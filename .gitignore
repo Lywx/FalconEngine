@@ -1,5 +1,8 @@
-build
+bin
 build_cmake
+include/*
+!include/FalconEngine
+!include/CMakeLists.txt
 lib
 sublime
 tools

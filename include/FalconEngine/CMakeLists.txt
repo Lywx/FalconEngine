@@ -1,4 +1,11 @@
-file(GLOB FALCON_ENGINE_HEADER_FILES *.h)
+file(GLOB FALCON_ENGINE_HEADER_FILES *.h
+	Content/*.h
+	Core/*.h
+	Graphics/*.h 
+	Geometry/*.h 
+	Input/*.h
+	Math/*.h
+	Utility/*.h)
 
 include_directories(${FALCON_ENGINE_INCLUDE_DIR})
 link_directories(${FALCON_ENGINE_LIBRARY_DIR})

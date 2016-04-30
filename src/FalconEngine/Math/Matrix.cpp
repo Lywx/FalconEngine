@@ -1,5 +1,5 @@
-#include <FalconEngine/Matrix.h>
-#include <FalconEngine/Quaternion.h>
+#include <FalconEngine/Math/Matrix.h>
+#include <FalconEngine/Math/Quaternion.h>
 
 namespace FalconEngine {
 namespace Math {

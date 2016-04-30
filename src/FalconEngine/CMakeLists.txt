@@ -1,2 +1,6 @@
-add_subdirectory(Render)
+add_subdirectory(Content)
+add_subdirectory(Core)
+add_subdirectory(Graphics)
+add_subdirectory(Geometry)
+# add_subdirectory(Input)
 add_subdirectory(Math)

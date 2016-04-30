@@ -1,4 +1,6 @@
-#include <FalconEngine/Vector3.h>
+#include <FalconEngine/Math/Vector3.h>
+
+#include <stdexcept>
 
 namespace FalconEngine {
 namespace Math {
@@ -12,6 +14,11 @@ const Vector3 Vector3::UnitZ = glm::vec3(0.f, 0.f, 1.f);
 /* static */
 Vector3 Vector3::Normalize(const Vector3& v)
 {
+    if (v == Vector3::Zero)
+    {
+        throw std::runtime_error("try to normalize zero vector");
+    }
+
     return glm::normalize(glm::vec3(v.x, v.y, v.z));
 }
 

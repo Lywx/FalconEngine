@@ -1,8 +1,10 @@
-#include <FalconEngine/Quaternion.h>
-#include <FalconEngine/Matrix.h>
+#include <FalconEngine/Math/Quaternion.h>
+#include <FalconEngine/Math/Matrix.h>
 
 namespace FalconEngine {
 namespace Math {
+
+Quaternion Quaternion::Identity = Quaternion(1, 0, 0, 0);
 
 Quaternion Quaternion::FromAxisAngle(const Vector3& axis, float angle)
 {

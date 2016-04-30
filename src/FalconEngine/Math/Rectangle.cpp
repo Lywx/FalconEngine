@@ -1,4 +1,4 @@
-#include <FalconEngine/Rectangle.h>
+#include <FalconEngine/Math/Rectangle.h>
 #include <FalconEngine/Math.h>
 
 namespace FalconEngine {
@@ -61,11 +61,11 @@ Rectangle::IsEmpty() const
     return IsEqual(m_width, 0.f) || IsEqual(m_height, 0.f);
 }
 
-Point
+Point2
 Rectangle::Center() const
 {
-    return Point(m_left + m_width * 0.5f,
-                 m_top + m_height * 0.5f);
+    return Point2(m_left + m_width * 0.5f,
+                  m_top + m_height * 0.5f);
 }
 
 bool
@@ -92,7 +92,7 @@ Rectangle::Contains(const Rectangle& rect) const
 }
 
 bool
-Rectangle::Contains(const Point& point) const
+Rectangle::Contains(const Point2& point) const
 {
     return Contains(
                static_cast<float>(point.x),
@@ -199,7 +199,7 @@ Rectangle::Offset(float x, float y)
 }
 
 void
-Rectangle::Offset(const Point& point)
+Rectangle::Offset(const Point2& point)
 {
     Offset(static_cast<float>(point.x), static_cast<float>(point.y));
 }

@@ -1,7 +1,6 @@
 #include <FalconEngine/Core/GameContext.h>
 
 namespace FalconEngine {
-namespace Core {
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -46,5 +45,4 @@ void GameContext::RenderEnd() {}
 void GameContext::Update(double elapsed) { }
 void GameContext::UpdateInput() { }
 
-}
 }

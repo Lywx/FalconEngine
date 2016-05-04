@@ -1,11 +1,24 @@
 file(GLOB FALCON_ENGINE_HEADER_FILES *.h
-	Content/*.h
-	Core/*.h
+	Content/*.h 
+	Content/*.inl
+
+	Core/*.h 
+	Core/*.inl
+
 	Graphics/*.h 
+	Graphics/*.inl
 	Geometry/*.h 
+	Geometry/*.inl 
+
 	Input/*.h
+	Input/*.inl
+ 
 	Math/*.h
-	Utility/*.h)
+	Math/*.inl
+
+	Utility/*.h
+	Utility/*.inl
+	)
 
 include_directories(${FALCON_ENGINE_INCLUDE_DIR})
 link_directories(${FALCON_ENGINE_LIBRARY_DIR})

@@ -4,7 +4,6 @@
 #include <memory>
 
 namespace FalconEngine {
-namespace Core {
 
 class GamePerformanceCounterImp;
 class GamePerformanceCounter
@@ -29,5 +28,4 @@ private:
     std::shared_ptr<GamePerformanceCounterImp> m_implementation;
 };
 
-}
 }

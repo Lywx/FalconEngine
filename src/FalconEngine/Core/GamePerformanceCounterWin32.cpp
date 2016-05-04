@@ -8,7 +8,6 @@
 #include <windows.h>
 
 namespace FalconEngine {
-namespace Core {
 
 /************************************************************************/
 /* Platform Dependent Implementation                                    */
@@ -101,7 +100,6 @@ double GamePerformanceCounter::GetMilliseconds() const
     return m_implementation->GetMilliseconds();
 }
 
-}
 }
 
 #endif

@@ -1,7 +1,6 @@
 #include <FalconEngine/Geometry/Model.h>
 
 namespace FalconEngine {
-namespace Geometry {
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -62,5 +61,3 @@ void Model::Render(double percent)
 }
 
 }
-}
-

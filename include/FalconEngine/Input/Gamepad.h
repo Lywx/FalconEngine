@@ -1,7 +1,7 @@
 #pragma once
 
 namespace FalconEngine {
-namespace Input {
+
 
 enum eGamepadAxes
 {
@@ -76,5 +76,4 @@ public:
 
 };
 
-}
 }

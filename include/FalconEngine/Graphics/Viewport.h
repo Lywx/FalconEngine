@@ -1,11 +1,10 @@
 #pragma once
 
 #include <FalconEngine/Math/Rectangle.h>
-#include <FalconEngine/Math/Vector3.h>
+#include <FalconEngine/Math/Vector3f.h>
 #include <FalconEngine/Math/Matrix.h>
 
 namespace FalconEngine {
-namespace Graphics {
 
 /// Describe the clip space region.
 class Viewport
@@ -39,8 +38,8 @@ public:
     float Viewport::MinDepth() const { return m_minDepth; }
     float Viewport::MaxDepth() const { return m_maxDepth; }
 
-    Math::Vector2 Center() const { return Math::Vector2(Left() + Width() / 2, Top() + Height() / 2); }
-    Math::Rectangle TitleSafeArea() const { return m_titleSafeArea; }
+    Vector2f Center() const { return Vector2f(Left() + Width() / 2, Top() + Height() / 2); }
+    Rectangle TitleSafeArea() const { return m_titleSafeArea; }
 
     Viewport& operator = (const Viewport& rhs);
 
@@ -56,7 +55,7 @@ public:
     ///
     /// returns a vector3 in which x,y will be screen coordinates.
     ///
-    Math::Vector3 Project(const Math::Vector3& worldPosition, const Math::Matrix& projection, const Math::Matrix& view, const Math::Matrix& world) const;
+    Vector3f Project(const Vector3f& worldPosition, const Matrix& projection, const Matrix& view, const Matrix& world) const;
 
     ///
     /// Unproject
@@ -72,7 +71,7 @@ public:
     ///
     /// Returns a world space position.
     ///
-    Math::Vector3 Unproject(const Math::Vector3& screenPosition, const Math::Matrix& projection, const Math::Matrix& view, const Math::Matrix& world) const;
+    Vector3f Unproject(const Vector3f& screenPosition, const Matrix& projection, const Matrix& view, const Matrix& world) const;
 
 
 protected:
@@ -86,10 +85,9 @@ protected:
     float m_maxDepth;
 
     float m_titleSafeRatio;
-    Math::Rectangle m_titleSafeArea;
+    Rectangle m_titleSafeArea;
 
     void CalculateTitleSafeArea();
 };
 
-}
 }

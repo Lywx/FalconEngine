@@ -1,7 +1,6 @@
 #pragma once
 
 namespace FalconEngine {
-namespace Input {
 
 class InputHandler
 {
@@ -18,6 +17,4 @@ public:
     }
 };
 
-
-}
 }

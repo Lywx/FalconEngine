@@ -2,7 +2,6 @@
 #include <FalconEngine/Math.h>
 
 namespace FalconEngine {
-namespace Math {
 
 const Rectangle Rectangle::Zero(0.f, 0.f, 0.f, 0.f);
 
@@ -61,11 +60,11 @@ Rectangle::IsEmpty() const
     return IsEqual(m_width, 0.f) || IsEqual(m_height, 0.f);
 }
 
-Point2
+Vector2d
 Rectangle::Center() const
 {
-    return Point2(m_left + m_width * 0.5f,
-                  m_top + m_height * 0.5f);
+    return Vector2d(m_left + m_width * 0.5f,
+                    m_top + m_height * 0.5f);
 }
 
 bool
@@ -92,7 +91,7 @@ Rectangle::Contains(const Rectangle& rect) const
 }
 
 bool
-Rectangle::Contains(const Point2& point) const
+Rectangle::Contains(const Vector2d& point) const
 {
     return Contains(
                static_cast<float>(point.x),
@@ -100,7 +99,7 @@ Rectangle::Contains(const Point2& point) const
 }
 
 bool
-Rectangle::Contains(const Vector2& position) const
+Rectangle::Contains(const Vector2f& position) const
 {
     return Contains(position.x, position.y);
 }
@@ -115,7 +114,7 @@ Rectangle::Intersects(const Rectangle& rect) const
 }
 
 void
-Rectangle::Constrain(Vector2& p, const Vector2& size/*=point::Zero*/) const
+Rectangle::Constrain(Vector2f& p, const Vector2f& size/*=point::Zero*/) const
 {
     float halfWidth = size.x * 0.5f;
     float halfHeight = size.y * 0.5f;
@@ -199,7 +198,7 @@ Rectangle::Offset(float x, float y)
 }
 
 void
-Rectangle::Offset(const Point2& point)
+Rectangle::Offset(const Vector2d& point)
 {
     Offset(static_cast<float>(point.x), static_cast<float>(point.y));
 }
@@ -220,5 +219,4 @@ Rectangle::operator + (const Rectangle& rhs) const
     return Rectangle(m_left + rhs.Left(), m_top + rhs.Top(), m_width + rhs.Width(), m_height + rhs.Height());
 }
 
-}
 }

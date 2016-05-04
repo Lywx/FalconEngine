@@ -2,7 +2,6 @@
 #include <FalconEngine/Graphics/ShaderBrewer.h>
 
 namespace FalconEngine {
-namespace Graphics {
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -153,6 +152,4 @@ void Shader::DoDeleteShader()
     glDeleteProgram(m_programId);
 }
 
-
-}
 }

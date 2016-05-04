@@ -7,7 +7,6 @@
 #include <FalconEngine/Graphics/Mesh.h>
 
 namespace FalconEngine {
-namespace Geometry {
 
 // Stores all the vertex data loaded from a vertex file.
 struct GeometryMeshVertexData
@@ -16,7 +15,7 @@ struct GeometryMeshVertexData
         : VertexNum(vertexNum)
         , VertexRowNum (vertexRowNum)
         , VertexColNum(vertexColNum)
-        , Vertexes(new std::vector<Math::Vector3>())
+        , Vertexes(new std::vector<Vector3f>())
     {
         Vertexes->reserve(vertexNum);
     }
@@ -24,7 +23,7 @@ struct GeometryMeshVertexData
     int                   VertexNum;
     int                   VertexRowNum;
     int                   VertexColNum;
-    Graphics::VertexList *Vertexes;
+    VertexList *Vertexes;
 };
 
 // Stores all the index data loaded from an index file.
@@ -36,19 +35,19 @@ struct GeometryMeshIndexData
     int                        IndexRowNum;
     int                        IndexColNum;
 
-    std::vector<Math::Index> *Indexes;
+    std::vector<Index> *Indexes;
 
     GeometryMeshIndexData(int indexNum, int indexRowNum, int indexColNum) :
         IndexNum(indexNum),
         IndexRowNum (indexRowNum),
         IndexColNum(indexColNum),
-        Indexes(new std::vector<Math::Index>())
+        Indexes(new std::vector<Index>())
     {
-        Indexes->reserve(10);
+        Indexes->reserve(indexNum);
     }
 };
 
-class GeometryMesh : public Graphics::Mesh
+class GeometryMesh : public Mesh
 {
 public:
 
@@ -62,6 +61,3 @@ public:
 };
 
 }
-}
-
-

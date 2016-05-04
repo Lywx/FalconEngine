@@ -6,7 +6,6 @@
 #include <GL/glew.h>
 
 namespace FalconEngine {
-namespace Geometry {
 
 class Model
 {
@@ -29,5 +28,4 @@ protected:
     GLuint VBO;                                 // Vertex Buffer
 };
 
-}
 }

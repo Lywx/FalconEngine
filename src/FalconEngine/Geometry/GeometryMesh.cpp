@@ -1,7 +1,6 @@
 #include <FalconEngine/Geometry/GeometryMesh.h>
 
 namespace FalconEngine {
-namespace Geometry {
 
 /* static */ GeometryMeshVertexData GeometryMesh::LoadVertexes(std::wstring filename)
 {
@@ -37,7 +36,7 @@ namespace Geometry {
     for (auto i = 0; i < vertexNum; ++i)
     {
         vertexFile >> vertexIndex >> vertexX >> vertexY >> vertexZ;
-        vertexData.Vertexes->push_back(Math::Vector3(vertexX, vertexY, vertexZ));
+        vertexData.Vertexes->push_back(Vector3f(vertexX, vertexY, vertexZ));
     }
 
     return vertexData;
@@ -77,7 +76,7 @@ namespace Geometry {
     for (auto i = 0; i < indexNum; ++i)
     {
         indexFile >> indexIndex >> indexA >> indexB >> indexC;
-        indexData.Indexes->push_back(Math::Index(indexA, indexB, indexC));
+        indexData.Indexes->push_back(Index(indexA, indexB, indexC));
     }
 
     return indexData;
@@ -106,5 +105,4 @@ GeometryMesh::GeometryMesh()
     m_Indexes.reset(indexData.Indexes);
 }
 
-}
 }

@@ -4,10 +4,9 @@
 #include <glm/gtc/type_ptr.hpp>
 
 namespace FalconEngine {
-namespace Math {
 
-struct Quaternion;
-struct Vector3;
+class Quaternion;
+class Vector3f;
 
 /// 4x4 matrix in column major format:
 ///
@@ -15,8 +14,9 @@ struct Vector3;
 ///  0.1, 1.1, 2.1, 3.1,
 ///  0.2, 1.2, 2.2, 3.2,
 ///  0.3, 1.3, 2.3, 3.3)
-struct Matrix : glm::mat4
+class Matrix : public glm::mat4
 {
+public:
     static Matrix Zero;
     static Matrix Identity;
 
@@ -69,8 +69,7 @@ struct Matrix : glm::mat4
     ///  0.0, 1.0, 0.0, v.y,
     ///  0.0, 0.0, 1.0, v.z,
     ///  0.0, 0.0, 0.0, 1.0)
-    static Matrix CreateTranslation(const Vector3& v);
+    static Matrix CreateTranslation(const Vector3f& v);
 };
 
-}
 }

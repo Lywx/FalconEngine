@@ -2,7 +2,7 @@
 
 #include "InputHandler.h"
 namespace FalconEngine {
-namespace Input {
+
 
 class gamepad_handler : public InputHandler
 {

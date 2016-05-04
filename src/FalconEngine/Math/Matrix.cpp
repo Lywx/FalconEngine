@@ -2,7 +2,6 @@
 #include <FalconEngine/Math/Quaternion.h>
 
 namespace FalconEngine {
-namespace Math {
 
 Matrix Matrix::Identity = glm::mat4(1.0, 0.0, 0.0, 0.0,
                                     0.0, 1.0, 0.0, 0.0,
@@ -86,9 +85,9 @@ Matrix Matrix::FromRotation(const Quaternion& q)
 
 Matrix Matrix::CreateRotation(const float& pitch, const float& yaw, const float& roll)
 {
-    Quaternion rotation_yaw   = Quaternion::FromAxisAngle(Vector3::UnitY, yaw);
-    Quaternion rotation_pitch = Quaternion::FromAxisAngle(Vector3::UnitX, pitch);
-    Quaternion rotation_roll  = Quaternion::FromAxisAngle(Vector3::UnitZ, roll);
+    Quaternion rotation_yaw   = Quaternion::FromAxisAngle(Vector3f::UnitY, yaw);
+    Quaternion rotation_pitch = Quaternion::FromAxisAngle(Vector3f::UnitX, pitch);
+    Quaternion rotation_roll  = Quaternion::FromAxisAngle(Vector3f::UnitZ, roll);
 
     Quaternion rotation = rotation_yaw * rotation_pitch * rotation_roll;
 
@@ -113,10 +112,10 @@ Matrix Matrix::CreateNonisomorphicScaling(const float& scaleX, const float& scal
 
 Matrix Matrix::CreateTranslation(const float& x, const float& y, const float& z)
 {
-    return CreateTranslation(Vector3(x, y, z));
+    return CreateTranslation(Vector3f(x, y, z));
 }
 
-Matrix Matrix::CreateTranslation(const Vector3& v)
+Matrix Matrix::CreateTranslation(const Vector3f& v)
 {
     Matrix result = Matrix::Identity;
 
@@ -127,5 +126,4 @@ Matrix Matrix::CreateTranslation(const Vector3& v)
     return result;
 }
 
-}
 }

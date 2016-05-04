@@ -5,7 +5,6 @@
 #include "GamePerformanceCounter.h"
 
 namespace FalconEngine {
-namespace Core {
 
 class Game
 {
@@ -44,5 +43,4 @@ private:
     bool m_running     = true;
 };
 
-}
 }

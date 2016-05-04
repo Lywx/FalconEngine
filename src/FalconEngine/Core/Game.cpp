@@ -2,7 +2,6 @@
 #include <iostream>
 
 namespace FalconEngine {
-namespace Core {
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -83,7 +82,7 @@ inline void Game::Initialize()
 // The main goal of this algorithm is to ensure the render rate is constant and update rate is flexible.
 inline void Game::Loop()
 {
-    PerformanceCounter = Core::GamePerformanceCounter();
+    PerformanceCounter = GamePerformanceCounter();
     char lastFramePerformanceString[256];
 
     if (Context != nullptr)
@@ -160,5 +159,4 @@ inline void Game::Exit()
     }
 }
 
-}
 }

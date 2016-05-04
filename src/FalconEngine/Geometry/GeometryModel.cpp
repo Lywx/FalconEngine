@@ -3,7 +3,6 @@
 #define BUFFER_OFFSET(offset) ((void *)(offset))
 
 namespace FalconEngine {
-namespace Geometry {
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -33,10 +32,10 @@ void GeometryModel::LoadModel(GeometryMesh mesh)
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Math::Vector3) * Mesh.VertexSize(), &Mesh.VertexFront(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * Mesh.VertexSize(), &Mesh.VertexFront(), GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Math::Index) * Mesh.IndexSize(), &Mesh.IndexFront(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Index) * Mesh.IndexSize(), &Mesh.IndexFront(), GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), static_cast<GLvoid *>(nullptr));
     glEnableVertexAttribArray(0);
@@ -48,11 +47,9 @@ void GeometryModel::LoadModel(GeometryMesh mesh)
 void GeometryModel::Render(double percent)
 {
     // Set mvp
-
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, int(sizeof(Math::Index) * Mesh.IndexSize()), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, int(sizeof(Index) * Mesh.IndexSize()), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
-}
 }

@@ -1,7 +1,7 @@
 #include <FalconEngine/Graphics/Viewport.h>
 
 namespace FalconEngine {
-namespace Graphics {
+
 
 Viewport::Viewport()
     : m_left(0.f)
@@ -59,12 +59,12 @@ Viewport& Viewport::operator = (const Viewport& rhs)
 //     projection: projection transform matrix
 //     view: view transform matrix
 //     world: world transform matrix
-Math::Vector3 Viewport::Project(const Math::Vector3& worldPosition, const Math::Matrix& projection, const Math::Matrix& view, const Math::Matrix& world) const
+Vector3f Viewport::Project(const Vector3f& worldPosition, const Matrix& projection, const Matrix& view, const Matrix& world) const
 {
-    Math::Matrix transform = projection * view * world;
-    Math::Vector4 ndcPosition = transform * Math::Vector4(worldPosition, 1);
+    Matrix transform = projection * view * world;
+    Vector4 ndcPosition = transform * Vector4(worldPosition, 1);
 
-    Math::Vector3 screenPosition;
+    Vector3f screenPosition;
     screenPosition.x = m_left + Width() * 0.5f * (1.f + ndcPosition.x);
     screenPosition.y = m_top + Height() * 0.5f * (1.f - ndcPosition.y);
     screenPosition.z = m_minDepth + ndcPosition.z;
@@ -77,9 +77,9 @@ Math::Vector3 Viewport::Project(const Math::Vector3& worldPosition, const Math::
 // The Z component of screenPosition will be used as a ratio of the depth of the
 // view frustum, using 0.f means the world space position returned will be at
 // the near plane, using 1.f will place it at the far plane.
-Math::Vector3 Viewport::Unproject(const Math::Vector3& screenPosition, const Math::Matrix& projection, const Math::Matrix& view, const Math::Matrix& world) const
+Vector3f Viewport::Unproject(const Vector3f& screenPosition, const Matrix& projection, const Matrix& view, const Matrix& world) const
 {
-    Math::Vector4 ndcPosition;
+    Vector4 ndcPosition;
 
     // Inverse of windows transform, see Viewport::Project.
     ndcPosition.x = 2.f * (screenPosition.x - m_left) / Width() - 1.f;
@@ -87,13 +87,13 @@ Math::Vector3 Viewport::Unproject(const Math::Vector3& screenPosition, const Mat
     ndcPosition.z = screenPosition.z - m_minDepth;
     ndcPosition.w = 1.f;
 
-    Math::Matrix inverseTransform = glm::inverse(projection * view * world);
-    Math::Vector4 worldPosition = inverseTransform * ndcPosition;
+    Matrix inverseTransform = glm::inverse(projection * view * world);
+    Vector4 worldPosition = inverseTransform * ndcPosition;
 
     worldPosition /= worldPosition.w;
 
     // Using glm::vec3(glm::vec4)
-    return Math::Vector3(worldPosition);
+    return Vector3f(worldPosition);
 }
 
 void Viewport::CalculateTitleSafeArea()
@@ -101,8 +101,7 @@ void Viewport::CalculateTitleSafeArea()
     const float titleSafeWidth = Width() * (1.f - m_titleSafeRatio);
     const float titleSafeHight = Height() * (1.f - m_titleSafeRatio);
 
-    m_titleSafeArea = Math::Rectangle(m_left + titleSafeWidth * 0.5f, m_top + titleSafeHight * 0.5f, Width() - titleSafeWidth, Height() - titleSafeHight);
+    m_titleSafeArea = Rectangle(m_left + titleSafeWidth * 0.5f, m_top + titleSafeHight * 0.5f, Width() - titleSafeWidth, Height() - titleSafeHight);
 }
 
-}
 }

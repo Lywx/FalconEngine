@@ -3,7 +3,7 @@
 #define BUFFER_SIZE (256)
 
 namespace FalconEngine {
-namespace Input {
+
 
 class Keyboard
 {
@@ -34,5 +34,4 @@ public:
     void Flush();
 };
 
-}
 }

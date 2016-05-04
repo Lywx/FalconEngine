@@ -6,7 +6,6 @@
 #include <GL/glew.h>
 
 namespace FalconEngine {
-namespace Graphics {
 
 class Shader
 {
@@ -46,5 +45,4 @@ private:
     virtual void DoDeleteShader();
 };
 
-} // Render
-} // FalconEngine
+}

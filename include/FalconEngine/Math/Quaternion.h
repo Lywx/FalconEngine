@@ -2,19 +2,18 @@
 
 #include <glm/gtc/quaternion.hpp>
 
-#include "Vector3.h"
+#include "Vector3f.h"
 
 namespace FalconEngine {
-namespace Math {
 
 // Forward declaration for circular dependency
-struct Matrix;
-
-struct Quaternion : glm::quat
+class Matrix;
+class Quaternion : public glm::quat
 {
+public:
     static Quaternion Identity;
 
-    static Quaternion FromAxisAngle(const Vector3& axis, float angle);;
+    static Quaternion FromAxisAngle(const Vector3f& axis, float angle);;
 
     // NEW
     // static Quaternion FromEulerAngle(const Vector3& axis, float angle);;
@@ -34,5 +33,4 @@ struct Quaternion : glm::quat
     Quaternion(const glm::quat quat) : glm::quat(quat) {}
 };
 
-}
 }

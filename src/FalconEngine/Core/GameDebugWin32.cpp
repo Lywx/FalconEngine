@@ -4,7 +4,6 @@
 #include <string>
 
 namespace FalconEngine {
-namespace Core {
 
 /* static */ void GameDebug::OutputString(std::string str)
 {
@@ -16,5 +15,4 @@ namespace Core {
     OutputDebugString(str);
 }
 
-}
 }

@@ -5,7 +5,6 @@
 #include <FalconEngine/Graphics/Mesh.h>
 
 namespace FalconEngine {
-namespace Graphics {
 
 /**
     Stores the vertex data for all the quads on which a text will be rendered.
@@ -26,5 +25,4 @@ struct TextMeshData
     size_t       TexturePositionCount() const { return TexturePosition->size(); }
 };
 
-}
 }

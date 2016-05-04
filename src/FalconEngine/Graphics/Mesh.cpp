@@ -1,7 +1,6 @@
 #include <FalconEngine/Graphics/Mesh.h>
 
 namespace FalconEngine {
-namespace Graphics {
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -56,5 +55,4 @@ Mesh::Mesh(Mesh&& rhs) noexcept
 {
 }
 
-}
 }

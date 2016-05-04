@@ -5,7 +5,6 @@
 #include "GeometryMesh.h"
 
 namespace FalconEngine {
-namespace Geometry {
 
 class GeometryModel : public Model
 {
@@ -23,5 +22,4 @@ protected:
     GeometryMesh Mesh;
 };
 
-}
 }

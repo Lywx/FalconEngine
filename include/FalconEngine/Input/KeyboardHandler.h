@@ -6,7 +6,7 @@
 #include "Keyboard.h"
 
 namespace FalconEngine {
-namespace Input {
+
 
 typedef bool(*KeyboardHandler)(std::shared_ptr<Keyboard> pKeyboard, void *userData);
 

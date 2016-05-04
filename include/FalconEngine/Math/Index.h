@@ -1,7 +1,6 @@
 #pragma once
 
 namespace FalconEngine {
-namespace Math {
 
 class Index
 {
@@ -19,5 +18,4 @@ public:
     ~Index() = default;
 };
 
-}
 }

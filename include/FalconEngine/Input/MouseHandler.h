@@ -3,7 +3,7 @@
 #include "InputHandler.h"
 
 namespace FalconEngine {
-namespace Input {
+
 
 class MouseHandler : public InputHandler
 {

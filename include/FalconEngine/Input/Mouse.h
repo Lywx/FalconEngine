@@ -1,9 +1,8 @@
 #pragma once
 
-#include <FalconEngine/Math/Vector2.h>
+#include <FalconEngine/Math/Vector2f.h>
 
 namespace FalconEngine {
-namespace Input {
 
 enum
 {
@@ -50,8 +49,8 @@ public:
     void GetAbsolutePosition(int& x, int& y, int& z);
     void GetRelativePosition(int& x, int& y, int& z);
 
-    Math::Vector2 GetPosition() const;
-    Math::Vector2 GetRelativePosition() const;
+    Vector2f GetPosition() const;
+    Vector2f GetRelativePosition() const;
 
     int GetMouseWheelValue() const { return absolute_mouse_state.lZ; }
 
@@ -74,11 +73,9 @@ private:
     bool Initialize(InputObject *di, HWND hwnd, bool buffered = FALSE);
     void ClearDevice();
 
-
     InputDevice *GetDevice() const { return m_device; }
 
     friend class InputState;
 };
 
-}
 }

@@ -6,7 +6,6 @@
 #include <FalconEngine/Content/Path.h>
 
 namespace FalconEngine {
-namespace Content {
 
 using namespace std;
 
@@ -43,5 +42,4 @@ TEST_CASE("Path Test", "")
     }
 }
 
-}
 }

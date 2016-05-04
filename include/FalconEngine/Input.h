@@ -1,7 +1,7 @@
 #pragma once
 
-#include <FalconEngine/Math/Vector2.h>
-#include <FalconEngine/Math/Vector3.h>
+#include <FalconEngine/Math/Vector2f.h>
+#include <FalconEngine/Math/Vector3f.h>
 
 #include <vector>
 #include <memory>
@@ -38,5 +38,4 @@ inline bool ComparePriority(InputHandler& a, InputHandler& b)
     return false;
 }
 
-}
 }

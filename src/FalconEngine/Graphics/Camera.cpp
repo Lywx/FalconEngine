@@ -2,26 +2,25 @@
 #include <FalconEngine/Math.h>
 
 namespace FalconEngine {
-namespace Graphics {
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Camera::Camera(const Math::Handedness *handedness)
-    : Camera(handedness, Math::PiOver4, 1.77777f)
+Camera::Camera(const Handedness *handedness)
+    : Camera(handedness, PiOver4, 1.77777f)
 {
 }
 
-Camera::Camera(const Math::Handedness *handedness, const Viewport& viewport, float nearPlane /*=0.1f*/, float farPlane /*=1000.f*/)
-    : Camera(handedness, Math::PiOver4, viewport.Aspect(), nearPlane, farPlane)
+Camera::Camera(const Handedness *handedness, const Viewport& viewport, float nearPlane /*=0.1f*/, float farPlane /*=1000.f*/)
+    : Camera(handedness, PiOver4, viewport.Aspect(), nearPlane, farPlane)
 {
 }
 
-Camera::Camera(const Math::Handedness *handedness, float fovy, float aspectRatio, float nearPlane /*=0.1f*/, float farPlane /*=1000.f*/)
-    : m_view(Math::Matrix::Identity)
-    , m_world(Math::Matrix::Identity)
-    , m_rotation(Math::Quaternion::Identity)
-    , m_position(Math::Vector3::Zero)
+Camera::Camera(const Handedness *handedness, float fovy, float aspectRatio, float nearPlane /*=0.1f*/, float farPlane /*=1000.f*/)
+    : m_position(Vector3f::Zero)
+    , m_rotation(Quaternion::Identity)
+    , m_view(Matrix::Identity)
+    , m_world(Matrix::Identity)
     , m_near(nearPlane)
     , m_far(farPlane)
     , m_fovy(fovy)
@@ -38,42 +37,42 @@ Camera::~Camera()
 /************************************************************************/
 /* Camera Movement                                                      */
 /************************************************************************/
-const Math::Vector3& Camera::Position() const
+const Vector3f& Camera::Position() const
 {
     return m_position;
 }
 
-Math::Vector3 Camera::Forward() const
+Vector3f Camera::Forward() const
 {
     return m_handedness->Forward(m_view);
 }
 
-Math::Vector3 Camera::Backward() const
+Vector3f Camera::Backward() const
 {
     return m_handedness->Backward(m_view);
 }
 
-Math::Vector3 Camera::Left() const
+Vector3f Camera::Left() const
 {
     return m_handedness->Left(m_view);
 }
 
-Math::Vector3 Camera::Right() const
+Vector3f Camera::Right() const
 {
     return m_handedness->Right(m_view);
 }
 
-Math::Vector3 Camera::Up() const
+Vector3f Camera::Up() const
 {
     return m_handedness->Up(m_view);
 }
 
-Math::Vector3 Camera::Down() const
+Vector3f Camera::Down() const
 {
     return m_handedness->Down(m_view);
 }
 
-const Math::Quaternion& Camera::Rotation() const
+const Quaternion& Camera::Rotation() const
 {
     return m_rotation;
 }
@@ -108,7 +107,7 @@ void Camera::MoveDown(float distance)
     m_position += Down() * distance;
 }
 
-void Camera::Rotate(const Math::Matrix& rotation)
+void Camera::Rotate(const Matrix& rotation)
 {
     m_world = rotation * m_world;
     m_view = glm::inverse(m_world);
@@ -116,9 +115,9 @@ void Camera::Rotate(const Math::Matrix& rotation)
 
 void Camera::Rotate(float pitch, float yaw, float roll)
 {
-    Math::Quaternion rotation_yaw   = Math::Quaternion::FromAxisAngle(Math::Vector3::UnitY, yaw);
-    Math::Quaternion rotation_pitch = Math::Quaternion::FromAxisAngle(Math::Vector3::UnitX, pitch);
-    Math::Quaternion rotation_roll  = Math::Quaternion::FromAxisAngle(Math::Vector3::UnitZ, roll);
+    Quaternion rotation_yaw   = Quaternion::FromAxisAngle(Vector3f::UnitY, yaw);
+    Quaternion rotation_pitch = Quaternion::FromAxisAngle(Vector3f::UnitX, pitch);
+    Quaternion rotation_roll  = Quaternion::FromAxisAngle(Vector3f::UnitZ, roll);
 
     m_rotation = rotation_yaw * rotation_pitch * rotation_roll;
 }
@@ -136,33 +135,33 @@ float Camera::Far() const
     return m_far;
 }
 
-const Math::Matrix& Camera::World() const
+const Matrix& Camera::World() const
 {
     return m_world;
 }
 
-const Math::Matrix& Camera::View() const
+const Matrix& Camera::View() const
 {
     return m_view;
 }
 
-const Math::Matrix& Camera::Projection() const
+const Matrix& Camera::Projection() const
 {
     return m_projection;
 }
 
-void Camera::SetWorld(const Math::Matrix& world)
+void Camera::SetWorld(const Matrix& world)
 {
     m_world = world;
     m_view = glm::inverse(m_world);
 }
 
-void Camera::SetView(const Math::Matrix& view)
+void Camera::SetView(const Matrix& view)
 {
     m_view = view;
 }
 
-void Camera::SetProjection(const Math::Matrix& projection)
+void Camera::SetProjection(const Matrix& projection)
 {
     m_projection = projection;
 }
@@ -177,10 +176,10 @@ float Camera::HorizontalFieldOfView() const
     return 2.f * atan(m_aspectRatio * tan(m_fovy * 0.5f) );
 }
 
-void Camera::SetPosition(const Math::Vector3& position)
+void Camera::SetPosition(const Vector3f& position)
 {
     m_position = position;
-    m_world = Math::Matrix::CreateTranslation(position) * m_world;
+    m_world = Matrix::CreateTranslation(position) * m_world;
     m_view = glm::inverse(m_world);
 }
 
@@ -191,12 +190,12 @@ void Camera::SetPerspectiveProjection(float fovy, float aspectRatio, float nearP
     m_projection = m_handedness->CreatePerspectiveFieldOfView(fovy, aspectRatio, nearPlane, farPlane);
 }
 
-void Camera::LookAt(const Math::Vector3& from, const Math::Vector3& to, const Math::Vector3& up)
+void Camera::LookAt(const Vector3f& from, const Vector3f& to, const Vector3f& up)
 {
     m_position = from;
     m_view = m_handedness->CreateLookAt(from, to, up);
     m_world = glm::inverse(m_view);
-    m_rotation = Math::Quaternion::FromRotationMatrix(m_world);
+    m_rotation = Quaternion::FromRotationMatrix(m_world);
 }
 
 /************************************************************************/
@@ -204,9 +203,8 @@ void Camera::LookAt(const Math::Vector3& from, const Math::Vector3& to, const Ma
 /************************************************************************/
 void Camera::Update(double elapsed)
 {
-    m_world = Math::Matrix::FromRotation(m_rotation) *  Math::Matrix::CreateTranslation(m_position);
+    m_world = Matrix::FromRotation(m_rotation) *  Matrix::CreateTranslation(m_position);
     m_view = glm::inverse(m_world);
 }
 
-}
 }

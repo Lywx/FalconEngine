@@ -4,7 +4,6 @@
 #include <string>
 
 namespace FalconEngine {
-namespace Content {
 
 bool                    Exists(const std::wstring relativePath);
 
@@ -14,5 +13,4 @@ std::ifstream::pos_type GetFileSize(const std::wstring relativePath);
 
 bool                    CreateDirectory(const std::wstring relativePath);
 
-}
 }

@@ -3,16 +3,15 @@
 #include <vector>
 #include <memory>
 
-#include <FalconEngine/Math/Vector2.h>
-#include <FalconEngine/Math/Vector3.h>
+#include <FalconEngine/Math/Vector2f.h>
+#include <FalconEngine/Math/Vector3f.h>
 #include <FalconEngine/Math/Index.h>
 
 namespace FalconEngine {
-namespace Graphics {
 
-typedef std::vector<Math::Vector3> VertexList;
-typedef std::vector<Math::Vector2> TextureList;
-typedef std::vector<Math::Index>   IndexList;
+typedef std::vector<Vector3f> VertexList;
+typedef std::vector<Vector2f> TextureList;
+typedef std::vector<Index>   IndexList;
 
 class Mesh
 {
@@ -31,11 +30,11 @@ public:
 
     std::shared_ptr<VertexList> Vertexes() const { return m_Vertexes; }
     size_t                      VertexSize() const { return m_Vertexes->size(); }
-    Math::Vector3&              VertexFront() const { return m_Vertexes->front(); }
+    Vector3f&                   VertexFront() const { return m_Vertexes->front(); }
 
     std::shared_ptr<IndexList> Indexes() const { return m_Indexes; }
     size_t                     IndexSize() const { return m_Indexes->size(); }
-    Math::Index&               IndexFront() const { return m_Indexes->front(); }
+    Index&                     IndexFront() const { return m_Indexes->front(); }
 
     virtual void LoadMesh(std::initializer_list<std::wstring> fileNames) = 0;
 
@@ -51,5 +50,4 @@ inline void swap(Mesh &lhs, Mesh &rhs)
     swap(lhs.m_Indexes, rhs.m_Indexes);
 }
 
-}
 }

@@ -1,11 +1,10 @@
 #pragma once
 
-#include "Point2.h"
-#include "Vector2.h"
-#include "Vector4.h"
+#include "Vector2d.h"
+#include "Vector2f.h"
+#include "Vector4f.h"
 
 namespace FalconEngine {
-namespace Math {
 
 /// Axis-aligned rectangle in 2D space
 class Rectangle
@@ -44,15 +43,15 @@ public:
         m_top = bottom - m_height;
     }
 
-    Vector2 Position() const { return Vector2(m_left, m_top); }
-    void SetPosition(const Vector2& position)
+    Vector2f Position() const { return Vector2f(m_left, m_top); }
+    void SetPosition(const Vector2f& position)
     {
         m_left = position.x;
         m_top = position.y;
     }
 
-    Vector2 Size() const { return Vector2(m_width, m_height); }
-    void SetSize(const Vector2& size)
+    Vector2f Size() const { return Vector2f(m_width, m_height); }
+    void SetSize(const Vector2f& size)
     {
         m_width = size.x;
         m_height = size.y;
@@ -71,25 +70,25 @@ public:
     bool operator != (const Rectangle& r) const;
 
     bool IsEmpty() const;
-    Point2 Center() const;
+    Vector2d Center() const;
 
     virtual bool Contains(float x, float y) const;
     virtual bool Intersects(const Rectangle& rect) const;
 
-    bool Contains(const Vector2& position) const;
+    bool Contains(const Vector2f& position) const;
     bool Contains(const Rectangle& rect) const;
-    bool Contains(const Point2& point) const;
+    bool Contains(const Vector2d& point) const;
 
     void Inflate(float x, float y);
     void Contract(float x, float y);
 
     void Offset(float x, float y);
-    void Offset(const Point2& point);
+    void Offset(const Vector2d& point);
 
     Rectangle& operator + (const Rectangle& rhs);
     Rectangle operator + (const Rectangle& rhs) const;
 
-    void Constrain(Vector2& p, const Vector2& size = Point2::Zero) const;
+    void Constrain(Vector2f& p, const Vector2f& size = Vector2d::Zero) const;
 
     // Clip rectangle based on another rectangle. The edge case is based on the idea of inconsistency clipping.
     void Clip(const Rectangle& clip);
@@ -103,5 +102,4 @@ protected:
     float m_height;
 };
 
-}
 }

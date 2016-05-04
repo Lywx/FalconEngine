@@ -1,7 +1,6 @@
 #pragma once
 
 namespace FalconEngine {
-namespace Core {
 
 class Game;
 class GameContext
@@ -32,5 +31,4 @@ public:
     virtual void UpdateInput();
 };
 
-}
 }

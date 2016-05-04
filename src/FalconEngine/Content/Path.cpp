@@ -12,7 +12,6 @@
 namespace fs = boost::filesystem;
 
 namespace FalconEngine {
-namespace Content {
 
 std::wstring GetCurrentPath()
 {
@@ -59,5 +58,4 @@ bool CreateDirectory(const std::wstring relativePath)
     return create_directory(path);
 }
 
-}
 }

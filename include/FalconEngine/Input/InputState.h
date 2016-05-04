@@ -11,7 +11,7 @@
 #include "KeyboardHandler.h"
 
 namespace FalconEngine {
-namespace Input {
+
 
 class InputState
 {

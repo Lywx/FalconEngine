@@ -1,3 +1,4 @@
+#include <FalconEngine/Math/Vector3f.h>
 #include <FalconEngine/Math/Vector4f.h>
 
 namespace FalconEngine {
@@ -5,22 +6,33 @@ namespace FalconEngine {
 /************************************************************************/
 /* Static Members                                                       */
 /************************************************************************/
-const Vector4 Vector4::Zero  = glm::vec4(0.f, 0.f, 0.f, 0.f);
-const Vector4 Vector4::UnitX = glm::vec4(1.f, 0.f, 0.f, 0.f);
-const Vector4 Vector4::UnitY = glm::vec4(0.f, 1.f, 0.f, 0.f);
-const Vector4 Vector4::UnitZ = glm::vec4(0.f, 0.f, 1.f, 0.f);
-const Vector4 Vector4::UnitW = glm::vec4(0.f, 0.f, 0.f, 1.f);
+const Vector4f Vector4f::Zero  = Vector4f(0.f, 0.f, 0.f, 0.f);
+const Vector4f Vector4f::UnitX = Vector4f(1.f, 0.f, 0.f, 0.f);
+const Vector4f Vector4f::UnitY = Vector4f(0.f, 1.f, 0.f, 0.f);
+const Vector4f Vector4f::UnitZ = Vector4f(0.f, 0.f, 1.f, 0.f);
+const Vector4f Vector4f::UnitW = Vector4f(0.f, 0.f, 0.f, 1.f);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Vector4::Vector4() : glm::vec4() {};
+Vector4f::Vector4f()
+{
+}
 
-Vector4::Vector4(const glm::vec3& vec3, const float w) : glm::vec4(vec3, w) {};
+Vector4f::Vector4f(const float x, const float y, const float z, const float w)
+    : glm::vec4(x, y, z, w)
+{
+}
 
-// Copy Constructor
-Vector4::Vector4(const Vector4& v) : glm::vec4(v) {};
+Vector4f::Vector4f(const Vector3f& v, const float w)
+    : glm::vec4(v, w)
+{
+}
 
 // Implicit Conversion
-Vector4::Vector4(const glm::vec4& v) : glm::vec4(v) {};
+Vector4f::Vector4f(const glm::vec4& v)
+    : glm::vec4(v)
+{
+}
+
 }

@@ -12,11 +12,12 @@ struct Vector2f : glm::vec2
     static const Vector2f UnitX;
     static const Vector2f UnitY;
 
-    Vector2f() : glm::vec2() {};
-    Vector2f(const float& x, const float& y) : glm::vec2(x, y) {};
+    Vector2f();
+
+    Vector2f(const float& x, const float& y);
 
     // Implicit Conversion
-    Vector2f(const glm::vec2& v) : glm::vec2(v) {};
+    Vector2f(const glm::vec2& v);
 };
 
 }

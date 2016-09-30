@@ -6,25 +6,25 @@
 namespace FalconEngine {
 
 // Assume vector are column vector
-class Vector4 : public glm::vec4
+class Vector3f;
+class Vector4f : public glm::vec4
 {
 public:
-    const static Vector4 One;
-    const static Vector4 Zero;
-    const static Vector4 UnitX;
-    const static Vector4 UnitY;
-    const static Vector4 UnitZ;
-    const static Vector4 UnitW;
+    const static Vector4f One;
+    const static Vector4f Zero;
+    const static Vector4f UnitX;
+    const static Vector4f UnitY;
+    const static Vector4f UnitZ;
+    const static Vector4f UnitW;
 
-    Vector4();
+    Vector4f();
 
-    Vector4(const glm::vec3& vec3, const float w);
+    Vector4f(const float x, const float y, const float z, const float w);
 
-    // Copy Constructor
-    Vector4(const Vector4& v);
+    Vector4f(const Vector3f& v, const float w);
 
     // Implicit Conversion
-    Vector4(const glm::vec4& v);
+    Vector4f(const glm::vec4& v);
 };
 
 }

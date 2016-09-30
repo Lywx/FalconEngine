@@ -1,5 +1,4 @@
 #include <FalconEngine/Core/Game.h>
-#include <iostream>
 
 namespace FalconEngine {
 
@@ -82,12 +81,12 @@ inline void Game::Initialize()
 // The main goal of this algorithm is to ensure the render rate is constant and update rate is flexible.
 inline void Game::Loop()
 {
-    PerformanceCounter = GamePerformanceCounter();
+    Counter = GameCounter();
     char lastFramePerformanceString[256];
 
     if (Context != nullptr)
     {
-        double lastFrameBegunMillisecond = PerformanceCounter.GetMilliseconds();
+        double lastFrameBegunMillisecond = Counter.GetMilliseconds();
         double lastRenderBegunMillisecond = lastFrameBegunMillisecond;
         int    lastUpdateTotalCount = 0;
 
@@ -96,7 +95,7 @@ inline void Game::Loop()
 
         while (m_running)
         {
-            double lastFrameEndedMillisecond = PerformanceCounter.GetMilliseconds();
+            double lastFrameEndedMillisecond = Counter.GetMilliseconds();
             double lastRenderEndedMillisecond = lastFrameEndedMillisecond;
 
             // Get the time elapsed during the LAST frame.
@@ -111,14 +110,14 @@ inline void Game::Loop()
             // Reset update accumulated time elapsed.
             int    currentUpdateTotalCount = 0;
             double currentUpdateTotalElapsedMillisecond = 0;
-            double lastUpdateBegunMillisecond = PerformanceCounter.GetMilliseconds();
+            double lastUpdateBegunMillisecond = Counter.GetMilliseconds();
             double lastUpdateEndedMillisecond = 0;
             do
             {
                 Context->Update(currentUpdateTotalCount == 0 ? lastUpdateElapsedMillisecond + lastRenderElapsedMillisecond : lastUpdateElapsedMillisecond);
                 ++currentUpdateTotalCount;
 
-                lastUpdateEndedMillisecond = PerformanceCounter.GetMilliseconds();
+                lastUpdateEndedMillisecond = Counter.GetMilliseconds();
 
                 // Get the time elapsed during the LAST update.
                 lastUpdateElapsedMillisecond = lastUpdateEndedMillisecond - lastUpdateBegunMillisecond;

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <FalconEngine/Math/Rectangle.h>
+#include <FalconEngine/Geometry/Rectangle.h>
 #include <FalconEngine/Math/Vector3f.h>
-#include <FalconEngine/Math/Matrix.h>
+#include <FalconEngine/Math/Matrix4f.h>
 
 namespace FalconEngine {
 
@@ -55,7 +55,7 @@ public:
     ///
     /// returns a vector3 in which x,y will be screen coordinates.
     ///
-    Vector3f Project(const Vector3f& worldPosition, const Matrix& projection, const Matrix& view, const Matrix& world) const;
+    Vector3f Project(const Vector3f& worldPosition, const Matrix4f& projection, const Matrix4f& view, const Matrix4f& world) const;
 
     ///
     /// Unproject
@@ -71,7 +71,7 @@ public:
     ///
     /// Returns a world space position.
     ///
-    Vector3f Unproject(const Vector3f& screenPosition, const Matrix& projection, const Matrix& view, const Matrix& world) const;
+    Vector3f Unproject(const Vector3f& screenPosition, const Matrix4f& projection, const Matrix4f& view, const Matrix4f& world) const;
 
 
 protected:

@@ -2,7 +2,6 @@
 
 namespace FalconEngine {
 
-
 Viewport::Viewport()
     : m_left(0.f)
     , m_top(0.f)
@@ -59,10 +58,10 @@ Viewport& Viewport::operator = (const Viewport& rhs)
 //     projection: projection transform matrix
 //     view: view transform matrix
 //     world: world transform matrix
-Vector3f Viewport::Project(const Vector3f& worldPosition, const Matrix& projection, const Matrix& view, const Matrix& world) const
+Vector3f Viewport::Project(const Vector3f& worldPosition, const Matrix4f& projection, const Matrix4f& view, const Matrix4f& world) const
 {
-    Matrix transform = projection * view * world;
-    Vector4 ndcPosition = transform * Vector4(worldPosition, 1);
+    Matrix4f transform = projection * view * world;
+    Vector4f ndcPosition = transform * Vector4f(worldPosition, 1);
 
     Vector3f screenPosition;
     screenPosition.x = m_left + Width() * 0.5f * (1.f + ndcPosition.x);
@@ -77,9 +76,9 @@ Vector3f Viewport::Project(const Vector3f& worldPosition, const Matrix& projecti
 // The Z component of screenPosition will be used as a ratio of the depth of the
 // view frustum, using 0.f means the world space position returned will be at
 // the near plane, using 1.f will place it at the far plane.
-Vector3f Viewport::Unproject(const Vector3f& screenPosition, const Matrix& projection, const Matrix& view, const Matrix& world) const
+Vector3f Viewport::Unproject(const Vector3f& screenPosition, const Matrix4f& projection, const Matrix4f& view, const Matrix4f& world) const
 {
-    Vector4 ndcPosition;
+    Vector4f ndcPosition;
 
     // Inverse of windows transform, see Viewport::Project.
     ndcPosition.x = 2.f * (screenPosition.x - m_left) / Width() - 1.f;
@@ -87,8 +86,8 @@ Vector3f Viewport::Unproject(const Vector3f& screenPosition, const Matrix& proje
     ndcPosition.z = screenPosition.z - m_minDepth;
     ndcPosition.w = 1.f;
 
-    Matrix inverseTransform = glm::inverse(projection * view * world);
-    Vector4 worldPosition = inverseTransform * ndcPosition;
+    Matrix4f inverseTransform = glm::inverse(projection * view * world);
+    Vector4f worldPosition = inverseTransform * ndcPosition;
 
     worldPosition /= worldPosition.w;
 

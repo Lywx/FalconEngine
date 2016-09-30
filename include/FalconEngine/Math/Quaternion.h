@@ -7,7 +7,7 @@
 namespace FalconEngine {
 
 // Forward declaration for circular dependency
-class Matrix;
+class Matrix4f;
 class Quaternion : public glm::quat
 {
 public:
@@ -18,7 +18,7 @@ public:
     // NEW
     // static Quaternion FromEulerAngle(const Vector3& axis, float angle);;
 
-    static Quaternion FromRotationMatrix(const Matrix& rotation);
+    static Quaternion FromRotationMatrix(const Matrix4f& rotation);
 
     Quaternion() : glm::quat() { }
     Quaternion

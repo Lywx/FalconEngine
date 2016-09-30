@@ -1,5 +1,5 @@
 #include <FalconEngine/Math/Quaternion.h>
-#include <FalconEngine/Math/Matrix.h>
+#include <FalconEngine/Math/Matrix4f.h>
 
 namespace FalconEngine {
 
@@ -11,7 +11,7 @@ Quaternion Quaternion::FromAxisAngle(const Vector3f& axis, float angle)
     return Quaternion(axis.x * sin_angle, axis.y * sin_angle, axis.z * sin_angle, cosf(angle * 0.5f));
 }
 
-Quaternion Quaternion::FromRotationMatrix(const Matrix& rotation)
+Quaternion Quaternion::FromRotationMatrix(const Matrix4f& rotation)
 {
     Quaternion result;
 

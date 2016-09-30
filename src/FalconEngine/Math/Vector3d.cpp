@@ -21,11 +21,15 @@ Vector3d::Vector3d(const float x, const float y, const int z) : glm::ivec3(x, y,
 /************************************************************************/
 Vector3d::Vector3d(glm::ivec3 v) : glm::ivec3(v) { }
 
+// Explicit Conversion
+Vector3d::operator glm::ivec3() const
+{
+    return glm::ivec3(x, y, z);
+}
+
 Vector3d::operator Vector3f() const
 {
-    return Vector3f(static_cast<float>(x),
-                    static_cast<float>(y),
-                    static_cast<float>(z));
+    return Vector3f(x, y, z);
 }
 
 }

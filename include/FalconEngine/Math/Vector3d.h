@@ -22,7 +22,8 @@ public:
     Vector3d(glm::ivec3 v);
 
     // Explicit Conversion
-    operator Vector3f() const;
+    explicit operator glm::ivec3() const;
+    explicit operator Vector3f() const;
 };
 
 }

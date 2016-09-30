@@ -1,14 +1,13 @@
-#pragma once
-
 /* static */
 inline Vector3f Vector3f::Normalize(const Vector3f& v)
 {
     if (v == Zero)
     {
-        throw std::runtime_error("try to normalize zero vector");
+        throw std::invalid_argument("Cannot normalize a zero vector\n");
     }
 
-    return glm::normalize(glm::vec3(v.x, v.y, v.z));
+    auto vec = glm::vec3(v);
+    return glm::normalize(vec);
 }
 
 /* static */

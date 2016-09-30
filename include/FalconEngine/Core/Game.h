@@ -1,8 +1,8 @@
 #pragma once
 
 #include "GameContext.h"
+#include "GameCounter.h"
 #include "GameDebug.h"
-#include "GamePerformanceCounter.h"
 
 namespace FalconEngine {
 
@@ -15,7 +15,7 @@ public:
 
     // Runtime Members
     GameContext *Context;
-    GamePerformanceCounter PerformanceCounter;
+    GameCounter Counter;
 
     explicit Game(GameContext *context);
 

@@ -1,6 +1,6 @@
 #include <FalconEngine/Content/Path.h>
+#include <FalconEngine/Core/Core.h>
 
-#include <boost/predef.h>
 #include <boost/filesystem.hpp>
 
 #if BOOST_OS_WINDOWS

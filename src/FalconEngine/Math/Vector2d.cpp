@@ -21,8 +21,12 @@ Vector2d::Vector2d(const glm::ivec2 v) : glm::ivec2(v) {}
 
 Vector2d::operator Vector2f() const
 {
-    return Vector2f(static_cast<float>(x),
-                    static_cast<float>(y));
+    return Vector2f(float(x), float(y));
+}
+
+Vector2d::operator glm::ivec2() const
+{
+    return glm::ivec2(x, y);
 }
 
 }

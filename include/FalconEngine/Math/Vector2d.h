@@ -18,9 +18,12 @@ public:
 
     Vector2d(const float x, const float y);
 
+    // Implicit Conversion
     Vector2d(const glm::ivec2 v);
 
-    operator Vector2f() const;
+    // Explicit Conversion
+    explicit operator glm::ivec2() const;
+    explicit operator Vector2f() const;
 };
 
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Math.h"
-#include "Matrix.h"
+#include "Matrix4f.h"
 #include "Vector3f.h"
 
 namespace FalconEngine {
@@ -12,52 +12,52 @@ public:
     Handedness() { }
     virtual ~Handedness() { }
 
-    virtual Vector3f Right(const Matrix& view) const = 0;
-    virtual Vector3f Left(const Matrix& view) const { return -Right(view); };
+    virtual Vector3f Right(const Matrix4f& view) const = 0;
+    virtual Vector3f Left(const Matrix4f& view) const { return -Right(view); };
 
-    virtual Vector3f Up(const Matrix& view) const = 0;
-    virtual Vector3f Down(const Matrix& view) const { return -Up(view); };
+    virtual Vector3f Up(const Matrix4f& view) const = 0;
+    virtual Vector3f Down(const Matrix4f& view) const { return -Up(view); };
 
-    virtual Vector3f Forward(const Matrix& view) const = 0;
-    virtual Vector3f Backward(const Matrix& view) const { return -Forward(view); };
+    virtual Vector3f Forward(const Matrix4f& view) const = 0;
+    virtual Vector3f Backward(const Matrix4f& view) const { return -Forward(view); };
 
-    virtual Matrix CreatePerspective(const float& width, const float& height, const float& dmin, const float& dmax) const = 0;
-    virtual void CreatePerspective(const float& width, const float& height, const float& dmin, const float& dmax, Matrix& result) const = 0;
+    virtual Matrix4f CreatePerspective(const float& width, const float& height, const float& dmin, const float& dmax) const = 0;
+    virtual void CreatePerspective(const float& width, const float& height, const float& dmin, const float& dmax, Matrix4f& result) const = 0;
 
-    virtual Matrix CreatePerspectiveFieldOfView(const float& fovy, const float& aspectRatio, const float& dmin, const float& dmax) const = 0;
-    virtual void CreatePerspectiveFieldOfView(const float& fovy, const float& aspectRatio, const float& dmin, const float& dmax, Matrix& result) const = 0;
+    virtual Matrix4f CreatePerspectiveFieldOfView(const float& fovy, const float& aspectRatio, const float& dmin, const float& dmax) const = 0;
+    virtual void CreatePerspectiveFieldOfView(const float& fovy, const float& aspectRatio, const float& dmin, const float& dmax, Matrix4f& result) const = 0;
 
-    virtual Matrix CreateLookAt(const Vector3f& eyePosition, const Vector3f& targetPosition, const Vector3f& up) const = 0;
-    virtual void CreateLookAt(const Vector3f& eyePosition, const Vector3f& targetPosition, const Vector3f& up, Matrix& result) const = 0;
+    virtual Matrix4f CreateLookAt(const Vector3f& eyePosition, const Vector3f& targetPosition, const Vector3f& up) const = 0;
+    virtual void CreateLookAt(const Vector3f& eyePosition, const Vector3f& targetPosition, const Vector3f& up, Matrix4f& result) const = 0;
 };
 
 class LeftHandedness : public Handedness
 {
 public:
     /// Extract right vector from the view matrix, assuming the view transfrom matrix is in the form of vector on the right
-    Vector3f Right(const Matrix & view) const override
+    Vector3f Right(const Matrix4f & view) const override
     {
         return Vector3f(view[0][0], view[1][0], view[2][0]);
     };
 
     /// Extract up vector from the view matrix, assuming the view transfrom matrix is in the form of vector on the right
-    Vector3f Up(const Matrix & view) const override
+    Vector3f Up(const Matrix4f & view) const override
     {
         return Vector3f(view[0][1], view[1][1], view[2][1]);
     };
 
     /// Extract forward vector from the view matrix, assuming the view transfrom matrix is in the form of vector on the right
-    Vector3f Forward(const Matrix & view) const override
+    Vector3f Forward(const Matrix4f & view) const override
     {
         return -Vector3f(view[0][2], view[1][2], view[2][2]);
     };
 
     /// Create Left-handed symmetric perspective transform matrix, assuming vector on the right side.
-    Matrix CreatePerspective(const float& width, const float& height, const float& dmin, const float& dmax) const override
+    Matrix4f CreatePerspective(const float& width, const float& height, const float& dmin, const float& dmax) const override
     {
-        Matrix result;
+        Matrix4f result;
 
-        result = Matrix::Zero;
+        result = Matrix4f::Zero;
 
         result[0][0] = 2.f * dmin / width;
         result[1][1] = 2.f * dmin / height;
@@ -70,13 +70,13 @@ public:
     }
 
     /// Create left-handed symmetric perspective transform matrix, assuming vector on the right side.
-    void CreatePerspective(const float& width, const float& height, const float& dmin, const float& dmax, Matrix& result) const override
+    void CreatePerspective(const float& width, const float& height, const float& dmin, const float& dmax, Matrix4f& result) const override
     {
         result = CreatePerspective(width, height, dmin, dmax);
     }
 
     /// Create left-handed symmetric perspective transform matrix based on the field of view, assuming the vector is on the right side.
-    Matrix CreatePerspectiveFieldOfView(const float& fovy, const float& aspectRatio, const float& dmin, const float& dmax) const override
+    Matrix4f CreatePerspectiveFieldOfView(const float& fovy, const float& aspectRatio, const float& dmin, const float& dmax) const override
     {
         assert(0.f <= fovy && fovy <= Pi);
         assert(0.f < dmin);
@@ -85,7 +85,7 @@ public:
 
         float theta_u = fovy / 2.f;
 
-        Matrix result = Matrix::Zero;
+        Matrix4f result = Matrix4f::Zero;
 
         // Based on P47, David H. Eberly 3D Game Engine Design_ A Practical Approach to Real-Time Computer Graphics, 2nd, 2006
         //
@@ -117,13 +117,13 @@ public:
     }
 
     /// Create left-handed perspective matrix based on the field of view, assuming the vector is on the right side.
-    void CreatePerspectiveFieldOfView(const float& fovy, const float& aspectRatio, const float& dmin, const float& dmax, Matrix &result) const override
+    void CreatePerspectiveFieldOfView(const float& fovy, const float& aspectRatio, const float& dmin, const float& dmax, Matrix4f &result) const override
     {
         result = CreatePerspectiveFieldOfView(fovy, aspectRatio, dmin, dmax);
     }
 
     /// Create left-handed view transform matrix, assuming the vector is on the right side.
-    Matrix CreateLookAt(const Vector3f & eyePosition, const Vector3f & targetPosition, const Vector3f & up) const override
+    Matrix4f CreateLookAt(const Vector3f & eyePosition, const Vector3f & targetPosition, const Vector3f & up) const override
     {
         // Assumed relations:
         // D = normal(targetPosition - eyePosition)
@@ -143,7 +143,7 @@ public:
         Vector3f r = Vector3f::Normalize(Vector3f::Cross(up, d));
         Vector3f u = Vector3f::Cross(d, r);
 
-        Matrix result = Matrix::Identity;
+        Matrix4f result = Matrix4f::Identity;
         result[0][0] = r.x;
         result[1][0] = r.y;
         result[2][0] = r.z;
@@ -163,7 +163,7 @@ public:
     }
 
     /// Create left-handed view transform matrix, assuming the vector is on the right side.
-    void CreateLookAt(const Vector3f & eyePosition, const Vector3f & targetPosition, const Vector3f & up, Matrix & result) const override
+    void CreateLookAt(const Vector3f & eyePosition, const Vector3f & targetPosition, const Vector3f & up, Matrix4f & result) const override
     {
         result = CreateLookAt(eyePosition, targetPosition, up);
     }
@@ -172,29 +172,29 @@ public:
 class RightHandedness : public Handedness
 {
     /// Extract right vector from the view matrix, assuming the view transfrom matrix is in the form of vector on the right
-    Vector3f Right(const Matrix & view) const override
+    Vector3f Right(const Matrix4f & view) const override
     {
         return Vector3f(view[0][0], view[1][0], view[2][0]);
     };
 
     /// Extract up vector from the view matrix, assuming the view transfrom matrix is in the form of vector on the right
-    Vector3f Up(const Matrix & view) const override
+    Vector3f Up(const Matrix4f & view) const override
     {
         return Vector3f(view[0][1], view[1][1], view[2][1]);
     };
 
     /// Extract forward vector from the view matrix, assuming the view transfrom matrix is in the form of vector on the right
-    Vector3f Forward(const Matrix & view) const override
+    Vector3f Forward(const Matrix4f & view) const override
     {
         return Vector3f(view[0][2], view[1][2], view[2][2]);
     };
 
     /// Create right-handed symmetric perspective transform matrix, assuming vector on the right side.
-    Matrix CreatePerspective(const float& width, const float& height, const float& dmin, const float& dmax) const override
+    Matrix4f CreatePerspective(const float& width, const float& height, const float& dmin, const float& dmax) const override
     {
-        Matrix result;
+        Matrix4f result;
 
-        result = Matrix::Zero;
+        result = Matrix4f::Zero;
 
         result[0][0] = 2.f * dmin / width;
         result[1][1] = 2.f * dmin / height;
@@ -207,13 +207,13 @@ class RightHandedness : public Handedness
     }
 
     /// Create right-handed symmetric perspective transform matrix, assuming vector on the right side.
-    void CreatePerspective(const float& width, const float& height, const float& dmin, const float& dmax, Matrix& result) const override
+    void CreatePerspective(const float& width, const float& height, const float& dmin, const float& dmax, Matrix4f& result) const override
     {
         result = CreatePerspective(width, height, dmin, dmax);
     }
 
     /// Create right-handed symmetric perspective transform matrix based on the field of view, assuming the vector is on the right side.
-    Matrix CreatePerspectiveFieldOfView(const float& fovy, const float& aspectRatio, const float& dmin, const float& dmax) const override
+    Matrix4f CreatePerspectiveFieldOfView(const float& fovy, const float& aspectRatio, const float& dmin, const float& dmax) const override
     {
         assert(0.f <= fovy && fovy <= Pi);
         assert(0.f < dmin);
@@ -222,7 +222,7 @@ class RightHandedness : public Handedness
 
         float theta_u = fovy / 2.f;
 
-        Matrix result = Matrix::Zero;
+        Matrix4f result = Matrix4f::Zero;
 
         // Based on P47, David H. Eberly 3D Game Engine Design_ A Practical Approach to Real-Time Computer Graphics, 2nd, 2006
         //
@@ -254,13 +254,13 @@ class RightHandedness : public Handedness
     }
 
     /// Create right-handed perspective matrix based on the field of view, assuming the vector is on the right side.
-    void CreatePerspectiveFieldOfView(const float& fovy, const float& aspectRatio, const float& dmin, const float& dmax, Matrix &result) const override
+    void CreatePerspectiveFieldOfView(const float& fovy, const float& aspectRatio, const float& dmin, const float& dmax, Matrix4f &result) const override
     {
         result = CreatePerspectiveFieldOfView(fovy, aspectRatio, dmin, dmax);
     }
 
     /// Create right-handed view transform matrix, assuming the vector is on the right side.
-    Matrix CreateLookAt(const Vector3f & eyePosition, const Vector3f & targetPosition, const Vector3f & up) const override
+    Matrix4f CreateLookAt(const Vector3f & eyePosition, const Vector3f & targetPosition, const Vector3f & up) const override
     {
         // Assumed relations:
         // D = normal(targetPosition - eyePosition)
@@ -280,7 +280,7 @@ class RightHandedness : public Handedness
         Vector3f r = Vector3f::Normalize(Vector3f::Cross(up, d));
         Vector3f u = Vector3f::Cross(d, r);
 
-        Matrix result = Matrix::Identity;
+        Matrix4f result = Matrix4f::Identity;
 
         result[0][0] = r.x;
         result[1][0] = r.y;
@@ -301,7 +301,7 @@ class RightHandedness : public Handedness
     }
 
     /// Create left-handed view transform matrix, assuming the vector is on the right side.
-    void CreateLookAt(const Vector3f & eyePosition, const Vector3f & targetPosition, const Vector3f & up, Matrix & result) const override
+    void CreateLookAt(const Vector3f & eyePosition, const Vector3f & targetPosition, const Vector3f & up, Matrix4f & result) const override
     {
         result = CreateLookAt(eyePosition, targetPosition, up);
     }

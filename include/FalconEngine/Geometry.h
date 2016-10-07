@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Geometry/Model.h"
+#include <FalconEngine/GeometryInclude.h>
 
-#include "Geometry/GeometryMesh.h"
-#include "Geometry/GeometryModel.h"
+#include <FalconEngine/Geometry/Geometry.h>
+#include <FalconEngine/Geometry/TriangleGeometry.h>
 
-
+#include <FalconEngine/Geometry/Mesh.h>
+#include <FalconEngine/Geometry/TriangleMesh.h>

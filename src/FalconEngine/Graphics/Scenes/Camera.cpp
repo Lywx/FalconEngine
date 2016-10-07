@@ -5,17 +5,17 @@ namespace FalconEngine {
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Camera::Camera(const Handedness *handedness)
+Camera::Camera(const Handedness &handedness)
     : Camera(handedness, PiOver4, 1.77777f)
 {
 }
 
-Camera::Camera(const Handedness *handedness, const Viewport& viewport, float nearPlane /*=0.1f*/, float farPlane /*=1000.f*/)
+Camera::Camera(const Handedness &handedness, const Viewport& viewport, float nearPlane /*=0.1f*/, float farPlane /*=1000.f*/)
     : Camera(handedness, PiOver4, viewport.Aspect(), nearPlane, farPlane)
 {
 }
 
-Camera::Camera(const Handedness *handedness, float fovy, float aspectRatio, float nearPlane /*=0.1f*/, float farPlane /*=1000.f*/)
+Camera::Camera(const Handedness &handedness, float fovy, float aspectRatio, float nearPlane /*=0.1f*/, float farPlane /*=1000.f*/)
     : m_position(Vector3f::Zero)
     , m_rotation(Quaternion::Identity)
     , m_view(Matrix4f::Identity)
@@ -26,7 +26,7 @@ Camera::Camera(const Handedness *handedness, float fovy, float aspectRatio, floa
     , m_aspectRatio(aspectRatio)
     , m_handedness(handedness)
 {
-    m_projection = m_handedness->CreatePerspectiveFieldOfView(m_fovy, m_aspectRatio, m_near, m_far);
+    m_projection = m_handedness.CreatePerspectiveFieldOfView(m_fovy, m_aspectRatio, m_near, m_far);
 }
 
 Camera::~Camera()
@@ -34,8 +34,9 @@ Camera::~Camera()
 }
 
 /************************************************************************/
-/* Camera Movement                                                      */
+/* Public Members                                                       */
 /************************************************************************/
+
 const Vector3f& Camera::Position() const
 {
     return m_position;
@@ -43,32 +44,32 @@ const Vector3f& Camera::Position() const
 
 Vector3f Camera::Forward() const
 {
-    return m_handedness->Forward(m_view);
+    return m_handedness.Forward(m_view);
 }
 
 Vector3f Camera::Backward() const
 {
-    return m_handedness->Backward(m_view);
+    return m_handedness.Backward(m_view);
 }
 
 Vector3f Camera::Left() const
 {
-    return m_handedness->Left(m_view);
+    return m_handedness.Left(m_view);
 }
 
 Vector3f Camera::Right() const
 {
-    return m_handedness->Right(m_view);
+    return m_handedness.Right(m_view);
 }
 
 Vector3f Camera::Up() const
 {
-    return m_handedness->Up(m_view);
+    return m_handedness.Up(m_view);
 }
 
 Vector3f Camera::Down() const
 {
-    return m_handedness->Down(m_view);
+    return m_handedness.Down(m_view);
 }
 
 const Quaternion& Camera::Rotation() const
@@ -109,7 +110,7 @@ void Camera::MoveDown(float distance)
 void Camera::Rotate(const Matrix4f& rotation)
 {
     m_world = rotation * m_world;
-    m_view = glm::inverse(m_world);
+    m_view = Matrix4f::Inverse(m_world);
 }
 
 void Camera::Rotate(float pitch, float yaw, float roll)
@@ -121,9 +122,6 @@ void Camera::Rotate(float pitch, float yaw, float roll)
     m_rotation = rotation_yaw * rotation_pitch * rotation_roll;
 }
 
-/************************************************************************/
-/* Camera Setup                                                         */
-/************************************************************************/
 float Camera::Near() const
 {
     return m_near;
@@ -152,7 +150,7 @@ const Matrix4f& Camera::Projection() const
 void Camera::SetWorld(const Matrix4f& world)
 {
     m_world = world;
-    m_view = glm::inverse(m_world);
+    m_view = Matrix4f::Inverse(m_world);
 }
 
 void Camera::SetView(const Matrix4f& view)
@@ -179,31 +177,28 @@ void Camera::SetPosition(const Vector3f& position)
 {
     m_position = position;
     m_world = Matrix4f::CreateTranslation(position) * m_world;
-    m_view = glm::inverse(m_world);
+    m_view = Matrix4f::Inverse(m_world);
 }
 
 void Camera::SetPerspectiveProjection(float fovy, float aspectRatio, float nearPlane, float farPlane)
 {
     m_near = nearPlane;
     m_far = farPlane;
-    m_projection = m_handedness->CreatePerspectiveFieldOfView(fovy, aspectRatio, nearPlane, farPlane);
+    m_projection = m_handedness.CreatePerspectiveFieldOfView(fovy, aspectRatio, nearPlane, farPlane);
 }
 
 void Camera::LookAt(const Vector3f& from, const Vector3f& to, const Vector3f& up)
 {
     m_position = from;
-    m_view = m_handedness->CreateLookAt(from, to, up);
-    m_world = glm::inverse(m_view);
+    m_view = m_handedness.CreateLookAt(from, to, up);
+    m_world = Matrix4f::Inverse(m_view);
     m_rotation = Quaternion::FromRotationMatrix(m_world);
 }
 
-/************************************************************************/
-/* Camera Update                                                        */
-/************************************************************************/
 void Camera::Update(double elapsed)
 {
     m_world = Matrix4f::FromRotation(m_rotation) *  Matrix4f::CreateTranslation(m_position);
-    m_view = glm::inverse(m_world);
+    m_view = Matrix4f::Inverse(m_world);
 }
 
 }

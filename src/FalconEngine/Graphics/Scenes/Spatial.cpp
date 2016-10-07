@@ -7,23 +7,32 @@ FALCON_ENGINE_IMPLEMENT_RTTI(Spatial, ControlledObject);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Spatial::Spatial()
+
+Spatial::Spatial() :
+    WorldTransformIsCurrent(false),
+    WorldBoundIsCurrent(false),
+    Parent(nullptr)
 {
 }
 
 Spatial::~Spatial()
 {
+    // The Parent member is not reference counted by Spatial, so do not
+    // release it here. The memory management responsibility belongs to
+    // the owner of each Spatial object.
 }
 
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-void Spatial::Update(double elaped)
+
+void Spatial::Update(double elaped, bool initiator)
 {
     // Update any controllers associated with this object.
     UpdateControllers(elaped);
 
-    UpdateWorldData(elaped);
+    // Update spatial owned data
+    UpdateWorldTransform(elaped);
     UpdateWorldBound();
 
     if (initiator)
@@ -35,7 +44,8 @@ void Spatial::Update(double elaped)
 /************************************************************************/
 /* Protected Members                                                    */
 /************************************************************************/
-void Spatial::UpdateWorldData(double elaped)
+
+void Spatial::UpdateWorldTransform(double elaped)
 {
     // Update world transforms.
     if (!WorldTransformIsCurrent)
@@ -61,4 +71,3 @@ void Spatial::UpdateWorldBoundPropagation()
 }
 
 }
-

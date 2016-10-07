@@ -29,6 +29,11 @@ Vector4f::Vector4f(const Vector3f& v, const float w)
 {
 }
 
+Vector4f::Vector4f(const Vector3f& v)
+    : glm::vec4(v, 0)
+{
+}
+
 // Implicit Conversion
 Vector4f::Vector4f(const glm::vec4& v)
     : glm::vec4(v)

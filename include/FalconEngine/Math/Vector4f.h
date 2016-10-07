@@ -22,6 +22,7 @@ public:
     Vector4f(const float x, const float y, const float z, const float w);
 
     Vector4f(const Vector3f& v, const float w);
+    Vector4f(const Vector3f& v);
 
     // Implicit Conversion
     Vector4f(const glm::vec4& v);

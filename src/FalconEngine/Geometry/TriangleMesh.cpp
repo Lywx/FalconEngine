@@ -3,11 +3,42 @@
 namespace FalconEngine {
 
 /************************************************************************/
+/* TriangleVertexData Members                                           */
+/************************************************************************/
+TriangleVertexData::TriangleVertexData(int vertexNum, int vertexRowNum,
+                                       int vertexColNum) :
+    VertexNum(vertexNum),
+    VertexRowNum(vertexRowNum),
+    VertexColNum(vertexColNum),
+    VertexList(std::make_shared<TriangleVertexList>())
+{
+    VertexList->reserve(vertexNum);
+}
+
+
+/************************************************************************/
+/* TriangleIndexData Members                                            */
+/************************************************************************/
+TriangleIndexData::TriangleIndexData(int indexNum, int indexRowNum,
+                                     int indexColNum) :
+    IndexNum(indexNum),
+    IndexRowNum (indexRowNum),
+    IndexColNum(indexColNum),
+    IndexList(std::make_shared<TriangleIndexList>())
+{
+    IndexList->reserve(indexNum);
+}
+
+/************************************************************************/
+/* TriangleMesh Members                                                 */
+/************************************************************************/
+
+/************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
 TriangleMesh::TriangleMesh() :
-    m_vertexes(nullptr),
-    m_indexes(nullptr)
+    m_vertexList(nullptr),
+    m_indexList(nullptr)
 {
 }
 
@@ -21,20 +52,22 @@ TriangleMesh::TriangleMesh() :
 
 void TriangleMesh::LoadMesh(std::initializer_list<std::wstring> fileNames)
 {
-    auto vertexData = LoadVertexes(*fileNames.begin());
-    auto indexData = LoadIndexes(*(fileNames.begin() + 1));
+    auto fileNameItr = fileNames.begin();
+
+    auto vertexDataPtr = LoadVertexes(*fileNameItr);
+    auto indexDataPtr = LoadIndexes(*(fileNameItr + 1));
 
     // This is based on common partition semantics in computational electromagnetism
-    if (vertexData.VertexNum != indexData.IndexNum)
+    if (vertexDataPtr->VertexNum != indexDataPtr->IndexNum)
     {
         throw std::runtime_error("Mesh file is invalid: index number is not equal to vertex number.");
     }
 
-    m_vertexes = vertexData.VertexList;
-    m_indexes = indexData.IndexList;
+    m_vertexList = vertexDataPtr->VertexList;
+    m_indexList = indexDataPtr->IndexList;
 }
 
-TriangleVertexData TriangleMesh::LoadVertexes(std::wstring filename)
+TriangleVertexDataPtr TriangleMesh::LoadVertexes(std::wstring filename)
 {
     using arma::uword;
 
@@ -52,7 +85,9 @@ TriangleVertexData TriangleMesh::LoadVertexes(std::wstring filename)
     // Get the dimension of the vertex matrix
     vertexFile >> vertexNum >> vertexRowNum >> vertexColNum;
 
-    auto vertexData = TriangleVertexData(vertexNum, vertexRowNum, vertexColNum);
+    auto vertexDataPtr = std::make_shared<TriangleVertexData>(vertexNum,
+                         vertexRowNum,
+                         vertexColNum);
 
     // Iterates column by column like this:
     // 0         4.0000    8.0000   12.0000
@@ -67,13 +102,13 @@ TriangleVertexData TriangleMesh::LoadVertexes(std::wstring filename)
     for (auto i = 0; i < vertexNum; ++i)
     {
         vertexFile >> vertexIndex >> vertexX >> vertexY >> vertexZ;
-        vertexData.VertexList->push_back(Vector3f(vertexX, vertexY, vertexZ));
+        vertexDataPtr->VertexList->push_back(Vector3f(vertexX, vertexY, vertexZ));
     }
 
-    return vertexData;
+    return vertexDataPtr;
 }
 
-TriangleIndexData TriangleMesh::LoadIndexes(std::wstring filename)
+TriangleIndexDataPtr TriangleMesh::LoadIndexes(std::wstring filename)
 {
     using arma::uword;
 
@@ -91,7 +126,8 @@ TriangleIndexData TriangleMesh::LoadIndexes(std::wstring filename)
     // Get the dimension of the point matrix
     indexFile >> indexNum >> indexRowNum >> indexColNum;
 
-    auto indexData = TriangleIndexData(indexNum, indexRowNum, indexColNum);
+    auto indexDataPtr = std::make_shared<TriangleIndexData>(indexNum, indexRowNum,
+                        indexColNum);
 
     // Iterates column by column like this:
     // 0    4    8    12
@@ -106,10 +142,10 @@ TriangleIndexData TriangleMesh::LoadIndexes(std::wstring filename)
     for (auto i = 0; i < indexNum; ++i)
     {
         indexFile >> indexIndex >> indexA >> indexB >> indexC;
-        indexData.IndexList->push_back(TriangleIndex(indexA, indexB, indexC));
+        indexDataPtr->IndexList->push_back(TriangleIndex(indexA, indexB, indexC));
     }
 
-    return indexData;
+    return indexDataPtr;
 }
 
 }

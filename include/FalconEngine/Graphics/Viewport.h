@@ -1,12 +1,14 @@
 #pragma once
 
-#include <FalconEngine/Geometry/Rectangle.h>
+#include <FalconEngine/Math/Rectangle2f.h>
+#include <FalconEngine/Math/Vector2f.h>
 #include <FalconEngine/Math/Vector3f.h>
+#include <FalconEngine/Math/Vector4f.h>
 #include <FalconEngine/Math/Matrix4f.h>
 
 namespace FalconEngine {
 
-/// Describe the clip space region.
+// @Summary: Describe the clip space region.
 class Viewport
 {
 public:
@@ -25,52 +27,50 @@ public:
 
     Viewport(const Viewport& rhs);
 
-    float Viewport::Left()   const { return m_left; }
-    float Viewport::Right()  const { return m_right; }
-    float Viewport::Top()    const { return m_top; }
-    float Viewport::Bottom() const { return m_bottom; }
+    inline float Left() const;
 
-    float Viewport::Width() const { return m_right - m_left; }
-    float Viewport::Height() const { return m_bottom - m_top; }
+    inline float Right() const;
 
-    float Viewport::Aspect() const { return Width() / Height(); }
+    inline float Top() const;
 
-    float Viewport::MinDepth() const { return m_minDepth; }
-    float Viewport::MaxDepth() const { return m_maxDepth; }
+    inline float Bottom() const;
 
-    Vector2f Center() const { return Vector2f(Left() + Width() / 2, Top() + Height() / 2); }
-    Rectangle TitleSafeArea() const { return m_titleSafeArea; }
+    inline float Width() const;
 
-    Viewport& operator = (const Viewport& rhs);
+    inline float Height() const;
 
-    ///
-    /// Project
-    ///
-    /// Projects a world space position unto the viewport 2D space.
-    ///
-    /// worldPosition - A 3D space position
-    /// projection  - The projection matrix
-    /// view - The camera's view matrix
-    /// world - The world matrix
-    ///
-    /// returns a vector3 in which x,y will be screen coordinates.
-    ///
+    inline float Aspect() const;
+
+    inline float MinDepth() const;
+
+    inline float MaxDepth() const;
+
+    inline Vector2f Center() const;
+
+    Viewport& operator= (const Viewport& rhs);
+
+    // @Summary: Projects a world space position unto the viewport 2D space.
+    //
+    // @Params:
+    // worldPosition - A 3D space position
+    // projection - The projection matrix
+    // view - The camera's view matrix
+    // world - The world matrix
+    //
+    // @Return: A vector3 in which x,y will be screen coordinates.
     Vector3f Project(const Vector3f& worldPosition, const Matrix4f& projection, const Matrix4f& view, const Matrix4f& world) const;
 
-    ///
-    /// Unproject
-    ///
-    /// Converts a screen position into a world space position. Typically unproject is used to generate a ray that spans the view frustum.
-    /// Unproject the screen coordinate the first time using 0.0 as the Z value, and a second time using 1.0 as the Z value, then calculate
-    /// a direction vector between these two world space points and normalize it. The resulting ray may be used to perform interesection testing.
-    ///
-    /// screenPosition - A screen space position, the z component represents a ratio of depth.
-    /// projection  - The projection matrix
-    /// view - The camera's view matrix
-    /// world - The world matrix
-    ///
-    /// Returns a world space position.
-    ///
+    // @Summary: Converts a screen position into a world space position. Typically unproject is used to generate a ray that spans the view frustum.
+    // Unproject the screen coordinate the first time using 0.0 as the Z value, and a second time using 1.0 as the Z value, then calculate
+    // a direction vector between these two world space points and normalize it. The resulting ray may be used to perform interesection testing.
+    //
+    // @Params:
+    // screenPosition - A screen space position, the z component represents a ratio of depth.
+    // projection - The projection matrix
+    // view - The camera's view matrix
+    // world - The world matrix
+    //
+    // @Return: A world space position.
     Vector3f Unproject(const Vector3f& screenPosition, const Matrix4f& projection, const Matrix4f& view, const Matrix4f& world) const;
 
 
@@ -85,9 +85,11 @@ protected:
     float m_maxDepth;
 
     float m_titleSafeRatio;
-    Rectangle m_titleSafeArea;
+    Rectangle2f m_titleSafeArea;
 
     void CalculateTitleSafeArea();
 };
+
+#include "Viewport.inl"
 
 }

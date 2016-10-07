@@ -1,13 +1,15 @@
 #pragma once
 
+#include <FalconEngine/Graphics/Bound.h>
+#include <FalconEngine/Graphics/Resources/VertexBuffer.h>
+#include <FalconEngine/Graphics/Resources/VertexFormat.h>
+#include <FalconEngine/Graphics/Resources/IndexBuffer.h>
 #include <FalconEngine/Graphics/Scenes/Spatial.h>
 #include <FalconEngine/Graphics/Shaders/VisualEffectInstance.h>
-#include <FalconEngine/Graphics/Resources/VertexBuffer.h>
-#include <FalconEngine/Graphics/Resources/IndexBuffer.h>
 
 namespace FalconEngine {
 
-// This class contains information about how the renderer would draw the visual
+// @Summary: This class contains information about how the renderer would draw the visual
 // element.
 enum class VisualPrimitiveType
 {
@@ -21,6 +23,7 @@ enum class VisualPrimitiveType
     ENUM_COUNT
 };
 
+// @Summary: This class .
 class Visual : public Spatial
 {
 protected:
@@ -29,29 +32,23 @@ protected:
 
 public:
 
-    ~Visual();
+    virtual ~Visual();
 
-    VisualPrimitiveType PrimitiveType;
+    VisualPrimitiveType     PrimitiveType;
+    VertexFormatPtr         VertexFormat;
+    VertexBufferPtr         VertexBuffer;
+    IndexBufferPtr          IndexBuffer;
+    VisualEffectInstancePtr VisualEffectInstance;
 
-    //inline void SetVertexFormat(VertexFormat *vformat);
-    //inline const VertexFormat *GetVertexFormat() const;
-    //inline VertexFormat *GetVertexFormat();
+    Bound                   ModelBound;
 
-    //inline void SetVertexBuffer(VertexBuffer *vbuffer);
-    //inline const VertexBuffer *GetVertexBuffer() const;
-    //inline VertexBuffer *GetVertexBuffer();
+protected:
 
-    //inline void SetIndexBuffer(IndexBuffer *ibuffer);
-    //inline const IndexBuffer *GetIndexBuffer() const;
-    //inline IndexBuffer *GetIndexBuffer();
-
-    inline const Bound& GetModelBound() const;
-    inline Bound& GetModelBound();
-
-    //// Access to the visual effect for drawing the object.
-    //inline void SetEffectInstance(VisualEffectInstance *effect);
-    //inline VisualEffectInstance *GetEffectInstance() const;
+    virtual void UpdateWorldBound() override;
+    virtual void UpdateModelBound();
 
 };
+
+typedef std::shared_ptr<Visual> VisualPtr;
 
 }

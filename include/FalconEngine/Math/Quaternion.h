@@ -2,7 +2,7 @@
 
 #include <glm/gtc/quaternion.hpp>
 
-#include "Vector3f.h"
+#include <FalconEngine/Math/Vector3f.h>
 
 namespace FalconEngine {
 

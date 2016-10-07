@@ -25,7 +25,7 @@ class PlatformVertexBuffer;
 
 class PlatformRenderState;
 
-class Renderer
+class FALCON_ENGINE_GRAPHICS_ITEM Renderer
 {
 public:
     Renderer();
@@ -35,11 +35,56 @@ public:
     typedef std::map<const VertexBuffer *, PlatformVertexBuffer *> VertexBufferMap;
     typedef std::map<const IndexBuffer *,  PlatformIndexBuffer *>  IndexBufferMap;
 
-    void Enable(const VertexBuffer *vbuffer, unsigned int streamIndex = 0, unsigned int offset = 0);
+    /************************************************************************/
+    // Vertex format management. The vertex format object must have been
+    // already allocated and its attributes and stride set by the application
+    // code.
+
+    // @Summary: Register the vertex format with the platform dependent one in the renderer
+    // implementation. If there is a mapping existing, then do nothing.
+    void Bind(const VertexFormat *vertexFormat);
+
+    // @Summary: Unregister the vertex format with the platform dependent one in the renderer
+    // implementation and delete the binded platform dependent vertex format.
+    void Unbind(const VertexFormat *vertexFormat);
+
+    // @Summary: Use the corresponding platform dependent vertex format to launch the renderer
+    // into desirable state. If there is no corresponding platform dependent
+    // vertex format, then create one and bind it on-the-fly.
+    void Enable(const VertexFormat *vertexFormat);
+
+    // @Summary: Use the corresponding platform dependent vertex format to disable used
+    // state. If there is no corresponding platform dependent vertex format,
+    // then do nothing.
+    void Disable(const VertexFormat *vertexFormat);
+
+    // NOTE(Wuxiang): I don't have the global version that allow controlling
+    // multiple renderer in one method, since I don't support multi-threaded
+    // rendering at this stage.
 
     /************************************************************************/
-    /* States                                                               */
+    // Vertex buffer management. The vertex buffer object must have been
+    // already allocated by the application code.
+
+    void Bind(const VertexBuffer *vertexBuffer);
+
+    void Unbind(const VertexBuffer *vertexBuffer);
+
+    void Enable(const VertexBuffer *vertexBuffer, size_t offset = 0);
+
+    void Disable(const VertexBuffer *vertexBuffer);
+
+    void Unlock(const VertexBuffer *vertexBuffer);
+
+    void Update(const VertexBuffer *vertexBuffer);
+
     /************************************************************************/
+    // Index buffer management. The index buffer object must have been
+    // already allocated by the application code.
+
+    /************************************************************************/
+    // Global state management.
+
     void SetBlendState(const BlendState *alphaState);
     void SetCullState(const CullState *cullState);
     void SetDepthState(const DepthState *depthState);
@@ -47,9 +92,11 @@ public:
     void SetStencilState(const StencilState *stencilState);
     void SetWireframeState(const WireframeState *wireState);
 
+    /************************************************************************/
     // Viewport management.  The viewport is specified in right-handed screen
     // coordinates.  The origin is the lower-left corner of the screen, the
     // y-axis points upward, and the x-axis points rightward.
+
     void SetViewport(int xPosition, int yPosition, int width, int height);
     void GetViewport(int& xPosition, int& yPosition, int& width, int& height) const;
     void SetDepthRange(float zMin, float zMax);
@@ -82,8 +129,9 @@ public:
 private:
     void DrawPrimitive(const Visual *visual);
 
-    // TODO(Wuxiang)
     VertexBufferMap m_vertexBuffers;
+    VertexFormatMap m_vertexFormats;
+    IndexBufferMap  m_indexBuffers;
 
     // TODO(Wuxiang)
     PlatformRenderState *m_renderState;

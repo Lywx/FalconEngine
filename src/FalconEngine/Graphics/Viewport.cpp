@@ -2,37 +2,41 @@
 
 namespace FalconEngine {
 
+/************************************************************************/
+/* Constructors and Destructor                                          */
+/************************************************************************/
+
 Viewport::Viewport()
-    : m_left(0.f)
-    , m_top(0.f)
-    , m_right(0.f)
-    , m_bottom(0.f)
-    , m_minDepth(0.f)
-    , m_maxDepth(0.f)
-    , m_titleSafeRatio(0.f)
+    : m_left(0.f),
+      m_top(0.f),
+      m_right(0.f),
+      m_bottom(0.f),
+      m_minDepth(0.f),
+      m_maxDepth(0.f),
+      m_titleSafeRatio(0.f)
 {
 }
 
 Viewport::Viewport(const float& left, const float& top, const float& right, const float& bottom, const float& minDepth, const float& maxDepth, const float& titleSafeRatio /*= 0.8f*/)
-    : m_left(left)
-    , m_top(top)
-    , m_right(right)
-    , m_bottom(bottom)
-    , m_minDepth(minDepth)
-    , m_maxDepth(maxDepth)
-    , m_titleSafeRatio(titleSafeRatio)
+    : m_left(left),
+      m_top(top),
+      m_right(right),
+      m_bottom(bottom),
+      m_minDepth(minDepth),
+      m_maxDepth(maxDepth),
+      m_titleSafeRatio(titleSafeRatio)
 {
     CalculateTitleSafeArea();
 }
 
 Viewport::Viewport(const Viewport& rhs)
-    : m_left(rhs.m_left)
-    , m_top(rhs.m_top)
-    , m_right(rhs.m_right)
-    , m_bottom(rhs.m_bottom)
-    , m_minDepth(rhs.m_minDepth)
-    , m_maxDepth(rhs.m_maxDepth)
-    , m_titleSafeRatio(rhs.m_titleSafeRatio)
+    : m_left(rhs.m_left),
+      m_top(rhs.m_top),
+      m_right(rhs.m_right),
+      m_bottom(rhs.m_bottom),
+      m_minDepth(rhs.m_minDepth),
+      m_maxDepth(rhs.m_maxDepth),
+      m_titleSafeRatio(rhs.m_titleSafeRatio)
 {
     CalculateTitleSafeArea();
 }
@@ -100,7 +104,7 @@ void Viewport::CalculateTitleSafeArea()
     const float titleSafeWidth = Width() * (1.f - m_titleSafeRatio);
     const float titleSafeHight = Height() * (1.f - m_titleSafeRatio);
 
-    m_titleSafeArea = Rectangle(m_left + titleSafeWidth * 0.5f, m_top + titleSafeHight * 0.5f, Width() - titleSafeWidth, Height() - titleSafeHight);
+    m_titleSafeArea = Rectangle2f(m_left + titleSafeWidth * 0.5f, m_top + titleSafeHight * 0.5f, Width() - titleSafeWidth, Height() - titleSafeHight);
 }
 
 }

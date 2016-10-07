@@ -7,7 +7,7 @@ namespace FalconEngine {
 
 class Renderer;
 
-class PlatformVertexBuffer
+class FALCON_ENGINE_GRAPHICS_ITEM PlatformVertexBuffer
 {
 public:
     /************************************************************************/
@@ -19,14 +19,22 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
-    void Enable();
-    void Disable();
 
-    // @Summary: access buffer data in the memory
+    // NOTE(Wuxiang): The interface is designed this way because the DirectX
+    // renderer probably need those parameters.
+
+    // @Summar: Enable buffer in the renderer.
+    void Enable(Renderer *, size_t vertexSize, size_t offset);
+
+    // @Summar: Disable buffer in the renderer.
+    void Disable(Renderer *);
+
+    // @Summary: Access buffer data in the memory, so you could copy data into
+    // the buffer by yourself.
     // @Return: buffer memory pointer
     void *AccessBuffer(BufferAccessMode mode);
 
-    // @Summary: close the buffer access pointer
+    // @Summary: Close the buffer access pointer.
     void CloseBuffer();
 
 private:

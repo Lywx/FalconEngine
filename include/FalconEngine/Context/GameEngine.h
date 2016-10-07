@@ -1,12 +1,12 @@
 #pragma once
 
-#include "GameContext.h"
+#include "Game.h"
 #include "GameCounter.h"
 #include "GameDebug.h"
 
 namespace FalconEngine {
 
-class Game
+class GameEngine
 {
 public:
     // Runtime Constants
@@ -14,27 +14,32 @@ public:
     double MillisecondPerRender    = 16.66666666666;
 
     // Runtime Members
-    GameContext *Context;
+    Game *m_game;
     GameCounter Counter;
 
-    explicit Game(GameContext *context);
+    explicit GameEngine(Game *game);
 
     // Copy Operations
-    Game(const Game& rhs);
-    Game& operator=(const Game& rhs);
+    GameEngine(const GameEngine& rhs);
+    GameEngine& operator=(const GameEngine& rhs);
 
     // Move Operations
-    Game(Game&& rhs) noexcept;
-    Game& operator=(Game&& rhs) noexcept;
+    GameEngine(GameEngine&& rhs) noexcept;
+    GameEngine& operator=(GameEngine&& rhs) noexcept;
 
-    virtual ~Game();
+    virtual ~GameEngine();
 
     virtual void Run();
     virtual void Shutdown();
 
 protected:
     virtual void Initialize();
+
+    // @Summary: Main loop
+    // @Remark: The main goal of this algorithm is to ensure the render rate is
+    // constant and update rate is flexible.
     virtual void Loop();
+
     virtual void Exit();
 
 private:

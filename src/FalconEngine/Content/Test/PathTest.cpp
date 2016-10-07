@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include <catch.hpp>
+#include "catch.hpp"
 
 #include <FalconEngine/Content/Path.h>
 

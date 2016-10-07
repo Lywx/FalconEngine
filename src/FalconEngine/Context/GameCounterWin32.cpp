@@ -1,5 +1,5 @@
-#include <FalconEngine/Core/GameCounter.h>
-#include <FalconEngine/Core/Core.h>
+#include <FalconEngine/Context/GameCounter.h>
+#include <FalconEngine/ContextInclude.h>
 
 #include <stdexcept>
 #include <string>

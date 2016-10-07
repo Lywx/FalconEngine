@@ -34,8 +34,8 @@ protected:
 public:
     virtual ~Buffer();
 
-    inline int GetElementNum() const;
-    inline int GetElementSize() const;
+    inline size_t ElementNum() const;
+    inline size_t ElementSize() const;
 
     // An application might want to vary the active number of indices. Use
     // this function to do so. It does not change the data storage, only the
@@ -43,21 +43,21 @@ public:
     // original number of indices and resetting this when finished with the
     // index buffer. The caller also should not pass in a number of indices
     // that is larger than the original number of indices.
-    inline void SetElementNum(int numElements);
+    inline void ElementNum(int numElements);
 
-    inline BufferUsage GetUsage() const;
+    inline size_t ByteNum() const;
 
-    inline int GetByteNum() const;
+    inline BufferUsage Usage() const;
 
     // Manage a copy of the buffer in system memory. Queries of the system
     // memory occur in IndexBuffer and VertexBuffer.
-    inline virtual char *GetData() const;
+    inline virtual char *Data() const;
 
 protected:
 
-    int m_elementNum;
-    int m_elementSize;
-    int m_byteNum;
+    size_t m_elementNum;
+    size_t m_elementSize;
+    size_t m_byteNum;
 
     BufferUsage m_usage;
     char       *m_data;

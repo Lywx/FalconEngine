@@ -10,16 +10,23 @@ namespace FalconEngine {
 class Camera
 {
 public:
-    Camera(const Handedness *handedness);
-    Camera(const Handedness *handedness, const Viewport& viewport, float nearPlane = 0.1f, float farPlane = 1000.f);
-    Camera(const Handedness *handedness, float fovy, float aspectRatio, float nearPlane = 0.1f, float farPlane = 1000.f);
+
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
+
+    // @Remark: Provide different way to construct the camera class.
+    Camera(const Handedness &handedness);
+    Camera(const Handedness &handedness, const Viewport& viewport, float nearPlane = 0.1f, float farPlane = 1000.f);
+    Camera(const Handedness &handedness, float fovy, float aspectRatio, float nearPlane = 0.1f, float farPlane = 1000.f);
 
     virtual ~Camera();
 
     /************************************************************************/
-    /* Camera Movement                                                      */
-    /************************************************************************/
+    // Camera position and orientation
+
     const Vector3f& Position() const;
+    void SetPosition(const Vector3f& position);
 
     Vector3f Forward() const;
     Vector3f Backward() const;
@@ -30,8 +37,6 @@ public:
     Vector3f Up() const;
     Vector3f Down() const;
 
-    const Quaternion& Rotation() const;
-
     void MoveForward(float distance);
     void MoveBack(float distance);
 
@@ -41,12 +46,13 @@ public:
     void MoveUp(float distance);
     void MoveDown(float distance);
 
+    const Quaternion& Rotation() const;
     void Rotate(const Matrix4f& rotation);
     void Rotate(float pitch, float yaw, float roll);
 
     /************************************************************************/
-    /* Camera Setup                                                         */
-    /************************************************************************/
+    // Camera visual setup and graphics API
+
     float Near() const;
     float Far() const;
 
@@ -63,16 +69,13 @@ public:
 
     void SetPerspectiveProjection(float fovy, float aspectRatio, float nearPlane, float farPlane);
 
-    // NEW
-    // void SetOrthogonalProjection();
-
-    void SetPosition(const Vector3f& position);
+    // NEW(Wuxiang)
+    void SetOrthogonalProjection();
 
     virtual void LookAt(const Vector3f& from, const Vector3f& to, const Vector3f& up);
 
     /************************************************************************/
-    /* Camera Update                                                        */
-    /************************************************************************/
+    // Camera update
     virtual void Update(double elapsed);
 
 protected:
@@ -99,7 +102,7 @@ protected:
     float m_aspectRatio;
 
 private:
-    const Handedness *m_handedness;
+    const Handedness &m_handedness;
 };
 
 }

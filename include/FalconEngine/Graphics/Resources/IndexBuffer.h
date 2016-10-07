@@ -1,6 +1,8 @@
 #pragma once
 
 #include <stdexcept>
+#include <memory>
+
 #include <FalconEngine/Graphics/Resources/Buffer.h>
 
 namespace FalconEngine {
@@ -8,7 +10,8 @@ namespace FalconEngine {
 class IndexBuffer : public Buffer
 {
 public:
-    IndexBuffer(int indices, int indexSize, BufferUsage usage = BufferUsage::STATIC);
+    IndexBuffer(int indices, int indexSize,
+                BufferUsage usage = BufferUsage::STATIC);
     virtual ~IndexBuffer();
 
     // The offset into the indices is used by the renderer for drawing. The
@@ -17,11 +20,13 @@ public:
     // this case, SetNumElements and SetOffset will be called dynamically by
     // the application for each such geometric primitive.
     inline void SetOffset(int offset);
-    inline int GetOffset() const;
+    inline int  GetOffset() const;
 
 protected:
     int m_offset;
 };
+
+typedef std::shared_ptr<IndexBuffer> IndexBufferPtr;
 
 #include "IndexBuffer.inl"
 

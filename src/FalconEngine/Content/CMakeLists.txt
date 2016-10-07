@@ -31,4 +31,4 @@ target_link_libraries(FalconEngine.Content.Test FalconEngine.Content
 
 set_target_properties(FalconEngine.Content.Test PROPERTIES COMPILE_FLAGS "/MTd")
 set_target_properties(FalconEngine.Content.Test PROPERTIES SUFFIX ".exe")
-set_target_properties(FalconEngine.Content.Test PROPERTIES FOLDER "FalconEngine.Test Target")
+set_target_properties(FalconEngine.Content.Test PROPERTIES FOLDER "FalconEngine Tests")

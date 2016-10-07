@@ -14,6 +14,13 @@ add_library(FalconEngine.Content.Include STATIC ${FALCON_ENGINE_CONTENT_HEADER_F
 set_target_properties(FalconEngine.Content.Include PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(FalconEngine.Content.Include PROPERTIES FOLDER "FalconEngine Targets")
 
+file(GLOB FALCON_ENGINE_CONTEXT_HEADER_FILES
+    Context/*.h 
+    Context/*.inl)
+add_library(FalconEngine.Context.Include STATIC ${FALCON_ENGINE_CONTEXT_HEADER_FILES})
+set_target_properties(FalconEngine.Context.Include PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(FalconEngine.Context.Include PROPERTIES FOLDER "FalconEngine Targets")
+
 file(GLOB FALCON_ENGINE_CORE_HEADER_FILES
     Core/*.h 
     Core/*.inl

@@ -7,7 +7,7 @@
 
 namespace FalconEngine {
 
-class Shader
+class FALCON_ENGINE_GRAPHICS_ITEM Shader
 {
 public:
     Shader();
@@ -23,8 +23,12 @@ public:
 
     virtual ~Shader();
 
-    GLuint ProgramId() const { return m_programId; }
-    bool   ProgramInUse() const { return m_programInUse; }
+    GLuint ProgramId() const {
+        return m_programId;
+    }
+    bool   ProgramInUse() const {
+        return m_programInUse;
+    }
 
     void UseBegin();
     void UseEnd();

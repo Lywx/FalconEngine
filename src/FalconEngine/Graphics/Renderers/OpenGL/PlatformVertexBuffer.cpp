@@ -8,22 +8,22 @@ namespace FalconEngine {
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PlatformVertexBuffer::PlatformVertexBuffer(Renderer *renderer, const VertexBuffer *vbuffer)
+PlatformVertexBuffer::PlatformVertexBuffer(Renderer *renderer, const VertexBuffer *vertexBuffer)
 {
     // Generate new buffer
     glGenBuffers(1, &m_buffer);
     glBindBuffer(GL_ARRAY_BUFFER, m_buffer);
     glBufferData(GL_ARRAY_BUFFER,                                        // target
-                 vbuffer->GetByteNum(),                                  // size
+                 vertexBuffer->ByteNum(),                             // size
                  nullptr,                                                // data*
-                 OpenGLBufferUsage[int(vbuffer->GetUsage())]);           // usage
+                 OpenGLBufferUsage[int(vertexBuffer->Usage())]);      // usage
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     // Copy the platform independent buffer data to platform specific buffer
     void *data = AccessBuffer(BufferAccessMode::WRITE);
     memcpy(data,                                                         // dest*
-           vbuffer->GetData(),                                           // src*
-           vbuffer->GetByteNum());                                       // count
+           vertexBuffer->Data(),                                      // src*
+           vertexBuffer->ByteNum());                                  // count
     CloseBuffer();
 }
 
@@ -35,12 +35,12 @@ PlatformVertexBuffer::~PlatformVertexBuffer()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-void PlatformVertexBuffer::Enable()
+void PlatformVertexBuffer::Enable(Renderer *, size_t, size_t)
 {
     glBindBuffer(GL_ARRAY_BUFFER, m_buffer);
 }
 
-void PlatformVertexBuffer::Disable()
+void PlatformVertexBuffer::Disable(Renderer *)
 {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

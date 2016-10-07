@@ -1,18 +1,19 @@
 #pragma once
 
 #include <glm/matrix.hpp>
+#include <glm/gtc/type_ptr.inl>
 
 namespace FalconEngine {
 
 class Quaternion;
 class Vector3f;
 
-/// 4x4 matrix in column major format:
-///
-/// (0.0, 1.0, 2.0, 3.0,
-///  0.1, 1.1, 2.1, 3.1,
-///  0.2, 1.2, 2.2, 3.2,
-///  0.3, 1.3, 2.3, 3.3)
+// @Summary: 4x4 matrix in column major format:
+//
+// (0.0, 1.0, 2.0, 3.0,
+//  0.1, 1.1, 2.1, 3.1,
+//  0.2, 1.2, 2.2, 3.2,
+//  0.3, 1.3, 2.3, 3.3)
 class Matrix4f : public glm::mat4
 {
 public:
@@ -21,6 +22,9 @@ public:
     /************************************************************************/
     static Matrix4f Zero;
     static Matrix4f Identity;
+
+    static Matrix4f     Inverse(const Matrix4f& mat);
+    static Matrix4f     Transpose(const Matrix4f& mat);
 
     static Matrix4f CreateRotationX(const float& radians);
     static void     CreateRotationX(const float& radians, Matrix4f& transform);
@@ -31,29 +35,27 @@ public:
     static Matrix4f CreateRotationZ(const float& radians);
     static void     CreateRotationZ(const float& radians, Matrix4f& transform);
 
-    /// Convert quaternion to rotation matrix
-    ///
-    /// Fletcher Dunn, Ian Parberry 3D Math Primer for Graphics and Game Development, 2nd, 2011, P284
+    // @Summary: Convert quaternion to rotation matrix
+    //
+    // Fletcher Dunn, Ian Parberry 3D Math Primer for Graphics and Game Development, 2nd, 2011, P284
     static Matrix4f FromRotation(const Quaternion& q);
 
-    /// Create 4x4 rotation matrix from fixed axis angle.
+    // @Summary: Create 4x4 rotation matrix from fixed axis angle.
     static Matrix4f CreateRotation(const float& pitch, const float& yaw, const float& roll);
 
-    static Matrix4f CreateIsomorphicScaling(const float& scale);
-    static Matrix4f CreateScaling(const float& scaleX, const float& scaleY, const float& scaleZ);
+    static Matrix4f CreateScaleIsomorphic(const float& scale);
+    static Matrix4f CreateScale(const float& scaleX, const float& scaleY, const float& scaleZ);
 
     static Matrix4f CreateTranslation(const float& x, const float& y, const float& z);
 
-    /// Create 4x4 Translation Transform Matrix. Column vector is assumed for use of
-    /// the transform. Transform matrix is as the following form:
-    ///
-    /// (1.0, 0.0, 0.0, v.x,
-    ///  0.0, 1.0, 0.0, v.y,
-    ///  0.0, 0.0, 1.0, v.z,
-    ///  0.0, 0.0, 0.0, 1.0)
+    // @Summary: Create 4x4 Translation Transform Matrix. Column vector is assumed for use of
+    // the transform. Transform matrix is as the following form:
+    //
+    // (1.0, 0.0, 0.0, v.x,
+    //  0.0, 1.0, 0.0, v.y,
+    //  0.0, 0.0, 1.0, v.z,
+    //  0.0, 0.0, 0.0, 1.0)
     static Matrix4f CreateTranslation(const Vector3f& v);
-
-    static const float *ValuePtr(const Matrix4f& mat);
 
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -72,6 +74,16 @@ public:
     // Implicit Conversion
     Matrix4f(const glm::mat4& m);
     operator glm::mat4();
+
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
+    const float *Ptr() const;
 };
+
+/************************************************************************/
+/* Operator Members                                                     */
+/************************************************************************/
+Vector3f operator*(const Matrix4f& matrix, const Vector3f& vector);
 
 }

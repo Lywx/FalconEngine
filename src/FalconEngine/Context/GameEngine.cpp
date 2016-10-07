@@ -1,53 +1,53 @@
-#include <FalconEngine/Core/Game.h>
+#include <FalconEngine/Context/GameEngine.h>
 
 namespace FalconEngine {
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Game::Game(GameContext *context)
-    : Context(context)
+GameEngine::GameEngine(Game *game)
+    : m_game(game)
 {
-    Context->Game = this;
+    m_game->SetEngine(this);
 }
 
-Game::Game(const Game& rhs)
-    : Context(rhs.Context)
+GameEngine::GameEngine(const GameEngine& rhs)
+    : m_game(rhs.m_game)
 {
 }
 
-Game& Game::operator=(const Game& rhs)
+GameEngine& GameEngine::operator=(const GameEngine& rhs)
 {
-    Context = rhs.Context;
+    m_game = rhs.m_game;
     return *this;
 }
 
-Game::Game(Game&& rhs) noexcept
-    : Context(rhs.Context)
+GameEngine::GameEngine(GameEngine&& rhs) noexcept
+    : m_game(rhs.m_game)
 {
-    rhs.Context = nullptr;
+    rhs.m_game = nullptr;
 }
 
-Game& Game::operator=(Game&& rhs) noexcept
+GameEngine& GameEngine::operator=(GameEngine&& rhs) noexcept
 {
     if (this != &rhs)
     {
-        Context = rhs.Context;
-        rhs.Context = nullptr;
+        m_game = rhs.m_game;
+        rhs.m_game = nullptr;
     }
 
     return *this;
 }
 
-Game::~Game()
+GameEngine::~GameEngine()
 {
-    Context = nullptr;
+    m_game = nullptr;
 }
 
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-inline void Game::Run()
+inline void GameEngine::Run()
 {
     if (!m_initialized)
     {
@@ -58,7 +58,7 @@ inline void Game::Run()
     Exit();
 }
 
-inline void Game::Shutdown()
+inline void GameEngine::Shutdown()
 {
     m_running = false;
 }
@@ -66,25 +66,22 @@ inline void Game::Shutdown()
 /************************************************************************/
 /* Protected Members                                                    */
 /************************************************************************/
-inline void Game::Initialize()
+inline void GameEngine::Initialize()
 {
-    if(Context != nullptr)
+    if(m_game != nullptr)
     {
-        Context->Initialize();
+        m_game->Initialize();
     }
 
     m_initialized = true;
 }
 
-// Main loop
-//
-// The main goal of this algorithm is to ensure the render rate is constant and update rate is flexible.
-inline void Game::Loop()
+inline void GameEngine::Loop()
 {
     Counter = GameCounter();
     char lastFramePerformanceString[256];
 
-    if (Context != nullptr)
+    if (m_game != nullptr)
     {
         double lastFrameBegunMillisecond = Counter.GetMilliseconds();
         double lastRenderBegunMillisecond = lastFrameBegunMillisecond;
@@ -105,7 +102,7 @@ inline void Game::Loop()
             // Reset frame start point.
             lastFrameBegunMillisecond = lastFrameEndedMillisecond;
 
-            Context->UpdateInput();
+            m_game->UpdateInput();
 
             // Reset update accumulated time elapsed.
             int    currentUpdateTotalCount = 0;
@@ -114,7 +111,7 @@ inline void Game::Loop()
             double lastUpdateEndedMillisecond = 0;
             do
             {
-                Context->Update(currentUpdateTotalCount == 0 ? lastUpdateElapsedMillisecond + lastRenderElapsedMillisecond : lastUpdateElapsedMillisecond);
+                m_game->Update(currentUpdateTotalCount == 0 ? lastUpdateElapsedMillisecond + lastRenderElapsedMillisecond : lastUpdateElapsedMillisecond);
                 ++currentUpdateTotalCount;
 
                 lastUpdateEndedMillisecond = Counter.GetMilliseconds();
@@ -143,18 +140,18 @@ inline void Game::Loop()
 
             // Reset render start point.
             lastRenderBegunMillisecond = lastUpdateEndedMillisecond;
-            Context->RenderBegin();
-            Context->Render(1.0f);
-            Context->RenderEnd();
+            m_game->RenderBegin();
+            m_game->Render(1.0f);
+            m_game->RenderEnd();
         }
     }
 }
 
-inline void Game::Exit()
+inline void GameEngine::Exit()
 {
-    if (Context != nullptr)
+    if (m_game != nullptr)
     {
-        Context->Exit();
+        m_game->Exit();
     }
 }
 

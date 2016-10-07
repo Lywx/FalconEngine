@@ -13,7 +13,7 @@ class StencilState;
 class WireframeState;
 
 /// Render state information to avoid redundant state changes.
-class PlatformRenderState
+class FALCON_ENGINE_GRAPHICS_ITEM PlatformRenderState
 {
 public:
     PlatformRenderState();

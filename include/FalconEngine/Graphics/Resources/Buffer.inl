@@ -1,29 +1,29 @@
-inline int Buffer::GetElementNum() const
+inline size_t Buffer::ElementNum() const
 {
     return m_elementNum;
 }
 
-inline void Buffer::SetElementNum(int elementNum)
+inline void Buffer::ElementNum(int elementNum)
 {
     m_elementNum = elementNum;
 }
 
-inline int Buffer::GetElementSize() const
+inline size_t Buffer::ElementSize() const
 {
     return m_elementSize;
 }
 
-inline BufferUsage Buffer::GetUsage() const
+inline BufferUsage Buffer::Usage() const
 {
     return m_usage;
 }
 
-inline int Buffer::GetByteNum() const
+inline size_t Buffer::ByteNum() const
 {
     return m_byteNum;
 }
 
-inline char *Buffer::GetData() const
+inline char *Buffer::Data() const
 {
     return m_data;
 }

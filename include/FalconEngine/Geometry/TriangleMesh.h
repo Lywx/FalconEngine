@@ -5,40 +5,24 @@
 
 #include <armadillo>
 
+#include <FalconEngine/Geometry/Mesh.h>
+#include <FalconEngine/Math/Vector3d.h>
 #include <FalconEngine/Math/Vector3f.h>
 
 namespace FalconEngine {
 
-struct TriangleIndex
-{
-    int A;
-    int B;
-    int C;
-
-    TriangleIndex(int a, int b, int c)
-    {
-        A = a;
-        B = b;
-        C = c;
-    }
-};
-
+typedef Vector3d                            TriangleIndex;
 typedef std::vector<TriangleIndex>          TriangleIndexList;
 typedef std::shared_ptr<TriangleIndexList>  TriangleIndexListPtr;
-typedef std::vector<Vector3f>               TriangleVertexList;
+
+typedef Vector3f                            TriangleVertex;
+typedef std::vector<TriangleVertex>         TriangleVertexList;
 typedef std::shared_ptr<TriangleVertexList> TriangleVertexListPtr;
 
 //@Summary: stores all the vertex data loaded from a vertex file.
 struct TriangleVertexData
 {
-    TriangleVertexData(int vertexNum, int vertexRowNum, int vertexColNum) :
-        VertexNum(vertexNum),
-        VertexRowNum(vertexRowNum),
-        VertexColNum(vertexColNum),
-        VertexList(std::make_shared<TriangleVertexList>())
-    {
-        VertexList->reserve(vertexNum);
-    }
+    TriangleVertexData(int vertexNum, int vertexRowNum, int vertexColNum);
 
     int                   VertexNum;
     int                   VertexRowNum;
@@ -46,47 +30,48 @@ struct TriangleVertexData
     TriangleVertexListPtr VertexList;
 };
 
-// Stores all the index data loaded from an index file.
+typedef std::shared_ptr<TriangleVertexData> TriangleVertexDataPtr;
+
+//@Summary: stores all the index data loaded from an index file.
 struct TriangleIndexData
 {
-    int                           IndexNum;
-    int                           IndexRowNum;
-    int                           IndexColNum;
-    TriangleIndexListPtr          IndexList;
+    TriangleIndexData(int indexNum, int indexRowNum, int indexColNum);
 
-    TriangleIndexData(int indexNum, int indexRowNum, int indexColNum) :
-        IndexNum(indexNum),
-        IndexRowNum (indexRowNum),
-        IndexColNum(indexColNum),
-        IndexList(std::make_shared<TriangleIndexList>())
-    {
-        IndexList->reserve(indexNum);
-    }
+    int                  IndexNum;
+    int                  IndexRowNum;
+    int                  IndexColNum;
+    TriangleIndexListPtr IndexList;
 };
 
-class TriangleMesh
+typedef std::shared_ptr<TriangleIndexData> TriangleIndexDataPtr;
+
+class TriangleMesh : public Mesh
 {
 public:
-
     TriangleMesh();
     virtual ~TriangleMesh();
 
-    TriangleVertexListPtr Vertexes() const { return m_vertexes; }
-    size_t                VertexSize() const { return m_vertexes->size(); }
-    Vector3f&             VertexFront() const { return m_vertexes->front(); }
+    size_t                VertexSize() const;
+    Vector3f&             VertexFront() const;
+    TriangleVertexListPtr VertexListPtr() const;
 
-    TriangleIndexListPtr Indexes() const { return m_indexes; }
-    size_t               IndexSize() const { return m_indexes->size(); }
-    TriangleIndex&       IndexFront() const { return m_indexes->front(); }
+    size_t                IndexSize() const;
+    TriangleIndex&        IndexFront() const;
+    TriangleIndexListPtr  IndexListPtr() const;
 
-    void               LoadMesh(std::initializer_list<std::wstring> fileNames);
+    virtual void          LoadMesh(std::initializer_list<std::wstring> fileNames)
+    override;
 
 private:
-    TriangleVertexData LoadVertexes(std::wstring filename);
-    TriangleIndexData  LoadIndexes(std::wstring filename);
+    TriangleVertexDataPtr LoadVertexes(std::wstring filename);
+    TriangleIndexDataPtr  LoadIndexes(std::wstring filename);
 
-    TriangleVertexListPtr m_vertexes;
-    TriangleIndexListPtr  m_indexes;
+    TriangleVertexListPtr m_vertexList;
+    TriangleIndexListPtr  m_indexList;
 };
+
+typedef std::shared_ptr<TriangleMesh> TriangleMeshPtr;
+
+#include "TriangleMesh.inl"
 
 }

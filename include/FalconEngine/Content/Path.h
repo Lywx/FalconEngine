@@ -3,6 +3,8 @@
 #include <fstream>
 #include <string>
 
+#include <FalconEngine/ContentInclude.h>
+
 namespace FalconEngine {
 
 bool                    Exists(const std::wstring relativePath);

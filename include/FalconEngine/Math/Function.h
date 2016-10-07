@@ -28,22 +28,34 @@ constexpr typename std::enable_if<std::is_unsigned<T>::value, T>::type Abs(T a)
 }
 
 template <typename T>
-constexpr T Square(T x) { return x * x; }
+constexpr T Square(T x) {
+    return x * x;
+}
 
 template <typename T>
-constexpr T Min(T a, T b) { return (a < b) ? a : b; }
+constexpr T Min(T a, T b) {
+    return (a < b) ? a : b;
+}
 
 template <typename T>
-constexpr T Max(T a, T b) { return (a > b) ? a : b; }
+constexpr T Max(T a, T b) {
+    return (a > b) ? a : b;
+}
 
 template <typename T>
-constexpr void Clamp(T& value, const T low, const T high) { (value < low) ? (value = low) : (value > high) ? (value = high) : (value); }
+constexpr void Clamp(T& value, const T low, const T high) {
+    (value < low) ? (value = low) : (value > high) ? (value = high) : (value);
+}
 
 template <typename T>
-T Lerp(const T a, const T b, T t) { return a + t * (b - a); }
+T Lerp(const T a, const T b, T t) {
+    return a + t * (b - a);
+}
 
 template <typename T>
-T Smooth(const T x) { return x * x * (3 - 2 * x); }
+T Smooth(const T x) {
+    return x * x * (3 - 2 * x);
+}
 
 template <typename T>
 typename std::enable_if<std::is_integral<T>::value, bool>::type IsOdd(T x)

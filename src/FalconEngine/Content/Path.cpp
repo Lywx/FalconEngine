@@ -1,5 +1,4 @@
 #include <FalconEngine/Content/Path.h>
-#include <FalconEngine/Core/Core.h>
 
 #include <boost/filesystem.hpp>
 

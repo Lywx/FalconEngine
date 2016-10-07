@@ -1,7 +1,4 @@
 #pragma once
 
-#include "Core/Core.h"
-#include "Core/Game.h"
-#include "Core/GameContext.h"
-#include "Core/GameDebug.h"
-#include "Core/GameCounter.h"
+#include <FalconEngine/CoreInclude.h>
+#include <FalconEngine/Core/Memory.h>

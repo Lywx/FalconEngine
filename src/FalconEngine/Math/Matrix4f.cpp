@@ -1,4 +1,5 @@
 #include <FalconEngine/Math/Matrix4f.h>
+#include <FalconEngine/Math/Vector4f.h>
 #include <FalconEngine/Math/Quaternion.h>
 
 namespace FalconEngine {
@@ -15,6 +16,21 @@ Matrix4f Matrix4f::Identity = glm::mat4(1.0, 0.0, 0.0, 0.0,
                                         0.0, 1.0, 0.0, 0.0,
                                         0.0, 0.0, 1.0, 0.0,
                                         0.0, 0.0, 0.0, 1.0);
+
+const float *Matrix4f::Ptr() const
+{
+    return glm::value_ptr(*this);
+}
+
+Matrix4f Matrix4f::Inverse(const Matrix4f& mat)
+{
+    return glm::inverse(mat);
+}
+
+Matrix4f Matrix4f::Transpose(const Matrix4f& mat)
+{
+    return glm::transpose(mat);
+}
 
 Matrix4f Matrix4f::CreateRotationX(const float& radians)
 {
@@ -83,7 +99,6 @@ Matrix4f Matrix4f::FromRotation(const Quaternion& q)
     result[2][2] = 1.f - 2.f * (q.x * q.x + q.y * q.y);
 
     return result;
-
 }
 
 Matrix4f Matrix4f::CreateRotation(const float& pitch, const float& yaw, const float& roll)
@@ -97,7 +112,7 @@ Matrix4f Matrix4f::CreateRotation(const float& pitch, const float& yaw, const fl
     return FromRotation(rotation);
 }
 
-Matrix4f Matrix4f::CreateIsomorphicScaling(const float& scale)
+Matrix4f Matrix4f::CreateScaleIsomorphic(const float& scale)
 {
     return Matrix4f(scale, 0.0f , 0.0f , 0.0f,
                     0.0f , scale, 0.0f , 0.0f,
@@ -105,7 +120,7 @@ Matrix4f Matrix4f::CreateIsomorphicScaling(const float& scale)
                     0.0f , 0.0f , 0.0f , 1.f);
 }
 
-Matrix4f Matrix4f::CreateScaling(const float& scaleX, const float& scaleY, const float& scaleZ)
+Matrix4f Matrix4f::CreateScale(const float& scaleX, const float& scaleY, const float& scaleZ)
 {
     return Matrix4f(scaleX, 0.0f  , 0.0f  , 0.0f,
                     0.0f  , scaleY, 0.0f  , 0.0f,
@@ -129,14 +144,10 @@ Matrix4f Matrix4f::CreateTranslation(const Vector3f& v)
     return result;
 }
 
-const float *Matrix4f::ValuePtr(const Matrix4f& mat)
-{
-    return &mat[0].x;
-}
-
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
+
 Matrix4f::Matrix4f() : glm::mat4() { }
 
 Matrix4f::Matrix4f(const glm::vec4& v0,
@@ -173,5 +184,13 @@ Matrix4f::operator glm::mat4()
 
 }
 
+/************************************************************************/
+/* Operator Members                                                     */
+/************************************************************************/
+
+Vector3f operator*(const Matrix4f& matrix,  const Vector3f& vector)
+{
+    return Vector3f(matrix * Vector4f(vector));
+}
 
 }

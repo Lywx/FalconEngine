@@ -4,8 +4,8 @@ A OpenGL 3D Graphics Engine for study and academic use.
 
 Reference
 ===
-David Eberly. *Wild Magic* and *Geometry Tool* Source Code.
-David Eberly. *3D Game Engine Design: A Practical Approach to Real-Time Computer Graphics*, 2nd, 2006.
+1. David Eberly. *Wild Magic* and *Geometry Tool* Source Code.
+2. David Eberly. *3D Game Engine Design: A Practical Approach to Real-Time Computer Graphics*, 2nd, 2006.
 
 Disclaimer
 ===

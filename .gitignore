@@ -1,5 +1,5 @@
 bin
-build_cmake
+build
 include/*
 !include/FalconEngine
 !include/CMakeLists.txt

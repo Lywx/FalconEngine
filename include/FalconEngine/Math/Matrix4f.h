@@ -1,9 +1,9 @@
 #pragma once
 
 #include <glm/matrix.hpp>
-#include <glm/gtc/type_ptr.inl>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 class Quaternion;
 class Vector3f;
@@ -23,8 +23,8 @@ public:
     static Matrix4f Zero;
     static Matrix4f Identity;
 
-    static Matrix4f     Inverse(const Matrix4f& mat);
-    static Matrix4f     Transpose(const Matrix4f& mat);
+    static Matrix4f Inverse(const Matrix4f& mat);
+    static Matrix4f Transpose(const Matrix4f& mat);
 
     static Matrix4f CreateRotationX(const float& radians);
     static void     CreateRotationX(const float& radians, Matrix4f& transform);
@@ -74,11 +74,6 @@ public:
     // Implicit Conversion
     Matrix4f(const glm::mat4& m);
     operator glm::mat4();
-
-    /************************************************************************/
-    /* Public Members                                                       */
-    /************************************************************************/
-    const float *Ptr() const;
 };
 
 /************************************************************************/

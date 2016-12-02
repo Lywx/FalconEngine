@@ -6,7 +6,8 @@
 #include <FalconEngine/Math/Matrix4f.h>
 #include <FalconEngine/Math/Vector3f.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 class Handedness
 {
@@ -68,6 +69,7 @@ public:
 
 class HandednessRight : public Handedness
 {
+public:
     // @Summary: Extract right vector from the view matrix, assuming the view transform matrix is in the form of vector on the right
     Vector3f Right(const Matrix4f & view) const override;
 

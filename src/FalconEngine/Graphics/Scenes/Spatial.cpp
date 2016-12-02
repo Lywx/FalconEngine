@@ -58,6 +58,8 @@ void Spatial::UpdateWorldTransform(double elaped)
         {
             WorldTransform = LocalTransform;
         }
+
+        WorldTransformIsCurrent = true;
     }
 }
 

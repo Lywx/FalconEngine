@@ -1,6 +1,7 @@
 #include <FalconEngine/Math/Vector3d.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 /************************************************************************/
 /* Static Members                                                       */
@@ -29,7 +30,7 @@ Vector3d::operator glm::ivec3() const
 
 Vector3d::operator Vector3f() const
 {
-    return Vector3f(x, y, z);
+    return Vector3f(int(x), int(y), int(z));
 }
 
 }

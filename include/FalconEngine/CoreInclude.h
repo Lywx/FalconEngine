@@ -3,7 +3,7 @@
 #include <climits>
 
 #if _MSC_VER >= 1600
-#include <stdint.h>
+#include <cstdint>
 #else
 typedef __int8              int8_t;
 typedef __int16             int16_t;

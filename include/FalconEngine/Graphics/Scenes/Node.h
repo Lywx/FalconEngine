@@ -22,7 +22,7 @@ public:
 
     // @Summary: Attach a child to this node. If the function succeeds, the return
     // value is the index i of the array where the child was stored, in which
-    // case 0 <= i < GetChildrenNum(). The first available empty slot of the
+    // case 0 <= i < ChildrenNum(). The first available empty slot of the
     // child array is used for storage. If all slots are filled, the child
     // is appended to the array (potentially causing a reallocation of the
     // array).
@@ -57,13 +57,13 @@ public:
     // child. Otherwise, the function returns -1.
     int DetachChild(SpatialPtr child);
 
-    // @Summary: Detach a child from this node. If 0 <= i < GetChildrenNum(), the
+    // @Summary: Detach a child from this node. If 0 <= i < ChildrenNum(), the
     // return value is the child at index i; otherwise, the function returns
     // null.
     SpatialPtr DetachChildAt(size_t i);
 
     // The same comments for AttachChild apply here regarding the inability
-    // to have multiple parents. If 0 <= i < GetChildrenNum(), the function
+    // to have multiple parents. If 0 <= i < ChildrenNum(), the function
     // succeeds and returns i. If i is out of range, the function *still*
     // succeeds, appending the child to the end of the array. The return
     // value is the previous child stored at index i.

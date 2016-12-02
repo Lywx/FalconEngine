@@ -2,7 +2,10 @@
 #include <FalconEngine/Math/Vector4f.h>
 #include <FalconEngine/Math/Quaternion.h>
 
-namespace FalconEngine {
+#include <glm/gtc/type_ptr.hpp>
+
+namespace FalconEngine
+{
 
 /************************************************************************/
 /* Static Members                                                       */
@@ -16,11 +19,6 @@ Matrix4f Matrix4f::Identity = glm::mat4(1.0, 0.0, 0.0, 0.0,
                                         0.0, 1.0, 0.0, 0.0,
                                         0.0, 0.0, 1.0, 0.0,
                                         0.0, 0.0, 0.0, 1.0);
-
-const float *Matrix4f::Ptr() const
-{
-    return glm::value_ptr(*this);
-}
 
 Matrix4f Matrix4f::Inverse(const Matrix4f& mat)
 {

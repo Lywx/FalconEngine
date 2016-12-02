@@ -1,7 +1,8 @@
 #include <FalconEngine/Math/Vector3f.h>
 #include <FalconEngine/Math/Vector3d.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 
 /************************************************************************/
@@ -38,7 +39,7 @@ Vector3f::operator glm::vec3() const
 
 Vector3f::operator Vector3d() const
 {
-    return Vector3d(x, y, z);
+    return Vector3d(int(x), int(y), int(z));
 };
 
 }

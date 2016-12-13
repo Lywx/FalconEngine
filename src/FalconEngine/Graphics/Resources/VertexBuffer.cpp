@@ -1,6 +1,7 @@
 #include <FalconEngine/Graphics/Resources/VertexBuffer.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 FALCON_ENGINE_IMPLEMENT_RTTI(VertexBuffer, Object);
 

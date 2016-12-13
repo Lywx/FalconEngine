@@ -4,15 +4,15 @@
 
 #include <FalconEngine/Graphics/Resources/Buffer.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 class VertexBuffer : public Buffer
 {
     FALCON_ENGINE_DECLARE_RTTI;
 
 public:
-    VertexBuffer(int vertices, int vertexSize,
-                 BufferUsage usage = BufferUsage::STATIC);
+    VertexBuffer(int vertices, int vertexSize, BufferUsage usage);
     virtual ~VertexBuffer();
 };
 

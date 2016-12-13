@@ -2,7 +2,8 @@
 
 #include <FalconEngine/Core/Objects/Object.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 enum class BufferAccessMode
 {
@@ -18,6 +19,7 @@ enum class BufferUsage
     NONE, // This value will generate an invalid enum
 
     STATIC,
+    STREAM,
     DYNAMIC,
 
     ENUM_COUNT

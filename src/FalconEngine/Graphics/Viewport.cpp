@@ -1,6 +1,7 @@
 #include <FalconEngine/Graphics/Viewport.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -104,7 +105,7 @@ void Viewport::CalculateTitleSafeArea()
     const float titleSafeWidth = Width() * (1.f - m_titleSafeRatio);
     const float titleSafeHight = Height() * (1.f - m_titleSafeRatio);
 
-    m_titleSafeArea = Rectangle2f(m_left + titleSafeWidth * 0.5f, m_top + titleSafeHight * 0.5f, Width() - titleSafeWidth, Height() - titleSafeHight);
+    m_titleSafeArea = Rectangle(m_left + titleSafeWidth * 0.5f, m_top + titleSafeHight * 0.5f, Width() - titleSafeWidth, Height() - titleSafeHight);
 }
 
 }

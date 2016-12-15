@@ -4,9 +4,10 @@
 
 #include <FalconEngine/Graphics/Scenes/Spatial.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
-class FALCON_ENGINE_GRAPHICS_ITEM Node : public Spatial
+class Node : public Spatial
 {
     FALCON_ENGINE_DECLARE_RTTI;
 
@@ -18,7 +19,7 @@ public:
     // elements are not all guaranteed to be non-null. Thus, when you
     // iterate over the array and access children with GetChild(...), you
     // should test the return pointer to be non-null before dereferencing it.
-    inline int ChildrenNum() const;
+    inline size_t ChildrenNum() const;
 
     // @Summary: Attach a child to this node. If the function succeeds, the return
     // value is the index i of the array where the child was stored, in which
@@ -79,7 +80,6 @@ protected:
 
     // Support for the geometric update.
     virtual void UpdateWorldTransform(double elapsed) override;
-    virtual void UpdateWorldBound() override;
 
 private:
     std::vector<SpatialPtr> m_children;

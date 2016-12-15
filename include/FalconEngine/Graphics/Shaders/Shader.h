@@ -5,9 +5,10 @@
 
 #include <FalconEngine/Graphics/Renderers/RendererExtensions.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
-class FALCON_ENGINE_GRAPHICS_ITEM Shader
+class Shader
 {
 public:
     Shader();
@@ -23,10 +24,12 @@ public:
 
     virtual ~Shader();
 
-    GLuint ProgramId() const {
+    GLuint ProgramId() const
+    {
         return m_programId;
     }
-    bool   ProgramInUse() const {
+    bool   ProgramInUse() const
+    {
         return m_programInUse;
     }
 

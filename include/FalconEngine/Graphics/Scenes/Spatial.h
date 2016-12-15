@@ -2,16 +2,13 @@
 
 #include <memory>
 
+#include <FalconEngine/Core/Object.h>
 #include <FalconEngine/GraphicsInclude.h>
-#include <FalconEngine/Graphics/Bound.h>
-#include <FalconEngine/Graphics/Controllers/ControlledObject.h>
-#include <FalconEngine/Graphics/Transform.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
-// @Remark: Improvement based on David Eberly's Wild Magic:
-//     1. Added dirty flag pattern for WorldTransform data.
-class FALCON_ENGINE_GRAPHICS_ITEM Spatial : public ControlledObject
+class Spatial : public Object
 {
     FALCON_ENGINE_DECLARE_RTTI;
 
@@ -29,7 +26,7 @@ public:
     virtual void Update(double elapsed, bool initiator);
 
     // @Summary: Local transform from parent
-    Transform LocalTransform;
+    Matrix4f LocalTransform;
 
     // @Summary: World transform from model space to world space if this instance has
     // no parent.
@@ -37,15 +34,8 @@ public:
     // In some situations you might need to set the world transform directly
     // and bypass the Spatial::Update() mechanism.  If World is set directly,
     // the mWorldIsCurrent flag should be set to 'true'.
-    Transform WorldTransform;
-    bool      WorldTransformIsCurrent = false;
-
-    // @Summary: World bound access.  In some situations you might want to set the
-    // world bound directly and bypass the Spatial::Update() mechanism.  If
-    // mWorldBound is set directly, the mWorldBoundIsCurrent flag should be
-    // set to 'true'.
-    Bound WorldBound;
-    bool  WorldBoundIsCurrent;
+    Matrix4f WorldTransform;
+    bool     WorldTransformIsCurrent = false;
 
     // @Remark: Because the child would not need to manage the lifetime of its
     // parent, it allows child to use get / set on parent conveniently without

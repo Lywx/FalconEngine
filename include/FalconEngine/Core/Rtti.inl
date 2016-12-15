@@ -1,6 +1,6 @@
-inline const char *Rtti::GetName() const
+inline const char *Rtti::GetTypeName() const
 {
-    return m_Name;
+    return m_typeName;
 }
 
 inline bool Rtti::IsExactly(const Rtti& type) const

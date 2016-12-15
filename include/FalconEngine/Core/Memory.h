@@ -1,8 +1,8 @@
 #pragma once
 
-#ifdef FALCON_ENGINE_USE_MEMORY
+#include <FalconEngine/CoreInclude.h>
 
-#else
+#if defined(FALCON_ENGINE_DEBUG_MEMORY)
 
 // Standard memory management.
 #define New new
@@ -14,22 +14,24 @@
 #define new New
 #define delete Delete
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 template <typename T>
 void DeleteSafe(T *&data)
 {
-    Delete data;
+    delete data;
     data = 0;
 }
 
 template <typename T>
 void DeleteArraySafe(T *&data)
 {
-    Delete[] data;
+    delete[] data;
     data = 0;
 }
 
 }
 
+#else
 #endif

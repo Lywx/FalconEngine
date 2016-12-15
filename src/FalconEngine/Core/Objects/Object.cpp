@@ -1,6 +1,7 @@
-#include <FalconEngine/Core/Objects/Object.h>
+#include <FalconEngine/Core/Object.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 /************************************************************************/
 /* Public Members                                                       */
@@ -12,14 +13,14 @@ bool Object::IsExactly(const Rtti& type) const
     return GetType().IsExactly(type);
 }
 
-bool Object::IsDerived(const Rtti& type) const
-{
-    return GetType().IsDerived(type);
-}
-
 bool Object::IsExactlyTypeOf(const Object *object) const
 {
     return object && GetType().IsExactly(object->GetType());
+}
+
+bool Object::IsDerived(const Rtti& type) const
+{
+    return GetType().IsDerived(type);
 }
 
 bool Object::IsDerivedTypeOf(const Object *object) const

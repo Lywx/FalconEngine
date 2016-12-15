@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Core/Objects/Object.h>
+#include <FalconEngine/Core/Object.h>
 #include <FalconEngine/Graphics/Shaders/VisualTechnique.h>
 
 namespace FalconEngine {

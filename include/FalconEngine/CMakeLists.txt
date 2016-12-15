@@ -33,18 +33,6 @@ set_target_properties(FalconEngine.Core.Include PROPERTIES FOLDER "FalconEngine 
 file(GLOB FALCON_ENGINE_GRAPHICS_HEADER_FILES
     Graphics/*.h 
     Graphics/*.inl
-    Graphics/Controllers/*.h 
-    Graphics/Controllers/*.inl 
-    Graphics/GlobalEffects/*.h
-    Graphics/GlobalEffects/*.inl
-    Graphics/LocalEffects/*.h
-    Graphics/LocalEffects/*.inl
-    Graphics/Renderers/*.h
-    Graphics/Renderers/*.inl
-    Graphics/Renderers/OpenGL/*.h
-    Graphics/Renderers/OpenGL/*.inl
-    Graphics/Resources/*.h 
-    Graphics/Resources/*.inl 
     Graphics/Scenes/*.h 
     Graphics/Scenes/*.inl 
     Graphics/Shaders/*.h 
@@ -54,13 +42,6 @@ file(GLOB FALCON_ENGINE_GRAPHICS_HEADER_FILES
 add_library(FalconEngine.Graphics.Include STATIC ${FALCON_ENGINE_GRAPHICS_HEADER_FILES})
 set_target_properties(FalconEngine.Graphics.Include PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(FalconEngine.Graphics.Include PROPERTIES FOLDER "FalconEngine Targets")
-
-file(GLOB FALCON_ENGINE_GEOMETRY_HEADER_FILES
-    Geometry/*.h 
-    Geometry/*.inl)
-add_library(FalconEngine.Geometry.Include STATIC ${FALCON_ENGINE_GEOMETRY_HEADER_FILES})
-set_target_properties(FalconEngine.Geometry.Include PROPERTIES LINKER_LANGUAGE CXX)
-set_target_properties(FalconEngine.Geometry.Include PROPERTIES FOLDER "FalconEngine Targets")
 
 file(GLOB FALCON_ENGINE_INPUT_HEADER_FILES
     Input/*.h

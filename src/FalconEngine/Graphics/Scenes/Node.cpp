@@ -1,6 +1,7 @@
 #include <FalconEngine/Graphics/Scenes/Node.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 FALCON_ENGINE_IMPLEMENT_RTTI(Node, Spatial);
 
@@ -28,13 +29,15 @@ int Node::AttachChild(SpatialPtr child)
 {
     if (!child)
     {
-        assert(false, "You cannot attach null children to a node.\n");
+        // You cannot attach null children to a node.
+        assert(false);
         return -1;
     }
 
     if (child->Parent)
     {
-        assert(false, "The child already has a parent.\n");
+        // The child already has a parent.
+        assert(false);;
         return -1;
     }
 
@@ -101,7 +104,8 @@ SpatialPtr Node::SetChild(size_t i, SpatialPtr child)
 {
     if (child)
     {
-        assert(child->Parent, "The child already has a parent.\n");
+        // The child already has a parent
+        assert(child->Parent);;
     }
 
     if (0 <= i && i < ChildrenNum())
@@ -155,30 +159,6 @@ void Node::UpdateWorldTransform(double elapsed)
         if (child)
         {
             child->Update(elapsed, false);
-        }
-    }
-}
-
-void Node::UpdateWorldBound()
-{
-    if (!WorldBoundIsCurrent)
-    {
-        // Start with an invalid bound.
-        WorldBound.SetCenter(APoint::ORIGIN);
-        WorldBound.SetRadius(0.0f);
-
-        for (auto iter = m_children.begin(); iter != m_children.end(); ++iter)
-        {
-            auto child = *iter;
-            if (child)
-            {
-                // GrowToContain ignores invalid child bounds.  If the world
-                // bound is invalid and a child bound is valid, the child
-                // bound is copied to the world bound.  If the world bound and
-                // child bound are valid, the smallest bound containing both
-                // bounds is assigned to the world bound.
-                WorldBound.GrowToContain(child->WorldBound);
-            }
         }
     }
 }

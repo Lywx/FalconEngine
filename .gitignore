@@ -4,5 +4,4 @@ include/*
 !include/FalconEngine
 !include/CMakeLists.txt
 lib
-sublime
-tools
+res

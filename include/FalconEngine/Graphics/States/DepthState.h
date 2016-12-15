@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include <FalconEngine/Core/Objects/Object.h>
+#include <FalconEngine/Core/Object.h>
 
 namespace FalconEngine {
 

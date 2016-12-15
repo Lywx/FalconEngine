@@ -1,12 +1,9 @@
 #pragma once
 
 #include <FalconEngine/Core.h>
+#include <FalconEngine/Math.h>
 
 #include <FalconEngine/GraphicsInclude.h>
-
-#include <FalconEngine/Graphics/Bound.h>
-#include <FalconEngine/Graphics/Point3.h>
-#include <FalconEngine/Graphics/Transform.h>
 #include <FalconEngine/Graphics/Viewport.h>
 
 #include <FalconEngine/Graphics/Scenes/Camera.h>

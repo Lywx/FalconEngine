@@ -3,12 +3,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${FALCON_ENGINE_LIBRARY_OUTPUT_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${FALCON_ENGINE_RUNTIME_OUTPUT_DIR})
 
 file(GLOB FALCON_ENGINE_GRAPHICS_SOURCE_FILES *.cpp
-    Controllers/*.cpp
-    GlobalEffects/*.cpp
-    LocalEffects/*.cpp
-    Renderers/*.cpp
-        Renderers/OpenGL/*.cpp
-    Resources/*.cpp
     Scenes/*.cpp
     Shaders/*.cpp
     States/*.cpp

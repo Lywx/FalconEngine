@@ -1,52 +1,36 @@
 #pragma once
 
-#include <FalconEngine/Math/Rectangle2f.h>
-#include <FalconEngine/Math/Vector2f.h>
-#include <FalconEngine/Math/Vector3f.h>
-#include <FalconEngine/Math/Vector4f.h>
-#include <FalconEngine/Math/Matrix4f.h>
+#include <FalconEngine/GraphicsInclude.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 // @Summary: Describe the clip space region.
 class Viewport
 {
 public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
     Viewport();
-
-    Viewport
-    (
-        const float& left,
-        const float& top,
-        const float& right,
-        const float& bottom,
-        const float& minDepth,
-        const float& maxDepth,
-        const float& titleSafeRatio = 0.8f
-    );
-
+    Viewport(const float& left,
+             const float& top,
+             const float& right,
+             const float& bottom,
+             const float& minDepth,
+             const float& maxDepth,
+             const float& titleSafeRatio = 0.8f);
     Viewport(const Viewport& rhs);
 
-    inline float Left() const;
-
-    inline float Right() const;
-
-    inline float Top() const;
-
-    inline float Bottom() const;
-
-    inline float Width() const;
-
-    inline float Height() const;
-
-    inline float Aspect() const;
-
-    inline float MinDepth() const;
-
-    inline float MaxDepth() const;
-
-    inline Vector2f Center() const;
-
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
+    float Width() const;
+    float Height() const;
+    float Aspect() const;
+    float MinDepth() const;
+    float MaxDepth() const;
+    Vector2f Center() const;
     Viewport& operator= (const Viewport& rhs);
 
     // @Summary: Projects a world space position unto the viewport 2D space.
@@ -73,21 +57,20 @@ public:
     // @Return: A world space position.
     Vector3f Unproject(const Vector3f& screenPosition, const Matrix4f& projection, const Matrix4f& view, const Matrix4f& world) const;
 
-
-protected:
-
-    float m_left;
-    float m_top;
-    float m_right;
-    float m_bottom;
-
-    float m_minDepth;
-    float m_maxDepth;
-
-    float m_titleSafeRatio;
-    Rectangle2f m_titleSafeArea;
-
+private:
     void CalculateTitleSafeArea();
+
+public:
+    float     m_left;
+    float     m_top;
+    float     m_right;
+    float     m_bottom;
+
+    float     m_minDepth;
+    float     m_maxDepth;
+
+    float     m_titleSafeRatio;
+    Rectangle m_titleSafeArea;
 };
 
 #include "Viewport.inl"

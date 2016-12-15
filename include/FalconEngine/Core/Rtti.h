@@ -1,6 +1,7 @@
 #pragma once
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 class Rtti
 {
@@ -8,14 +9,14 @@ public:
     Rtti (const char *name, const Rtti *baseType);
     ~Rtti ();
 
-    inline const char *GetName() const;
+    inline const char *GetTypeName() const;
 
-    inline bool IsExactly (const Rtti& type) const;
-    bool        IsDerived (const Rtti& type) const;
+    inline bool IsExactly(const Rtti& type) const;
+    bool        IsDerived(const Rtti& type) const;
 
 private:
-    const char *m_Name;
-    const Rtti *m_BaseType;
+    const char *m_typeName;
+    const Rtti *m_typeBase;
 };
 
 #include "Rtti.inl"
@@ -25,7 +26,7 @@ private:
 public: \
     static const Rtti Type; \
     \
-    virtual const Rtti& GetType () const \
+    virtual const Rtti& GetType() const \
     { \
         return Type; \
     }

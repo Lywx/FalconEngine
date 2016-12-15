@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include <FalconEngine/Core/Objects/Object.h>
+#include <FalconEngine/Core/Object.h>
 #include <FalconEngine/Graphics/Shaders/VisualPass.h>
 
 namespace FalconEngine {

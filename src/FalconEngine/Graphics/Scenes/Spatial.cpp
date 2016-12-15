@@ -1,8 +1,9 @@
 #include <FalconEngine/Graphics/Scenes/Spatial.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
-FALCON_ENGINE_IMPLEMENT_RTTI(Spatial, ControlledObject);
+FALCON_ENGINE_IMPLEMENT_RTTI(Spatial, Object);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -10,7 +11,6 @@ FALCON_ENGINE_IMPLEMENT_RTTI(Spatial, ControlledObject);
 
 Spatial::Spatial() :
     WorldTransformIsCurrent(false),
-    WorldBoundIsCurrent(false),
     Parent(nullptr)
 {
 }
@@ -28,9 +28,6 @@ Spatial::~Spatial()
 
 void Spatial::Update(double elaped, bool initiator)
 {
-    // Update any controllers associated with this object.
-    UpdateControllers(elaped);
-
     // Update spatial owned data
     UpdateWorldTransform(elaped);
     UpdateWorldBound();

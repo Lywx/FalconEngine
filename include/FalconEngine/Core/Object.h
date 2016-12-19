@@ -8,6 +8,8 @@ namespace FalconEngine
 class Object
 {
 public:
+    virtual ~Object();
+
     FALCON_ENGINE_DECLARE_RTTI
 
     bool IsExactly(const Rtti& type) const;

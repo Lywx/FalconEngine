@@ -10,8 +10,8 @@ FALCON_ENGINE_IMPLEMENT_RTTI(Spatial, Object);
 /************************************************************************/
 
 Spatial::Spatial() :
-    WorldTransformIsCurrent(false),
-    Parent(nullptr)
+    m_worldTransformIsCurrent(false),
+    m_parent(nullptr)
 {
 }
 
@@ -30,11 +30,9 @@ void Spatial::Update(double elaped, bool initiator)
 {
     // Update spatial owned data
     UpdateWorldTransform(elaped);
-    UpdateWorldBound();
 
     if (initiator)
     {
-        UpdateWorldBoundPropagation();
     }
 }
 
@@ -45,27 +43,18 @@ void Spatial::Update(double elaped, bool initiator)
 void Spatial::UpdateWorldTransform(double elaped)
 {
     // Update world transforms.
-    if (!WorldTransformIsCurrent)
+    if (!m_worldTransformIsCurrent)
     {
-        if (Parent)
+        if (m_parent)
         {
-            WorldTransform = Parent->WorldTransform * LocalTransform;
+            m_worldTransform = m_parent->m_worldTransform * m_localTransform;
         }
         else
         {
-            WorldTransform = LocalTransform;
+            m_worldTransform = m_localTransform;
         }
 
-        WorldTransformIsCurrent = true;
-    }
-}
-
-void Spatial::UpdateWorldBoundPropagation()
-{
-    if (Parent)
-    {
-        Parent->UpdateWorldBound();
-        Parent->UpdateWorldBoundPropagation();
+        m_worldTransformIsCurrent = true;
     }
 }
 

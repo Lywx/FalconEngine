@@ -8,6 +8,10 @@ namespace FalconEngine
 /************************************************************************/
 const Rtti Object::Type("Object", nullptr);
 
+Object::~Object()
+{
+}
+
 bool Object::IsExactly(const Rtti& type) const
 {
     return GetType().IsExactly(type);

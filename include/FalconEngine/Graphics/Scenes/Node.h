@@ -1,7 +1,9 @@
 #pragma once
 
 #include <vector>
+#include <assimp/scene.h>
 
+#include <FalconEngine/Graphics/Scenes/Mesh.h>
 #include <FalconEngine/Graphics/Scenes/Spatial.h>
 
 namespace FalconEngine
@@ -13,13 +15,15 @@ class Node : public Spatial
 
 public:
     Node();
+    Node(const aiScene *scene, const aiNode *node);
     ~Node();
 
     // @Summary: This is the current number of elements in the child array. These
     // elements are not all guaranteed to be non-null. Thus, when you
     // iterate over the array and access children with GetChild(...), you
     // should test the return pointer to be non-null before dereferencing it.
-    inline size_t ChildrenNum() const;
+    size_t
+    ChildrenNum() const;
 
     // @Summary: Attach a child to this node. If the function succeeds, the return
     // value is the index i of the array where the child was stored, in which
@@ -51,42 +55,48 @@ public:
     //     SpatialPtr saveChild = node0->GetChild(0);
     //     node0->DetachChild(saveChild);
     //     node1->AttachChild(saveChild);
-    int AttachChild(SpatialPtr child);
+    int
+    AttachChild(SpatialPtr child);
 
     // @Summary: Detach a child from this node. If the 'child' is non-null and in the
     // array, the return value is the index in the array that had stored the
     // child. Otherwise, the function returns -1.
-    int DetachChild(SpatialPtr child);
+    int
+    DetachChild(SpatialPtr child);
 
     // @Summary: Detach a child from this node. If 0 <= i < ChildrenNum(), the
     // return value is the child at index i; otherwise, the function returns
     // null.
-    SpatialPtr DetachChildAt(size_t i);
+    SpatialPtr
+    DetachChildAt(size_t i);
 
     // The same comments for AttachChild apply here regarding the inability
     // to have multiple parents. If 0 <= i < ChildrenNum(), the function
     // succeeds and returns i. If i is out of range, the function *still*
     // succeeds, appending the child to the end of the array. The return
     // value is the previous child stored at index i.
-    SpatialPtr SetChild(size_t i, SpatialPtr child);
+    SpatialPtr
+    SetChild(size_t i, SpatialPtr child);
 
     // @Summary: Get the child at the specified index. If 0 <= i < GetNumChildren(),
     // the function succeeds and returns the child at that index--keep in mind
     // that child[i] could very well be null. If i is out of range, the
     // function returns null.
-    SpatialPtr ChildAt(size_t i);
+    SpatialPtr
+    ChildAt(size_t i);
 
 protected:
-
-    // Support for the geometric update.
     virtual void UpdateWorldTransform(double elapsed) override;
 
 private:
     std::vector<SpatialPtr> m_children;
 };
 
-typedef std::shared_ptr<Node> NodePtr;
+inline size_t Node::ChildrenNum() const
+{
+    return m_children.size();
+}
 
-#include "Node.inl"
+typedef std::shared_ptr<Node> NodePtr;
 
 }

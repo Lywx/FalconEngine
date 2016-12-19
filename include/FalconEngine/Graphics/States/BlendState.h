@@ -5,7 +5,8 @@
 #include <FalconEngine/Core/Object.h>
 #include <FalconEngine/Math/Vector4f.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 enum class BlendFactorSource
 {
@@ -29,7 +30,7 @@ enum class BlendFactorSource
     SRC1_ALPHA,
     ONE_MINUS_SRC1_ALPHA,
 
-    ENUM_COUNT
+    Count
 };
 
 enum class BlendFactorDestination
@@ -54,7 +55,7 @@ enum class BlendFactorDestination
     SRC1_ALPHA,
     ONE_MINUS_SRC1_ALPHA,
 
-    ENUM_COUNT
+    Count
 };
 
 class BlendState : public Object

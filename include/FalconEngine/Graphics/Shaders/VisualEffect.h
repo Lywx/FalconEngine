@@ -3,7 +3,8 @@
 #include <FalconEngine/Core/Object.h>
 #include <FalconEngine/Graphics/Shaders/VisualTechnique.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 class VisualEffect : public Object
 {
@@ -37,6 +38,5 @@ protected:
 };
 
 typedef std::shared_ptr<VisualEffect> VisualEffectPtr;
-#include "VisualEffect.inl"
 
 }

@@ -25,13 +25,17 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
-    float Width() const;
-    float Height() const;
-    float Aspect() const;
-    float MinDepth() const;
-    float MaxDepth() const;
-    Vector2f Center() const;
-    Viewport& operator= (const Viewport& rhs);
+    float
+    GetWidth() const;
+
+    float
+    GetHeight() const;
+
+    float
+    GetAspect() const;
+
+    Vector2f
+    GetCenter() const;
 
     // @Summary: Projects a world space position unto the viewport 2D space.
     //
@@ -42,7 +46,8 @@ public:
     // world - The world matrix
     //
     // @Return: A vector3 in which x,y will be screen coordinates.
-    Vector3f Project(const Vector3f& worldPosition, const Matrix4f& projection, const Matrix4f& view, const Matrix4f& world) const;
+    Vector3f
+    Project(const Vector3f& worldPosition, const Matrix4f& projection, const Matrix4f& view, const Matrix4f& world) const;
 
     // @Summary: Converts a screen position into a world space position. Typically unproject is used to generate a ray that spans the view frustum.
     // Unproject the screen coordinate the first time using 0.0 as the Z value, and a second time using 1.0 as the Z value, then calculate
@@ -55,7 +60,8 @@ public:
     // world - The world matrix
     //
     // @Return: A world space position.
-    Vector3f Unproject(const Vector3f& screenPosition, const Matrix4f& projection, const Matrix4f& view, const Matrix4f& world) const;
+    Vector3f
+    Unproject(const Vector3f& screenPosition, const Matrix4f& projection, const Matrix4f& view, const Matrix4f& world) const;
 
 private:
     void CalculateTitleSafeArea();
@@ -73,6 +79,24 @@ public:
     Rectangle m_titleSafeArea;
 };
 
-#include "Viewport.inl"
+inline float Viewport::GetWidth() const
+{
+    return m_right - m_left;
+}
+
+inline float Viewport::GetHeight() const
+{
+    return m_bottom - m_top;
+}
+
+inline float Viewport::GetAspect() const
+{
+    return GetWidth() / GetHeight();
+}
+
+inline Vector2f Viewport::GetCenter() const
+{
+    return Vector2f(m_left + GetWidth() / 2, m_top + GetHeight() / 2);
+}
 
 }

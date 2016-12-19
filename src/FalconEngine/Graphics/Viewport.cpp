@@ -42,21 +42,6 @@ Viewport::Viewport(const Viewport& rhs)
     CalculateTitleSafeArea();
 }
 
-Viewport& Viewport::operator = (const Viewport& rhs)
-{
-    m_left           = rhs.m_left;
-    m_top            = rhs.m_top;
-    m_right          = rhs.m_right;
-    m_bottom         = rhs.m_bottom;
-    m_minDepth       = rhs.m_minDepth;
-    m_maxDepth       = rhs.m_maxDepth;
-    m_titleSafeRatio = rhs.m_titleSafeRatio;
-
-    CalculateTitleSafeArea();
-
-    return *this;
-}
-
 // Projects a world space (3D) position into screen space (2D).
 // Parameter:
 //     worldPosition: world position from 3d space.
@@ -69,8 +54,8 @@ Vector3f Viewport::Project(const Vector3f& worldPosition, const Matrix4f& projec
     Vector4f ndcPosition = transform * Vector4f(worldPosition, 1);
 
     Vector3f screenPosition;
-    screenPosition.x = m_left + Width() * 0.5f * (1.f + ndcPosition.x);
-    screenPosition.y = m_top + Height() * 0.5f * (1.f - ndcPosition.y);
+    screenPosition.x = m_left + GetWidth() * 0.5f * (1.f + ndcPosition.x);
+    screenPosition.y = m_top + GetHeight() * 0.5f * (1.f - ndcPosition.y);
     screenPosition.z = m_minDepth + ndcPosition.z;
 
     return screenPosition;
@@ -86,8 +71,8 @@ Vector3f Viewport::Unproject(const Vector3f& screenPosition, const Matrix4f& pro
     Vector4f ndcPosition;
 
     // Inverse of windows transform, see Viewport::Project.
-    ndcPosition.x = 2.f * (screenPosition.x - m_left) / Width() - 1.f;
-    ndcPosition.y = 2.f * (screenPosition.y - m_top) / Height() - 1.f;
+    ndcPosition.x = 2.f * (screenPosition.x - m_left) / GetWidth() - 1.f;
+    ndcPosition.y = 2.f * (screenPosition.y - m_top) / GetHeight() - 1.f;
     ndcPosition.z = screenPosition.z - m_minDepth;
     ndcPosition.w = 1.f;
 
@@ -102,10 +87,10 @@ Vector3f Viewport::Unproject(const Vector3f& screenPosition, const Matrix4f& pro
 
 void Viewport::CalculateTitleSafeArea()
 {
-    const float titleSafeWidth = Width() * (1.f - m_titleSafeRatio);
-    const float titleSafeHight = Height() * (1.f - m_titleSafeRatio);
+    const float titleSafeWidth = GetWidth() * (1.f - m_titleSafeRatio);
+    const float titleSafeHight = GetHeight() * (1.f - m_titleSafeRatio);
 
-    m_titleSafeArea = Rectangle(m_left + titleSafeWidth * 0.5f, m_top + titleSafeHight * 0.5f, Width() - titleSafeWidth, Height() - titleSafeHight);
+    m_titleSafeArea = Rectangle(m_left + titleSafeWidth * 0.5f, m_top + titleSafeHight * 0.5f, GetWidth() - titleSafeWidth, GetHeight() - titleSafeHight);
 }
 
 }

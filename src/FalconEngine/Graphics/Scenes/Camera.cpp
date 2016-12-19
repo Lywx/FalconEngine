@@ -11,7 +11,7 @@ Camera::Camera(const Handedness &handedness)
 }
 
 Camera::Camera(const Handedness &handedness, const Viewport& viewport, float nearPlane /*=0.1f*/, float farPlane /*=1000.f*/)
-    : Camera(handedness, PiOver4, viewport.Aspect(), nearPlane, farPlane)
+    : Camera(handedness, PiOver4, viewport.GetAspect(), nearPlane, farPlane)
 {
 }
 

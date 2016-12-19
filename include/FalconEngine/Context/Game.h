@@ -1,6 +1,7 @@
 #pragma once
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 class GameEngine;
 
@@ -50,6 +51,9 @@ protected:
     GameEngine *m_gameEngine = nullptr;
 };
 
-#include "Game.inl"
+inline GameEngine *Game::GetEngine() const
+{
+    return m_gameEngine;
+}
 
 }

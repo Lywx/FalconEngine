@@ -34,8 +34,6 @@ public:
     virtual void CreateLookAt(const Vector3f& eyePosition, const Vector3f& targetPosition, const Vector3f& up, Matrix4f& result) const = 0;
 };
 
-#include "Handedness.inl"
-
 class HandednessLeft : public Handedness
 {
 public:
@@ -96,6 +94,21 @@ public:
 
     // @Summary: Create left-handed view transform matrix, assuming the vector is on the right side.
     void     CreateLookAt(const Vector3f & eyePosition, const Vector3f & targetPosition, const Vector3f & up, Matrix4f & result) const override;
+};
+
+inline Vector3f Handedness::Left(const Matrix4f& view) const
+{
+    return -Right(view);
+};
+
+inline Vector3f Handedness::Down(const Matrix4f& view) const
+{
+    return -Up(view);
+};
+
+inline Vector3f Handedness::Backward(const Matrix4f& view) const
+{
+    return -Forward(view);
 };
 
 }

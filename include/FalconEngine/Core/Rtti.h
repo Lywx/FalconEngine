@@ -19,7 +19,16 @@ private:
     const Rtti *m_typeBase;
 };
 
-#include "Rtti.inl"
+inline const char *Rtti::GetTypeName() const
+{
+    return m_typeName;
+}
+
+inline bool Rtti::IsExactly(const Rtti& type) const
+{
+    return &type == this;
+}
+
 }
 
 #define FALCON_ENGINE_DECLARE_RTTI \

@@ -19,7 +19,7 @@ enum class StencilFunction
     GREATER,
     NOTEQUAL,
 
-    ENUM_COUNT
+    Count
 };
 
 enum class StencilOperation
@@ -33,7 +33,7 @@ enum class StencilOperation
     INCREMENT_WRAP,
     DECREMENT_WRAP,
 
-    ENUM_COUNT,
+    Count,
 };
 
 class StencilState : public Object

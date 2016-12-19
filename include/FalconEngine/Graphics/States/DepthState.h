@@ -4,7 +4,8 @@
 
 #include <FalconEngine/Core/Object.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 enum class DepthCompareFunction
 {
@@ -17,7 +18,7 @@ enum class DepthCompareFunction
     GEQUAL,   // Passes if the incoming depth value is greater than or equal to the stored depth value.
     ALWAYS,
 
-    ENUM_COUNT
+    Count
 };
 
 class DepthState : public Object

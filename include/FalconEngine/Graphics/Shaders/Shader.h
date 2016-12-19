@@ -3,7 +3,7 @@
 #include <memory>
 #include <string>
 
-#include <FalconEngine/Graphics/Renderers/RendererExtensions.h>
+#include <FalconEngine/GraphicsInclude.h>
 
 namespace FalconEngine
 {

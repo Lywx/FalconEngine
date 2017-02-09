@@ -10,11 +10,10 @@ link_directories(${FALCON_ENGINE_LIBRARY_DIR})
 add_library(FalconEngine.Graphics STATIC
     ${FALCON_ENGINE_GRAPHICS_SOURCE_FILES})
 
-set_target_properties(FalconEngine.Graphics PROPERTIES COMPILE_FLAGS "/MTd")
-set_target_properties(FalconEngine.Graphics PROPERTIES SUFFIX ".lib")
-
 target_link_libraries(FalconEngine.Graphics 
     glew32sd.lib glfw3.lib opengl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib)
 
-# Add to Visual Studio filter folder
-set_target_properties(FalconEngine.Graphics PROPERTIES FOLDER "FalconEngine Targets")
+set_target_properties(FalconEngine.Graphics PROPERTIES COMPILE_FLAGS "/MTd /Gm")
+set_target_properties(FalconEngine.Graphics PROPERTIES LINK_FLAGS "/INCREMENTAL")
+set_target_properties(FalconEngine.Graphics PROPERTIES SUFFIX ".lib")
+set_target_properties(FalconEngine.Graphics PROPERTIES FOLDER "FalconEngine Library Targets")

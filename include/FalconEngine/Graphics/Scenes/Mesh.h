@@ -1,48 +1,52 @@
 #pragma once
 
+#include <FalconEngine/Graphics/GraphicsInclude.h>
+
 #include <vector>
+
 #include <assimp/scene.h>
 
-#include <FalconEngine/Graphics/Renderers/IndexBuffer.h>
-#include <FalconEngine/Graphics/Renderers/VertexBuffer.h>
-#include <FalconEngine/Graphics/Renderers/Texture2d.h>
-#include <FalconEngine/Graphics/Scenes/Spatial.h>
+#include <FalconEngine/Graphics/Renderers/VisualTriangles.h>
+#include <FalconEngine/Graphics/Renderers/Resources/IndexBuffer.h>
+#include <FalconEngine/Graphics/Renderers/Resources/VertexBuffer.h>
+#include <FalconEngine/Graphics/Renderers/Resources/Texture2d.h>
 
 namespace FalconEngine
 {
 
-struct Vertex
-{
-    Vector3f m_position;
-    Vector3f m_normal;
-    Vector2f m_texCoords;
-};
-
 class Model;
-class Mesh : public Spatial
+class Mesh : public VisualTriangles
 {
-protected:
-    Mesh();
+    FALCON_ENGINE_RTTI_DECLARE;
 
 public:
-
-    // @Summary: Load vertex, normal, texture coordinate, index, texture object,
-    //
-    Mesh(Model *model, aiScene *scene, aiMesh *mesh);
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
+    // @summary Load vertex, normal, texture coordinate, index, texture object.
+    Mesh(Model *model, const aiScene *scene, const aiMesh *mesh);
     virtual ~Mesh();
 
+protected:
     void
-    LoadMaterial(Model                *model,
-                 std::vector<Texture>& materialTextureGroup,
-                 aiMaterial           *material,
-                 aiTextureType         textureType,
-                 std::string           textureTypeName);
+    LoadBuffers(const aiMesh *mesh);
 
-public:
-    VertexBufferPtr           m_vertexBuffer;
-    IndexBufferPtr            m_indexBuffer;
+    void
+    LoadTextures(Model *model, const aiScene *scene, const aiMesh *mesh);
+
+    // @param model - the model owns this mesh.
+    // @param material - the material to load from.
+    // @param materialTextureIndexVector - index of material's texture into the model's texture vector.
+    // @param materialTextureType - the texture type to load from.
+    void
+    LoadMaterialTexture(Model               *model,
+                        const aiMaterial    *material,
+                        std::vector<size_t>& materialTextureIndexVector,
+                        aiTextureType        materialTextureType);
+
+    std::vector<size_t>  mTextureIndexVector; // Texture used in this mesh, in term of index into the model texture vector.
 };
 
-typedef std::shared_ptr<Mesh> MeshPtr;
+typedef std::shared_ptr<Mesh> MeshSharedPtr;
 
 }

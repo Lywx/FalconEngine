@@ -10,7 +10,7 @@ class Object
 public:
     virtual ~Object();
 
-    FALCON_ENGINE_DECLARE_RTTI
+    FALCON_ENGINE_RTTI_DECLARE
 
     bool IsExactly(const Rtti& type) const;
     bool IsExactlyTypeOf(const Object *object) const;

@@ -1,30 +1,49 @@
 #include <FalconEngine/Graphics/Scenes/Mesh.h>
+
+#include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Graphics/Scenes/Model.h>
-#include <FalconEngine/Graphics/Renderers/Texture2d.h>
 
 using namespace std;
 
 namespace FalconEngine
 {
 
-Mesh::Mesh()
-    : m_vertexBuffer(nullptr),
-      m_indexBuffer(nullptr)
+FALCON_ENGINE_RTTI_IMPLEMENT(Mesh, VisualTriangles);
+
+/************************************************************************/
+/* Constructors and Destructor                                          */
+/************************************************************************/
+Mesh::Mesh(Model *model, const aiScene *scene, const aiMesh *mesh) :
+    VisualTriangles(nullptr, nullptr)
 {
+    LoadBuffers(mesh);
+    LoadTextures(model, scene, mesh);
 }
 
-Mesh::Mesh(Model *model, aiScene *scene, aiMesh *mesh)
-    : Mesh()
+void
+Mesh::LoadBuffers(const aiMesh *mesh)
 {
-    vector<Vertex> *vertexVector = new vector<Vertex>();
-    vector<Index> *indexVector = new vector<Index>();
+    // TODO(Wuxiang 2017-01-27 13:35): Shader attribute hasn't been connected!
 
-    // TODO(Wuxiang): Haven't figure out the texture buffer implementation
-    vector<Texture2dPtr> *textureVector = new vector<Vertex>();
+    // NOTE(Wuxiang): Memory allocation here.
+    int vertexNum = mesh->mNumVertices;
+    ModelVertex *vertices = reinterpret_cast<ModelVertex *>(malloc(vertexNum * sizeof(ModelVertex)));
 
+    int indexNum = 0;
+    ModelIndex *indices = nullptr;
+    {
+        for (unsigned int faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex)
+        {
+            indexNum += mesh->mFaces[faceIndex].mNumIndices;
+        }
+
+        indices = reinterpret_cast<ModelIndex *>(malloc(indexNum * sizeof(ModelIndex)));
+    }
+
+    // Walk through vertex data.
     for (size_t i = 0; i < mesh->mNumVertices; ++i)
     {
-        Vertex   vertex;
+        ModelVertex vertex;
         Vector3f vec3;
         Vector2f vec2;
 
@@ -32,109 +51,122 @@ Mesh::Mesh(Model *model, aiScene *scene, aiMesh *mesh)
         vec3.x = mesh->mVertices[i].x;
         vec3.y = mesh->mVertices[i].y;
         vec3.z = mesh->mVertices[i].z;
-        vertex.m_position = vec3;
+        vertex.mPosition = vec3;
 
-        // Normals
+        // Normal
         vec3.x = mesh->mNormals[i].x;
         vec3.y = mesh->mNormals[i].y;
         vec3.z = mesh->mNormals[i].z;
-        vertex.m_normal = vec3;
+        vertex.mNormal = vec3;
 
-        // Texture
+        // Texture coordinate
         if (mesh->mTextureCoords[0])
         {
             // NOTE(Wuxiang): A vertex can contain up to 8 different texture
             // coordinates.
             vec2.x = mesh->mTextureCoords[0][i].x;
             vec2.y = mesh->mTextureCoords[0][i].y;
-            vertex.m_texCoords = vec2;
+            vertex.mTexCoord = vec2;
         }
         else
         {
-            vertex.m_texCoords = vec2;
+            vertex.mTexCoord = Vector2f::Zero;
         }
 
-        vertexVector->push_back(vertex);
+        vertices[i] = vertex;
     }
 
     // Walk through each of the mesh's faces (a face is a mesh its triangle)
     // and retrieve the corresponding vertex indexes.
-    for (size_t i = 0; i < mesh->mNumFaces; ++i)
     {
-        aiFace face = mesh->mFaces[i];
-        for (size_t j = 0; j < face.mNumIndices; j++)
+        int indexNumAdded = 0;
+        for (unsigned int faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex)
         {
-            indexVector.push_back(face.mIndices[j]);
+            auto& face = mesh->mFaces[faceIndex];
+            for (unsigned int j = 0; j < face.mNumIndices; j++)
+            {
+                indices[indexNumAdded] = face.mIndices[j];
+                ++indexNumAdded;
+            }
         }
     }
 
-    // Walk through each of the material and retrieve the corresponding
+    {
+        auto vertexBuffer = new VertexBuffer(reinterpret_cast<unsigned char *>(vertices),
+                                             vertexNum, sizeof(ModelVertex), BufferUsage::Static);
+        auto indexBuffer = new IndexBuffer(reinterpret_cast<unsigned char *>(indices),
+                                           indexNum, IndexType::UnsignedInt, BufferUsage::Static);
+
+        mVertexBuffer = VertexBufferSharedPtr(vertexBuffer);
+        mIndexBuffer = IndexBufferSharedPtr(indexBuffer);
+    }
+}
+
+void
+Mesh::LoadTextures(Model *model, const aiScene *scene, const aiMesh *mesh)
+{
+    // Walk through each of the material and retrieve the corresponding textures.
     if (mesh->mMaterialIndex >= 0)
     {
         aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
-        // We assume a convention for sampler names in the shaders. Each diffuse texture should be named
-        // as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER.
-        // Same applies to other texture as the following list summarizes:
-        // Diffuse: texture_diffuseN
-        // Specular: texture_specularN
-        // Normal: texture_normalN
+        // TODO(Wuxiang 2017-01-27 16:02): Add ambient.
 
-        // Diffuse maps
-        static vector<Texture> diffuseMapTextureGroup;
-        LoadMaterial(model, diffuseMapTextureGroup, material, aiTextureType_DIFFUSE, "texture_diffuse");
-        textureVector.insert(textureVector.end(), diffuseMapTextureGroup.begin(), diffuseMapTextureGroup.end());
+        // Load diffuse maps
+        static vector<size_t> diffuseMapTextureIndexVector;
+        diffuseMapTextureIndexVector.clear();
+        LoadMaterialTexture(model, material, diffuseMapTextureIndexVector, aiTextureType_DIFFUSE);
+        mTextureIndexVector.insert(mTextureIndexVector.end(), diffuseMapTextureIndexVector.begin(), diffuseMapTextureIndexVector.end());
 
-        // Specular maps
-        static vector<Texture> specularMapTextureGroup;
-        LoadMaterial(model, specularMapTextureGroup, material, aiTextureType_SPECULAR, "texture_specular");
-        textureVector.insert(textureVector.end(), specularMapTextureGroup.begin(), specularMapTextureGroup.end());
+        // Load specular maps
+        static vector<size_t> specularMapTextureIndexVector;
+        specularMapTextureIndexVector.clear();
+        LoadMaterialTexture(model, material, specularMapTextureIndexVector, aiTextureType_SPECULAR);
+        mTextureIndexVector.insert(mTextureIndexVector.end(), specularMapTextureIndexVector.begin(), specularMapTextureIndexVector.end());
     }
-
-    m_vertexBuffer = make_shared<VertexBuffer>(vertexVector->size(), 3, sizeof(float), BufferUsage::Static);
-    m_vertexBuffer->m_data = reinterpret_cast<char *>(&vertexVector[0]);
-    m_vertexBuffer->m_dataContainer = vertexVector;
-
-    m_indexBuffer = make_shared<IndexBuffer>(indexVector->size(), sizeof(Index), BufferUsage::Static);
-    m_indexBuffer->m_data = reinterpret_cast<char *>(&indexVector[0]);
-    m_vertexBuffer->m_dataContainer = indexVector;
 }
 
 void
-Mesh::LoadMaterial(Model           *model,
-                   vector<Texture>& materialTextureGroup,
-                   aiMaterial      *material,
-                   aiTextureType    textureType,
-                   string           textureTypeName)
+Mesh::LoadMaterialTexture(Model            *model,
+                          const aiMaterial *material,
+                          vector<size_t>&   materialTextureIndexVector,
+                          aiTextureType     materialTextureType)
 {
-    vector<Texture> textures;
-    for (GLuint materialIndex = 0; materialIndex < material->GetTextureCount(textureType); ++materialIndex)
+    int textureNum = material->GetTextureCount(materialTextureType);
+    if (textureNum > 0)
     {
-        aiString textureFilePath;
-        material->GetTexture(textureType, materialIndex, &textureFilePath);
+        auto assetManager = AssetManager::GetInstance();
 
-        bool skip = false;
-
-        // Linear search loaded texture
-        for (GLuint textureIndex = 0; textureIndex < model->m_textureVector.size(); textureIndex++)
+        // Walk through every piece of material and load texture if needed
+        for (int textureIndex = 0; textureIndex < textureNum; ++textureIndex)
         {
-            auto texture = model->m_textureVector[textureIndex];
+            aiString textureFilePath;
+            material->GetTexture(materialTextureType, textureIndex, &textureFilePath);
 
-            // When we find this ready to load texture has been loaded already
-            if (texture->m_textureFilePath.c_str() == textureFilePath.C_Str())
+            // Linear search loaded texture
+            bool textureFound = false;
             {
-                textures.push_back(model->m_textureVector[textureIndex]->m_id);
-                skip = true;
-                break;
-            }
-        }
+                for (int textureIndexLoaded = 0; textureIndexLoaded < model->mTextureVector.size(); textureIndexLoaded++)
+                {
+                    auto textureLoaded = model->mTextureVector[textureIndexLoaded];
 
-        if (!skip)
-        {
-            auto textureResource = make_shared<Texture2d>();
-            textureResource->LoadFromAssetFile(textureFilePath.C_Str());
-            textures.push_back(textureResource);
-            model->m_textureVector.push_back(textureResource);
+                    // When we find this ready to load texture has been loaded already
+                    if (textureLoaded->mFilePath.c_str() == textureFilePath.C_Str())
+                    {
+                        // Add the
+                        materialTextureIndexVector.push_back(textureIndexLoaded);
+                        textureFound = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!textureFound)
+            {
+                auto texture = assetManager->LoadTexture(textureFilePath.C_Str());
+                materialTextureIndexVector.push_back(materialTextureIndexVector.size());
+                model->mTextureVector.push_back(texture);
+            }
         }
     }
 }

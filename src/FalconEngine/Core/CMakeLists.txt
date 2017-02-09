@@ -7,7 +7,6 @@ file(GLOB FALCON_ENGINE_CORE_SOURCE_FILES *.cpp)
 include_directories(${FALCON_ENGINE_INCLUDE_DIR})
 link_directories(${FALCON_ENGINE_LIBRARY_DIR})
 
-# Content
 add_library(FalconEngine.Core STATIC
     ${FALCON_ENGINE_CORE_SOURCE_FILES})
 
@@ -17,4 +16,4 @@ target_link_libraries(FalconEngine.Core
 
 set_target_properties(FalconEngine.Core PROPERTIES COMPILE_FLAGS "/MTd")
 set_target_properties(FalconEngine.Core PROPERTIES SUFFIX ".lib")
-set_target_properties(FalconEngine.Core PROPERTIES FOLDER "FalconEngine Targets")
+set_target_properties(FalconEngine.Core PROPERTIES FOLDER "FalconEngine Library Targets")

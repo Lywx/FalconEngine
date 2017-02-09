@@ -17,4 +17,4 @@ target_link_libraries(FalconEngine.Context
 
 set_target_properties(FalconEngine.Context PROPERTIES COMPILE_FLAGS "/MTd")
 set_target_properties(FalconEngine.Context PROPERTIES SUFFIX ".lib")
-set_target_properties(FalconEngine.Context PROPERTIES FOLDER "FalconEngine Targets")
+set_target_properties(FalconEngine.Context PROPERTIES FOLDER "FalconEngine Library Targets")

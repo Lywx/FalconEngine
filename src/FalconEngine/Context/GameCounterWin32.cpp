@@ -1,5 +1,5 @@
 #include <FalconEngine/Context/GameCounter.h>
-#include <FalconEngine/ContextInclude.h>
+#include <FalconEngine/Context/ContextInclude.h>
 
 #include <stdexcept>
 #include <string>
@@ -7,7 +7,8 @@
 #if BOOST_OS_WINDOWS
 #include <windows.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 /************************************************************************/
 /* Platform Dependent Implementation                                    */
@@ -49,40 +50,40 @@ LARGE_INTEGER GameCounterImp::CounterFrequency;
 /* Constructors and Destructor                                          */
 /************************************************************************/
 GameCounter::GameCounter()
-    : m_initializationPoint(std::chrono::steady_clock::now())
-    , m_implementation(std::make_shared<GameCounterImp>(GameCounterImp()))
+    : mInitializationPoint(std::chrono::steady_clock::now())
+    , mImplementation(std::make_shared<GameCounterImp>(GameCounterImp()))
 {
 }
 
 GameCounter::GameCounter(const GameCounter& rhs)
-    : m_initializationPoint(rhs.m_initializationPoint)
-    , m_implementation(rhs.m_implementation)
+    : mInitializationPoint(rhs.mInitializationPoint)
+    , mImplementation(rhs.mImplementation)
 {
 }
 
 GameCounter& GameCounter::operator=(const GameCounter& rhs)
 {
-    m_implementation = rhs.m_implementation;
-    m_initializationPoint = rhs.m_initializationPoint;
+    mImplementation = rhs.mImplementation;
+    mInitializationPoint = rhs.mInitializationPoint;
 
     return *this;
 }
 
 GameCounter::GameCounter(GameCounter&& rhs) noexcept
-    : m_initializationPoint(rhs.m_initializationPoint)
-    , m_implementation(rhs.m_implementation)
+    : mInitializationPoint(rhs.mInitializationPoint)
+    , mImplementation(rhs.mImplementation)
 {
-    rhs.m_implementation = nullptr;
+    rhs.mImplementation = nullptr;
 }
 
 GameCounter& GameCounter::operator=(GameCounter&& rhs) noexcept
 {
     if (this != &rhs)
     {
-        m_implementation = rhs.m_implementation;
-        m_initializationPoint = rhs.m_initializationPoint;
+        mImplementation = rhs.mImplementation;
+        mInitializationPoint = rhs.mInitializationPoint;
 
-        rhs.m_implementation = nullptr;
+        rhs.mImplementation = nullptr;
     }
 
     return *this;
@@ -97,7 +98,7 @@ GameCounter::~GameCounter()
 /************************************************************************/
 double GameCounter::GetMilliseconds() const
 {
-    return m_implementation->GetMilliseconds();
+    return mImplementation->GetMilliseconds();
 }
 
 }

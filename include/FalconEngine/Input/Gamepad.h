@@ -45,9 +45,9 @@ enum eGamepadButtons
 
 class Gamepad
 {
-    InputObject    *m_inputObject;
-    InputDevice    *m_device;
-    DIJOYSTATE2     m_gamepadState;
+    InputObject    *mInputObject;
+    InputDevice    *mDevice;
+    DIJOYSTATE2     mGamepadState;
 
     size_t          m_ID;
     size_t          m_NumDevices;
@@ -55,7 +55,7 @@ class Gamepad
     bool Initialize(InputObject *di, HWND hwnd, bool buffered = FALSE);
     void ClearDevice();
 
-    InputDevice *GetDevice() const { return m_device; }
+    InputDevice *GetDevice() const { return mDevice; }
 
     friend class InputState;
 

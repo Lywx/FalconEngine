@@ -2,59 +2,92 @@
 
 #include <boost/filesystem.hpp>
 
-#if BOOST_OS_WINDOWS
-#define DIR_SEPARATOR L"\\"
-#elif BOOST_OS_LINUX
-#define DIR_SEPARATOR L"/"
+#if FALCON_ENGINE_OS_WINDOWS
+#define DIR_SEPARATOR "\\"
+#elif FALCON_ENGINE_OS_LINUX
+#define DIR_SEPARATOR "/"
 #endif
 
-namespace fs = boost::filesystem;
+using namespace boost;
+using namespace std;
 
-namespace FalconEngine {
-
-std::wstring GetCurrentPath()
+namespace FalconEngine
 {
-    auto path = fs::current_path().wstring();
-    path.append(DIR_SEPARATOR);
-    return path;
+
+wstring
+GetWString(string str)
+{
+    // NOTE(Wuxiang): http://en.cppreference.com/w/cpp/locale/codecvt_utf8_utf16
+    // TODO(Wuxiang): Before you starting to work in linux you would not want to change wstring as paramter in IO.
+    using CodeOutput = wchar_t;
+    using CodeConvert = codecvt_utf8_utf16<CodeOutput>;
+    static wstring_convert<CodeConvert> converter;
+    return converter.from_bytes(str);
+}
+
+bool
+Exist(const string relativePath)
+{
+    return filesystem::exists(GetCurrentPath() + relativePath);
+}
+
+string
+GetCurrentPath()
+{
+    return filesystem::current_path().string() + DIR_SEPARATOR;
+}
+
+string
+GetFileDirectory(const string path)
+{
+    return filesystem::path(path).parent_path().string() + DIR_SEPARATOR;
 }
 
 // http://stackoverflow.com/questions/4430780/how-can-i-extract-the-file-name-and-extension-from-a-path-in-c
-std::wstring GetFileName(const std::wstring relativePath)
+string
+GetFileName(const string path)
 {
-    if (Exists(relativePath))
-    {
-        fs::path file(relativePath);
-        return file.filename().wstring();
-    }
+    return filesystem::path(path).filename().string();
+}
 
-    return L"";
+std::string GetFileStem(const std::string path)
+{
+    return filesystem::path(path).stem().string();
+}
+
+string
+GetFileExtension(const std::string path)
+{
+    return filesystem::path(path).extension().string();
 }
 
 // Return byte number of the given file.
 //
 // http://stackoverflow.com/questions/5840148/how-can-i-get-a-files-size-in-c
-std::ifstream::pos_type GetFileSize(const std::wstring relativePath) {
-    if (Exists(relativePath))
+ifstream::pos_type
+GetFileSize(const string relativePath)
+{
+    if (Exist(relativePath))
     {
-        std::ifstream file(relativePath, std::ifstream::ate | std::ifstream::binary);
-        return file.tellg();
+        ifstream fileStream(relativePath, ifstream::ate | ifstream::binary);
+        return fileStream.tellg();
     }
 
-    return std::ifstream::pos_type();
+    throw runtime_error("File not found.");
 }
 
-bool Exists(const std::wstring relativePath)
+string
+ChangeFileExtension(const string path, const string extension)
 {
-    return fs::exists(GetCurrentPath() + relativePath);
+    return filesystem::path(path).replace_extension(extension).string();
 }
 
 // Return true if successful.
 // Return false if there is already a directory named as given or other IO errors happen.
-bool CreateDirectory(const std::wstring relativePath)
+bool CreateDirectory(const string relativePath)
 {
-    fs::path path(GetCurrentPath() + relativePath);
-    return create_directory(path);
+    auto path = GetCurrentPath() + relativePath;
+    return filesystem::create_directory(path);
 }
 
 }

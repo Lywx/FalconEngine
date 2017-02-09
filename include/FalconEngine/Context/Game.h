@@ -5,7 +5,7 @@ namespace FalconEngine
 
 class GameEngine;
 
-// @Summary: This is the context that runs the customized code. The GameEngine class
+// @summary This is the context that runs the customized code. The GameEngine class
 // would use this class's
 class Game
 {
@@ -26,34 +26,49 @@ public:
 
     virtual ~Game();
 
+public:
     /************************************************************************/
-    // Game Operation
-    virtual void Initialize();
-    virtual void Exit();
+    /* Game Operation                                                       */
+    /************************************************************************/
+    virtual void
+    Initialize();
+
+    virtual void
+    Exit();
 
     /************************************************************************/
-    // Render Operation
-    virtual void RenderBegin();
-    virtual void Render(double percent);
-    virtual void RenderEnd();
+    /* Render Operation                                                     */
+    /************************************************************************/
+    virtual void
+    RenderBegin();
+
+    virtual void
+    Render(double percent);
+
+    virtual void
+    RenderEnd();
 
     /************************************************************************/
-    // Update Operation
-    virtual void Update(double elapsed);
-    virtual void UpdateInput();
-
+    /* Update Operation                                                     */
     /************************************************************************/
-    // Member Access Operation
-    GameEngine *GetEngine() const;
-    void        SetEngine(GameEngine *gameEngine);
+    virtual void
+    Update(double elapsed);
+
+    virtual void
+    UpdateInput();
+
+    GameEngine *
+    GetEngine() const;
+    void
+    SetEngine(GameEngine *gameEngine);
 
 protected:
-    GameEngine *m_gameEngine = nullptr;
+    GameEngine *mGameEngine = nullptr;
 };
 
 inline GameEngine *Game::GetEngine() const
 {
-    return m_gameEngine;
+    return mGameEngine;
 }
 
 }

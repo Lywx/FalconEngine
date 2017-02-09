@@ -12,7 +12,7 @@ class Keyboard
     char            key_state[256];
     char            old_key_state[256];
 
-    bool            m_bBuffered;
+    bool            mBBuffered;
 
     bool Initialize(bool buffered = false);
 

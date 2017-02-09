@@ -7,9 +7,9 @@ namespace Input {
 /* Constructors and Destructor                                          */
 /************************************************************************/
 InputState::InputState()
-    : m_keyboard(0)
-    , m_mouse(0)
-    , m_gamepad(0)
+    : mKeyboard(0)
+    , mMouse(0)
+    , mGamepad(0)
 {
 
 }
@@ -23,14 +23,14 @@ InputState::~InputState()
 /************************************************************************/
 std::shared_ptr<Keyboard> InputState::CreateKeyboard()
 {
-    if (m_keyboard)
+    if (mKeyboard)
     {
-        return m_keyboard;
+        return mKeyboard;
     }
 
-    m_keyboard = std::make_shared<Keyboard>();
-    m_keyboard->Initialize(false);
-    return m_keyboard;
+    mKeyboard = std::make_shared<Keyboard>();
+    mKeyboard->Initialize(false);
+    return mKeyboard;
 
 }
 

@@ -12,23 +12,36 @@ add_library(FalconEngine.Content STATIC
     ${FALCON_ENGINE_CONTENT_SOURCE_FILES})
 
 target_link_libraries(FalconEngine.Content 
-    glew32sd.lib glfw3.lib 
-    opengl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib)
+    FalconEngine.Core.lib
+    FalconEngine.Graphics.lib)
 
 set_target_properties(FalconEngine.Content PROPERTIES COMPILE_FLAGS "/MTd")
 set_target_properties(FalconEngine.Content PROPERTIES SUFFIX ".lib")
-set_target_properties(FalconEngine.Content PROPERTIES FOLDER "FalconEngine Targets")
+set_target_properties(FalconEngine.Content PROPERTIES FOLDER "FalconEngine Library Targets")
 
-# Content.Test 
-file(GLOB FALCON_ENGINE_CONTENT_TEST_SOURCE_FILES Test/*.cpp)
+link_directories(
+    ${FALCON_ENGINE_LIBRARY_DIR}
+    ${FALCON_ENGINE_RUNTIME_OUTPUT_DIR})
 
-add_executable(FalconEngine.Content.Test
-    ${FALCON_ENGINE_CONTENT_TEST_SOURCE_FILES})
+# Content Pipeline
+add_executable(FalconEngine.Content.Pipeline AssetBuilder.cpp)
 
-target_link_libraries(FalconEngine.Content.Test FalconEngine.Content
-    glew32sd.lib glfw3.lib 
-    opengl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib)
+if (WIN32)
+set(FALCON_ENGINE_CONTENT_PIPELINE_EXTRA_BINRARY_FILES assimp-vc140-mt.lib)
+else()
+message(WARNING "Dependency not available in linux.")
+endif()
 
-set_target_properties(FalconEngine.Content.Test PROPERTIES COMPILE_FLAGS "/MTd")
-set_target_properties(FalconEngine.Content.Test PROPERTIES SUFFIX ".exe")
-set_target_properties(FalconEngine.Content.Test PROPERTIES FOLDER "FalconEngine Tests")
+target_link_libraries(FalconEngine.Content.Pipeline 
+    FalconEngine.Core.lib
+    FalconEngine.Content.lib
+    FalconEngine.Graphics.lib
+    ${FALCON_ENGINE_CONTENT_PIPELINE_EXTRA_BINRARY_FILES}
+    )
+
+set_target_properties(FalconEngine.Content.Pipeline PROPERTIES COMPILE_FLAGS "/MTd /Gm-")
+
+# Prevent strangely setting the import library: https://msdn.microsoft.com/en-us/library/67wc07b9.aspx
+set_target_properties(FalconEngine.Content.Pipeline PROPERTIES LINK_FLAGS "/INCREMENTAL:NO /IMPLIB:")
+set_target_properties(FalconEngine.Content.Pipeline PROPERTIES SUFFIX ".exe")
+set_target_properties(FalconEngine.Content.Pipeline PROPERTIES FOLDER "FalconEngine Executable Targets")

@@ -15,13 +15,13 @@ public:
     bool        IsDerived(const Rtti& type) const;
 
 private:
-    const char *m_typeName;
-    const Rtti *m_typeBase;
+    const char *mTypeName;
+    const Rtti *mTypeBase;
 };
 
 inline const char *Rtti::GetTypeName() const
 {
-    return m_typeName;
+    return mTypeName;
 }
 
 inline bool Rtti::IsExactly(const Rtti& type) const
@@ -31,7 +31,7 @@ inline bool Rtti::IsExactly(const Rtti& type) const
 
 }
 
-#define FALCON_ENGINE_DECLARE_RTTI \
+#define FALCON_ENGINE_RTTI_DECLARE \
 public: \
     static const Rtti Type; \
     \
@@ -40,5 +40,5 @@ public: \
         return Type; \
     }
 
-#define FALCON_ENGINE_IMPLEMENT_RTTI(klass, baseklass) \
+#define FALCON_ENGINE_RTTI_IMPLEMENT(klass, baseklass) \
     const Rtti klass::Type(#klass, &baseklass::Type)

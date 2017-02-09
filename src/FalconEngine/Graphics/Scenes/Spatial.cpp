@@ -3,15 +3,15 @@
 namespace FalconEngine
 {
 
-FALCON_ENGINE_IMPLEMENT_RTTI(Spatial, Object);
+FALCON_ENGINE_RTTI_IMPLEMENT(Spatial, Object);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
 
 Spatial::Spatial() :
-    m_worldTransformIsCurrent(false),
-    m_parent(nullptr)
+    mWorldTransformIsCurrent(false),
+    mParent(nullptr)
 {
 }
 
@@ -43,18 +43,18 @@ void Spatial::Update(double elaped, bool initiator)
 void Spatial::UpdateWorldTransform(double elaped)
 {
     // Update world transforms.
-    if (!m_worldTransformIsCurrent)
+    if (!mWorldTransformIsCurrent)
     {
-        if (m_parent)
+        if (mParent)
         {
-            m_worldTransform = m_parent->m_worldTransform * m_localTransform;
+            mWorldTransform = mParent->mWorldTransform * mLocalTransform;
         }
         else
         {
-            m_worldTransform = m_localTransform;
+            mWorldTransform = mLocalTransform;
         }
 
-        m_worldTransformIsCurrent = true;
+        mWorldTransformIsCurrent = true;
     }
 }
 

@@ -4,7 +4,8 @@
 #include "GameCounter.h"
 #include "GameDebug.h"
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 class GameEngine
 {
@@ -14,7 +15,7 @@ public:
     double MillisecondPerRender    = 16.66666666666;
 
     // Runtime Members
-    Game *m_game;
+    Game *mGame;
     GameCounter Counter;
 
     explicit GameEngine(Game *game);
@@ -35,17 +36,17 @@ public:
 protected:
     virtual void Initialize();
 
-    // @Summary: Main loop
-    // @Remark: The main goal of this algorithm is to ensure the render rate is
+    // @summary Main loop
+    // @note The main goal of this algorithm is to ensure the render rate is
     // constant and update rate is flexible.
     virtual void Loop();
 
     virtual void Exit();
 
 private:
-    bool m_initialized = false;
-    bool m_paused      = false;
-    bool m_running     = true;
+    bool mInitialized = false;
+    bool mPaused      = false;
+    bool mRunning     = true;
 };
 
 }

@@ -24,8 +24,8 @@ public:
     double GetMilliseconds() const;
 
 private:
-    std::chrono::time_point<std::chrono::steady_clock> m_initializationPoint;
-    std::shared_ptr<GameCounterImp> m_implementation;
+    std::chrono::time_point<std::chrono::steady_clock> mInitializationPoint;
+    std::shared_ptr<GameCounterImp> mImplementation;
 };
 
 }

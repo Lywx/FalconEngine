@@ -6,34 +6,34 @@ namespace FalconEngine {
 /* Constructors and Destructor                                          */
 /************************************************************************/
 GameEngine::GameEngine(Game *game)
-    : m_game(game)
+    : mGame(game)
 {
-    m_game->SetEngine(this);
+    mGame->SetEngine(this);
 }
 
 GameEngine::GameEngine(const GameEngine& rhs)
-    : m_game(rhs.m_game)
+    : mGame(rhs.mGame)
 {
 }
 
 GameEngine& GameEngine::operator=(const GameEngine& rhs)
 {
-    m_game = rhs.m_game;
+    mGame = rhs.mGame;
     return *this;
 }
 
 GameEngine::GameEngine(GameEngine&& rhs) noexcept
-    : m_game(rhs.m_game)
+    : mGame(rhs.mGame)
 {
-    rhs.m_game = nullptr;
+    rhs.mGame = nullptr;
 }
 
 GameEngine& GameEngine::operator=(GameEngine&& rhs) noexcept
 {
     if (this != &rhs)
     {
-        m_game = rhs.m_game;
-        rhs.m_game = nullptr;
+        mGame = rhs.mGame;
+        rhs.mGame = nullptr;
     }
 
     return *this;
@@ -41,7 +41,7 @@ GameEngine& GameEngine::operator=(GameEngine&& rhs) noexcept
 
 GameEngine::~GameEngine()
 {
-    m_game = nullptr;
+    mGame = nullptr;
 }
 
 /************************************************************************/
@@ -49,7 +49,7 @@ GameEngine::~GameEngine()
 /************************************************************************/
 inline void GameEngine::Run()
 {
-    if (!m_initialized)
+    if (!mInitialized)
     {
         Initialize();
     }
@@ -60,7 +60,7 @@ inline void GameEngine::Run()
 
 inline void GameEngine::Shutdown()
 {
-    m_running = false;
+    mRunning = false;
 }
 
 /************************************************************************/
@@ -68,12 +68,12 @@ inline void GameEngine::Shutdown()
 /************************************************************************/
 inline void GameEngine::Initialize()
 {
-    if(m_game != nullptr)
+    if(mGame != nullptr)
     {
-        m_game->Initialize();
+        mGame->Initialize();
     }
 
-    m_initialized = true;
+    mInitialized = true;
 }
 
 inline void GameEngine::Loop()
@@ -81,7 +81,7 @@ inline void GameEngine::Loop()
     Counter = GameCounter();
     char lastFramePerformanceString[256];
 
-    if (m_game != nullptr)
+    if (mGame != nullptr)
     {
         double lastFrameBegunMillisecond = Counter.GetMilliseconds();
         double lastRenderBegunMillisecond = lastFrameBegunMillisecond;
@@ -90,7 +90,7 @@ inline void GameEngine::Loop()
         // First update has no previous elapsed time
         double lastUpdateElapsedMillisecond = 0;
 
-        while (m_running)
+        while (mRunning)
         {
             double lastFrameEndedMillisecond = Counter.GetMilliseconds();
             double lastRenderEndedMillisecond = lastFrameEndedMillisecond;
@@ -102,7 +102,7 @@ inline void GameEngine::Loop()
             // Reset frame start point.
             lastFrameBegunMillisecond = lastFrameEndedMillisecond;
 
-            m_game->UpdateInput();
+            mGame->UpdateInput();
 
             // Reset update accumulated time elapsed.
             int    currentUpdateTotalCount = 0;
@@ -111,7 +111,7 @@ inline void GameEngine::Loop()
             double lastUpdateEndedMillisecond = 0;
             do
             {
-                m_game->Update(currentUpdateTotalCount == 0 ? lastUpdateElapsedMillisecond + lastRenderElapsedMillisecond : lastUpdateElapsedMillisecond);
+                mGame->Update(currentUpdateTotalCount == 0 ? lastUpdateElapsedMillisecond + lastRenderElapsedMillisecond : lastUpdateElapsedMillisecond);
                 ++currentUpdateTotalCount;
 
                 lastUpdateEndedMillisecond = Counter.GetMilliseconds();
@@ -140,18 +140,18 @@ inline void GameEngine::Loop()
 
             // Reset render start point.
             lastRenderBegunMillisecond = lastUpdateEndedMillisecond;
-            m_game->RenderBegin();
-            m_game->Render(1.0f);
-            m_game->RenderEnd();
+            mGame->RenderBegin();
+            mGame->Render(1.0f);
+            mGame->RenderEnd();
         }
     }
 }
 
 inline void GameEngine::Exit()
 {
-    if (m_game != nullptr)
+    if (mGame != nullptr)
     {
-        m_game->Exit();
+        mGame->Exit();
     }
 }
 

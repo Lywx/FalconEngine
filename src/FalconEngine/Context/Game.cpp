@@ -1,6 +1,7 @@
 #include <FalconEngine/Context/Game.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -35,19 +36,31 @@ Game::~Game()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-void Game::Initialize() {};
-void Game::Exit() {};
+void
+Game::Initialize() {};
 
-void Game::RenderBegin() {}
-void Game::Render(double percent) { }
-void Game::RenderEnd() {}
+void
+Game::Exit() {};
 
-void Game::Update(double elapsed) { }
-void Game::UpdateInput() { }
+void
+Game::RenderBegin() {}
 
-void Game::SetEngine(GameEngine *gameEngine)
+void
+Game::Render(double percent) { }
+
+void
+Game::RenderEnd() {}
+
+void
+Game::Update(double elapsed) { }
+
+void
+Game::UpdateInput() { }
+
+void
+Game::SetEngine(GameEngine *gameEngine)
 {
-    m_gameEngine = gameEngine;
+    mGameEngine = gameEngine;
 }
 
 }

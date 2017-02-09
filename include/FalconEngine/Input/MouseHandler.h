@@ -8,10 +8,10 @@ namespace FalconEngine {
 class MouseHandler : public InputHandler
 {
 public:
-    fnMouseHandler m_pHandler;
+    fnMouseHandler mPHandler;
     MouseHandler()
         : InputHandler()
-        , m_pHandler(0)
+        , mPHandler(0)
     {}
 };
 

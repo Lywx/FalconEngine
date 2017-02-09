@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Math/Vector2f.h>
+#include <FalconEngine/Math/Vector2.h>
 
 namespace FalconEngine {
 
@@ -35,8 +35,8 @@ public:
     void Update(float deltaTime);
 
     bool ButtonPressed(Button button) const;
-    bool ButtonReleased(Button button) { return m_wasReleased[button]; }
-    bool ButtonDoubleClicked(Button button) { return m_wasDoubleClicked[button]; }
+    bool ButtonReleased(Button button) { return mWasReleased[button]; }
+    bool ButtonDoubleClicked(Button button) { return mWasDoubleClicked[button]; }
 
     int GetRelativeX() const { return mouse_state.lX; }
     int GetRelativeY() const { return mouse_state.lY; }
@@ -56,24 +56,24 @@ public:
 
 private:
 
-    InputDevice    *m_device;
+    InputDevice    *mDevice;
     HANDLE          mouse_event;
     DIMOUSESTATE2   mouse_state;
     DIMOUSESTATE2   absolute_mouse_state;
-    HWND m_hwnd;
-    std::chrono::system_clock::time_point m_lastUpdate;
+    HWND mHwnd;
+    std::chrono::systemClock::time_point mLastUpdate;
 
-    bool m_wasPressed[8];
-    bool m_wasReleased[8];
-    bool m_wasDoubleClicked[8];
-    float m_lastReleaseTime[8];
+    bool mWasPressed[8];
+    bool mWasReleased[8];
+    bool mWasDoubleClicked[8];
+    float mLastReleaseTime[8];
 
-    bool m_bBuffered;
+    bool mBBuffered;
 
     bool Initialize(InputObject *di, HWND hwnd, bool buffered = FALSE);
     void ClearDevice();
 
-    InputDevice *GetDevice() const { return m_device; }
+    InputDevice *GetDevice() const { return mDevice; }
 
     friend class InputState;
 };

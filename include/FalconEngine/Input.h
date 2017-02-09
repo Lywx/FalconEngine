@@ -1,13 +1,14 @@
 #pragma once
 
-#include <FalconEngine/Math/Vector2f.h>
-#include <FalconEngine/Math/Vector3f.h>
+#include <FalconEngine/Math/Vector2.h>
+#include <FalconEngine/Math/Vector3.h>
 
 #include <vector>
 #include <memory>
 #include <chrono>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 namespace Input
 {
 
@@ -15,7 +16,8 @@ class Keyboard;
 class Mouse;
 class Gamepad;
 
-enum {
+enum
+{
     IN_DEFAULT,
     IN_EXCLUSIVE,
 };
@@ -25,12 +27,12 @@ typedef bool(*fnGamepadHandler)(std::shared_ptr<Gamepad> pgamepad, void *userDat
 
 inline bool ComparePriority(InputHandler& a, InputHandler& b)
 {
-    if (a.m_priority < b.m_priority)
+    if (a.mPriority < b.mPriority)
     {
         return false;
     }
 
-    if (a.m_priority > b.m_priority)
+    if (a.mPriority > b.mPriority)
     {
         return true;
     }

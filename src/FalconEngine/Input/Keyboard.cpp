@@ -7,13 +7,13 @@ bool Keyboard::Initialize(bool buffered)
 {
     HRESULT hr = S_OK;
 
-    hr = di->CreateDevice(GUID_SysKeyboard, &m_device, nullptr);
+    hr = di->CreateDevice(GUID_SysKeyboard, &mDevice, nullptr);
     if (FAILED(hr))
     {
         return false;
     }
 
-    hr = m_device->SetDataFormat(&c_dfDIKeyboard);
+    hr = mDevice->SetDataFormat(&c_dfDIKeyboard);
     if (FAILED(hr))
     {
         return false;
@@ -22,7 +22,7 @@ bool Keyboard::Initialize(bool buffered)
     DWORD dwCoopFlags = 0;
     dwCoopFlags |= DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY;
 
-    hr = m_device->SetCooperativeLevel(hwnd, dwCoopFlags);
+    hr = mDevice->SetCooperativeLevel(hwnd, dwCoopFlags);
     if (FAILED(hr))
     {
         return false;
@@ -30,7 +30,7 @@ bool Keyboard::Initialize(bool buffered)
 
     if (buffered)
     {
-        m_bBuffered = buffered;
+        mBBuffered = buffered;
 
         DIPROPDWORD dipdw;
 
@@ -40,13 +40,13 @@ bool Keyboard::Initialize(bool buffered)
         dipdw.diph.dwHow = DIPH_DEVICE;
         dipdw.dwData = BUFFER_SIZE;
 
-        if (FAILED(hr = m_device->SetProperty(DIPROP_BUFFERSIZE, &dipdw.diph)))
+        if (FAILED(hr = mDevice->SetProperty(DIPROP_BUFFERSIZE, &dipdw.diph)))
         {
             return false;
         }
     }
 
-    hr = m_device->Acquire();
+    hr = mDevice->Acquire();
     if (FAILED(hr))
     {
         return false;

@@ -6,12 +6,12 @@ class InputHandler
 {
 public:
 
-    size_t  m_priority;
-    void   *m_caller;
+    size_t  mPriority;
+    void   *mCaller;
 
     InputHandler()
-        : m_priority(IN_DEFAULT)
-        , m_caller(0)
+        : mPriority(IN_DEFAULT)
+        , mCaller(0)
     {
 
     }

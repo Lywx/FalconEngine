@@ -5,7 +5,7 @@ using namespace std;
 namespace FalconEngine
 {
 
-FALCON_ENGINE_IMPLEMENT_RTTI(Node, Spatial);
+FALCON_ENGINE_RTTI_IMPLEMENT(Node, Spatial);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -14,10 +14,10 @@ Node::Node()
 {
 }
 
-Node::Node(const aiScene *scene, const aiNode *node)
+Node::Node(Model *model, const aiScene *scene, const aiNode *node)
 {
     // Process each mesh located at the current node
-    for (size_t i = 0; i < node->mNumMeshes; ++i)
+    for (unsigned int i = 0; i < node->mNumMeshes; ++i)
     {
         // The node object only contains indices to index the actual objects in the scene.
         // The scene contains all the data, node is just to keep stuff organized (like relations between nodes).
@@ -27,24 +27,28 @@ Node::Node(const aiScene *scene, const aiNode *node)
     // After we've processed all of the meshes (if any) we then recursively process each of the children nodes
     for (size_t i = 0; i < node->mNumChildren; ++i)
     {
-        AttachChild(make_shared<Node>(scene, node->mChildren[i]));
+        AttachChild(make_shared<Node>(model, scene, node->mChildren[i]));
     }
 }
 
 Node::~Node()
 {
-    for (auto iter = m_children.begin(); iter != m_children.end(); ++iter)
+    for (auto iter = mChildren.begin(); iter != mChildren.end(); ++iter)
     {
         auto& spatialPtr = *iter;
         if (spatialPtr)
         {
-            spatialPtr->m_parent = nullptr;
+            spatialPtr->mParent = nullptr;
             spatialPtr = nullptr;
         }
     }
 }
 
-int Node::AttachChild(SpatialPtr child)
+/************************************************************************/
+/* Public Members                                                       */
+/************************************************************************/
+int
+Node::AttachChild(SpatialSharedPtr child)
 {
     if (!child)
     {
@@ -53,18 +57,18 @@ int Node::AttachChild(SpatialPtr child)
         return -1;
     }
 
-    if (child->m_parent)
+    if (child->mParent)
     {
         // The child already has a parent.
         assert(false);;
         return -1;
     }
 
-    child->m_parent = this;
+    child->mParent = this;
 
     // Insert the child in the first available slot (if any).
     auto i = 0;
-    for (auto iter = m_children.begin(); iter != m_children.end(); ++iter, ++i)
+    for (auto iter = mChildren.begin(); iter != mChildren.end(); ++iter, ++i)
     {
         auto& spatialPtr = *iter;
 
@@ -77,22 +81,23 @@ int Node::AttachChild(SpatialPtr child)
     }
 
     // All slots are used, so append the child to the array.
-    auto insertedIndex = static_cast<int>(m_children.size());
-    m_children.push_back(child);
+    auto insertedIndex = static_cast<int>(mChildren.size());
+    mChildren.push_back(child);
     return insertedIndex;
 }
 
-int Node::DetachChild(SpatialPtr child)
+int
+Node::DetachChild(SpatialSharedPtr child)
 {
     if (child)
     {
         auto i = 0;
-        for (auto iter = m_children.begin(); iter != m_children.end(); ++iter, ++i)
+        for (auto iter = mChildren.begin(); iter != mChildren.end(); ++iter, ++i)
         {
             auto& spatialPtr = *iter;
             if (spatialPtr == child)
             {
-                spatialPtr->m_parent = nullptr;
+                spatialPtr->mParent = nullptr;
                 spatialPtr = nullptr;
                 return i;
             }
@@ -102,15 +107,16 @@ int Node::DetachChild(SpatialPtr child)
     return -1;
 }
 
-SpatialPtr Node::DetachChildAt(size_t i)
+SpatialSharedPtr
+Node::DetachChildAt(size_t i)
 {
-    if (0 <= i && i < m_children.size())
+    if (0 <= i && i < mChildren.size())
     {
-        auto child = m_children[i];
+        auto child = mChildren[i];
         if (child)
         {
-            child->m_parent = nullptr;
-            m_children[i] = nullptr;
+            child->mParent = nullptr;
+            mChildren[i] = nullptr;
         }
 
         return child;
@@ -119,30 +125,31 @@ SpatialPtr Node::DetachChildAt(size_t i)
     return nullptr;
 }
 
-SpatialPtr Node::SetChild(size_t i, SpatialPtr child)
+SpatialSharedPtr
+Node::SetChild(size_t i, SpatialSharedPtr child)
 {
     if (child)
     {
         // The child already has a parent
-        assert(child->m_parent);;
+        assert(child->mParent);;
     }
 
     if (0 <= i && i < ChildrenNum())
     {
         // Remove the child currently in the slot.
-        auto childPrevious = m_children[i];
+        auto childPrevious = mChildren[i];
         if (childPrevious)
         {
-            childPrevious->m_parent = nullptr;
+            childPrevious->mParent = nullptr;
         }
 
         // Insert the new child in the slot.
         if (child)
         {
-            child->m_parent = this;
+            child->mParent = this;
         }
 
-        m_children[i] = child;
+        mChildren[i] = child;
 
         return childPrevious;
     }
@@ -150,29 +157,31 @@ SpatialPtr Node::SetChild(size_t i, SpatialPtr child)
     // The index is out of range, so append the child to the array.
     if (child)
     {
-        child->m_parent = this;
+        child->mParent = this;
     }
 
-    m_children.push_back(child);
+    mChildren.push_back(child);
 
     return nullptr;
 }
 
-SpatialPtr Node::ChildAt(size_t i)
+SpatialSharedPtr
+Node::ChildAt(size_t i)
 {
     if (0 <= i && i < ChildrenNum())
     {
-        return m_children[i];
+        return mChildren[i];
     }
 
     return nullptr;
 }
 
-void Node::UpdateWorldTransform(double elapsed)
+void
+Node::UpdateWorldTransform(double elapsed)
 {
     Spatial::UpdateWorldTransform(elapsed);
 
-    for (auto iter = m_children.begin(); iter != m_children.end(); ++iter)
+    for (auto iter = mChildren.begin(); iter != mChildren.end(); ++iter)
     {
         auto child = *iter;
         if (child)

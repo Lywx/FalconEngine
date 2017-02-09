@@ -7,10 +7,10 @@ namespace FalconEngine {
 class gamepad_handler : public InputHandler
 {
 public:
-    fnGamepadHandler m_pHandler;
+    fnGamepadHandler mPHandler;
     gamepad_handler()
         : InputHandler()
-        , m_pHandler(0)
+        , mPHandler(0)
     {}
 };
 

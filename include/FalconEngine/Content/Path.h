@@ -1,18 +1,46 @@
 #pragma once
 
+#include <codecvt>
 #include <fstream>
+#include <locale>
 #include <string>
 
-#include <FalconEngine/ContentInclude.h>
+#include <FalconEngine/Content/ContentInclude.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
-bool                    Exists(const std::wstring relativePath);
+// @param str must be in utf-8 format.
+//
+// @return
+std::wstring
+GetWString(std::string str);
 
-std::wstring            GetCurrentPath();
-std::wstring            GetFileName(const std::wstring relateivePath);
-std::ifstream::pos_type GetFileSize(const std::wstring relativePath);
+bool
+Exist(const std::string relativePath);
 
-bool                    CreateDirectory(const std::wstring relativePath);
+std::string
+GetCurrentPath();
+
+std::string
+GetFileExtension(const std::string path);
+
+std::string
+GetFileDirectory(const std::string path);
+
+std::string
+GetFileName(const std::string path);
+
+std::string
+GetFileStem(const std::string path);
+
+std::ifstream::pos_type
+GetFileSize(const std::string relativePath);
+
+std::string
+ChangeFileExtension(const std::string path, const std::string extension);
+
+bool
+CreateDirectory(const std::string relativePath);
 
 }

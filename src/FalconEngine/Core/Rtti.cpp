@@ -7,8 +7,8 @@ namespace FalconEngine {
 /************************************************************************/
 Rtti::Rtti (const char *name, const Rtti *baseType)
 {
-    m_typeName = name;
-    m_typeBase = baseType;
+    mTypeName = name;
+    mTypeBase = baseType;
 }
 
 Rtti::~Rtti ()
@@ -30,7 +30,7 @@ bool Rtti::IsDerived (const Rtti& type) const
             return true;
         }
 
-        search = search->m_typeBase;
+        search = search->mTypeBase;
     }
 
     return false;

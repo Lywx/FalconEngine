@@ -1,7 +1,8 @@
 #include <FalconEngine/Math/Quaternion.h>
-#include <FalconEngine/Math/Matrix4f.h>
+#include <FalconEngine/Math/Matrix4.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 Quaternion Quaternion::Identity = Quaternion(1, 0, 0, 0);
 

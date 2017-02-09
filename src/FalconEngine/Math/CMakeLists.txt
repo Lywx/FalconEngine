@@ -17,4 +17,4 @@ target_link_libraries(FalconEngine.Math
     glew32sd.lib glfw3.lib opengl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib)
 
 # Add to Visual Studio filter folder
-set_target_properties(FalconEngine.Math PROPERTIES FOLDER "FalconEngine Targets")
+set_target_properties(FalconEngine.Math PROPERTIES FOLDER "FalconEngine Library Targets")

@@ -27,9 +27,9 @@ public:
 
     void Update(float deltaTime);
 
-    std::shared_ptr<Keyboard>   GetKeyboard() const { return m_keyboard; }
-    std::shared_ptr<Mouse>      GetMouse() const { return m_mouse; }
-    std::shared_ptr<Gamepad>    GetGamepad() const { return m_gamepad; }
+    std::shared_ptr<Keyboard>   GetKeyboard() const { return mKeyboard; }
+    std::shared_ptr<Mouse>      GetMouse() const { return mMouse; }
+    std::shared_ptr<Gamepad>    GetGamepad() const { return mGamepad; }
 
     // Keyboard Handling
     void HandleKeyboard();
@@ -48,20 +48,20 @@ public:
 
 private:
 
-    std::shared_ptr<Keyboard>   m_keyboard;
-    std::shared_ptr<Mouse>      m_mouse;
-    std::shared_ptr<Gamepad>    m_gamepad;
+    std::shared_ptr<Keyboard>   mKeyboard;
+    std::shared_ptr<Mouse>      mMouse;
+    std::shared_ptr<Gamepad>    mGamepad;
 
-    std::vector<keyboard_handler> m_keyboard_handlers;
-    std::vector<MouseHandler>     m_mouse_handlers;
-    std::vector<gamepad_handler>  m_gamepad_handlers;
+    std::vector<keyboard_handler> mKeyboard_handlers;
+    std::vector<MouseHandler>     mMouse_handlers;
+    std::vector<gamepad_handler>  mGamepad_handlers;
 
     enum InputDeviceType {
         KEYBOARD,
         MOUSE
     };
 
-    float m_lastUpdate;
+    float mLastUpdate;
 };
 
 }

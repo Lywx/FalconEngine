@@ -15,10 +15,10 @@ class keyboard_handler : public InputHandler
     bool m_Enabled;
 
 public:
-    KeyboardHandler m_pHandler;
+    KeyboardHandler mPHandler;
     keyboard_handler()
         : InputHandler()
-        , m_pHandler(0)
+        , mPHandler(0)
         , m_Enabled(true)
     {}
 

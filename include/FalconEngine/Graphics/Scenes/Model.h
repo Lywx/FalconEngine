@@ -1,30 +1,48 @@
 #pragma once
 
+#include <FalconEngine/Graphics/GraphicsInclude.h>
+
 #include <assimp/scene.h>
 
-#include <FalconEngine/GraphicsInclude.h>
-#include <FalconEngine/Graphics/Renderers/Texture2d.h>
+#include <FalconEngine/Graphics/Renderers/Resources/Texture2d.h>
 #include <FalconEngine/Graphics/Scenes/Mesh.h>
 #include <FalconEngine/Graphics/Scenes/Node.h>
-#include <FalconEngine/Graphics/Scenes/Spatial.h>
 
 namespace FalconEngine
 {
 
-class Model : public Object
+struct ModelVertex
 {
-    FALCON_ENGINE_DECLARE_RTTI;
-
-public:
-    void
-    LoadFromModelFile(std::string modelFilePath);
-
-public:
-    std::string               m_filePath;
-    std::string               m_fileDirPath;
-
-    NodePtr                   m_nodeRoot;
-    std::vector<Texture2dPtr> m_textureVector;
+    Vector3f mPosition;
+    Vector3f mNormal;
+    Vector2f mTexCoord;
 };
+
+using ModelIndex = int;
+
+class Model : public Asset
+{
+    FALCON_ENGINE_RTTI_DECLARE;
+
+public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
+    Model(std::string fileName, std::string filePath);
+    virtual ~Model();
+
+public:
+    Node                     mRootNode;
+    std::vector<Texture2d *> mTextureVector;
+
+    /************************************************************************/
+    /* Model Loadtime Data                                                  */
+    /************************************************************************/
+    std::vector<std::string>  mTextureArchivePathVector;                       // Texture Archive paths
+    std::vector<std::string>  mTextureFilePathVector;                          // Raw texture paths
+};
+
+typedef std::shared_ptr<Model> ModelSharedPtr;
+typedef std::unique_ptr<Model> ModelUniquePtr;
 
 }

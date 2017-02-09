@@ -1,13 +1,12 @@
 #pragma once
 
-#include <FalconEngine/Math/Vector2d.h>
-#include <FalconEngine/Math/Vector2f.h>
-#include <FalconEngine/Math/Vector4f.h>
+#include <FalconEngine/Math/Vector2.h>
+#include <FalconEngine/Math/Vector4.h>
 
 namespace FalconEngine
 {
 
-// @Summary: axis-aligned rectangle in 2D space
+// @summary axis-aligned rectangle in 2D space
 class Rectangle
 {
 public:
@@ -40,7 +39,7 @@ public:
     Vector4f
     GetExtents() const;
 
-    Vector2d
+    Vector2i
     GetCenter() const;
 
     void
@@ -77,7 +76,7 @@ public:
     Contains(const Rectangle& rect) const;
 
     bool
-    Contains(const Vector2d& position) const;
+    Contains(const Vector2i& position) const;
 
     void
     Inflate(float x, float y);
@@ -89,14 +88,14 @@ public:
     Offset(float x, float y);
 
     void
-    Offset(const Vector2d& vec);
+    Offset(const Vector2i& vec);
 
 public:
-    float m_left;
-    float m_top;
+    float mLeft;
+    float mTop;
 
-    float m_width;
-    float m_height;
+    float mWidth;
+    float mHeight;
 };
 
 bool operator==(const Rectangle&lhs, const Rectangle& rhs);
@@ -105,82 +104,82 @@ bool operator!=(const Rectangle&lhs, const Rectangle& rhs);
 inline float
 Rectangle::GetRight() const
 {
-    return m_left + m_width;
+    return mLeft + mWidth;
 }
 
 inline void
 Rectangle::SetRight(float right)
 {
-    auto offsetPlusWidth = right - m_left;
-    auto offsetForLeft = offsetPlusWidth - m_width;
-    m_left += offsetForLeft;
+    auto offsetPlusWidth = right - mLeft;
+    auto offsetForLeft = offsetPlusWidth - mWidth;
+    mLeft += offsetForLeft;
 }
 
 inline float
 Rectangle::GetBottom() const
 {
-    return m_top + m_height;
+    return mTop + mHeight;
 }
 
 inline void
 Rectangle::SetBottom(float bottom)
 {
-    m_top = bottom - m_height;
+    mTop = bottom - mHeight;
 }
 
 inline Vector2f
 Rectangle::GetPosition() const
 {
-    return Vector2f(m_left, m_top);
+    return Vector2f(mLeft, mTop);
 }
 
 inline void
 Rectangle::SetPosition(const Vector2f& position)
 {
-    m_left = position.x;
-    m_top = position.y;
+    mLeft = position.x;
+    mTop = position.y;
 }
 
 inline Vector2f
 Rectangle::GetSize() const
 {
-    return Vector2f(m_width, m_height);
+    return Vector2f(mWidth, mHeight);
 }
 
 inline void
 Rectangle::SetSize(const Vector2f& size)
 {
-    m_width = size.x;
-    m_height = size.y;
+    mWidth = size.x;
+    mHeight = size.y;
 }
 
 inline Vector4f
 Rectangle::GetExtents() const
 {
-    return glm::vec4(m_left, m_top, GetRight(), GetBottom());
+    return glm::vec4(mLeft, mTop, GetRight(), GetBottom());
 }
 
 inline void
 Rectangle::SetExtents(const Vector4f extents)
 {
-    m_left   = extents.x;
-    m_top    = extents.y;
-    m_width  = extents.z - m_left;
-    m_height = extents.w - m_top;
+    mLeft   = extents.x;
+    mTop    = extents.y;
+    mWidth  = extents.z - mLeft;
+    mHeight = extents.w - mTop;
 }
 
-inline Vector2d
+inline Vector2i
 Rectangle::GetCenter() const
 {
-    return Vector2d(m_left + m_width * 0.5f,
-                    m_top + m_height * 0.5f);
+    return Vector2i(mLeft + mWidth * 0.5f,
+                    mTop + mHeight * 0.5f);
 }
 
 inline void
 Rectangle::SetCenter(const Vector2f& center)
 {
-    m_left = center.x - m_width / 2;
-    m_top  = center.y - m_height / 2;
+    mLeft = center.x - mWidth / 2;
+    mTop  = center.y - mHeight / 2;
 }
 
 }

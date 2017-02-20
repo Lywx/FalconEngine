@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Renderers/Shaders/VertexAttribute.h>
+#include <FalconEngine/Graphics/Renderers/Resources/VertexAttribute.h>
 
 namespace FalconEngine
 {

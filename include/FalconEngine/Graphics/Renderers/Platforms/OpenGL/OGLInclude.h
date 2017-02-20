@@ -14,11 +14,11 @@
 #include <FalconEngine/Graphics/Renderers/Resources/Buffer.h>
 #include <FalconEngine/Graphics/Renderers/Resources/Texture.h>
 #include <FalconEngine/Graphics/Renderers/Resources/Sampler.h>
+#include <FalconEngine/Graphics/Renderers/Resources/VertexAttribute.h>
 #include <FalconEngine/Graphics/Renderers/States/BlendState.h>
 #include <FalconEngine/Graphics/Renderers/States/DepthTestState.h>
 #include <FalconEngine/Graphics/Renderers/States/StencilTestState.h>
 #include <FalconEngine/Graphics/Renderers/Shaders/Shader.h>
-#include <FalconEngine/Graphics/Renderers/Shaders/VertexAttribute.h>
 
 namespace FalconEngine
 {

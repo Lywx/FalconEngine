@@ -1,8 +1,8 @@
 #pragma once
 
 #include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Renderers/Resources/VertexAttribute.h>
 #include <FalconEngine/Graphics/Renderers/Resources/VertexBuffer.h>
-#include <FalconEngine/Graphics/Renderers/Shaders/VertexAttribute.h>
 
 namespace FalconEngine
 {

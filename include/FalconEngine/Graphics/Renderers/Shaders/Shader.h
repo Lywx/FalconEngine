@@ -53,8 +53,11 @@ public:
     int
     GetUniformNum() const;
 
-    ShaderUniform *
-    GetUniform(std::string uniformName) const;
+    ShaderUniform&
+    GetUniform(std::string uniformName);
+
+    int
+    GetUniformLocation(std::string uniformName) const;
 
     /************************************************************************/
     /* Composition Management                                               */

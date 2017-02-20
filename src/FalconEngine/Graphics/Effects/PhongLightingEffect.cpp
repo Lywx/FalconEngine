@@ -45,13 +45,10 @@ PhongLightingEffect::~PhongLightingEffect()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-VisualEffectInstance *
+void
 PhongLightingEffect::CreateInstance(VisualEffectInstance *instance, const Light *light, const Material *material) const
 {
-    if (!GetType().IsExactly(instance->GetEffect()->GetType()))
-    {
-        FALCON_ENGINE_NOT_SUPPORT();
-    }
+    CheckEffectCompatible(instance);
 
     // TODO(Wuxiang 2017-01-23 10:46): Try to implement this.
     instance->SetShaderUniform(0, ShareConstant<Vector4f>("", light->mAmbient));
@@ -66,14 +63,14 @@ PhongLightingEffect::CreateInstance(VisualEffectInstance *instance, const Light 
     //                            new0 LightAmbientConstant(light));
     //instance->SetVertexConstant(0, 4,
     //                            new0 LightAttenuationConstant(light));
-    return instance;
 }
 
-VisualEffectInstance *
+VisualEffectInstanceSharedPtr
 PhongLightingEffect::CreateInstance(const Light *light, const Material *material)
 {
     auto instance = new VisualEffectInstance(GetSharedPtr());
-    return CreateInstance(instance, light, material);
+    CreateInstance(instance, light, material);
+    return VisualEffectInstanceSharedPtr(instance);
 }
 
 }

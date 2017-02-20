@@ -16,6 +16,7 @@
 namespace FalconEngine
 {
 
+class VisualEffectInstance;
 class VisualEffect;
 using VisualEffectSharedPtr = std::shared_ptr<VisualEffect>;
 class VisualEffect : public Object
@@ -47,26 +48,30 @@ public:
     Shader *
     GetShader(int passIndex);
 
-    BlendState *
-    GetBlendState(int passIndex);
+    const BlendState *
+    GetBlendState(int passIndex) const;
 
-    CullState *
-    GetCullState(int passIndex);
+    const CullState *
+    GetCullState(int passIndex) const;
 
-    DepthTestState *
-    GetDepthTestState(int passIndex);
+    const DepthTestState *
+    GetDepthTestState(int passIndex) const;
 
-    OffsetState *
-    GetOffsetState(int passIndex);
+    const OffsetState *
+    GetOffsetState(int passIndex) const;
 
-    StencilTestState *
-    GetStencilTestState(int passIndex);
+    const StencilTestState *
+    GetStencilTestState(int passIndex) const;
 
-    WireframeState *
-    GetWireframeState(int passIndex);
+    const WireframeState *
+    GetWireframeState(int passIndex) const;
 
     VisualEffectSharedPtr
     GetSharedPtr();
+
+protected:
+    void
+    CheckEffectCompatible(VisualEffectInstance *instance) const;
 
 protected:
     VisualEffectSharedPtr  mEffect;                                             // Effect shared_ptr controls the destruction of this class.

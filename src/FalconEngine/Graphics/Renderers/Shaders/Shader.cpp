@@ -27,7 +27,7 @@ Shader::~Shader()
 void
 Shader::PushUniform(std::string uniformName, ShaderUniformType uniformType)
 {
-    mUniformTable[uniformName] = make_unique<ShaderUniform>(uniformName, uniformType);
+    mUniformTable[uniformName] = ShaderUniform(uniformName, uniformType);
 }
 
 int
@@ -36,11 +36,16 @@ Shader::GetUniformNum() const
     return int(mUniformTable.size());
 }
 
-ShaderUniform *
-Shader::GetUniform(string uniformName) const
+ShaderUniform&
+Shader::GetUniform(string uniformName)
 {
-    // TODO(Wuxiang 2017-01-25 13:33): Not done!
     return mUniformTable.at(uniformName);
+}
+
+int
+Shader::GetUniformLocation(std::string uniformName) const
+{
+    return mUniformTable.at(uniformName).mLocation;
 }
 
 int Shader::GetShaderNum() const

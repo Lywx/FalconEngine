@@ -4,6 +4,7 @@
 
 #include <FalconEngine/Graphics/Renderers/VisualEffect.h>
 #include <FalconEngine/Graphics/Renderers/VisualEffectInstance.h>
+#include <FalconEngine/Graphics/Renderers/Resources/VertexFormat.h>
 
 namespace FalconEngine
 {
@@ -25,6 +26,16 @@ class BitmapFontEffect : public VisualEffect
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
+    /************************************************************************/
+    /* Static Members                                                       */
+    /************************************************************************/
+public:
+    static VertexFormatSharedPtr
+    GetVertexFormatInstance();
+
+private:
+    VertexFormatSharedPtr static sVertexFormat;
+
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -36,11 +47,11 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     // @summary Add required parameters to the existing visual effect instance.
-    VisualEffectInstance *
+    void
     CreateInstance(VisualEffectInstance *instance, const BitmapFont *font, int width, int height) const;
 
     // @summary Create a new visual effect instance.
-    VisualEffectInstance *
+    VisualEffectInstanceSharedPtr
     CreateInstance(const BitmapFont *font, int width, int height);
 
 private:

@@ -20,8 +20,6 @@
 #include <FalconEngine/Graphics/Renderers/Shaders/Shader.h>
 #include <FalconEngine/Graphics/Renderers/Shaders/VertexAttribute.h>
 
-#define FALCON_ENGINE_BUFFER_OFFSET(offset) ((void *)(offset))
-
 namespace FalconEngine
 {
 

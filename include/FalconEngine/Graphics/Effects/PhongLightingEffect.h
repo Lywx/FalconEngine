@@ -25,11 +25,11 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     // @summary Add required parameters to the existing visual effect instance.
-    VisualEffectInstance *
+    void
     CreateInstance(VisualEffectInstance *instance, const Light *light, const Material *material) const;
 
     // @summary Create a new visual effect instance.
-    VisualEffectInstance *
+    VisualEffectInstanceSharedPtr
     CreateInstance(const Light *light, const Material *material);
 };
 

@@ -1,4 +1,5 @@
 #include <FalconEngine/Graphics/Renderers/VisualEffect.h>
+#include <FalconEngine/Graphics/Renderers/VisualEffectInstance.h>
 
 namespace FalconEngine
 {
@@ -43,38 +44,38 @@ VisualEffect::GetShader(int passIndex)
     return mPassHandleVector.at(passIndex)->GetShader();
 }
 
-BlendState *
-VisualEffect::GetBlendState(int passIndex)
+const BlendState *
+VisualEffect::GetBlendState(int passIndex) const
 {
     return mPassHandleVector.at(passIndex)->GetBlendState();
 }
 
-CullState *
-VisualEffect::GetCullState(int passIndex)
+const CullState *
+VisualEffect::GetCullState(int passIndex) const
 {
     return mPassHandleVector.at(passIndex)->GetCullState();
 }
 
-DepthTestState *
-VisualEffect::GetDepthTestState(int passIndex)
+const DepthTestState *
+VisualEffect::GetDepthTestState(int passIndex) const
 {
     return mPassHandleVector.at(passIndex)->GetDepthTestState();
 }
 
-OffsetState *
-VisualEffect::GetOffsetState(int passIndex)
+const OffsetState *
+VisualEffect::GetOffsetState(int passIndex) const
 {
     return mPassHandleVector.at(passIndex)->GetOffsetState();
 }
 
-StencilTestState *
-VisualEffect::GetStencilTestState(int passIndex)
+const StencilTestState *
+VisualEffect::GetStencilTestState(int passIndex) const
 {
     return mPassHandleVector.at(passIndex)->GetStencilTestState();
 }
 
-WireframeState *
-VisualEffect::GetWireframeState(int passIndex)
+const WireframeState *
+VisualEffect::GetWireframeState(int passIndex) const
 {
     return mPassHandleVector.at(passIndex)->GetWireframeState();
 }
@@ -89,4 +90,14 @@ VisualEffect::GetSharedPtr()
 
     return mEffect;
 }
+
+void
+VisualEffect::CheckEffectCompatible(VisualEffectInstance *instance) const
+{
+    if (!GetType().IsExactly(instance->GetEffect()->GetType()))
+    {
+        FALCON_ENGINE_NOT_SUPPORT();
+    }
+}
+
 }

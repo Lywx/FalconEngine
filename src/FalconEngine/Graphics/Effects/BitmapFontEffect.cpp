@@ -1,5 +1,6 @@
 #include <FalconEngine/Graphics/Effects/BitmapFontEffect.h>
 #include <FalconEngine/Graphics/Renderers/BitmapFont.h>
+#include <FalconEngine/Graphics/Renderers/Resources/VertexFormat.h>
 
 using namespace std;
 
@@ -8,6 +9,23 @@ namespace FalconEngine
 
 FALCON_ENGINE_RTTI_IMPLEMENT(BitmapFontEffect, VisualEffect);
 
+VertexFormatSharedPtr
+BitmapFontEffect::GetVertexFormatInstance()
+{
+    if (sVertexFormat == nullptr)
+    {
+        sVertexFormat = std::make_shared<VertexFormat>();
+        sVertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec2, false, 0);
+        sVertexFormat->PushVertexAttribute(1, "TexCoord", VertexAttributeType::FloatVec2, false, 0);
+        sVertexFormat->PushVertexAttribute(2, "FontColor", VertexAttributeType::FloatVec4, false, 0);
+        sVertexFormat->PushVertexAttribute(3, "FontWidth", VertexAttributeType::Float, false, 0);
+        sVertexFormat->PushVertexAttribute(4, "FontEdge", VertexAttributeType::Float, false, 0);
+        sVertexFormat->PushVertexAttribute(5, "FontPage", VertexAttributeType::Float, false, 0);
+    }
+
+    return sVertexFormat;
+}
+
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
@@ -15,35 +33,13 @@ BitmapFontEffect::BitmapFontEffect(const Handedness *handedness) :
     mCameraHandedness(handedness)
 {
     auto shader = std::make_shared<Shader>();
-
-    // TODO(Wuxiang 2017-01-22 10:41): Fix this with a default shader storage.
     shader->PushShaderFile(ShaderType::VertexShader, "Content/Shaders/BitmapFont.vert.glsl");
     shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shaders/BitmapFont.frag.glsl");
-
-    shader->PushAttribute(0, "Position", VertexAttributeType::FloatVec2, false);
-    shader->PushAttribute(1, "TexCoord", VertexAttributeType::FloatVec2, false);
-    shader->PushAttribute(2, "FontColor", VertexAttributeType::FloatVec4, false);
-    shader->PushAttribute(3, "FontWidth", VertexAttributeType::Float, false);
-    shader->PushAttribute(4, "FontEdge", VertexAttributeType::Float, false);
-    shader->PushAttribute(5, "FontPage", VertexAttributeType::Float, false);
 
     shader->PushUniform("Projection", ShaderUniformType::FloatMat4);
     shader->PushUniform("Texture", ShaderUniformType::Int);
 
-    // Prepare text batcher and text buffer
-    glGenVertexArrays(1, &mTextShaderDefaultVao);
-    glBindVertexArray(mTextShaderDefaultVao);
-
-    glBindBuffer(GL_ARRAY_BUFFER, mTextShaderDefaultBuffer);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(float), BUFFER_OFFSET( 0 * sizeof(float)));
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(float), BUFFER_OFFSET( 2 * sizeof(float)));
-    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 11 * sizeof(float), BUFFER_OFFSET( 4 * sizeof(float)));
-    glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 11 * sizeof(float), BUFFER_OFFSET( 8 * sizeof(float)));
-    glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, 11 * sizeof(float), BUFFER_OFFSET( 9 * sizeof(float)));
-    glVertexAttribPointer(5, 1, GL_FLOAT, GL_FALSE, 11 * sizeof(float), BUFFER_OFFSET(10 * sizeof(float)));
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    //shader->
 
     auto pass = make_unique<VisualPass>();
     pass->SetShader(shader);
@@ -74,21 +70,25 @@ BitmapFontEffect::~BitmapFontEffect()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-VisualEffectInstance *
+void
 BitmapFontEffect::CreateInstance(VisualEffectInstance *instance, const BitmapFont *font, int width, int height) const
 {
+    CheckEffectCompatible(instance);
+
     auto projection = mCameraHandedness->CreateOrthogonal(float(width), float(height), 1.0f, 1000.0f);
     instance->SetShaderUniform(0, ShareConstant<Matrix4f>("Projection", projection));
+
+    // TODO(Wuxiang): Should I change the texture unit?
     instance->SetShaderTexture(0, 0, font->GetTexture());
     instance->SetShaderSampler(0, 0, font->GetSampler());
-
-    return instance;
 }
 
-VisualEffectInstance *
+VisualEffectInstanceSharedPtr
 BitmapFontEffect::CreateInstance(const BitmapFont *font, int width, int height)
 {
-
+    auto instance = new VisualEffectInstance(GetSharedPtr());
+    CreateInstance(instance, font, width, height);
+    return VisualEffectInstanceSharedPtr(instance);
 }
 
 }

@@ -697,15 +697,20 @@ Renderer::Enable(const VisualPass *pass)
     // Update required shader uniforms.
     for (int uniformIndex = 0; uniformIndex < pass->GetShaderUniformNum(); ++uniformIndex)
     {
-        /
-        //  TODO(Wuxiang 2017-01-25 13:21): Wrong!
         // NOTE(Wuxiang): At this point you are supposed to have uniform location
         // for each uniform. In principle, you should finish declaring all shader
         // uniform before this. The render engine would not repetitively check
         // whether each uniform has setup uniform location.
 
-        // NOTE(Wuxiang): The binding of the shader would
-        auto *uniform = pass->GetShaderUniform(uniformIndex);
+        // NOTE(Wuxiang): The location of the shader uniform would be stored in
+        // shader's uniform table after the binding of the shader.
+        auto uniform = pass->GetShaderUniform(uniformIndex);
+        if (uniform->mLocation == 0)
+        {
+            auto shader = pass->GetShader();
+            uniform->mLocation = shader->GetUniformLocation(uniform->mName);
+        }
+
         if (uniform->mUpdated)
         {
             PlatformShaderUniform::UpdateContext(uniform);

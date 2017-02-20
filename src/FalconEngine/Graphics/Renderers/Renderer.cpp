@@ -207,22 +207,33 @@ Renderer::Unbind(const VertexFormat *vertexFormat)
 void
 Renderer::Enable(const VertexFormat *vertexFormat)
 {
-    for (auto& vertexRecord : vertexFormat->mVertexRecordVector)
+    FALCON_ENGINE_CHECK_NULLPTR(vertexFormat);
+
+    auto iter = mVertexFormatTable.find(vertexFormat);
+    PlatformVertexFormat *vertexFormatPlatform;
+    if (iter != mVertexFormatTable.end())
     {
-        Enable(vertexRecord.GetVertexBuffer(),
-               vertexRecord.GetBindingIndex(),
-               vertexRecord.GetOffset(),
-               vertexRecord.GetStride());
+        vertexFormatPlatform = iter->second;
     }
+    else
+    {
+        vertexFormatPlatform = new PlatformVertexFormat(vertexFormat);
+        mVertexFormatTable[vertexFormat] = vertexFormatPlatform;
+    }
+
+    vertexFormatPlatform->Enable();
 }
 
 void
 Renderer::Disable(const VertexFormat *vertexFormat)
 {
-    for (auto& vertexRecord : vertexFormat->mVertexRecordVector)
+    FALCON_ENGINE_CHECK_NULLPTR(vertexFormat);
+
+    auto iter = mVertexFormatTable.find(vertexFormat);
+    if (iter != mVertexFormatTable.end())
     {
-        Disable(vertexRecord.GetVertexBuffer(),
-                vertexRecord.GetBindingIndex());
+        auto vertexFormatPlatform = iter->second;
+        vertexFormatPlatform->Disable();
     }
 }
 
@@ -683,11 +694,10 @@ Renderer::Enable(const VisualPass *pass)
         Enable(textureUnit.first, textureUnit.second);
     }
 
-    // TODO(Wuxiang 2017-01-25 13:21): VAO!
-
     // Update required shader uniforms.
     for (int uniformIndex = 0; uniformIndex < pass->GetShaderUniformNum(); ++uniformIndex)
     {
+        /
         //  TODO(Wuxiang 2017-01-25 13:21): Wrong!
         // NOTE(Wuxiang): At this point you are supposed to have uniform location
         // for each uniform. In principle, you should finish declaring all shader
@@ -751,12 +761,27 @@ Renderer::Draw(const Visual *visual,
     FALCON_ENGINE_CHECK_NULLPTR(visual);
     FALCON_ENGINE_CHECK_NULLPTR(instance);
 
+    // NOTE(Wuxiang): Currently this function assume that all passes are using
+    // same vertex attribute array, so that we don't switch vertex format between
+    // the shader.
+
+    // Enable vertex attribute array.
     auto vertexFormat = visual->GetVertexFormat();
     Enable(vertexFormat);
+
+    // Enable vertex buffer.
+    for (auto& vertexRecord : vertexFormat->mVertexRecordVector)
+    {
+        Enable(vertexRecord.GetVertexBuffer(),
+               vertexRecord.GetBindingIndex(),
+               vertexRecord.GetOffset(),
+               vertexRecord.GetStride());
+    }
 
     auto indexBuffer = visual->GetIndexBuffer();
     if (indexBuffer)
     {
+        // Enable index buffer.
         Enable(indexBuffer);
     }
 
@@ -782,11 +807,20 @@ Renderer::Draw(const Visual *visual,
         Disable(shader);
     }
 
+    // Disable index buffer.
     if (indexBuffer)
     {
         Disable(indexBuffer);
     }
 
+    // Disable vertex buffer.
+    for (auto& vertexRecord : vertexFormat->mVertexRecordVector)
+    {
+        Disable(vertexRecord.GetVertexBuffer(),
+                vertexRecord.GetBindingIndex());
+    }
+
+    // Disable vertex attribute array.
     Disable(vertexFormat);
 }
 

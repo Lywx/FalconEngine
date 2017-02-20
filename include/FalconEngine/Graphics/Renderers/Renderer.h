@@ -297,9 +297,12 @@ public:
     /************************************************************************/
     /* Draw                                                                 */
     /************************************************************************/
+
+    // @summary Draw single instance of visual.
     void
     Draw(Visual *visual);
 
+    // @summary Draw single instance of visual.
     void
     Draw(const Visual *visual, VisualEffectInstance *instance);
 

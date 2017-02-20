@@ -47,8 +47,8 @@ public:
     /************************************************************************/
     /* Uniform Management                                                   */
     /************************************************************************/
-    void
-    PushUniform(std::string uniformName, ShaderUniformType uniformType);
+    bool
+    ContainUniform(std::string uniformName) const;
 
     int
     GetUniformNum() const;
@@ -58,6 +58,9 @@ public:
 
     int
     GetUniformLocation(std::string uniformName) const;
+
+    void
+    PushUniform(std::string uniformName, ShaderUniformType uniformType);
 
     /************************************************************************/
     /* Composition Management                                               */

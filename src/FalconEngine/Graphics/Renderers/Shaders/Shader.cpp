@@ -24,10 +24,10 @@ Shader::~Shader()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-void
-Shader::PushUniform(std::string uniformName, ShaderUniformType uniformType)
+bool
+Shader::ContainUniform(std::string uniformName) const
 {
-    mUniformTable[uniformName] = ShaderUniform(uniformName, uniformType);
+    return mUniformTable.find(uniformName) != mUniformTable.end();
 }
 
 int
@@ -46,6 +46,12 @@ int
 Shader::GetUniformLocation(std::string uniformName) const
 {
     return mUniformTable.at(uniformName).mLocation;
+}
+
+void
+Shader::PushUniform(std::string uniformName, ShaderUniformType uniformType)
+{
+    mUniformTable[uniformName] = ShaderUniform(uniformName, uniformType);
 }
 
 int Shader::GetShaderNum() const

@@ -408,8 +408,8 @@ void Renderer::DrawPrimitive(const Visual *visual)
             int indexNum = indexBuffer->mElementNum;
             if (vertexNum > 0 && indexNum > 0)
             {
-                GLenum indexType;
-                const GLvoid *indexData;
+                GLenum indexType = 0;
+                const GLvoid *indexData = nullptr;
 
                 if (indexBuffer->mType == IndexType::UnsignedShort)
                 {

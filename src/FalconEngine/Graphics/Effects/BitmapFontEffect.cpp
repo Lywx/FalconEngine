@@ -9,6 +9,9 @@ namespace FalconEngine
 
 FALCON_ENGINE_RTTI_IMPLEMENT(BitmapFontEffect, VisualEffect);
 
+/************************************************************************/
+/* Static Members                                                       */
+/************************************************************************/
 VertexFormatSharedPtr
 BitmapFontEffect::GetVertexFormatInstance()
 {
@@ -38,8 +41,6 @@ BitmapFontEffect::BitmapFontEffect(const Handedness *handedness) :
 
     shader->PushUniform("Projection", ShaderUniformType::FloatMat4);
     shader->PushUniform("Texture", ShaderUniformType::Int);
-
-    //shader->
 
     auto pass = make_unique<VisualPass>();
     pass->SetShader(shader);

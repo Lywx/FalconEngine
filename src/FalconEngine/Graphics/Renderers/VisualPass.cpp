@@ -28,12 +28,14 @@ VisualPass::SetShader(ShaderSharedPtr shader)
 void
 VisualPass::SetShaderUniform(ShaderUniform *shaderUniform)
 {
-    if (mShader->GetUniform(shaderUniform->mName))
+    if (mShader->ContainUniform(shaderUniform->mName))
     {
-        / ;
+        mShaderUniformVector.push_back(shaderUniform);
     }
-
-    mShaderUniformVector.push_back(shaderUniform);
+    else
+    {
+        ThrowRuntimeException("Uniform is not registered");
+    }
 }
 
 void

@@ -68,9 +68,7 @@ template <typename T>
 void
 VisualEffectInstance::SetShaderUniform(int passIndex, ShaderUniformValueSharedPtr<T> uniform)
 {
-    /
-    VisualPass *a = mEffect->GetPass(passIndex);
-    a->SetShaderUniform(uniform);
+    mEffect->GetPass(passIndex)->SetShaderUniform(uniform);
 }
 
 typedef std::shared_ptr<VisualEffectInstance> VisualEffectInstanceSharedPtr;

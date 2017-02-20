@@ -731,8 +731,6 @@ Renderer::Disable(const VisualPass *pass)
 {
     FALCON_ENGINE_CHECK_NULLPTR(pass);
 
-    // TODO(Wuxiang 2017-02-11 00:16): VAO!
-
     // Disable required shader textures.
     for (auto &textureUnit : pass->mShaderTextureTable)
     {

@@ -24,24 +24,43 @@ class Primitives : public Spatial
     FALCON_ENGINE_RTTI_DECLARE;
 
 protected:
-    Primitives(PrimitiveType primitiveType = PrimitiveType::None);
-    Primitives(PrimitiveType primitiveType, VertexBufferSharedPtr vertexBuffer, IndexBufferSharedPtr indexBuffer);
+    explicit Primitives(PrimitiveType primitiveType);
+    Primitives(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat);
+    Primitives(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat, IndexBufferSharedPtr indexBuffer);
 public:
     virtual ~Primitives();
 
 public:
-    const PrimitiveType
+    PrimitiveType
     GetPrimitiveType() const;
 
     const VertexFormat *
     GetVertexFormat() const;
 
+    int
+    GetVertexNum() const
+    {
+        return mVertexNum;
+    }
+
     const IndexBuffer *
     GetIndexBuffer() const;
 
 protected:
+
+    // NOTE(Wuxiang): This function should be implemented by the derived class
+    // and add final keyword in the derived class declaration. This function
+    // should be call during the derived class constructor.
+    virtual void
+    SetPrimitiveNum();
+
+    void
+    SetVertexNum(int vertexNum);
+
+protected:
     PrimitiveType         mPrimitiveType;
     VertexFormatSharedPtr mVertexFormat;
+    int                   mVertexNum;
     IndexBufferSharedPtr  mIndexBuffer;
 };
 

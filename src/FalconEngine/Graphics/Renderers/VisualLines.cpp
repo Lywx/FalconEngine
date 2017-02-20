@@ -6,20 +6,32 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-VisualLines::VisualLines(VertexBufferSharedPtr vertexBuffer, bool lineStrip) :
+VisualLines::VisualLines(VertexFormatSharedPtr vertexFormat, int vertexNum, bool vertexStrip) :
     Visual(
-        lineStrip
+        vertexStrip
         ? PrimitiveType::LineStrip
-        : PrimitiveType::Line, vertexBuffer, nullptr),
-    mSegmentStrip(lineStrip)
+        : PrimitiveType::Line, vertexFormat, nullptr),
+    mSegmentStrip(vertexStrip)
 {
-    mSegmentNum = lineStrip
-                  ? vertexBuffer->mElementNum - 1
-                  : vertexBuffer->mElementNum / 2;
+    SetVertexNum(vertexNum);
+    SetPrimitiveNum();
 }
 
 VisualLines::~VisualLines()
 {
+}
+
+/************************************************************************/
+/* Protected Members                                                    */
+/************************************************************************/
+void
+VisualLines::SetPrimitiveNum()
+{
+    Primitives::SetPrimitiveNum();
+
+    mSegmentNum = mSegmentStrip
+                  ? mVertexNum - 1
+                  : mVertexNum / 2;
 }
 
 }

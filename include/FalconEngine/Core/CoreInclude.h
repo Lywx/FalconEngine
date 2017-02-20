@@ -6,6 +6,7 @@
 #include <string>
 
 #include <boost/predef.h>
+#include <memory>
 
 /************************************************************************/
 /* Deployment Items                                                     */
@@ -41,6 +42,16 @@ ThrowNullException(const std::string& name)
 
 inline void
 CheckNullPointer(const void *pointer, const std::string name)
+{
+    if (!pointer)
+    {
+        ThrowNullException(name);
+    }
+}
+
+template<typename T>
+inline void
+CheckNullPointer(const std::shared_ptr<T> pointer, const std::string name)
 {
     if (!pointer)
     {

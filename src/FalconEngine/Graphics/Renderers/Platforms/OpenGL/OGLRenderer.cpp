@@ -375,8 +375,7 @@ void Renderer::DrawPrimitive(const Visual *visual)
     const GLenum  primitiveMode = OpenGLPrimitiveType[int(primitiveType)];
     if (primitiveType == PrimitiveType::Point)
     {
-        auto primitive = reinterpret_cast<const VisualPoints *>(visual);
-        int vertexNum = primitive->mPointNum;
+        int vertexNum = visual->GetVertexNum();
         if (vertexNum > 0)
         {
             glDrawArrays(primitiveMode, 0, vertexNum);
@@ -384,6 +383,7 @@ void Renderer::DrawPrimitive(const Visual *visual)
     }
     else if (primitiveType == PrimitiveType::Line)
     {
+        int vertexNum = visual->GetVertexNum();
         if (vertexNum > 0)
         {
             glDrawArrays(primitiveMode, 0, vertexNum);
@@ -391,6 +391,7 @@ void Renderer::DrawPrimitive(const Visual *visual)
     }
     else if (primitiveType == PrimitiveType::LineStrip)
     {
+        int vertexNum = visual->GetVertexNum();
         if (vertexNum > 0)
         {
             glDrawArrays(primitiveMode, 0, vertexNum);
@@ -398,6 +399,8 @@ void Renderer::DrawPrimitive(const Visual *visual)
     }
     else if (primitiveType == PrimitiveType::Triangle)
     {
+        int vertexNum = visual->GetVertexNum();
+
         // When use index buffer
         auto indexBuffer = visual->GetIndexBuffer();
         if (indexBuffer)

@@ -13,8 +13,13 @@ Visual::Visual(PrimitiveType primitiveType) :
 {
 }
 
-Visual::Visual(PrimitiveType primitiveType, VertexBufferSharedPtr vertexBuffer, IndexBufferSharedPtr indexBuffer) :
-    Primitives(primitiveType, vertexBuffer, indexBuffer)
+Visual::Visual(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat) :
+    Primitives(primitiveType, vertexFormat)
+{
+}
+
+Visual::Visual(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat, IndexBufferSharedPtr indexBuffer) :
+    Primitives(primitiveType, vertexFormat, indexBuffer)
 {
 }
 

@@ -18,8 +18,9 @@ protected:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Visual(PrimitiveType primitiveType);
-    Visual(PrimitiveType primitiveType, VertexBufferSharedPtr vertexBuffer, IndexBufferSharedPtr indexBuffer);
+    explicit Visual(PrimitiveType primitiveType);
+    Visual(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat);
+    Visual(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat, IndexBufferSharedPtr indexBuffer);
     virtual ~Visual();
 
 public:

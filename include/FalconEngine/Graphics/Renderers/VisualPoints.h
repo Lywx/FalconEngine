@@ -13,10 +13,18 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    VisualPoints(VertexBufferSharedPtr vertexBuffer);
+    VisualPoints(VertexFormatSharedPtr vertexFormat, int vertexNum);
     virtual ~VisualPoints();
 
 public:
+    int
+    GetPointNum() const;
+
+protected:
+    void
+    SetPrimitiveNum() override final;
+
+protected:
     size_t mPointNum;
 };
 }

@@ -13,10 +13,27 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    VisualLines(VertexBufferSharedPtr vertexBuffer, bool lineStrip = false);
+    VisualLines(VertexFormatSharedPtr vertexFormat, int vertexNum, bool vertexStrip = false);
     virtual ~VisualLines();
 
 public:
+    int
+    GetSegmentNum() const
+    {
+        return mSegmentNum;
+    }
+
+    bool
+    IsSegmentStrip() const
+    {
+        return mSegmentStrip;
+    }
+
+protected:
+    void
+    SetPrimitiveNum() override final;
+
+protected:
     size_t mSegmentNum;
     bool   mSegmentStrip;
 };

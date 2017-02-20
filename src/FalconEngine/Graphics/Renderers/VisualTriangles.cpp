@@ -8,21 +8,41 @@ FALCON_ENGINE_RTTI_IMPLEMENT(VisualTriangles, Visual);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-VisualTriangles::VisualTriangles(VertexBufferSharedPtr vertexBuffer, IndexBufferSharedPtr indexBuffer) :
-    Visual(PrimitiveType::Triangle, vertexBuffer, indexBuffer)
+VisualTriangles::VisualTriangles() :
+    Visual(PrimitiveType::Triangle),
+    mTriangleNum(0)
 {
-    if (mIndexBuffer)
-    {
-        mTriangleNum = indexBuffer->mElementNum / 3;
-    }
-    else
-    {
-        mTriangleNum = vertexBuffer->mElementNum / 3;
-    }
+    // NOTE(Wuxiang): The user for this constructor should be responsible for
+    // correctly initializing the mTriangleNum.
+}
+
+VisualTriangles::VisualTriangles(VertexFormatSharedPtr vertexFormat, int vertexNum, IndexBufferSharedPtr indexBuffer) :
+    Visual(PrimitiveType::Triangle, vertexFormat, indexBuffer)
+{
+    SetVertexNum(vertexNum);
+    SetPrimitiveNum();
 }
 
 VisualTriangles::~VisualTriangles()
 {
+}
+
+/************************************************************************/
+/* Protected Members                                                    */
+/************************************************************************/
+void
+VisualTriangles::SetPrimitiveNum()
+{
+    Primitives::SetPrimitiveNum();
+
+    if (mIndexBuffer)
+    {
+        mTriangleNum = mIndexBuffer->mElementNum / 3;
+    }
+    else
+    {
+        mTriangleNum = mVertexNum / 3;
+    }
 }
 
 }

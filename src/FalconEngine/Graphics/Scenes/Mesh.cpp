@@ -14,10 +14,12 @@ FALCON_ENGINE_RTTI_IMPLEMENT(Mesh, VisualTriangles);
 /* Constructors and Destructor                                          */
 /************************************************************************/
 Mesh::Mesh(Model *model, const aiScene *scene, const aiMesh *mesh) :
-    VisualTriangles(nullptr, nullptr)
+    VisualTriangles()
 {
     LoadBuffers(mesh);
     LoadTextures(model, scene, mesh);
+
+    SetPrimitiveNum();
 }
 
 void
@@ -63,13 +65,13 @@ Mesh::LoadBuffers(const aiMesh *mesh)
                 vertex.mTexCoord = Vector2f::Zero;
             }
 
-            // NOTE(Wuxiang):
+            // NOTE(Wuxiang): The vertex data is interlaced.
             vertexes[i] = vertex;
         }
 
         // TODO(Wuxiang): Should I change the binding index?
         mVertexFormat->PushVertexBuffer(0, vertexBuffer, 0, sizeof(ModelVertex));
-        mCount = vertexNum;
+        SetVertexNum(vertexNum);
     }
 
     // Fill index buffer.

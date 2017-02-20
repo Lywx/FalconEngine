@@ -219,6 +219,11 @@ Renderer::Enable(const VertexFormat *vertexFormat)
 void
 Renderer::Disable(const VertexFormat *vertexFormat)
 {
+    for (auto& vertexRecord : vertexFormat->mVertexRecordVector)
+    {
+        Disable(vertexRecord.GetVertexBuffer(),
+                vertexRecord.GetBindingIndex());
+    }
 }
 
 void

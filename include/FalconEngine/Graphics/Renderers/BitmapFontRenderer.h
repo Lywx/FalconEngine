@@ -51,10 +51,10 @@ public:
              Color        textColor = ColorPalette::White);
 
     void
-    PrepareString(BitmapFont *font,
-                  Shader     *textShader,
-                  BitmapText *text,
-                  Color       textColor = ColorPalette::White);
+    PrepareString(const BitmapFont *font,
+                  const Shader     *textShader,
+                  const BitmapText *text,
+                  Color             textColor = ColorPalette::White);
 
     void RenderBegin();
     void Render();
@@ -69,6 +69,7 @@ private:
 
     BitmapFontEffect                  *mTextEffect;
     VisualEffectInstanceSharedPtr      mTextEffectInstance;
+    HandednessRight                    mTextHandedness;
 };
 
 }

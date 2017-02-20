@@ -45,19 +45,23 @@ BitmapFontRenderer::Initialize(int width, int height)
     auto assetManager = AssetManager::GetInstance();
 
     // Obtain needed texture
-    auto font = assetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.bin");
+    auto debugFont = assetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.bin");
 
-    mTextBufferStream = std::make_shared<VertexBuffer>(1, sizeof(BitmapFontVertex), BufferUsage::Stream);
+
     mTextBufferDynamic = std::make_shared<VertexBuffer>(1, sizeof(BitmapFontVertex), BufferUsage::Dynamic);
+    mTextBufferStream = std::make_shared<VertexBuffer>(1, sizeof(BitmapFontVertex), BufferUsage::Stream);
 
-    mTextEffect = new BitmapFontEffect();
-    mTextEffectInstance = VisualEffectInstanceSharedPtr(mTextEffect->CreateInstance(font, width, height));
+    mTextEffect = new BitmapFontEffect(&mTextHandedness);
+    mTextFormatDynamic = mTextEffect->CreateVertexFormat();
+    mTextFormatStream = mTextEffect->CreateVertexFormat();
+
+    mTextEffectInstance = mTextEffect->CreateInstance(debugFont, width, height);
 }
 
 void BitmapFontRenderer::DrawText(
     BitmapFont& font,
     float       fontSize,
-    string  textString,
+    string   textString,
     Vector2f textPosition,
     float    textLineWidth,
     Color    textColor)
@@ -71,9 +75,9 @@ void BitmapFontRenderer::DrawText(
 //
 // @return The glyph number inside the text lines.
 int
-CreateLines(
+CreateTextLines(
     IN  const BitmapFont   *font,
-    IN  BitmapText         *text,
+    IN  const BitmapText   *text,
     OUT vector<BitmapLine>& lines)
 {
     static auto lineStrings = vector<string>();
@@ -121,33 +125,48 @@ CreateLines(
     return glyphCount;
 }
 
-void PushGlyphFontAttribute(
-    vector<float>& textAttributes, BitmapGlyph& textGlyph, Vector4f textColor, double fontSizeScale)
+template<typename T>
+inline void FillData(T *data, size_t& dataIndex, T value)
 {
-    // font color
-    textAttributes.push_back(textColor.x);
-    textAttributes.push_back(textColor.y);
-    textAttributes.push_back(textColor.z);
-    textAttributes.push_back(textColor.w);
+    data[dataIndex] = value;
+    ++dataIndex;
+}
+
+void
+FillFontAttribute(float             *textData,
+                  size_t&            textDataIndex,
+                  const BitmapGlyph *textGlyph,
+                  Vector4f           textColor,
+                  double fontSizeScale)
+{
+    // Font color
+    FillData<float>(textData, textDataIndex, textColor.x);
+    FillData<float>(textData, textDataIndex, textColor.y);
+    FillData<float>(textData, textDataIndex, textColor.z);
+    FillData<float>(textData, textDataIndex, textColor.w);
 
     // NOTE(Wuxiang): 1.32 is value the when imported font size is 33. 1.32 is
     // used as origin for scaling.
 
-    // font width
-    textAttributes.push_back(0.50f * (1 + 0.15 * (fontSizeScale - 1.32)));
+    // Font width
+    FillData<float>(textData, textDataIndex, 0.50 * (1 + 0.15 * (fontSizeScale - 1.32)));
 
-    // font edge
-    textAttributes.push_back(0.03f / (1 + 1.05 * (fontSizeScale - 1.32)));
+    // Font edge
+    FillData<float>(textData, textDataIndex, 0.03 / (1 + 1.05 * (fontSizeScale - 1.32)));
 
-    // font page
-    textAttributes.push_back(textGlyph.mPage);
+    // Font page
+    FillData<float>(textData, textDataIndex, textGlyph->mPage);
 }
 
-void PushGlyphAttribute(vector<float>& textAttributes,
-                        BitmapGlyph& textGlyph,
-                        Vector4f textColor,
-                        float textGlyphX, float textGlyphY,
-                        BitmapFont& font, double fontSizeScale)
+void
+FillGlyphAttribute(float             *textData,
+                   size_t&            textDataIndex,
+                   const BitmapGlyph *textGlyph,
+                   Vector4f           textColor,
+                   float              textGlyphX,
+                   float              textGlyphY,
+                   const BitmapFont *font,
+                   double            fontSizeScale)
 {
     // NOTE(Wuxiang): Since x1, y1 represents left-bottom coordinate, we need to
     // process base and yoffset differently. Notably, x1 is amended to center the
@@ -157,56 +176,59 @@ void PushGlyphAttribute(vector<float>& textAttributes,
     // set, which means English would have different advance than Chinese.
     // However, the influence of width indeed is compensated using this method in
     // spacing of the glyph.
-    double x1 = textGlyphX + (textGlyph.mAdvance / 2 - textGlyph.mWidth / 2 + textGlyph.mOffsetX) * fontSizeScale;
-    double y2 = textGlyphY + (font.mLineBase - textGlyph.mOffsetY) * fontSizeScale;
-    double y1 = y2 - textGlyph.mHeight * fontSizeScale;
-    double x2 = x1 + textGlyph.mWidth * fontSizeScale;
+    double x1 = textGlyphX + (textGlyph->mAdvance / 2 - textGlyph->mWidth / 2 + textGlyph->mOffsetX) * fontSizeScale;
+    double y2 = textGlyphY + (font->mLineBase - textGlyph->mOffsetY) * fontSizeScale;
+    double y1 = y2 - textGlyph->mHeight * fontSizeScale;
+    double x2 = x1 + textGlyph->mWidth * fontSizeScale;
 
-    textAttributes.push_back(x1);
-    textAttributes.push_back(y1);
-    textAttributes.push_back(textGlyph.mS1);
-    textAttributes.push_back(textGlyph.mT1);
-    PushGlyphFontAttribute(textAttributes, textGlyph, textColor, fontSizeScale);
+    FillData<float>(textData, textDataIndex, x1);
+    FillData<float>(textData, textDataIndex, y1);
+    FillData<float>(textData, textDataIndex, textGlyph->mS1);
+    FillData<float>(textData, textDataIndex, textGlyph->mT1);
+    FillFontAttribute(textData, textDataIndex, textGlyph, textColor, fontSizeScale);
 
-    textAttributes.push_back(x2);
-    textAttributes.push_back(y2);
-    textAttributes.push_back(textGlyph.mS2);
-    textAttributes.push_back(textGlyph.mT2);
-    PushGlyphFontAttribute(textAttributes, textGlyph, textColor, fontSizeScale);
+    FillData<float>(textData, textDataIndex, x2);
+    FillData<float>(textData, textDataIndex, y2);
+    FillData<float>(textData, textDataIndex, textGlyph->mS2);
+    FillData<float>(textData, textDataIndex, textGlyph->mT2);
+    FillFontAttribute(textData, textDataIndex, textGlyph, textColor, fontSizeScale);
 
-    textAttributes.push_back(x1);
-    textAttributes.push_back(y2);
-    textAttributes.push_back(textGlyph.mS1);
-    textAttributes.push_back(textGlyph.mT2);
-    PushGlyphFontAttribute(textAttributes, textGlyph, textColor, fontSizeScale);
+    FillData<float>(textData, textDataIndex, x1);
+    FillData<float>(textData, textDataIndex, y2);
+    FillData<float>(textData, textDataIndex, textGlyph->mS1);
+    FillData<float>(textData, textDataIndex, textGlyph->mT2);
+    FillFontAttribute(textData, textDataIndex, textGlyph, textColor, fontSizeScale);
 
-    textAttributes.push_back(x2);
-    textAttributes.push_back(y1);
-    textAttributes.push_back(textGlyph.mS2);
-    textAttributes.push_back(textGlyph.mT1);
-    PushGlyphFontAttribute(textAttributes, textGlyph, textColor, fontSizeScale);
+    FillData<float>(textData, textDataIndex, x2);
+    FillData<float>(textData, textDataIndex, y1);
+    FillData<float>(textData, textDataIndex, textGlyph->mS2);
+    FillData<float>(textData, textDataIndex, textGlyph->mT1);
+    FillFontAttribute(textData, textDataIndex, textGlyph, textColor, fontSizeScale);
 
-    textAttributes.push_back(x2);
-    textAttributes.push_back(y2);
-    textAttributes.push_back(textGlyph.mS2);
-    textAttributes.push_back(textGlyph.mT2);
-    PushGlyphFontAttribute(textAttributes, textGlyph, textColor, fontSizeScale);
+    FillData<float>(textData, textDataIndex, x2);
+    FillData<float>(textData, textDataIndex, y2);
+    FillData<float>(textData, textDataIndex, textGlyph->mS2);
+    FillData<float>(textData, textDataIndex, textGlyph->mT2);
+    FillFontAttribute(textData, textDataIndex, textGlyph, textColor, fontSizeScale);
 
-    textAttributes.push_back(x1);
-    textAttributes.push_back(y1);
-    textAttributes.push_back(textGlyph.mS1);
-    textAttributes.push_back(textGlyph.mT1);
-    PushGlyphFontAttribute(textAttributes, textGlyph, textColor, fontSizeScale);
+    FillData<float>(textData, textDataIndex, x1);
+    FillData<float>(textData, textDataIndex, y1);
+    FillData<float>(textData, textDataIndex, textGlyph->mS1);
+    FillData<float>(textData, textDataIndex, textGlyph->mT1);
+    FillFontAttribute(textData, textDataIndex, textGlyph, textColor, fontSizeScale);
 }
 
+// @summary Fill the vertex buffer with the text line information.
 void
-CreateAttributes(
+FillTextLines(
     IN const BitmapFont   *font,
     IN float               fontSize,
     IN Vector2f                  textPosition,
     IN Vector4f                  textColor,
     IN const vector<BitmapLine>& textLines,
-    OUT vector<float>&           textAttributes)
+    IN size_t&                   textDataIndex,
+    OUT float                   *textData
+)
 {
     float x = textPosition.x;
     float y = textPosition.y;
@@ -217,7 +239,7 @@ CreateAttributes(
     {
         for (auto& glyph : line.mLineGlyphs)
         {
-            PushGlyphAttribute(textAttributes, glyph, textColor, x, y, font, fontSizeScale);
+            FillGlyphAttribute(textData, textDataIndex, &glyph, textColor, x, y, font, fontSizeScale);
 
             x += glyph.mAdvance * fontSizeScale;
         }
@@ -230,23 +252,23 @@ CreateAttributes(
 void
 BitmapFontRenderer::PrepareString(
     const BitmapFont *font,
-    Shader     *textShader,
-    BitmapText *text,
-    Color       textColor)
+    const Shader     *textShader,
+    const BitmapText *text,
+    Color             textColor)
 {
+    // TODO(Wuxiang): Add multiple font and shader support. Replace the default with shader specific attribute vector.
+
     static auto textLines = vector<BitmapLine>();
     textLines.clear();
 
-    int textGlyphCount = CreateLines(font, text, textLines);
+    // Construct lines with glyph information.
+    int textGlyphCount = CreateTextLines(font, text, textLines);
 
-    // TODO(Wuxiang): Add multiple font and shader support. Replace the default with shader specific attribute vector.
     // Fill the vertex attribute into the buffer
-    CreateAttributes(font, text.mFontSize, Vector2f(text.mTextBounds.x, text.mTextBounds.y), Vector4f(textColor), textLines, mTextShaderDefaultAttributes);
+    size_t textDataIndex = 0;
+    FillTextLines(font, text->mFontSize, Vector2f(text->mTextBounds.x, text->mTextBounds.y), Vector4f(textColor), textLines, textDataIndex, reinterpret_cast<float *>(mTextBufferDynamic->mData));
 
-
-    auto data;
-    auto s = VertexBuffer(data);
-    VisualQuads()
+    VisualQuads a(mTextBufferStream);
 
     // Find the render group this group of text belongs to.
     int  renderGroupIndex;

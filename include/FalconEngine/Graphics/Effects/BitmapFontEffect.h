@@ -26,16 +26,6 @@ class BitmapFontEffect : public VisualEffect
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
-    /************************************************************************/
-    /* Static Members                                                       */
-    /************************************************************************/
-public:
-    static VertexFormatSharedPtr
-    GetVertexFormatInstance();
-
-private:
-    VertexFormatSharedPtr static sVertexFormat;
-
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -53,6 +43,9 @@ public:
     // @summary Create a new visual effect instance.
     VisualEffectInstanceSharedPtr
     CreateInstance(const BitmapFont *font, int width, int height);
+
+    VertexFormatSharedPtr
+    CreateVertexFormat();
 
 private:
     const Handedness *mCameraHandedness;

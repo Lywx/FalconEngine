@@ -8,8 +8,8 @@ FALCON_ENGINE_RTTI_IMPLEMENT(VisualQuads, Visual);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-VisualQuads::VisualQuads(VertexBufferSharedPtr vertexBuffer)
-    : Visual(PrimitiveType::Triangle, vertexBuffer, nullptr)
+VisualQuads::VisualQuads(VertexFormatSharedPtr vertexFormat, int vertexNum)
+    : VisualTriangles(vertexFormat, vertexNum, nullptr)
 {
 }
 

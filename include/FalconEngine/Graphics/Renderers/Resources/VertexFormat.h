@@ -93,7 +93,7 @@ public:
     PushVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer, int offset, int stride);
 
 public:
-    // NOTE(Wuxiang): THe vertex attribute vector is assumed to be in order of
+    // NOTE(Wuxiang): The vertex attribute vector is assumed to be in order of
     // layout location in OpenGL. This rule is enforced by the PushAttribute function.
     VertexAttributeVector    mVertexAttributeVector;
     VertexRecordVector       mVertexRecordVector;

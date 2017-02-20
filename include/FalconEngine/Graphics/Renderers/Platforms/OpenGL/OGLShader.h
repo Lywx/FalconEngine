@@ -52,9 +52,6 @@ protected:
     void
     CollectVertexAttributeLocation(Shader *shader) const;
 
-    void
-    CreateVertexAttributeArray(Shader *shader);
-
     // @remark This function modify the shader rather than the platform shader.
     void
     CollectUniformLocation(Shader *shader) const;
@@ -63,7 +60,6 @@ private:
     GLuint mProgram;
     int    mShaderNum;
     GLuint mShaders[int(ShaderType::Count)];
-    GLuint mVertexArray;
 };
 
 typedef std::shared_ptr<PlatformShader> PlatformShaderSharedPtr;

@@ -20,12 +20,12 @@ BitmapFontEffect::BitmapFontEffect(const Handedness *handedness) :
     shader->PushShaderFile(ShaderType::VertexShader, "Content/Shaders/BitmapFont.vert.glsl");
     shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shaders/BitmapFont.frag.glsl");
 
-    shader->PushAttribute(0, "Position", ShaderVertexAttributeType::FloatVec2, false);
-    shader->PushAttribute(1, "TexCoord", ShaderVertexAttributeType::FloatVec2, false);
-    shader->PushAttribute(2, "FontColor", ShaderVertexAttributeType::FloatVec4, false);
-    shader->PushAttribute(3, "FontWidth", ShaderVertexAttributeType::Float, false);
-    shader->PushAttribute(4, "FontEdge", ShaderVertexAttributeType::Float, false);
-    shader->PushAttribute(5, "FontPage", ShaderVertexAttributeType::Float, false);
+    shader->PushAttribute(0, "Position", VertexAttributeType::FloatVec2, false);
+    shader->PushAttribute(1, "TexCoord", VertexAttributeType::FloatVec2, false);
+    shader->PushAttribute(2, "FontColor", VertexAttributeType::FloatVec4, false);
+    shader->PushAttribute(3, "FontWidth", VertexAttributeType::Float, false);
+    shader->PushAttribute(4, "FontEdge", VertexAttributeType::Float, false);
+    shader->PushAttribute(5, "FontPage", VertexAttributeType::Float, false);
 
     shader->PushUniform("Projection", ShaderUniformType::FloatMat4);
     shader->PushUniform("Texture", ShaderUniformType::Int);

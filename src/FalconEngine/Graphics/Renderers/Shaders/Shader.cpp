@@ -13,8 +13,7 @@ FALCON_ENGINE_RTTI_IMPLEMENT(Shader, Object);
 /* Constructors and Destructor                                          */
 /************************************************************************/
 
-Shader::Shader() :
-    mVertexAttributeOffset(0)
+Shader::Shader()
 {
 }
 
@@ -25,30 +24,6 @@ Shader::~Shader()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-int
-Shader::GetAttributeNum() const
-{
-    return int(mVertexAttributeVector.size());
-}
-
-ShaderVertexAttribute&
-Shader::GetAttribute(int attributeIndex)
-{
-    return mVertexAttributeVector.at(attributeIndex);
-}
-
-void
-Shader::PushAttribute(int attributeLocation, std::string attributeName, ShaderVertexAttributeType attributeType, bool attributeNormalized)
-{
-    if (attributeLocation != mVertexAttributeVector.size())
-    {
-        ThrowRuntimeException("It is not supported for out of order attribute registration.");
-    }
-
-    mVertexAttributeVector.push_back(ShaderVertexAttribute(attributeLocation, attributeName, attributeType, attributeNormalized, mVertexAttributeOffset));
-    mVertexAttributeOffset += ShaderAttributeSize[int(mVertexAttributeVector.back().mType)];
-}
-
 void
 Shader::PushUniform(std::string uniformName, ShaderUniformType uniformType)
 {

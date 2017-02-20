@@ -31,6 +31,7 @@ using namespace std;
 #include <FalconEngine/Graphics/Renderers/BitmapFontRenderer.h>
 #include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLIndexBuffer.h>
 #include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLVertexBuffer.h>
+#include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLVertexFormat.h>
 #include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLTexture1d.h>
 #include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLTexture2d.h>
 #include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLTexture2dArray.h>
@@ -176,6 +177,43 @@ Renderer::Update(const VertexBuffer *vertexBuffer)
     void *destinationData = Map(vertexBuffer, BufferAccessMode::Write);
     memcpy(destinationData, sourceData, sourceDataByteNum);
     Unmap(vertexBuffer);
+}
+
+void
+Renderer::Bind(const VertexFormat *vertexFormat)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(vertexFormat);
+
+    if (mVertexFormatTable.find(vertexFormat) == mVertexFormatTable.end())
+    {
+        mVertexFormatTable[vertexFormat] = new PlatformVertexFormat(vertexFormat);
+    }
+}
+
+void
+Renderer::Unbind(const VertexFormat *vertexFormat)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(vertexFormat);
+
+    auto iter = mVertexFormatTable.find(vertexFormat);
+    if (iter != mVertexFormatTable.end())
+    {
+        auto *vertexFormatPlatform = iter->second;
+        delete vertexFormatPlatform;
+        mVertexFormatTable.erase(iter);
+    }
+}
+
+void
+Renderer::Enable(const VertexFormat *vertexFormat)
+{
+    for (auto& vertexRecord : vertexFormat->mVertexRecordVector)
+    {
+        Enable(vertexRecord.GetVertexBuffer(),
+               vertexRecord.GetBindingIndex(),
+               vertexRecord.GetOffset(),
+               vertexRecord.GetStride());
+    }
 }
 
 void
@@ -704,16 +742,9 @@ Renderer::Draw(const Visual *visual,
     FALCON_ENGINE_CHECK_NULLPTR(instance);
 
     VertexFormat *vertexFormat = visual->GetVertexFormat();
+    Enable(vertexFormat);
 
-    for (vertexFormat : visual->GetVertexFormat())
-    {
-        Enable(vertexFormat->VertexBuffer,
-               vertexFormat->bindingIndex,
-               vertexFormat->offset,
-               vertexFormat->stride);
-    }
-
-    const VertexBuffer *vertexBuffer = visual->GetVertexBuffer();
+    const VertexBuffer *vertexBuffer = visual->GetVertexFormat();
     const IndexBuffer *indexBuffer = visual->GetIndexBuffer();
 
     Enable(vertexFormat);

@@ -169,38 +169,6 @@ PlatformShader::Disable() const
 /************************************************************************/
 
 void
-PlatformShader::CollectVertexAttributeLocation(Shader *shader) const
-{
-    for (auto& vertexAttrib : shader->mVertexAttributeVector)
-    {
-        GLint vertexAttriLocation = glGetAttribLocation(mProgram, vertexAttrib.mName.c_str());
-        if (vertexAttriLocation == -1)
-        {
-            ThrowRuntimeException("The vertex attribute could not be found.");
-        }
-
-        vertexAttrib.mLocation = vertexAttriLocation;
-    }
-}
-
-void
-PlatformShader::CreateVertexAttributeArray(Shader *shader)
-{
-    glCreateVertexArrays(1, &mVertexArray);
-    glBindVertexArray(mVertexArray);
-
-    for (auto& vertexAttrib : shader->mVertexAttributeVector)
-    {
-        glVertexAttribFormat(vertexAttrib.mLocation, vertexAttrib.mChannel,
-                             OpenGLShaderAttributeType[int(vertexAttrib.mType)],
-                             vertexAttrib.mNormalized, vertexAttrib.mOffset);
-        glEnableVertexAttribArray(vertexAttrib.mLocation);
-    }
-
-    glBindVertexArray(0);
-}
-
-void
 PlatformShader::CollectUniformLocation(Shader *shader) const
 {
     for (auto& uniformNameValuePair : shader->mUniformTable)

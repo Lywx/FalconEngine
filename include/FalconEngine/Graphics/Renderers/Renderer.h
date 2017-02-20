@@ -33,6 +33,7 @@ class VisualPass;
 class Buffer;
 enum class BufferAccessMode;
 class VertexBuffer;
+class VertexFormat;
 class IndexBuffer;
 
 class Texture;
@@ -58,6 +59,7 @@ class WireframeState;
 /************************************************************************/
 class PlatformIndexBuffer;
 class PlatformVertexBuffer;
+class PlatformVertexFormat;
 class PlatformTexture1d;
 class PlatformTexture2d;
 class PlatformTexture2dArray;
@@ -69,7 +71,7 @@ class PlatformSampler;
 /************************************************************************/
 class PlatformShader;
 
-class RendererData;
+class PlatformRendererData;
 class Renderer
 {
 public:
@@ -77,6 +79,7 @@ public:
     /* Platform Independent Members                                         */
     /************************************************************************/
     typedef std::map<const VertexBuffer *, PlatformVertexBuffer *> PlatformVertexBufferTable;
+    typedef std::map<const VertexFormat *, PlatformVertexFormat *> PlatformVertexFormatTable;
     typedef std::map<const IndexBuffer *,  PlatformIndexBuffer *> PlatformIndexBufferTable;
     typedef std::map<const Texture1d *, PlatformTexture1d *> PlatformTexture1dTable;
     typedef std::map<const Texture2d *, PlatformTexture2d *> PlatformTexture2dTable;
@@ -116,6 +119,21 @@ public:
 
     void
     Update(const VertexBuffer *vertexBuffer);
+
+    /************************************************************************/
+    /* Vertex Format Management                                             */
+    /************************************************************************/
+    void
+    Bind(const VertexFormat *vertexFormat);
+
+    void
+    Unbind(const VertexFormat *vertexFormat);
+
+    void
+    Enable(const VertexFormat *vertexFormat);
+
+    void
+    Disable(const VertexFormat *vertexFormat);
 
     /************************************************************************/
     /* Index Buffer Management                                              */
@@ -300,6 +318,7 @@ private:
     /************************************************************************/
     PlatformIndexBufferTable        mIndexBufferTable;
     PlatformVertexBufferTable       mVertexBufferTable;
+    PlatformVertexFormatTable       mVertexFormatTable;
     PlatformTexture2dTable          mTexture2dTable;
     PlatformTexture2dArrayTable     mTexture2dArrayTable;
     PlatformTextureSamplerTable     mSamplerTable;
@@ -397,7 +416,7 @@ private:
     void
     DrawPrimitive(const Visual *visual);
 
-    RendererData *mData;
+    PlatformRendererData *mData;
 };
 
 }

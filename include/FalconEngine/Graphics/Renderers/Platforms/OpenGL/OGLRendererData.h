@@ -6,7 +6,7 @@
 namespace FalconEngine
 {
 
-class RendererData
+class PlatformRendererData
 {
 public:
     PlatformRenderState mState;

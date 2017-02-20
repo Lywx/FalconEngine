@@ -4,7 +4,7 @@
 
 #include <FalconEngine/Graphics/GraphicsInclude.h>
 #include <FalconEngine/Graphics/Renderers/Shaders/ShaderUniform.h>
-#include <FalconEngine/Graphics/Renderers/Shaders/ShaderVertexAttribute.h>
+#include <FalconEngine/Graphics/Renderers/Shaders/VertexAttribute.h>
 
 namespace FalconEngine
 {
@@ -45,17 +45,8 @@ public:
     ~Shader();
 
     /************************************************************************/
-    /* Vertex Attribute Management                                          */
+    /* Uniform Management                                                   */
     /************************************************************************/
-    int
-    GetAttributeNum() const;
-
-    ShaderVertexAttribute&
-    GetAttribute(int attributeIndex);
-
-    void
-    PushAttribute(int attributeLocation, std::string attributeName, ShaderVertexAttributeType attributeType, bool attributeNormalized);
-
     void
     PushUniform(std::string uniformName, ShaderUniformType uniformType);
 
@@ -81,12 +72,6 @@ public:
     PushShaderFile(ShaderType shaderType, const std::string& shaderFilename);
 
 public:
-
-    // NOTE(Wuxiang): THe vertex attribute vector is assumed to be in order of
-    // layout location in OpenGL. This rule is enforced by the PushAttribute function.
-    ShaderVertexAttributeVector mVertexAttributeVector;
-    int                         mVertexAttributeOffset;
-
     ShaderUniformTable          mUniformTable;
 
 private:

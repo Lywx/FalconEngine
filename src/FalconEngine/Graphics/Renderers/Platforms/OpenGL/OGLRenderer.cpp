@@ -18,7 +18,7 @@ Renderer::Renderer(string caption, int width, int height)
 {
     Initialize(width, height);
 
-    mData = new PlatformRenderData();
+    mData = new PlatformRendererData();
     mData->mWindow = glfwCreateWindow(mWidth, mHeight, caption.c_str(), nullptr, nullptr);
     mData->mState.Initialize(mBlendStateDefault, mCullStateDefault,
                              mDepthTestStateDefault, mOffsetStateDefault,
@@ -373,11 +373,10 @@ void Renderer::DrawPrimitive(const Visual *visual)
 
     PrimitiveType primitiveType = visual->GetPrimitiveType();
     const GLenum  primitiveMode = OpenGLPrimitiveType[int(primitiveType)];
-    auto vertexBuffer = visual->GetVertexBuffer();
-
     if (primitiveType == PrimitiveType::Point)
     {
-        int vertexNum = vertexBuffer->mElementNum;
+        auto primitive = reinterpret_cast<const VisualPoints *>(visual);
+        int vertexNum = primitive->mPointNum;
         if (vertexNum > 0)
         {
             glDrawArrays(primitiveMode, 0, vertexNum);
@@ -385,7 +384,6 @@ void Renderer::DrawPrimitive(const Visual *visual)
     }
     else if (primitiveType == PrimitiveType::Line)
     {
-        int vertexNum = vertexBuffer->mElementNum;
         if (vertexNum > 0)
         {
             glDrawArrays(primitiveMode, 0, vertexNum);
@@ -393,7 +391,6 @@ void Renderer::DrawPrimitive(const Visual *visual)
     }
     else if (primitiveType == PrimitiveType::LineStrip)
     {
-        int vertexNum = vertexBuffer->mElementNum;
         if (vertexNum > 0)
         {
             glDrawArrays(primitiveMode, 0, vertexNum);
@@ -401,8 +398,6 @@ void Renderer::DrawPrimitive(const Visual *visual)
     }
     else if (primitiveType == PrimitiveType::Triangle)
     {
-        int vertexNum = vertexBuffer->mElementNum;
-
         // When use index buffer
         auto indexBuffer = visual->GetIndexBuffer();
         if (indexBuffer)

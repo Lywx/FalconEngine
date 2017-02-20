@@ -23,71 +23,82 @@ Mesh::Mesh(Model *model, const aiScene *scene, const aiMesh *mesh) :
 void
 Mesh::LoadBuffers(const aiMesh *mesh)
 {
-    // TODO(Wuxiang 2017-01-27 13:35): Shader attribute hasn't been connected!
-
-    // NOTE(Wuxiang): Memory allocation here.
-    int vertexNum = mesh->mNumVertices;
-    mVertexBuffer = std::make_shared<VertexBuffer>(vertexNum, sizeof(ModelVertex), BufferUsage::Static);
-    auto vertices = reinterpret_cast<ModelVertex *>(mVertexBuffer->mData);
-
-    int indexNum = 0;
-    ModelIndex *indices = nullptr;
+    // Fill vertex buffer.
     {
-        for (unsigned int faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex)
+        // Memory allocation for vertex buffer.
+        int vertexNum = mesh->mNumVertices;
+        auto vertexBuffer = std::make_shared<VertexBuffer>(vertexNum, sizeof(ModelVertex), BufferUsage::Static);
+        auto vertexes = reinterpret_cast<ModelVertex *>(vertexBuffer->mData);
+
+        // Walk through vertex data and create vertex buffer content in an interlaced fashion.
+        for (size_t i = 0; i < mesh->mNumVertices; ++i)
         {
-            indexNum += mesh->mFaces[faceIndex].mNumIndices;
-        }
-    }
-    mIndexBuffer = std::make_shared<IndexBuffer>(indexNum, IndexType::UnsignedInt, BufferUsage::Static);
-    indices = reinterpret_cast<ModelIndex *>(mIndexBuffer->mData);
+            ModelVertex vertex;
+            Vector3f vec3;
+            Vector2f vec2;
 
-    // Walk through vertex data.
-    for (size_t i = 0; i < mesh->mNumVertices; ++i)
-    {
-        ModelVertex vertex;
-        Vector3f vec3;
-        Vector2f vec2;
+            // Position
+            vec3.x = mesh->mVertices[i].x;
+            vec3.y = mesh->mVertices[i].y;
+            vec3.z = mesh->mVertices[i].z;
+            vertex.mPosition = vec3;
 
-        // Position
-        vec3.x = mesh->mVertices[i].x;
-        vec3.y = mesh->mVertices[i].y;
-        vec3.z = mesh->mVertices[i].z;
-        vertex.mPosition = vec3;
+            // Normal
+            vec3.x = mesh->mNormals[i].x;
+            vec3.y = mesh->mNormals[i].y;
+            vec3.z = mesh->mNormals[i].z;
+            vertex.mNormal = vec3;
 
-        // Normal
-        vec3.x = mesh->mNormals[i].x;
-        vec3.y = mesh->mNormals[i].y;
-        vec3.z = mesh->mNormals[i].z;
-        vertex.mNormal = vec3;
-
-        // Texture coordinate
-        if (mesh->mTextureCoords[0])
-        {
-            // NOTE(Wuxiang): A vertex can contain up to 8 different texture
-            // coordinates.
-            vec2.x = mesh->mTextureCoords[0][i].x;
-            vec2.y = mesh->mTextureCoords[0][i].y;
-            vertex.mTexCoord = vec2;
-        }
-        else
-        {
-            vertex.mTexCoord = Vector2f::Zero;
-        }
-
-        vertices[i] = vertex;
-    }
-
-    // Walk through each of the mesh's faces (a face is a mesh its triangle)
-    // and retrieve the corresponding vertex indexes.
-    {
-        int indexNumAdded = 0;
-        for (unsigned int faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex)
-        {
-            auto& face = mesh->mFaces[faceIndex];
-            for (unsigned int j = 0; j < face.mNumIndices; j++)
+            // Texture coordinate
+            if (mesh->mTextureCoords[0])
             {
-                indices[indexNumAdded] = face.mIndices[j];
-                ++indexNumAdded;
+                // NOTE(Wuxiang): A vertex can contain up to 8 different texture
+                // coordinates.
+                vec2.x = mesh->mTextureCoords[0][i].x;
+                vec2.y = mesh->mTextureCoords[0][i].y;
+                vertex.mTexCoord = vec2;
+            }
+            else
+            {
+                vertex.mTexCoord = Vector2f::Zero;
+            }
+
+            // NOTE(Wuxiang):
+            vertexes[i] = vertex;
+        }
+
+        // TODO(Wuxiang): Should I change the binding index?
+        mVertexFormat->PushVertexBuffer(0, vertexBuffer, 0, sizeof(ModelVertex));
+        mCount = vertexNum;
+    }
+
+    // Fill index buffer.
+    {
+        // Sum space for the index buffer memory allocation.
+        int indexNum = 0;
+        {
+            for (unsigned int faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex)
+            {
+                indexNum += mesh->mFaces[faceIndex].mNumIndices;
+            }
+        }
+
+        // Memory allocation for index buffer.
+        mIndexBuffer = std::make_shared<IndexBuffer>(indexNum, IndexType::UnsignedInt, BufferUsage::Static);
+        auto indexes = reinterpret_cast<ModelIndex *>(mIndexBuffer->mData);
+
+        // Walk through each of the mesh's faces (a face is a mesh its triangle)
+        // and retrieve the corresponding vertex indexes.
+        {
+            int indexNumAdded = 0;
+            for (unsigned int faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex)
+            {
+                auto& face = mesh->mFaces[faceIndex];
+                for (unsigned int j = 0; j < face.mNumIndices; j++)
+                {
+                    indexes[indexNumAdded] = face.mIndices[j];
+                    ++indexNumAdded;
+                }
             }
         }
     }

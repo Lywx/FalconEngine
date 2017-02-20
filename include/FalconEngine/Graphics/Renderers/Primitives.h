@@ -33,15 +33,14 @@ public:
     const PrimitiveType
     GetPrimitiveType() const;
 
-    const VertexBuffer *
-    GetVertexBuffer() const;
+    const VertexFormat *
+    GetVertexFormat() const;
 
     const IndexBuffer *
     GetIndexBuffer() const;
 
 protected:
     PrimitiveType         mPrimitiveType;
-    //VertexBufferSharedPtr mVertexBuffer;
     VertexFormatSharedPtr mVertexFormat;
     IndexBufferSharedPtr  mIndexBuffer;
 };

@@ -13,12 +13,12 @@
 #include <FalconEngine/Graphics/Renderers/Primitives.h>
 #include <FalconEngine/Graphics/Renderers/Resources/Buffer.h>
 #include <FalconEngine/Graphics/Renderers/Resources/Texture.h>
-#include <FalconEngine/Graphics/Renderers/Resources/TextureSampler.h>
+#include <FalconEngine/Graphics/Renderers/Resources/Sampler.h>
 #include <FalconEngine/Graphics/Renderers/States/BlendState.h>
 #include <FalconEngine/Graphics/Renderers/States/DepthTestState.h>
 #include <FalconEngine/Graphics/Renderers/States/StencilTestState.h>
 #include <FalconEngine/Graphics/Renderers/Shaders/Shader.h>
-#include <FalconEngine/Graphics/Renderers/Shaders/ShaderVertexAttribute.h>
+#include <FalconEngine/Graphics/Renderers/Shaders/VertexAttribute.h>
 
 #define FALCON_ENGINE_BUFFER_OFFSET(offset) ((void *)(offset))
 
@@ -45,7 +45,7 @@ extern const GLenum OpenGLDepthFunction[int(DepthFunction::Count)];
 extern const GLenum OpenGLStencilFunction[int(StencilFunction::Count)];
 extern const GLenum OpenGLStencilOperation[int(StencilOperation::Count)];
 
-extern const GLuint OpenGLShaderAttributeType[int(ShaderVertexAttributeType::Count)];
+extern const GLuint OpenGLShaderAttributeType[int(VertexAttributeType::Count)];
 extern const GLenum OpenGLShaderType[int(ShaderType::Count)];
 
 extern const GLenum OpenGLPrimitiveType[int(PrimitiveType::Count)];

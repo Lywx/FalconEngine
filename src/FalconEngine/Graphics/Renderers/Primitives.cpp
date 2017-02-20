@@ -15,7 +15,7 @@ Primitives::Primitives(PrimitiveType primitiveType) :
 
 Primitives::Primitives(PrimitiveType primitiveType, VertexBufferSharedPtr vertexBuffer, IndexBufferSharedPtr indexBuffer) :
     mPrimitiveType(primitiveType),
-    mVertexBuffer(vertexBuffer),
+    mVertexFormat(vertexBuffer),
     mIndexBuffer(indexBuffer)
 {
 }
@@ -34,9 +34,9 @@ PrimitiveType Primitives::GetPrimitiveType() const
 }
 
 const VertexBuffer *
-Primitives::GetVertexBuffer() const
+Primitives::GetVertexFormat() const
 {
-    return mVertexBuffer.get();
+    return mVertexFormat.get();
 }
 
 const IndexBuffer *

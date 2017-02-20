@@ -217,6 +217,11 @@ Renderer::Enable(const VertexFormat *vertexFormat)
 }
 
 void
+Renderer::Disable(const VertexFormat *vertexFormat)
+{
+}
+
+void
 Renderer::Bind(const IndexBuffer *indexBuffer)
 {
     FALCON_ENGINE_CHECK_NULLPTR(indexBuffer);
@@ -741,14 +746,10 @@ Renderer::Draw(const Visual *visual,
     FALCON_ENGINE_CHECK_NULLPTR(visual);
     FALCON_ENGINE_CHECK_NULLPTR(instance);
 
-    VertexFormat *vertexFormat = visual->GetVertexFormat();
+    auto vertexFormat = visual->GetVertexFormat();
     Enable(vertexFormat);
 
-    const VertexBuffer *vertexBuffer = visual->GetVertexFormat();
-    const IndexBuffer *indexBuffer = visual->GetIndexBuffer();
-
-    Enable(vertexFormat);
-    Enable(vertexBuffer, bindingIndex, offset, stride);
+    auto indexBuffer = visual->GetIndexBuffer();
     if (indexBuffer)
     {
         Enable(indexBuffer);
@@ -781,7 +782,7 @@ Renderer::Draw(const Visual *visual,
         Disable(indexBuffer);
     }
 
-    Disable(vertexBuffer);
+    Disable(vertexFormat);
 }
 
 }

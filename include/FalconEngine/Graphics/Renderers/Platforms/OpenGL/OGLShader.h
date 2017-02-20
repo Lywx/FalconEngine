@@ -6,7 +6,7 @@
 #include <memory>
 #include <string>
 
-#include <FalconEngine/Graphics/Shaders/Shader.h>
+#include <FalconEngine/Graphics/Renderers/Shaders/Shader.h>
 
 namespace FalconEngine
 {
@@ -17,7 +17,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    PlatformShader(const Shader *shader);
+    PlatformShader(Shader *shader);
     ~PlatformShader();
 
     /************************************************************************/
@@ -44,10 +44,26 @@ public:
     void
     Disable() const;
 
+protected:
+    // @summary Look up all the declared vertex attribute location and create vertex
+    // attribute array.
+    //
+    // @remark This function modify the shader rather than the platform shader.
+    void
+    CollectVertexAttributeLocation(Shader *shader) const;
+
+    void
+    CreateVertexAttributeArray(Shader *shader);
+
+    // @remark This function modify the shader rather than the platform shader.
+    void
+    CollectUniformLocation(Shader *shader) const;
+
 private:
     GLuint mProgram;
     int    mShaderNum;
     GLuint mShaders[int(ShaderType::Count)];
+    GLuint mVertexArray;
 };
 
 typedef std::shared_ptr<PlatformShader> PlatformShaderSharedPtr;

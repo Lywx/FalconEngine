@@ -12,11 +12,11 @@ FALCON_ENGINE_RTTI_IMPLEMENT(PhongLightingEffect, VisualEffect);
 /************************************************************************/
 PhongLightingEffect::PhongLightingEffect()
 {
-    auto shader = make_shared<Shader>();
+    auto shader = std::make_shared<Shader>();
 
     // TODO(Wuxiang 2017-01-22 10:41): Fix this with a default shader storage.
     shader->PushShaderFile(ShaderType::VertexShader, "Content/Shaders/PhongLighting.vert.glsl");
-    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shaders/PhongLighting.frag.glsl");
+    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shaders/PhongLighting.frag.glsl");
 
     shader->PushAttribute(0, "modelPosition", ShaderVertexAttributeType::FloatVec3, false);
     shader->PushUniform("PVWMatrix", ShaderUniformType::FloatMat4);
@@ -48,15 +48,15 @@ PhongLightingEffect::~PhongLightingEffect()
 VisualEffectInstance *
 PhongLightingEffect::CreateInstance(VisualEffectInstance *instance, const Light *light, const Material *material) const
 {
-    if (!instance->GetEffect()->GetType().IsExactly(GetType()))
+    if (!GetType().IsExactly(instance->GetEffect()->GetType()))
     {
         FALCON_ENGINE_NOT_SUPPORT();
     }
 
     // TODO(Wuxiang 2017-01-23 10:46): Try to implement this.
-    instance->SetShaderUniform(0, new ShaderUniformConstant<Vector4f>("", light->mAmbient));
-    instance->SetShaderUniform(0, new ShaderUniformConstant<Vector4f>("", light->mDiffuse));
-    instance->SetShaderUniform(0, new ShaderUniformConstant<Vector4f>("", light->mSpecular));
+    instance->SetShaderUniform(0, ShareConstant<Vector4f>("", light->mAmbient));
+    instance->SetShaderUniform(0, ShareConstant<Vector4f>("", light->mDiffuse));
+    instance->SetShaderUniform(0, ShareConstant<Vector4f>("", light->mSpecular));
 
     //instance->SetVertexConstant(0, 0, new0 PVWMatrixConstant());
     //instance->SetVertexConstant(0, 1, new0 MaterialEmissiveConstant(material));

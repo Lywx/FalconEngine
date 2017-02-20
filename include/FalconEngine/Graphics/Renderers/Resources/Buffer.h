@@ -32,8 +32,12 @@ class Buffer : public Object
     FALCON_ENGINE_RTTI_DECLARE;
 
 protected:
-    Buffer();
-    Buffer(unsigned char *data, int elementNum, int elementByteNum, BufferUsage usage);
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
+    Buffer(int elementNum, int elementByteNum, BufferUsage usage);
+    Buffer(const Buffer&) = delete;
+    Buffer& operator=(const Buffer&) = delete;
 
 public:
     virtual ~Buffer();

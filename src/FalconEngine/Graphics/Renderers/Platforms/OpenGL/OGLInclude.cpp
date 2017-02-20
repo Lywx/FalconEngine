@@ -172,21 +172,6 @@ const GLenum OpenGLPrimitiveType[int(PrimitiveType::Count)] =
     GL_TRIANGLES,  // Triangle
 };
 
-const GLint OpenGLShaderAttributeChannels[int(ShaderVertexAttributeType::Count)] =
-{
-    0,  // None
-
-    1,  // Float
-    2,  // FloatVec2
-    3,  // FloatVec3
-    4,  // FloatVec4
-
-    1,  // Int
-    2,  // IntVec2
-    3,  // IntVec2
-    4   // IntVec4
-};
-
 const GLuint OpenGLShaderAttributeType[int(ShaderVertexAttributeType::Count)] =
 {
     0,        // None

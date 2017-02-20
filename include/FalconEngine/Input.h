@@ -1,7 +1,7 @@
 #pragma once
 
-#include <FalconEngine/Math/Vector2.h>
-#include <FalconEngine/Math/Vector3.h>
+#include <FalconEngine/Input/InputInclude.h>
+#include <FalconEngine/Input/InputHandler.h>
 
 #include <vector>
 #include <memory>

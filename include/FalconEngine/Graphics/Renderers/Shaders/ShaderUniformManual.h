@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Shaders/ShaderUniform.h>
+#include <FalconEngine/Graphics/Renderers/Shaders/ShaderUniform.h>
 
 namespace FalconEngine
 {
@@ -26,6 +26,15 @@ void ShaderUniformManual<T>::SetValue(T value)
 {
     mValue = value;
     mUpdated = true;
+}
+
+template<typename T>
+using ShaderUniformManualSharedPtr = std::shared_ptr<ShaderUniformManual<T>>;
+
+template <typename T, typename ... Args>
+ShaderUniformValueSharedPtr<T> ShareManual(const Args& ... args)
+{
+    return ShareUniform<T, ShaderUniformManual<T>>(std::forward(args) ...);
 }
 
 }

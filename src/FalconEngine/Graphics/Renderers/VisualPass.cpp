@@ -28,19 +28,27 @@ VisualPass::SetShader(ShaderSharedPtr shader)
 void
 VisualPass::SetShaderUniform(ShaderUniform *shaderUniform)
 {
-    mShader->GetUniform(shaderUniform->mName);
+    if (mShader->GetUniform(shaderUniform->mName))
+    {
+        / ;
+    }
+
     mShaderUniformVector.push_back(shaderUniform);
 }
 
 void
-VisualPass::SetShaderTexture(int textureUnit, Texture *texture)
+VisualPass::SetShaderTexture(int textureUnit, const Texture *texture)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(texture);
+
     mShaderTextureTable[textureUnit] = texture;
 }
 
 void
-VisualPass::SetShaderSampler(int textureUnit, TextureSampler *sampler)
+VisualPass::SetShaderSampler(int textureUnit, const Sampler *sampler)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(sampler);
+
     mShaderSamplerTable[textureUnit] = sampler;
 }
 
@@ -104,7 +112,7 @@ VisualPass::GetShaderTextureNum() const
     return int(mShaderTextureTable.size());
 }
 
-Texture *
+const Texture *
 VisualPass::GetShaderTexture(int textureUnit) const
 {
     return mShaderTextureTable.at(textureUnit);
@@ -116,43 +124,43 @@ VisualPass::GetShaderSamplerNum() const
     return int(mShaderSamplerTable.size());
 }
 
-TextureSampler *
+const Sampler *
 VisualPass::GetShaderSampler(int textureUnit)
 {
     return mShaderSamplerTable.at(textureUnit);
 }
 
-BlendState *
+const BlendState *
 VisualPass::GetBlendState() const
 {
     return mBlendStateHandle.get();
 }
 
-CullState *
+const CullState *
 VisualPass::GetCullState() const
 {
     return mCullStateHandle.get();
 }
 
-DepthTestState *
+const DepthTestState *
 VisualPass::GetDepthTestState() const
 {
     return mDepthTestStateHandle.get();
 }
 
-OffsetState *
+const OffsetState *
 VisualPass::GetOffsetState() const
 {
     return mOffsetStateHandle.get();
 }
 
-StencilTestState *
+const StencilTestState *
 VisualPass::GetStencilTestState() const
 {
     return mStencilTestStateHandle.get();
 }
 
-WireframeState *
+const WireframeState *
 VisualPass::GetWireframeState() const
 {
     return mWireframeStateHandle.get();

@@ -27,7 +27,8 @@ Mesh::LoadBuffers(const aiMesh *mesh)
 
     // NOTE(Wuxiang): Memory allocation here.
     int vertexNum = mesh->mNumVertices;
-    ModelVertex *vertices = reinterpret_cast<ModelVertex *>(malloc(vertexNum * sizeof(ModelVertex)));
+    mVertexBuffer = std::make_shared<VertexBuffer>(vertexNum, sizeof(ModelVertex), BufferUsage::Static);
+    auto vertices = reinterpret_cast<ModelVertex *>(mVertexBuffer->mData);
 
     int indexNum = 0;
     ModelIndex *indices = nullptr;
@@ -36,9 +37,9 @@ Mesh::LoadBuffers(const aiMesh *mesh)
         {
             indexNum += mesh->mFaces[faceIndex].mNumIndices;
         }
-
-        indices = reinterpret_cast<ModelIndex *>(malloc(indexNum * sizeof(ModelIndex)));
     }
+    mIndexBuffer = std::make_shared<IndexBuffer>(indexNum, IndexType::UnsignedInt, BufferUsage::Static);
+    indices = reinterpret_cast<ModelIndex *>(mIndexBuffer->mData);
 
     // Walk through vertex data.
     for (size_t i = 0; i < mesh->mNumVertices; ++i)
@@ -89,16 +90,6 @@ Mesh::LoadBuffers(const aiMesh *mesh)
                 ++indexNumAdded;
             }
         }
-    }
-
-    {
-        auto vertexBuffer = new VertexBuffer(reinterpret_cast<unsigned char *>(vertices),
-                                             vertexNum, sizeof(ModelVertex), BufferUsage::Static);
-        auto indexBuffer = new IndexBuffer(reinterpret_cast<unsigned char *>(indices),
-                                           indexNum, IndexType::UnsignedInt, BufferUsage::Static);
-
-        mVertexBuffer = VertexBufferSharedPtr(vertexBuffer);
-        mIndexBuffer = IndexBufferSharedPtr(indexBuffer);
     }
 }
 
@@ -163,7 +154,7 @@ Mesh::LoadMaterialTexture(Model            *model,
 
             if (!textureFound)
             {
-                auto texture = assetManager->LoadTexture(textureFilePath.C_Str());
+                auto texture = assetManager->LoadTexture2d(textureFilePath.C_Str());
                 materialTextureIndexVector.push_back(materialTextureIndexVector.size());
                 model->mTextureVector.push_back(texture);
             }

@@ -93,7 +93,8 @@ private:
     std::vector<SpatialSharedPtr> mChildren;
 };
 
-inline size_t Node::ChildrenNum() const
+inline size_t
+Node::ChildrenNum() const
 {
     return mChildren.size();
 }

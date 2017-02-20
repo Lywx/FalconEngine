@@ -21,11 +21,11 @@ public:
 
     // @Summar: Enable buffer in the renderer.
     void
-    Enable();
+    Enable(int bindingIndex, int offset, int stride);
 
     // @Summar: Disable buffer in the renderer.
     void
-    Disable();
+    Disable(int bindingIndex);
 
     // @summary Map buffer data in the memory, so you could copy data into
     // the buffer by yourself.

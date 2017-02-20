@@ -14,6 +14,8 @@
 
 #include <FalconEngine/Content/Asset.h>
 #include <FalconEngine/Graphics/Renderers/BitmapGlyph.h>
+#include <FalconEngine/Graphics/Renderers/Resources/Texture2dArray.h>
+#include <FalconEngine/Graphics/Renderers/Resources/Sampler.h>
 
 namespace FalconEngine
 {
@@ -25,28 +27,36 @@ namespace FalconEngine
 class BitmapFont : public Asset
 {
 public:
+    FALCON_ENGINE_RTTI_DECLARE;
+
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
     BitmapFont(std::string fileName, std::string filePath);
     virtual ~BitmapFont();
 
+public:
     /************************************************************************/
     /* Font Runtime Data                                                    */
     /************************************************************************/
+
+    // NOTE(Wuxiang): Not serialized members include: mSizeScale, mTexture. mTexture,
+    // which is texture array, is composited during loading using multiple textures.
+
     double                        mSizePt = 0;                                 // Font size in point.
     double                        mSizePx = 0;                                 // Font size in pixel.
+
     static double const           mSizeScale;                                  // Font size up-scaling factor based on test result.
 
     double                        mLineBase = 0;                               // Font base height in pixel.
     double                        mLineHeight = 0;                             // Font line height (em height) in pixel.
 
     size_t                        mGlyphCount = 0;                             // Font glyph number the font contains
-    std::vector<size_t>           mGlyphIndexTable;                            // Font glyph index table that map glyph codepoint into glyph's index in glyph table.
+    std::vector<size_t>           mGlyphIndexTable;                            // Font glyph index table that map glyph Codepoint into glyph's index in glyph table.
     std::vector<BitmapGlyph>      mGlyphTable;
 
     /************************************************************************/
-    /* Font Loadtime Data                                                   */
+    /* Font Metadata                                                        */
     /************************************************************************/
     int                           mTextureWidth;
     int                           mTextureHeight;
@@ -55,11 +65,29 @@ public:
     std::vector<std::string>      mTextureArchiveNameVector;                   // Font raw texture filenames, index is the page id
     std::vector<std::string>      mTextureFileNameVector;                      // Font texture archive filenames, index is the page id
 
-    void SetSize(double size);
+    void
+    SetSize(double size);
+
+    void
+    SetSampler(SamplerSharedPtr sampler);
+
+    const Sampler *
+    GetSampler() const;
+
+    void
+    SetTexture(Texture2dArraySharedPtr texture);
+
+    const Texture2dArray *
+    GetTexture() const;
+
+private:
+    Texture2dArraySharedPtr       mTexture;                                    // Font texture.
+    SamplerSharedPtr              mSampler;                                    // Font texture sampler.
 
     /************************************************************************/
     /* Asset Importing and Exporting                                        */
     /************************************************************************/
+public:
     friend class boost::serialization::access;
     template<class Archive>
     void save(Archive & ar, const unsigned int version) const

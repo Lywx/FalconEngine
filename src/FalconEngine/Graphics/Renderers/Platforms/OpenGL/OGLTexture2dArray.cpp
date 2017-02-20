@@ -1,4 +1,5 @@
 #include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLTexture2dArray.h>
+#include <FalconEngine/Graphics/Renderers/Resources/Texture2d.h>
 
 namespace FalconEngine
 {
@@ -6,64 +7,70 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PlatformTexture2dArray::PlatformTexture2dArray(const std::vector<Texture2d *> textures) :
+PlatformTexture2dArray::PlatformTexture2dArray(const Texture2dArray *textureArray) :
     mTexture(0),
     mTexturePrevious(0)
 {
-    if (textures.empty())
-    {
-        throw std::runtime_error("Texture array is empty.");
-    }
-
-    auto *texture = textures[0];
-    mType = OpenGLTextureType[int(texture->mFormat)];
-    mFormat = OpenGLTextureFormat[int(texture->mFormat)];
-    mFormatInternal = OpenGLTextureInternalFormat[int(texture->mFormat)];
-    mUsage = OpenGLBufferUsage[int(texture->mUsage)];
+    mType = OpenGLTextureType[int(textureArray->mFormat)];
+    mFormat = OpenGLTextureFormat[int(textureArray->mFormat)];
+    mFormatInternal = OpenGLTextureInternalFormat[int(textureArray->mFormat)];
+    mUsage = OpenGLBufferUsage[int(textureArray->mUsage)];
 
     // TODO(Wuxiang): Add mipmap support.
     // Allocate and setup buffer and dimension
-    mBuffer.assign(textures.size(), 0);
-    mDimension.assign(textures.size(), { 0, 0 });
-    for (int i = 0; i < textures.size(); ++i)
     {
-        mDimension[i][0] = textures[i]->mDimension[0];
-        mDimension[i][1] = textures[i]->mDimension[1];
-    }
+        mTextureArraySize = textureArray->mDimension[2];
+        mBuffer.assign(mTextureArraySize, 0);
+        mDimension.assign(mTextureArraySize, { 0, 0 });
 
-    for (int i = 0; i < mDimension.size(); ++i)
-    {
-        glGenBuffers(1, &mBuffer[i]);
-        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBuffer[i]);
-        glBufferData(GL_PIXEL_UNPACK_BUFFER, textures[i]->mDataByteNum, nullptr, mUsage);
-        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+        for (int textureArrayIndex = 0; textureArrayIndex < mTextureArraySize; ++textureArrayIndex)
+        {
+            auto texture = textureArray->GetTexture2d(textureArrayIndex);
+            mDimension[textureArrayIndex][0] = texture->mDimension[0];
+            mDimension[textureArrayIndex][1] = texture->mDimension[1];
+        }
+
+        for (int textureArrayIndex = 0; textureArrayIndex < mTextureArraySize; ++textureArrayIndex)
+        {
+            glGenBuffers(1, &mBuffer[textureArrayIndex]);
+            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBuffer[textureArrayIndex]);
+            glBufferData(GL_PIXEL_UNPACK_BUFFER, textureArray->GetTexture2d(textureArrayIndex)->mDataByteNum, nullptr, mUsage);
+            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+        }
+
+        assert(mTextureArraySize == mBuffer.size());
+        assert(mTextureArraySize == mDimension.size());
     }
 
     // Allocate current texture memory
     glGenTextures(1, &mTexture);
-    GLuint textureBindingPrevious = BindTexture(TextureType::Texture2dArray, mTexture);
-    for (int i = 0; i < mDimension.size(); ++i)
     {
-        glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, i,
-                        mDimension[i][0], mDimension[i][1], 1,
-                        mFormat, mType, nullptr);
+        // Bind newly created texture
+        GLuint textureBindingPrevious = BindTexture(TextureType::Texture2dArray, mTexture);
+        for (int textureArrayIndex = 0; textureArrayIndex < mTextureArraySize; ++textureArrayIndex)
+        {
+            glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, textureArrayIndex,
+                            mDimension[textureArrayIndex][0], mDimension[textureArrayIndex][1], 1,
+                            mFormat, mType, nullptr);
+        }
+
+        // Restore previous texture binding
+        glBindTexture(GL_TEXTURE_2D_ARRAY, textureBindingPrevious);
     }
 
-    // Restore previous texture binding
-    glBindTexture(GL_TEXTURE_2D_ARRAY, textureBindingPrevious);
-
     // Fill in the texture data
-    for (int i = 0; i < mDimension.size(); ++i)
+    for (int textureArrayIndex = 0; textureArrayIndex < mTextureArraySize; ++textureArrayIndex)
     {
-        void *data = Map(i, 0, BufferAccessMode::Write);
-        memcpy(data, textures[i]->mData, textures[i]->mDataByteNum);
-        Unmap(i, 0);
+        auto texture = textureArray->GetTexture2d(textureArrayIndex);
+        void *textureData = Map(textureArrayIndex, 0, BufferAccessMode::Write);
+        memcpy(textureData, texture->mData, texture->mDataByteNum);
+        Unmap(textureArrayIndex, 0);
     }
 }
 
 PlatformTexture2dArray::~PlatformTexture2dArray()
 {
-    for (int i = 0; i < mDimension.size(); ++i)
+    for (int i = 0; i < mTextureArraySize; ++i)
     {
         glDeleteBuffers(1, &mBuffer[i]);
     }

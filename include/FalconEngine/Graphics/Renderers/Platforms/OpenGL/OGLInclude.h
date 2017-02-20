@@ -4,6 +4,12 @@
 
 #include <FalconEngine/Graphics/GraphicsInclude.h>
 
+#if FALCON_ENGINE_API_OPENGL
+#define GLEW_STATIC
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#endif
+
 #include <FalconEngine/Graphics/Renderers/Primitives.h>
 #include <FalconEngine/Graphics/Renderers/Resources/Buffer.h>
 #include <FalconEngine/Graphics/Renderers/Resources/Texture.h>
@@ -11,10 +17,10 @@
 #include <FalconEngine/Graphics/Renderers/States/BlendState.h>
 #include <FalconEngine/Graphics/Renderers/States/DepthTestState.h>
 #include <FalconEngine/Graphics/Renderers/States/StencilTestState.h>
-#include <FalconEngine/Graphics/Shaders/Shader.h>
-#include <FalconEngine/Graphics/Shaders/ShaderVertexAttribute.h>
+#include <FalconEngine/Graphics/Renderers/Shaders/Shader.h>
+#include <FalconEngine/Graphics/Renderers/Shaders/ShaderVertexAttribute.h>
 
-#define BUFFER_OFFSET(offset) ((void *)(offset))
+#define FALCON_ENGINE_BUFFER_OFFSET(offset) ((void *)(offset))
 
 namespace FalconEngine
 {
@@ -39,7 +45,6 @@ extern const GLenum OpenGLDepthFunction[int(DepthFunction::Count)];
 extern const GLenum OpenGLStencilFunction[int(StencilFunction::Count)];
 extern const GLenum OpenGLStencilOperation[int(StencilOperation::Count)];
 
-extern const GLint  OpenGLShaderAttributeChannels[int(ShaderVertexAttributeType::Count)];
 extern const GLuint OpenGLShaderAttributeType[int(ShaderVertexAttributeType::Count)];
 extern const GLenum OpenGLShaderType[int(ShaderType::Count)];
 

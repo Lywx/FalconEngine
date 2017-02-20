@@ -90,22 +90,26 @@ public:
     Rectangle mTitleSafeArea;
 };
 
-inline float Viewport::GetWidth() const
+inline float
+Viewport::GetWidth() const
 {
     return mRight - mLeft;
 }
 
-inline float Viewport::GetHeight() const
+inline float
+Viewport::GetHeight() const
 {
     return mBottom - mTop;
 }
 
-inline float Viewport::GetAspect() const
+inline float
+Viewport::GetAspect() const
 {
     return GetWidth() / GetHeight();
 }
 
-inline Vector2f Viewport::GetCenter() const
+inline Vector2f
+Viewport::GetCenter() const
 {
     return Vector2f(mLeft + GetWidth() / 2, mTop + GetHeight() / 2);
 }

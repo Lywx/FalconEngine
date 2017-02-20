@@ -3,13 +3,15 @@
 namespace FalconEngine
 {
 
+FALCON_ENGINE_RTTI_IMPLEMENT(IndexBuffer, Buffer);
+
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-IndexBuffer::IndexBuffer(unsigned char *indexData, int indexNum, IndexType indexType, BufferUsage usage) :
+IndexBuffer::IndexBuffer(int indexNum, IndexType indexType, BufferUsage usage) :
     // The index buffer doesn't need the vertex array information about index
     // channel dimension. So we pass 1 here.
-    Buffer(indexData, indexNum, indexType == IndexType::UnsignedShort
+    Buffer(indexNum, indexType == IndexType::UnsignedShort
            ? sizeof(unsigned short)
            : sizeof(unsigned int), usage),
     mOffset(0),

@@ -6,7 +6,7 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PlatformTextureSampler::PlatformTextureSampler(const TextureSampler *sampler)
+PlatformSampler::PlatformSampler(const Sampler *sampler)
 {
     // TODO(Wuxiang): Add support for GL_TEXTURE_BORDER_COLOR, GL_TEXTURE_MIN_LOD, GL_TEXTURE_MAX_LOD, GL_TEXTURE_LOD_BIAS, GL_TEXTURE_COMPARE_MODE, GL_TEXTURE_COMPARE_FUNC
     glGenSamplers(1, &mSampler);
@@ -26,7 +26,7 @@ PlatformTextureSampler::PlatformTextureSampler(const TextureSampler *sampler)
                         OpenGLSamplerWrapMode[int(sampler->mWrapR)]);
 }
 
-PlatformTextureSampler::~PlatformTextureSampler()
+PlatformSampler::~PlatformSampler()
 {
     glDeleteSamplers(1, &mSampler);
 }
@@ -35,13 +35,13 @@ PlatformTextureSampler::~PlatformTextureSampler()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PlatformTextureSampler::Enable(int textureUnit)
+PlatformSampler::Enable(int textureUnit)
 {
     mSamplerPrevious = BindSampler(textureUnit, mSampler);
 }
 
 void
-PlatformTextureSampler::Disable(int textureUnit)
+PlatformSampler::Disable(int textureUnit)
 {
     glBindSampler(textureUnit, mSamplerPrevious);
 }

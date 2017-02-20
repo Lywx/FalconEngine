@@ -26,6 +26,37 @@ enum class ShaderVertexAttributeType
     Count,
 };
 
+const int ShaderAttributeChannels[int(ShaderVertexAttributeType::Count)] =
+{
+    0,  // None
+
+    1,  // Float
+    2,  // FloatVec2
+    3,  // FloatVec3
+    4,  // FloatVec4
+
+    1,  // Int
+    2,  // IntVec2
+    3,  // IntVec2
+    4   // IntVec4
+};
+
+// @summary Attribute sizeof operation result in byte.
+const int ShaderAttributeSize[int(ShaderVertexAttributeType::Count)] =
+{
+    0,  // None
+
+    4,  // Float
+    8,  // FloatVec2
+    12, // FloatVec3
+    16, // FloatVec4
+
+    4,  // Int
+    8,  // IntVec2
+    12, // IntVec2
+    16  // IntVec4
+};
+
 class ShaderVertexAttribute : Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
@@ -34,8 +65,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    ShaderVertexAttribute(std::string name, ShaderVertexAttributeType type, bool normalized);
-    ShaderVertexAttribute(int location, std::string name, ShaderVertexAttributeType type, bool normalized);
+    ShaderVertexAttribute(int location, std::string name, ShaderVertexAttributeType type, bool normalized, int offset);
     virtual ~ShaderVertexAttribute();
 
 public:
@@ -43,6 +73,8 @@ public:
     std::string               mName;
     bool                      mNormalized;
     ShaderVertexAttributeType mType;
+    int                       mChannel;
+    int                       mOffset;
 };
 
 typedef std::map<std::string, ShaderVertexAttribute> ShaderVertexAttributeTable;

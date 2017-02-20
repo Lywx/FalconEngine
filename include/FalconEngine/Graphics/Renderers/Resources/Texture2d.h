@@ -1,21 +1,22 @@
 #pragma once
 
+#include <FalconEngine/Graphics/GraphicsInclude.h>
+
 #include <memory>
 #include <boost/serialization/access.hpp>
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
-#include <FalconEngine/Graphics/Renderers/Resources/Texture.h>
+#include <FalconEngine/Graphics/Renderers/Resources/TextureBuffer.h>
 
 namespace FalconEngine
 {
 
-class Texture2d : public Texture
+class Texture2d : public TextureBuffer
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Texture2d(std::string fileName, std::string filePath, TextureFormat format, BufferUsage usage = BufferUsage::Dynamic, int mipmapLevel = 0);
+    Texture2d(std::string fileName, std::string filePath, int width, int height, TextureFormat format, BufferUsage usage = BufferUsage::Static, int mipmapLevel = 0);
     virtual ~Texture2d();
 
     /************************************************************************/

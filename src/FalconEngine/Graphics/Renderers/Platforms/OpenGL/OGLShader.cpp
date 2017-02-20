@@ -11,16 +11,14 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PlatformShader::PlatformShader(const Shader *shader) :
+PlatformShader::PlatformShader(Shader *shader) :
     mProgram(0),
     mShaderNum(0)
 {
-    // Initialize to zero
-    for (int shaderProgramIndex = 0; shaderProgramIndex < int(ShaderType::Count); ++shaderProgramIndex)
-    {
-        mShaders[shaderProgramIndex] = 0;
-    }
+    // Initialize to zero.
+    std::fill_n(mShaders, int(ShaderType::Count), 0);
 
+    // Compile all shader source.
     for (int shaderIndex = 0; shaderIndex < shader->GetShaderNum(); ++shaderIndex)
     {
         auto shaderSource = shader->GetShaderSource(shaderIndex);
@@ -33,17 +31,10 @@ PlatformShader::PlatformShader(const Shader *shader) :
     // Link all the part together.
     LinkProgram();
 
-    // Look up all the declared uniform location.
-    for (auto iter = shader->mUniformHandleTable.begin(); iter != shader->mUniformHandleTable.end(); ++iter)
-    {
-        GLint location = glGetUniformLocation(mProgram, iter->first.c_str());
-        if (location == -1)
-        {
-            throw runtime_error("The location could not be found.");
-        }
+    CreateVertexAttributeArray(shader);
 
-        shader->GetUniform(iter->first)->mLocation = location;
-    }
+    // Look up all the declared uniform location.
+    CollectUniformLocation(shader);
 }
 
 PlatformShader::~PlatformShader()
@@ -171,6 +162,57 @@ void
 PlatformShader::Disable() const
 {
     glUseProgram(0);
+}
+
+/************************************************************************/
+/* Private Members                                                      */
+/************************************************************************/
+
+void
+PlatformShader::CollectVertexAttributeLocation(Shader *shader) const
+{
+    for (auto& vertexAttrib : shader->mVertexAttributeVector)
+    {
+        GLint vertexAttriLocation = glGetAttribLocation(mProgram, vertexAttrib.mName.c_str());
+        if (vertexAttriLocation == -1)
+        {
+            ThrowRuntimeException("The vertex attribute could not be found.");
+        }
+
+        vertexAttrib.mLocation = vertexAttriLocation;
+    }
+}
+
+void
+PlatformShader::CreateVertexAttributeArray(Shader *shader)
+{
+    glCreateVertexArrays(1, &mVertexArray);
+    glBindVertexArray(mVertexArray);
+
+    for (auto& vertexAttrib : shader->mVertexAttributeVector)
+    {
+        glVertexAttribFormat(vertexAttrib.mLocation, vertexAttrib.mChannel,
+                             OpenGLShaderAttributeType[int(vertexAttrib.mType)],
+                             vertexAttrib.mNormalized, vertexAttrib.mOffset);
+        glEnableVertexAttribArray(vertexAttrib.mLocation);
+    }
+
+    glBindVertexArray(0);
+}
+
+void
+PlatformShader::CollectUniformLocation(Shader *shader) const
+{
+    for (auto& uniformNameValuePair : shader->mUniformTable)
+    {
+        GLint uniformLocation = glGetUniformLocation(mProgram, uniformNameValuePair.first.c_str());
+        if (uniformLocation == -1)
+        {
+            ThrowRuntimeException("The location could not be found.");
+        }
+
+        uniformNameValuePair.second.mLocation = uniformLocation;
+    }
 }
 
 }

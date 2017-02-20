@@ -3,6 +3,7 @@
 #include <FalconEngine/Graphics/Renderers/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderers/Resources/IndexBuffer.h>
 #include <FalconEngine/Graphics/Renderers/Resources/VertexBuffer.h>
+#include <FalconEngine/Graphics/Renderers/Resources/VertexFormat.h>
 #include <FalconEngine/Graphics/Scenes/Spatial.h>
 
 namespace FalconEngine
@@ -40,7 +41,8 @@ public:
 
 protected:
     PrimitiveType         mPrimitiveType;
-    VertexBufferSharedPtr mVertexBuffer;
+    //VertexBufferSharedPtr mVertexBuffer;
+    VertexFormatSharedPtr mVertexFormat;
     IndexBufferSharedPtr  mIndexBuffer;
 };
 

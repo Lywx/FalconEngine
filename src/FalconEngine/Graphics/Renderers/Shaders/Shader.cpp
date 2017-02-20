@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Shaders/Shader.h>
+#include <FalconEngine/Graphics/Renderers/Shaders/Shader.h>
 
 #include <fstream>
 
@@ -13,7 +13,8 @@ FALCON_ENGINE_RTTI_IMPLEMENT(Shader, Object);
 /* Constructors and Destructor                                          */
 /************************************************************************/
 
-Shader::Shader()
+Shader::Shader() :
+    mVertexAttributeOffset(0)
 {
 }
 
@@ -27,38 +28,44 @@ Shader::~Shader()
 int
 Shader::GetAttributeNum() const
 {
-    return int(mAttributeVector.size());
+    return int(mVertexAttributeVector.size());
 }
 
 ShaderVertexAttribute&
 Shader::GetAttribute(int attributeIndex)
 {
-    return mAttributeVector.at(attributeIndex);
+    return mVertexAttributeVector.at(attributeIndex);
 }
 
 void
 Shader::PushAttribute(int attributeLocation, std::string attributeName, ShaderVertexAttributeType attributeType, bool attributeNormalized)
 {
-    mAttributeVector.push_back(ShaderVertexAttribute(attributeLocation, attributeName, attributeType, attributeNormalized));
+    if (attributeLocation != mVertexAttributeVector.size())
+    {
+        ThrowRuntimeException("It is not supported for out of order attribute registration.");
+    }
+
+    mVertexAttributeVector.push_back(ShaderVertexAttribute(attributeLocation, attributeName, attributeType, attributeNormalized, mVertexAttributeOffset));
+    mVertexAttributeOffset += ShaderAttributeSize[int(mVertexAttributeVector.back().mType)];
 }
 
 void
 Shader::PushUniform(std::string uniformName, ShaderUniformType uniformType)
 {
-    mUniformHandleTable[uniformName] = make_unique<ShaderUniform>(uniformName, uniformType);
+    mUniformTable[uniformName] = make_unique<ShaderUniform>(uniformName, uniformType);
 }
 
 int
 Shader::GetUniformNum() const
 {
-    return int(mUniformHandleTable.size());
+    return int(mUniformTable.size());
 }
 
 ShaderUniform *
 Shader::GetUniform(string uniformName) const
 {
     // TODO(Wuxiang 2017-01-25 13:33): Not done!
-    return mUniformHandleTable.at(uniformName).get();
+    return mUniformTable.at(uniformName);
 }
 
 int Shader::GetShaderNum() const

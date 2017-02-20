@@ -19,10 +19,12 @@ enum class IndexType
 class IndexBuffer : public Buffer
 {
 public:
+    FALCON_ENGINE_RTTI_DECLARE;
+
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    IndexBuffer(unsigned char *indexData, int indexNum, IndexType indexType, BufferUsage usage);
+    IndexBuffer(int indexNum, IndexType indexType, BufferUsage usage);
     virtual ~IndexBuffer();
 
 public:

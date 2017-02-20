@@ -132,9 +132,9 @@ Camera::SetRotation(const Matrix4f& rotation)
 void
 Camera::SetRotation(float pitch, float yaw, float roll)
 {
-    Quaternion rotation_yaw   = Quaternion::FromAxisAngle(Vector3f::UnitY, yaw);
-    Quaternion rotation_pitch = Quaternion::FromAxisAngle(Vector3f::UnitX, pitch);
-    Quaternion rotation_roll  = Quaternion::FromAxisAngle(Vector3f::UnitZ, roll);
+    Quaternion rotation_yaw   = Quaternion::CreateFromAxisAngle(Vector3f::UnitY, yaw);
+    Quaternion rotation_pitch = Quaternion::CreateFromAxisAngle(Vector3f::UnitX, pitch);
+    Quaternion rotation_roll  = Quaternion::CreateFromAxisAngle(Vector3f::UnitZ, roll);
 
     mRotation = rotation_yaw * rotation_pitch * rotation_roll;
 }
@@ -237,13 +237,13 @@ Camera::LookAt(const Vector3f& from, const Vector3f& to, const Vector3f& up)
     mPosition = from;
     mView = mHandedness->CreateLookAt(from, to, up);
     mWorld = Matrix4f::Inverse(mView);
-    mRotation = Quaternion::FromRotationMatrix(mWorld);
+    mRotation = Quaternion::CreateFromRotationMatrix(mWorld);
 }
 
 void
 Camera::Update(double elapsed)
 {
-    mWorld = Matrix4f::FromRotation(mRotation) *  Matrix4f::CreateTranslation(mPosition);
+    mWorld = Matrix4f::CreateFromRotation(mRotation) *  Matrix4f::CreateTranslation(mPosition);
     mView = Matrix4f::Inverse(mWorld);
 }
 

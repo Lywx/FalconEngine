@@ -30,38 +30,32 @@ VisualEffectInstance::GetPassNum() const
     return mEffect->GetPassNum();
 }
 
-const VisualPass *
-VisualEffectInstance::GetPass(int passIndex) const
+VisualPass *
+VisualEffectInstance::GetPass(int passIndex)
 {
     return mEffect->GetPass(passIndex);
 }
 
-ShaderUniform *
-VisualEffectInstance::GetShaderUniform(int passIndex, int uniformIndex) const
-{
-    return mEffect->GetPass(passIndex)->GetShaderUniform(uniformIndex);
-}
-
-Texture *
+const Texture *
 VisualEffectInstance::GetShaderTexture(int passIndex, int textureUnit) const
 {
     return mEffect->GetPass(passIndex)->GetShaderTexture(textureUnit);
 }
 
 void
-VisualEffectInstance::SetShaderTexture(int passIndex, int textureUnit, Texture *texture)
+VisualEffectInstance::SetShaderTexture(int passIndex, int textureUnit, const Texture *texture)
 {
     mEffect->GetPass(passIndex)->SetShaderTexture(textureUnit, texture);
 }
 
-TextureSampler *
+const Sampler *
 VisualEffectInstance::GetShaderSampler(int passIndex, int textureUnit) const
 {
     return mEffect->GetPass(passIndex)->GetShaderSampler(textureUnit);
 }
 
 void
-VisualEffectInstance::SetShaderSampler(int passIndex, int textureUnit, TextureSampler *sampler)
+VisualEffectInstance::SetShaderSampler(int passIndex, int textureUnit, const Sampler *sampler)
 {
     return mEffect->GetPass(passIndex)->SetShaderSampler(textureUnit, sampler);
 }

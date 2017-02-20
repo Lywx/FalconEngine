@@ -26,7 +26,7 @@ VisualEffect::InsertPass(VisualPassHandle pass)
 }
 
 VisualPass *
-VisualEffect::GetPass(int passIndex) const
+VisualEffect::GetPass(int passIndex)
 {
     return mPassHandleVector.at(passIndex).get();
 }
@@ -38,43 +38,43 @@ VisualEffect::GetPassNum() const
 }
 
 Shader *
-VisualEffect::GetShader(int passIndex) const
+VisualEffect::GetShader(int passIndex)
 {
     return mPassHandleVector.at(passIndex)->GetShader();
 }
 
 BlendState *
-VisualEffect::GetBlendState(int passIndex) const
+VisualEffect::GetBlendState(int passIndex)
 {
     return mPassHandleVector.at(passIndex)->GetBlendState();
 }
 
 CullState *
-VisualEffect::GetCullState(int passIndex) const
+VisualEffect::GetCullState(int passIndex)
 {
     return mPassHandleVector.at(passIndex)->GetCullState();
 }
 
 DepthTestState *
-VisualEffect::GetDepthTestState(int passIndex) const
+VisualEffect::GetDepthTestState(int passIndex)
 {
     return mPassHandleVector.at(passIndex)->GetDepthTestState();
 }
 
 OffsetState *
-VisualEffect::GetOffsetState(int passIndex) const
+VisualEffect::GetOffsetState(int passIndex)
 {
     return mPassHandleVector.at(passIndex)->GetOffsetState();
 }
 
 StencilTestState *
-VisualEffect::GetStencilTestState(int passIndex) const
+VisualEffect::GetStencilTestState(int passIndex)
 {
     return mPassHandleVector.at(passIndex)->GetStencilTestState();
 }
 
 WireframeState *
-VisualEffect::GetWireframeState(int passIndex) const
+VisualEffect::GetWireframeState(int passIndex)
 {
     return mPassHandleVector.at(passIndex)->GetWireframeState();
 }
@@ -82,11 +82,11 @@ VisualEffect::GetWireframeState(int passIndex) const
 VisualEffectSharedPtr
 VisualEffect::GetSharedPtr()
 {
-    if (mThis == nullptr)
+    if (mEffect == nullptr)
     {
-        mThis = VisualEffectSharedPtr(this);
+        mEffect = VisualEffectSharedPtr(this);
     }
 
-    return mThis;
+    return mEffect;
 }
 }

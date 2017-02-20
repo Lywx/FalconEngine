@@ -47,7 +47,7 @@ AssetManager::GetFont(std::string fontName)
 BitmapFont *
 AssetManager::LoadFont(std::string fontAssetPath)
 {
-    BitmapFont *font = GetFont(GetFileStem(fontAssetPath));
+    auto font = GetFont(GetFileStem(fontAssetPath));
     if (font)
     {
         return font;
@@ -74,7 +74,7 @@ AssetManager::GetModel(std::string modelName)
 Model *
 AssetManager::LoadModel(std::string modelFilePath)
 {
-    Model *model = GetModel(GetFileStem(modelFilePath));
+    auto model = GetModel(GetFileStem(modelFilePath));
     if (model)
     {
         return model;
@@ -87,10 +87,10 @@ AssetManager::LoadModel(std::string modelFilePath)
 }
 
 Texture2d *
-AssetManager::GetTexture(std::string textureName)
+AssetManager::GetTexture2d(std::string textureName)
 {
-    auto iter = mTextureTable.find(textureName);
-    if (iter != mTextureTable.end())
+    auto iter = mTexture2dTable.find(textureName);
+    if (iter != mTexture2dTable.end())
     {
         return iter->second.get();
     }
@@ -99,17 +99,17 @@ AssetManager::GetTexture(std::string textureName)
 }
 
 Texture2d *
-AssetManager::LoadTexture(std::string textureAssetPath)
+AssetManager::LoadTexture2d(std::string textureAssetPath)
 {
-    Texture2d *texture = GetTexture(GetFileStem(textureAssetPath));
+    auto texture = GetTexture2d(GetFileStem(textureAssetPath));
     if (texture)
     {
         return texture;
     }
 
-    auto textureHandle = LoadTextureInternal(textureAssetPath);
+    auto textureHandle = LoadTexture2dInternal(textureAssetPath);
     texture = textureHandle.get();
-    mTextureTable[texture->mFileName] = move(textureHandle);
+    mTexture2dTable[texture->mFileName] = move(textureHandle);
 
     return texture;
 }
@@ -124,56 +124,52 @@ AssetManager::LoadFontInternal(std::string fontAssetPath)
 
     if (Exist(fontAssetPath))
     {
-        // Load font
-        auto font = new BitmapFont("", "");
+        // Load font.
+        auto font = new BitmapFont("None", "None");
         {
             ifstream fontAssetStream(fontAssetPath);
             archive::binary_iarchive fontAssetArchive(fontAssetStream);
             fontAssetArchive >> *font;
         }
 
-        // Load font texture
+        // Load font texture array.
         auto fontAssetDirPath = GetFileDirectory(fontAssetPath);
-        for (int fontPageId = 0; fontPageId < font->mTexturePages; ++fontPageId)
         {
-            auto textureAssetName = font->mTextureArchiveNameVector[fontPageId];
-            auto textureAssetPath = fontAssetDirPath + textureAssetName;
-            LoadTexture(textureAssetPath);
+            // Load the first texture, then, use the texture metadata to create texture array.
+            Texture2dArray *fontPageTextureArray;
+            {
+                auto fontPage0TextureAssetName = font->mTextureArchiveNameVector[0];
+                auto fontPage0TextureAssetPath = fontAssetDirPath + fontPage0TextureAssetName;
+                auto fontPage0Texture = LoadTexture2d(fontPage0TextureAssetPath);
+
+                // TODO(Wuxiang): Add mipmap support.
+                fontPageTextureArray = new Texture2dArray("None", "None", fontPage0Texture->mDimension[0],
+                        fontPage0Texture->mDimension[1], font->mTexturePages,
+                        TextureFormat::R8G8B8A8, BufferUsage::Static, 0);
+            }
+
+            // Load the other textures.
+            for (int fontPageId = 1; fontPageId < font->mTexturePages; ++fontPageId)
+            {
+                auto textureAssetName = font->mTextureArchiveNameVector[fontPageId];
+                auto textureAssetPath = fontAssetDirPath + textureAssetName;
+
+                auto fontPageTexture = LoadTexture2d(textureAssetPath);
+                fontPageTextureArray->PushTexture2d(fontPageTexture);
+            }
+            font->SetTexture(Texture2dArraySharedPtr(fontPageTextureArray));
         }
 
-        // TODO(Wuxiang 2016-12-30 19:26): How to use font?
-        //GLuint texture;
-        //glGenTextures(1, &texture);
-        //glBindTexture(GL_TEXTURE_2D_ARRAY, texture);
-        //glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, font.mTextureWidth, font.mTextureHeight, font.mTexturePages);
-        //glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        //glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        //glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        //glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        //for (int fontPageId = 0; fontPageId < font.mTexturePages; ++fontPageId)
-        //{
-        //    string textureAssetFilePath = font.mTextureFileNameVector[fontPageId];
-
-        //    auto textureFileName = fntDirPathString + font->mTextureFileNameVector[fontPageId];
-        //    LoadTextureFile(textureFileName, font, fontPageId);
-
-        //    Texture2d fontTexture;
-        //    ifstream textureAssetStream(textureAssetFilePath);
-        //    archive::binary_iarchive textureAssetArchive(textureAssetFilePath);
-        //    textureAssetArchive >> fontTexture;
-
-        //    fontTexture.mTexture = textureData;
-        //    fontTexture.mTextureWidth = textureWidth;
-        //    fontTexture.mTextureHeight = textureHeight;
-
-        //    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, fontPageId, textureWidth, textureHeight, 1, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
-        //}
+        // Set font texture sampler.
+        auto sampler = new Sampler();
+        sampler->mMagnificationFilter = SamplerMagnificationFilter::Linear;
+        sampler->mMinificationFilter = SamplerMinificationFilter::Linear;
+        font->SetSampler(SamplerSharedPtr(sampler));
 
         return unique_ptr<BitmapFont>(font);
     }
 
-    throw runtime_error("File not found.");
+    ThrowRuntimeException("File not found.");
 }
 
 ModelUniquePtr
@@ -190,7 +186,7 @@ AssetManager::LoadModelInternal(std::string modelFilePath)
     const aiScene *scene = modelImporter.ReadFile(modelFilePath, aiProcess_Triangulate | aiProcess_FlipUVs);
     if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
-        throw runtime_error(string("Error: ") + modelImporter.GetErrorString());
+        ThrowRuntimeException(string("Error: ") + modelImporter.GetErrorString());
     }
 
     // NOTE(Wuxiang): The node constructor would recursively load the necessary children nodes and textures.
@@ -200,18 +196,18 @@ AssetManager::LoadModelInternal(std::string modelFilePath)
 }
 
 Texture2dUniquePtr
-AssetManager::LoadTextureInternal(std::string textureAssetPath)
+AssetManager::LoadTexture2dInternal(std::string textureAssetPath)
 {
     using namespace boost;
 
     ifstream textureAssetStream(textureAssetPath);
     archive::binary_iarchive textureAssetArchive(textureAssetStream);
 
-    auto texture = new Texture2d("", "", TextureFormat::None);
+    auto texture = new Texture2d("None", "None", 0, 0, TextureFormat::None);
     textureAssetArchive >> *texture;
     if (texture->mData == nullptr)
     {
-        throw runtime_error("Failed to load texture asset.");
+        ThrowRuntimeException("Failed to load texture asset.");
     }
 
     texture->mFileType = AssetSource::Stream;

@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Shaders/ShaderUniform.h>
+#include <FalconEngine/Graphics/Renderers/Shaders/ShaderUniform.h>
 
 namespace FalconEngine
 {

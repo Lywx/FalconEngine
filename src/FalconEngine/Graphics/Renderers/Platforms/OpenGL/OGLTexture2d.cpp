@@ -28,16 +28,19 @@ PlatformTexture2d::PlatformTexture2d(const Texture2d *texture) :
 
     // Allocate current texture memory
     glGenTextures(1, &mTexture);
-    GLuint textureBindingPrevious = BindTexture(TextureType::Texture2d, mTexture);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, mDimension[0], mDimension[1],
-                    mFormat, mType, nullptr);
+    {
+        // Bind newly created texture
+        GLuint textureBindingPrevious = BindTexture(TextureType::Texture2d, mTexture);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, mDimension[0], mDimension[1],
+                        mFormat, mType, nullptr);
 
-    // Restore previous texture binding
-    glBindTexture(GL_TEXTURE_2D, textureBindingPrevious);
+        // Restore previous texture binding
+        glBindTexture(GL_TEXTURE_2D, textureBindingPrevious);
+    }
 
     // Fill in the texture data
-    void *data = Map(0, BufferAccessMode::Write);
-    memcpy(data, texture->mData, texture->mDataByteNum);
+    void *textureData = Map(0, BufferAccessMode::Write);
+    memcpy(textureData, texture->mData, texture->mDataByteNum);
     Unmap(0);
 }
 

@@ -1,7 +1,11 @@
 #pragma once
 
-#include <map>
+#include <FalconEngine/Graphics/GraphicsInclude.h>
 
+#include <map>
+#include <vector>
+
+#include <FalconEngine/Graphics/Renderers/Resources/Texture2dArray.h>
 #include <FalconEngine/Graphics/Renderers/Viewport.h>
 
 namespace FalconEngine
@@ -35,7 +39,7 @@ class Texture;
 class Texture1d;
 class Texture2d;
 class Texture3d;
-class TextureSampler;
+class Sampler;
 
 /************************************************************************/
 /* Renderer States                                                      */
@@ -56,8 +60,9 @@ class PlatformIndexBuffer;
 class PlatformVertexBuffer;
 class PlatformTexture1d;
 class PlatformTexture2d;
+class PlatformTexture2dArray;
 class PlatformTexture3d;
-class PlatformTextureSampler;
+class PlatformSampler;
 
 /************************************************************************/
 /* Platform Rendering Pipeline                                          */
@@ -75,8 +80,9 @@ public:
     typedef std::map<const IndexBuffer *,  PlatformIndexBuffer *> PlatformIndexBufferTable;
     typedef std::map<const Texture1d *, PlatformTexture1d *> PlatformTexture1dTable;
     typedef std::map<const Texture2d *, PlatformTexture2d *> PlatformTexture2dTable;
+    typedef std::map<const Texture2dArray *, PlatformTexture2dArray *> PlatformTexture2dArrayTable;
     typedef std::map<const Texture3d *, PlatformTexture3d *> PlatformTexture3dTable;
-    typedef std::map<const TextureSampler *, PlatformTextureSampler *> PlatformTextureSamplerTable;
+    typedef std::map<const Sampler *, PlatformSampler *> PlatformTextureSamplerTable;
 
     typedef std::map<const Shader *, PlatformShader *> PlatformShaderTable;
 
@@ -94,11 +100,13 @@ public:
     void
     Unbind(const VertexBuffer *vertexBuffer);
 
+    // @param offset - offset into the first data in byte.
+    // @param stride - stride between contiguous data in byte.
     void
-    Enable(const VertexBuffer *vertexBuffer);
+    Enable(const VertexBuffer *vertexBuffer, int bindingIndex, int offset, int stride);
 
     void
-    Disable(const VertexBuffer *vertexBuffer);
+    Disable(const VertexBuffer *vertexBuffer, int bindingIndex);
 
     void *
     Map(const VertexBuffer *vertexBuffer, BufferAccessMode mode);
@@ -188,6 +196,27 @@ public:
     Update(const Texture2d *texture, int mipmapLevel);
 
     void
+    Bind(const Texture2dArray *textureArray);
+
+    void
+    Unbind(const Texture2dArray *textureArray);
+
+    void
+    Enable(int textureUnit, const Texture2dArray *textureArray);
+
+    void
+    Disable(int textureUnit, const Texture2dArray *textureArray);
+
+    void *
+    Map(const Texture2dArray *textureArray, int mipmapLevel, BufferAccessMode mode);
+
+    void
+    Unmap(const Texture2dArray *textureArray, int mipmapLevel);
+
+    void
+    Update(const Texture2dArray *textureArray, int mipmapLevel);
+
+    void
     Bind(const Texture3d *texture);
 
     void
@@ -212,28 +241,28 @@ public:
     /* Sampler Management                                                   */
     /************************************************************************/
     void
-    Bind(const TextureSampler *sampler);
+    Bind(const Sampler *sampler);
 
     void
-    Unbind(const TextureSampler *sampler);
+    Unbind(const Sampler *sampler);
 
     void
-    Enable(int textureUnit, TextureSampler *sampler);
+    Enable(int textureUnit, const Sampler *sampler);
 
     void
-    Disable(int textureUnit, TextureSampler *sampler);
+    Disable(int textureUnit, const Sampler *sampler);
 
     /************************************************************************/
     /* Shader Management                                                   */
     /************************************************************************/
     void
-    Bind(const Shader *shader);
+    Bind(Shader *shader);
 
     void
     Unbind(const Shader *shader);
 
     void
-    Enable(const Shader *shader);
+    Enable(Shader *shader);
 
     void
     Disable(const Shader *shader);
@@ -251,26 +280,10 @@ public:
     /* Draw                                                                 */
     /************************************************************************/
     void
-    DrawString(BitmapFont *font,
-               float       fontSize,
-               Vector2f          textPosition,
-               const BitmapText *text,
-               const Color       textColor = ColorPalette::White,
-               float             textLineWidth = std::numeric_limits<float>().max());
+    Draw(Visual *visual);
 
     void
-    DrawString(BitmapFont *font,
-               float       fontSize,
-               Vector2f           textPosition,
-               const std::string& text,
-               const Color        textColor = ColorPalette::White,
-               float              textLineWidth = std::numeric_limits<float>().max());
-
-    void
-    Draw(const Visual *visual);
-
-    void
-    Draw(const Visual *visual, const VisualEffectInstance *instance);
+    Draw(const Visual *visual, VisualEffectInstance *instance);
 
 public:
     int                     mWidth;
@@ -288,7 +301,8 @@ private:
     PlatformIndexBufferTable        mIndexBufferTable;
     PlatformVertexBufferTable       mVertexBufferTable;
     PlatformTexture2dTable          mTexture2dTable;
-    PlatformTextureSamplerTable     mTextureSamplerTable;
+    PlatformTexture2dArrayTable     mTexture2dArrayTable;
+    PlatformTextureSamplerTable     mSamplerTable;
 
     PlatformShaderTable             mShaderTable;
 

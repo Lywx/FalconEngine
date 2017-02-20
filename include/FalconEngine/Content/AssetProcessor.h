@@ -34,7 +34,7 @@ public:
     BakeModel(std::string modelFilePath);
 
     void
-    BakeTexture(std::string textureFilePath);
+    BakeTexture2d(std::string textureFilePath);
 
 private:
     void
@@ -45,10 +45,10 @@ private:
     LoadRawFont(std::string fntFilePath);
 
     void
-    BakeTexture(Texture2d *texturePtr, std::string textureOutputPath);
+    BakeTexture2d(Texture2d *texturePtr, std::string textureOutputPath);
 
     Texture2dUniquePtr
-    LoadRawTexture(std::string textureFilePath);
+    LoadRawTexture2d(std::string textureFilePath);
 
     // @param materialPathsBaked material texture
     void

@@ -9,8 +9,9 @@ namespace FalconEngine
 {
 // @summary This represents a glyph in bitmap. The information related to the
 // font it's using and the size of that font.
-struct BitmapGlyph
+class BitmapGlyph
 {
+public:
     /************************************************************************/
     /* Lookup Data                                                          */
     /************************************************************************/

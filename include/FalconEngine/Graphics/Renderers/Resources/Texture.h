@@ -36,6 +36,13 @@ enum class TextureFormat
     Count
 };
 
+const int TexelSize[int(TextureFormat::Count)] =
+{
+    0, // None
+
+    1, // R8G8B8A8
+};
+
 class Texture : public Asset
 {
     FALCON_ENGINE_RTTI_DECLARE;
@@ -44,16 +51,17 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Texture(std::string fileName, std::string filePath, TextureFormat format, TextureType type, BufferUsage usage, int mipmapLevel);
+    Texture(std::string fileName, std::string filePath, int width, int height, int depth,
+            TextureFormat format, TextureType type, BufferUsage usage, int mipmapLevel);
     virtual ~Texture();
 
 public:
     int            mChannel = 0;                                               // Texture RGBA color channel number.
     int            mDimension[3];                                              // Texture dimension (width, height, depth).
 
+    // NOTE(Wuxiang): Initialization in constructor requires the following data members.
+
     TextureFormat  mFormat;                                                    // Texture binary format, needed during construction.
-    unsigned char *mData;
-    int            mDataByteNum;
     int            mMipmapLevel;                                               // Texture mipmap level, needed during construction.
     TextureType    mType;                                                      // Texture type, needed during construction.
     BufferUsage    mUsage;                                                     // Texture buffer usage, needed during construction.
@@ -83,7 +91,7 @@ public:
 };
 
 typedef std::vector<Texture *> TextureVector;
-typedef std::map<int, Texture *> TextureTable;
+typedef std::map<int, const Texture *> TextureTable;
 
 }
 

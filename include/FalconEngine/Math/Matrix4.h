@@ -43,7 +43,7 @@ public:
 
     // @summary Convert quaternion to rotation matrix
     // @note Column vector convention
-    static Matrix4f FromRotation(const Quaternion& q);
+    static Matrix4f CreateFromRotation(const Quaternion& q);
 
     // @summary Create 4x4 rotation matrix from axis angle.
     static Matrix4f CreateRotation(const float& pitch, const float& yaw, const float& roll);

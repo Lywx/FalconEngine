@@ -7,7 +7,11 @@
 #include <glm/gtc/matrix_transform.inl>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <FalconEngine/Content/AssetManager.h>
+#include <FalconEngine/Graphics/Effects/BitmapFontEffect.h>
 #include <FalconEngine/Graphics/Renderers/BitmapLine.h>
+#include <FalconEngine/Graphics/Renderers/VisualQuads.h>
+#include <FalconEngine/Graphics/Renderers/Resources/Texture2dArray.h>
 
 using namespace std;
 using namespace boost;
@@ -16,7 +20,15 @@ using namespace FalconEngine;
 namespace FalconEngine
 {
 
-BitmapFontRenderer::BitmapFontRenderer()
+/************************************************************************/
+/* Constructors and Destructor                                          */
+/************************************************************************/
+BitmapFontRenderer::BitmapFontRenderer() :
+    mTextBufferDynamic(nullptr),
+    mTextBufferStream(nullptr),
+    mTextEffect()
+
+
 {
 }
 
@@ -24,50 +36,22 @@ BitmapFontRenderer::~BitmapFontRenderer()
 {
 }
 
+/************************************************************************/
+/* Public Members                                                       */
+/************************************************************************/
 void
-BitmapFontRenderer::Setup(BitmapFontRendererContext context)
+BitmapFontRenderer::Initialize(int width, int height)
 {
-    mContext = context;
+    auto assetManager = AssetManager::GetInstance();
 
-    // Load font shader
-    mTextShaderDefault.CreateFromFile(GL_VERTEX_SHADER,   "Content/Shaders/Font.vert.glsl");
-    mTextShaderDefault.CreateFromFile(GL_FRAGMENT_SHADER, "Content/Shaders/Font.frag.glsl");
-    mTextShaderDefault.LinkProgram();
+    // Obtain needed texture
+    auto font = assetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.bin");
 
-    mTextShaderDefault.Enable();
+    mTextBufferStream = std::make_shared<VertexBuffer>(1, sizeof(BitmapFontVertex), BufferUsage::Stream);
+    mTextBufferDynamic = std::make_shared<VertexBuffer>(1, sizeof(BitmapFontVertex), BufferUsage::Dynamic);
 
-    mTextShaderDefault.DeclareAttribute("VertexCoord");
-    mTextShaderDefault.DeclareAttribute("TextureCoord");
-    mTextShaderDefault.DeclareAttribute("FontColor");
-    mTextShaderDefault.DeclareAttribute("FontWidth");
-    mTextShaderDefault.DeclareAttribute("FontEdge");
-    mTextShaderDefault.DeclareAttribute("FontPage");
-
-    mTextShaderDefault.DeclareUniform("Projection");
-    mTextShaderDefault.DeclareUniform("Texture");
-
-    mFontShaderCameraProjection = glm::ortho(0.0f, float(mContext.mWidth), 0.0f, float(mContext.mHeight));
-    glUniformMatrix4fv(mTextShaderDefault["Projection"], 1, GL_FALSE, value_ptr(mFontShaderCameraProjection[0]));
-    mTextShaderDefault.Disable();
-
-    // Prepare text batcher and text buffer
-    glGenVertexArrays(1, &mTextShaderDefaultVao);
-    glBindVertexArray(mTextShaderDefaultVao);
-
-    glGenBuffers(1, &mTextShaderDefaultBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, mTextShaderDefaultBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, mTextShaderDefaultBuffer);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(float), BUFFER_OFFSET( 0 * sizeof(float)));
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(float), BUFFER_OFFSET( 2 * sizeof(float)));
-    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 11 * sizeof(float), BUFFER_OFFSET( 4 * sizeof(float)));
-    glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 11 * sizeof(float), BUFFER_OFFSET( 8 * sizeof(float)));
-    glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, 11 * sizeof(float), BUFFER_OFFSET( 9 * sizeof(float)));
-    glVertexAttribPointer(5, 1, GL_FLOAT, GL_FALSE, 11 * sizeof(float), BUFFER_OFFSET(10 * sizeof(float)));
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    mTextEffect = new BitmapFontEffect();
+    mTextEffectInstance = VisualEffectInstanceSharedPtr(mTextEffect->CreateInstance(font, width, height));
 }
 
 void BitmapFontRenderer::DrawText(
@@ -259,13 +243,18 @@ BitmapFontRenderer::PrepareString(
     // Fill the vertex attribute into the buffer
     CreateAttributes(font, text.mFontSize, Vector2f(text.mTextBounds.x, text.mTextBounds.y), Vector4f(textColor), textLines, mTextShaderDefaultAttributes);
 
+
+    auto data;
+    auto s = VertexBuffer(data);
+    VisualQuads()
+
     // Find the render group this group of text belongs to.
     int  renderGroupIndex;
     bool renderGroupFound = false;
-    for (renderGroupIndex = 0; renderGroupIndex < mFontRenderGroups.size(); ++renderGroupIndex)
+    for (renderGroupIndex = 0; renderGroupIndex < mTextBatch.size(); ++renderGroupIndex)
     {
-        if (mFontRenderGroups[renderGroupIndex].mFont == &font
-                && mFontRenderGroups[renderGroupIndex].mTextShader == &textShader)
+        if (mTextBatch[renderGroupIndex].mFont == &font
+                && mTextBatch[renderGroupIndex].mTextShader == &textShader)
         {
             renderGroupFound = true;
             break;
@@ -274,7 +263,7 @@ BitmapFontRenderer::PrepareString(
 
     if (renderGroupFound)
     {
-        mFontRenderGroups[renderGroupIndex].mTextVertexCount += textGlyphCount * 6;
+        mTextBatch[renderGroupIndex].mTextVertexCount += textGlyphCount * 6;
     }
     else
     {
@@ -286,40 +275,21 @@ BitmapFontRenderer::PrepareString(
         renderGroup.mTextShaderBuffer = mTextShaderDefaultBuffer;
         renderGroup.mTextShaderVao = mTextShaderDefaultVao;
         renderGroup.mTextVertexCount = textGlyphCount * 6;
-        mFontRenderGroups.push_back(renderGroup);
+        mTextBatch.push_back(renderGroup);
     }
 
-    mFontRenderGroupsDirty = true;
-}
-
-void BitmapFontRenderer::PrepareText(
-    BitmapFont& font,
-    Shader&     textShader,
-    BitmapText& text,
-    Color       textColor)
-{
+    mTextBatchDirty = true;
 }
 
 void BitmapFontRenderer::RenderBegin()
 {
-    // Switch GL State
-    auto a = DepthTestState();
-    a.mTestEnabled = true;
-    mRenderer->SetDepthState(a);
-
-    auto b = BlendState();
-    b.mEnabled = true;
-    b.mSourceFactor = BlendSourceFactor::SRC_ALPHA;
-    b.mDestinationFactor = BlendDestinationFactor::ONE_MINUS_SRC_ALPHA;
-    mRenderer->SetBlendState(b);
-
     if (mTextShaderPrevious != nullptr)
     {
         mTextShaderPrevious->Enable();
     }
 
     // Sort render groups when necessary
-    if (mFontRenderGroupsDirty)
+    if (mTextBatchDirty)
     {
         // NOTE(Wuxiang): According to these refs, shader switch is more expensive
         // than texture binding:
@@ -330,25 +300,25 @@ void BitmapFontRenderer::RenderBegin()
         // So that result should be like: (s1, t1), (s1, t2), (s2, t1), (s2, t2),
         // where s stands for shader and t stands for texture object. You need to
         // switch texture object for different font.
-        std::stable_sort(mFontRenderGroups.begin(), mFontRenderGroups.end(),
+        std::stable_sort(mTextBatch.begin(), mTextBatch.end(),
                          [](BitmapFontRenderGroup lhs, BitmapFontRenderGroup rhs) -> bool
         {
             return lhs.mFont->mName < rhs.mFont->mName;
         });
 
-        std::stable_sort(mFontRenderGroups.begin(), mFontRenderGroups.end(),
+        std::stable_sort(mTextBatch.begin(), mTextBatch.end(),
                          [](BitmapFontRenderGroup lhs, BitmapFontRenderGroup rhs) -> bool
         {
             return lhs.mTextShader->GetProgram() < rhs.mTextShader->GetProgram();
         });
 
-        mFontRenderGroupsDirty = false;
+        mTextBatchDirty = false;
     }
 }
 
 void BitmapFontRenderer::Render()
 {
-    for (auto renderGroup : mFontRenderGroups)
+    for (auto renderGroup : mTextBatch)
     {
         GLuint renderGroupTexture = renderGroup.mFont->mTextureObject;
         Shader& renderGroupShader = *renderGroup.mTextShader;
@@ -412,7 +382,7 @@ void BitmapFontRenderer::Render()
 
 void BitmapFontRenderer::RenderEnd()
 {
-    mFontRenderGroups.clear();
+    mTextBatch.clear();
     mTextShaderPrevious->Disable();
     mTexts.clear();
     mTextShaderDefaultAttributes.clear();

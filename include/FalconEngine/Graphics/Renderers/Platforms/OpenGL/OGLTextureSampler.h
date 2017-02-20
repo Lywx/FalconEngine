@@ -1,16 +1,16 @@
 #pragma once
 
 #include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLInclude.h>
-#include <FalconEngine/Graphics/Renderers/Resources/TextureSampler.h>
+#include <FalconEngine/Graphics/Renderers/Resources/Sampler.h>
 
 namespace FalconEngine
 {
 
-class PlatformTextureSampler
+class PlatformSampler
 {
 public:
-    PlatformTextureSampler(const TextureSampler *sampler);
-    virtual ~PlatformTextureSampler();
+    PlatformSampler(const Sampler *sampler);
+    virtual ~PlatformSampler();
 
     void
     Enable(int textureUnit);

@@ -36,15 +36,15 @@ PlatformVertexBuffer::~PlatformVertexBuffer()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PlatformVertexBuffer::Enable()
+PlatformVertexBuffer::Enable(int bindingIndex, int offset, int stride)
 {
-    glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+    glBindVertexBuffer(bindingIndex, mBuffer, offset, stride);
 }
 
 void
-PlatformVertexBuffer::Disable()
+PlatformVertexBuffer::Disable(int bindingIndex)
 {
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexBuffer(bindingIndex, 0, 0, 0);
 }
 
 void *

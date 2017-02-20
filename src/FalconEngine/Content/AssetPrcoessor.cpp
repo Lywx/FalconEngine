@@ -46,8 +46,8 @@ AssetProcessor::BakeFont(std::string fntFilePath)
         for (int fontPageId = 0; fontPageId < fontHandle->mTexturePages; ++fontPageId)
         {
             auto textureFilePath = fntDirPath + fontHandle->mTextureFileNameVector[fontPageId];
-            auto texture = LoadRawTexture(textureFilePath);
-            BakeTexture(texture.get(), ChangeFileExtension(textureFilePath, u8".bin"));
+            auto texture = LoadRawTexture2d(textureFilePath);
+            BakeTexture2d(texture.get(), ChangeFileExtension(textureFilePath, u8".bin"));
         }
     }
 }
@@ -190,7 +190,7 @@ LoadFntFile(std::string fntFilePath)
     fntStream.open(fntFilePath);
     if (!fntStream.good())
     {
-        throw runtime_error("Failed to load fnt file.");
+        ThrowRuntimeException("Failed to load fnt file.");
     }
 
     static map<string, string> fontSettingTable;
@@ -326,14 +326,14 @@ AssetProcessor::LoadRawFont(std::string fntFilePath)
 }
 
 void
-AssetProcessor::BakeTexture(std::string textureFilePath)
+AssetProcessor::BakeTexture2d(std::string textureFilePath)
 {
-    auto textureHandle = LoadRawTexture(textureFilePath);
-    BakeTexture(textureHandle.get(), ChangeFileExtension(textureFilePath, u8".bin"));
+    auto textureHandle = LoadRawTexture2d(textureFilePath);
+    BakeTexture2d(textureHandle.get(), ChangeFileExtension(textureFilePath, u8".bin"));
 }
 
 void
-AssetProcessor::BakeTexture(Texture2d *texture, string textureOutputPath)
+AssetProcessor::BakeTexture2d(Texture2d *texture, string textureOutputPath)
 {
     ofstream textureAssetStream(textureOutputPath);
     archive::binary_oarchive textureAssetArchive(textureAssetStream);
@@ -341,25 +341,28 @@ AssetProcessor::BakeTexture(Texture2d *texture, string textureOutputPath)
 }
 
 std::unique_ptr<Texture2d>
-AssetProcessor::LoadRawTexture(std::string textureFilePath)
+AssetProcessor::LoadRawTexture2d(std::string textureFilePath)
 {
-    auto *texture = new Texture2d(GetFileStem(textureFilePath), textureFilePath, TextureFormat::R8G8B8A8);
-    texture->mFileType = AssetSource::Stream;
-
     // NOTE(Wuxiang): Since the stb_image default loading format goes from top-left to bottom-right,
     // it is necessary to flip to make it compatible for OpenGL.
     stbi_set_flip_vertically_on_load(1);
-    texture->mData = stbi_load(textureFilePath.c_str(),
-                               &texture->mDimension[0],
-                               &texture->mDimension[1],
-                               &texture->mChannel,
-                               STBI_rgb_alpha);
-    if (texture->mData == nullptr)
+
+    int  textureDimension[3];
+    int  textureChannel;
+    auto textureData = stbi_load(textureFilePath.c_str(), &textureDimension[0],
+                                 &textureDimension[1], &textureChannel,
+                                 STBI_rgb_alpha);
+    if (textureData == nullptr)
     {
-        throw runtime_error("Failed to load texture file.");
+        ThrowRuntimeException("Failed to load texture file.");
     }
 
-    texture->mDataByteNum = texture->mDimension[0] * texture->mDimension[1] * sizeof(unsigned char);
+    // NOTE(Wuxiang): Copy the memory allocated from the stb library.
+    auto *texture = new Texture2d(GetFileStem(textureFilePath), textureFilePath, textureDimension[0], textureDimension[1], TextureFormat::R8G8B8A8);
+    texture->mFileType = AssetSource::Stream;
+    memcpy(texture->mData, textureData, texture->mDataByteNum);
+    stbi_image_free(textureData);
+
     return unique_ptr<Texture2d>(texture);
 }
 
@@ -371,7 +374,7 @@ AssetProcessor::BakeModel(std::string modelFilePath)
     const aiScene *scene = modelImporter.ReadFile(modelFilePath, aiProcess_Triangulate | aiProcess_FlipUVs);
     if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
-        throw runtime_error(string("Error: ") + modelImporter.GetErrorString());
+        ThrowRuntimeException(modelImporter.GetErrorString());
     }
 
     // Bake texture in model
@@ -408,7 +411,7 @@ AssetProcessor::BakeMaterial(aiMaterial               *material,
         }
         else
         {
-            BakeTexture(textureFilePathString);
+            BakeTexture2d(textureFilePathString);
             texturePathsBaked.push_back(textureFilePathString);
         }
     }

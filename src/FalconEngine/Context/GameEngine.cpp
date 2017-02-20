@@ -1,6 +1,7 @@
 #include <FalconEngine/Context/GameEngine.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -47,7 +48,8 @@ GameEngine::~GameEngine()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-inline void GameEngine::Run()
+void
+GameEngine::Run()
 {
     if (!mInitialized)
     {
@@ -58,7 +60,8 @@ inline void GameEngine::Run()
     Exit();
 }
 
-inline void GameEngine::Shutdown()
+void
+GameEngine::Shutdown()
 {
     mRunning = false;
 }
@@ -66,7 +69,8 @@ inline void GameEngine::Shutdown()
 /************************************************************************/
 /* Protected Members                                                    */
 /************************************************************************/
-inline void GameEngine::Initialize()
+void
+GameEngine::Initialize()
 {
     if(mGame != nullptr)
     {
@@ -76,7 +80,8 @@ inline void GameEngine::Initialize()
     mInitialized = true;
 }
 
-inline void GameEngine::Loop()
+void
+GameEngine::Loop()
 {
     Counter = GameCounter();
     char lastFramePerformanceString[256];
@@ -147,7 +152,8 @@ inline void GameEngine::Loop()
     }
 }
 
-inline void GameEngine::Exit()
+void
+GameEngine::Exit()
 {
     if (mGame != nullptr)
     {

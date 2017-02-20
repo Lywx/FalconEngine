@@ -52,9 +52,8 @@ public:
     bool              mUpdated;
 };
 
-typedef std::map<std::string, ShaderUniform *> ShaderUniformTable;
-typedef std::map<std::string, std::unique_ptr<ShaderUniform>> ShaderUniformHandleTable;
-typedef std::vector<ShaderUniform *> ShaderUniformVector;
+typedef std::map<std::string, ShaderUniform> ShaderUniformTable;
+typedef std::vector<ShaderUniform *>         ShaderUniformPtrVector;
 
 template<typename T>
 class ShaderUniformValue : public ShaderUniform
@@ -77,15 +76,72 @@ protected:
     T mValue;
 };
 
+template<typename T>
+using ShaderUniformValueSharedPtr = std::shared_ptr<ShaderUniformValue<T>>;
+
+template <typename T, typename U, typename ... Args>
+ShaderUniformValueSharedPtr<T> ShareUniform(const Args& ... args)
+{
+    return static_pointer_cast<ShaderUniformValueSharedPtr<T>>(std::make_shared<U>(args));
+}
+
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
+template <>
+inline ShaderUniformValue<int>::ShaderUniformValue(const std::string& name, const int& value) :
+    ShaderUniform(name, ShaderUniformType::Int),
+    mValue(value)
+{
+}
+
+template <>
+inline ShaderUniformValue<Vector2i>::ShaderUniformValue(const std::string& name, const Vector2i& value) :
+    ShaderUniform(name, ShaderUniformType::IntVec2),
+    mValue(value)
+{
+}
+
+template <>
+inline ShaderUniformValue<Vector3i>::ShaderUniformValue(const std::string& name, const Vector3i& value) :
+    ShaderUniform(name, ShaderUniformType::IntVec3),
+    mValue(value)
+{
+}
+
+template <>
+inline ShaderUniformValue<Vector4i>::ShaderUniformValue(const std::string& name, const Vector4i& value) :
+    ShaderUniform(name, ShaderUniformType::IntVec4),
+    mValue(value)
+{
+}
+
 template <>
 inline ShaderUniformValue<float>::ShaderUniformValue(const std::string& name, const float& value) :
     ShaderUniform(name, ShaderUniformType::Float),
     mValue(value)
 {
+}
 
+template <>
+inline ShaderUniformValue<Vector2f>::ShaderUniformValue(const std::string& name, const Vector2f& value) :
+    ShaderUniform(name, ShaderUniformType::FloatVec2),
+    mValue(value)
+{
+}
+
+template <>
+inline ShaderUniformValue<Vector3f>::ShaderUniformValue(const std::string& name, const Vector3f& value) :
+    ShaderUniform(name, ShaderUniformType::FloatVec3),
+    mValue(value)
+{
+}
+
+template <>
+inline ShaderUniformValue<Vector4f>::ShaderUniformValue(const std::string& name, const Vector4f& value) :
+    ShaderUniform(name, ShaderUniformType::FloatVec4),
+    mValue(value)
+{
 }
 
 template <typename T>

@@ -11,8 +11,8 @@
 #include <FalconEngine/Graphics/Renderers/States/StencilTestState.h>
 #include <FalconEngine/Graphics/Renderers/States/WireframeState.h>
 #include <FalconEngine/Graphics/Renderers/Resources/Texture.h>
-#include <FalconEngine/Graphics/Renderers/Resources/TextureSampler.h>
-#include <FalconEngine/Graphics/Shaders/Shader.h>
+#include <FalconEngine/Graphics/Renderers/Resources/Sampler.h>
+#include <FalconEngine/Graphics/Renderers/Shaders/Shader.h>
 
 namespace FalconEngine
 {
@@ -43,10 +43,10 @@ public:
     SetShaderUniform(ShaderUniform *shaderUniform);
 
     void
-    SetShaderTexture(int textureUnit, Texture *texture);
+    SetShaderTexture(int textureUnit, const Texture *texture);
 
     void
-    SetShaderSampler(int textureUnit, TextureSampler *sampler);
+    SetShaderSampler(int textureUnit, const Sampler *sampler);
 
     void
     SetBlendState(BlendStateHandle blendStateHandle);
@@ -78,45 +78,45 @@ public:
     int
     GetShaderTextureNum() const;
 
-    Texture *
+    const Texture *
     GetShaderTexture(int textureUnit) const;
 
     int
     GetShaderSamplerNum() const;
 
-    TextureSampler *
+    const Sampler *
     GetShaderSampler(int textureUnit);
 
-    BlendState *
+    const BlendState *
     GetBlendState() const;
 
-    CullState *
+    const CullState *
     GetCullState() const;
 
-    DepthTestState *
+    const DepthTestState *
     GetDepthTestState() const;
 
-    OffsetState *
+    const OffsetState *
     GetOffsetState() const;
 
-    StencilTestState *
+    const StencilTestState *
     GetStencilTestState() const;
 
-    WireframeState *
+    const WireframeState *
     GetWireframeState() const;
 
 protected:
-    ShaderSharedPtr              mShader;
-    ShaderUniformVector    mShaderUniformVector;
-    TextureTable           mShaderTextureTable;
-    TextureSamplerTable    mShaderSamplerTable;
+    ShaderSharedPtr         mShader;
+    ShaderUniformPtrVector  mShaderUniformVector;
+    TextureTable            mShaderTextureTable;
+    SamplerTable            mShaderSamplerTable;
 
-    BlendStateHandle       mBlendStateHandle;
-    CullStateHandle        mCullStateHandle;
-    DepthTestStateHandle   mDepthTestStateHandle;
-    OffsetStateHandle      mOffsetStateHandle;
-    StencilTestStateHandle mStencilTestStateHandle;
-    WireframeStateHandle   mWireframeStateHandle;
+    BlendStateHandle        mBlendStateHandle;
+    CullStateHandle         mCullStateHandle;
+    DepthTestStateHandle    mDepthTestStateHandle;
+    OffsetStateHandle       mOffsetStateHandle;
+    StencilTestStateHandle  mStencilTestStateHandle;
+    WireframeStateHandle    mWireframeStateHandle;
 
     friend class Renderer;
 };

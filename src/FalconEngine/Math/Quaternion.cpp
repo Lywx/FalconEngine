@@ -6,13 +6,13 @@ namespace FalconEngine
 
 Quaternion Quaternion::Identity = Quaternion(1, 0, 0, 0);
 
-Quaternion Quaternion::FromAxisAngle(const Vector3f& axis, float angle)
+Quaternion Quaternion::CreateFromAxisAngle(const Vector3f& axis, float angle)
 {
     const float sin_angle = sinf(angle * 0.5f);
     return Quaternion(axis.x * sin_angle, axis.y * sin_angle, axis.z * sin_angle, cosf(angle * 0.5f));
 }
 
-Quaternion Quaternion::FromRotationMatrix(const Matrix4f& rotation)
+Quaternion Quaternion::CreateFromRotationMatrix(const Matrix4f& rotation)
 {
     Quaternion result;
 

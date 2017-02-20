@@ -8,8 +8,8 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Texture3d::Texture3d(std::string fileName, std::string filePath, TextureFormat format, BufferUsage usage, int mipmapLevel)
-    : Texture(fileName, filePath, format, TextureType::Texture3d, usage, mipmapLevel)
+Texture3d::Texture3d(std::string fileName, std::string filePath, int width, int height, int depth, TextureFormat format, BufferUsage usage, int mipmapLevel)
+    : TextureBuffer(fileName, filePath, width, height, depth, format, TextureType::Texture3d, usage, mipmapLevel)
 {
 }
 

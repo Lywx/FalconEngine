@@ -3,8 +3,8 @@
 #include <unordered_map>
 
 #include <FalconEngine/Graphics/GraphicsInclude.h>
-#include <FalconEngine/Graphics/Shaders/ShaderUniform.h>
-#include <FalconEngine/Graphics/Shaders/ShaderVertexAttribute.h>
+#include <FalconEngine/Graphics/Renderers/Shaders/ShaderUniform.h>
+#include <FalconEngine/Graphics/Renderers/Shaders/ShaderVertexAttribute.h>
 
 namespace FalconEngine
 {
@@ -81,8 +81,15 @@ public:
     PushShaderFile(ShaderType shaderType, const std::string& shaderFilename);
 
 public:
-    ShaderVertexAttributeVector          mAttributeVector;
-    ShaderUniformHandleTable             mUniformHandleTable;
+
+    // NOTE(Wuxiang): THe vertex attribute vector is assumed to be in order of
+    // layout location in OpenGL. This rule is enforced by the PushAttribute function.
+    ShaderVertexAttributeVector mVertexAttributeVector;
+    int                         mVertexAttributeOffset;
+
+    ShaderUniformTable          mUniformTable;
+
+private:
     std::unordered_map<int, std::string> mSourceTable;
 };
 

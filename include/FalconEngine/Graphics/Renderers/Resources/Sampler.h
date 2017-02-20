@@ -39,19 +39,19 @@ enum class SamplerWrapMode
     Count,
 };
 
-class TextureSampler : public Object
+class Sampler : public Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
 public:
-    TextureSampler();
-    TextureSampler(SamplerMinificationFilter minificationFilter,
-                   SamplerMagnificationFilter magnificationFilter,
-                   SamplerWrapMode wrapS,
-                   SamplerWrapMode wrapT,
-                   SamplerWrapMode wrapR);
+    Sampler();
+    Sampler(SamplerMinificationFilter minificationFilter,
+            SamplerMagnificationFilter magnificationFilter,
+            SamplerWrapMode wrapS,
+            SamplerWrapMode wrapT,
+            SamplerWrapMode wrapR);
 
-    virtual ~TextureSampler();
+    virtual ~Sampler();
 
 public:
     SamplerMinificationFilter  mMinificationFilter;
@@ -61,7 +61,8 @@ public:
     SamplerWrapMode            mWrapR;
 };
 
-typedef std::vector<TextureSampler *> TextureSamplerVector;
-typedef std::map<int, TextureSampler *> TextureSamplerTable;
+using SamplerSharedPtr = std::shared_ptr<Sampler>;
+using SamplerVector = std::vector<const Sampler *>;
+using SamplerTable = std::map<int, const Sampler *>;
 
 }

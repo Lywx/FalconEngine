@@ -1,9 +1,10 @@
-#include <FalconEngine/Core/CoreInclude.h>
+#include <FalconEngine/Core/Memory.h>
 #include <FalconEngine/Core/MemoryPool.h>
 
 #include <cstdlib>
 
-using namespace FalconEngine;
+namespace FalconEngine
+{
 
 inline int64_t Kilobytes(int i)
 {
@@ -25,24 +26,30 @@ inline int64_t Terabytes(int i)
     return Gigabytes(i) * 1024LL;
 }
 
-#if defined(FALCON_ENGINE_DEBUG_MEMORY)
-// Declaration lies in Memory.h
 const char *__file__ = "Unknown";
 size_t      __line__ = 0;
 
-// Declaration lies in Memory.h
-void PushMemoryRecord(void *pointer, const char *file, size_t line)
+void
+PushMemoryRecord(void *pointer, const char *file, size_t line)
 {
     // TODO(Wuxiang): Implement to detect memory leak.
 }
 
-void PopMemoryRecord(void *pointer)
+void
+PopMemoryRecord(void *pointer)
 {
     // TODO(Wuxiang): Implement to detect memory leak.
 }
 
-inline void *operator new(size_t size, MemoryPool *memory)
+}
+
+using namespace FalconEngine;
+
+void *
+operator new(size_t size, MemoryPool *memory)
 {
+    using namespace FalconEngine;
+
     void *pointer = memory->mStorage;
 
     // Modify storage
@@ -58,8 +65,11 @@ inline void *operator new(size_t size, MemoryPool *memory)
     return pointer;
 }
 
-inline void *operator new[](size_t size, MemoryPool *memory)
+void *
+operator new[](size_t size, MemoryPool *memory)
 {
+    using namespace FalconEngine;
+
     void *pointer = memory->mStorage;
 
     // Modify storage
@@ -75,17 +85,20 @@ inline void *operator new[](size_t size, MemoryPool *memory)
     return pointer;
 }
 
-void operator delete[](void *pointer, MemoryPool *memory)
+void
+operator delete[](void *pointer, MemoryPool *memory)
 {
+    using namespace FalconEngine;
+
     PopMemoryRecord(pointer);
     free(pointer);
 }
 
-void operator delete(void *pointer, MemoryPool *memory)
+void
+operator delete(void *pointer, MemoryPool *memory)
 {
+    using namespace FalconEngine;
+
     PopMemoryRecord(pointer);
     free(pointer);
 }
-
-#else
-#endif

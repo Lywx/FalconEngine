@@ -36,10 +36,10 @@ Matrix4f Matrix4f::CreateRotationX(const float& radians)
     const float sine = sin(radians);
 
     // ref Fletcher Dunn, Ian Parberry 3D Math Primer for Graphics and Game Development, 2nd, 2011, P277
-    return Matrix4f(1.0, 0.0   , 0.0   , 0.0,
-                    0.0, cosine, -sine , 0.0,
-                    0.0, sine  , cosine, 0.0,
-                    0.0, 0.0   , 0.0   , 1.0);
+    return Matrix4f(1.0, 0.0, 0.0, 0.0,
+                    0.0, cosine, -sine, 0.0,
+                    0.0, sine, cosine, 0.0,
+                    0.0, 0.0, 0.0, 1.0);
 }
 
 void Matrix4f::CreateRotationX(const float& radians, Matrix4f& transform)
@@ -53,10 +53,10 @@ Matrix4f Matrix4f::CreateRotationY(const float& radians)
     const float sine = sin(radians);
 
     // @ref Fletcher Dunn, Ian Parberry 3D Math Primer for Graphics and Game Development, 2nd, 2011, P277
-    return Matrix4f(cosine, 0.0, -sine , 0.0,
-                    0.0   , 1.0, 0.0   , 0.0,
-                    sine  , 0.0, cosine, 0.0,
-                    0.0   , 0.0, 0.0   , 1.0);
+    return Matrix4f(cosine, 0.0, -sine, 0.0,
+                    0.0, 1.0, 0.0, 0.0,
+                    sine, 0.0, cosine, 0.0,
+                    0.0, 0.0, 0.0, 1.0);
 
 }
 
@@ -71,10 +71,10 @@ Matrix4f Matrix4f::CreateRotationZ(const float& radians)
     const float sine = sin(radians);
 
     // @ref Fletcher Dunn, Ian Parberry 3D Math Primer for Graphics and Game Development, 2nd, 2011, P277
-    return Matrix4f(cosine, -sine , 0.0, 0.0,
-                    sine  , cosine, 0.0, 0.0,
-                    0.0   , 0.0   , 1.0, 0.0,
-                    0.0   , 0.0   , 0.0, 1.0);
+    return Matrix4f(cosine, -sine, 0.0, 0.0,
+                    sine, cosine, 0.0, 0.0,
+                    0.0, 0.0, 1.0, 0.0,
+                    0.0, 0.0, 0.0, 1.0);
 
 }
 
@@ -83,7 +83,7 @@ void Matrix4f::CreateRotationZ(const float& radians, Matrix4f& transform)
     transform = CreateRotationZ(radians);
 }
 
-Matrix4f Matrix4f::FromRotation(const Quaternion& q)
+Matrix4f Matrix4f::CreateFromRotation(const Quaternion& q)
 {
     Matrix4f result = Identity;
 
@@ -105,29 +105,29 @@ Matrix4f Matrix4f::FromRotation(const Quaternion& q)
 
 Matrix4f Matrix4f::CreateRotation(const float& pitch, const float& yaw, const float& roll)
 {
-    Quaternion rotation_yaw   = Quaternion::FromAxisAngle(Vector3f::UnitY, yaw);
-    Quaternion rotation_pitch = Quaternion::FromAxisAngle(Vector3f::UnitX, pitch);
-    Quaternion rotation_roll  = Quaternion::FromAxisAngle(Vector3f::UnitZ, roll);
+    Quaternion rotation_yaw   = Quaternion::CreateFromAxisAngle(Vector3f::UnitY, yaw);
+    Quaternion rotation_pitch = Quaternion::CreateFromAxisAngle(Vector3f::UnitX, pitch);
+    Quaternion rotation_roll  = Quaternion::CreateFromAxisAngle(Vector3f::UnitZ, roll);
 
     Quaternion rotation = rotation_yaw * rotation_pitch * rotation_roll;
 
-    return FromRotation(rotation);
+    return CreateFromRotation(rotation);
 }
 
 Matrix4f Matrix4f::CreateScaleIsomorphic(const float& scale)
 {
-    return Matrix4f(scale, 0.0f , 0.0f , 0.0f,
-                    0.0f , scale, 0.0f , 0.0f,
-                    0.0f , 0.0f , scale, 0.0f,
-                    0.0f , 0.0f , 0.0f , 1.f);
+    return Matrix4f(scale, 0.0f, 0.0f, 0.0f,
+                    0.0f, scale, 0.0f, 0.0f,
+                    0.0f, 0.0f, scale, 0.0f,
+                    0.0f, 0.0f, 0.0f, 1.f);
 }
 
 Matrix4f Matrix4f::CreateScale(const float& scaleX, const float& scaleY, const float& scaleZ)
 {
-    return Matrix4f(scaleX, 0.0f  , 0.0f  , 0.0f,
-                    0.0f  , scaleY, 0.0f  , 0.0f,
-                    0.0f  , 0.0f  , scaleZ, 0.0f,
-                    0.0f  , 0.0f  , 0.0f  , 1.f);
+    return Matrix4f(scaleX, 0.0f, 0.0f, 0.0f,
+                    0.0f, scaleY, 0.0f, 0.0f,
+                    0.0f, 0.0f, scaleZ, 0.0f,
+                    0.0f, 0.0f, 0.0f, 1.f);
 }
 
 Matrix4f Matrix4f::CreateTranslation(const float& x, const float& y, const float& z)

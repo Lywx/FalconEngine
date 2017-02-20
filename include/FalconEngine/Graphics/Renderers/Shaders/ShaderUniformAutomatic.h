@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Shaders/ShaderUniform.h>
+#include <FalconEngine/Graphics/Renderers/Shaders/ShaderUniform.h>
 
 namespace FalconEngine
 {
@@ -82,6 +82,16 @@ ShaderUniformAutomatic<T>::Update(const Visual *visual, const Camera *camera)
     {
         mUpdateFunction(visual, camera);
     }
+}
+
+template<typename T>
+using ShaderUniformAutomaticSharedPtr = std::shared_ptr<ShaderUniformAutomatic<T>>;
+
+
+template <typename T, typename ... Args>
+ShaderUniformValueSharedPtr<T> ShareAutomatic(const Args& ... args)
+{
+    return ShareUniform<T, ShaderUniformAutomatic<T>>(std::forward(args) ...);
 }
 
 }

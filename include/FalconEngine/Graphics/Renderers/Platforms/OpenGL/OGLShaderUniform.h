@@ -2,7 +2,7 @@
 
 #include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLInclude.h>
 
-#include <glm/gtc/type_ptr.inl>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace FalconEngine
 {

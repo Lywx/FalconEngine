@@ -73,7 +73,7 @@ GetFileSize(const string relativePath)
         return fileStream.tellg();
     }
 
-    throw runtime_error("File not found.");
+    ThrowRuntimeException("File not found.");
 }
 
 string

@@ -8,28 +8,19 @@ FALCON_ENGINE_RTTI_IMPLEMENT(Buffer, Object);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Buffer::Buffer() :
-    mData(nullptr),
-    mDataByteNum(0),
-    mElementNum(0),
-    mUsage(BufferUsage::None)
-{
-}
-
 // @param elementNum - the element number
 // @param elementByteNum - the element size in total.
-Buffer::Buffer(unsigned char *data, int elementNum, int elementByteNum, BufferUsage usage) :
-    mData(data),
+Buffer::Buffer(int elementNum, int elementByteNum, BufferUsage usage) :
     mDataByteNum(elementNum * elementByteNum),
     mElementNum(elementNum),
     mUsage(usage)
 {
+    mData = new unsigned char[mDataByteNum];
 }
 
 Buffer::~Buffer()
 {
-    // When the buffer is allocated using malloc.
-    free(mData);
+    delete [] mData;
 }
 
 

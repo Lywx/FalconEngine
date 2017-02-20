@@ -31,4 +31,10 @@ Visual::GetEffectInstance() const
     return mEffectInstance.get();
 }
 
+void
+Visual::SetEffectInstance(VisualEffectInstanceSharedPtr effectInstance)
+{
+    mEffectInstance = effectInstance;
+}
+
 }

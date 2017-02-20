@@ -8,24 +8,23 @@ namespace FalconEngine
 
 FALCON_ENGINE_RTTI_IMPLEMENT(Texture, Asset);
 
-Texture::Texture(std::string fileName, std::string filePath, TextureFormat format, TextureType type, BufferUsage usage, int mipmapLevel) :
+/************************************************************************/
+/* Constructors and Destructor                                          */
+/************************************************************************/
+Texture::Texture(std::string fileName, std::string filePath, int width, int height, int depth, TextureFormat format, TextureType type, BufferUsage usage, int mipmapLevel) :
     Asset(fileName, filePath),
     mFormat(format),
-    mData(nullptr),
-    mDataByteNum(0),
     mMipmapLevel(mipmapLevel),
     mType(type),
     mUsage(usage)
 {
+    mDimension[0] = width;
+    mDimension[1] = height;
+    mDimension[2] = depth;
 }
 
 Texture::~Texture()
 {
-    mDimension[0] = 0;
-    mDimension[1] = 0;
-    mDimension[2] = 0;
-
-    delete[] mData;
 }
 
 }

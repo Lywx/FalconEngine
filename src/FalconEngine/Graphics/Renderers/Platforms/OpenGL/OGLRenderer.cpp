@@ -1,5 +1,5 @@
 #include <FalconEngine/Graphics/Renderers/Renderer.h>
-#include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLRenderData.h>
+#include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLRendererData.h>
 #include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLRenderState.h>
 
 #include <FalconEngine/Graphics/Renderers/VisualLines.h>
@@ -369,6 +369,8 @@ void Renderer::SwapBuffers()
 
 void Renderer::DrawPrimitive(const Visual *visual)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(visual);
+
     PrimitiveType primitiveType = visual->GetPrimitiveType();
     const GLenum  primitiveMode = OpenGLPrimitiveType[int(primitiveType)];
     auto vertexBuffer = visual->GetVertexBuffer();
@@ -423,7 +425,7 @@ void Renderer::DrawPrimitive(const Visual *visual)
                 }
                 else
                 {
-                    throw runtime_error("Unknown index type.");
+                    ThrowRuntimeException("Unknown index type.");
                 }
 
                 glDrawRangeElements(primitiveMode, 0, vertexNum - 1, indexNum, indexType, indexData);
@@ -436,7 +438,7 @@ void Renderer::DrawPrimitive(const Visual *visual)
     }
     else
     {
-        throw runtime_error("Unknown primitive type.");
+        ThrowRuntimeException("Unknown primitive type.");
     }
 }
 

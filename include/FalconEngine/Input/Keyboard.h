@@ -2,7 +2,8 @@
 
 #define BUFFER_SIZE (256)
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 
 class Keyboard

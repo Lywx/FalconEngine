@@ -6,25 +6,37 @@ namespace FalconEngine
 class Rtti
 {
 public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
     Rtti (const char *name, const Rtti *baseType);
     ~Rtti ();
 
-    inline const char *GetTypeName() const;
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
+    inline const char *
+    GetName() const;
 
-    inline bool IsExactly(const Rtti& type) const;
-    bool        IsDerived(const Rtti& type) const;
+    inline bool
+    IsExactly(const Rtti& type) const;
+
+    bool
+    IsDerived(const Rtti& type) const;
 
 private:
     const char *mTypeName;
     const Rtti *mTypeBase;
 };
 
-inline const char *Rtti::GetTypeName() const
+const char *
+Rtti::GetName() const
 {
     return mTypeName;
 }
 
-inline bool Rtti::IsExactly(const Rtti& type) const
+bool
+Rtti::IsExactly(const Rtti& type) const
 {
     return &type == this;
 }

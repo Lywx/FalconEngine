@@ -3,10 +3,10 @@
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(VertexBuffer, Object);
+FALCON_ENGINE_RTTI_IMPLEMENT(VertexBuffer, Buffer);
 
-VertexBuffer::VertexBuffer(unsigned char *vertexData, int vertexNum, int vertexByteNum, BufferUsage usage)
-    : Buffer(vertexData, vertexNum, vertexByteNum, usage)
+VertexBuffer::VertexBuffer(int vertexNum, int vertexByteNum, BufferUsage usage) :
+    Buffer(vertexNum, vertexByteNum, usage)
 {
 }
 

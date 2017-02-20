@@ -4,7 +4,7 @@
 #include <FalconEngine/Graphics/Renderers/VisualEffect.h>
 #include <FalconEngine/Graphics/Renderers/VisualPass.h>
 #include <FalconEngine/Graphics/Renderers/Resources/Texture.h>
-#include <FalconEngine/Graphics/Renderers/Resources/TextureSampler.h>
+#include <FalconEngine/Graphics/Renderers/Resources/Sampler.h>
 
 namespace FalconEngine
 {
@@ -28,37 +28,49 @@ public:
     int
     GetPassNum() const;
 
-    const VisualPass *
-    GetPass(int passIndex) const;
+    VisualPass *
+    GetPass(int passIndex);
 
-    ShaderUniform *
-    GetShaderUniform(int passIndex, int uniformIndex) const;
+    template <typename T>
+    ShaderUniformValue<T> *
+    GetShaderUniform(int passIndex, int uniformIndex);
 
     template <typename T>
     void
-    SetShaderUniform(int passIndex, ShaderUniformValue<T> *shaderUniform);
+    SetShaderUniform(int passIndex, ShaderUniformValueSharedPtr<T> uniform);
 
-    Texture *
+    const Texture *
     GetShaderTexture(int passIndex, int textureUnit) const;
 
     void
-    SetShaderTexture(int passIndex, int textureUnit, Texture *texture);
+    SetShaderTexture(int passIndex, int textureUnit, const Texture *texture);
 
-    TextureSampler *
+    const Sampler *
     GetShaderSampler(int passIndex, int textureUnit) const;
 
     void
-    SetShaderSampler(int passIndex, int textureUnit, TextureSampler *sampler);
+    SetShaderSampler(int passIndex, int textureUnit, const Sampler *sampler);
 
 protected:
     VisualEffectSharedPtr mEffect;
 };
 
+using VisualEffectInstanceSharedPtr = std::shared_ptr<VisualEffectInstance>;
+
+template <typename T>
+ShaderUniformValue<T> *
+VisualEffectInstance::GetShaderUniform(int passIndex, int uniformIndex)
+{
+    return mEffect->GetPass(passIndex)->GetShaderUniform(uniformIndex);
+}
+
 template <typename T>
 void
-VisualEffectInstance::SetShaderUniform(int passIndex, ShaderUniformValue<T> *shaderUniform)
+VisualEffectInstance::SetShaderUniform(int passIndex, ShaderUniformValueSharedPtr<T> uniform)
 {
-    return mEffect->GetPass(passIndex)->SetShaderUniform(shaderUniform);
+    /
+    VisualPass *a = mEffect->GetPass(passIndex);
+    a->SetShaderUniform(uniform);
 }
 
 typedef std::shared_ptr<VisualEffectInstance> VisualEffectInstanceSharedPtr;

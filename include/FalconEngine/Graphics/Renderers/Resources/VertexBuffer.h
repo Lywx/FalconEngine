@@ -18,7 +18,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    VertexBuffer(unsigned char *vertexData, int vertexNum, int vertexByteNum, BufferUsage usage);
+    VertexBuffer(int vertexNum, int vertexByteNum, BufferUsage usage);
     virtual ~VertexBuffer();
 };
 

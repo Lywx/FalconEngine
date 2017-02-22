@@ -52,4 +52,5 @@ private:
     Matrix4f          mCameraProjection;
 };
 
+using BitmapFontEffectSharedPtr = std::shared_ptr<BitmapFontEffect>;
 }

@@ -1,12 +1,118 @@
 #include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLShader.h>
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
+
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/trim.hpp>
+
+#include <FalconEngine/Content/AssetManager.h>
+#include <FalconEngine/Content/Path.h>
+#include <FalconEngine/Graphics/Renderers/Shaders/ShaderSource.h>
 
 using namespace std;
 
 namespace FalconEngine
 {
+
+void
+ProcessShaderInclude(
+    _IN_OUT_ std::string&       shaderSourceString,
+    _IN_     const std::string& shaderExtensionLine,
+    _IN_     const std::string& shaderPath,
+    _IN_OUT_ int&               extensionBeginIndex)
+{
+    using namespace boost;
+
+    static vector<string> shaderExtensionSymbols;
+    shaderExtensionSymbols.clear();
+    split(shaderExtensionSymbols, shaderExtensionLine, " ");
+
+    if (shaderExtensionSymbols.front() != "#include")
+    {
+        return;
+    }
+
+    auto includeFileName = shaderExtensionSymbols.back();
+    trim_if(includeFileName, is_any_of("\""));
+    auto includeFilePath = GetFileDirectory(shaderPath) + includeFileName;
+
+    auto assetManager = AssetManager::GetInstance();
+    auto includeSource = assetManager->LoadShaderSource(includeFilePath);
+    shaderSourceString.insert(extensionBeginIndex, includeSource->mSource);
+    extensionBeginIndex += includeSource->mSource.size();
+}
+
+void
+ProcessShaderExtension(
+    _IN_OUT_ std::string&       shaderSourceString,
+    _IN_OUT_ std::string&       shaderExtension,
+    _IN_     const std::string& shaderPath,
+    _IN_OUT_ int&               extensionBeginIndex)
+{
+    using namespace boost;
+
+    static vector<string> shaderExtensionLines;
+    shaderExtensionLines.clear();
+
+    trim(shaderExtension);
+    split(shaderExtensionLines, shaderExtension, "\n");
+    for (auto& shaderExtensionLine : shaderExtensionLines)
+    {
+        trim(shaderExtensionLine);
+        if (!shaderExtensionLine.empty())
+        {
+            ProcessShaderInclude(shaderSourceString, shaderExtensionLine, shaderPath, extensionBeginIndex);
+        }
+    }
+}
+
+// ReSharper disable once CppNotAllPathsReturnValue
+string
+ExtractShaderExtension(
+    _IN_OUT_ std::string& shaderSourceString,
+    _OUT_    int&         extensionHeaderBeginIndex)
+{
+    static const string extensionHeaderBeginString = "#fe_extension : enable";
+    static const string extensionHeaderEndString   = "#fe_extension : disable";
+
+    extensionHeaderBeginIndex = shaderSourceString.find(extensionHeaderBeginString);
+    auto extensionHeaderEndIndex = shaderSourceString.find(extensionHeaderEndString);
+
+    auto extensionHeaderBeginFound = extensionHeaderBeginIndex != string::npos;
+    auto extensionHeaderEndFound = extensionHeaderEndIndex != string::npos;
+
+    if (extensionHeaderBeginFound && extensionHeaderEndFound
+            && extensionHeaderEndFound > extensionHeaderBeginFound)
+    {
+        auto extensionContentBeginIndex = extensionHeaderBeginIndex + extensionHeaderBeginString.size();
+        auto extensionContentEndIndex = extensionHeaderEndIndex - 1;
+        string extensionContent = shaderSourceString.substr(extensionContentBeginIndex,
+                                  extensionContentEndIndex - extensionContentBeginIndex);
+
+        shaderSourceString.erase(extensionHeaderBeginIndex,
+                                 extensionHeaderEndIndex - extensionHeaderBeginIndex
+                                 + extensionHeaderEndString.size());
+
+        return extensionContent;
+    }
+    else if (!extensionHeaderBeginFound && !extensionHeaderEndFound)
+    {
+        return "";
+    }
+    else
+    {
+        ThrowRuntimeException("Extension is not defined correctly.");
+    }
+}
+
+void
+ProcessShaderSource(ShaderSource *shaderSource)
+{
+    auto extensionBeginIndex = 0;
+    auto extensionContent = ExtractShaderExtension(shaderSource->mSource, extensionBeginIndex);
+    ProcessShaderExtension(shaderSource->mSource, extensionContent, shaderSource->mFilePath, extensionBeginIndex);
+}
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -22,6 +128,8 @@ PlatformShader::PlatformShader(Shader *shader) :
     for (int shaderIndex = 0; shaderIndex < shader->GetShaderNum(); ++shaderIndex)
     {
         auto shaderSource = shader->GetShaderSource(shaderIndex);
+        ProcessShaderSource(shaderSource);
+
         auto shaderType = shader->GetShaderType(shaderIndex);
 
         // Compile for each part of shader
@@ -30,8 +138,6 @@ PlatformShader::PlatformShader(Shader *shader) :
 
     // Link all the part together.
     LinkProgram();
-
-    CreateVertexAttributeArray(shader);
 
     // Look up all the declared uniform location.
     CollectUniformLocation(shader);
@@ -71,30 +177,6 @@ PlatformShader::CreateFromString(GLenum shaderType, const string& shaderSource)
     }
 
     mShaders[mShaderNum++] = shader;
-}
-
-void
-PlatformShader::CreateFromFile(GLenum shaderType, const string& shaderFilename)
-{
-    ifstream fstream;
-    fstream.open(shaderFilename.c_str(), ios_base::in);
-
-    if (fstream)
-    {
-        string line, buffer;
-        while (getline(fstream, line))
-        {
-            buffer.append(line);
-            buffer.append("\r\n");
-        }
-
-        // Copy to source
-        CreateFromString(shaderType, buffer);
-    }
-    else
-    {
-        cerr << typeid(Shader).name() << ": Error loading shader \"" << shaderFilename << "\"." << endl;
-    }
 }
 
 void
@@ -167,7 +249,6 @@ PlatformShader::Disable() const
 /************************************************************************/
 /* Private Members                                                      */
 /************************************************************************/
-
 void
 PlatformShader::CollectUniformLocation(Shader *shader) const
 {

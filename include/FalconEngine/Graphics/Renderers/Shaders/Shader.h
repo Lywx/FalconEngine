@@ -1,7 +1,5 @@
 #pragma once
 
-#include <unordered_map>
-
 #include <FalconEngine/Graphics/GraphicsInclude.h>
 #include <FalconEngine/Graphics/Renderers/Shaders/ShaderUniform.h>
 #include <FalconEngine/Graphics/Renderers/Resources/VertexAttribute.h>
@@ -27,6 +25,8 @@ enum ShaderIndex
     FragmentShaderIndex = 2,
 };
 
+class ShaderSource;
+
 // @remark Shader contains information about input vertex variables, output
 // fragment variables and uniform variables. Sharing shaders for different
 // primitive set is allowed (which is done by setting shader in the visual effect),
@@ -36,6 +36,8 @@ enum ShaderIndex
 class Shader : Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
+
+    friend class PlatformShader;
 
 public:
     /************************************************************************/
@@ -68,20 +70,18 @@ public:
     int
     GetShaderNum() const;
 
-    std::string
+    ShaderSource *
     GetShaderSource(int shaderIndex) const;
 
     ShaderType
     GetShaderType(int shaderIndex) const;
 
     void
-    PushShaderFile(ShaderType shaderType, const std::string& shaderFilename);
-
-public:
-    ShaderUniformTable          mUniformTable;
+    PushShaderFile(ShaderType shaderType, const std::string& shaderPath);
 
 private:
-    std::unordered_map<int, std::string> mSourceTable;
+    std::map<int, ShaderSource *> mSourceTable;
+    ShaderUniformTable            mUniformTable;
 };
 
 typedef std::shared_ptr<Shader> ShaderSharedPtr;

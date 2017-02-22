@@ -1,5 +1,10 @@
 #version 420 core
 
+#fe_extension : enable
+#include "fe_Texture.glsl"
+#include "fe_Function.glsl"
+#fe_extension : disable
+
 in Vout
 {
     vec2  TexCoord;
@@ -9,14 +14,11 @@ in Vout
     flat int FontPage;
 } fin;
 
-// Texture array of different page of texture atlas
-layout (binding = 0)  uniform sampler2DArray Texture;
-
-layout (location = 0) out     vec4           FragColor;
+layout (location = 0) out vec4 FragColor;
 
 void main(void)
 {
-    float fontDistance = 1.0 - texture(Texture, vec3(fin.TexCoord, float(fin.FontPage))).a;
+    float fontDistance = 1.0 - texture(TextureFont, vec3(fin.TexCoord, float(fin.FontPage))).a;
     float fontAlpha = 1.0 - smoothstep(fin.FontWidth, fin.FontWidth + fin.FontEdge, fontDistance);
 
     FragColor = vec4(fin.FontColor.xyz, fontAlpha);

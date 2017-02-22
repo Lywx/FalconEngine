@@ -55,37 +55,37 @@ VisualPass::SetShaderSampler(int textureUnit, const Sampler *sampler)
 }
 
 void
-VisualPass::SetBlendState(BlendStateHandle blendStateHandle)
+VisualPass::SetBlendState(BlendStateUniquePtr blendStateHandle)
 {
     mBlendStateHandle.reset(blendStateHandle.release());
 }
 
 void
-VisualPass::SetCullState(CullStateHandle cullStateHandle)
+VisualPass::SetCullState(CullStateUniquePtr cullStateHandle)
 {
     mCullStateHandle.reset(cullStateHandle.release());
 }
 
 void
-VisualPass::SetDepthTestState(DepthTestStateHandle depthTestStateHandle)
+VisualPass::SetDepthTestState(DepthTestStateUniquePtr depthTestStateHandle)
 {
     mDepthTestStateHandle.reset(depthTestStateHandle.release());
 }
 
 void
-VisualPass::SetOffsetState(OffsetStateHandle offsetStateHandle)
+VisualPass::SetOffsetState(OffsetStateUniquePtr offsetStateHandle)
 {
     mOffsetStateHandle.reset(offsetStateHandle.release());
 }
 
 void
-VisualPass::SetStencilTestState(StencilTestStateHandle stencilTestStateHandle)
+VisualPass::SetStencilTestState(StencilTestStateUniquePtr stencilTestStateHandle)
 {
     mStencilTestStateHandle.reset(stencilTestStateHandle.release());
 }
 
 void
-VisualPass::SetWireframeState(WireframeStateHandle wireframeStateHandle)
+VisualPass::SetWireframeState(WireframeStateUniquePtr wireframeStateHandle)
 {
     mWireframeStateHandle.reset(wireframeStateHandle.release());
 }

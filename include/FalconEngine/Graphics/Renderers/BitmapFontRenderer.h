@@ -4,24 +4,22 @@
 #include <vector>
 #include <limits>
 
+#include <FalconEngine/Graphics/Effects/BitmapFontEffect.h>
 #include <FalconEngine/Graphics/Renderers/BitmapFont.h>
 #include <FalconEngine/Graphics/Renderers/BitmapText.h>
 #include <FalconEngine/Graphics/Renderers/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderers/Resources/VertexBuffer.h>
+#include "VisualQuads.h"
 
 // TODO(Wuxiang 2016-12-29 22:27): Integrate the font renderer with current renderer.
 namespace FalconEngine
 {
 
-// @summary Represent a font rendering instance.
-struct BitmapFontRenderGroup
+class BitmapFontRenderItem
 {
-    BitmapFont         *mFont;
-    Shader             *mTextShader;
-    std::vector<float> *mTextShaderAttributes;
-    GLuint              mTextShaderBuffer;
-    size_t              mTextVertexCount;
-    GLuint              mTextShaderVao;
+public:
+    VertexBufferSharedPtr mTextBuffer;
+    size_t                mTextBufferDataIndex;
 };
 
 class BitmapFontEffect;
@@ -43,31 +41,43 @@ public:
     Initialize(int width, int height);
 
     void
-    DrawText(BitmapFont&  font,
-             float        fontSize,
-             std::string  textString,
-             Vector2f     textPosition,
-             float        textLineWidth = std::numeric_limits<float>().max(),
-             Color        textColor = ColorPalette::White);
+    BatchTextDynamic(const BitmapFont *font,
+                     float             fontSize,
+                     std::string textString,
+                     Vector2f    textPosition,
+                     float       textLineWidth = std::numeric_limits<float>().max(),
+                     Color       textColor = ColorPalette::White);
 
     void
-    PrepareString(const BitmapFont *font,
-                  const Shader     *textShader,
-                  const BitmapText *text,
-                  Color             textColor = ColorPalette::White);
+    BatchTextStatic(const BitmapFont *font,
+                    float             fontSize,
+                    std::string textString,
+                    Vector2f    textPosition,
+                    float       textLineWidth = std::numeric_limits<float>().max(),
+                    Color       textColor = ColorPalette::White);
 
     void RenderBegin();
-    void Render();
+    void Render(Renderer *renderer);
     void RenderEnd();
 
+protected:
+    void
+    PrepareText(BitmapFontRenderItem& item,
+                const BitmapFont *font,
+                const BitmapText *text,
+                Color             textColor = ColorPalette::White);
+
+
 private:
-    std::vector<BitmapFontRenderGroup> mTextBatch;
-    bool                               mTextBatchDirty = false;
+    VertexBufferSharedPtr              mDynamicTextBuffer;
+    BitmapFontRenderItem               mDynamicTextItem;
+    VisualSharedPtr                    mDynamicTextQuads;
 
-    VertexBufferSharedPtr              mTextBufferDynamic;
-    VertexBufferSharedPtr              mTextBufferStream;
+    VertexBufferSharedPtr              mStaticTextBuffer;
+    BitmapFontRenderItem               mStaticTextItem;
+    VisualSharedPtr                    mStaticTextQuads;
 
-    BitmapFontEffect                  *mTextEffect;
+    BitmapFontEffectSharedPtr          mTextEffect;
     VisualEffectInstanceSharedPtr      mTextEffectInstance;
     HandednessRight                    mTextHandedness;
 };

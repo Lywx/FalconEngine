@@ -773,10 +773,10 @@ Renderer::Draw(const Visual *visual,
     Enable(vertexFormat);
 
     // Enable vertex buffer.
-    for (auto& vertexRecord : vertexFormat->mVertexRecordVector)
+    for (auto& vertexRecord : vertexFormat->mVertexBufferTable)
     {
         Enable(vertexRecord.GetVertexBuffer(),
-               vertexRecord.GetBindingIndex(),
+               vertexRecord.GetIndex(),
                vertexRecord.GetOffset(),
                vertexRecord.GetStride());
     }
@@ -817,10 +817,83 @@ Renderer::Draw(const Visual *visual,
     }
 
     // Disable vertex buffer.
-    for (auto& vertexRecord : vertexFormat->mVertexRecordVector)
+    for (auto& vertexRecord : vertexFormat->mVertexBufferTable)
     {
         Disable(vertexRecord.GetVertexBuffer(),
-                vertexRecord.GetBindingIndex());
+                vertexRecord.GetIndex());
+    }
+
+    // Disable vertex attribute array.
+    Disable(vertexFormat);
+}
+
+void
+Renderer::Draw(const VertexFormat *vertexFormat, const VertexBuffer *vertexBuffer, VisualEffectInstance *instance)
+{
+    // NOTE(Wuxiang): The non-constness of instance comes from the fact that
+    // during the binding of shader, the renderer would look up the shader's
+    // location for each vertex attribute and each uniform.
+
+    FALCON_ENGINE_CHECK_NULLPTR(vertexFormat);
+    FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
+    FALCON_ENGINE_CHECK_NULLPTR(instance);
+
+    // NOTE(Wuxiang): Currently this function assume that all passes are using
+    // same vertex attribute array, so that we don't switch vertex format between
+    // the shader.
+
+    // Enable vertex attribute array.
+    Enable(vertexFormat);
+
+    // Enable vertex buffer.
+    for (auto& vertexRecord : vertexFormat->mVertexBufferTable)
+    {
+        Enable(vertexRecord.GetVertexBuffer(),
+               vertexRecord.GetIndex(),
+               vertexRecord.GetOffset(),
+               vertexRecord.GetStride());
+    }
+
+    auto indexBuffer = visual->GetIndexBuffer();
+    if (indexBuffer)
+    {
+        // Enable index buffer.
+        Enable(indexBuffer);
+    }
+
+    const int passNum = instance->GetPassNum();
+    for (int passIndex = 0; passIndex < passNum; ++passIndex)
+    {
+        auto *pass = instance->GetPass(passIndex);
+        auto *shader = pass->GetShader();
+
+        // Enable the shader.
+        Enable(shader);
+
+        // Enable the pass.
+        Enable(pass);
+
+        // Draw the primitive.
+        DrawPrimitive(visual);
+
+        // Disable the pass.
+        Disable(pass);
+
+        // Disable the shader.
+        Disable(shader);
+    }
+
+    // Disable index buffer.
+    if (indexBuffer)
+    {
+        Disable(indexBuffer);
+    }
+
+    // Disable vertex buffer.
+    for (auto& vertexRecord : vertexFormat->mVertexBufferTable)
+    {
+        Disable(vertexRecord.GetVertexBuffer(),
+                vertexRecord.GetIndex());
     }
 
     // Disable vertex attribute array.

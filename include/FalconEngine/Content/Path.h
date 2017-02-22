@@ -7,6 +7,14 @@
 
 #include <FalconEngine/Content/ContentInclude.h>
 
+#include <boost/filesystem.hpp>
+
+#if FALCON_ENGINE_OS_WINDOWS
+#define DIR_SEPARATOR "\\"
+#elif FALCON_ENGINE_OS_LINUX
+#define DIR_SEPARATOR "/"
+#endif
+
 namespace FalconEngine
 {
 

@@ -14,7 +14,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    VisualQuads(VertexFormatSharedPtr vertexFormat, int vertexNum);
+    VisualQuads(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup);
     virtual ~VisualQuads();
 
 public:

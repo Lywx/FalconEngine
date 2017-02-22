@@ -306,6 +306,9 @@ public:
     void
     Draw(const Visual *visual, VisualEffectInstance *instance);
 
+    void
+    Draw(const VertexFormat *vertexFormat, const VertexBuffer *vertexBuffer, VisualEffectInstance *instance);
+
 public:
     int                     mWidth;
     int                     mHeight;

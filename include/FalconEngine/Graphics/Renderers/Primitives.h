@@ -2,7 +2,7 @@
 
 #include <FalconEngine/Graphics/Renderers/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderers/Resources/IndexBuffer.h>
-#include <FalconEngine/Graphics/Renderers/Resources/VertexBuffer.h>
+#include <FalconEngine/Graphics/Renderers/Resources/VertexGroup.h>
 #include <FalconEngine/Graphics/Renderers/Resources/VertexFormat.h>
 #include <FalconEngine/Graphics/Scenes/Spatial.h>
 
@@ -24,43 +24,65 @@ class Primitives : public Spatial
     FALCON_ENGINE_RTTI_DECLARE;
 
 protected:
-    explicit Primitives(PrimitiveType primitiveType);
     Primitives(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat);
-    Primitives(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat, IndexBufferSharedPtr indexBuffer);
+    Primitives(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer);
 public:
     virtual ~Primitives();
 
 public:
     PrimitiveType
-    GetPrimitiveType() const;
+    GetPrimitiveType() const
+    {
+        return mPrimitiveType;
+    }
 
-    const VertexFormat *
-    GetVertexFormat() const;
+    /************************************************************************/
+    /* Vertex Buffer Management                                             */
+    /************************************************************************/
 
     int
     GetVertexNum() const
     {
-        return mVertexNum;
+        return mVertexGroup->GetVertexNum();
+    }
+
+    void
+    SetVertexNum(int vertexNum) const
+    {
+        mVertexGroup->SetVertexNum(vertexNum);
+    }
+
+    void
+    SetVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer, int offset, int stride);
+
+    const VertexFormat *
+    GetVertexFormat() const
+    {
+        return mVertexFormat.get();
+    }
+
+    void
+    SetVertexFormat(VertexFormatSharedPtr vertexFormat)
+    {
+        mVertexFormat = vertexFormat;
     }
 
     const IndexBuffer *
-    GetIndexBuffer() const;
-
-protected:
-
-    // NOTE(Wuxiang): This function should be implemented by the derived class
-    // and add final keyword in the derived class declaration. This function
-    // should be call during the derived class constructor.
-    virtual void
-    SetPrimitiveNum();
+    GetIndexBuffer() const
+    {
+        return mIndexBuffer.get();
+    }
 
     void
-    SetVertexNum(int vertexNum);
+    SetIndexBuffer(IndexBufferSharedPtr indexBuffer)
+    {
+        mIndexBuffer = indexBuffer;
+    }
 
 protected:
     PrimitiveType         mPrimitiveType;
+    VertexGroupSharedPtr  mVertexGroup;
     VertexFormatSharedPtr mVertexFormat;
-    int                   mVertexNum;
     IndexBufferSharedPtr  mIndexBuffer;
 };
 

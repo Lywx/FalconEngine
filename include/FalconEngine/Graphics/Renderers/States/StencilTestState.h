@@ -70,6 +70,6 @@ public:
     StencilOperation OnDepthTestPass   = StencilOperation::KEEP;
 };
 
-typedef std::unique_ptr<StencilTestState> StencilTestStateHandle;
+using StencilTestStateUniquePtr = std::unique_ptr<StencilTestState>;
 
 }

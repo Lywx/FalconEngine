@@ -37,7 +37,7 @@ public:
 
 public:
     /************************************************************************/
-    /* Font Runtime Data                                                    */
+    /* Font Runtime Data -- Glyph (1/2)                                     */
     /************************************************************************/
 
     // NOTE(Wuxiang): Not serialized members include: mSizeScale, mTexture. mTexture,
@@ -66,21 +66,46 @@ public:
     std::vector<std::string>      mTextureFileNameVector;                      // Font texture archive filenames, index is the page id
 
     void
-    SetSize(double size);
+    SetSize(double size)
+    {
+        mSizePt = size / mSizeScale;
+        mSizePx = mSizePt / 72 * 96;
+    }
 
     void
-    SetSampler(SamplerSharedPtr sampler);
+    SetSampler(SamplerSharedPtr sampler)
+    {
+        mSampler = sampler;
+    }
 
     const Sampler *
-    GetSampler() const;
+    GetSampler() const
+    {
+        return mSampler.get();
+    }
 
     void
-    SetTexture(Texture2dArraySharedPtr texture);
+    SetTexture(Texture2dArraySharedPtr texture)
+    {
+        mTexture = texture;
+    }
 
     const Texture2dArray *
-    GetTexture() const;
+    GetTexture() const
+    {
+        return mTexture.get();
+    }
 
 private:
+    /************************************************************************/
+    /* Font Runtime Data -- Texture (2/2)                                   */
+    /************************************************************************/
+
+    // NOTE(Wuxiang): The reason texture array is in form of shared_ptr is that
+    // the texture array could not be reused anywhere so that it is better to
+    // dispose of the texture array when font is destroyed. However, individual
+    // textures would not be destroyed since texture array is just a container.
+
     Texture2dArraySharedPtr       mTexture;                                    // Font texture.
     SamplerSharedPtr              mSampler;                                    // Font texture sampler.
 

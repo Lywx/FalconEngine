@@ -27,9 +27,6 @@ public:
     CreateFromString(GLenum shaderType, const std::string& shaderSource);
 
     void
-    CreateFromFile(GLenum shaderType, const std::string& shaderFilename);
-
-    void
     LinkProgram();
 
     void
@@ -45,13 +42,6 @@ public:
     Disable() const;
 
 protected:
-    // @summary Look up all the declared vertex attribute location and create vertex
-    // attribute array.
-    //
-    // @remark This function modify the shader rather than the platform shader.
-    void
-    CollectVertexAttributeLocation(Shader *shader) const;
-
     // @remark This function modify the shader rather than the platform shader.
     void
     CollectUniformLocation(Shader *shader) const;

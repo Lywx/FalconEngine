@@ -13,7 +13,8 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    VisualPoints(VertexFormatSharedPtr vertexFormat, int vertexNum);
+    explicit VisualPoints(VertexFormatSharedPtr vertexFormat);
+    VisualPoints(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, int vertexNum);
     virtual ~VisualPoints();
 
 public:

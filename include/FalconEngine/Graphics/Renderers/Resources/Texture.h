@@ -14,6 +14,21 @@
 namespace FalconEngine
 {
 
+enum class TextureUnit
+{
+    Ambient  = 0,
+    Diffuse  = 1,
+    Specular = 2,
+
+    Font     = 3,
+};
+
+inline int
+GetTextureUnit(TextureUnit textureUnit)
+{
+    return int(textureUnit);
+}
+
 enum class TextureType
 {
     None,

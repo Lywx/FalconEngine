@@ -76,6 +76,6 @@ public:
     Vector4f               mConstantFactor    = Vector4f::Zero;
 };
 
-typedef std::unique_ptr<BlendState> BlendStateHandle;
+using BlendStateUniquePtr = std::unique_ptr<BlendState>;
 
 }

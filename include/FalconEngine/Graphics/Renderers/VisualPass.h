@@ -49,22 +49,22 @@ public:
     SetShaderSampler(int textureUnit, const Sampler *sampler);
 
     void
-    SetBlendState(BlendStateHandle blendStateHandle);
+    SetBlendState(BlendStateUniquePtr blendStateHandle);
 
     void
-    SetCullState(CullStateHandle cullStateHandle);
+    SetCullState(CullStateUniquePtr cullStateHandle);
 
     void
-    SetDepthTestState(DepthTestStateHandle depthTestStateHandle);
+    SetDepthTestState(DepthTestStateUniquePtr depthTestStateHandle);
 
     void
-    SetOffsetState(OffsetStateHandle offsetStateHandle);
+    SetOffsetState(OffsetStateUniquePtr offsetStateHandle);
 
     void
-    SetStencilTestState(StencilTestStateHandle stencilTestStateHandle);
+    SetStencilTestState(StencilTestStateUniquePtr stencilTestStateHandle);
 
     void
-    SetWireframeState(WireframeStateHandle wireframeStateHandle);
+    SetWireframeState(WireframeStateUniquePtr wireframeStateHandle);
 
     Shader *
     GetShader() const;
@@ -106,22 +106,22 @@ public:
     GetWireframeState() const;
 
 protected:
-    ShaderSharedPtr         mShader;
-    ShaderUniformPtrVector  mShaderUniformVector;
-    TextureTable            mShaderTextureTable;
-    SamplerTable            mShaderSamplerTable;
+    ShaderSharedPtr           mShader;
+    ShaderUniformPtrVector    mShaderUniformVector;
+    TextureTable              mShaderTextureTable;
+    SamplerTable              mShaderSamplerTable;
 
-    BlendStateHandle        mBlendStateHandle;
-    CullStateHandle         mCullStateHandle;
-    DepthTestStateHandle    mDepthTestStateHandle;
-    OffsetStateHandle       mOffsetStateHandle;
-    StencilTestStateHandle  mStencilTestStateHandle;
-    WireframeStateHandle    mWireframeStateHandle;
+    BlendStateUniquePtr       mBlendStateHandle;
+    CullStateUniquePtr        mCullStateHandle;
+    DepthTestStateUniquePtr   mDepthTestStateHandle;
+    OffsetStateUniquePtr      mOffsetStateHandle;
+    StencilTestStateUniquePtr mStencilTestStateHandle;
+    WireframeStateUniquePtr   mWireframeStateHandle;
 
     friend class Renderer;
 };
 
-typedef std::unique_ptr<VisualPass>   VisualPassHandle;
-typedef std::vector<VisualPassHandle> VisualPassHandleVector;
+using VisualPassUniquePtr = std::unique_ptr<VisualPass>;
+using VisualPassUniquePtrVector = std::vector<VisualPassUniquePtr>;
 
 }

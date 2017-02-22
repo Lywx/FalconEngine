@@ -1,8 +1,8 @@
 #pragma once
 
-#include <memory>
-
 #include <FalconEngine/Graphics/GraphicsInclude.h>
+
+#include <memory>
 
 namespace FalconEngine
 {
@@ -22,6 +22,6 @@ public:
     bool mEnabled = true;
 };
 
-typedef std::unique_ptr<CullState> CullStateHandle;
+using CullStateUniquePtr = std::unique_ptr<CullState> ;
 
 }

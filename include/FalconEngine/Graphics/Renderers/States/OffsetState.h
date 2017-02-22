@@ -29,6 +29,6 @@ public:
     float mUnit   = 0.0f; // Offset unit, positive or negative
 };
 
-typedef std::unique_ptr<OffsetState> OffsetStateHandle;
+using OffsetStateUniquePtr = std::unique_ptr<OffsetState>;
 
 }

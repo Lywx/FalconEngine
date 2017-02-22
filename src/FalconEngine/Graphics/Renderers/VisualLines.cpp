@@ -6,15 +6,13 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-VisualLines::VisualLines(VertexFormatSharedPtr vertexFormat, int vertexNum, bool vertexStrip) :
+VisualLines::VisualLines(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, bool vertexStrip) :
     Visual(
         vertexStrip
         ? PrimitiveType::LineStrip
-        : PrimitiveType::Line, vertexFormat, nullptr),
+        : PrimitiveType::Line, vertexFormat, vertexGroup, nullptr),
     mSegmentStrip(vertexStrip)
 {
-    SetVertexNum(vertexNum);
-    SetPrimitiveNum();
 }
 
 VisualLines::~VisualLines()
@@ -22,16 +20,15 @@ VisualLines::~VisualLines()
 }
 
 /************************************************************************/
-/* Protected Members                                                    */
+/* Public Members                                                       */
 /************************************************************************/
-void
-VisualLines::SetPrimitiveNum()
+int
+VisualLines::GetSegmentNum() const
 {
-    Primitives::SetPrimitiveNum();
+    return mSegmentStrip
+           ? mVertexGroup->GetVertexNum() - 1
+           : mVertexGroup->GetVertexNum() / 2;
 
-    mSegmentNum = mSegmentStrip
-                  ? mVertexNum - 1
-                  : mVertexNum / 2;
 }
 
 }

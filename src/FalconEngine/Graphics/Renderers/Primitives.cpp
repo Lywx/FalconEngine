@@ -8,24 +8,20 @@ FALCON_ENGINE_RTTI_IMPLEMENT(Primitives, Spatial);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Primitives::Primitives(PrimitiveType primitiveType) :
-    Primitives(primitiveType, nullptr)
-{
-}
-
 Primitives::Primitives(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat) :
-    Primitives(primitiveType, vertexFormat, nullptr)
+    Primitives(primitiveType, vertexFormat, nullptr, nullptr)
 {
 }
 
-Primitives::Primitives(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat, IndexBufferSharedPtr indexBuffer) :
+Primitives::Primitives(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer) :
     mPrimitiveType(primitiveType),
+    mVertexGroup(vertexGroup),
     mVertexFormat(vertexFormat),
-    mIndexBuffer(indexBuffer),
-    mVertexNum(0)
+    mIndexBuffer(indexBuffer)
 {
-    // NOTE(Wuxiang): Both vertex format and index buffer is allowed to be null
-    // here. But they should be initialized in the derived class's constructor.
+    // NOTE(Wuxiang): All vertex buffer format, vertex format and index buffer is
+    // allowed to be null here. But they should be initialized in the derived
+    // class's constructor.
 }
 
 Primitives::~Primitives()
@@ -35,22 +31,17 @@ Primitives::~Primitives()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-PrimitiveType
-Primitives::GetPrimitiveType() const
+void
+Primitives::SetVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer, int offset, int stride)
 {
-    return mPrimitiveType;
-}
-
-const VertexFormat *
-Primitives::GetVertexFormat() const
-{
-    return mVertexFormat.get();
-}
-
-const IndexBuffer *
-Primitives::GetIndexBuffer() const
-{
-    return mIndexBuffer.get();
+    if (mVertexGroup->ContainVertexBuffer(bindingIndex, vertexBuffer))
+    {
+        ThrowRuntimeException("It is not allowed to reset vertex buffer's offset or stride.");
+    }
+    else
+    {
+        mVertexGroup->SetVertexBuffer(bindingIndex, vertexBuffer, offset, stride);
+    }
 }
 
 /************************************************************************/
@@ -59,21 +50,6 @@ Primitives::GetIndexBuffer() const
 void
 Primitives::SetPrimitiveNum()
 {
-    if (mVertexNum == 0)
-    {
-        ThrowRuntimeException("Vertex number is 0.");
-    }
-}
-
-void
-Primitives::SetVertexNum(int vertexNum)
-{
-    if (vertexNum == 0)
-    {
-        ThrowRuntimeException("Vertex number is 0.");
-    }
-
-    mVertexNum = vertexNum;
 }
 
 }

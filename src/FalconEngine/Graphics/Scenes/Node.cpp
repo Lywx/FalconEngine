@@ -1,5 +1,7 @@
 #include <FalconEngine/Graphics/Scenes/Node.h>
 
+#include <assimp/scene.h>
+
 using namespace std;
 
 namespace FalconEngine
@@ -12,23 +14,6 @@ FALCON_ENGINE_RTTI_IMPLEMENT(Node, Spatial);
 /************************************************************************/
 Node::Node()
 {
-}
-
-Node::Node(Model *model, const aiScene *scene, const aiNode *node)
-{
-    // Process each mesh located at the current node
-    for (unsigned int i = 0; i < node->mNumMeshes; ++i)
-    {
-        // The node object only contains indices to index the actual objects in the scene.
-        // The scene contains all the data, node is just to keep stuff organized (like relations between nodes).
-        AttachChild(make_shared<Mesh>(model, scene, scene->mMeshes[node->mMeshes[i]]));
-    }
-
-    // After we've processed all of the meshes (if any) we then recursively process each of the children nodes
-    for (size_t i = 0; i < node->mNumChildren; ++i)
-    {
-        AttachChild(make_shared<Node>(model, scene, node->mChildren[i]));
-    }
 }
 
 Node::~Node()

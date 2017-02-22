@@ -8,18 +8,13 @@ FALCON_ENGINE_RTTI_IMPLEMENT(Visual, Primitives);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Visual::Visual(PrimitiveType primitiveType) :
-    Primitives(primitiveType)
-{
-}
-
 Visual::Visual(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat) :
     Primitives(primitiveType, vertexFormat)
 {
 }
 
-Visual::Visual(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat, IndexBufferSharedPtr indexBuffer) :
-    Primitives(primitiveType, vertexFormat, indexBuffer)
+Visual::Visual(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer) :
+    Primitives(primitiveType, vertexFormat, vertexGroup, indexBuffer)
 {
 }
 

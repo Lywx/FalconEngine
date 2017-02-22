@@ -18,6 +18,6 @@ public:
     bool mEnabled = false;
 };
 
-typedef std::unique_ptr<WireframeState> WireframeStateHandle;
+using WireframeStateUniquePtr = std::unique_ptr<WireframeState>;
 
 }

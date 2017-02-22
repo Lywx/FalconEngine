@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <assimp/scene.h>
 
 #include <FalconEngine/Graphics/Scenes/Mesh.h>
 #include <FalconEngine/Graphics/Scenes/Spatial.h>
@@ -15,7 +14,6 @@ class Node : public Spatial
 
 public:
     Node();
-    Node(Model *model, const aiScene *scene, const aiNode *node);
     ~Node();
 
     // @summary This is the current number of elements in the child array. These

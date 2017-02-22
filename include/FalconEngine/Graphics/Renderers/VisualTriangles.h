@@ -13,23 +13,13 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    VisualTriangles();
-    VisualTriangles(VertexFormatSharedPtr vertexFormat, int vertexNum, IndexBufferSharedPtr indexBuffer);
+    explicit VisualTriangles(VertexFormatSharedPtr vertexFormat);
+    VisualTriangles(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer);
     virtual ~VisualTriangles();
 
 public:
-    int
-    GetTriangleNum() const
-    {
-        return mTriangleNum;
-    }
-
-protected:
-    void
-    SetPrimitiveNum() override final;
-
-protected:
-    size_t mTriangleNum;
+    virtual int
+    GetTriangleNum() const;
 };
 
 }

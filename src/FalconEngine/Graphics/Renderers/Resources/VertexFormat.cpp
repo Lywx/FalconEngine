@@ -20,19 +20,6 @@ VertexFormat::~VertexFormat()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-void
-VertexFormat::PushVertexAttribute(int attributeLocation, std::string attributeName, VertexAttributeType attributeType, bool attributeNormalized, int attributeBindingIndex)
-{
-    if (attributeLocation != mVertexAttributeVector.size())
-    {
-        ThrowRuntimeException("It is not supported for out of order attribute registration.");
-    }
-
-    // NOTE(Wuxiang): mVertexAttributeOffset is summed
-    mVertexAttributeVector.push_back(VertexAttribute(attributeLocation, attributeName, attributeType, attributeNormalized, mVertexAttributeOffset, attributeBindingIndex));
-    mVertexAttributeOffset += VertexAttributeSize[int(mVertexAttributeVector.back().mType)];
-}
-
 int
 VertexFormat::GetVertexAttributeNum() const
 {
@@ -45,10 +32,42 @@ VertexFormat::GetVertexAttribute(int attributeIndex)
     return mVertexAttributeVector.at(attributeIndex);
 }
 
-void
-VertexFormat::PushVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer, int offset, int stride)
+// ReSharper disable once CppNotAllPathsReturnValue
+int
+VertexFormat::GetVertexAttributeStride() const
 {
-    mVertexRecordVector.push_back(VertexRecord(vertexBuffer, bindingIndex, offset, stride));
+    if (mVertexAttributeFinished)
+    {
+        return mVertexAttributeOffset;
+    }
+    else
+    {
+        ThrowRuntimeException("Vertex attribute has not finished initialization.");
+    }
+}
+
+void
+VertexFormat::PushVertexAttribute(int attributeLocation, std::string attributeName, VertexAttributeType attributeType, bool attributeNormalized, int attributeBindingIndex)
+{
+    if (attributeLocation != mVertexAttributeVector.size())
+    {
+        ThrowRuntimeException("It is not supported for out of order attribute registration.");
+    }
+
+    if (mVertexAttributeFinished)
+    {
+        ThrowRuntimeException("Vertex attribute has finished initialization.");
+    }
+
+    // NOTE(Wuxiang): mVertexAttributeOffset is summed
+    mVertexAttributeVector.push_back(VertexAttribute(attributeLocation, attributeName, attributeType, attributeNormalized, mVertexAttributeOffset, attributeBindingIndex));
+    mVertexAttributeOffset += VertexAttributeSize[int(mVertexAttributeVector.back().mType)];
+}
+
+void
+VertexFormat::FinishVertexAttribute()
+{
+    mVertexAttributeFinished = true;
 }
 
 }

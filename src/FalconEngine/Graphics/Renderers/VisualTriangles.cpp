@@ -8,19 +8,16 @@ FALCON_ENGINE_RTTI_IMPLEMENT(VisualTriangles, Visual);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-VisualTriangles::VisualTriangles() :
-    Visual(PrimitiveType::Triangle),
-    mTriangleNum(0)
+VisualTriangles::VisualTriangles(VertexFormatSharedPtr vertexFormat) :
+    Visual(PrimitiveType::Triangle, vertexFormat)
 {
     // NOTE(Wuxiang): The user for this constructor should be responsible for
     // correctly initializing the mTriangleNum.
 }
 
-VisualTriangles::VisualTriangles(VertexFormatSharedPtr vertexFormat, int vertexNum, IndexBufferSharedPtr indexBuffer) :
-    Visual(PrimitiveType::Triangle, vertexFormat, indexBuffer)
+VisualTriangles::VisualTriangles(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer) :
+    Visual(PrimitiveType::Triangle, vertexFormat, vertexGroup, indexBuffer)
 {
-    SetVertexNum(vertexNum);
-    SetPrimitiveNum();
 }
 
 VisualTriangles::~VisualTriangles()
@@ -28,20 +25,18 @@ VisualTriangles::~VisualTriangles()
 }
 
 /************************************************************************/
-/* Protected Members                                                    */
+/* Public Members                                                       */
 /************************************************************************/
-void
-VisualTriangles::SetPrimitiveNum()
+int
+VisualTriangles::GetTriangleNum() const
 {
-    Primitives::SetPrimitiveNum();
-
     if (mIndexBuffer)
     {
-        mTriangleNum = mIndexBuffer->mElementNum / 3;
+        return mIndexBuffer->mElementNum / 3;
     }
     else
     {
-        mTriangleNum = mVertexNum / 3;
+        return mVertexGroup->GetVertexNum() / 3;
     }
 }
 

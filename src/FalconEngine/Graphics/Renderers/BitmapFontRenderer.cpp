@@ -10,11 +10,11 @@
 #include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Graphics/Effects/BitmapFontEffect.h>
 #include <FalconEngine/Graphics/Renderers/BitmapLine.h>
+#include <FalconEngine/Graphics/Renderers/Renderer.h>
 #include <FalconEngine/Graphics/Renderers/VisualQuads.h>
 #include <FalconEngine/Graphics/Renderers/Resources/Texture2dArray.h>
 
 using namespace std;
-using namespace boost;
 using namespace FalconEngine;
 
 namespace FalconEngine
@@ -24,11 +24,11 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 BitmapFontRenderer::BitmapFontRenderer() :
-    mTextBufferDynamic(nullptr),
-    mTextBufferStream(nullptr),
+    mDynamicTextBuffer(nullptr),
+    mDynamicTextQuads(nullptr),
+    mStaticTextBuffer(nullptr),
+    mStaticTextQuads(nullptr),
     mTextEffect()
-
-
 {
 }
 
@@ -44,30 +44,62 @@ BitmapFontRenderer::Initialize(int width, int height)
 {
     auto assetManager = AssetManager::GetInstance();
 
-    // Obtain needed texture
-    auto debugFont = assetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.bin");
+    // Setup text effect.
+    {
+        auto font = assetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.bin");
 
+        // Prepare text effect.
+        mTextEffect = make_shared<BitmapFontEffect>(&mTextHandedness);
+        mTextEffectInstance = mTextEffect->CreateInstance(font, width, height);
 
-    mTextBufferDynamic = std::make_shared<VertexBuffer>(1, sizeof(BitmapFontVertex), BufferUsage::Dynamic);
-    mTextBufferStream = std::make_shared<VertexBuffer>(1, sizeof(BitmapFontVertex), BufferUsage::Stream);
+    }
 
-    mTextEffect = new BitmapFontEffect(&mTextHandedness);
-    mTextFormatDynamic = mTextEffect->CreateVertexFormat();
-    mTextFormatStream = mTextEffect->CreateVertexFormat();
+    auto textVertexFormat = mTextEffect->CreateVertexFormat();
 
-    mTextEffectInstance = mTextEffect->CreateInstance(debugFont, width, height);
+    // Setup static text rendering.
+    {
+        // TODO(Wuxiang): Should I change the size of the buffer?
+        mStaticTextBuffer = make_shared<VertexBuffer>(1024, sizeof(BitmapFontVertex), BufferUsage::Dynamic);
+
+        auto textVertexGroupDynamic = make_shared<VertexGroup>();
+        textVertexGroupDynamic->SetVertexBuffer(0, mStaticTextBuffer, 0, textVertexFormat->GetVertexAttributeStride());
+        mStaticTextQuads = make_shared<VisualQuads>(textVertexFormat, textVertexGroupDynamic);
+
+        mStaticTextItem = BitmapFontRenderItem();
+    }
+
+    // Setup dynamic text rendering.
+    {
+        // TODO(Wuxiang): Should I change the size of the buffer?
+        mDynamicTextBuffer = make_shared<VertexBuffer>(1024, sizeof(BitmapFontVertex), BufferUsage::Stream);
+
+        auto dynamicTextVertexGroup = make_shared<VertexGroup>();
+        dynamicTextVertexGroup->SetVertexBuffer(0, mDynamicTextBuffer, 0, textVertexFormat->GetVertexAttributeStride());
+        mDynamicTextQuads = make_shared<VisualQuads>(textVertexFormat, dynamicTextVertexGroup);
+        //mDynamicTextQuads->SetVertexNum()
+
+        mDynamicTextItem = BitmapFontRenderItem();
+    }
 }
 
-void BitmapFontRenderer::DrawText(
-    BitmapFont& font,
-    float       fontSize,
-    string   textString,
-    Vector2f textPosition,
-    float    textLineWidth,
-    Color    textColor)
+void
+BitmapFontRenderer::BatchTextDynamic(
+    const BitmapFont *font,
+    float             fontSize,
+    std::string textString,
+    Vector2f    textPosition,
+    float       textLineWidth,
+    Color       textColor)
 {
-    mTexts.push_back(BitmapText(fontSize, textString, textPosition, textLineWidth));
-    PrepareText(font, mTextShaderDefault, mTexts.back(), textColor);
+    auto text = BitmapText(fontSize, textString, textPosition, textLineWidth);
+    PrepareText(mDynamicTextItem, font, &text, textColor);
+}
+
+void
+BitmapFontRenderer::BatchTextStatic(const BitmapFont *font, float fontSize, std::string textString, Vector2f textPosition, float textLineWidth, Color textColor)
+{
+    auto text = BitmapText(fontSize, textString, textPosition, textLineWidth);
+    PrepareText(mStaticTextItem, font, &text, textColor);
 }
 
 // @summary Construct all the necessary lexical separation of given text into
@@ -76,10 +108,11 @@ void BitmapFontRenderer::DrawText(
 // @return The glyph number inside the text lines.
 int
 CreateTextLines(
-    IN  const BitmapFont   *font,
-    IN  const BitmapText   *text,
-    OUT vector<BitmapLine>& lines)
+    _IN_  const BitmapFont   *font,
+    _IN_  const BitmapText   *text,
+    _OUT_ vector<BitmapLine>& lines)
 {
+    using namespace boost;
     static auto lineStrings = vector<string>();
     lineStrings.clear();
     split(lineStrings, text->mTextString, is_any_of("\n"));
@@ -221,13 +254,13 @@ FillGlyphAttribute(float             *textData,
 // @summary Fill the vertex buffer with the text line information.
 void
 FillTextLines(
-    IN const BitmapFont   *font,
-    IN float               fontSize,
-    IN Vector2f                  textPosition,
-    IN Vector4f                  textColor,
-    IN const vector<BitmapLine>& textLines,
-    IN size_t&                   textDataIndex,
-    OUT float                   *textData
+    _IN_ const BitmapFont   *font,
+    _IN_ float               fontSize,
+    _IN_ Vector2f                  textPosition,
+    _IN_ Vector4f                  textColor,
+    _IN_ const vector<BitmapLine>& textLines,
+    _IN_ size_t&                   textDataIndex,
+    _OUT_ float                   *textData
 )
 {
     float x = textPosition.x;
@@ -250,14 +283,12 @@ FillTextLines(
 }
 
 void
-BitmapFontRenderer::PrepareString(
+BitmapFontRenderer::PrepareText(
+    BitmapFontRenderItem& item,
     const BitmapFont *font,
-    const Shader     *textShader,
     const BitmapText *text,
     Color             textColor)
 {
-    // TODO(Wuxiang): Add multiple font and shader support. Replace the default with shader specific attribute vector.
-
     static auto textLines = vector<BitmapLine>();
     textLines.clear();
 
@@ -265,149 +296,32 @@ BitmapFontRenderer::PrepareString(
     int textGlyphCount = CreateTextLines(font, text, textLines);
 
     // Fill the vertex attribute into the buffer
-    size_t textDataIndex = 0;
-    FillTextLines(font, text->mFontSize, Vector2f(text->mTextBounds.x, text->mTextBounds.y), Vector4f(textColor), textLines, textDataIndex, reinterpret_cast<float *>(mTextBufferDynamic->mData));
-
-    VisualQuads a(mTextBufferStream);
-
-    // Find the render group this group of text belongs to.
-    int  renderGroupIndex;
-    bool renderGroupFound = false;
-    for (renderGroupIndex = 0; renderGroupIndex < mTextBatch.size(); ++renderGroupIndex)
-    {
-        if (mTextBatch[renderGroupIndex].mFont == &font
-                && mTextBatch[renderGroupIndex].mTextShader == &textShader)
-        {
-            renderGroupFound = true;
-            break;
-        }
-    }
-
-    if (renderGroupFound)
-    {
-        mTextBatch[renderGroupIndex].mTextVertexCount += textGlyphCount * 6;
-    }
-    else
-    {
-        // TODO(Wuxiang): Add multiple font and shader support. Replace the default attributes, buffer, vao with shader specific ones.
-        BitmapFontRenderGroup renderGroup;
-        renderGroup.mFont = &font;
-        renderGroup.mTextShader = &textShader;
-        renderGroup.mTextShaderAttributes = &mTextShaderDefaultAttributes;
-        renderGroup.mTextShaderBuffer = mTextShaderDefaultBuffer;
-        renderGroup.mTextShaderVao = mTextShaderDefaultVao;
-        renderGroup.mTextVertexCount = textGlyphCount * 6;
-        mTextBatch.push_back(renderGroup);
-    }
-
-    mTextBatchDirty = true;
+    FillTextLines(font, text->mFontSize, Vector2f(text->mTextBounds.x, text->mTextBounds.y), Vector4f(textColor), textLines, item.mTextBufferDataIndex, reinterpret_cast<float *>(item.mTextBuffer->mData));
 }
 
 void BitmapFontRenderer::RenderBegin()
 {
-    if (mTextShaderPrevious != nullptr)
-    {
-        mTextShaderPrevious->Enable();
-    }
-
-    // Sort render groups when necessary
-    if (mTextBatchDirty)
-    {
-        // NOTE(Wuxiang): According to these refs, shader switch is more expensive
-        // than texture binding:
-        // 1. http://stackoverflow.com/questions/29623892/cost-of-opengl-state-vb-ib-texture-changes
-        // 2. Cass Everitt, John McDonald Beyond Porting_ How Modern OpenGL Can
-        // Radically Reduce Driver Overhead, 2014, P48
-        //
-        // So that result should be like: (s1, t1), (s1, t2), (s2, t1), (s2, t2),
-        // where s stands for shader and t stands for texture object. You need to
-        // switch texture object for different font.
-        std::stable_sort(mTextBatch.begin(), mTextBatch.end(),
-                         [](BitmapFontRenderGroup lhs, BitmapFontRenderGroup rhs) -> bool
-        {
-            return lhs.mFont->mName < rhs.mFont->mName;
-        });
-
-        std::stable_sort(mTextBatch.begin(), mTextBatch.end(),
-                         [](BitmapFontRenderGroup lhs, BitmapFontRenderGroup rhs) -> bool
-        {
-            return lhs.mTextShader->GetProgram() < rhs.mTextShader->GetProgram();
-        });
-
-        mTextBatchDirty = false;
-    }
 }
 
-void BitmapFontRenderer::Render()
+void BitmapFontRenderer::Render(Renderer *renderer)
 {
-    for (auto renderGroup : mTextBatch)
-    {
-        GLuint renderGroupTexture = renderGroup.mFont->mTextureObject;
-        Shader& renderGroupShader = *renderGroup.mTextShader;
-        GLuint renderGroupVao = renderGroup.mTextShaderVao;
-        GLuint renderGroupBuffer = renderGroup.mTextShaderBuffer;
-        vector<float>& renderGroupAttributes = *renderGroup.mTextShaderAttributes;
+    renderer->Draw(&mStaticTextQuads, mTextEffectInstance.get());
+    renderer->Draw(&mDynamicTextQuads, mTextEffectInstance.get());
 
-        // Switch shader program
-        if (mTextShaderPrevious == nullptr || renderGroupShader.GetProgram() != mTextShaderPrevious->GetProgram())
-        {
-            // NOTE(Wuxiang): We could use this because Disable would reset the
-            // shader program globally.
-            renderGroupShader.Disable();
-            renderGroupShader.Enable();
+    //// NOTE(Wuxiang): Use orphaning strategy
+    //// TODO(Wuxiang): Wrong. Use glMapBuffer to access asynchronously
+    //glBindBuffer(GL_ARRAY_BUFFER, renderGroupBuffer);
+    //glBufferData(GL_ARRAY_BUFFER, renderGroupAttributes.size() * sizeof(float), nullptr, GL_STREAM_DRAW);
+    //auto *va = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 
-            mTextShaderPrevious = &renderGroupShader;
-        }
+    //// TODO(Move this to data creation?)
+    //va copy &renderGroupAttributes[0];
 
-        // Switch shader texture
-        if (renderGroupTexture != mTextShaderPreviousTexture)
-        {
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D_ARRAY, renderGroupTexture);
-
-            mTextShaderPreviousTexture = renderGroupTexture;
-        }
-
-        glBindVertexArray(renderGroupVao);
-
-        // NOTE(Wuxiang): Use orphaning strategy
-        // TODO(Wuxiang): Wrong. Use glMapBuffer to access asynchronously
-        glBindBuffer(GL_ARRAY_BUFFER, renderGroupBuffer);
-        glBufferData(GL_ARRAY_BUFFER, renderGroupAttributes.size() * sizeof(float), nullptr, GL_STREAM_DRAW);
-        auto *va = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-
-        // TODO(Move this to data creation?)
-        va copy &renderGroupAttributes[0];
-        glUnmapBuffer(GL_ARRAY_BUFFER);
-
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-        glEnableVertexAttribArray(2);
-        glEnableVertexAttribArray(3);
-        glEnableVertexAttribArray(4);
-        glEnableVertexAttribArray(5);
-
-        glUniform1i(renderGroupShader["Texture"], 0);
-
-        glDrawArrays(GL_TRIANGLES, 0, renderGroup.mTextVertexCount);
-
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-        glDisableVertexAttribArray(2);
-        glDisableVertexAttribArray(3);
-        glDisableVertexAttribArray(4);
-        glDisableVertexAttribArray(5);
-
-        glBindVertexArray(0);
-    }
+    //glDrawArrays(GL_TRIANGLES, 0, renderGroup.mTextVertexCount);
 }
 
 void BitmapFontRenderer::RenderEnd()
 {
-    mTextBatch.clear();
-    mTextShaderPrevious->Disable();
-    mTexts.clear();
-    mTextShaderDefaultAttributes.clear();
 }
 
 }

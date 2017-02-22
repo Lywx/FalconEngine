@@ -43,6 +43,13 @@ public:
     virtual ~Buffer();
 
 public:
+    void
+    SetElementNum(int elementNum)
+    {
+        mElementNum = elementNum;
+    }
+
+public:
     unsigned char *mData;
     int            mDataByteNum;
     int            mElementNum;

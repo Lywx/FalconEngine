@@ -37,7 +37,7 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    InsertPass(VisualPassHandle pass);
+    InsertPass(VisualPassUniquePtr pass);
 
     int
     GetPassNum() const;
@@ -75,7 +75,7 @@ protected:
 
 protected:
     VisualEffectSharedPtr  mEffect;                                             // Effect shared_ptr controls the destruction of this class.
-    VisualPassHandleVector mPassHandleVector;                                   // Passes contained in this effect.
+    VisualPassUniquePtrVector mPassHandleVector;                                   // Passes contained in this effect.
 };
 
 }

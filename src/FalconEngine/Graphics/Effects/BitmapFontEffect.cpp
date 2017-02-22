@@ -22,6 +22,7 @@ BitmapFontEffect::CreateVertexFormat()
     vertexFormat->PushVertexAttribute(3, "FontWidth", VertexAttributeType::Float, false, 0);
     vertexFormat->PushVertexAttribute(4, "FontEdge", VertexAttributeType::Float, false, 0);
     vertexFormat->PushVertexAttribute(5, "FontPage", VertexAttributeType::Float, false, 0);
+    vertexFormat->FinishVertexAttribute();
 
     return vertexFormat;
 }
@@ -76,17 +77,16 @@ BitmapFontEffect::CreateInstance(VisualEffectInstance *instance, const BitmapFon
     auto projection = mCameraHandedness->CreateOrthogonal(float(width), float(height), 1.0f, 1000.0f);
     instance->SetShaderUniform(0, ShareConstant<Matrix4f>("Projection", projection));
 
-    // TODO(Wuxiang): Should I change the texture unit?
-    instance->SetShaderTexture(0, 0, font->GetTexture());
-    instance->SetShaderSampler(0, 0, font->GetSampler());
+    instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Font), font->GetTexture());
+    instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Font), font->GetSampler());
 }
 
 VisualEffectInstanceSharedPtr
 BitmapFontEffect::CreateInstance(const BitmapFont *font, int width, int height)
 {
-    auto instance = new VisualEffectInstance(GetSharedPtr());
-    CreateInstance(instance, font, width, height);
-    return VisualEffectInstanceSharedPtr(instance);
+    auto instance = make_shared<VisualEffectInstance>(GetSharedPtr());
+    CreateInstance(instance.get(), font, width, height);
+    return instance;
 }
 
 }

@@ -63,5 +63,6 @@ CheckNullPointer(const std::shared_ptr<T> pointer, const std::string name)
 
 #define FALCON_ENGINE_CHECK_NULLPTR(pointer) FalconEngine::CheckNullPointer(pointer, #pointer);
 
-#define IN
-#define OUT
+#define _IN_
+#define _OUT_
+#define _IN_OUT_

@@ -2,6 +2,8 @@
 
 #include <fstream>
 
+#include <FalconEngine/Content/AssetManager.h>
+
 using namespace std;
 
 namespace FalconEngine
@@ -59,7 +61,7 @@ int Shader::GetShaderNum() const
     return int(mSourceTable.size());
 }
 
-std::string
+ShaderSource *
 Shader::GetShaderSource(int shaderIndex) const
 {
     return mSourceTable.at(shaderIndex);
@@ -72,25 +74,18 @@ Shader::GetShaderType(int shaderIndex) const
 }
 
 void
-Shader::PushShaderFile(ShaderType shaderType, const std::string& shaderFilename)
+Shader::PushShaderFile(ShaderType shaderType, const std::string& shaderPath)
 {
-    ifstream shaderStream;
-    shaderStream.open(shaderFilename.c_str(), ios_base::in);
+    auto assetManager = AssetManager::GetInstance();
+    auto shaderSource = assetManager->LoadShaderSource(shaderPath);
 
-    if (shaderStream)
+    if (shaderSource)
     {
-        string shaderLine, shaderBuffer;
-        while (getline(shaderStream, shaderLine))
-        {
-            shaderBuffer.append(shaderLine);
-            shaderBuffer.append("\r\n");
-        }
-
-        mSourceTable[int(shaderType)] = move(shaderBuffer);
+        mSourceTable[int(shaderType)] = shaderSource;
     }
     else
     {
-        cerr << typeid(Shader).name() << ": Error loading shader \"" << shaderFilename << "\"." << endl;
+        cerr << "Error loading shader \"" << shaderPath << "\"." << endl;
     }
 }
 

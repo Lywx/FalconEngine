@@ -21,7 +21,7 @@ VisualEffect::~VisualEffect()
 /* Public Members                                                       */
 /************************************************************************/
 void
-VisualEffect::InsertPass(VisualPassHandle pass)
+VisualEffect::InsertPass(VisualPassUniquePtr pass)
 {
     mPassHandleVector.push_back(move(pass));
 }

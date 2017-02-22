@@ -18,9 +18,8 @@ protected:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit Visual(PrimitiveType primitiveType);
     Visual(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat);
-    Visual(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat, IndexBufferSharedPtr indexBuffer);
+    Visual(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer);
     virtual ~Visual();
 
 public:
@@ -33,5 +32,7 @@ public:
 protected:
     VisualEffectInstanceSharedPtr mEffectInstance;
 };
+
+using VisualSharedPtr = std::shared_ptr<Visual>;
 
 }

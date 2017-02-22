@@ -86,6 +86,34 @@ AssetManager::LoadModel(std::string modelFilePath)
     return model;
 }
 
+ShaderSource *
+AssetManager::GetShaderSource(std::string shaderFilePath)
+{
+    auto iter = mShaderSourceTable.find(shaderFilePath);
+    if (iter != mShaderSourceTable.end())
+    {
+        return iter->second.get();
+    }
+
+    return nullptr;
+}
+
+ShaderSource *
+AssetManager::LoadShaderSource(std::string shaderFilePath)
+{
+    auto shaderSource = GetShaderSource(shaderFilePath);
+    if (shaderSource)
+    {
+        return shaderSource;
+    }
+
+    auto shaderSourceHandle = LoadShaderSourceInternal(shaderFilePath);
+    shaderSource = shaderSourceHandle.get();
+    mShaderSourceTable[shaderSource->mFilePath] = move(shaderSourceHandle);
+
+    return shaderSource;
+}
+
 Texture2d *
 AssetManager::GetTexture2d(std::string textureName)
 {
@@ -125,7 +153,7 @@ AssetManager::LoadFontInternal(std::string fontAssetPath)
     if (Exist(fontAssetPath))
     {
         // Load font.
-        auto font = new BitmapFont("None", "None");
+        auto font = std::make_unique<BitmapFont>("None", "None");
         {
             ifstream fontAssetStream(fontAssetPath);
             archive::binary_iarchive fontAssetArchive(fontAssetStream);
@@ -136,16 +164,16 @@ AssetManager::LoadFontInternal(std::string fontAssetPath)
         auto fontAssetDirPath = GetFileDirectory(fontAssetPath);
         {
             // Load the first texture, then, use the texture metadata to create texture array.
-            Texture2dArray *fontPageTextureArray;
+            Texture2dArraySharedPtr fontPageTextureArray;
             {
                 auto fontPage0TextureAssetName = font->mTextureArchiveNameVector[0];
                 auto fontPage0TextureAssetPath = fontAssetDirPath + fontPage0TextureAssetName;
                 auto fontPage0Texture = LoadTexture2d(fontPage0TextureAssetPath);
 
                 // TODO(Wuxiang): Add mipmap support.
-                fontPageTextureArray = new Texture2dArray("None", "None", fontPage0Texture->mDimension[0],
-                        fontPage0Texture->mDimension[1], font->mTexturePages,
-                        TextureFormat::R8G8B8A8, BufferUsage::Static, 0);
+                fontPageTextureArray = std::make_shared<Texture2dArray>("None", "None", fontPage0Texture->mDimension[0],
+                                       fontPage0Texture->mDimension[1], font->mTexturePages,
+                                       TextureFormat::R8G8B8A8, BufferUsage::Static, 0);
             }
 
             // Load the other textures.
@@ -157,16 +185,16 @@ AssetManager::LoadFontInternal(std::string fontAssetPath)
                 auto fontPageTexture = LoadTexture2d(textureAssetPath);
                 fontPageTextureArray->PushTexture2d(fontPageTexture);
             }
-            font->SetTexture(Texture2dArraySharedPtr(fontPageTextureArray));
+            font->SetTexture(fontPageTextureArray);
         }
 
         // Set font texture sampler.
-        auto sampler = new Sampler();
+        auto sampler = std::make_shared<Sampler>();
         sampler->mMagnificationFilter = SamplerMagnificationFilter::Linear;
         sampler->mMinificationFilter = SamplerMinificationFilter::Linear;
-        font->SetSampler(SamplerSharedPtr(sampler));
+        font->SetSampler(sampler);
 
-        return unique_ptr<BitmapFont>(font);
+        return font;
     }
 
     ThrowRuntimeException("File not found.");
@@ -178,21 +206,35 @@ AssetManager::LoadModelInternal(std::string modelFilePath)
     // NOTE(Wuxiang 2017-01-27 22:08): Model would not load from asset file. The
     // asset process would only preprocess model's texture in a way that is
     // beneficial for model texture loading.
-    auto model = new Model(GetFileStem(modelFilePath), modelFilePath);
+    auto model = make_unique<Model>(GetFileStem(modelFilePath), modelFilePath);
     model->mFileType = AssetSource::Normal;
+    AssetImporter::ImportModel(model.get(), modelFilePath);
 
-    // Load model using Assimp
-    static Assimp::Importer modelImporter;
-    const aiScene *scene = modelImporter.ReadFile(modelFilePath, aiProcess_Triangulate | aiProcess_FlipUVs);
-    if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+    return model;
+}
+
+ShaderSourceUniquePtr
+AssetManager::LoadShaderSourceInternal(std::string shaderFilePath)
+{
+    ifstream shaderStream;
+    shaderStream.open(shaderFilePath.c_str(), ios_base::in);
+
+    if (shaderStream)
     {
-        ThrowRuntimeException(string("Error: ") + modelImporter.GetErrorString());
+        string shaderLine, shaderBuffer;
+        while (getline(shaderStream, shaderLine))
+        {
+            shaderBuffer.append(shaderLine);
+            shaderBuffer.append("\r\n");
+        }
+
+        auto shaderSource = make_unique<ShaderSource>(GetFileName(shaderFilePath), shaderFilePath);
+        shaderSource->mSource = move(shaderBuffer);
+
+        return shaderSource;
     }
 
-    // NOTE(Wuxiang): The node constructor would recursively load the necessary children nodes and textures.
-    model->mRootNode = Node(model, scene, scene->mRootNode);
-
-    return unique_ptr<Model>(model);
+    return nullptr;
 }
 
 Texture2dUniquePtr
@@ -203,7 +245,7 @@ AssetManager::LoadTexture2dInternal(std::string textureAssetPath)
     ifstream textureAssetStream(textureAssetPath);
     archive::binary_iarchive textureAssetArchive(textureAssetStream);
 
-    auto texture = new Texture2d("None", "None", 0, 0, TextureFormat::None);
+    auto texture = make_unique<Texture2d>("None", "None", 0, 0, TextureFormat::None);
     textureAssetArchive >> *texture;
     if (texture->mData == nullptr)
     {
@@ -211,7 +253,7 @@ AssetManager::LoadTexture2dInternal(std::string textureAssetPath)
     }
 
     texture->mFileType = AssetSource::Stream;
-    return unique_ptr<Texture2d>(texture);
+    return texture;
 }
 
 }

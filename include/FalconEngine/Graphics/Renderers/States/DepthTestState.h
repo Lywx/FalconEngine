@@ -34,6 +34,6 @@ public:
     DepthFunction mCompareFunction = DepthFunction::LEQUAL;
 };
 
-typedef std::unique_ptr<DepthTestState> DepthTestStateHandle;
+using DepthTestStateUniquePtr = std::unique_ptr<DepthTestState>;
 
 }

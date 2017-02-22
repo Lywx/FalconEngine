@@ -133,7 +133,7 @@ PlatformShader::PlatformShader(Shader *shader) :
         auto shaderType = shader->GetShaderType(shaderIndex);
 
         // Compile for each part of shader
-        CreateFromString(OpenGLShaderType[int(shaderType)], shaderSource);
+        CreateFromString(OpenGLShaderType[int(shaderType)], shaderSource->mSource);
     }
 
     // Link all the part together.

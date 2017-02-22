@@ -55,24 +55,6 @@ public:
         return mSampler.get();
     }
 
-    int
-    GetTextureNum() const
-    {
-        return mTextures.size();
-    }
-
-    const Texture2d *
-    GetTexture(int index) const
-    {
-        return mTextures[index];
-    }
-
-    void
-    PushTexture(Texture2d *texture)
-    {
-        mTextures.push_back(texture);
-    }
-
     /************************************************************************/
     /* Model Loadtime Data                                                  */
     /************************************************************************/
@@ -85,13 +67,6 @@ public:
     /************************************************************************/
 private:
     NodeSharedPtr            mNode;                                            // Model root node.
-
-    // NOTE(Wuxiang): The reason I use a vector of texture is that texture imported
-    // from the model file might not be identical in the size, format, etc. The
-    // heterogeneity would cause extra cost on texture array object so that it is
-    // impossible to use texture array.
-
-    std::vector<Texture2d *> mTextures;                                        // Model texture.
     SamplerSharedPtr         mSampler;                                         // Model texture sampler.
 };
 

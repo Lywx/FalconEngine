@@ -19,42 +19,30 @@ class AssetProcessor
 {
 public:
     /************************************************************************/
-    /* Constructors and Destructor                                          */
-    /************************************************************************/
-    AssetProcessor();
-    ~AssetProcessor();
-
-    /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
-    void
+    static void
     BakeFont(std::string fntFilePath);
 
-    void
+    static void
     BakeModel(std::string modelFilePath);
 
-    void
+    static void
     BakeTexture2d(std::string textureFilePath);
 
 private:
-    void
+    static void
     BakeFont(BitmapFont *fontPtr, std::string fontOutputPath);
 
     // @summary Load font without optimization.
-    BitmapFontUniquePtr
+    static BitmapFontUniquePtr
     LoadRawFont(std::string fntFilePath);
 
-    void
+    static void
     BakeTexture2d(Texture2d *texturePtr, std::string textureOutputPath);
 
-    Texture2dUniquePtr
+    static Texture2dUniquePtr
     LoadRawTexture2d(std::string textureFilePath);
-
-    // @param materialPathsBaked material texture
-    void
-    BakeMaterial(aiMaterial               *material,
-                 aiTextureType             textureType,
-                 std::vector<std::string>& texturePathsBaked);
 };
 }
 

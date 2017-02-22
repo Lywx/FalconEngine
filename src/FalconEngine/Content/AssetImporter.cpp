@@ -5,7 +5,6 @@
 #include <assimp/scene.h>
 
 #include <FalconEngine/Content/AssetManager.h>
-#include <FalconEngine/Graphics/Renderers/VisualEffect.h>
 #include <FalconEngine/Graphics/Scenes/Mesh.h>
 #include <FalconEngine/Graphics/Scenes/Model.h>
 #include <FalconEngine/Graphics/Scenes/Node.h>
@@ -101,14 +100,54 @@ CreateModelIndexBuffer(const aiMesh *mesh)
     return indexBuffer;
 }
 
+// ReSharper disable once CppNotAllPathsReturnValue
+int
+GetTextureUnitFrom(aiTextureType textureType)
+{
+    switch (textureType)
+    {
+    case aiTextureType_NONE:
+        break;
+    case aiTextureType_DIFFUSE:
+        return GetTextureUnit(TextureUnit::Diffuse);
+    case aiTextureType_SPECULAR:
+        return GetTextureUnit(TextureUnit::Specular);
+    case aiTextureType_AMBIENT:
+        return GetTextureUnit(TextureUnit::Ambient);
+    case aiTextureType_EMISSIVE:
+        break;
+    case aiTextureType_HEIGHT:
+        break;
+    case aiTextureType_NORMALS:
+        break;
+    case aiTextureType_SHININESS:
+        break;
+    case aiTextureType_OPACITY:
+        break;
+    case aiTextureType_DISPLACEMENT:
+        break;
+    case aiTextureType_LIGHTMAP:
+        break;
+    case aiTextureType_REFLECTION:
+        break;
+    case aiTextureType_UNKNOWN:
+        break;
+    case _aiTextureType_Force32Bit:
+        break;
+    default:
+        FALCON_ENGINE_NOT_POSSIBLE();
+    }
+
+    FALCON_ENGINE_NOT_SUPPORT();
+}
+
 void
 LoadMaterialTexture(
-    _IN_OUT_ Model            *model,
-    _IN_     Mesh             *mesh,
+    _IN_OUT_ Mesh             *mesh,
     _IN_     const aiMaterial *material,
-    _IN_     aiTextureType     materialTextureType)
+    _IN_     aiTextureType     textureType)
 {
-    int textureNum = material->GetTextureCount(materialTextureType);
+    int textureNum = material->GetTextureCount(textureType);
     if (textureNum > 0)
     {
         auto assetManager = AssetManager::GetInstance();
@@ -117,36 +156,14 @@ LoadMaterialTexture(
         // Walk through every piece of material and load texture if needed
         for (int textureIndex = 0; textureIndex < textureNum; ++textureIndex)
         {
+            // Read texture file path.
             aiString textureFilePath;
-            material->GetTexture(materialTextureType, textureIndex, &textureFilePath);
+            material->GetTexture(textureType, textureIndex, &textureFilePath);
 
-            // Linear search loaded texture so that we don't need to load loaded texture again.
-            bool textureFound = false;
-            {
-                for (int textureIndexLoaded = 0; textureIndexLoaded < model->GetTextureNum(); textureIndexLoaded++)
-                {
-                    auto textureLoaded = model->GetTexture(textureIndexLoaded);
-
-                    // When we find this texture has been loaded already
-                    if (textureLoaded->mFilePath.c_str() == textureFilePath.C_Str())
-                    {
-                        // TODO(Wuxiang)
-                        effectInstance->SetShaderTexture(0,);
-                        // Add the texture index in the model back into the mesh.
-                        materialTextureIndexVector.push_back(textureIndexLoaded);
-                        textureFound = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!textureFound)
-            {
-                auto texture = assetManager->LoadTexture2d(textureFilePath.C_Str());
-                // TODO(Wuxiang)
-                materialTextureIndexVector.push_back(materialTextureIndexVector.size());
-                model->PushTexture(texture);
-            }
+            // Get texture from asset manager without duplication using asset
+            // manager's duplication checking mechanics.
+            auto texture = assetManager->LoadTexture2d(textureFilePath.C_Str());
+            effectInstance->SetShaderTexture(0, GetTextureUnitFrom(textureType), texture);
         }
     }
 }
@@ -157,26 +174,19 @@ LoadMaterialTexture(
 // @param materialTextureIndexVector - index of material's texture into the model's texture vector.
 // @param materialTextureType - the texture type to load from.
 void
-LoadTextures(
-    _IN_  Model         *model,
-    _IN_  Mesh          *mesh,
-    _OUT_ const aiScene *aiScene,
-    _OUT_ const aiMesh  *aiMesh)
+CreateMeshTexture(
+    _IN_OUT_  Mesh          *mesh,
+    _OUT_     const aiScene *aiScene,
+    _OUT_     const aiMesh  *aiMesh)
 {
     // Walk through each of the material and retrieve the corresponding textures.
     if (aiMesh->mMaterialIndex >= 0)
     {
-        aiMaterial *material = aiScene->mMaterials[aiMesh->mMaterialIndex];
+        auto material = aiScene->mMaterials[aiMesh->mMaterialIndex];
 
-        // TODO(Wuxiang 2017-01-27 16:02): Add ambient.
-
-        // Load diffuse maps
-        LoadMaterialTexture(model, mesh, material, aiTextureType_DIFFUSE);
-        mTextureIndexVector.insert(mTextureIndexVector.end(), diffuseMapTextureIndexVector.begin(), diffuseMapTextureIndexVector.end());
-
-        // Load specular maps
-        LoadMaterialTexture(model, mesh, material, aiTextureType_SPECULAR);
-        mTextureIndexVector.insert(mTextureIndexVector.end(), specularMapTextureIndexVector.begin(), specularMapTextureIndexVector.end());
+        LoadMaterialTexture(mesh, material, aiTextureType_AMBIENT);
+        LoadMaterialTexture(mesh, material, aiTextureType_DIFFUSE);
+        LoadMaterialTexture(mesh, material, aiTextureType_SPECULAR);
     }
 }
 VertexFormatSharedPtr
@@ -192,30 +202,36 @@ CreateModelVertexFormat()
 
 MeshSharedPtr
 CreateMesh(
-    _IN_OUT_ Model                              *model,
     _IN_     const VisualEffectInstanceSharedPtr effectInstance,
     _IN_     const aiScene                      *aiScene,
     _IN_     const aiMesh                       *aiMesh)
 {
-    auto vertexFormat = CreateModelVertexFormat();
-    auto vertexGroup = CreateModelVertexBuffer(aiMesh);
-    auto indexBuffer = CreateModelIndexBuffer(aiMesh);
+    shared_ptr<Mesh> mesh;
 
-    auto mesh = make_shared<Mesh>(vertexFormat, vertexGroup, indexBuffer);
+    // Load vertex and index data.
+    {
+        auto vertexFormat = CreateModelVertexFormat();
+        auto vertexGroup = CreateModelVertexBuffer(aiMesh);
+        auto indexBuffer = CreateModelIndexBuffer(aiMesh);
 
-    // NOTE(Wuxiang): It is important for mesh having a effect instance so that
-    // the model importer would be able to set the texture and sampler in the
-    // effect instance.
-    mesh->SetEffectInstance(effectInstance);
+        mesh = make_shared<Mesh>(vertexFormat, vertexGroup, indexBuffer);
+    }
 
-    LoadTextures(model, mesh.get(), aiScene, aiMesh);
+    // Load texture data.
+    {
+        // NOTE(Wuxiang): It is important for mesh having a effect instance so that
+        // the model importer would be able to set the texture and sampler in the
+        // effect instance.
+        mesh->SetEffectInstance(effectInstance);
+
+        CreateMeshTexture(mesh.get(), aiScene, aiMesh);
+    }
 
     return mesh;
 }
 
 NodeSharedPtr
 CreateNode(
-    _IN_OUT_ Model                              *model,
     _IN_     const VisualEffectInstanceSharedPtr effectInstance,
     _IN_     const aiScene                      *aiScene,
     _IN_     const aiNode                       *aiNode)
@@ -227,13 +243,13 @@ CreateNode(
     {
         // The node object only contains indices to index the actual objects in the scene.
         // The scene contains all the data, node is just to keep stuff organized (like relations between nodes).
-        node->AttachChild(CreateMesh(model, effectInstance, aiScene, aiScene->mMeshes[aiNode->mMeshes[i]]));
+        node->AttachChild(CreateMesh(effectInstance, aiScene, aiScene->mMeshes[aiNode->mMeshes[i]]));
     }
 
     // After we've processed all of the meshes (if any) we then recursively process each of the children nodes
     for (size_t i = 0; i < aiNode->mNumChildren; ++i)
     {
-        node->AttachChild(CreateNode(model, effectInstance, aiScene, aiNode->mChildren[i]));
+        node->AttachChild(CreateNode(effectInstance, aiScene, aiNode->mChildren[i]));
     }
 
     return node;
@@ -251,7 +267,7 @@ AssetImporter::ImportModel(Model *model, const std::string& modelFilePath, const
     }
 
     // NOTE(Wuxiang): The node constructor would recursively load the necessary children nodes and textures.
-    model->SetNode(CreateNode(model, effectInstance, aiScene, aiScene->mRootNode));
+    model->SetNode(CreateNode(effectInstance, aiScene, aiScene->mRootNode));
 }
 
 }

@@ -3,8 +3,6 @@
 #include <fstream>
 #include <stdexcept>
 
-#include <assimp/Importer.hpp>
-#include <assimp/postprocess.h>
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/filesystem.hpp>
 
@@ -31,11 +29,24 @@ AssetManager::~AssetManager()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+BitmapFont *
+AssetManager::GetFontNamed(std::string fontName)
+{
+    for (const auto &fontPair : mFontTable)
+    {
+        if (GetFileStem(fontPair.first) == fontName)
+        {
+            return GetFont(fontPair.first);
+        }
+    }
+
+    return nullptr;
+}
 
 BitmapFont *
-AssetManager::GetFont(std::string fontName)
+AssetManager::GetFont(std::string fontFilePath)
 {
-    auto iter = mFontTable.find(fontName);
+    auto iter = mFontTable.find(fontFilePath);
     if (iter != mFontTable.end())
     {
         return iter->second.get();
@@ -47,7 +58,7 @@ AssetManager::GetFont(std::string fontName)
 BitmapFont *
 AssetManager::LoadFont(std::string fontAssetPath)
 {
-    auto font = GetFont(GetFileStem(fontAssetPath));
+    auto font = GetFont(ChangeFileExtension(fontAssetPath, ".fnt"));
     if (font)
     {
         return font;
@@ -55,14 +66,14 @@ AssetManager::LoadFont(std::string fontAssetPath)
 
     auto fontHandle = LoadFontInternal(fontAssetPath);
     font = fontHandle.get();
-    mFontTable[font->mFileName] = move(fontHandle);
+    mFontTable[font->mFilePath] = move(fontHandle);
     return font;
 }
 
 Model *
-AssetManager::GetModel(std::string modelName)
+AssetManager::GetModel(std::string modelFilePath)
 {
-    auto iter = mModelTable.find(modelName);
+    auto iter = mModelTable.find(modelFilePath);
     if (iter != mModelTable.end())
     {
         return iter->second.get();
@@ -74,7 +85,7 @@ AssetManager::GetModel(std::string modelName)
 Model *
 AssetManager::LoadModel(std::string modelFilePath)
 {
-    auto model = GetModel(GetFileStem(modelFilePath));
+    auto model = GetModel(modelFilePath);
     if (model)
     {
         return model;
@@ -82,7 +93,7 @@ AssetManager::LoadModel(std::string modelFilePath)
 
     auto modelHandle = LoadModelInternal(modelFilePath);
     model = modelHandle.get();
-    mModelTable[model->mFileName] = move(modelHandle);
+    mModelTable[model->mFilePath] = move(modelHandle);
     return model;
 }
 
@@ -115,9 +126,9 @@ AssetManager::LoadShaderSource(std::string shaderFilePath)
 }
 
 Texture2d *
-AssetManager::GetTexture2d(std::string textureName)
+AssetManager::GetTexture2d(std::string textureFilePath)
 {
-    auto iter = mTexture2dTable.find(textureName);
+    auto iter = mTexture2dTable.find(textureFilePath);
     if (iter != mTexture2dTable.end())
     {
         return iter->second.get();
@@ -129,7 +140,10 @@ AssetManager::GetTexture2d(std::string textureName)
 Texture2d *
 AssetManager::LoadTexture2d(std::string textureAssetPath)
 {
-    auto texture = GetTexture2d(GetFileStem(textureAssetPath));
+    // NOTE(Wuxiang): Only allow png file to be loaded because the raw asset / asset
+    // naming scheme is N to 1 mapping. It is necessary to limit the file
+    // extension to form a 1 to 1 mapping.
+    auto texture = GetTexture2d(ChangeFileExtension(textureAssetPath, ".png"));
     if (texture)
     {
         return texture;
@@ -137,7 +151,7 @@ AssetManager::LoadTexture2d(std::string textureAssetPath)
 
     auto textureHandle = LoadTexture2dInternal(textureAssetPath);
     texture = textureHandle.get();
-    mTexture2dTable[texture->mFileName] = move(textureHandle);
+    mTexture2dTable[texture->mFilePath] = move(textureHandle);
 
     return texture;
 }

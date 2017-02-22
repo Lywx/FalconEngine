@@ -2,7 +2,10 @@
 
 #if FALCON_ENGINE_OS_WINDOWS
 #include <assimp/Importer.hpp>
+#include <assimp/material.h>
 #include <assimp/postprocess.h>
+#include <assimp/scene.h>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/filesystem.hpp>
@@ -17,17 +20,6 @@ using namespace std;
 
 namespace FalconEngine
 {
-
-/************************************************************************/
-/* Constructors and Destructor                                          */
-/************************************************************************/
-AssetProcessor::AssetProcessor()
-{
-}
-
-AssetProcessor::~AssetProcessor()
-{
-}
 
 /************************************************************************/
 /* Public Members                                                       */
@@ -367,6 +359,31 @@ AssetProcessor::LoadRawTexture2d(std::string textureFilePath)
 }
 
 void
+BakeMaterial(aiMaterial               *material,
+             aiTextureType             textureType,
+             std::vector<std::string>& texturePathsBaked)
+{
+    for (unsigned int textureIndex = 0; textureIndex < material->GetTextureCount(textureType); ++textureIndex)
+    {
+        aiString textureFilePath;
+        material->GetTexture(textureType, textureIndex, &textureFilePath);
+        auto textureFilePathString = string(textureFilePath.C_Str());
+
+        // When we find this ready to load texture has been loaded already
+        auto iter = find(texturePathsBaked.begin(), texturePathsBaked.end(), textureFilePathString);
+        if (iter != texturePathsBaked.end())
+        {
+            continue;
+        }
+        else
+        {
+            AssetProcessor::BakeTexture2d(textureFilePathString);
+            texturePathsBaked.push_back(textureFilePathString);
+        }
+    }
+}
+
+void
 AssetProcessor::BakeModel(std::string modelFilePath)
 {
     // Load model using Assimp
@@ -390,31 +407,6 @@ AssetProcessor::BakeModel(std::string modelFilePath)
 
     // We don't need to get the fully initialized model at processor. The model
     // is only half loaded.
-}
-
-void
-AssetProcessor::BakeMaterial(aiMaterial               *material,
-                             aiTextureType             textureType,
-                             std::vector<std::string>& texturePathsBaked)
-{
-    for (unsigned int textureIndex = 0; textureIndex < material->GetTextureCount(textureType); ++textureIndex)
-    {
-        aiString textureFilePath;
-        material->GetTexture(textureType, textureIndex, &textureFilePath);
-        auto textureFilePathString = string(textureFilePath.C_Str());
-
-        // When we find this ready to load texture has been loaded already
-        auto iter = find(texturePathsBaked.begin(), texturePathsBaked.end(), textureFilePathString);
-        if (iter != texturePathsBaked.end())
-        {
-            continue;
-        }
-        else
-        {
-            BakeTexture2d(textureFilePathString);
-            texturePathsBaked.push_back(textureFilePathString);
-        }
-    }
 }
 
 }

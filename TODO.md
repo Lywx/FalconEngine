@@ -15,6 +15,10 @@ support multiple buffer switching without switch vertex format.
 ++ Fixed Renderer.Draw.
 ++ Fixed BitmapFontRenderer::PrepareString and correctly fill text buffer.
 
+++ Added texture / sampler binding into uniform?
+
+---
+
 ++ Separated Mesh and aiMesh using factory pattern or something else.
 ++ Merged Buffer element and primitive element number information.
 ++ Encapsulated Assimp layer in Content Project.
@@ -23,4 +27,7 @@ support multiple buffer switching without switch vertex format.
 ++ Removed texture information in Mesh to somewhere else.
 ++ Rewrote mesh loading in new Primitive abstraction so that texture and sampler would be in corresponding visual effect instance.
 
-++ Added texture / sampler binding into uniform?
+--
+Optimized the LoadMaterialTexture.
+Changed AssetManager to use file name as index for asset look up.
+Fixed AssetProcess for Model baking.

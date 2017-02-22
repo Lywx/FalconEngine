@@ -320,6 +320,11 @@ AssetProcessor::LoadRawFont(std::string fntFilePath)
 void
 AssetProcessor::BakeTexture2d(std::string textureFilePath)
 {
+    if (GetFileExtension(textureFilePath) != u8".png")
+    {
+        FALCON_ENGINE_NOT_SUPPORT();
+    }
+
     auto textureHandle = LoadRawTexture2d(textureFilePath);
     BakeTexture2d(textureHandle.get(), ChangeFileExtension(textureFilePath, u8".bin"));
 }

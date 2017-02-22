@@ -36,20 +36,13 @@ Primitives::SetVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer
 {
     if (mVertexGroup->ContainVertexBuffer(bindingIndex, vertexBuffer))
     {
-        ThrowRuntimeException("It is not allowed to reset vertex buffer's offset or stride.");
+        // NOTE(Wuxiang): It is not allowed to reset vertex buffer's offset or stride.
+        FALCON_ENGINE_NOT_SUPPORT();
     }
     else
     {
         mVertexGroup->SetVertexBuffer(bindingIndex, vertexBuffer, offset, stride);
     }
-}
-
-/************************************************************************/
-/* Protected Members                                                    */
-/************************************************************************/
-void
-Primitives::SetPrimitiveNum()
-{
 }
 
 }

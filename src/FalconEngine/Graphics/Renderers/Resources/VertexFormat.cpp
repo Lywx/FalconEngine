@@ -51,7 +51,8 @@ VertexFormat::PushVertexAttribute(int attributeLocation, std::string attributeNa
 {
     if (attributeLocation != mVertexAttributeVector.size())
     {
-        ThrowRuntimeException("It is not supported for out of order attribute registration.");
+        // NOTE(Wuxiang): It is not supported for out of order attribute registration.
+        FALCON_ENGINE_NOT_SUPPORT();
     }
 
     if (mVertexAttributeFinished)

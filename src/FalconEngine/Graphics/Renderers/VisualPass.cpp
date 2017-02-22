@@ -34,7 +34,7 @@ VisualPass::SetShaderUniform(ShaderUniform *shaderUniform)
     }
     else
     {
-        ThrowRuntimeException("Uniform is not registered");
+        ThrowRuntimeException("Uniform is not registered.");
     }
 }
 

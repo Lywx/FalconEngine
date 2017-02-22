@@ -28,6 +28,3 @@ support multiple buffer switching without switch vertex format.
 ++ Rewrote mesh loading in new Primitive abstraction so that texture and sampler would be in corresponding visual effect instance.
 
 --
-Optimized the LoadMaterialTexture.
-Changed AssetManager to use file name as index for asset look up.
-Fixed AssetProcess for Model baking.

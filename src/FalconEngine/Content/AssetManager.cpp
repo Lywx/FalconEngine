@@ -58,7 +58,7 @@ AssetManager::GetFont(std::string fontFilePath)
 BitmapFont *
 AssetManager::LoadFont(std::string fontAssetPath)
 {
-    auto font = GetFont(ChangeFileExtension(fontAssetPath, ".fnt"));
+    auto font = GetFont(ChangeFileExtension(fontAssetPath, u8".fnt"));
     if (font)
     {
         return font;
@@ -143,7 +143,7 @@ AssetManager::LoadTexture2d(std::string textureAssetPath)
     // NOTE(Wuxiang): Only allow png file to be loaded because the raw asset / asset
     // naming scheme is N to 1 mapping. It is necessary to limit the file
     // extension to form a 1 to 1 mapping.
-    auto texture = GetTexture2d(ChangeFileExtension(textureAssetPath, ".png"));
+    auto texture = GetTexture2d(ChangeFileExtension(textureAssetPath, u8".png"));
     if (texture)
     {
         return texture;

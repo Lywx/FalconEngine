@@ -423,7 +423,7 @@ void Renderer::DrawPrimitive(const Visual *visual)
                 }
                 else
                 {
-                    ThrowRuntimeException("Unknown index type.");
+                    FALCON_ENGINE_NOT_POSSIBLE();
                 }
 
                 glDrawRangeElements(primitiveMode, 0, vertexNum - 1, indexNum, indexType, indexData);
@@ -436,7 +436,7 @@ void Renderer::DrawPrimitive(const Visual *visual)
     }
     else
     {
-        ThrowRuntimeException("Unknown primitive type.");
+        FALCON_ENGINE_NOT_POSSIBLE();
     }
 }
 

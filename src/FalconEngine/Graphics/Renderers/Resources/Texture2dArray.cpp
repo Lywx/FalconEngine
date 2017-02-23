@@ -20,13 +20,13 @@ Texture2dArray::~Texture2dArray()
 /* Public Members                                                       */
 /************************************************************************/
 const Texture2d *
-Texture2dArray::GetTexture2d(int index) const
+Texture2dArray::GetTextureSlice(int index) const
 {
     return mTexture2dVector.at(index);
 }
 
 void
-Texture2dArray::PushTexture2d(const Texture2d *texture)
+Texture2dArray::PushTextureSlice(const Texture2d *texture)
 {
     mTexture2dVector.push_back(texture);
 }

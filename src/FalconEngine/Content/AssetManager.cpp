@@ -126,10 +126,10 @@ AssetManager::LoadShaderSource(std::string shaderFilePath)
 }
 
 Texture2d *
-AssetManager::GetTexture2d(std::string textureFilePath)
+AssetManager::GetTexture(std::string textureFilePath)
 {
-    auto iter = mTexture2dTable.find(textureFilePath);
-    if (iter != mTexture2dTable.end())
+    auto iter = mTextureTable.find(textureFilePath);
+    if (iter != mTextureTable.end())
     {
         return iter->second.get();
     }
@@ -138,20 +138,20 @@ AssetManager::GetTexture2d(std::string textureFilePath)
 }
 
 Texture2d *
-AssetManager::LoadTexture2d(std::string textureAssetPath)
+AssetManager::LoadTexture(std::string textureAssetPath)
 {
     // NOTE(Wuxiang): Only allow png file to be loaded because the raw asset / asset
     // naming scheme is N to 1 mapping. It is necessary to limit the file
     // extension to form a 1 to 1 mapping.
-    auto texture = GetTexture2d(ChangeFileExtension(textureAssetPath, u8".png"));
+    auto texture = GetTexture(ChangeFileExtension(textureAssetPath, u8".png"));
     if (texture)
     {
         return texture;
     }
 
-    auto textureHandle = LoadTexture2dInternal(textureAssetPath);
+    auto textureHandle = LoadTextureInternal(textureAssetPath);
     texture = textureHandle.get();
-    mTexture2dTable[texture->mFilePath] = move(textureHandle);
+    mTextureTable[texture->mFilePath] = move(textureHandle);
 
     return texture;
 }
@@ -182,7 +182,7 @@ AssetManager::LoadFontInternal(std::string fontAssetPath)
             {
                 auto fontPage0TextureAssetName = font->mTextureArchiveNameVector[0];
                 auto fontPage0TextureAssetPath = fontAssetDirPath + fontPage0TextureAssetName;
-                auto fontPage0Texture = LoadTexture2d(fontPage0TextureAssetPath);
+                auto fontPage0Texture = LoadTexture(fontPage0TextureAssetPath);
 
                 // TODO(Wuxiang): Add mipmap support.
                 fontPageTextureArray = std::make_shared<Texture2dArray>("None", "None", fontPage0Texture->mDimension[0],
@@ -196,8 +196,8 @@ AssetManager::LoadFontInternal(std::string fontAssetPath)
                 auto textureAssetName = font->mTextureArchiveNameVector[fontPageId];
                 auto textureAssetPath = fontAssetDirPath + textureAssetName;
 
-                auto fontPageTexture = LoadTexture2d(textureAssetPath);
-                fontPageTextureArray->PushTexture2d(fontPageTexture);
+                auto fontPageTexture = LoadTexture(textureAssetPath);
+                fontPageTextureArray->PushTextureSlice(fontPageTexture);
             }
             font->SetTexture(fontPageTextureArray);
         }
@@ -223,7 +223,6 @@ AssetManager::LoadModelInternal(std::string modelFilePath)
     auto model = make_unique<Model>(GetFileStem(modelFilePath), modelFilePath);
     model->mFileType = AssetSource::Normal;
     AssetImporter::ImportModel(model.get(), modelFilePath);
-
     return model;
 }
 
@@ -252,7 +251,7 @@ AssetManager::LoadShaderSourceInternal(std::string shaderFilePath)
 }
 
 Texture2dUniquePtr
-AssetManager::LoadTexture2dInternal(std::string textureAssetPath)
+AssetManager::LoadTextureInternal(std::string textureAssetPath)
 {
     using namespace boost;
 

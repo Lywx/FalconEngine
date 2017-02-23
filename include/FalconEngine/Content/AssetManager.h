@@ -63,10 +63,10 @@ public:
     LoadShaderSource(std::string shaderFilePath);
 
     Texture2d *
-    GetTexture2d(std::string textureFilePath);
+    GetTexture(std::string textureFilePath);
 
     Texture2d *
-    LoadTexture2d(std::string textureAssetPath);
+    LoadTexture(std::string textureAssetPath);
 
 private:
     BitmapFontUniquePtr
@@ -79,11 +79,11 @@ private:
     LoadShaderSourceInternal(std::string shaderFilePath);
 
     Texture2dUniquePtr
-    LoadTexture2dInternal(std::string textureAssetPath);
+    LoadTextureInternal(std::string textureAssetPath);
 
     std::map<std::string, BitmapFontUniquePtr>     mFontTable;                  // Index is file path.
     std::map<std::string, ModelUniquePtr>          mModelTable;                 // Index is file path.
     std::map<std::string, ShaderSourceUniquePtr>   mShaderSourceTable;          // Index is file path.
-    std::map<std::string, Texture2dUniquePtr>      mTexture2dTable;             // Index is file path.
+    std::map<std::string, Texture2dUniquePtr>      mTextureTable;             // Index is file path.
 };
 }

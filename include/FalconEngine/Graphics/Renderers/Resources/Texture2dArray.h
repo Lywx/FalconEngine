@@ -24,10 +24,10 @@ public:
 
 public:
     const Texture2d *
-    GetTexture2d(int index) const;
+    GetTextureSlice(int index) const;
 
     void
-    PushTexture2d(const Texture2d *texture);
+    PushTextureSlice(const Texture2d *texture);
 
 protected:
     std::vector<const Texture2d *> mTexture2dVector;

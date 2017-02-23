@@ -35,10 +35,10 @@ GetFileDirectory(const string path)
     return filesystem::path(path).parent_path().string() + DIR_SEPARATOR;
 }
 
-// http://stackoverflow.com/questions/4430780/how-can-i-extract-the-file-name-and-extension-from-a-path-in-c
 string
 GetFileName(const string path)
 {
+    // http://stackoverflow.com/questions/4430780/how-can-i-extract-the-file-name-and-extension-from-a-path-in-c
     return filesystem::path(path).filename().string();
 }
 
@@ -50,15 +50,15 @@ std::string GetFileStem(const std::string path)
 string
 GetFileExtension(const std::string path)
 {
+    // http://stackoverflow.com/questions/959837/how-can-i-know-the-type-of-a-file-using-boost-filesystem
     return filesystem::path(path).extension().string();
 }
 
-// Return byte number of the given file.
-//
-// http://stackoverflow.com/questions/5840148/how-can-i-get-a-files-size-in-c
+// ReSharper disable once CppNotAllPathsReturnValue
 ifstream::pos_type
 GetFileSize(const string relativePath)
 {
+    // http://stackoverflow.com/questions/5840148/how-can-i-get-a-files-size-in-c
     if (Exist(relativePath))
     {
         ifstream fileStream(relativePath, ifstream::ate | ifstream::binary);

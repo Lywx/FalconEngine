@@ -7,6 +7,7 @@
 #include <FalconEngine/Graphics/Renderers/VisualTriangles.h>
 #include <FalconEngine/Graphics/Renderers/Resources/IndexBuffer.h>
 #include <FalconEngine/Graphics/Renderers/Resources/VertexBuffer.h>
+#include <FalconEngine/Graphics/Scenes/Material.h>
 
 namespace FalconEngine
 {
@@ -19,9 +20,23 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    // @summary Load vertex, normal, texture coordinate, index, texture object.
     Mesh(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer);
     virtual ~Mesh();
+
+    void
+    SetMaterial(MaterialSharedPtr material)
+    {
+        mMaterial = material;
+    }
+
+    const Material *
+    GetMaterial() const
+    {
+        return mMaterial.get();
+    }
+
+protected:
+    MaterialSharedPtr mMaterial;
 };
 
 typedef std::shared_ptr<Mesh> MeshSharedPtr;

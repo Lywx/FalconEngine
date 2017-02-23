@@ -18,9 +18,10 @@ enum class TextureUnit
 {
     Ambient  = 0,
     Diffuse  = 1,
-    Specular = 2,
+    Emissive = 2,
+    Specular = 3,
 
-    Font     = 3,
+    Font     = 4,
 };
 
 inline int

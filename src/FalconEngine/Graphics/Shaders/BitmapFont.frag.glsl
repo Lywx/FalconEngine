@@ -18,7 +18,7 @@ layout (location = 0) out vec4 FragColor;
 
 void main(void)
 {
-    float fontDistance = 1.0 - texture(TextureFont, vec3(fin.TexCoord, float(fin.FontPage))).a;
+    float fontDistance = 1.0 - texture(fe_TextureFont, vec3(fin.TexCoord, float(fin.FontPage))).a;
     float fontAlpha = 1.0 - smoothstep(fin.FontWidth, fin.FontWidth + fin.FontEdge, fontDistance);
 
     FragColor = vec4(fin.FontColor.xyz, fontAlpha);

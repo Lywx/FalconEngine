@@ -42,6 +42,7 @@ GetFileName(const std::string path);
 std::string
 GetFileStem(const std::string path);
 
+// @return Byte number of the given file.
 std::ifstream::pos_type
 GetFileSize(const std::string relativePath);
 

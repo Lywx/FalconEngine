@@ -39,8 +39,8 @@ private:
     AssetManager *mAssetManager;
     Renderer *mRenderer;
 
-    BitmapFont *mFontConsole;
-    BitmapFont *mFontDisplay;
+    const BitmapFont *mFontConsole;
+    const BitmapFont *mFontDisplay;
 
     Model *mModelAxe;
 };

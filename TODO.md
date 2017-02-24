@@ -16,5 +16,5 @@ support multiple buffer switching without switch vertex format.
 ++ Fixed BitmapFontRenderer::PrepareString and correctly fill text buffer.
 
 ++ Added model sampler.
-++ Added texture / sampler binding into uniform??? Or, let user set those themselves?
+++ Added more members in Light class.
 

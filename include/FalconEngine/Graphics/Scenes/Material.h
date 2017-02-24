@@ -19,55 +19,7 @@ public:
     Material();
     virtual ~Material ();
 
-    void
-    SetAmbient(const Texture *texture)
-    {
-        mAmbient = texture;
-    }
-
-    const Texture *
-    GetAmbient() const
-    {
-        return mAmbient;
-    }
-
-    void
-    SetDiffuse(const Texture *texture)
-    {
-        mDiffuse = texture;
-    }
-
-    const Texture *
-    GetDiffuse() const
-    {
-        return mDiffuse;
-    }
-
-    void
-    SetEmissive(const Texture *texture)
-    {
-        mEmissive = texture;
-    }
-
-    const Texture *
-    GetEmissive() const
-    {
-        return mEmissive;
-    }
-
-    void
-    SetSpecular(const Texture *texture)
-    {
-        mSpecular = texture;
-    }
-
-    const Texture *
-    GetSpecular() const
-    {
-        return mSpecular;
-    }
-
-private:
+public:
     const Texture *mAmbient;
     const Texture *mDiffuse;
     const Texture *mEmissive;

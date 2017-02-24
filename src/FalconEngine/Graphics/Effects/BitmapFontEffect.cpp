@@ -38,7 +38,6 @@ BitmapFontEffect::BitmapFontEffect(const Handedness *handedness) :
     shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shaders/BitmapFont.frag.glsl");
 
     shader->PushUniform("Projection", ShaderUniformType::FloatMat4);
-    shader->PushUniform("Texture", ShaderUniformType::Int);
 
     auto pass = make_unique<VisualPass>();
     pass->SetShader(shader);
@@ -76,6 +75,9 @@ BitmapFontEffect::CreateInstance(VisualEffectInstance *instance, const BitmapFon
 
     auto projection = mCameraHandedness->CreateOrthogonal(float(width), float(height), 1.0f, 1000.0f);
     instance->SetShaderUniform(0, ShareConstant<Matrix4f>("Projection", projection));
+
+    // NOTE(Wuxiang): You don't need to set the texture sampler uniform because
+    // they are predefined in the fe_Texture.glsl as #include extension.
 
     instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Font), font->GetTexture());
     instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Font), font->GetSampler());

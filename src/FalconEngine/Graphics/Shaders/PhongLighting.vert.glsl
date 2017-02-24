@@ -1,27 +1,26 @@
 #version 330 core
   
-// Per-vertex position
-layout(location = 0) in vec3 vVertex;
-// Per-vertex normal
-layout(location = 1) in vec3 vNormal;
+layout(location = 0) in vec3 Position;
+layout(location = 1) in vec3 Normal;
+layout(location = 2) in vec2 TexCoord;
+
+out Vout
+{
+    noperspective vec3 EyePosition;
+    noperspective vec3 EyeNormal;
+    vec2               TexCoord;
+} vout;
  
-// Combined model-view projection matrix
-uniform mat4 MVP;
-
-// Normal matrix
-uniform mat3 N;
-
-// Eye space normal
-smooth out vec3 vEyeSpaceNormal;
+uniform mat4 MVPTransform;
+uniform mat4 MVTransform;
+uniform mat3 NormalTransform;
 
 void main()
 {      
-    // Multiply the object space normal with the normal matrix 
-    // to get the eye space normal
-    vEyeSpaceNormal = N * vNormal; 
+    vout.EyePosition = (MVTransform * vec4(Position, 1)).xyz;
+    vout.EyeNormal = NormalTransform * Normal; 
+    vout.TexCoord = TexCoord;
 
-    // Multiply the combined model-view projection matrix with the object space vertex
-    // position to get the clip space position
-    gl_Position = MVP * vec4(vVertex, 1); 
+    gl_Position = MVPTransform * vec4(Position, 1); 
 }
  

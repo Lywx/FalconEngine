@@ -6,7 +6,8 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Light::Light()
+Light::Light(LightType lightType) :
+    mLightType(lightType)
 {
 }
 

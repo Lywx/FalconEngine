@@ -101,43 +101,6 @@ CreateModelIndexBuffer(const aiMesh *mesh)
     return indexBuffer;
 }
 
-// ReSharper disable once CppNotAllPathsReturnValue
-int
-GetTextureUnitFrom(aiTextureType textureType)
-{
-    switch (textureType)
-    {
-    case aiTextureType_NONE:
-        break;
-    case aiTextureType_DIFFUSE:
-        return GetTextureUnit(TextureUnit::Diffuse);
-    case aiTextureType_SPECULAR:
-        return GetTextureUnit(TextureUnit::Specular);
-    case aiTextureType_AMBIENT:
-        return GetTextureUnit(TextureUnit::Ambient);
-    case aiTextureType_EMISSIVE:
-        break;
-    case aiTextureType_HEIGHT:
-        break;
-    case aiTextureType_NORMALS:
-        break;
-    case aiTextureType_SHININESS:
-        break;
-    case aiTextureType_OPACITY:
-        break;
-    case aiTextureType_DISPLACEMENT:
-        break;
-    case aiTextureType_LIGHTMAP:
-        break;
-    case aiTextureType_REFLECTION:
-        break;
-    default:
-        FALCON_ENGINE_NOT_POSSIBLE();
-    }
-
-    FALCON_ENGINE_NOT_SUPPORT();
-}
-
 Texture *
 LoadMaterialTexture(
     _IN_     const aiMaterial *material,
@@ -165,31 +128,22 @@ LoadMaterialTexture(
     return nullptr;
 }
 
-
-// @param model - the model owns this mesh.
-// @param material - the material to load from.
-// @param materialTextureIndexVector - index of material's texture into the model's texture vector.
-// @param materialTextureType - the texture type to load from.
 MaterialSharedPtr
 CreateMaterial(
     _IN_      const aiScene *aiScene,
     _IN_      const aiMesh  *aiMesh)
 {
-    // Walk through each of the material and retrieve the corresponding textures.
+    // When material exists.
     if (aiMesh->mMaterialIndex > 0)
     {
         auto aiMaterial = aiScene->mMaterials[aiMesh->mMaterialIndex];
 
-        auto ambient  = LoadMaterialTexture(aiMaterial, aiTextureType_AMBIENT);
-        auto diffuse  = LoadMaterialTexture(aiMaterial, aiTextureType_DIFFUSE);
-        auto emissive = LoadMaterialTexture(aiMaterial, aiTextureType_EMISSIVE);
-        auto specular = LoadMaterialTexture(aiMaterial, aiTextureType_SPECULAR);
-
         auto material = make_shared<Material>();
-        material->SetAmbient(ambient);
-        material->SetDiffuse(diffuse);
-        material->SetEmissive(emissive);
-        material->SetSpecular(specular);
+        material->mAmbient  = LoadMaterialTexture(aiMaterial, aiTextureType_AMBIENT);
+        material->mDiffuse  = LoadMaterialTexture(aiMaterial, aiTextureType_DIFFUSE);
+        material->mEmissive = LoadMaterialTexture(aiMaterial, aiTextureType_EMISSIVE);
+        material->mSpecular = LoadMaterialTexture(aiMaterial, aiTextureType_SPECULAR);
+
         return material;
     }
 
@@ -200,9 +154,9 @@ VertexFormatSharedPtr
 CreateModelVertexFormat()
 {
     auto vertexFormat = make_shared<VertexFormat>();
-    vertexFormat->PushVertexAttribute(0, "mPosition", VertexAttributeType::FloatVec3, false, 0);
-    vertexFormat->PushVertexAttribute(1, "mNormal", VertexAttributeType::FloatVec3, false, 0);
-    vertexFormat->PushVertexAttribute(2, "mTexCoord", VertexAttributeType::FloatVec2, false, 0);
+    vertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
+    vertexFormat->PushVertexAttribute(1, "Normal", VertexAttributeType::FloatVec3, false, 0);
+    vertexFormat->PushVertexAttribute(2, "TexCoord", VertexAttributeType::FloatVec2, false, 0);
     vertexFormat->FinishVertexAttribute();
     return vertexFormat;
 }

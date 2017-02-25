@@ -22,7 +22,8 @@ public:
 };
 
 template <typename T>
-void ShaderUniformManual<T>::SetValue(T value)
+void
+ShaderUniformManual<T>::SetValue(T value)
 {
     mValue = value;
     mUpdated = true;
@@ -32,9 +33,10 @@ template<typename T>
 using ShaderUniformManualSharedPtr = std::shared_ptr<ShaderUniformManual<T>>;
 
 template <typename T, typename ... Args>
-ShaderUniformValueSharedPtr<T> ShareManual(const Args& ... args)
+ShaderUniformValueSharedPtr <
+T > ShareManual(const Args& ... args)
 {
-    return ShareUniform<T, ShaderUniformManual<T>>(std::forward(args) ...);
+    return ShareUniform<T, ShaderUniformManual<T>>(args ...);
 }
 
 }

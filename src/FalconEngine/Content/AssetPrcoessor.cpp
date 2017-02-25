@@ -25,7 +25,7 @@ namespace FalconEngine
 /* Public Members                                                       */
 /************************************************************************/
 void
-AssetProcessor::BakeFont(std::string fntFilePath)
+AssetProcessor::BakeFont(const std::string& fntFilePath)
 {
     auto fontHandle = LoadRawFont(fntFilePath);
     if (fontHandle)
@@ -45,22 +45,12 @@ AssetProcessor::BakeFont(std::string fntFilePath)
 }
 
 void
-AssetProcessor::BakeFont(BitmapFont *font, std::string fontOutputPath)
+AssetProcessor::BakeFont(BitmapFont *font, const std::string& fontOutputPath)
 {
     ofstream fontAssetStream(fontOutputPath);
     archive::binary_oarchive fontAssetArchive(fontAssetStream);
     fontAssetArchive << *font;
 }
-
-// TODO(Wuxiang 2016-12-30 19:13): Move this to texture paramter?
-//GLuint fontTextureObject;
-//glGenTextures(1, &fontTextureObject);
-//glBindTexture(GL_TEXTURE_2D_ARRAY, fontTextureObject);
-//glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, font->mTextureWidth, font->mTextureHeight, font->mTexturePages);
-//glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-//glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-//glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 pair<string, string>
 ReadFntPair(const string fntPair)
@@ -172,7 +162,7 @@ LoadFntPageLine(BitmapFont& font, vector<string>& fontPageElems)
 // @Return: whether should continue reading texture file. If you should, the
 // pointer points to the half loaded font.
 std::unique_ptr<BitmapFont>
-LoadFntFile(std::string fntFilePath)
+LoadFntFile(const std::string& fntFilePath)
 {
     static vector<string> fntElems;
     static string         fntLine;
@@ -182,7 +172,7 @@ LoadFntFile(std::string fntFilePath)
     fntStream.open(fntFilePath);
     if (!fntStream.good())
     {
-        ThrowRuntimeException("Failed to load fnt file.");
+        FALCON_ENGINE_THROW_EXCEPTION("Failed to load fnt file.");
     }
 
     static map<string, string> fontSettingTable;
@@ -306,7 +296,7 @@ LoadFntFile(std::string fntFilePath)
 }
 
 BitmapFontUniquePtr
-AssetProcessor::LoadRawFont(std::string fntFilePath)
+AssetProcessor::LoadRawFont(const std::string& fntFilePath)
 {
     if (Exist(fntFilePath))
     {
@@ -318,7 +308,7 @@ AssetProcessor::LoadRawFont(std::string fntFilePath)
 }
 
 void
-AssetProcessor::BakeTexture2d(std::string textureFilePath)
+AssetProcessor::BakeTexture2d(const std::string& textureFilePath)
 {
     if (GetFileExtension(textureFilePath) != u8".png")
     {
@@ -330,7 +320,7 @@ AssetProcessor::BakeTexture2d(std::string textureFilePath)
 }
 
 void
-AssetProcessor::BakeTexture2d(Texture2d *texture, string textureOutputPath)
+AssetProcessor::BakeTexture2d(Texture2d *texture, const string& textureOutputPath)
 {
     ofstream textureAssetStream(textureOutputPath);
     archive::binary_oarchive textureAssetArchive(textureAssetStream);
@@ -338,7 +328,7 @@ AssetProcessor::BakeTexture2d(Texture2d *texture, string textureOutputPath)
 }
 
 std::unique_ptr<Texture2d>
-AssetProcessor::LoadRawTexture2d(std::string textureFilePath)
+AssetProcessor::LoadRawTexture2d(const std::string& textureFilePath)
 {
     // NOTE(Wuxiang): Since the stb_image default loading format goes from top-left to bottom-right,
     // it is necessary to flip to make it compatible for OpenGL.
@@ -351,7 +341,7 @@ AssetProcessor::LoadRawTexture2d(std::string textureFilePath)
                                  STBI_rgb_alpha);
     if (textureData == nullptr)
     {
-        ThrowRuntimeException("Failed to load texture file.");
+        FALCON_ENGINE_THROW_EXCEPTION("Failed to load texture file.");
     }
 
     // NOTE(Wuxiang): Copy the memory allocated from the stb library.
@@ -389,14 +379,14 @@ BakeMaterial(aiMaterial               *material,
 }
 
 void
-AssetProcessor::BakeModel(std::string modelFilePath)
+AssetProcessor::BakeModel(const std::string& modelFilePath)
 {
     // Load model using Assimp
     static Assimp::Importer modelImporter;
     const aiScene *scene = modelImporter.ReadFile(modelFilePath, aiProcess_Triangulate | aiProcess_FlipUVs);
     if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
-        ThrowRuntimeException(modelImporter.GetErrorString());
+        FALCON_ENGINE_THROW_EXCEPTION(modelImporter.GetErrorString());
     }
 
     // Bake texture in model
@@ -407,6 +397,8 @@ AssetProcessor::BakeModel(std::string modelFilePath)
 
         BakeMaterial(material, aiTextureType_AMBIENT, texturePathsBaked);
         BakeMaterial(material, aiTextureType_DIFFUSE, texturePathsBaked);
+        BakeMaterial(material, aiTextureType_EMISSIVE, texturePathsBaked);
+        BakeMaterial(material, aiTextureType_SHININESS, texturePathsBaked);
         BakeMaterial(material, aiTextureType_SPECULAR, texturePathsBaked);
     }
 

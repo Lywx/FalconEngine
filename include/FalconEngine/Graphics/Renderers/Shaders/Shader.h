@@ -2,7 +2,6 @@
 
 #include <FalconEngine/Graphics/GraphicsInclude.h>
 #include <FalconEngine/Graphics/Renderers/Shaders/ShaderUniform.h>
-#include <FalconEngine/Graphics/Renderers/Resources/VertexAttribute.h>
 
 namespace FalconEngine
 {
@@ -26,6 +25,7 @@ enum ShaderIndex
 };
 
 class ShaderSource;
+using ShaderSourceTable = std::unordered_map<int, ShaderSource *>;
 
 // @remark Shader contains information about input vertex variables, output
 // fragment variables and uniform variables. Sharing shaders for different
@@ -80,8 +80,8 @@ public:
     PushShaderFile(ShaderType shaderType, const std::string& shaderPath);
 
 private:
-    std::map<int, ShaderSource *> mSourceTable;
-    ShaderUniformTable            mUniformTable;
+    ShaderSourceTable mSourceTable;
+    ShaderUniformTable mUniformTable;
 };
 
 typedef std::shared_ptr<Shader> ShaderSharedPtr;

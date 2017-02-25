@@ -22,27 +22,27 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     static void
-    BakeFont(std::string fntFilePath);
+    BakeFont(const std::string& fntFilePath);
 
     static void
-    BakeModel(std::string modelFilePath);
+    BakeModel(const std::string& modelFilePath);
 
     static void
-    BakeTexture2d(std::string textureFilePath);
+    BakeTexture2d(const std::string& textureFilePath);
 
 private:
     static void
-    BakeFont(BitmapFont *fontPtr, std::string fontOutputPath);
+    BakeFont(BitmapFont *fontPtr, const std::string& fontOutputPath);
 
     // @summary Load font without optimization.
     static BitmapFontUniquePtr
-    LoadRawFont(std::string fntFilePath);
+    LoadRawFont(const std::string& fntFilePath);
 
     static void
-    BakeTexture2d(Texture2d *texturePtr, std::string textureOutputPath);
+    BakeTexture2d(Texture2d *texturePtr, const std::string& textureOutputPath);
 
     static Texture2dUniquePtr
-    LoadRawTexture2d(std::string textureFilePath);
+    LoadRawTexture2d(const std::string& textureFilePath);
 };
 }
 

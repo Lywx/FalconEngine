@@ -5,6 +5,7 @@
 #include <functional>
 #include <map>
 #include <vector>
+#include <unordered_map>
 
 namespace FalconEngine
 {
@@ -52,8 +53,9 @@ public:
     bool              mUpdated;
 };
 
-typedef std::map<std::string, ShaderUniform> ShaderUniformTable;
-typedef std::vector<ShaderUniform *>         ShaderUniformPtrVector;
+using ShaderUniformTable = std::unordered_map<std::string, ShaderUniform>;
+using ShaderUniformSharedPtr = std::shared_ptr<ShaderUniform>;
+using ShaderUniformPtrVector = std::vector<ShaderUniformSharedPtr>;
 
 template<typename T>
 class ShaderUniformValue : public ShaderUniform
@@ -80,9 +82,10 @@ template<typename T>
 using ShaderUniformValueSharedPtr = std::shared_ptr<ShaderUniformValue<T>>;
 
 template <typename T, typename U, typename ... Args>
-ShaderUniformValueSharedPtr<T> ShareUniform(const Args& ... args)
+ShaderUniformValueSharedPtr<T>
+ShareUniform(Args&& ... args)
 {
-    return static_pointer_cast<ShaderUniformValueSharedPtr<T>>(std::make_shared<U>(args));
+    return static_pointer_cast<ShaderUniformValue<T>>(std::make_shared<U>(args ...));
 }
 
 /************************************************************************/

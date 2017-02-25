@@ -13,7 +13,8 @@ Material::Material() :
     mAmbient(nullptr),
     mDiffuse(nullptr),
     mEmissive(nullptr),
-    mSpecular(nullptr)
+    mSpecular(nullptr),
+    mShininess(nullptr)
 {
 }
 

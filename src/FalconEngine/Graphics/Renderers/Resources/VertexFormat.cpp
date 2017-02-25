@@ -42,7 +42,7 @@ VertexFormat::GetVertexAttributeStride() const
     }
     else
     {
-        ThrowRuntimeException("Vertex attribute has not finished initialization.");
+        FALCON_ENGINE_THROW_EXCEPTION("Vertex attribute has not finished initialization.");
     }
 }
 
@@ -57,7 +57,7 @@ VertexFormat::PushVertexAttribute(int attributeLocation, std::string attributeNa
 
     if (mVertexAttributeFinished)
     {
-        ThrowRuntimeException("Vertex attribute has finished initialization.");
+        FALCON_ENGINE_THROW_EXCEPTION("Vertex attribute has finished initialization.");
     }
 
     // NOTE(Wuxiang): mVertexAttributeOffset is summed

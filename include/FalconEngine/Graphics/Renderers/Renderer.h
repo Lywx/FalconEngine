@@ -12,11 +12,6 @@ namespace FalconEngine
 {
 
 /************************************************************************/
-/* Renderer                                                             */
-/************************************************************************/
-class BitmapFontRenderer;
-
-/************************************************************************/
 /* Rendering Pipeline                                                   */
 /************************************************************************/
 class BitmapFont;
@@ -34,6 +29,7 @@ class Buffer;
 enum class BufferAccessMode;
 class VertexBuffer;
 class VertexFormat;
+class VertexGroup;
 class IndexBuffer;
 
 class Texture;
@@ -78,6 +74,13 @@ public:
     /************************************************************************/
     /* Platform Independent Members                                         */
     /************************************************************************/
+
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
+    Renderer(const std::string& caption, int width, int height);
+    virtual ~Renderer();
+
     typedef std::map<const VertexBuffer *, PlatformVertexBuffer *> PlatformVertexBufferTable;
     typedef std::map<const VertexFormat *, PlatformVertexFormat *> PlatformVertexFormatTable;
     typedef std::map<const IndexBuffer *,  PlatformIndexBuffer *> PlatformIndexBufferTable;
@@ -134,6 +137,15 @@ public:
 
     void
     Disable(const VertexFormat *vertexFormat);
+
+    /************************************************************************/
+    /* Vertex Group Management                                              */
+    /************************************************************************/
+    void
+    Enable(const VertexGroup *vertexGroup);
+
+    void
+    Disable(const VertexGroup *vertexGroup);
 
     /************************************************************************/
     /* Index Buffer Management                                              */
@@ -306,17 +318,12 @@ public:
     void
     Draw(const Visual *visual, VisualEffectInstance *instance);
 
-    void
-    Draw(const VertexFormat *vertexFormat, const VertexBuffer *vertexBuffer, VisualEffectInstance *instance);
-
 public:
     int                     mWidth;
     int                     mHeight;
 
     Camera                 *mCamera;
     Viewport                mViewport;
-
-    BitmapFontRenderer     *mFontRenderer;
 
 private:
     /************************************************************************/
@@ -353,12 +360,6 @@ public:
     /************************************************************************/
     /* Platform Dependent Members                                           */
     /************************************************************************/
-
-    /************************************************************************/
-    /* Constructors and Destructor                                          */
-    /************************************************************************/
-    Renderer(std::string caption, int width, int height);
-    virtual ~Renderer();
 
     /************************************************************************/
     /* State Management                                                     */
@@ -417,7 +418,10 @@ public:
 
 private:
     void
-    InitializePlatform();
+    InitializePlatform(std::string caption);
+
+    void
+    DestroyPlatform();
 
     void
     DrawPrimitive(const Visual *visual);

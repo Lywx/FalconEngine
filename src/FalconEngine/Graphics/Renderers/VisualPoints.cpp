@@ -6,16 +6,13 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-VisualPoints::VisualPoints(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, int vertexNum) :
-    Visual(PrimitiveType::Point, vertexFormat, vertexGroup, nullptr)
+VisualPoints::VisualPoints(VertexFormatSharedPtr vertexFormat) :
+    Visual(PrimitiveType::Point, vertexFormat)
 {
-    SetVertexNum(vertexNum);
-    SetPrimitiveNum();
 }
 
-VisualPoints::VisualPoints(VertexFormatSharedPtr vertexFormat) :
-    Visual(PrimitiveType::Point, vertexFormat),
-    mPointNum(0)
+VisualPoints::VisualPoints(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup) :
+    Visual(PrimitiveType::Point, vertexFormat, vertexGroup, nullptr)
 {
 }
 
@@ -29,18 +26,7 @@ VisualPoints::~VisualPoints()
 int
 VisualPoints::GetPointNum() const
 {
-    return mPointNum;
-}
-
-/************************************************************************/
-/* Protected Members                                                    */
-/************************************************************************/
-void
-VisualPoints::SetPrimitiveNum()
-{
-    Primitives::SetPrimitiveNum();
-
-    mPointNum = mVertexNum;
+    return GetVertexNum();
 }
 
 }

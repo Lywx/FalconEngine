@@ -57,7 +57,7 @@ public:
                     Color       textColor = ColorPalette::White);
 
     void RenderBegin();
-    void Render(Renderer *renderer);
+    void Render(Renderer *renderer, double percent);
     void RenderEnd();
 
 protected:

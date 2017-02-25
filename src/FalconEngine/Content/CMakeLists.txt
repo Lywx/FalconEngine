@@ -24,7 +24,7 @@ link_directories(
     ${FALCON_ENGINE_RUNTIME_OUTPUT_DIR})
 
 # Content Pipeline
-add_executable(FalconEngine.Content.Pipeline AssetBuilder.cpp)
+add_executable(FalconEngine.Content.Pipeline Pipeline/main.cpp)
 
 if (WIN32)
 set(FALCON_ENGINE_CONTENT_PIPELINE_EXTRA_BINRARY_FILES assimp-vc140-mt.lib)

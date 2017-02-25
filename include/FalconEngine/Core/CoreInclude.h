@@ -22,17 +22,8 @@
 /************************************************************************/
 /* Helper Items                                                         */
 /************************************************************************/
-#define FALCON_ENGINE_NOT_SUPPORT() assert(0);
-#define FALCON_ENGINE_NOT_POSSIBLE() assert(0);
-
 namespace FalconEngine
 {
-
-inline void
-ThrowRuntimeException(const std::string& error)
-{
-    throw std::runtime_error(error);
-}
 
 inline void
 ThrowNullException(const std::string& name)
@@ -63,6 +54,11 @@ CheckNullPointer(const std::shared_ptr<T> pointer, const std::string name)
 
 #define FALCON_ENGINE_CHECK_NULLPTR(pointer) FalconEngine::CheckNullPointer(pointer, #pointer);
 
+#define FALCON_ENGINE_NOT_SUPPORT() throw std::runtime_error("No support for this yet.");
+#define FALCON_ENGINE_NOT_POSSIBLE() assert(0);
+
+#define FALCON_ENGINE_THROW_EXCEPTION(information) throw std::runtime_error(information);
+
 #define _IN_
-#define _OUT_
 #define _IN_OUT_
+#define _OUT_

@@ -16,12 +16,15 @@ namespace FalconEngine
 
 enum class TextureUnit
 {
-    Ambient  = 0,
-    Diffuse  = 1,
-    Emissive = 2,
-    Specular = 3,
+    Ambient   = 0,
+    Diffuse   = 1,
+    Emissive  = 2,
+    Shininess = 3,
+    Specular  = 4,
 
-    Font     = 4,
+    Font      = 5,
+
+    Count,
 };
 
 inline int

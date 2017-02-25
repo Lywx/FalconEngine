@@ -40,7 +40,7 @@ public:
     // actually drawing so that sharing uniform table might overwrite previously
     // unsynchronized value.
     void
-    SetShaderUniform(ShaderUniform *shaderUniform);
+    SetShaderUniform(ShaderUniformSharedPtr shaderUniform);
 
     void
     SetShaderTexture(int textureUnit, const Texture *texture);

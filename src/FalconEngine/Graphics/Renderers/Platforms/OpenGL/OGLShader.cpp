@@ -26,7 +26,7 @@ ProcessShaderInclude(
 
     static vector<string> shaderExtensionSymbols;
     shaderExtensionSymbols.clear();
-    split(shaderExtensionSymbols, shaderExtensionLine, " ");
+    split(shaderExtensionSymbols, shaderExtensionLine, is_any_of(" "));
 
     if (shaderExtensionSymbols.front() != "#include")
     {
@@ -40,7 +40,7 @@ ProcessShaderInclude(
     auto assetManager = AssetManager::GetInstance();
     auto includeSource = assetManager->LoadShaderSource(includeFilePath);
     shaderSourceString.insert(extensionBeginIndex, includeSource->mSource);
-    extensionBeginIndex += includeSource->mSource.size();
+    extensionBeginIndex += int(includeSource->mSource.size());
 }
 
 void
@@ -50,21 +50,21 @@ ProcessShaderExtension(
     _IN_     const std::string& shaderPath,
     _IN_OUT_ int&               extensionBeginIndex)
 {
-    using namespace boost;
+    //using namespace boost;
 
-    static vector<string> shaderExtensionLines;
-    shaderExtensionLines.clear();
+    //static vector<string> shaderExtensionLines;
+    //shaderExtensionLines.clear();
 
-    trim(shaderExtension);
-    split(shaderExtensionLines, shaderExtension, "\n");
-    for (auto& shaderExtensionLine : shaderExtensionLines)
-    {
-        trim(shaderExtensionLine);
-        if (!shaderExtensionLine.empty())
-        {
-            ProcessShaderInclude(shaderSourceString, shaderExtensionLine, shaderPath, extensionBeginIndex);
-        }
-    }
+    //trim(shaderExtension);
+    //split(shaderExtensionLines, shaderExtension, "\n");
+    //for (auto& shaderExtensionLine : shaderExtensionLines)
+    //{
+    //    trim(shaderExtensionLine);
+    //    if (!shaderExtensionLine.empty())
+    //    {
+    //        ProcessShaderInclude(shaderSourceString, shaderExtensionLine, shaderPath, extensionBeginIndex);
+    //    }
+    //}
 }
 
 // ReSharper disable once CppNotAllPathsReturnValue
@@ -76,8 +76,8 @@ ExtractShaderExtension(
     static const string extensionHeaderBeginString = "#fe_extension : enable";
     static const string extensionHeaderEndString   = "#fe_extension : disable";
 
-    extensionHeaderBeginIndex = shaderSourceString.find(extensionHeaderBeginString);
-    auto extensionHeaderEndIndex = shaderSourceString.find(extensionHeaderEndString);
+    extensionHeaderBeginIndex = int(shaderSourceString.find(extensionHeaderBeginString));
+    auto extensionHeaderEndIndex = int(shaderSourceString.find(extensionHeaderEndString));
 
     auto extensionHeaderBeginFound = extensionHeaderBeginIndex != string::npos;
     auto extensionHeaderEndFound = extensionHeaderEndIndex != string::npos;
@@ -102,7 +102,7 @@ ExtractShaderExtension(
     }
     else
     {
-        ThrowRuntimeException("Extension is not defined correctly.");
+        FALCON_ENGINE_THROW_EXCEPTION("Extension is not defined correctly.");
     }
 }
 
@@ -176,7 +176,7 @@ PlatformShader::CreateFromString(GLenum shaderType, const string& shaderSource)
         delete[] infoLog;
     }
 
-    mShaders[mShaderNum++] = shader;
+    //mShaders[mShaderNum++] = shader;
 }
 
 void
@@ -257,7 +257,7 @@ PlatformShader::CollectUniformLocation(Shader *shader) const
         GLint uniformLocation = glGetUniformLocation(mProgram, uniformNameValuePair.first.c_str());
         if (uniformLocation == -1)
         {
-            ThrowRuntimeException("The location could not be found.");
+            FALCON_ENGINE_THROW_EXCEPTION("The location could not be found.");
         }
 
         uniformNameValuePair.second.mLocation = uniformLocation;

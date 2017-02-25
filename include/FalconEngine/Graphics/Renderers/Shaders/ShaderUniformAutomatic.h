@@ -89,9 +89,10 @@ using ShaderUniformAutomaticSharedPtr = std::shared_ptr<ShaderUniformAutomatic<T
 
 
 template <typename T, typename ... Args>
-ShaderUniformValueSharedPtr<T> ShareAutomatic(const Args& ... args)
+ShaderUniformValueSharedPtr<T>
+ShareAutomatic(const Args& ... args)
 {
-    return ShareUniform<T, ShaderUniformAutomatic<T>>(std::forward(args) ...);
+    return ShareUniform<T, ShaderUniformAutomatic<T>>(args ...);
 }
 
 }

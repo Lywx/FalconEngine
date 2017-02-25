@@ -1,4 +1,5 @@
 #include <FalconEngine/Graphics/Renderers/RendererFacade.h>
+#include <FalconEngine/Graphics/Renderers/Renderer.h>
 #include <FalconEngine/Graphics/Renderers/BitmapFontRenderer.h>
 
 namespace FalconEngine
@@ -27,6 +28,8 @@ RendererFacade::DrawString(BitmapFont *font, float fontSize, Vector2f textPositi
 void
 RendererFacade::Initialize(int width, int height)
 {
+    mRenderer = new Renderer("Test", width, height);
+    mRendererForFont = new BitmapFontRenderer();
     mRendererForFont->Initialize(width, height);
 }
 
@@ -39,7 +42,7 @@ RendererFacade::RenderBegin()
 void
 RendererFacade::Render(double percent)
 {
-    mRendererForFont->Render(percent);
+    mRendererForFont->Render(mRenderer, percent);
 }
 
 void

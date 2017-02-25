@@ -26,7 +26,7 @@ VisualPass::SetShader(ShaderSharedPtr shader)
 }
 
 void
-VisualPass::SetShaderUniform(ShaderUniform *shaderUniform)
+VisualPass::SetShaderUniform(ShaderUniformSharedPtr shaderUniform)
 {
     if (mShader->ContainUniform(shaderUniform->mName))
     {
@@ -34,7 +34,7 @@ VisualPass::SetShaderUniform(ShaderUniform *shaderUniform)
     }
     else
     {
-        ThrowRuntimeException("Uniform is not registered.");
+        FALCON_ENGINE_THROW_EXCEPTION("Uniform is not registered.");
     }
 }
 
@@ -105,7 +105,7 @@ VisualPass::GetShaderUniformNum() const
 ShaderUniform *
 VisualPass::GetShaderUniform(int uniformIndex) const
 {
-    return mShaderUniformVector.at(uniformIndex);
+    return mShaderUniformVector.at(uniformIndex).get();
 }
 
 int

@@ -21,7 +21,7 @@ CreateModelVertexBuffer(const aiMesh *mesh)
     // Memory allocation for vertex buffer.
     auto vertexNum = mesh->mNumVertices;
     auto vertexBuffer = std::make_shared<VertexBuffer>(vertexNum, sizeof(ModelVertex), BufferUsage::Static);
-    auto vertexes = reinterpret_cast<ModelVertex *>(vertexBuffer->mData);
+    auto vertexes = reinterpret_cast<ModelVertex *>(vertexBuffer->GetData());
 
     // Walk through vertex data and create vertex buffer content in an interlaced fashion.
     for (size_t i = 0; i < mesh->mNumVertices; ++i)
@@ -81,7 +81,7 @@ CreateModelIndexBuffer(const aiMesh *mesh)
 
     // Memory allocation for index buffer.
     auto indexBuffer = std::make_shared<IndexBuffer>(indexNum, IndexType::UnsignedInt, BufferUsage::Static);
-    auto indexes = reinterpret_cast<ModelIndex *>(indexBuffer->mData);
+    auto indexes = reinterpret_cast<ModelIndex *>(indexBuffer->GetData());
 
     // Walk through each of the mesh's faces (a face is a mesh its triangle)
     // and retrieve the corresponding vertex indexes.
@@ -139,10 +139,11 @@ CreateMaterial(
         auto aiMaterial = aiScene->mMaterials[aiMesh->mMaterialIndex];
 
         auto material = make_shared<Material>();
-        material->mAmbient  = LoadMaterialTexture(aiMaterial, aiTextureType_AMBIENT);
-        material->mDiffuse  = LoadMaterialTexture(aiMaterial, aiTextureType_DIFFUSE);
-        material->mEmissive = LoadMaterialTexture(aiMaterial, aiTextureType_EMISSIVE);
-        material->mSpecular = LoadMaterialTexture(aiMaterial, aiTextureType_SPECULAR);
+        material->mAmbient   = LoadMaterialTexture(aiMaterial, aiTextureType_AMBIENT);
+        material->mDiffuse   = LoadMaterialTexture(aiMaterial, aiTextureType_DIFFUSE);
+        material->mEmissive  = LoadMaterialTexture(aiMaterial, aiTextureType_EMISSIVE);
+        material->mShininess = LoadMaterialTexture(aiMaterial, aiTextureType_SHININESS);
+        material->mSpecular  = LoadMaterialTexture(aiMaterial, aiTextureType_SPECULAR);
 
         return material;
     }
@@ -217,7 +218,7 @@ AssetImporter::ImportModel(Model *model, const std::string& modelFilePath)
     auto aiScene = aiModelImporter.ReadFile(modelFilePath, aiProcess_Triangulate | aiProcess_FlipUVs);
     if (!aiScene || aiScene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !aiScene->mRootNode)
     {
-        ThrowRuntimeException(string("Error: ") + aiModelImporter.GetErrorString());
+        FALCON_ENGINE_THROW_EXCEPTION(string("Error: ") + aiModelImporter.GetErrorString());
     }
 
     // NOTE(Wuxiang): The node constructor would recursively load the necessary children nodes and textures.

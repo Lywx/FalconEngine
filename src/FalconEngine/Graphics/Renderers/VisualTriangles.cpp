@@ -32,7 +32,7 @@ VisualTriangles::GetTriangleNum() const
 {
     if (mIndexBuffer)
     {
-        return mIndexBuffer->mElementNum / 3;
+        return mIndexBuffer->GetElementNum() / 3;
     }
     else
     {

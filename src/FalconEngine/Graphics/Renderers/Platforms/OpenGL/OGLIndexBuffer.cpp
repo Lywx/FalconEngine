@@ -13,15 +13,15 @@ PlatformIndexBuffer::PlatformIndexBuffer(const IndexBuffer *indexBuffer)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mBuffer);
 
     // Allocate buffer storage
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer->mDataByteNum,
-                 nullptr, OpenGLBufferUsage[int(indexBuffer->mUsage)]);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer->GetDataByteNum(),
+                 nullptr, OpenGLBufferUsage[int(indexBuffer->GetUsage())]);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     // Copy the platform independent buffer data to platform specific buffer
     void *data = Map(BufferAccessMode::Write);
 
     // TODO(Wuxiang): Feed data without copying
-    memcpy(data, indexBuffer->mData, indexBuffer->mDataByteNum);
+    memcpy(data, indexBuffer->GetData(), indexBuffer->GetDataByteNum());
     Unmap();
 }
 

@@ -24,6 +24,7 @@ public:
     const Texture *mDiffuse;
     const Texture *mEmissive;
     const Texture *mSpecular;
+    const Texture *mShininess;
 };
 
 using MaterialSharedPtr = std::shared_ptr<Material>;

@@ -1,6 +1,9 @@
 #pragma once
 
 #include <FalconEngine/Graphics/GraphicsInclude.h>
+
+#include <unordered_map>
+
 #include <FalconEngine/Content/Asset.h>
 
 namespace FalconEngine

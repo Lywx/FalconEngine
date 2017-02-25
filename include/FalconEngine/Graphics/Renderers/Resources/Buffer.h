@@ -43,13 +43,38 @@ public:
     virtual ~Buffer();
 
 public:
+    unsigned char *GetData()
+    {
+        return mData;
+    }
+
+    const unsigned char *GetData() const
+    {
+        return mData;
+    }
+
+    int GetDataByteNum() const
+    {
+        return mDataByteNum;
+    }
+
+    int GetElementNum() const
+    {
+        return mElementNum;
+    }
+
     void
     SetElementNum(int elementNum)
     {
         mElementNum = elementNum;
     }
 
-public:
+    BufferUsage GetUsage() const
+    {
+        return mUsage;
+    }
+
+private:
     unsigned char *mData;
     int            mDataByteNum;
     int            mElementNum;

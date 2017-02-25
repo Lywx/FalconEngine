@@ -18,7 +18,6 @@ PhongLightingEffect::PhongLightingEffect()
     shader->PushShaderFile(ShaderType::VertexShader, "Content/Shaders/PhongLighting.vert.glsl");
     shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shaders/PhongLighting.frag.glsl");
 
-    shader->PushAttribute(0, "modelPosition", VertexAttributeType::FloatVec3, false);
     shader->PushUniform("PVWMatrix", ShaderUniformType::FloatMat4);
 
     // TODO(Wuxiang 2017-01-22 11:09): Fix this later.

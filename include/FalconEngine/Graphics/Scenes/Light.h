@@ -23,11 +23,35 @@ public:
     virtual ~Light();
 
 public:
-    Color mAmbient;
-    Color mDiffuse;
-    Color mSpecular;
+    /************************************************************************/
+    /* General Members                                                      */
+    /************************************************************************/
+    float    mIntensity = 1;
 
-    Vector3f mPosition;
+    Color    mAmbient;
+    Color    mDiffuse;
+    Color    mSpecular;
+
+    Vector3f mDirection; // Used for directional light or spot light.
+
+    /************************************************************************/
+    /* Point Light Members                                                  */
+    /************************************************************************/
+    float    mConstant = 1;
+    float    mLinear = 0;
+    float    mQuadratic = 0;
+
+    Vector3f mPosition; // Used for point light or spot light.
+
+    /************************************************************************/
+    /* Spot Light Members                                                   */
+    /************************************************************************/
+    float    mInnerAngle;
+    float    mOuterAngle;     // default: pi
+    float    mCosAngle;  // default: -1
+    float    mSinAngle;  // default:  0
+    float    mExponent;  // default:  1
+
 
     LightType
     GetLightType() const

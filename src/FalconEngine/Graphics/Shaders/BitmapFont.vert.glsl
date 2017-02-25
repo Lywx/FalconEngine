@@ -25,7 +25,7 @@ void main(void)
 {
 	gl_Position = Projection * vec4(Position, 0.0, 1.0);
 
-    vout.TexCoord = TexCoord;
+    vout.TexCoord  = TexCoord;
     vout.FontColor = FontColor;
     vout.FontEdge  = FontEdge;
     vout.FontWidth = FontWidth;

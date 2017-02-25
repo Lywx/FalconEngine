@@ -4,6 +4,8 @@
 namespace FalconEngine
 {
 
+FALCON_ENGINE_RTTI_IMPLEMENT(Texture2dArray, Texture);
+
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/

@@ -1,8 +1,5 @@
 #include <FalconEngine/Graphics/Renderers/BitmapFontRenderer.h>
 
-#include <algorithm>
-#include <numeric>
-
 #include <boost/algorithm/string.hpp>
 #include <glm/gtc/matrix_transform.inl>
 #include <glm/gtc/type_ptr.hpp>
@@ -12,7 +9,6 @@
 #include <FalconEngine/Graphics/Renderers/BitmapLine.h>
 #include <FalconEngine/Graphics/Renderers/Renderer.h>
 #include <FalconEngine/Graphics/Renderers/VisualQuads.h>
-#include <FalconEngine/Graphics/Renderers/Resources/Texture2dArray.h>
 
 using namespace std;
 using namespace FalconEngine;
@@ -165,6 +161,14 @@ inline void FillData(T *data, size_t& dataIndex, T value)
     ++dataIndex;
 }
 
+// @param T is the data pointer type you need to fill in.
+// @param V is the data type you provide to fill with.
+template<typename T, typename V>
+inline void FillDataAs(T *data, size_t& dataIndex, V value)
+{
+    FillData<T>(data, dataIndex, T(value));
+}
+
 void
 FillFontAttribute(float             *textData,
                   size_t&            textDataIndex,
@@ -173,33 +177,34 @@ FillFontAttribute(float             *textData,
                   double fontSizeScale)
 {
     // Font color
-    FillData<float>(textData, textDataIndex, textColor.x);
-    FillData<float>(textData, textDataIndex, textColor.y);
-    FillData<float>(textData, textDataIndex, textColor.z);
-    FillData<float>(textData, textDataIndex, textColor.w);
+    FillDataAs<float, double>(textData, textDataIndex, textColor.x);
+    FillDataAs<float, double>(textData, textDataIndex, textColor.y);
+    FillDataAs<float, double>(textData, textDataIndex, textColor.z);
+    FillDataAs<float, double>(textData, textDataIndex, textColor.w);
 
     // NOTE(Wuxiang): 1.32 is value the when imported font size is 33. 1.32 is
     // used as origin for scaling.
 
     // Font width
-    FillData<float>(textData, textDataIndex, 0.50 * (1 + 0.15 * (fontSizeScale - 1.32)));
+    FillDataAs<float, double>(textData, textDataIndex, 0.50 * (1 + 0.15 * (fontSizeScale - 1.32)));
 
     // Font edge
-    FillData<float>(textData, textDataIndex, 0.03 / (1 + 1.05 * (fontSizeScale - 1.32)));
+    FillDataAs<float, double>(textData, textDataIndex, 0.03 / (1 + 1.05 * (fontSizeScale - 1.32)));
 
     // Font page
-    FillData<float>(textData, textDataIndex, textGlyph->mPage);
+    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mPage);
 }
 
 void
-FillGlyphAttribute(float             *textData,
-                   size_t&            textDataIndex,
-                   const BitmapGlyph *textGlyph,
-                   Vector4f           textColor,
-                   float              textGlyphX,
-                   float              textGlyphY,
-                   const BitmapFont *font,
-                   double            fontSizeScale)
+FillGlyphAttribute(
+    _OUT_    float             *textData,
+    _IN_OUT_ size_t&            textDataIndex,
+    _IN_     const BitmapGlyph *textGlyph,
+    _IN_     Vector4f           textColor,
+    _IN_     float              textGlyphX,
+    _IN_     float              textGlyphY,
+    _IN_     const BitmapFont *font,
+    _IN_     double            fontSizeScale)
 {
     // NOTE(Wuxiang): Since x1, y1 represents left-bottom coordinate, we need to
     // process base and yoffset differently. Notably, x1 is amended to center the
@@ -214,40 +219,40 @@ FillGlyphAttribute(float             *textData,
     double y1 = y2 - textGlyph->mHeight * fontSizeScale;
     double x2 = x1 + textGlyph->mWidth * fontSizeScale;
 
-    FillData<float>(textData, textDataIndex, x1);
-    FillData<float>(textData, textDataIndex, y1);
-    FillData<float>(textData, textDataIndex, textGlyph->mS1);
-    FillData<float>(textData, textDataIndex, textGlyph->mT1);
+    FillDataAs<float, double>(textData, textDataIndex, x1);
+    FillDataAs<float, double>(textData, textDataIndex, y1);
+    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mS1);
+    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mT1);
     FillFontAttribute(textData, textDataIndex, textGlyph, textColor, fontSizeScale);
 
-    FillData<float>(textData, textDataIndex, x2);
-    FillData<float>(textData, textDataIndex, y2);
-    FillData<float>(textData, textDataIndex, textGlyph->mS2);
-    FillData<float>(textData, textDataIndex, textGlyph->mT2);
+    FillDataAs<float, double>(textData, textDataIndex, x2);
+    FillDataAs<float, double>(textData, textDataIndex, y2);
+    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mS2);
+    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mT2);
     FillFontAttribute(textData, textDataIndex, textGlyph, textColor, fontSizeScale);
 
-    FillData<float>(textData, textDataIndex, x1);
-    FillData<float>(textData, textDataIndex, y2);
-    FillData<float>(textData, textDataIndex, textGlyph->mS1);
-    FillData<float>(textData, textDataIndex, textGlyph->mT2);
+    FillDataAs<float, double>(textData, textDataIndex, x1);
+    FillDataAs<float, double>(textData, textDataIndex, y2);
+    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mS1);
+    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mT2);
     FillFontAttribute(textData, textDataIndex, textGlyph, textColor, fontSizeScale);
 
-    FillData<float>(textData, textDataIndex, x2);
-    FillData<float>(textData, textDataIndex, y1);
-    FillData<float>(textData, textDataIndex, textGlyph->mS2);
-    FillData<float>(textData, textDataIndex, textGlyph->mT1);
+    FillDataAs<float, double>(textData, textDataIndex, x2);
+    FillDataAs<float, double>(textData, textDataIndex, y1);
+    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mS2);
+    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mT1);
     FillFontAttribute(textData, textDataIndex, textGlyph, textColor, fontSizeScale);
 
-    FillData<float>(textData, textDataIndex, x2);
-    FillData<float>(textData, textDataIndex, y2);
-    FillData<float>(textData, textDataIndex, textGlyph->mS2);
-    FillData<float>(textData, textDataIndex, textGlyph->mT2);
+    FillDataAs<float, double>(textData, textDataIndex, x2);
+    FillDataAs<float, double>(textData, textDataIndex, y2);
+    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mS2);
+    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mT2);
     FillFontAttribute(textData, textDataIndex, textGlyph, textColor, fontSizeScale);
 
-    FillData<float>(textData, textDataIndex, x1);
-    FillData<float>(textData, textDataIndex, y1);
-    FillData<float>(textData, textDataIndex, textGlyph->mS1);
-    FillData<float>(textData, textDataIndex, textGlyph->mT1);
+    FillDataAs<float, double>(textData, textDataIndex, x1);
+    FillDataAs<float, double>(textData, textDataIndex, y1);
+    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mS1);
+    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mT1);
     FillFontAttribute(textData, textDataIndex, textGlyph, textColor, fontSizeScale);
 }
 
@@ -274,11 +279,11 @@ FillTextLines(
         {
             FillGlyphAttribute(textData, textDataIndex, &glyph, textColor, x, y, font, fontSizeScale);
 
-            x += glyph.mAdvance * fontSizeScale;
+            x += float(glyph.mAdvance * fontSizeScale);
         }
 
         x = textPosition.x;
-        y -= font->mLineHeight * fontSizeScale;
+        y -= float(font->mLineHeight * fontSizeScale);
     }
 }
 
@@ -296,17 +301,19 @@ BitmapFontRenderer::PrepareText(
     int textGlyphCount = CreateTextLines(font, text, textLines);
 
     // Fill the vertex attribute into the buffer
-    FillTextLines(font, text->mFontSize, Vector2f(text->mTextBounds.x, text->mTextBounds.y), Vector4f(textColor), textLines, item.mTextBufferDataIndex, reinterpret_cast<float *>(item.mTextBuffer->mData));
+    FillTextLines(font, text->mFontSize, Vector2f(text->mTextBounds.x, text->mTextBounds.y),
+                  Vector4f(textColor), textLines, item.mTextBufferDataIndex,
+                  reinterpret_cast<float *>(item.mTextBuffer->GetData()));
 }
 
 void BitmapFontRenderer::RenderBegin()
 {
 }
 
-void BitmapFontRenderer::Render(Renderer *renderer)
+void BitmapFontRenderer::Render(Renderer *renderer, double percent)
 {
-    renderer->Draw(&mStaticTextQuads, mTextEffectInstance.get());
-    renderer->Draw(&mDynamicTextQuads, mTextEffectInstance.get());
+    renderer->Draw(mStaticTextQuads.get(), mTextEffectInstance.get());
+    renderer->Draw(mDynamicTextQuads.get(), mTextEffectInstance.get());
 
     //// NOTE(Wuxiang): Use orphaning strategy
     //// TODO(Wuxiang): Wrong. Use glMapBuffer to access asynchronously

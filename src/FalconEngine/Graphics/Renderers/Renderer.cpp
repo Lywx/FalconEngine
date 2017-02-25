@@ -47,11 +47,23 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
+Renderer::Renderer(const string& caption, int width, int height)
+{
+    // NOTE(Wuxiang): Platform independent part initialization.
+    Initialize(width, height);
+
+    // NOTE(Wuxiang): Platform dependent part initialization.
+    InitializePlatform(caption);
+}
+
+Renderer::~Renderer()
+{
+    DestroyPlatform();
+}
+
 void
 Renderer::Initialize(int width, int height)
 {
-    InitializePlatform();
-
     assert(width > 0);
     assert(height > 0);
 
@@ -75,6 +87,9 @@ Renderer::Initialize(int width, int height)
     mCamera = nullptr;
 }
 
+/************************************************************************/
+/* Public Members                                                       */
+/************************************************************************/
 void
 Renderer::Bind(const VertexBuffer *vertexBuffer)
 {
@@ -172,8 +187,8 @@ Renderer::Update(const VertexBuffer *vertexBuffer)
 {
     FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
 
-    int sourceDataByteNum = vertexBuffer->mDataByteNum;
-    auto *sourceData = vertexBuffer->mData;
+    int sourceDataByteNum = vertexBuffer->GetDataByteNum();
+    auto *sourceData = vertexBuffer->GetData();
     void *destinationData = Map(vertexBuffer, BufferAccessMode::Write);
     memcpy(destinationData, sourceData, sourceDataByteNum);
     Unmap(vertexBuffer);
@@ -234,6 +249,32 @@ Renderer::Disable(const VertexFormat *vertexFormat)
     {
         auto vertexFormatPlatform = iter->second;
         vertexFormatPlatform->Disable();
+    }
+}
+
+void
+Renderer::Enable(const VertexGroup *vertexGroup)
+{
+    for (const auto& vertexBufferPair : vertexGroup->mVertexBufferTable)
+    {
+        auto const & vertexBufferBinding = vertexBufferPair.second;
+
+        Enable(vertexBufferBinding.GetBuffer(),
+               vertexBufferBinding.GetIndex(),
+               vertexBufferBinding.GetOffset(),
+               vertexBufferBinding.GetStride());
+    }
+}
+
+void
+Renderer::Disable(const VertexGroup *vertexGroup)
+{
+    for (const auto& vertexBufferPair : vertexGroup->mVertexBufferTable)
+    {
+        auto const & vertexBufferBinding = vertexBufferPair.second;
+
+        Disable(vertexBufferBinding.GetBuffer(),
+                vertexBufferBinding.GetIndex());
     }
 }
 
@@ -333,8 +374,8 @@ Renderer::Update(const IndexBuffer *indexBuffer)
 {
     FALCON_ENGINE_CHECK_NULLPTR(indexBuffer);
 
-    int sourceDataByteNum = indexBuffer->mDataByteNum;
-    auto *sourceData = indexBuffer->mData;
+    int sourceDataByteNum = indexBuffer->GetDataByteNum();
+    auto *sourceData = indexBuffer->GetData();
     void *destinationData = Map(indexBuffer, BufferAccessMode::Write);
     memcpy(destinationData, sourceData, sourceDataByteNum);
     Unmap(indexBuffer);
@@ -398,6 +439,48 @@ Renderer::Disable(int textureUnit, const Texture *texture)
     default:
         FALCON_ENGINE_NOT_POSSIBLE();
     }
+}
+
+void
+Renderer::Bind(const Texture1d *texture)
+{
+    FALCON_ENGINE_NOT_SUPPORT();
+}
+
+void
+Renderer::Unbind(const Texture1d *texture)
+{
+    FALCON_ENGINE_NOT_SUPPORT();
+}
+
+void
+Renderer::Enable(int textureUnit, const Texture1d *texture)
+{
+    FALCON_ENGINE_NOT_SUPPORT();
+}
+
+void
+Renderer::Disable(int textureUnit, const Texture1d *texture)
+{
+    FALCON_ENGINE_NOT_SUPPORT();
+}
+
+void *
+Renderer::Map(const Texture1d *texture, int mipmapLevel, BufferAccessMode mode)
+{
+    FALCON_ENGINE_NOT_SUPPORT();
+}
+
+void
+Renderer::Unmap(const Texture1d *texture, int mipmapLevel)
+{
+    FALCON_ENGINE_NOT_SUPPORT();
+}
+
+void
+Renderer::Update(const Texture1d *texture, int mipmapLevel)
+{
+    FALCON_ENGINE_NOT_SUPPORT();
 }
 
 void
@@ -559,6 +642,66 @@ Renderer::Disable(int textureUnit, const Texture2dArray *textureArray)
         auto textureArrayPlatform = iter->second;
         textureArrayPlatform->Disable(textureUnit);
     }
+}
+
+void *
+Renderer::Map(const Texture2dArray *textureArray, int mipmapLevel, BufferAccessMode mode)
+{
+    FALCON_ENGINE_NOT_SUPPORT();
+}
+
+void
+Renderer::Unmap(const Texture2dArray *textureArray, int mipmapLevel)
+{
+    FALCON_ENGINE_NOT_SUPPORT();
+}
+
+void
+Renderer::Update(const Texture2dArray *textureArray, int mipmapLevel)
+{
+    FALCON_ENGINE_NOT_SUPPORT();
+}
+
+void
+Renderer::Bind(const Texture3d *texture)
+{
+    FALCON_ENGINE_NOT_SUPPORT();
+}
+
+void
+Renderer::Unbind(const Texture3d *texture)
+{
+    FALCON_ENGINE_NOT_SUPPORT();
+}
+
+void
+Renderer::Enable(int textureUnit, const Texture3d *texture)
+{
+    FALCON_ENGINE_NOT_SUPPORT();
+}
+
+void
+Renderer::Disable(int textureUnit, const Texture3d *texture)
+{
+    FALCON_ENGINE_NOT_SUPPORT();
+}
+
+void *
+Renderer::Map(const Texture3d *texture, int mipmapLevel, BufferAccessMode mode)
+{
+    FALCON_ENGINE_NOT_SUPPORT();
+}
+
+void
+Renderer::Unmap(const Texture3d *texture, int mipmapLevel)
+{
+    FALCON_ENGINE_NOT_SUPPORT();
+}
+
+void
+Renderer::Update(const Texture3d *texture, int mipmapLevel)
+{
+    FALCON_ENGINE_NOT_SUPPORT();
 }
 
 void
@@ -773,13 +916,8 @@ Renderer::Draw(const Visual *visual,
     Enable(vertexFormat);
 
     // Enable vertex buffer.
-    for (auto& vertexRecord : vertexFormat->mVertexBufferTable)
-    {
-        Enable(vertexRecord.GetVertexBuffer(),
-               vertexRecord.GetIndex(),
-               vertexRecord.GetOffset(),
-               vertexRecord.GetStride());
-    }
+    auto vertexGroup = visual->GetVertexGroup();
+    Enable(vertexGroup);
 
     auto indexBuffer = visual->GetIndexBuffer();
     if (indexBuffer)
@@ -817,84 +955,7 @@ Renderer::Draw(const Visual *visual,
     }
 
     // Disable vertex buffer.
-    for (auto& vertexRecord : vertexFormat->mVertexBufferTable)
-    {
-        Disable(vertexRecord.GetVertexBuffer(),
-                vertexRecord.GetIndex());
-    }
-
-    // Disable vertex attribute array.
-    Disable(vertexFormat);
-}
-
-void
-Renderer::Draw(const VertexFormat *vertexFormat, const VertexBuffer *vertexBuffer, VisualEffectInstance *instance)
-{
-    // NOTE(Wuxiang): The non-constness of instance comes from the fact that
-    // during the binding of shader, the renderer would look up the shader's
-    // location for each vertex attribute and each uniform.
-
-    FALCON_ENGINE_CHECK_NULLPTR(vertexFormat);
-    FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
-    FALCON_ENGINE_CHECK_NULLPTR(instance);
-
-    // NOTE(Wuxiang): Currently this function assume that all passes are using
-    // same vertex attribute array, so that we don't switch vertex format between
-    // the shader.
-
-    // Enable vertex attribute array.
-    Enable(vertexFormat);
-
-    // Enable vertex buffer.
-    for (auto& vertexRecord : vertexFormat->mVertexBufferTable)
-    {
-        Enable(vertexRecord.GetVertexBuffer(),
-               vertexRecord.GetIndex(),
-               vertexRecord.GetOffset(),
-               vertexRecord.GetStride());
-    }
-
-    auto indexBuffer = visual->GetIndexBuffer();
-    if (indexBuffer)
-    {
-        // Enable index buffer.
-        Enable(indexBuffer);
-    }
-
-    const int passNum = instance->GetPassNum();
-    for (int passIndex = 0; passIndex < passNum; ++passIndex)
-    {
-        auto *pass = instance->GetPass(passIndex);
-        auto *shader = pass->GetShader();
-
-        // Enable the shader.
-        Enable(shader);
-
-        // Enable the pass.
-        Enable(pass);
-
-        // Draw the primitive.
-        DrawPrimitive(visual);
-
-        // Disable the pass.
-        Disable(pass);
-
-        // Disable the shader.
-        Disable(shader);
-    }
-
-    // Disable index buffer.
-    if (indexBuffer)
-    {
-        Disable(indexBuffer);
-    }
-
-    // Disable vertex buffer.
-    for (auto& vertexRecord : vertexFormat->mVertexBufferTable)
-    {
-        Disable(vertexRecord.GetVertexBuffer(),
-                vertexRecord.GetIndex());
-    }
+    Disable(vertexGroup);
 
     // Disable vertex attribute array.
     Disable(vertexFormat);

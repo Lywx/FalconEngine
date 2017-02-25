@@ -52,6 +52,12 @@ public:
         mVertexGroup->SetVertexNum(vertexNum);
     }
 
+    const VertexGroup *
+    GetVertexGroup() const
+    {
+        return mVertexGroup.get();
+    }
+
     void
     SetVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer, int offset, int stride);
 

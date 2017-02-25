@@ -12,24 +12,6 @@ namespace FalconEngine
 {
 
 /************************************************************************/
-/* Constructors and Destructor                                          */
-/************************************************************************/
-Renderer::Renderer(string caption, int width, int height)
-{
-    Initialize(width, height);
-
-    mData = new PlatformRendererData();
-    mData->mWindow = glfwCreateWindow(mWidth, mHeight, caption.c_str(), nullptr, nullptr);
-    mData->mState.Initialize(mBlendStateDefault, mCullStateDefault,
-                             mDepthTestStateDefault, mOffsetStateDefault,
-                             mStencilTestStateDefault, mWireframeStateDefault);
-}
-
-Renderer::~Renderer()
-{
-}
-
-/************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
 void
@@ -405,7 +387,7 @@ void Renderer::DrawPrimitive(const Visual *visual)
         auto indexBuffer = visual->GetIndexBuffer();
         if (indexBuffer)
         {
-            int indexNum = indexBuffer->mElementNum;
+            int indexNum = indexBuffer->GetElementNum();
             if (vertexNum > 0 && indexNum > 0)
             {
                 GLenum indexType = 0;
@@ -444,7 +426,7 @@ void Renderer::DrawPrimitive(const Visual *visual)
 /* Private Members                                                      */
 /************************************************************************/
 void
-Renderer::InitializePlatform()
+Renderer::InitializePlatform(std::string caption)
 {
     glfwInit();
 
@@ -472,6 +454,32 @@ Renderer::InitializePlatform()
     {
 
     }
+
+    mData = new PlatformRendererData();
+    mData->mWindow = glfwCreateWindow(mWidth, mHeight, caption.c_str(), nullptr, nullptr);
+    glfwMakeContextCurrent(mData->mWindow);
+
+    // NOTE(Wuxiang): Need to initialize glew after window has been created.
+    // http://stackoverflow.com/questions/13943825/access-violation-when-using-glew-and-glfw
+    glewInit();
+    glViewport(0, 0, mWidth, mHeight);
+
+    mData->mState.Initialize(mBlendStateDefault, mCullStateDefault,
+                             mDepthTestStateDefault, mOffsetStateDefault,
+                             mStencilTestStateDefault, mWireframeStateDefault);
+
+    // TODO(Wuxiang): 2017-02-25 19:27 Add input binding.
+    //glfwSetKeyCallback(mData->mWindow, KeyCallbackDispatch);
+    //glfwSetMouseButtonCallback(m_window, MouseButtonCallbackDispatch);
+    //glfwSetCursorPosCallback(m_window, MousePositionCallbackDispatch);
+    //glfwSetScrollCallback(m_window, ScrollCallbackDispatch);
+
+    //glfwSetWindowUserPointer(mData->mWindow, this);
 }
 
+void
+Renderer::DestroyPlatform()
+{
+    delete mData;
+}
 }

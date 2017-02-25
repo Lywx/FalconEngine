@@ -29,10 +29,7 @@ public:
     }
 
     void
-    SetVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer, int offset, int stride)
-    {
-        mVertexBufferTable[bindingIndex] = VertexBufferBinding(vertexBuffer, bindingIndex, offset, stride);
-    }
+    SetVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer, int offset, int stride);
 
     int
     GetVertexNum() const

@@ -38,7 +38,7 @@ void SampleGame::RenderBegin()
 
 void SampleGame::Render(double percent)
 {
-    mRenderer->DrawString(100, 100, "", ColorPalette::AliceBlue);
+    //mRenderer->DrawString(100, 100, "", ColorPalette::AliceBlue);
 }
 
 void SampleGame::RenderEnd()

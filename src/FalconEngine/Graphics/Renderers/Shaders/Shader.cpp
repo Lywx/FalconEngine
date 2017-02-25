@@ -53,7 +53,7 @@ Shader::GetUniformLocation(std::string uniformName) const
 void
 Shader::PushUniform(std::string uniformName, ShaderUniformType uniformType)
 {
-    mUniformTable[uniformName] = ShaderUniform(uniformName, uniformType);
+    mUniformTable.insert({ uniformName, ShaderUniform(uniformName, uniformType) });
 }
 
 int Shader::GetShaderNum() const

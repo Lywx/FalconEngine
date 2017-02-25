@@ -3,6 +3,8 @@
 namespace FalconEngine
 {
 
+FALCON_ENGINE_RTTI_IMPLEMENT(Sampler, Object);
+
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/

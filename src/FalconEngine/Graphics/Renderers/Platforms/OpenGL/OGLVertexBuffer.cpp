@@ -15,15 +15,15 @@ PlatformVertexBuffer::PlatformVertexBuffer(const VertexBuffer *vertexBuffer)
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
 
     // Allocate buffer storage
-    glBufferData(GL_ARRAY_BUFFER, vertexBuffer->mDataByteNum,
-                 nullptr, OpenGLBufferUsage[int(vertexBuffer->mUsage)]);
+    glBufferData(GL_ARRAY_BUFFER, vertexBuffer->GetDataByteNum(),
+                 nullptr, OpenGLBufferUsage[int(vertexBuffer->GetUsage())]);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     // Copy the platform independent buffer data to platform specific buffer
     void *data = Map(BufferAccessMode::Write);
 
     // TODO(Wuxiang): Feed data without copying
-    memcpy(data, vertexBuffer->mData, vertexBuffer->mDataByteNum);
+    memcpy(data, vertexBuffer->GetData(), vertexBuffer->GetDataByteNum());
     Unmap();
 }
 

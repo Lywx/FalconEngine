@@ -94,7 +94,7 @@ inline void
 PlatformShaderUniform::Update<Matrix4f>(ShaderUniformValue<Matrix4f> *shaderUniform)
 {
     auto& value = shaderUniform->GetValue();
-    glUniformMatrix4fv(shaderUniform->mLocation, 1, GL_FALSE, glm::value_ptr(value));
+    glUniformMatrix4fv(shaderUniform->mLocation, 1, GL_FALSE, &value[0][0]);
 }
 
 template <typename T>

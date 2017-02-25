@@ -211,7 +211,7 @@ AssetManager::LoadFontInternal(std::string fontAssetPath)
         return font;
     }
 
-    ThrowRuntimeException("File not found.");
+    FALCON_ENGINE_THROW_EXCEPTION("File not found.");
 }
 
 ModelUniquePtr
@@ -262,7 +262,7 @@ AssetManager::LoadTextureInternal(std::string textureAssetPath)
     textureAssetArchive >> *texture;
     if (texture->mData == nullptr)
     {
-        ThrowRuntimeException("Failed to load texture asset.");
+        FALCON_ENGINE_THROW_EXCEPTION("Failed to load texture asset.");
     }
 
     texture->mFileType = AssetSource::Stream;

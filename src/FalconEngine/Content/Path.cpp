@@ -74,6 +74,12 @@ ChangeFileExtension(const string path, const string extension)
     return filesystem::path(path).replace_extension(extension).string();
 }
 
+std::string
+RemoveFileExtension(const std::string path)
+{
+    return filesystem::path(path).replace_extension("").string();
+}
+
 // Return true if successful.
 // Return false if there is already a directory named as given or other IO errors happen.
 bool CreateDirectory(const string relativePath)

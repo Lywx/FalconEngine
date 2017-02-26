@@ -49,6 +49,9 @@ GetFileSize(const std::string relativePath);
 std::string
 ChangeFileExtension(const std::string path, const std::string extension);
 
+std::string
+RemoveFileExtension(const std::string path);
+
 bool
 CreateDirectory(const std::string relativePath);
 

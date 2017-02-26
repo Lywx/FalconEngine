@@ -9,7 +9,8 @@ FALCON_ENGINE_RTTI_IMPLEMENT(VertexFormat, Object);
 /* Constructors and Destructor                                          */
 /************************************************************************/
 VertexFormat::VertexFormat() :
-    mVertexAttributeOffset(0)
+    mVertexAttributeOffset(0),
+    mVertexAttributeFinished(false)
 {
 }
 

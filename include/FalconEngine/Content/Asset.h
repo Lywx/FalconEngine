@@ -21,7 +21,7 @@ class Asset : Object
     FALCON_ENGINE_RTTI_DECLARE;
 
 public:
-    Asset(std::string fileName, std::string filePath);
+    Asset(const std::string& fileName, const std::string& filePath);
     Asset(const Asset&) = delete;
     Asset& operator=(const Asset&) = delete;
     virtual ~Asset() noexcept;
@@ -41,8 +41,13 @@ public:
     {
         ar & mFileName;
         ar & mFilePath;
-        ar & mFileType;
+
+        // NOTE(Wuxiang): Don't need to serialize mFileType, because it is
+        // changed when loading in different circumstances.
     }
 };
+
+std::string
+AddAssetExtension(const std::string& filePath);
 
 }

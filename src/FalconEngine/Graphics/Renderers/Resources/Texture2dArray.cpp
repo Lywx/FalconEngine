@@ -9,7 +9,7 @@ FALCON_ENGINE_RTTI_IMPLEMENT(Texture2dArray, Texture);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Texture2dArray::Texture2dArray(std::string fileName, std::string filePath, int width, int height, int depth, TextureFormat format, BufferUsage usage, int mipmapLevel) :
+Texture2dArray::Texture2dArray(const std::string& fileName, const std::string& filePath, int width, int height, int depth, TextureFormat format, BufferUsage usage, int mipmapLevel) :
     Texture(fileName, filePath, width, height, depth, format, TextureType::Texture2dArray, usage, mipmapLevel)
 {
 }

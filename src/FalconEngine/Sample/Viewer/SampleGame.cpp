@@ -26,8 +26,8 @@ void SampleGame::Initialize()
 
     mRenderer = new Renderer("Viewer", width, height);
 
-    mFontConsole = mAssetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.bin");
-    mFontDisplay = mAssetManager->LoadFont("Content/Fonts/NSimSunDistanceField.bin");
+    mFontConsole = mAssetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.fnt.bin");
+    mFontDisplay = mAssetManager->LoadFont("Content/Fonts/NSimSunDistanceField.fnt.bin");
 
     mModelAxe = mAssetManager->LoadModel("Content/Models/Axe.obj");
 }

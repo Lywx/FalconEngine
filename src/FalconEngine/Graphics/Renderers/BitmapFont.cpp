@@ -13,7 +13,7 @@ const double BitmapFont::mSizeScale = 1.32;
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-BitmapFont::BitmapFont(std::string fileName, std::string filePath) :
+BitmapFont::BitmapFont(const std::string& fileName, const std::string& filePath) :
     Asset(fileName, filePath),
     mTextureWidth(0),
     mTextureHeight(0),

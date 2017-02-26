@@ -30,7 +30,7 @@ AssetManager::~AssetManager()
 /* Public Members                                                       */
 /************************************************************************/
 BitmapFont *
-AssetManager::GetFontNamed(std::string fontName)
+AssetManager::GetFontNamed(const std::string& fontName)
 {
     for (const auto &fontPair : mFontTable)
     {
@@ -44,7 +44,7 @@ AssetManager::GetFontNamed(std::string fontName)
 }
 
 BitmapFont *
-AssetManager::GetFont(std::string fontFilePath)
+AssetManager::GetFont(const std::string& fontFilePath)
 {
     auto iter = mFontTable.find(fontFilePath);
     if (iter != mFontTable.end())
@@ -56,9 +56,9 @@ AssetManager::GetFont(std::string fontFilePath)
 }
 
 BitmapFont *
-AssetManager::LoadFont(std::string fontAssetPath)
+AssetManager::LoadFont(const std::string& fontAssetPath)
 {
-    auto font = GetFont(ChangeFileExtension(fontAssetPath, u8".fnt"));
+    auto font = GetFont(RemoveFileExtension(fontAssetPath));
     if (font)
     {
         return font;
@@ -71,7 +71,7 @@ AssetManager::LoadFont(std::string fontAssetPath)
 }
 
 Model *
-AssetManager::GetModel(std::string modelFilePath)
+AssetManager::GetModel(const std::string& modelFilePath)
 {
     auto iter = mModelTable.find(modelFilePath);
     if (iter != mModelTable.end())
@@ -83,7 +83,7 @@ AssetManager::GetModel(std::string modelFilePath)
 }
 
 Model *
-AssetManager::LoadModel(std::string modelFilePath)
+AssetManager::LoadModel(const std::string& modelFilePath)
 {
     auto model = GetModel(modelFilePath);
     if (model)
@@ -98,7 +98,7 @@ AssetManager::LoadModel(std::string modelFilePath)
 }
 
 ShaderSource *
-AssetManager::GetShaderSource(std::string shaderFilePath)
+AssetManager::GetShaderSource(const std::string& shaderFilePath)
 {
     auto iter = mShaderSourceTable.find(shaderFilePath);
     if (iter != mShaderSourceTable.end())
@@ -110,7 +110,7 @@ AssetManager::GetShaderSource(std::string shaderFilePath)
 }
 
 ShaderSource *
-AssetManager::LoadShaderSource(std::string shaderFilePath)
+AssetManager::LoadShaderSource(const std::string& shaderFilePath)
 {
     auto shaderSource = GetShaderSource(shaderFilePath);
     if (shaderSource)
@@ -126,7 +126,7 @@ AssetManager::LoadShaderSource(std::string shaderFilePath)
 }
 
 Texture2d *
-AssetManager::GetTexture(std::string textureFilePath)
+AssetManager::GetTexture(const std::string& textureFilePath)
 {
     auto iter = mTextureTable.find(textureFilePath);
     if (iter != mTextureTable.end())
@@ -138,12 +138,9 @@ AssetManager::GetTexture(std::string textureFilePath)
 }
 
 Texture2d *
-AssetManager::LoadTexture(std::string textureAssetPath)
+AssetManager::LoadTexture(const std::string& textureAssetPath)
 {
-    // NOTE(Wuxiang): Only allow png file to be loaded because the raw asset / asset
-    // naming scheme is N to 1 mapping. It is necessary to limit the file
-    // extension to form a 1 to 1 mapping.
-    auto texture = GetTexture(ChangeFileExtension(textureAssetPath, u8".png"));
+    auto texture = GetTexture(RemoveFileExtension(textureAssetPath));
     if (texture)
     {
         return texture;
@@ -160,7 +157,7 @@ AssetManager::LoadTexture(std::string textureAssetPath)
 /* Private Members                                                      */
 /************************************************************************/
 BitmapFontUniquePtr
-AssetManager::LoadFontInternal(std::string fontAssetPath)
+AssetManager::LoadFontInternal(const std::string& fontAssetPath)
 {
     using namespace boost;
 
@@ -168,8 +165,10 @@ AssetManager::LoadFontInternal(std::string fontAssetPath)
     {
         // Load font.
         auto font = std::make_unique<BitmapFont>("None", "None");
+        font->mFileType = AssetSource::Stream;
         {
-            ifstream fontAssetStream(fontAssetPath);
+            // http://stackoverflow.com/questions/24313359/data-dependent-failure-when-serializing-stdvector-to-boost-binary-archive
+            ifstream fontAssetStream(fontAssetPath, std::ios::binary);
             archive::binary_iarchive fontAssetArchive(fontAssetStream);
             fontAssetArchive >> *font;
         }
@@ -191,7 +190,7 @@ AssetManager::LoadFontInternal(std::string fontAssetPath)
             }
 
             // Load the other textures.
-            for (int fontPageId = 1; fontPageId < font->mTexturePages; ++fontPageId)
+            for (int fontPageId = 0; fontPageId < font->mTexturePages; ++fontPageId)
             {
                 auto textureAssetName = font->mTextureArchiveNameVector[fontPageId];
                 auto textureAssetPath = fontAssetDirPath + textureAssetName;
@@ -215,7 +214,7 @@ AssetManager::LoadFontInternal(std::string fontAssetPath)
 }
 
 ModelUniquePtr
-AssetManager::LoadModelInternal(std::string modelFilePath)
+AssetManager::LoadModelInternal(const std::string& modelFilePath)
 {
     // NOTE(Wuxiang 2017-01-27 22:08): Model would not load from asset file. The
     // asset process would only preprocess model's texture in a way that is
@@ -227,46 +226,59 @@ AssetManager::LoadModelInternal(std::string modelFilePath)
 }
 
 ShaderSourceUniquePtr
-AssetManager::LoadShaderSourceInternal(std::string shaderFilePath)
+AssetManager::LoadShaderSourceInternal(const std::string& shaderFilePath)
 {
-    ifstream shaderStream;
-    shaderStream.open(shaderFilePath.c_str(), ios_base::in);
-
-    if (shaderStream)
+    if (Exist(shaderFilePath))
     {
-        string shaderLine, shaderBuffer;
-        while (getline(shaderStream, shaderLine))
+        ifstream shaderStream(shaderFilePath.c_str(), ios_base::in);
+        if (shaderStream.good())
         {
-            shaderBuffer.append(shaderLine);
-            shaderBuffer.append("\r\n");
+            string shaderLine, shaderBuffer;
+            while (getline(shaderStream, shaderLine))
+            {
+                shaderBuffer.append(shaderLine);
+                shaderBuffer.append("\r\n");
+            }
+
+            auto shaderSource = make_unique<ShaderSource>(GetFileName(shaderFilePath), shaderFilePath);
+            shaderSource->mSource = move(shaderBuffer);
+
+            return shaderSource;
         }
 
-        auto shaderSource = make_unique<ShaderSource>(GetFileName(shaderFilePath), shaderFilePath);
-        shaderSource->mSource = move(shaderBuffer);
-
-        return shaderSource;
+        FALCON_ENGINE_THROW_EXCEPTION("Failed to load the file.");
     }
-
-    return nullptr;
+    else
+    {
+        FALCON_ENGINE_THROW_EXCEPTION("Failed to find the file.");
+    }
 }
 
 Texture2dUniquePtr
-AssetManager::LoadTextureInternal(std::string textureAssetPath)
+AssetManager::LoadTextureInternal(const std::string& textureAssetPath)
 {
     using namespace boost;
 
-    ifstream textureAssetStream(textureAssetPath);
-    archive::binary_iarchive textureAssetArchive(textureAssetStream);
-
-    auto texture = make_unique<Texture2d>("None", "None", 0, 0, TextureFormat::None);
-    textureAssetArchive >> *texture;
-    if (texture->mData == nullptr)
+    if (Exist(textureAssetPath))
     {
-        FALCON_ENGINE_THROW_EXCEPTION("Failed to load texture asset.");
-    }
+        // http://stackoverflow.com/questions/24313359/data-dependent-failure-when-serializing-stdvector-to-boost-binary-archive
+        ifstream textureAssetStream(textureAssetPath, ios::binary);
+        archive::binary_iarchive textureAssetArchive(textureAssetStream);
 
-    texture->mFileType = AssetSource::Stream;
-    return texture;
+        auto texture = make_unique<Texture2d>("None", "None", 0, 0, TextureFormat::None);
+        textureAssetArchive >> *texture;
+        if (texture->mData == nullptr)
+        {
+            FALCON_ENGINE_THROW_EXCEPTION("Failed to load texture asset.");
+        }
+
+        texture->mFileType = AssetSource::Stream;
+        return texture;
+    }
+    else
+    {
+        FALCON_ENGINE_THROW_EXCEPTION("Failed to find the file.");
+    }
 }
 
 }

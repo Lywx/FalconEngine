@@ -16,39 +16,54 @@ namespace FalconEngine
 {
 
 VertexGroupSharedPtr
-CreateModelVertexBuffer(const aiMesh *mesh)
+CreateModelVertexBuffer(const aiMesh *aiMesh)
 {
     // Memory allocation for vertex buffer.
-    auto vertexNum = mesh->mNumVertices;
+    auto vertexNum = aiMesh->mNumVertices;
     auto vertexBuffer = std::make_shared<VertexBuffer>(vertexNum, sizeof(ModelVertex), BufferUsage::Static);
     auto vertexes = reinterpret_cast<ModelVertex *>(vertexBuffer->GetData());
 
+    if (!aiMesh->mVertices)
+    {
+        FALCON_ENGINE_THROW_EXCEPTION("Model doesn't have vertex data.");
+    }
+
+    if (!aiMesh->mNormals)
+    {
+        FALCON_ENGINE_THROW_EXCEPTION("Model doesn't have normal data.");
+    }
+
+    if (!aiMesh->mTextureCoords)
+    {
+        FALCON_ENGINE_THROW_EXCEPTION("Model doesn't have uv data.");
+    }
+
     // Walk through vertex data and create vertex buffer content in an interlaced fashion.
-    for (size_t i = 0; i < mesh->mNumVertices; ++i)
+    for (size_t i = 0; i < aiMesh->mNumVertices; ++i)
     {
         ModelVertex vertex;
         Vector3f vec3;
         Vector2f vec2;
 
         // Position
-        vec3.x = mesh->mVertices[i].x;
-        vec3.y = mesh->mVertices[i].y;
-        vec3.z = mesh->mVertices[i].z;
+        vec3.x = aiMesh->mVertices[i].x;
+        vec3.y = aiMesh->mVertices[i].y;
+        vec3.z = aiMesh->mVertices[i].z;
         vertex.mPosition = vec3;
 
         // Normal
-        vec3.x = mesh->mNormals[i].x;
-        vec3.y = mesh->mNormals[i].y;
-        vec3.z = mesh->mNormals[i].z;
+        vec3.x = aiMesh->mNormals[i].x;
+        vec3.y = aiMesh->mNormals[i].y;
+        vec3.z = aiMesh->mNormals[i].z;
         vertex.mNormal = vec3;
 
         // Texture coordinate
-        if (mesh->mTextureCoords[0])
+        if (aiMesh->mTextureCoords[0])
         {
             // NOTE(Wuxiang): A vertex can contain up to 8 different texture
             // coordinates.
-            vec2.x = mesh->mTextureCoords[0][i].x;
-            vec2.y = mesh->mTextureCoords[0][i].y;
+            vec2.x = aiMesh->mTextureCoords[0][i].x;
+            vec2.y = aiMesh->mTextureCoords[0][i].y;
             vertex.mTexCoord = vec2;
         }
         else
@@ -121,7 +136,10 @@ LoadMaterialTexture(
 
             // Get texture from asset manager without duplication using asset
             // manager's duplication checking mechanics.
-            return assetManager->LoadTexture(textureFilePath.C_Str());
+
+            // NOTE(Wuxiang): Add .bin to file path so that the texture file is
+            // loaded from preprocessed asset file.
+            return assetManager->LoadTexture(AddAssetExtension(textureFilePath.C_Str()));
         }
     }
 

@@ -27,7 +27,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Model(std::string fileName, std::string filePath);
+    Model(const std::string& fileName, const std::string& filePath);
     virtual ~Model();
 
 public:

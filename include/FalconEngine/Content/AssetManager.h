@@ -42,44 +42,44 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     BitmapFont *
-    GetFontNamed(std::string fontName);
+    GetFontNamed(const std::string& fontName);
 
     BitmapFont *
-    GetFont(std::string fontFilePath);
+    GetFont(const std::string& fontFilePath);
 
     BitmapFont *
-    LoadFont(std::string fontAssetPath);
+    LoadFont(const std::string& fontAssetPath);
 
     Model *
-    GetModel(std::string modelFilePath);
+    GetModel(const std::string& modelFilePath);
 
     Model *
-    LoadModel(std::string modelFilePath);
+    LoadModel(const std::string& modelFilePath);
 
     ShaderSource *
-    GetShaderSource(std::string shaderFilePath);
+    GetShaderSource(const std::string& shaderFilePath);
 
     ShaderSource *
-    LoadShaderSource(std::string shaderFilePath);
+    LoadShaderSource(const std::string& shaderFilePath);
 
     Texture2d *
-    GetTexture(std::string textureFilePath);
+    GetTexture(const std::string& textureFilePath);
 
     Texture2d *
-    LoadTexture(std::string textureAssetPath);
+    LoadTexture(const std::string& textureAssetPath);
 
 private:
     BitmapFontUniquePtr
-    LoadFontInternal(std::string fontAssetPath);
+    LoadFontInternal(const std::string& fontAssetPath);
 
     ModelUniquePtr
-    LoadModelInternal(std::string modelFilePath);
+    LoadModelInternal(const std::string& modelFilePath);
 
     ShaderSourceUniquePtr
-    LoadShaderSourceInternal(std::string shaderFilePath);
+    LoadShaderSourceInternal(const std::string& shaderFilePath);
 
     Texture2dUniquePtr
-    LoadTextureInternal(std::string textureAssetPath);
+    LoadTextureInternal(const std::string& textureAssetPath);
 
     std::map<std::string, BitmapFontUniquePtr>     mFontTable;                  // Index is file path.
     std::map<std::string, ModelUniquePtr>          mModelTable;                 // Index is file path.

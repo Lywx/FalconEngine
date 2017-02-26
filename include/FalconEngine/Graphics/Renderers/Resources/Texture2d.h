@@ -16,9 +16,10 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Texture2d(std::string fileName, std::string filePath, int width, int height, TextureFormat format, BufferUsage usage = BufferUsage::Static, int mipmapLevel = 0);
+    Texture2d(const std::string& fileName, const std::string& filePath, int width, int height, TextureFormat format, BufferUsage usage = BufferUsage::Static, int mipmapLevel = 0);
     virtual ~Texture2d();
 
+public:
     /************************************************************************/
     /* Asset Importing and Exporting                                        */
     /************************************************************************/
@@ -26,13 +27,13 @@ public:
     template<class Archive>
     void save(Archive & ar, const unsigned int version) const
     {
-        ar << boost::serialization::base_object<const Texture>(*this);
+        ar << boost::serialization::base_object<const TextureBuffer>(*this);
 
         int width  = mDimension[0];
         int height = mDimension[1];
-        for (int w = 0; w < width; ++w)
+        for (int h = 0; h < height; ++h)
         {
-            for (int h = 0; h < height; ++h)
+            for (int w = 0; w < width; ++w)
             {
                 ar << mData[w + h * width];
             }
@@ -42,15 +43,15 @@ public:
     template<class Archive>
     void load(Archive & ar, const unsigned int version)
     {
-        ar >> boost::serialization::base_object<Texture>(*this);
+        ar >> boost::serialization::base_object<TextureBuffer>(*this);
 
         int width  = mDimension[0];
         int height = mDimension[1];
 
         mData = new unsigned char[width * height];
-        for (int w = 0; w < width; ++w)
+        for (int h = 0; h < height; ++h)
         {
-            for (int h = 0; h < height; ++h)
+            for (int w = 0; w < width; ++w)
             {
                 ar >> mData[w + h * width];
             }

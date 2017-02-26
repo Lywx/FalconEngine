@@ -10,7 +10,7 @@ namespace FalconEngine
 
 FALCON_ENGINE_RTTI_IMPLEMENT(Model, Asset);
 
-Model::Model(std::string fileName, std::string filePath) :
+Model::Model(const std::string& fileName, const std::string& filePath) :
     Asset(fileName, filePath)
 {
 }

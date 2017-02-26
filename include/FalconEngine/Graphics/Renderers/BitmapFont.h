@@ -32,7 +32,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    BitmapFont(std::string fileName, std::string filePath);
+    BitmapFont(const std::string& fileName, const std::string& filePath);
     virtual ~BitmapFont();
 
 public:

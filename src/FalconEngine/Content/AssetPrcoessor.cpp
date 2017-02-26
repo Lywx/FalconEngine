@@ -30,7 +30,7 @@ AssetProcessor::BakeFont(const std::string& fntFilePath)
     auto fontHandle = LoadRawFont(fntFilePath);
     if (fontHandle)
     {
-        auto fontOuptutPath = ChangeFileExtension(fntFilePath, u8".bin");
+        auto fontOuptutPath = AddAssetExtension(fntFilePath);
         BakeFont(fontHandle.get(), fontOuptutPath);
 
         // Bake font's textures
@@ -39,7 +39,7 @@ AssetProcessor::BakeFont(const std::string& fntFilePath)
         {
             auto textureFilePath = fntDirPath + fontHandle->mTextureFileNameVector[fontPageId];
             auto texture = LoadRawTexture2d(textureFilePath);
-            BakeTexture2d(texture.get(), ChangeFileExtension(textureFilePath, u8".bin"));
+            BakeTexture2d(texture.get(), AddAssetExtension(textureFilePath));
         }
     }
 }
@@ -47,7 +47,8 @@ AssetProcessor::BakeFont(const std::string& fntFilePath)
 void
 AssetProcessor::BakeFont(BitmapFont *font, const std::string& fontOutputPath)
 {
-    ofstream fontAssetStream(fontOutputPath);
+    // http://stackoverflow.com/questions/24313359/data-dependent-failure-when-serializing-stdvector-to-boost-binary-archive
+    ofstream fontAssetStream(fontOutputPath, std::ios::binary);
     archive::binary_oarchive fontAssetArchive(fontAssetStream);
     fontAssetArchive << *font;
 }
@@ -156,7 +157,7 @@ LoadFntPageLine(BitmapFont& font, vector<string>& fontPageElems)
 
     auto fontTextureFileName = trim_copy_if(fontPagePairs.at("file"), is_any_of("\""));
     font.mTextureFileNameVector.push_back(fontTextureFileName);
-    font.mTextureArchiveNameVector.push_back(ChangeFileExtension(fontTextureFileName, u8".bin"));
+    font.mTextureArchiveNameVector.push_back(AddAssetExtension(fontTextureFileName));
 }
 
 // @Return: whether should continue reading texture file. If you should, the
@@ -166,10 +167,9 @@ LoadFntFile(const std::string& fntFilePath)
 {
     static vector<string> fntElems;
     static string         fntLine;
-    ifstream              fntStream;
+    ifstream              fntStream(fntFilePath);
 
     // Try open fnt file.
-    fntStream.open(fntFilePath);
     if (!fntStream.good())
     {
         FALCON_ENGINE_THROW_EXCEPTION("Failed to load fnt file.");
@@ -208,6 +208,7 @@ LoadFntFile(const std::string& fntFilePath)
 
     // Create font
     auto font = new BitmapFont(GetFileStem(fntFilePath), fntFilePath);
+    font->mFileType = AssetSource::Normal;
 
     // Read page number and read page specific filename
     font->mTexturePages = lexical_cast<int>(fontSettingTable.at("pages"));
@@ -316,13 +317,14 @@ AssetProcessor::BakeTexture2d(const std::string& textureFilePath)
     }
 
     auto textureHandle = LoadRawTexture2d(textureFilePath);
-    BakeTexture2d(textureHandle.get(), ChangeFileExtension(textureFilePath, u8".bin"));
+    BakeTexture2d(textureHandle.get(), AddAssetExtension(textureFilePath));
 }
 
 void
 AssetProcessor::BakeTexture2d(Texture2d *texture, const string& textureOutputPath)
 {
-    ofstream textureAssetStream(textureOutputPath);
+    // http://stackoverflow.com/questions/24313359/data-dependent-failure-when-serializing-stdvector-to-boost-binary-archive
+    ofstream textureAssetStream(textureOutputPath, ios::binary);
     archive::binary_oarchive textureAssetArchive(textureAssetStream);
     textureAssetArchive << *texture;
 }

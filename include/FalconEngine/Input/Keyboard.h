@@ -1,38 +1,46 @@
 #pragma once
 
-#define BUFFER_SIZE (256)
+#include <FalconEngine/Input/InputInclude.h>
 
 namespace FalconEngine
 {
 
-
-class Keyboard
+class Keyboard : Object
 {
-    DIDEVICEOBJECTDATA didod[BUFFER_SIZE];
+    FALCON_ENGINE_RTTI_DECLARE;
 
-    char            key_state[256];
-    char            old_key_state[256];
+public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
+    Keyboard();
+    virtual ~Keyboard();
 
-    bool            mBBuffered;
+    char key_state[256];
+    char old_key_state[256];
 
     bool Initialize(bool buffered = false);
 
-    friend class InputState;
+    void
+    Update(float deltaTime);
 
-public:
+    bool
+    KeyDown(char key);
 
-    Keyboard();
-    ~Keyboard();
+    bool
+    KeyPressed(char key);
 
-    void Update(float deltaTime);
-    bool KeyDown(wchar_t key);
-    bool KeyPressed(wchar_t key);
-    bool KeyUp(wchar_t key);
+    bool
+    KeyUp(char key);
 
-    WCHAR GetKeyPress();
-    const wchar_t *GetKeyDescription(wchar_t key);
+    char
+    GetKeyPress();
+
+    const char *
+    GetKeyDescription(wchar_t key);
 
     void Flush();
 };
 
+using KeyboardSharedPtr = std::shared_ptr<Keyboard>;
 }

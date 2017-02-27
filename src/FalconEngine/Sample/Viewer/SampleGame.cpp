@@ -24,7 +24,7 @@ void SampleGame::Initialize()
     int width = 1280;
     int height = 800;
 
-    mRenderer = new Renderer("Viewer", width, height);
+    mRenderer = new GameEngineGraphics("Viewer", width, height);
 
     mFontConsole = mAssetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.fnt.bin");
     mFontDisplay = mAssetManager->LoadFont("Content/Fonts/NSimSunDistanceField.fnt.bin");
@@ -38,7 +38,7 @@ void SampleGame::RenderBegin()
 
 void SampleGame::Render(double percent)
 {
-    //mRenderer->DrawString(100, 100, "", ColorPalette::AliceBlue);
+    mRenderer->DrawString(100, 100, "", ColorPalette::AliceBlue);
 }
 
 void SampleGame::RenderEnd()

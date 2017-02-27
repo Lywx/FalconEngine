@@ -1,52 +1,64 @@
 #pragma once
 
-#include "Game.h"
-#include "GameCounter.h"
-#include "GameDebug.h"
+#include <FalconEngine/Context/Game.h>
+#include <FalconEngine/Context/GameCounter.h>
+#include <FalconEngine/Context/GameDebug.h>
 
 namespace FalconEngine
 {
 
+class GameEngineData;
+class GameEngineGraphics;
+class GameEngineInput;
+class GameEnginePlatform;
 class GameEngine
 {
 public:
-    // Runtime Constants
-    double MillisecondPerUpdateMax = 16.66666666666;
-    double MillisecondPerRender    = 16.66666666666;
-
-    // Runtime Members
-    Game *mGame;
-    GameCounter Counter;
-
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
     explicit GameEngine(Game *game);
-
-    // Copy Operations
-    GameEngine(const GameEngine& rhs);
-    GameEngine& operator=(const GameEngine& rhs);
-
-    // Move Operations
-    GameEngine(GameEngine&& rhs) noexcept;
-    GameEngine& operator=(GameEngine&& rhs) noexcept;
-
     virtual ~GameEngine();
+    GameEngine(const GameEngine& rhs) = delete;
+    GameEngine& operator=(const GameEngine& rhs) = delete;
 
-    virtual void Run();
-    virtual void Shutdown();
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
+    void
+    Run();
 
-protected:
-    virtual void Initialize();
+    void
+    Exit();
+
+private:
+    void
+    Initialize();
 
     // @summary Main loop
     // @note The main goal of this algorithm is to ensure the render rate is
     // constant and update rate is flexible.
-    virtual void Loop();
+    void
+    Loop();
 
-    virtual void Exit();
+    void
+    Destory();
+
+public:
+    double              mMillisecondPerUpdateMax = 16.66666666666;
+    double              mMillisecondPerRender    = 16.66666666666;
 
 private:
-    bool mInitialized = false;
-    bool mPaused      = false;
-    bool mRunning     = true;
+    GameCounter         mCounter;
+    GameEngineData     *mData;
+    Game               *mGame;
+    GameEngineInput    *mInput;
+    GameEnginePlatform *mPlatform;
+    GameEngineGraphics *mGraphics;
+
+    bool                mInitialized = false;
+    bool                mPaused      = false;
+    bool                mRunning     = true;
 };
 
 }

@@ -13,8 +13,8 @@ GetWString(string str)
     // TODO(Wuxiang): Before you starting to work in linux you would not want to change wstring as paramter in IO.
     using CodeOutput = wchar_t;
     using CodeConvert = codecvt_utf8_utf16<CodeOutput>;
-    static wstring_convert<CodeConvert> converter;
-    return converter.from_bytes(str);
+    static wstring_convert<CodeConvert> sConverter;
+    return sConverter.from_bytes(str);
 }
 
 bool

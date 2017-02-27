@@ -1,27 +1,35 @@
-#include <FalconEngine/Input/InputState.h>
+#include <FalconEngine/Context/GameEngineInput.h>
 
-namespace FalconEngine {
-namespace Input {
+namespace FalconEngine
+{
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-InputState::InputState()
-    : mKeyboard(0)
-    , mMouse(0)
-    , mGamepad(0)
+GameEngineInput::GameEngineInput() :
+    mKeyboard(nullptr),
+    mMouse(nullptr)
 {
 
 }
 
-InputState::~InputState()
+GameEngineInput::~GameEngineInput()
 {
 }
 
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-std::shared_ptr<Keyboard> InputState::CreateKeyboard()
+void
+GameEngineInput::Initialize(const GameEngineData *data, GameEngineInputSettingsSharedPtr settings)
+{
+    mSettings = settings;
+
+    InitializePlatform(data);
+}
+
+std::shared_ptr<Keyboard>
+GameEngineInput::CreateKeyboard()
 {
     if (mKeyboard)
     {
@@ -34,18 +42,8 @@ std::shared_ptr<Keyboard> InputState::CreateKeyboard()
 
 }
 
-std::shared_ptr<Mouse> InputState::CreateMouse()
+void
+GameEngineInput::Update(float elapsed)
 {
-}
-
-std::shared_ptr<Gamepad> InputState::CreateGamepad()
-{
-}
-
-
-void InputState::HandleKeyboard()
-{
-}
-
 }
 }

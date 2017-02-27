@@ -56,11 +56,11 @@ AssetProcessor::BakeFont(BitmapFont *font, const std::string& fontOutputPath)
 pair<string, string>
 ReadFntPair(const string fntPair)
 {
-    static vector<string> lineElems;
-    lineElems.clear();
+    static vector<string> sLineElems;
+    sLineElems.clear();
 
-    split(lineElems, fntPair, is_any_of("="));
-    return make_pair(lineElems[0], lineElems[1]);
+    split(sLineElems, fntPair, is_any_of("="));
+    return make_pair(sLineElems[0], sLineElems[1]);
 }
 
 // @summary Extract the content in line into pairs and push them into the font
@@ -91,7 +91,7 @@ LoadFntGlyphLine(
 {
     // NOTE(Wuxiang): Using preallocated map to improved performance. There is no
     // need to clear the map because all the data is overwritten by new glyph.
-    static map<string, string> fontGlyphPairTable;
+    static map<string, string> sFontGlyphPairTable;
 
     // Skip "char", the first element
     for (size_t i = 1; i < fontGlyphElems.size(); ++i)
@@ -99,7 +99,7 @@ LoadFntGlyphLine(
         if (fontGlyphElems[i].size() != 0)
         {
             pair<string, string> keyValuePair = ReadFntPair(fontGlyphElems[i]);
-            fontGlyphPairTable[keyValuePair.first] = keyValuePair.second;
+            sFontGlyphPairTable[keyValuePair.first] = keyValuePair.second;
         }
     }
 
@@ -107,26 +107,26 @@ LoadFntGlyphLine(
     int fontGlyphPWidth = fontGlyphPL + fontGlyphPR;
 
     // NOTE(Wuxiang): The fnt file has to configured to padding = 0 in all directions.
-    int id = lexical_cast<int>(fontGlyphPairTable.at("id").c_str());
-    double width = lexical_cast<double>(fontGlyphPairTable.at("width").c_str());
-    double height = lexical_cast<double>(fontGlyphPairTable.at("height").c_str());
+    int id = lexical_cast<int>(sFontGlyphPairTable.at("id").c_str());
+    double width = lexical_cast<double>(sFontGlyphPairTable.at("width").c_str());
+    double height = lexical_cast<double>(sFontGlyphPairTable.at("height").c_str());
 
     // NOTE(Wuxiang): Only amend padding data in vertex related data. Texture quad
     // should be expanded as the padding expands.
-    double offsetX = lexical_cast<double>(fontGlyphPairTable.at("xoffset").c_str()) + fontGlyphPL;
-    double offsetY = lexical_cast<double>(fontGlyphPairTable.at("yoffset").c_str()) + fontGlyphPT;
-    double advance = lexical_cast<double>(fontGlyphPairTable.at("xadvance").c_str()) - fontGlyphPWidth;
+    double offsetX = lexical_cast<double>(sFontGlyphPairTable.at("xoffset").c_str()) + fontGlyphPL;
+    double offsetY = lexical_cast<double>(sFontGlyphPairTable.at("yoffset").c_str()) + fontGlyphPT;
+    double advance = lexical_cast<double>(sFontGlyphPairTable.at("xadvance").c_str()) - fontGlyphPWidth;
 
     // NOTE(Wuxiang): The fnt file x, y represents left and top pixel coordinate
     // origined from top-left corner of the png file. However, in opengl s1, t1
     // represents left and bottom coordinate origined from bottom-left corner of
     // the screen.
-    double s1 = lexical_cast<double>(fontGlyphPairTable.at("x").c_str()) / font.mTextureWidth;
+    double s1 = lexical_cast<double>(sFontGlyphPairTable.at("x").c_str()) / font.mTextureWidth;
     double s2 = s1 + width / font.mTextureWidth;
-    double t2 = (font.mTextureHeight - lexical_cast<double>(fontGlyphPairTable.at("y").c_str())) / font.mTextureHeight;
+    double t2 = (font.mTextureHeight - lexical_cast<double>(sFontGlyphPairTable.at("y").c_str())) / font.mTextureHeight;
     double t1 = t2 - height / font.mTextureHeight;
 
-    int page = lexical_cast<int>(fontGlyphPairTable.at("page").c_str());
+    int page = lexical_cast<int>(sFontGlyphPairTable.at("page").c_str());
 
     // NOTE(Wuxiang): Indirect lookup in glyph table. First you look up the glyph
     // index with the codepoint, which indexes into the glyph table. Then you use
@@ -143,7 +143,7 @@ LoadFntPageLine(BitmapFont& font, vector<string>& fontPageElems)
 {
     // NOTE(Wuxiang): Using preallocated map to improved performance. There is no
     // need to clear the map because all the data is overwritten by new page.
-    static map<string, string> fontPagePairs;
+    static map<string, string> sFontPagePairs;
 
     // Skip "page", the first element
     for (size_t i = 1; i < fontPageElems.size(); ++i)
@@ -151,11 +151,11 @@ LoadFntPageLine(BitmapFont& font, vector<string>& fontPageElems)
         if (fontPageElems[i].size() != 0)
         {
             pair<string, string> keyValuePair = ReadFntPair(fontPageElems[i]);
-            fontPagePairs[keyValuePair.first] = keyValuePair.second;
+            sFontPagePairs[keyValuePair.first] = keyValuePair.second;
         }
     }
 
-    auto fontTextureFileName = trim_copy_if(fontPagePairs.at("file"), is_any_of("\""));
+    auto fontTextureFileName = trim_copy_if(sFontPagePairs.at("file"), is_any_of("\""));
     font.mTextureFileNameVector.push_back(fontTextureFileName);
     font.mTextureArchiveNameVector.push_back(AddAssetExtension(fontTextureFileName));
 }
@@ -165,8 +165,8 @@ LoadFntPageLine(BitmapFont& font, vector<string>& fontPageElems)
 std::unique_ptr<BitmapFont>
 LoadFntFile(const std::string& fntFilePath)
 {
-    static vector<string> fntElems;
-    static string         fntLine;
+    static vector<string> sFntElems;
+    static string         sFntLine;
     ifstream              fntStream(fntFilePath);
 
     // Try open fnt file.
@@ -175,35 +175,35 @@ LoadFntFile(const std::string& fntFilePath)
         FALCON_ENGINE_THROW_EXCEPTION("Failed to load fnt file.");
     }
 
-    static map<string, string> fontSettingTable;
-    fontSettingTable.clear();
+    static map<string, string> sFontSettingTable;
+    sFontSettingTable.clear();
 
     // Read first 2 lines of font metadata
     {
         // 1st line. Since the face name could contain space character, we need to
         // process this line separately
         {
-            getline(fntStream, fntLine);
+            getline(fntStream, sFntLine);
 
-            auto faceLhsQuote = find_nth(fntLine, "\"", 0);
-            auto faceRhsQuote = find_nth(fntLine, "\"", 1);
+            auto faceLhsQuote = find_nth(sFntLine, "\"", 0);
+            auto faceRhsQuote = find_nth(sFntLine, "\"", 1);
             auto faceLength = distance(faceLhsQuote.begin(), faceRhsQuote.begin());
-            auto faceNameIndex = distance(fntLine.begin(), faceLhsQuote.begin()) + 1;
-            auto faceSettingIndex = distance(fntLine.begin(), faceLhsQuote.begin()) - 5;
-            auto sizeSettingIndex = distance(fntLine.begin(), faceRhsQuote.begin()) + 2;
+            auto faceNameIndex = distance(sFntLine.begin(), faceLhsQuote.begin()) + 1;
+            auto faceSettingIndex = distance(sFntLine.begin(), faceLhsQuote.begin()) - 5;
+            auto sizeSettingIndex = distance(sFntLine.begin(), faceRhsQuote.begin()) + 2;
 
-            fontSettingTable["face"] = fntLine.substr(faceNameIndex, faceLength);
-            fntLine.erase(faceSettingIndex, sizeSettingIndex - faceSettingIndex);
-            split(fntElems, fntLine, is_space());
-            PushFntMetaLine(fontSettingTable, fntElems);
+            sFontSettingTable["face"] = sFntLine.substr(faceNameIndex, faceLength);
+            sFntLine.erase(faceSettingIndex, sizeSettingIndex - faceSettingIndex);
+            split(sFntElems, sFntLine, is_space());
+            PushFntMetaLine(sFontSettingTable, sFntElems);
         }
 
         // 2nd line
-        fntElems.clear();
-        getline(fntStream, fntLine);
-        split(fntElems, fntLine, is_space());
+        sFntElems.clear();
+        getline(fntStream, sFntLine);
+        split(sFntElems, sFntLine, is_space());
 
-        PushFntMetaLine(fontSettingTable, fntElems);
+        PushFntMetaLine(sFontSettingTable, sFntElems);
     }
 
     // Create font
@@ -211,14 +211,14 @@ LoadFntFile(const std::string& fntFilePath)
     font->mFileType = AssetSource::Normal;
 
     // Read page number and read page specific filename
-    font->mTexturePages = lexical_cast<int>(fontSettingTable.at("pages"));
+    font->mTexturePages = lexical_cast<int>(sFontSettingTable.at("pages"));
     for (int i = 0; i < font->mTexturePages; ++i)
     {
-        fntElems.clear();
-        getline(fntStream, fntLine);
-        split(fntElems, fntLine, is_space());
+        sFntElems.clear();
+        getline(fntStream, sFntLine);
+        split(sFntElems, sFntLine, is_space());
 
-        LoadFntPageLine(*font, fntElems);
+        LoadFntPageLine(*font, sFntElems);
     }
 
     // Extract some necessary metadata in font-> They are useful when we load
@@ -237,40 +237,40 @@ LoadFntFile(const std::string& fntFilePath)
     // Padding right
     int fontGlyphPR;
     {
-        fontSize = lexical_cast<int>(fontSettingTable.at("size"));
-        font->mLineBase = lexical_cast<uint32>(fontSettingTable.at("base"));
-        font->mLineHeight = lexical_cast<uint32>(fontSettingTable.at("lineHeight"));
-        font->mTextureWidth = lexical_cast<int>(fontSettingTable.at("scaleW"));
-        font->mTextureHeight = lexical_cast<int>(fontSettingTable.at("scaleH"));
+        fontSize = lexical_cast<int>(sFontSettingTable.at("size"));
+        font->mLineBase = lexical_cast<uint32>(sFontSettingTable.at("base"));
+        font->mLineHeight = lexical_cast<uint32>(sFontSettingTable.at("lineHeight"));
+        font->mTextureWidth = lexical_cast<int>(sFontSettingTable.at("scaleW"));
+        font->mTextureHeight = lexical_cast<int>(sFontSettingTable.at("scaleH"));
 
-        fntElems.clear();
-        auto& glyphPaddingString = fontSettingTable.at("padding");
+        sFntElems.clear();
+        auto& glyphPaddingString = sFontSettingTable.at("padding");
         trim(glyphPaddingString);
-        split(fntElems, glyphPaddingString, is_any_of(","));
+        split(sFntElems, glyphPaddingString, is_any_of(","));
 
-        fontGlyphPT = lexical_cast<int>(fntElems[0]);
-        fontGlyphPR = lexical_cast<int>(fntElems[1]);
-        fontGlyphPB = lexical_cast<int>(fntElems[2]);
-        fontGlyphPL = lexical_cast<int>(fntElems[3]);
+        fontGlyphPT = lexical_cast<int>(sFntElems[0]);
+        fontGlyphPR = lexical_cast<int>(sFntElems[1]);
+        fontGlyphPB = lexical_cast<int>(sFntElems[2]);
+        fontGlyphPL = lexical_cast<int>(sFntElems[3]);
     }
 
     // Read character glyphs
     {
         // Read glyph number
-        fntElems.clear();
-        getline(fntStream, fntLine);
-        split(fntElems, fntLine, is_space());
-        font->mGlyphCount = lexical_cast<int>(ReadFntPair(fntElems[1]).second.c_str());
+        sFntElems.clear();
+        getline(fntStream, sFntLine);
+        split(sFntElems, sFntLine, is_space());
+        font->mGlyphCount = lexical_cast<int>(ReadFntPair(sFntElems[1]).second.c_str());
 
         // NOTE(Wuxiang): Unicode Codepoint range: http://inamidst.com/stuff/unidata/
         // U+4E00 to U+9FFF: CJK Unified Ideographs
         // U+A000 to U+A48F: Yi Syllables
-        static const int MaxCodepointPastOne = 0xA000;
+        static const int sMaxCodepointPastOne = 0xA000;
 
         // Allocate storage for index table. This member would be large. The default
         // value refers to the none character, which has id = 0. This character is
         // always loaded first.
-        font->mGlyphIndexTable.assign(MaxCodepointPastOne, 0);
+        font->mGlyphIndexTable.assign(sMaxCodepointPastOne, 0);
 
         // Read every glyph
         boost::regex spaceMultiple("[ ]+");
@@ -278,15 +278,15 @@ LoadFntFile(const std::string& fntFilePath)
 
         for (size_t fontGlyphIndex = 0; fontGlyphIndex < font->mGlyphCount; ++fontGlyphIndex)
         {
-            fntElems.clear();
-            getline(fntStream, fntLine);
+            sFntElems.clear();
+            getline(fntStream, sFntLine);
 
             // Replace multiple space with single space to avoid splitting error.
-            fntLine = regex_replace(fntLine, spaceMultiple, space);
+            sFntLine = regex_replace(sFntLine, spaceMultiple, space);
 
-            split(fntElems, fntLine, is_space());
+            split(sFntElems, sFntLine, is_space());
 
-            LoadFntGlyphLine(*font, fntElems, fontGlyphIndex, fontGlyphPT, fontGlyphPR, fontGlyphPB, fontGlyphPL);
+            LoadFntGlyphLine(*font, sFntElems, fontGlyphIndex, fontGlyphPT, fontGlyphPR, fontGlyphPB, fontGlyphPL);
         }
     }
 

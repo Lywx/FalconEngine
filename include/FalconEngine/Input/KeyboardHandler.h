@@ -1,30 +1,41 @@
 #pragma once
 
+#include <FalconEngine/Input/InputInclude.h>
+
 #include <memory>
 
-#include "InputHandler.h"
-#include "Keyboard.h"
+#include <FalconEngine/Input/InputHandler.h>
+#include <FalconEngine/Input/Keyboard.h>
 
-namespace FalconEngine {
-
-
-typedef bool(*KeyboardHandler)(std::shared_ptr<Keyboard> pKeyboard, void *userData);
-
-class keyboard_handler : public InputHandler
+namespace FalconEngine
 {
-    bool m_Enabled;
+
+class GameEngineInput;
+
+class KeyboardHandler : public InputHandler<KeyboardSharedPtr>
+{
+    FALCON_ENGINE_RTTI_DECLARE;
+
+    friend class GameEngineInput;
 
 public:
-    KeyboardHandler mPHandler;
-    keyboard_handler()
-        : InputHandler()
-        , mPHandler(0)
-        , m_Enabled(true)
-    {}
+    KeyboardHandler();
+    virtual ~KeyboardHandler() = default;
 
-    void Enable(bool enabled) { m_Enabled = enabled; }
-    bool IsEnabled() const { return m_Enabled; }
+    void
+    Enable(bool enabled)
+    {
+        mEnabled = enabled;
+    }
+
+    bool
+    Enabled() const
+    {
+        return mEnabled;
+    }
+
+private:
+    bool mEnabled;
 };
 
-}
 }

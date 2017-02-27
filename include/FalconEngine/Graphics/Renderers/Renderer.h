@@ -5,11 +5,17 @@
 #include <map>
 #include <vector>
 
+#include <FalconEngine/Context/GameEngineGraphicsSettings.h>
 #include <FalconEngine/Graphics/Renderers/Resources/Texture2dArray.h>
 #include <FalconEngine/Graphics/Renderers/Viewport.h>
 
 namespace FalconEngine
 {
+
+/************************************************************************/
+/* Engine Resource                                                      */
+/************************************************************************/
+class GameEngineData;
 
 /************************************************************************/
 /* Rendering Pipeline                                                   */
@@ -66,8 +72,8 @@ class PlatformSampler;
 /* Platform Rendering Pipeline                                          */
 /************************************************************************/
 class PlatformShader;
-
 class PlatformRendererData;
+
 class Renderer
 {
 public:
@@ -78,7 +84,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Renderer(const std::string& caption, int width, int height);
+    Renderer(const GameEngineData *data, int width, int height);
     virtual ~Renderer();
 
     typedef std::map<const VertexBuffer *, PlatformVertexBuffer *> PlatformVertexBufferTable;
@@ -92,9 +98,9 @@ public:
 
     typedef std::map<const Shader *, PlatformShader *> PlatformShaderTable;
 
-protected:
+private:
     void
-    Initialize(int width, int height);
+    InitializeExceptPlatform(int width, int height);
 
 public:
     /************************************************************************/
@@ -398,6 +404,9 @@ public:
     void
     SetWindowSize(int width, int height);
 
+    void
+    GetWindow();
+
     /************************************************************************/
     /* Default Framebuffer Management                                       */
     /************************************************************************/
@@ -418,7 +427,7 @@ public:
 
 private:
     void
-    InitializePlatform(std::string caption);
+    InitializePlatform(const GameEngineData *data);
 
     void
     DestroyPlatform();

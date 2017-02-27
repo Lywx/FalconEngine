@@ -37,7 +37,7 @@ public:
 
 private:
     AssetManager *mAssetManager;
-    Renderer *mRenderer;
+    GameEngineGraphics *mRenderer;
 
     const BitmapFont *mFontConsole;
     const BitmapFont *mFontDisplay;

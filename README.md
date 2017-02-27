@@ -13,7 +13,7 @@ Disclaimer
 You would find a lot of similiarity in code compared to the David Eberly's [Geometry Tool](https://www.geometrictools.com/)
 Project. 
 
-In fact, this project started as first my attempt to build a rendering engine.
+In fact, this project started as my first attempt to build a rendering engine.
 As I learned more and more about David Eberly's work, I decided to prune code from 
 Geometry Tool into my own renderer. By doing so I actually learned faster, given 
 the necessary framework and logics in Geometry Tool.

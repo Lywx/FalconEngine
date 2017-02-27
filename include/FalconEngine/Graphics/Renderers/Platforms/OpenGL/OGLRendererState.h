@@ -14,18 +14,22 @@ class StencilTestState;
 class WireframeState;
 
 // @summary Render state information to avoid redundant state changes.
-class PlatformRenderState
+class PlatformRendererState
 {
 public:
-    PlatformRenderState();
+    PlatformRendererState();
+    virtual ~PlatformRendererState() = default;
 
-    void Initialize(const BlendState *blendState,
-                    const CullState *cullState,
-                    const DepthTestState *depthTestState,
-                    const OffsetState *offsetState,
-                    const StencilTestState *stencilTestState,
-                    const WireframeState *wireframeState);
+public:
+    void
+    Initialize(const BlendState *blendState,
+               const CullState *cullState,
+               const DepthTestState *depthTestState,
+               const OffsetState *offsetState,
+               const StencilTestState *stencilTestState,
+               const WireframeState *wireframeState);
 
+public:
     /************************************************************************/
     /* Blending                                                             */
     /************************************************************************/

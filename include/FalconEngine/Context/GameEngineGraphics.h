@@ -1,14 +1,17 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/Context/ContextInclude.h>
 
 #include <limits>
 
+#include <FalconEngine/Context/GameEngineGraphicsSettings.h>
+#include <FalconEngine/Context/GameEngineSettings.h>
 #include <FalconEngine/Math/Color.h>
 #include <FalconEngine/Math/Vector2.h>
 
 namespace FalconEngine
 {
+
 
 /************************************************************************/
 /* Specialized Renderer                                                 */
@@ -21,11 +24,27 @@ class BitmapText;
 /* General Renderer                                                     */
 /************************************************************************/
 class Renderer;
-class RendererFacade
+
+class GameEngineData;
+class GameEngineGraphics
 {
 public:
-    RendererFacade();
-    ~RendererFacade();
+    /************************************************************************/
+    /* Static Members                                                       */
+    /************************************************************************/
+    static GameEngineGraphics *
+    GetInstance()
+    {
+        static GameEngineGraphics sInstance;
+        return &sInstance;
+    }
+
+public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
+    GameEngineGraphics();
+    ~GameEngineGraphics();
 
 public:
     void
@@ -46,7 +65,9 @@ public:
 
 public:
     void
-    Initialize(int width, int height);
+    Initialize(
+        _IN_  const GameEngineData       *data,
+        _OUT_ GameEngineSettingsSharedPtr settings);
 
     void
     RenderBegin();
@@ -57,9 +78,14 @@ public:
     void
     RenderEnd();
 
+private:
+    void
+    InitializePlatform(GameEngineData *data);
+
 protected:
-    BitmapFontRenderer *mRendererForFont;
-    Renderer           *mRenderer;
+    BitmapFontRenderer                 *mRendererForFont;
+    Renderer                           *mRenderer;
+    GameEngineGraphicsSettingsSharedPtr mSettings;
 };
 
 }

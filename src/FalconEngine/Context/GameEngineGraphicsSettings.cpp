@@ -1,4 +1,4 @@
-#include <FalconEngine/Input/Keyboard.h>
+#include <FalconEngine/Context/GameEngineGraphicsSettings.h>
 
 namespace FalconEngine
 {
@@ -6,11 +6,8 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Keyboard::Keyboard()
-{
-}
-
-Keyboard::~Keyboard()
+GameEngineGraphicsSettings::GameEngineGraphicsSettings() :
+    mTitle("Falcon Engine Game"), mWidth(0), mHeight(0)
 {
 }
 

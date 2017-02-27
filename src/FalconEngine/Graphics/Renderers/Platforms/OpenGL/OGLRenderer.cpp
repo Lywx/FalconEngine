@@ -1,6 +1,9 @@
 #include <FalconEngine/Graphics/Renderers/Renderer.h>
+
+#if FALCON_ENGINE_PLATFORM_GLFW
+#include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
 #include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLRendererData.h>
-#include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLRenderState.h>
+#include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLRendererState.h>
 
 #include <FalconEngine/Graphics/Renderers/VisualLines.h>
 #include <FalconEngine/Graphics/Renderers/VisualPoints.h>
@@ -21,37 +24,37 @@ Renderer::SetBlendState(const BlendState *blendState)
 
     if (mBlendStateCurrent->mEnabled)
     {
-        if (!mData->mState.mBlendEnabled)
+        if (!mData->mState->mBlendEnabled)
         {
-            mData->mState.mBlendEnabled = true;
+            mData->mState->mBlendEnabled = true;
             glEnable(GL_BLEND);
         }
 
         GLenum sourceFactor = OpenGLBlendFactorSource[int(mBlendStateCurrent->mSourceFactor)];
         GLenum destinationFactor = OpenGLBlendFactorDestination[int(mBlendStateCurrent->mDestinationFactor)];
-        if (sourceFactor != mData->mState.mBlendSourceFactor
-                || destinationFactor != mData->mState.mBlendDestinationFactor)
+        if (sourceFactor != mData->mState->mBlendSourceFactor
+                || destinationFactor != mData->mState->mBlendDestinationFactor)
         {
-            mData->mState.mBlendSourceFactor = sourceFactor;
-            mData->mState.mBlendDestinationFactor = destinationFactor;
+            mData->mState->mBlendSourceFactor = sourceFactor;
+            mData->mState->mBlendDestinationFactor = destinationFactor;
             glBlendFunc(sourceFactor, destinationFactor);
         }
 
-        if (mBlendStateCurrent->mConstantFactor != mData->mState.mBlendConstantFactor)
+        if (mBlendStateCurrent->mConstantFactor != mData->mState->mBlendConstantFactor)
         {
-            mData->mState.mBlendConstantFactor = mBlendStateCurrent->mConstantFactor;
+            mData->mState->mBlendConstantFactor = mBlendStateCurrent->mConstantFactor;
             glBlendColor(
-                mData->mState.mBlendConstantFactor[0],
-                mData->mState.mBlendConstantFactor[1],
-                mData->mState.mBlendConstantFactor[2],
-                mData->mState.mBlendConstantFactor[3]);
+                mData->mState->mBlendConstantFactor[0],
+                mData->mState->mBlendConstantFactor[1],
+                mData->mState->mBlendConstantFactor[2],
+                mData->mState->mBlendConstantFactor[3]);
         }
     }
     else
     {
-        if (mData->mState.mBlendEnabled)
+        if (mData->mState->mBlendEnabled)
         {
-            mData->mState.mBlendEnabled = false;
+            mData->mState->mBlendEnabled = false;
             glDisable(GL_BLEND);
         }
     }
@@ -64,18 +67,18 @@ Renderer::SetCullState(const CullState *cullState)
 
     if (mCullStateCurrent->mEnabled)
     {
-        if (!mData->mState.mCullEnabled)
+        if (!mData->mState->mCullEnabled)
         {
-            mData->mState.mCullEnabled = true;
+            mData->mState->mCullEnabled = true;
             glEnable(GL_CULL_FACE);
             glFrontFace(GL_CCW);
         }
 
         bool face = mCullStateCurrent->mCounterClockwise;
-        if (face != mData->mState.mCullCounterClockwise)
+        if (face != mData->mState->mCullCounterClockwise)
         {
-            mData->mState.mCullCounterClockwise = face;
-            if (mData->mState.mCullCounterClockwise)
+            mData->mState->mCullCounterClockwise = face;
+            if (mData->mState->mCullCounterClockwise)
             {
                 glCullFace(GL_FRONT);
             }
@@ -87,9 +90,9 @@ Renderer::SetCullState(const CullState *cullState)
     }
     else
     {
-        if (mData->mState.mCullEnabled)
+        if (mData->mState->mCullEnabled)
         {
-            mData->mState.mCullEnabled = false;
+            mData->mState->mCullEnabled = false;
             glDisable(GL_CULL_FACE);
         }
     }
@@ -102,41 +105,41 @@ Renderer::SetDepthTestState(const DepthTestState *depthTestState)
 
     if (mDepthTestStateCurrent->mTestEnabled)
     {
-        if (!mData->mState.mDepthTestEnabled)
+        if (!mData->mState->mDepthTestEnabled)
         {
-            mData->mState.mDepthTestEnabled = true;
+            mData->mState->mDepthTestEnabled = true;
             glEnable(GL_DEPTH_TEST);
         }
 
         GLenum compareFunction = OpenGLDepthFunction[int(mDepthTestStateCurrent->mCompareFunction)];
-        if (compareFunction != mData->mState.mDepthCompareFunction)
+        if (compareFunction != mData->mState->mDepthCompareFunction)
         {
-            mData->mState.mDepthCompareFunction = compareFunction;
+            mData->mState->mDepthCompareFunction = compareFunction;
             glDepthFunc(compareFunction);
         }
     }
     else
     {
-        if (mData->mState.mDepthTestEnabled)
+        if (mData->mState->mDepthTestEnabled)
         {
-            mData->mState.mDepthTestEnabled = false;
+            mData->mState->mDepthTestEnabled = false;
             glDisable(GL_DEPTH_TEST);
         }
     }
 
     if (mDepthTestStateCurrent->mWriteEnabled)
     {
-        if (!mData->mState.mDepthWriteEnabled)
+        if (!mData->mState->mDepthWriteEnabled)
         {
-            mData->mState.mDepthWriteEnabled = true;
+            mData->mState->mDepthWriteEnabled = true;
             glDepthMask(GL_TRUE);
         }
     }
     else
     {
-        if (mData->mState.mDepthWriteEnabled)
+        if (mData->mState->mDepthWriteEnabled)
         {
-            mData->mState.mDepthWriteEnabled = false;
+            mData->mState->mDepthWriteEnabled = false;
             glDepthMask(GL_FALSE);
         }
     }
@@ -149,60 +152,60 @@ Renderer::SetOffsetState(const OffsetState *offsetState)
 
     if (mOffsetStateCurrent->mFillEnabled)
     {
-        if (!mData->mState.mOffsetFillEnabled)
+        if (!mData->mState->mOffsetFillEnabled)
         {
-            mData->mState.mOffsetFillEnabled = true;
+            mData->mState->mOffsetFillEnabled = true;
             glEnable(GL_POLYGON_OFFSET_FILL);
         }
     }
     else
     {
-        if (mData->mState.mOffsetFillEnabled)
+        if (mData->mState->mOffsetFillEnabled)
         {
-            mData->mState.mOffsetFillEnabled = false;
+            mData->mState->mOffsetFillEnabled = false;
             glDisable(GL_POLYGON_OFFSET_FILL);
         }
     }
 
     if (mOffsetStateCurrent->mLineEnabled)
     {
-        if (!mData->mState.mOffsetLineEnabled)
+        if (!mData->mState->mOffsetLineEnabled)
         {
-            mData->mState.mOffsetLineEnabled = true;
+            mData->mState->mOffsetLineEnabled = true;
             glEnable(GL_POLYGON_OFFSET_LINE);
         }
     }
     else
     {
-        if (mData->mState.mOffsetLineEnabled)
+        if (mData->mState->mOffsetLineEnabled)
         {
-            mData->mState.mOffsetLineEnabled = false;
+            mData->mState->mOffsetLineEnabled = false;
             glDisable(GL_POLYGON_OFFSET_LINE);
         }
     }
 
     if (mOffsetStateCurrent->mPointEnabled)
     {
-        if (!mData->mState.mOffsetPointEnabled)
+        if (!mData->mState->mOffsetPointEnabled)
         {
-            mData->mState.mOffsetPointEnabled = true;
+            mData->mState->mOffsetPointEnabled = true;
             glEnable(GL_POLYGON_OFFSET_POINT);
         }
     }
     else
     {
-        if (mData->mState.mOffsetPointEnabled)
+        if (mData->mState->mOffsetPointEnabled)
         {
-            mData->mState.mOffsetPointEnabled = false;
+            mData->mState->mOffsetPointEnabled = false;
             glDisable(GL_POLYGON_OFFSET_POINT);
         }
     }
 
-    if (mOffsetStateCurrent->mFactor != mData->mState.mOffsetFactor
-            || mOffsetStateCurrent->mUnit != mData->mState.mOffsetUnit)
+    if (mOffsetStateCurrent->mFactor != mData->mState->mOffsetFactor
+            || mOffsetStateCurrent->mUnit != mData->mState->mOffsetUnit)
     {
-        mData->mState.mOffsetFactor = mOffsetStateCurrent->mFactor;
-        mData->mState.mOffsetUnit = mOffsetStateCurrent->mUnit;
+        mData->mState->mOffsetFactor = mOffsetStateCurrent->mFactor;
+        mData->mState->mOffsetUnit = mOffsetStateCurrent->mUnit;
         glPolygonOffset(mOffsetStateCurrent->mFactor, mOffsetStateCurrent->mUnit);
     }
 }
@@ -214,48 +217,48 @@ Renderer::SetStencilTestState(const StencilTestState *stencilTestState)
 
     if (mStencilTestStateCurrent->mTestEnabled)
     {
-        if (!mData->mState.mStencilTestEnabled)
+        if (!mData->mState->mStencilTestEnabled)
         {
-            mData->mState.mStencilTestEnabled = true;
+            mData->mState->mStencilTestEnabled = true;
             glEnable(GL_STENCIL_TEST);
         }
 
         GLenum compareFunction = OpenGLStencilFunction[int(mStencilTestStateCurrent->mCompareFunction)];
-        if (compareFunction != mData->mState.mStencilCompareFunction
-                || mStencilTestStateCurrent->mCompareReference != mData->mState.mStencilCompareReference
-                || mStencilTestStateCurrent->mCompareMask != mData->mState.mStencilCompareMask)
+        if (compareFunction != mData->mState->mStencilCompareFunction
+                || mStencilTestStateCurrent->mCompareReference != mData->mState->mStencilCompareReference
+                || mStencilTestStateCurrent->mCompareMask != mData->mState->mStencilCompareMask)
         {
-            mData->mState.mStencilCompareFunction = compareFunction;
-            mData->mState.mStencilCompareReference = mStencilTestStateCurrent->mCompareReference;
-            mData->mState.mStencilCompareMask = mStencilTestStateCurrent->mCompareMask;
+            mData->mState->mStencilCompareFunction = compareFunction;
+            mData->mState->mStencilCompareReference = mStencilTestStateCurrent->mCompareReference;
+            mData->mState->mStencilCompareMask = mStencilTestStateCurrent->mCompareMask;
             glStencilFunc(compareFunction, mStencilTestStateCurrent->mCompareReference,
                           mStencilTestStateCurrent->mCompareMask);
         }
 
-        if (mStencilTestStateCurrent->mWriteMask != mData->mState.mStencilWriteMask)
+        if (mStencilTestStateCurrent->mWriteMask != mData->mState->mStencilWriteMask)
         {
-            mData->mState.mStencilWriteMask = mStencilTestStateCurrent->mWriteMask;
+            mData->mState->mStencilWriteMask = mStencilTestStateCurrent->mWriteMask;
             glStencilMask(mStencilTestStateCurrent->mWriteMask);
         }
 
         GLenum onStencilTestFail = OpenGLStencilOperation[int(mStencilTestStateCurrent->OnStencilTestFail)];
         GLenum onDepthTestFail = OpenGLStencilOperation[int(mStencilTestStateCurrent->OnDepthTestFail)];
         GLenum onDepthTestPass = OpenGLStencilOperation[int(mStencilTestStateCurrent->OnDepthTestPass)];
-        if (onStencilTestFail != mData->mState.mStencilOnStencilTestFail
-                || onDepthTestFail != mData->mState.mStencilOnDepthTestFail
-                || onDepthTestPass != mData->mState.mStencilOnDepthTestPass)
+        if (onStencilTestFail != mData->mState->mStencilOnStencilTestFail
+                || onDepthTestFail != mData->mState->mStencilOnDepthTestFail
+                || onDepthTestPass != mData->mState->mStencilOnDepthTestPass)
         {
-            mData->mState.mStencilOnStencilTestFail = onStencilTestFail;
-            mData->mState.mStencilOnDepthTestFail = onDepthTestFail;
-            mData->mState.mStencilOnDepthTestPass = onDepthTestPass;
+            mData->mState->mStencilOnStencilTestFail = onStencilTestFail;
+            mData->mState->mStencilOnDepthTestFail = onDepthTestFail;
+            mData->mState->mStencilOnDepthTestPass = onDepthTestPass;
             glStencilOp(onStencilTestFail, onDepthTestFail, onDepthTestPass);
         }
     }
     else
     {
-        if (mData->mState.mStencilTestEnabled)
+        if (mData->mState->mStencilTestEnabled)
         {
-            mData->mState.mStencilTestEnabled = false;
+            mData->mState->mStencilTestEnabled = false;
             glDisable(GL_STENCIL_TEST);
         }
     }
@@ -268,17 +271,17 @@ Renderer::SetWireframeState(const WireframeState *wireframeState)
 
     if (mWireframeStateCurrent->mEnabled)
     {
-        if (!mData->mState.mWireframeEnabled)
+        if (!mData->mState->mWireframeEnabled)
         {
-            mData->mState.mWireframeEnabled = true;
+            mData->mState->mWireframeEnabled = true;
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         }
     }
     else
     {
-        if (mData->mState.mWireframeEnabled)
+        if (mData->mState->mWireframeEnabled)
         {
-            mData->mState.mWireframeEnabled = false;
+            mData->mState->mWireframeEnabled = false;
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
     }
@@ -426,55 +429,16 @@ void Renderer::DrawPrimitive(const Visual *visual)
 /* Private Members                                                      */
 /************************************************************************/
 void
-Renderer::InitializePlatform(std::string caption)
+Renderer::InitializePlatform(const GameEngineData *data)
 {
-    glfwInit();
-
-    // GLFW Window Hints
-    {
-        glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
-        glfwWindowHint(GLFW_FOCUSED, GLFW_TRUE);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
-    }
-
-    // OpenGL Context Hints
-    {
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_FALSE);
-    }
-
-    // OpenGL Framebuffer Hints
-    {
-
-    }
-
-    mData = new PlatformRendererData();
-    mData->mWindow = glfwCreateWindow(mWidth, mHeight, caption.c_str(), nullptr, nullptr);
-    glfwMakeContextCurrent(mData->mWindow);
-
-    // NOTE(Wuxiang): Need to initialize glew after window has been created.
-    // http://stackoverflow.com/questions/13943825/access-violation-when-using-glew-and-glfw
-    glewInit();
     glViewport(0, 0, mWidth, mHeight);
 
-    mData->mState.Initialize(mBlendStateDefault, mCullStateDefault,
-                             mDepthTestStateDefault, mOffsetStateDefault,
-                             mStencilTestStateDefault, mWireframeStateDefault);
-
-    // TODO(Wuxiang): 2017-02-25 19:27 Add input binding.
-    //glfwSetKeyCallback(mData->mWindow, KeyCallbackDispatch);
-    //glfwSetMouseButtonCallback(m_window, MouseButtonCallbackDispatch);
-    //glfwSetCursorPosCallback(m_window, MousePositionCallbackDispatch);
-    //glfwSetScrollCallback(m_window, ScrollCallbackDispatch);
-
-    //glfwSetWindowUserPointer(mData->mWindow, this);
+    // Initialize platform renderer data.
+    mData = new PlatformRendererData();
+    mData->mWindow = data->mWindow;
+    mData->mState->Initialize(mBlendStateDefault, mCullStateDefault,
+                              mDepthTestStateDefault, mOffsetStateDefault,
+                              mStencilTestStateDefault, mWireframeStateDefault);
 }
 
 void
@@ -483,3 +447,5 @@ Renderer::DestroyPlatform()
     delete mData;
 }
 }
+
+#endif

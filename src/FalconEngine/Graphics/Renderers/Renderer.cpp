@@ -27,7 +27,8 @@ using namespace std;
 #include <FalconEngine/Graphics/Renderers/Resources/Texture3d.h>
 #include <FalconEngine/Graphics/Renderers/Resources/Sampler.h>
 
-#if FALCON_ENGINE_API_OPENGL
+#if FALCON_ENGINE_PLATFORM_GLFW
+#include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
 #include <FalconEngine/Graphics/Renderers/BitmapFontRenderer.h>
 #include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLIndexBuffer.h>
 #include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLVertexBuffer.h>
@@ -47,13 +48,13 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Renderer::Renderer(const string& caption, int width, int height)
+Renderer::Renderer(const GameEngineData *data, int width, int height)
 {
     // NOTE(Wuxiang): Platform independent part initialization.
-    Initialize(width, height);
+    InitializeExceptPlatform(width, height);
 
     // NOTE(Wuxiang): Platform dependent part initialization.
-    InitializePlatform(caption);
+    InitializePlatform(data);
 }
 
 Renderer::~Renderer()
@@ -62,7 +63,7 @@ Renderer::~Renderer()
 }
 
 void
-Renderer::Initialize(int width, int height)
+Renderer::InitializeExceptPlatform(int width, int height)
 {
     assert(width > 0);
     assert(height > 0);

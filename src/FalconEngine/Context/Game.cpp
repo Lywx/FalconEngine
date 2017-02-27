@@ -6,27 +6,9 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Game::Game()
+Game::Game() :
+    mGameEngine(nullptr)
 {
-
-}
-
-Game::Game(const Game& rhs)
-{
-}
-
-Game& Game::operator=(const Game& rhs)
-{
-    return *this;
-}
-
-Game::Game(Game&& rhs) noexcept
-{
-}
-
-Game& Game::operator=(Game&& rhs) noexcept
-{
-    return *this;
 }
 
 Game::~Game()
@@ -36,11 +18,22 @@ Game::~Game()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+GameEngineSettingsSharedPtr
+Game::GetEngineSettings()
+{
+    if (!mGameEngineSettings)
+    {
+        mGameEngineSettings = std::make_shared<GameEngineSettings>();
+    }
+
+    return mGameEngineSettings;
+}
+
 void
 Game::Initialize() {};
 
 void
-Game::Exit() {};
+Game::Destory() {};
 
 void
 Game::RenderBegin() {}
@@ -56,11 +49,5 @@ Game::Update(double elapsed) { }
 
 void
 Game::UpdateInput() { }
-
-void
-Game::SetEngine(GameEngine *gameEngine)
-{
-    mGameEngine = gameEngine;
-}
 
 }

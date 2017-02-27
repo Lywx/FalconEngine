@@ -1,9 +1,16 @@
 #pragma once
 
+#include <FalconEngine/Context/ContextInclude.h>
+
+#include <string>
+
+#include <FalconEngine/Context/GameEngineSettings.h>
+
 namespace FalconEngine
 {
 
 class GameEngine;
+class GameEngineSettings;
 
 // @summary This is the context that runs the customized code. The GameEngine class
 // would use this class's
@@ -15,18 +22,30 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
     Game();
-
-    // Copy Operations
-    Game(const Game& rhs);
-    virtual Game& operator=(const Game& rhs);
-
-    // Move Operations
-    Game(Game&& rhs) noexcept;
-    virtual Game& operator=(Game&& rhs) noexcept;
-
     virtual ~Game();
 
+    Game(const Game& rhs) = delete;
+    Game& operator=(const Game& rhs) = delete;
+
 public:
+    /************************************************************************/
+    /* Engine Operation                                                     */
+    /************************************************************************/
+    GameEngine *
+    GetEngine() const
+    {
+        return mGameEngine;
+    }
+
+    void
+    SetEngine(GameEngine *gameEngine)
+    {
+        mGameEngine = gameEngine;
+    }
+
+    virtual GameEngineSettingsSharedPtr
+    GetEngineSettings();
+
     /************************************************************************/
     /* Game Operation                                                       */
     /************************************************************************/
@@ -34,7 +53,7 @@ public:
     Initialize();
 
     virtual void
-    Exit();
+    Destory();
 
     /************************************************************************/
     /* Render Operation                                                     */
@@ -57,18 +76,9 @@ public:
     virtual void
     UpdateInput();
 
-    GameEngine *
-    GetEngine() const;
-    void
-    SetEngine(GameEngine *gameEngine);
-
 protected:
-    GameEngine *mGameEngine = nullptr;
+    GameEngine                 *mGameEngine;
+    GameEngineSettingsSharedPtr mGameEngineSettings;
 };
-
-inline GameEngine *Game::GetEngine() const
-{
-    return mGameEngine;
-}
 
 }

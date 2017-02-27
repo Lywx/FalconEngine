@@ -17,6 +17,9 @@
 #define FALCON_ENGINE_OS_LINUX 1
 #endif
 #define FALCON_ENGINE_API_OPENGL 1
+#if FALCON_ENGINE_API_OPENGL
+#define FALCON_ENGINE_PLATFORM_GLFW 1
+#endif
 #define FALCON_ENGINE_DEBUG_MEMORY 1
 
 /************************************************************************/

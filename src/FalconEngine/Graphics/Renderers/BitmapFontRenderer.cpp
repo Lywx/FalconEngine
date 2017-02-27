@@ -109,18 +109,18 @@ CreateTextLines(
     _OUT_ vector<BitmapLine>& lines)
 {
     using namespace boost;
-    static auto lineStrings = vector<string>();
-    lineStrings.clear();
-    split(lineStrings, text->mTextString, is_any_of("\n"));
+    static auto sLineStrings = vector<string>();
+    sLineStrings.clear();
+    split(sLineStrings, text->mTextString, is_any_of("\n"));
 
     // Bounds is formatted as [x, y, width, height]
     const auto lineWidth = text->mTextBounds[2];
 
     int glyphCount = 0;
     auto lineCurrent = BitmapLine(lineWidth);
-    for (int lineIndex = 0; lineIndex < lineStrings.size(); ++lineIndex)
+    for (int lineIndex = 0; lineIndex < sLineStrings.size(); ++lineIndex)
     {
-        for (const wchar_t& c : lineStrings[lineIndex])
+        for (const wchar_t& c : sLineStrings[lineIndex])
         {
             // NOTE(Wuxiang): When processing English, a word is defined as space
             // separated letters. But this concept would not work
@@ -294,15 +294,15 @@ BitmapFontRenderer::PrepareText(
     const BitmapText *text,
     Color             textColor)
 {
-    static auto textLines = vector<BitmapLine>();
-    textLines.clear();
+    static auto sTextLines = vector<BitmapLine>();
+    sTextLines.clear();
 
     // Construct lines with glyph information.
-    int textGlyphCount = CreateTextLines(font, text, textLines);
+    int textGlyphCount = CreateTextLines(font, text, sTextLines);
 
     // Fill the vertex attribute into the buffer
     FillTextLines(font, text->mFontSize, Vector2f(text->mTextBounds.x, text->mTextBounds.y),
-                  Vector4f(textColor), textLines, item.mTextBufferDataIndex,
+                  Vector4f(textColor), sTextLines, item.mTextBufferDataIndex,
                   reinterpret_cast<float *>(item.mTextBuffer->GetData()));
 }
 

@@ -6,6 +6,8 @@
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/filesystem.hpp>
 
+#include <FalconEngine/Content/Asset.h>
+#include <FalconEngine/Content/AssetImporter.h>
 #include <FalconEngine/Content/Path.h>
 
 using namespace std;

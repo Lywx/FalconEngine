@@ -1,16 +1,19 @@
 #pragma once
 
 #include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLInclude.h>
-#include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLRenderState.h>
+#include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLRendererState.h>
 
 namespace FalconEngine
 {
 
-class PlatformRendererData
+class PlatformRendererData sealed
 {
 public:
-    PlatformRenderState mState;
-    GLFWwindow         *mWindow;
-};
+    PlatformRendererData();
+    ~PlatformRendererData();
 
+public:
+    PlatformRendererState *mState;
+    GLFWwindow            *mWindow;
+};
 }

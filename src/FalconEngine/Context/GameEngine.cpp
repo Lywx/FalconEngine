@@ -1,4 +1,12 @@
 #include <FalconEngine/Context/GameEngine.h>
+#include <FalconEngine/Context/GameEnginePlatform.h>
+#include <FalconEngine/Context/GameEngineGraphics.h>
+#include <FalconEngine/Context/GameEngineInput.h>
+#include <FalconEngine/Context/GameEngineSettings.h>
+
+#if FALCON_ENGINE_PLATFORM_GLFW
+#include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
+#endif
 
 namespace FalconEngine
 {
@@ -6,38 +14,11 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-GameEngine::GameEngine(Game *game)
-    : mGame(game)
+GameEngine::GameEngine(Game *game) :
+    mGame(game),
+    mInput(nullptr)
 {
     mGame->SetEngine(this);
-}
-
-GameEngine::GameEngine(const GameEngine& rhs)
-    : mGame(rhs.mGame)
-{
-}
-
-GameEngine& GameEngine::operator=(const GameEngine& rhs)
-{
-    mGame = rhs.mGame;
-    return *this;
-}
-
-GameEngine::GameEngine(GameEngine&& rhs) noexcept
-    : mGame(rhs.mGame)
-{
-    rhs.mGame = nullptr;
-}
-
-GameEngine& GameEngine::operator=(GameEngine&& rhs) noexcept
-{
-    if (this != &rhs)
-    {
-        mGame = rhs.mGame;
-        rhs.mGame = nullptr;
-    }
-
-    return *this;
 }
 
 GameEngine::~GameEngine()
@@ -57,11 +38,11 @@ GameEngine::Run()
     }
 
     Loop();
-    Exit();
+    Destory();
 }
 
 void
-GameEngine::Shutdown()
+GameEngine::Exit()
 {
     mRunning = false;
 }
@@ -72,6 +53,29 @@ GameEngine::Shutdown()
 void
 GameEngine::Initialize()
 {
+    mData = new GameEngineData();
+
+    mPlatform = GameEnginePlatform::GetInstance();
+    if (mPlatform != nullptr)
+    {
+        auto settings = mGame->GetEngineSettings();
+        mPlatform->Initialize(mData, settings);
+    }
+
+    mGraphics = GameEngineGraphics::GetInstance();
+    if (mGraphics != nullptr)
+    {
+        auto settings = mGame->GetEngineSettings();
+        mGraphics->Initialize(mData, settings);
+    }
+
+    mInput = GameEngineInput::GetInstance();
+    if (mInput != nullptr)
+    {
+        auto settings = mGame->GetEngineSettings();
+        mInput->Initialize(mData, settings);
+    }
+
     if(mGame != nullptr)
     {
         mGame->Initialize();
@@ -83,12 +87,12 @@ GameEngine::Initialize()
 void
 GameEngine::Loop()
 {
-    Counter = GameCounter();
+    mCounter = GameCounter();
     char lastFramePerformanceString[256];
 
     if (mGame != nullptr)
     {
-        double lastFrameBegunMillisecond = Counter.GetMilliseconds();
+        double lastFrameBegunMillisecond = mCounter.GetMilliseconds();
         double lastRenderBegunMillisecond = lastFrameBegunMillisecond;
         int    lastUpdateTotalCount = 0;
 
@@ -97,7 +101,7 @@ GameEngine::Loop()
 
         while (mRunning)
         {
-            double lastFrameEndedMillisecond = Counter.GetMilliseconds();
+            double lastFrameEndedMillisecond = mCounter.GetMilliseconds();
             double lastRenderEndedMillisecond = lastFrameEndedMillisecond;
 
             // Get the time elapsed during the LAST frame.
@@ -112,14 +116,14 @@ GameEngine::Loop()
             // Reset update accumulated time elapsed.
             int    currentUpdateTotalCount = 0;
             double currentUpdateTotalElapsedMillisecond = 0;
-            double lastUpdateBegunMillisecond = Counter.GetMilliseconds();
+            double lastUpdateBegunMillisecond = mCounter.GetMilliseconds();
             double lastUpdateEndedMillisecond = 0;
             do
             {
                 mGame->Update(currentUpdateTotalCount == 0 ? lastUpdateElapsedMillisecond + lastRenderElapsedMillisecond : lastUpdateElapsedMillisecond);
                 ++currentUpdateTotalCount;
 
-                lastUpdateEndedMillisecond = Counter.GetMilliseconds();
+                lastUpdateEndedMillisecond = mCounter.GetMilliseconds();
 
                 // Get the time elapsed during the LAST update.
                 lastUpdateElapsedMillisecond = lastUpdateEndedMillisecond - lastUpdateBegunMillisecond;
@@ -128,7 +132,7 @@ GameEngine::Loop()
                 // Reset update start point.
                 lastUpdateBegunMillisecond = lastUpdateEndedMillisecond;
             }
-            while (currentUpdateTotalElapsedMillisecond + lastUpdateElapsedMillisecond <= MillisecondPerRender);
+            while (currentUpdateTotalElapsedMillisecond + lastUpdateElapsedMillisecond <= mMillisecondPerRender);
 
             // Output performance profile
             double lastFrameFPS = 1000 / lastFrameElapsedMillisecond;
@@ -153,12 +157,14 @@ GameEngine::Loop()
 }
 
 void
-GameEngine::Exit()
+GameEngine::Destory()
 {
     if (mGame != nullptr)
     {
-        mGame->Exit();
+        mGame->Destory();
     }
+
+    delete mData;
 }
 
 }

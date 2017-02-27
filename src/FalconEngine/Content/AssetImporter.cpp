@@ -232,11 +232,11 @@ void
 AssetImporter::ImportModel(Model *model, const std::string& modelFilePath)
 {
     // Load model using Assimp
-    static Assimp::Importer aiModelImporter;
-    auto aiScene = aiModelImporter.ReadFile(modelFilePath, aiProcess_Triangulate | aiProcess_FlipUVs);
+    static Assimp::Importer sAiModelImporter;
+    auto aiScene = sAiModelImporter.ReadFile(modelFilePath, aiProcess_Triangulate | aiProcess_FlipUVs);
     if (!aiScene || aiScene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !aiScene->mRootNode)
     {
-        FALCON_ENGINE_THROW_EXCEPTION(string("Error: ") + aiModelImporter.GetErrorString());
+        FALCON_ENGINE_THROW_EXCEPTION(string("Error: ") + sAiModelImporter.GetErrorString());
     }
 
     // NOTE(Wuxiang): The node constructor would recursively load the necessary children nodes and textures.

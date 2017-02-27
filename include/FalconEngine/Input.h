@@ -3,41 +3,4 @@
 #include <FalconEngine/Input/InputInclude.h>
 #include <FalconEngine/Input/InputHandler.h>
 
-#include <vector>
-#include <memory>
-#include <chrono>
-
-namespace FalconEngine
-{
-namespace Input
-{
-
-class Keyboard;
-class Mouse;
-class Gamepad;
-
-enum
-{
-    IN_DEFAULT,
-    IN_EXCLUSIVE,
-};
-
-typedef bool(*fnMouseHandler)(std::shared_ptr<Mouse> pMouse, void *userData);
-typedef bool(*fnGamepadHandler)(std::shared_ptr<Gamepad> pgamepad, void *userData);
-
-inline bool ComparePriority(InputHandler& a, InputHandler& b)
-{
-    if (a.mPriority < b.mPriority)
-    {
-        return false;
-    }
-
-    if (a.mPriority > b.mPriority)
-    {
-        return true;
-    }
-
-    return false;
-}
-
-}
+// TODO(Wuxiang): 2017-02-26 11:07 Fill this header.

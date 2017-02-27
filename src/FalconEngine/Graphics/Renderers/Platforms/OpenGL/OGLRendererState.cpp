@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLRenderState.h>
+#include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLRendererState.h>
 
 #include <FalconEngine/Graphics/Renderers/States/BlendState.h>
 #include <FalconEngine/Graphics/Renderers/States/CullState.h>
@@ -13,7 +13,7 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PlatformRenderState::PlatformRenderState()
+PlatformRendererState::PlatformRendererState()
 {
     // Initialization must be deferred until an OpenGL context has been
     // created.
@@ -22,12 +22,13 @@ PlatformRenderState::PlatformRenderState()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-void PlatformRenderState::Initialize(const BlendState *blendState,
-                                     const CullState *cullState,
-                                     const DepthTestState *depthTestState,
-                                     const OffsetState *offsetState,
-                                     const StencilTestState *stencilTestState,
-                                     const WireframeState *wireframeState)
+void
+PlatformRendererState::Initialize(const BlendState *blendState,
+                                  const CullState *cullState,
+                                  const DepthTestState *depthTestState,
+                                  const OffsetState *offsetState,
+                                  const StencilTestState *stencilTestState,
+                                  const WireframeState *wireframeState)
 {
     // NOTE(Wuxiang): Alpha Test is deprecated after OpenGL 3.0
 

@@ -13,7 +13,7 @@
 #include <FalconEngine/Graphics/Renderers/BitmapWord.h>
 #include <FalconEngine/Graphics/Renderers/Camera.h>
 #include <FalconEngine/Graphics/Renderers/Renderer.h>
-#include <FalconEngine/Graphics/Renderers/RendererFacade.h>
+#include <FalconEngine/Graphics/Renderers/GameRenderer.h>
 #include <FalconEngine/Graphics/Renderers/Primitives.h>
 #include <FalconEngine/Graphics/Renderers/Viewport.h>
 #include <FalconEngine/Graphics/Renderers/Visual.h>

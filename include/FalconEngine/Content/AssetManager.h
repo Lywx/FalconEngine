@@ -4,11 +4,8 @@
 
 #include <map>
 
-#include <FalconEngine/Content/Asset.h>
-#include <FalconEngine/Content/AssetImporter.h>
 #include <FalconEngine/Graphics/Renderers/BitmapFont.h>
 #include <FalconEngine/Graphics/Renderers/Resources/Texture2d.h>
-#include <FalconEngine/Graphics/Renderers/Resources/Texture2dArray.h>
 #include <FalconEngine/Graphics/Renderers/Shaders/ShaderSource.h>
 #include <FalconEngine/Graphics/Scenes/Model.h>
 
@@ -17,19 +14,22 @@ namespace FalconEngine
 
 class BitmapFont;
 class Model;
-class Texture2d;
 class TextureArray;
+class Texture2d;
 
 class AssetManager : Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
 public:
-    static AssetManager *GetInstance()
+    static AssetManager *
+    GetInstance()
     {
+        // NOTE(Wuxiang): On concern about static method copy in different translation unit, read:
+        // http://stackoverflow.com/questions/5372091/are-static-member-functions-in-c-copied-in-multiple-translation-units
         // http://stackoverflow.com/questions/12248747/singleton-with-multithreads
-        static AssetManager instance;
-        return &instance;
+        static AssetManager sInstance;
+        return &sInstance;
     }
 
     /************************************************************************/
@@ -37,6 +37,9 @@ public:
     /************************************************************************/
     AssetManager();
     ~AssetManager();
+
+    AssetManager(const AssetManager&) = delete;
+    AssetManager& operator=(const AssetManager&) = delete;
 
     /************************************************************************/
     /* Public Members                                                       */

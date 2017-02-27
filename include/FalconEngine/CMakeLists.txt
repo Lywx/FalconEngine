@@ -28,9 +28,9 @@ set_target_properties(FalconEngine.Graphics.Include PROPERTIES LINKER_LANGUAGE C
 set_target_properties(FalconEngine.Graphics.Include PROPERTIES FOLDER "FalconEngine Library Targets")
 
 file(GLOB_RECURSE FALCON_ENGINE_INPUT_HEADER_FILES Input/*.h)
-# add_library(FalconEngine.Input.Include STATIC ${FALCON_ENGINE_INPUT_HEADER_FILES})
-# set_target_properties(FalconEngine.Input.Include PROPERTIES LINKER_LANGUAGE CXX)
-# set_target_properties(FalconEngine.Input.Include PROPERTIES FOLDER "FalconEngine Library Targets")
+add_library(FalconEngine.Input.Include STATIC ${FALCON_ENGINE_INPUT_HEADER_FILES})
+set_target_properties(FalconEngine.Input.Include PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(FalconEngine.Input.Include PROPERTIES FOLDER "FalconEngine Library Targets")
  
 file(GLOB_RECURSE FALCON_ENGINE_MATH_HEADER_FILES Math/*.h)
 add_library(FalconEngine.Math.Include STATIC ${FALCON_ENGINE_MATH_HEADER_FILES})

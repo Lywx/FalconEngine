@@ -39,7 +39,7 @@ HandednessRight::Forward(const Matrix4f & view) const
 };
 
 Matrix4f
-HandednessRight::CreatePerspective(const float& width, const float& height, const float& dmin, const float& dmax) const
+HandednessRight::CreatePerspective(float width, float height, float dmin, float dmax) const
 {
     Matrix4f result;
 
@@ -62,13 +62,13 @@ HandednessRight::CreatePerspective(const float& width, const float& height, cons
 }
 
 void
-HandednessRight::CreatePerspective(const float& width, const float& height, const float& dmin, const float& dmax, Matrix4f& result) const
+HandednessRight::CreatePerspective(float width, float height, float dmin, float dmax, Matrix4f& result) const
 {
     result = CreatePerspective(width, height, dmin, dmax);
 }
 
 Matrix4f
-HandednessRight::CreatePerspectiveFieldOfView(const float& fovy, const float& aspectRatio, const float& dmin, const float& dmax) const
+HandednessRight::CreatePerspectiveFieldOfView(float fovy, float aspectRatio, float dmin, float dmax) const
 {
     assert(0.f <= fovy && fovy <= Pi);
     assert(0.f < dmin);
@@ -109,13 +109,13 @@ HandednessRight::CreatePerspectiveFieldOfView(const float& fovy, const float& as
 }
 
 void
-HandednessRight::CreatePerspectiveFieldOfView(const float& fovy, const float& aspectRatio, const float& dmin, const float& dmax, Matrix4f &result) const
+HandednessRight::CreatePerspectiveFieldOfView(float fovy, float aspectRatio, float dmin, float dmax, Matrix4f &result) const
 {
     result = CreatePerspectiveFieldOfView(fovy, aspectRatio, dmin, dmax);
 }
 
 Matrix4f
-HandednessRight::CreateOrthogonal(const float& width, const float& height, const float& dmin, const float& dmax) const
+HandednessRight::CreateOrthogonal(float left, float right, float bottom, float top, float dmin, float dmax) const
 {
     Matrix4f result;
 
@@ -124,23 +124,25 @@ HandednessRight::CreateOrthogonal(const float& width, const float& height, const
     result = Matrix4f::Zero;
 
     // NOTE(Wuxiang): Map x, y from into [-1, 1] in right-handed system.
-    result[0][0] = 2.0f / width;
-    result[1][1] = 2.0f / height;
+    result[0][0] = 2.0f / (right - left);
+    result[1][1] = 2.0f / (top - bottom);
 
     // NOTE(Wuxiang): Map z from [-near, -far] into [-1, 1] in right-handed system,
     // for illustration of coordinate system I am using, refer to Dave Shreiner, etc OpenGL Programming Guide, 8th, 2013, P230, Figure 5.14
     result[2][2] = -2.0f / (dmax - dmin);
-    result[3][2] = -(dmin + dmax) / (dmax - dmin);
 
+    result[3][0] = -(right + left) / (right - left);
+    result[3][1] = -(top + bottom) / (top - bottom);
+    result[3][2] = -(dmin + dmax) / (dmax - dmin);
     result[3][3] = 1.0f;
 
     return result;
 }
 
 void
-HandednessRight::CreateOrthogonal(const float& width, const float& height, const float& dmin, const float& dmax, Matrix4f& result) const
+HandednessRight::CreateOrthogonal(float left, float right, float bottom, float top, float dmin, float dmax, Matrix4f& result) const
 {
-    result = CreateOrthogonal(width, height, dmin, dmax);
+    result = CreateOrthogonal(left, right, bottom, top, dmin, dmax);
 }
 
 Matrix4f

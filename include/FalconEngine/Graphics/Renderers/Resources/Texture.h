@@ -59,7 +59,7 @@ const int TexelSize[int(TextureFormat::Count)] =
 {
     0, // None
 
-    1, // R8G8B8A8
+    4, // R8G8B8A8
 };
 
 class Texture : public Asset

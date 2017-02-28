@@ -1,6 +1,7 @@
 #include <FalconEngine/Graphics/Effects/BitmapFontEffect.h>
 #include <FalconEngine/Graphics/Renderers/BitmapFont.h>
 #include <FalconEngine/Graphics/Renderers/Resources/VertexFormat.h>
+#include <glm/gtc/matrix_transform.inl>
 
 using namespace std;
 
@@ -48,13 +49,14 @@ BitmapFontEffect::BitmapFontEffect(const Handedness *handedness) :
     blendState->mDestinationFactor = BlendDestinationFactor::ONE_MINUS_SRC_ALPHA;
     pass->SetBlendState(move(blendState));
 
-    pass->SetCullState(make_unique<CullState>());
+    auto cullState = make_unique<CullState>();
+    pass->SetCullState(move(cullState));
 
     auto depthTestState = make_unique<DepthTestState>();
     depthTestState->mTestEnabled = false;
     pass->SetDepthTestState(move(depthTestState));
 
-    pass->SetOffsetState(make_unique< OffsetState>());
+    pass->SetOffsetState(make_unique<OffsetState>());
     pass->SetStencilTestState(make_unique<StencilTestState>());
     pass->SetWireframeState(make_unique<WireframeState>());
 
@@ -73,7 +75,7 @@ BitmapFontEffect::CreateInstance(VisualEffectInstance *instance, const BitmapFon
 {
     CheckEffectCompatible(instance);
 
-    auto projection = mCameraHandedness->CreateOrthogonal(float(width), float(height), 1.0f, 1000.0f);
+    auto projection = mCameraHandedness->CreateOrthogonal(0, float(width), 0, float(height), -1.0f, 1.0f);
     instance->SetShaderUniform(0, ShareConstant<Matrix4f>("ProjectionTransform", projection));
 
     // NOTE(Wuxiang): You don't need to set the texture sampler uniform because

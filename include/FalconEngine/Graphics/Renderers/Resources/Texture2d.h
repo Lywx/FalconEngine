@@ -29,14 +29,10 @@ public:
     {
         ar << boost::serialization::base_object<const TextureBuffer>(*this);
 
-        int width  = mDimension[0];
-        int height = mDimension[1];
-        for (int h = 0; h < height; ++h)
+        // NOTE(Wuxiang): mDataByteNum is serialized in TextureBuffer.
+        for (int i = 0; i < mDataByteNum; ++i)
         {
-            for (int w = 0; w < width; ++w)
-            {
-                ar << mData[w + h * width];
-            }
+            ar << mData[i];
         }
     }
 
@@ -45,16 +41,11 @@ public:
     {
         ar >> boost::serialization::base_object<TextureBuffer>(*this);
 
-        int width  = mDimension[0];
-        int height = mDimension[1];
-
-        mData = new unsigned char[width * height];
-        for (int h = 0; h < height; ++h)
+        // NOTE(Wuxiang): mDataByteNum is serialized in TextureBuffer.
+        mData = new unsigned char[mDataByteNum];
+        for (int i = 0; i < mDataByteNum; ++i)
         {
-            for (int w = 0; w < width; ++w)
-            {
-                ar >> mData[w + h * width];
-            }
+            ar >> mData[i];
         }
     }
 

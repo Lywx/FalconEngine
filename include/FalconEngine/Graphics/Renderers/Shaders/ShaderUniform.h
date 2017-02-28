@@ -33,8 +33,12 @@ enum class ShaderUniformType
 class Camera;
 class Visual;
 
-using ShaderUniformUpdatePrototype = void(const Visual *, const Camera *);
-using ShaderUniformUpdateFunction = std::function<ShaderUniformUpdatePrototype>;
+template <typename T>
+using ShaderUniformUpdatePrototype = T(const Visual *, const Camera *);
+
+template <typename T>
+using ShaderUniformUpdateFunction = std::function<ShaderUniformUpdatePrototype<T>>;
+
 class ShaderUniform
 {
 public:
@@ -43,6 +47,9 @@ public:
     /************************************************************************/
     ShaderUniform(const std::string name, ShaderUniformType type);
     virtual ~ShaderUniform();
+
+    virtual void
+    Update(const Visual *visual, const Camera *camera);
 
 public:
     std::string       mName;
@@ -68,7 +75,8 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
-    const T& GetValue() const;
+    const T&
+    GetValue() const;
 
 protected:
     T mValue;

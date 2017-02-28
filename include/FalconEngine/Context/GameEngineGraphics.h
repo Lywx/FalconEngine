@@ -66,7 +66,7 @@ public:
     void
     ClearStencilBuffer(unsigned int stencil)
     {
-        mRenderer->ClearDepthBuffer(stencil);
+        mRenderer->ClearStencilBuffer(stencil);
     }
 
     void

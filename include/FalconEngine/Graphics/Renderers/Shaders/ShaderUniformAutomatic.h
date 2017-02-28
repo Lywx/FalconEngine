@@ -13,7 +13,7 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
     using ShaderUniformValue<T>::ShaderUniformValue;
-    ShaderUniformAutomatic(const std::string& name, const ShaderUniformUpdateFunction updateFunction);
+    ShaderUniformAutomatic(const std::string& name, const ShaderUniformUpdateFunction<T> updateFunction);
 
 public:
     /************************************************************************/
@@ -24,13 +24,13 @@ public:
     bool
     GetUpdateEnable() const;
 
-    ShaderUniformUpdateFunction
+    ShaderUniformUpdateFunction<T>
     GetUpdateFunction() const;
 
     // @summary The function you would pass as a customized way to update the
     // uniform variable, mostly as a throw-away function that could not be reused.
     void
-    SetUpdateFunction(ShaderUniformUpdateFunction updateFunction);
+    SetUpdateFunction(ShaderUniformUpdateFunction<T> updateFunction);
 
     // TODO(Wuxiang 2017-01-25 11:42): not done yet
 
@@ -38,14 +38,14 @@ public:
     // function. If you intent to enforce reusability, you could override this
     // method using a fixed template class argument.
     virtual void
-    Update(const Visual *visual, const Camera *camera);
+    Update(const Visual *visual, const Camera *camera) override;
 
 protected:
-    ShaderUniformUpdateFunction mUpdateFunction;
+    ShaderUniformUpdateFunction<T> mUpdateFunction;
 };
 
 template <typename T>
-ShaderUniformAutomatic<T>::ShaderUniformAutomatic(const std::string& name, const ShaderUniformUpdateFunction updateFunction) :
+ShaderUniformAutomatic<T>::ShaderUniformAutomatic(const std::string& name, const ShaderUniformUpdateFunction<T> updateFunction) :
     ShaderUniformValue<T>(name, T()),
     mUpdateFunction(updateFunction)
 {
@@ -59,7 +59,7 @@ ShaderUniformAutomatic<T>::GetUpdateEnable() const
 }
 
 template <typename T>
-ShaderUniformUpdateFunction
+ShaderUniformUpdateFunction<T>
 ShaderUniformAutomatic<T>::GetUpdateFunction() const
 {
     return mUpdateFunction;
@@ -67,7 +67,7 @@ ShaderUniformAutomatic<T>::GetUpdateFunction() const
 
 template <typename T>
 void
-ShaderUniformAutomatic<T>::SetUpdateFunction(ShaderUniformUpdateFunction updateFunction)
+ShaderUniformAutomatic<T>::SetUpdateFunction(ShaderUniformUpdateFunction<T> updateFunction)
 {
     mUpdateFunction = updateFunction;
 }
@@ -78,7 +78,8 @@ ShaderUniformAutomatic<T>::Update(const Visual *visual, const Camera *camera)
 {
     if (mUpdateFunction)
     {
-        mUpdateFunction(visual, camera);
+        mValue = mUpdateFunction(visual, camera);
+        mUpdated = true;
     }
 }
 

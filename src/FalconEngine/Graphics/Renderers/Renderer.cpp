@@ -822,7 +822,27 @@ Renderer::Disable(const Shader *shader)
 }
 
 void
-Renderer::Enable(const VisualPass *pass)
+Renderer::Update(const VisualPass *pass, ShaderUniform *uniform, const Visual *visual)
+{
+    // Update uniform location
+    if (uniform->mLocation == 0)
+    {
+        auto shader = pass->GetShader();
+        uniform->mLocation = shader->GetUniformLocation(uniform->mName);
+    }
+
+    // Update uniform value
+    uniform->Update(visual, mCamera);
+
+    // Update uniform value in context.
+    if (uniform->mUpdated)
+    {
+        PlatformShaderUniform::UpdateContext(uniform);
+    }
+}
+
+void
+Renderer::Enable(const VisualPass *pass, const Visual *visual)
 {
     FALCON_ENGINE_CHECK_NULLPTR(pass);
 
@@ -849,16 +869,7 @@ Renderer::Enable(const VisualPass *pass)
         // NOTE(Wuxiang): The location of the shader uniform would be stored in
         // shader's uniform table after the binding of the shader.
         auto uniform = pass->GetShaderUniform(uniformIndex);
-        if (uniform->mLocation == 0)
-        {
-            auto shader = pass->GetShader();
-            uniform->mLocation = shader->GetUniformLocation(uniform->mName);
-        }
-
-        if (uniform->mUpdated)
-        {
-            PlatformShaderUniform::UpdateContext(uniform);
-        }
+        Update(pass, uniform, visual);
     }
 
     // Set pass' render states.
@@ -937,7 +948,7 @@ Renderer::Draw(const Visual *visual,
         Enable(shader);
 
         // Enable the pass.
-        Enable(pass);
+        Enable(pass, visual);
 
         // Draw the primitive.
         DrawPrimitive(visual);

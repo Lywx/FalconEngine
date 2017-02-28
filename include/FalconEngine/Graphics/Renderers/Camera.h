@@ -114,7 +114,7 @@ public:
     SetProjectionPerspective(float width, float height, float nearPlane, float farPlane);
 
     void
-    SetProjectionOrthogonal(float width, float height, float nearPlane, float farPlane);
+    SetProjectionOrthogonal(float left, float right, float bottom, float top, float nearPlane, float farPlane);
 
     virtual void
     LookAt(const Vector3f& from, const Vector3f& to, const Vector3f& up);

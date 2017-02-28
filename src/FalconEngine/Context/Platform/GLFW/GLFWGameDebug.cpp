@@ -69,7 +69,7 @@ glDebugSeverityString(GLenum severity)
         "High",
         "Medium",
         "Low",
-        "Unknown"
+        "Notification"
     };
 
     auto severityIndex = min<size_t>(severity - GL_DEBUG_SEVERITY_HIGH, ArraySize(sevirityNames) - 1);
@@ -101,19 +101,22 @@ glDebugCallback(
     const GLchar *message,
     GLvoid       *userParam)
 {
-    GameDebug::OutputString("OpenGL Error:\n");
-    GameDebug::OutputString("=============\n");
-    GameDebug::OutputString(string("Object:    ") + to_string(id) + "\n");
-    GameDebug::OutputString(string("Severity:  ") + glDebugSeverityString(severity) + "\n");
-    GameDebug::OutputString(string("Type:      ") + glDebugTypeString(type) + "\n");
-    GameDebug::OutputString(string("Source:    ") + glDebugSourceString(source) + "\n");
-    GameDebug::OutputString(string("Message:   ") + message + "\n");
+    if (severity == GL_DEBUG_SEVERITY_HIGH)
+    {
+        GameDebug::OutputString("OpenGL Error:\n");
+        GameDebug::OutputString("=============\n");
+        GameDebug::OutputString(string("Object:    ") + to_string(id) + "\n");
+        GameDebug::OutputString(string("Severity:  ") + glDebugSeverityString(severity) + "\n");
+        GameDebug::OutputString(string("Type:      ") + glDebugTypeString(type) + "\n");
+        GameDebug::OutputString(string("Source:    ") + glDebugSourceString(source) + "\n");
+        GameDebug::OutputString(string("Message:   ") + message + "\n");
 
-    // Trigger a breakpoint in gDEBugger...
-    glFinish();
+        // Trigger a breakpoint in gDEBugger...
+        glFinish();
 
-    // Trigger a breakpoint in traditional debuggers...
-    FALCON_ENGINE_DEBUG_BREAK();
+        // Trigger a breakpoint in traditional debuggers...
+        FALCON_ENGINE_DEBUG_BREAK();
+    }
 }
 
 void
@@ -124,14 +127,14 @@ glDebugInitMessage()
     {
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 
-        // https://www.opengl.org/sdk/docs/man/docbook4/xhtml/glDebugMessageControl.xml
+        // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glDebugMessageControl.xhtml
         glDebugMessageControl(
-            GL_DONT_CARE, // source filter
-            GL_DONT_CARE, // type filter
-            GL_DONT_CARE, // severity filter
-            0,            // count, which ignores ids array.
-            NULL,         // ids, which is ignored when count = 0.
-            GL_TRUE       // enable message
+            GL_DONT_CARE,           // source filter
+            GL_DONT_CARE,           // type filter
+            GL_DEBUG_SEVERITY_HIGH, // severity filter
+            0,                      // count, which ignores ids array.
+            NULL,                   // ids, which is ignored when count = 0.
+            GL_TRUE                 // enable message
         );
 
         // https://www.opengl.org/sdk/docs/man/html/glDebugMessageCallback.xhtml

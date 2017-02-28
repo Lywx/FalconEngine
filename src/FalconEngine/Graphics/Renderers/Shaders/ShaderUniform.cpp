@@ -17,4 +17,10 @@ ShaderUniform::ShaderUniform(const std::string name, ShaderUniformType type) :
 ShaderUniform::~ShaderUniform()
 {
 }
+
+void
+ShaderUniform::Update(const Visual *visual, const Camera *camera)
+{
+}
+
 }

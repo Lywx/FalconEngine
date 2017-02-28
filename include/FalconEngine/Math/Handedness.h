@@ -43,24 +43,24 @@ public:
 
     // @remark Provide OpenGL version of z coordinate [-1, 1] in clip space.
     virtual Matrix4f
-    CreatePerspective(const float& width, const float& height, const float& dmin, const float& dmax) const = 0;
+    CreatePerspective(float width, float height, float dmin, float dmax) const = 0;
 
     virtual void
-    CreatePerspective(const float& width, const float& height, const float& dmin, const float& dmax, Matrix4f& result) const = 0;
+    CreatePerspective(float width, float height, float dmin, float dmax, Matrix4f& result) const = 0;
 
     // @remark Provide OpenGL version of z coordinate [-1, 1] in clip space.
     virtual Matrix4f
-    CreatePerspectiveFieldOfView(const float& fovy, const float& aspectRatio, const float& dmin, const float& dmax) const = 0;
+    CreatePerspectiveFieldOfView(float fovy, float aspectRatio, float dmin, float dmax) const = 0;
 
     virtual void
-    CreatePerspectiveFieldOfView(const float& fovy, const float& aspectRatio, const float& dmin, const float& dmax, Matrix4f& result) const = 0;
+    CreatePerspectiveFieldOfView(float fovy, float aspectRatio, float dmin, float dmax, Matrix4f& result) const = 0;
 
     // @remark Provide OpenGL version of z coordinate [-1, 1] in clip space.
     virtual Matrix4f
-    CreateOrthogonal(const float& width, const float& height, const float& dmin, const float& dmax) const = 0;
+    CreateOrthogonal(float left, float right, float bottom, float top, float dmin, float dmax) const = 0;
 
     virtual void
-    CreateOrthogonal(const float& width, const float& height, const float& dmin, const float& dmax, Matrix4f& result) const = 0;
+    CreateOrthogonal(float left, float right, float bottom, float top, float dmin, float dmax, Matrix4f& result) const = 0;
 
     virtual Matrix4f
     CreateLookAt(const Vector3f& eyePosition, const Vector3f& targetPosition, const Vector3f& up) const = 0;
@@ -86,25 +86,25 @@ public:
 
     // @summary Create Left-handed symmetric perspective transform matrix, assuming vector on the right side.
     Matrix4f
-    CreatePerspective(const float& width, const float& height, const float& dmin, const float& dmax) const override;
+    CreatePerspective(float width, float height, float dmin, float dmax) const override;
 
     // @summary Create left-handed symmetric perspective transform matrix, assuming vector on the right side.
     void
-    CreatePerspective(const float& width, const float& height, const float& dmin, const float& dmax, Matrix4f& result) const override;
+    CreatePerspective(float width, float height, float dmin, float dmax, Matrix4f& result) const override;
 
     // @summary Create left-handed symmetric perspective transform matrix based on the field of view, assuming the vector is on the right side.
     Matrix4f
-    CreatePerspectiveFieldOfView(const float& fovy, const float& aspectRatio, const float& dmin, const float& dmax) const override;
+    CreatePerspectiveFieldOfView(float fovy, float aspectRatio, float dmin, float dmax) const override;
 
     // @summary Create left-handed perspective matrix based on the field of view, assuming the vector is on the right side.
     void
-    CreatePerspectiveFieldOfView(const float& fovy, const float& aspectRatio, const float& dmin, const float& dmax, Matrix4f &result) const override;
+    CreatePerspectiveFieldOfView(float fovy, float aspectRatio, float dmin, float dmax, Matrix4f &result) const override;
 
     Matrix4f
-    CreateOrthogonal(const float& width, const float& height, const float& dmin, const float& dmax) const override;
+    CreateOrthogonal(float left, float right, float bottom, float top, float dmin, float dmax) const override;
 
     void
-    CreateOrthogonal(const float& width, const float& height, const float& dmin, const float& dmax, Matrix4f& result) const override;
+    CreateOrthogonal(float left, float right, float bottom, float top, float dmin, float dmax, Matrix4f& result) const override;
 
     // @summary Create left-handed view transform matrix, assuming the vector is on the right side.
     Matrix4f
@@ -133,25 +133,25 @@ public:
     // @summary Create right-handed symmetric perspective transform matrix, assuming vector on the right side.
     // @remark Compatible with glFrustum.
     Matrix4f
-    CreatePerspective(const float& width, const float& height, const float& dmin, const float& dmax) const override;
+    CreatePerspective(float width, float height, float dmin, float dmax) const override;
 
     // @summary Create right-handed symmetric perspective transform matrix, assuming vector on the right side.
     void
-    CreatePerspective(const float& width, const float& height, const float& dmin, const float& dmax, Matrix4f& result) const override;
+    CreatePerspective(float width, float height, float dmin, float dmax, Matrix4f& result) const override;
 
     // @summary Create right-handed symmetric perspective transform matrix based on the field of view, assuming the vector is on the right side.
     Matrix4f
-    CreatePerspectiveFieldOfView(const float& fovy, const float& aspectRatio, const float& dmin, const float& dmax) const override;
+    CreatePerspectiveFieldOfView(float fovy, float aspectRatio, float dmin, float dmax) const override;
 
     // @summary Create right-handed perspective matrix based on the field of view, assuming the vector is on the right side.
     void
-    CreatePerspectiveFieldOfView(const float& fovy, const float& aspectRatio, const float& dmin, const float& dmax, Matrix4f &result) const override;
+    CreatePerspectiveFieldOfView(float fovy, float aspectRatio, float dmin, float dmax, Matrix4f &result) const override;
 
     Matrix4f
-    CreateOrthogonal(const float& width, const float& height, const float& dmin, const float& dmax) const override;
+    CreateOrthogonal(float left, float right, float bottom, float top, float dmin, float dmax) const override;
 
     void
-    CreateOrthogonal(const float& width, const float& height, const float& dmin, const float& dmax, Matrix4f& result) const override;
+    CreateOrthogonal(float left, float right, float bottom, float top, float dmin, float dmax, Matrix4f& result) const override;
 
     // @summary Create right-handed view transform matrix, assuming the vector is on the right side.
     Matrix4f

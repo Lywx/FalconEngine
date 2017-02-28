@@ -24,6 +24,7 @@ class BitmapFont;
 class BitmapText;
 class Camera;
 class Shader;
+class ShaderUniform;
 class Visual;
 class VisualEffectInstance;
 class VisualPass;
@@ -307,10 +308,16 @@ public:
     /* Pass Management                                                      */
     /************************************************************************/
     void
-    Enable(const VisualPass *pass);
+    Enable(const VisualPass *pass, const Visual *visual);
 
     void
     Disable(const VisualPass *pass);
+
+    /************************************************************************/
+    /* Uniform Management                                                   */
+    /************************************************************************/
+    void
+    Update(const VisualPass *pass, ShaderUniform *uniform, const Visual *visual);
 
     /************************************************************************/
     /* Draw                                                                 */

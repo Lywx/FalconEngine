@@ -224,11 +224,11 @@ Camera::SetProjectionPerspective(float width, float height, float nearPlane, flo
 }
 
 void
-Camera::SetProjectionOrthogonal(float width, float height, float nearPlane, float farPlane)
+Camera::SetProjectionOrthogonal(float left, float right, float bottom, float top, float nearPlane, float farPlane)
 {
     mNearPlane = nearPlane;
     mFarPlane = farPlane;
-    mProjection = mHandedness->CreateOrthogonal(width, height, nearPlane, farPlane);
+    mProjection = mHandedness->CreateOrthogonal(left, right, bottom, top, nearPlane, farPlane);
 }
 
 void

@@ -149,9 +149,9 @@ GameEngine::Loop()
 
             // Reset render start point.
             lastRenderBegunMillisecond = lastUpdateEndedMillisecond;
-            mGame->RenderBegin();
-            mGame->Render(1.0f);
-            mGame->RenderEnd();
+            mGame->RenderBegin(mGraphics);
+            mGame->Render(mGraphics, 1.0f);
+            mGame->RenderEnd(mGraphics);
         }
     }
 }

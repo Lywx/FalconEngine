@@ -60,13 +60,13 @@ public:
     /* Render Operation                                                     */
     /************************************************************************/
     virtual void
-    RenderBegin();
+    RenderBegin(GameEngineGraphics *graphics);
 
     virtual void
-    Render(double percent);
+    Render(GameEngineGraphics *graphics, double percent);
 
     virtual void
-    RenderEnd();
+    RenderEnd(GameEngineGraphics *graphics);
 
     /************************************************************************/
     /* Update Operation                                                     */
@@ -74,7 +74,7 @@ public:
 
     // @param elapsed -- Millisecond elapsed during last update / render cycle.
     virtual void
-    Update(const GameEngineInput *input, double elapsed);
+    Update(GameEngineInput *input, double elapsed);
 
     void
     UpdateInput();

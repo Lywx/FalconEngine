@@ -48,16 +48,16 @@ public:
 
 public:
     void
-    DrawString(BitmapFont *font,
-               float       fontSize,
-               Vector2f          textPosition,
-               const BitmapText *text,
-               const Color       textColor = ColorPalette::White,
-               float             textLineWidth = std::numeric_limits<float>().max());
+    DrawStaticString(const BitmapFont *font,
+                     float             fontSize,
+                     Vector2f           textPosition,
+                     const std::string& text,
+                     const Color        textColor = ColorPalette::White,
+                     float              textLineWidth = std::numeric_limits<float>().max());
 
     void
-    DrawString(BitmapFont *font,
-               float       fontSize,
+    DrawString(const BitmapFont *font,
+               float             fontSize,
                Vector2f           textPosition,
                const std::string& text,
                const Color        textColor = ColorPalette::White,
@@ -81,6 +81,9 @@ public:
 private:
     void
     InitializePlatform(const GameEngineData *data);
+
+    void
+    Destroy();
 
 protected:
     BitmapFontRenderer                 *mRendererForFont;

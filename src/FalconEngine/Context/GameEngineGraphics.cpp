@@ -18,12 +18,24 @@ GameEngineGraphics::GameEngineGraphics() :
 
 GameEngineGraphics::~GameEngineGraphics()
 {
+    Destroy();
 }
-
 
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+void
+GameEngineGraphics::DrawStaticString(const BitmapFont *font, float fontSize, Vector2f textPosition, const std::string& text, const Color textColor, float textLineWidth)
+{
+    mRendererForFont->BatchTextStatic(font, fontSize, text, textPosition, textLineWidth);
+}
+
+void
+GameEngineGraphics::DrawString(const BitmapFont *font, float fontSize, Vector2f textPosition, const std::string& text, const Color textColor, float textLineWidth)
+{
+    mRendererForFont->BatchTextDynamic(font, fontSize, text, textPosition, textLineWidth);
+}
+
 void
 GameEngineGraphics::Initialize(
     _IN_  const GameEngineData *data,
@@ -53,6 +65,12 @@ GameEngineGraphics::Initialize(
     InitializePlatform(data);
 }
 
+void
+GameEngineGraphics::Destroy()
+{
+    delete mRenderer;
+    delete mRendererForFont;
+}
 
 void
 GameEngineGraphics::RenderBegin()

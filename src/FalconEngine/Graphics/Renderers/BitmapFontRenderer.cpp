@@ -62,6 +62,7 @@ BitmapFontRenderer::Initialize(int width, int height)
         mStaticTextQuads = make_shared<VisualQuads>(textVertexFormat, textVertexGroupDynamic);
 
         mStaticTextItem = BitmapFontRenderItem();
+        mStaticTextItem.mTextBuffer = mStaticTextBuffer;
     }
 
     // Setup dynamic text rendering.
@@ -75,6 +76,7 @@ BitmapFontRenderer::Initialize(int width, int height)
         //mDynamicTextQuads->SetVertexNum()
 
         mDynamicTextItem = BitmapFontRenderItem();
+        mDynamicTextItem.mTextBuffer = mDynamicTextBuffer;
     }
 }
 
@@ -306,11 +308,13 @@ BitmapFontRenderer::PrepareText(
                   reinterpret_cast<float *>(item.mTextBuffer->GetData()));
 }
 
-void BitmapFontRenderer::RenderBegin()
+void
+BitmapFontRenderer::RenderBegin()
 {
 }
 
-void BitmapFontRenderer::Render(Renderer *renderer, double percent)
+void
+BitmapFontRenderer::Render(Renderer *renderer, double percent)
 {
     renderer->Draw(mStaticTextQuads.get(), mTextEffectInstance.get());
     renderer->Draw(mDynamicTextQuads.get(), mTextEffectInstance.get());
@@ -327,8 +331,10 @@ void BitmapFontRenderer::Render(Renderer *renderer, double percent)
     //glDrawArrays(GL_TRIANGLES, 0, renderGroup.mTextVertexCount);
 }
 
-void BitmapFontRenderer::RenderEnd()
+void
+BitmapFontRenderer::RenderEnd()
 {
+    mDynamicTextItem.mTextBufferDataIndex = 0;
 }
 
 }

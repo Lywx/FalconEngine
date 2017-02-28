@@ -18,5 +18,4 @@ support multiple buffer switching without switch vertex format.
 ++ Added model sampler.
 ++ Added more members in Light class.
 
-++ Merged GameEngine's Initialization with Renderer System Initialization.
-++ Add GameInput into GameEngine.
+++ Added GameEngineGraphics as facade class into rendering system.

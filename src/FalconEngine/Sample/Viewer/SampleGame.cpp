@@ -4,13 +4,15 @@ using namespace std;
 using namespace FalconEngine;
 
 SampleGame::SampleGame() :
-    mAssetManager(nullptr), mRenderer(nullptr), mFontConsole(nullptr), mFontDisplay(nullptr), mModelAxe(nullptr)
+    mAssetManager(nullptr),
+    mFontConsole(nullptr),
+    mFontDisplay(nullptr),
+    mModelAxe(nullptr)
 {
 }
 
 SampleGame::~SampleGame()
 {
-    delete mRenderer;
 }
 
 void
@@ -24,27 +26,19 @@ SampleGame::Initialize()
     mFontConsole = mAssetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.fnt.bin");
     mFontDisplay = mAssetManager->LoadFont("Content/Fonts/NSimSunDistanceField.fnt.bin");
 
-    mModelAxe = mAssetManager->LoadModel("Content/Models/Axe.obj");
+    //mModelAxe = mAssetManager->LoadModel("Content/Models/Axe.obj");
 }
 
 void
-SampleGame::RenderBegin()
+SampleGame::Render(GameEngineGraphics *graphics, double percent)
 {
+    graphics->DrawString(mFontConsole, 13, Vector2f(100, 100), "Hello", ColorPalette::AliceBlue);
+
+    Game::Render(graphics, percent);
 }
 
 void
-SampleGame::Render(double percent)
-{
-    mRenderer->DrawString(100, 100, "", ColorPalette::AliceBlue);
-}
-
-void
-SampleGame::RenderEnd()
-{
-}
-
-void
-SampleGame::Update(const GameEngineInput *input, double elapsed)
+SampleGame::Update(GameEngineInput *input, double elapsed)
 {
     auto keyboard = input->GetKeyboardState();
     if (keyboard->KeyPressed(Key::Escape))

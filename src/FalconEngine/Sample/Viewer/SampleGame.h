@@ -20,24 +20,18 @@ public:
     Initialize() override;
 
     virtual void
-    RenderBegin() override;
+    Render(GameEngineGraphics *graphics, double percent) override;
 
     virtual void
-    Render(double percent) override;
-
-    virtual void
-    RenderEnd() override;
-
-    virtual void
-    Update(const GameEngineInput *input, double elapsed) override;
+    Update(GameEngineInput *input, double elapsed) override;
 
 private:
-    AssetManager *mAssetManager;
+    AssetManager     *mAssetManager;
 
     const BitmapFont *mFontConsole;
     const BitmapFont *mFontDisplay;
 
-    Model *mModelAxe;
+    Model            *mModelAxe;
 };
 
 }

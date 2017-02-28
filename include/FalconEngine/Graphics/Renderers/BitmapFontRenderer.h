@@ -19,7 +19,7 @@ class BitmapFontRenderItem
 {
 public:
     VertexBufferSharedPtr mTextBuffer;
-    size_t                mTextBufferDataIndex;
+    size_t                mTextBufferDataIndex = 0;
 };
 
 class BitmapFontEffect;

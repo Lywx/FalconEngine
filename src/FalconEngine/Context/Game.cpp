@@ -1,4 +1,5 @@
 #include <FalconEngine/Context/Game.h>
+#include <FalconEngine/Context/GameEngineGraphics.h>
 
 namespace FalconEngine
 {
@@ -24,7 +25,7 @@ Game::GetEngineSettings()
     if (!mGameEngineSettings)
     {
         mGameEngineSettings = std::make_shared<GameEngineSettings>();
-        mGameEngineSettings->mGraphics->mWidth = 800;
+        mGameEngineSettings->mGraphics->mWidth  = 800;
         mGameEngineSettings->mGraphics->mHeight = 600;
     }
 
@@ -32,22 +33,35 @@ Game::GetEngineSettings()
 }
 
 void
-Game::Initialize() {};
+Game::Initialize()
+{
+}
 
 void
-Game::Destory() {};
+Game::Destory()
+{
+}
 
 void
-Game::RenderBegin() {}
+Game::RenderBegin(GameEngineGraphics *graphics)
+{
+    graphics->RenderBegin();
+}
 
 void
-Game::Render(const GameEngineGraphics *gra double percent) { }
+Game::Render(GameEngineGraphics *graphics, double percent)
+{
+    graphics->Render(percent);
+}
 
 void
-Game::RenderEnd() {}
+Game::RenderEnd(GameEngineGraphics *graphics)
+{
+    graphics->RenderEnd();
+}
 
 void
-Game::Update(const GameEngineInput *input, double elapsed)
+Game::Update(GameEngineInput *input, double elapsed)
 {
 }
 

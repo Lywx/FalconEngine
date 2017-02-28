@@ -80,7 +80,7 @@ public:
     PushShaderFile(ShaderType shaderType, const std::string& shaderPath);
 
 private:
-    ShaderSourceTable mSourceTable;
+    ShaderSourceTable  mSourceTable;
     ShaderUniformTable mUniformTable;
 };
 

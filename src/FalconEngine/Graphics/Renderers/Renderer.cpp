@@ -423,16 +423,16 @@ Renderer::Disable(int textureUnit, const Texture *texture)
         FALCON_ENGINE_NOT_SUPPORT();
         break;
     case TextureType::Texture1d:
-        FALCON_ENGINE_NOT_SUPPORT();
+        Disable(textureUnit, reinterpret_cast<const Texture1d *>(texture));
         break;
     case TextureType::Texture2d:
         Disable(textureUnit, reinterpret_cast<const Texture2d *>(texture));
         break;
     case TextureType::Texture2dArray:
-        FALCON_ENGINE_NOT_SUPPORT();
+        Disable(textureUnit, reinterpret_cast<const Texture2dArray *>(texture));
         break;
     case TextureType::Texture3d:
-        FALCON_ENGINE_NOT_SUPPORT();
+        Disable(textureUnit, reinterpret_cast<const Texture3d *>(texture));
         break;
     case TextureType::TextureCube:
         FALCON_ENGINE_NOT_SUPPORT();

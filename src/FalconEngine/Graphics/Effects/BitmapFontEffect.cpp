@@ -37,7 +37,7 @@ BitmapFontEffect::BitmapFontEffect(const Handedness *handedness) :
     shader->PushShaderFile(ShaderType::VertexShader, "Content/Shaders/BitmapFont.vert.glsl");
     shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shaders/BitmapFont.frag.glsl");
 
-    shader->PushUniform("Projection", ShaderUniformType::FloatMat4);
+    shader->PushUniform("ProjectionTransform", ShaderUniformType::FloatMat4);
 
     auto pass = make_unique<VisualPass>();
     pass->SetShader(shader);
@@ -74,21 +74,13 @@ BitmapFontEffect::CreateInstance(VisualEffectInstance *instance, const BitmapFon
     CheckEffectCompatible(instance);
 
     auto projection = mCameraHandedness->CreateOrthogonal(float(width), float(height), 1.0f, 1000.0f);
-    instance->SetShaderUniform(0, ShareConstant<Matrix4f>("Projection", projection));
+    instance->SetShaderUniform(0, ShareConstant<Matrix4f>("ProjectionTransform", projection));
 
     // NOTE(Wuxiang): You don't need to set the texture sampler uniform because
     // they are predefined in the fe_Texture.glsl as #include extension.
 
     instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Font), font->GetTexture());
     instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Font), font->GetSampler());
-}
-
-VisualEffectInstanceSharedPtr
-BitmapFontEffect::CreateInstance(const BitmapFont *font, int width, int height)
-{
-    auto instance = make_shared<VisualEffectInstance>(GetSharedPtr());
-    CreateInstance(instance.get(), font, width, height);
-    return instance;
 }
 
 }

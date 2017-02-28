@@ -64,12 +64,4 @@ PhongLightingEffect::CreateInstance(VisualEffectInstance *instance, const Light 
     //                            new0 LightAttenuationConstant(light));
 }
 
-VisualEffectInstanceSharedPtr
-PhongLightingEffect::CreateInstance(const Light *light, const Material *material)
-{
-    auto instance = new VisualEffectInstance(GetSharedPtr());
-    CreateInstance(instance, light, material);
-    return VisualEffectInstanceSharedPtr(instance);
-}
-
 }

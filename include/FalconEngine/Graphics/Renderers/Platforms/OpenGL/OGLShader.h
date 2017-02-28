@@ -24,7 +24,7 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    CreateFromString(GLenum shaderType, const std::string& shaderSource);
+    CreateFromString(int shaderIndex, GLenum shaderType, const std::string& shaderSource);
 
     void
     LinkProgram();

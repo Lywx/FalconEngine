@@ -66,15 +66,12 @@ public:
     const WireframeState *
     GetWireframeState(int passIndex) const;
 
-    VisualEffectSharedPtr
-    GetSharedPtr();
-
 protected:
     void
     CheckEffectCompatible(VisualEffectInstance *instance) const;
 
 protected:
-    VisualEffectSharedPtr  mEffect;                                             // Effect shared_ptr controls the destruction of this class.
+    VisualEffectSharedPtr     mEffect;                                             // Effect shared_ptr controls the destruction of this class.
     VisualPassUniquePtrVector mPassHandleVector;                                   // Passes contained in this effect.
 };
 

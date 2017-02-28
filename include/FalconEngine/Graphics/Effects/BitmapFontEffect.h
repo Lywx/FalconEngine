@@ -38,11 +38,9 @@ public:
     /************************************************************************/
     // @summary Add required parameters to the existing visual effect instance.
     void
-    CreateInstance(VisualEffectInstance *instance, const BitmapFont *font, int width, int height) const;
-
-    // @summary Create a new visual effect instance.
-    VisualEffectInstanceSharedPtr
-    CreateInstance(const BitmapFont *font, int width, int height);
+    CreateInstance(
+        _IN_OUT_ VisualEffectInstance *instance,
+        _IN_     const BitmapFont     *font, int width, int height) const;
 
     VertexFormatSharedPtr
     CreateVertexFormat();

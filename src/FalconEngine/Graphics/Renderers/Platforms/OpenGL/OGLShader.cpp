@@ -50,21 +50,21 @@ ProcessShaderExtension(
     _IN_     const std::string& shaderPath,
     _IN_OUT_ int&               extensionBeginIndex)
 {
-    //using namespace boost;
+    using namespace boost;
 
-    //static vector<string> shaderExtensionLines;
-    //shaderExtensionLines.clear();
+    static vector<string> shaderExtensionLines;
+    shaderExtensionLines.clear();
 
-    //trim(shaderExtension);
-    //split(shaderExtensionLines, shaderExtension, "\n");
-    //for (auto& shaderExtensionLine : shaderExtensionLines)
-    //{
-    //    trim(shaderExtensionLine);
-    //    if (!shaderExtensionLine.empty())
-    //    {
-    //        ProcessShaderInclude(shaderSourceString, shaderExtensionLine, shaderPath, extensionBeginIndex);
-    //    }
-    //}
+    trim(shaderExtension);
+    split(shaderExtensionLines, shaderExtension, is_any_of("\n"));
+    for (auto& shaderExtensionLine : shaderExtensionLines)
+    {
+        trim(shaderExtensionLine);
+        if (!shaderExtensionLine.empty())
+        {
+            ProcessShaderInclude(shaderSourceString, shaderExtensionLine, shaderPath, extensionBeginIndex);
+        }
+    }
 }
 
 // ReSharper disable once CppNotAllPathsReturnValue
@@ -83,7 +83,7 @@ ExtractShaderExtension(
     auto extensionHeaderEndFound = extensionHeaderEndIndex != string::npos;
 
     if (extensionHeaderBeginFound && extensionHeaderEndFound
-            && extensionHeaderEndFound > extensionHeaderBeginFound)
+            && extensionHeaderEndIndex > extensionHeaderBeginIndex)
     {
         auto extensionContentBeginIndex = extensionHeaderBeginIndex + extensionHeaderBeginString.size();
         auto extensionContentEndIndex = extensionHeaderEndIndex - 1;
@@ -125,15 +125,15 @@ PlatformShader::PlatformShader(Shader *shader) :
     std::fill_n(mShaders, int(ShaderType::Count), 0);
 
     // Compile all shader source.
-    for (int shaderIndex = 0; shaderIndex < shader->GetShaderNum(); ++shaderIndex)
+    for (auto& shaderSourcePair : shader->mSourceTable)
     {
-        auto shaderSource = shader->GetShaderSource(shaderIndex);
+        auto shaderIndex = shaderSourcePair.first;
+        auto shaderType = shader->GetShaderType(shaderIndex);
+        auto& shaderSource = shaderSourcePair.second;
         ProcessShaderSource(shaderSource);
 
-        auto shaderType = shader->GetShaderType(shaderIndex);
-
         // Compile for each part of shader
-        CreateFromString(OpenGLShaderType[int(shaderType)], shaderSource->mSource);
+        CreateFromString(shaderIndex, OpenGLShaderType[int(shaderType)], shaderSource->mSource);
     }
 
     // Link all the part together.
@@ -152,7 +152,7 @@ PlatformShader::~PlatformShader()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PlatformShader::CreateFromString(GLenum shaderType, const string& shaderSource)
+PlatformShader::CreateFromString(int shaderIndex, GLenum shaderType, const string& shaderSource)
 {
     GLuint shader = glCreateShader(shaderType);
 
@@ -172,11 +172,12 @@ PlatformShader::CreateFromString(GLenum shaderType, const string& shaderSource)
         GLchar *infoLog = new GLchar[infoLogLength];
         glGetShaderInfoLog(shader, infoLogLength, nullptr, infoLog);
 
-        cerr << typeid(Shader).name() << ": Compile: " << infoLog << endl;
+        cerr << "Shader compile error: " << infoLog << endl;
         delete[] infoLog;
     }
 
-    //mShaders[mShaderNum++] = shader;
+    mShaders[shaderIndex] = shader;
+    ++mShaderNum;
 }
 
 void
@@ -212,14 +213,25 @@ PlatformShader::LinkProgram()
         GLchar *infoLog = new GLchar[infoLogLength];
         glGetProgramInfoLog(mProgram, infoLogLength, nullptr, infoLog);
 
-        cerr << typeid(Shader).name() << ": Link: " << infoLog << endl;
+        cerr << "Shader link error: " << infoLog << endl;
         delete[] infoLog;
     }
 
     // Remove the unnecessary shader handle.
-    glDeleteShader(mShaders[VertexShaderIndex]);
-    glDeleteShader(mShaders[GeometryShaderIndex]);
-    glDeleteShader(mShaders[FragmentShaderIndex]);
+    if (mShaders[VertexShaderIndex] != 0)
+    {
+        glDeleteShader(mShaders[VertexShaderIndex]);
+    }
+
+    if (mShaders[GeometryShaderIndex] != 0)
+    {
+        glDeleteShader(mShaders[GeometryShaderIndex]);
+    }
+
+    if (mShaders[FragmentShaderIndex] != 0)
+    {
+        glDeleteShader(mShaders[FragmentShaderIndex]);
+    }
 }
 
 void

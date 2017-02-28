@@ -1,4 +1,8 @@
-#version 330 core
+#version 430 core
+
+#fe_extension : enable
+#include "fe_Texture.glsl"
+#fe_extension : disable
 
 layout (location = 0) in vec2  Position;
 layout (location = 1) in vec2  TexCoord;
@@ -10,7 +14,7 @@ layout (location = 4) in float FontEdge;
 // integer vertex attribute is so not lossless. The result would be unexpected.
 layout (location = 5) in float FontPage;
 
-uniform mat4 Projection;
+uniform mat4 ProjectionTransform;
 
 out Vout
 {
@@ -23,7 +27,7 @@ out Vout
 
 void main(void)
 {
-	gl_Position = Projection * vec4(Position, 0.0, 1.0);
+	gl_Position = ProjectionTransform * vec4(Position, 0.0, 1.0);
 
     vout.TexCoord  = TexCoord;
     vout.FontColor = FontColor;

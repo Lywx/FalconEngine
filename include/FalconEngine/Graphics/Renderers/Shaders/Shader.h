@@ -19,7 +19,7 @@ enum class ShaderType
 
 enum ShaderIndex
 {
-    VertexShaderIndex = 0,
+    VertexShaderIndex   = 0,
     GeometryShaderIndex = 1,
     FragmentShaderIndex = 2,
 };

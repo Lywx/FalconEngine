@@ -80,17 +80,6 @@ VisualEffect::GetWireframeState(int passIndex) const
     return mPassHandleVector.at(passIndex)->GetWireframeState();
 }
 
-VisualEffectSharedPtr
-VisualEffect::GetSharedPtr()
-{
-    if (mEffect == nullptr)
-    {
-        mEffect = VisualEffectSharedPtr(this);
-    }
-
-    return mEffect;
-}
-
 void
 VisualEffect::CheckEffectCompatible(VisualEffectInstance *instance) const
 {

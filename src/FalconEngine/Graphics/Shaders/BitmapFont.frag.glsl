@@ -1,8 +1,7 @@
-#version 420 core
+#version 430 core
 
 #fe_extension : enable
 #include "fe_Texture.glsl"
-#include "fe_Function.glsl"
 #fe_extension : disable
 
 in Vout

@@ -46,8 +46,8 @@ BitmapFontRenderer::Initialize(int width, int height)
 
         // Prepare text effect.
         mTextEffect = make_shared<BitmapFontEffect>(&mTextHandedness);
-        mTextEffectInstance = mTextEffect->CreateInstance(font, width, height);
-
+        mTextEffectInstance = make_shared<VisualEffectInstance>(mTextEffect);
+        mTextEffect->CreateInstance(mTextEffectInstance.get(), font, width, height);
     }
 
     auto textVertexFormat = mTextEffect->CreateVertexFormat();

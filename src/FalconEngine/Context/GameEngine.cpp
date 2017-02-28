@@ -120,7 +120,7 @@ GameEngine::Loop()
             double lastUpdateEndedMillisecond = 0;
             do
             {
-                mGame->Update(currentUpdateTotalCount == 0 ? lastUpdateElapsedMillisecond + lastRenderElapsedMillisecond : lastUpdateElapsedMillisecond);
+                mGame->Update(mInput, currentUpdateTotalCount == 0 ? lastUpdateElapsedMillisecond + lastRenderElapsedMillisecond : lastUpdateElapsedMillisecond);
                 ++currentUpdateTotalCount;
 
                 lastUpdateEndedMillisecond = mCounter.GetMilliseconds();

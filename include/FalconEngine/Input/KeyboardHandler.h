@@ -5,14 +5,14 @@
 #include <memory>
 
 #include <FalconEngine/Input/InputHandler.h>
-#include <FalconEngine/Input/Keyboard.h>
+#include <FalconEngine/Input/KeyboardState.h>
 
 namespace FalconEngine
 {
 
 class GameEngineInput;
 
-class KeyboardHandler : public InputHandler<KeyboardSharedPtr>
+class KeyboardHandler : public InputHandler<KeyboardStateSharedPtr>
 {
     FALCON_ENGINE_RTTI_DECLARE;
 

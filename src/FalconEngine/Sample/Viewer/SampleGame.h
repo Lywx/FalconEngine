@@ -4,11 +4,10 @@
 #include <FalconEngine/Context.h>
 #include <FalconEngine/Core.h>
 #include <FalconEngine/Graphics.h>
+#include <FalconEngine/Input.h>
 #include <FalconEngine/Math.h>
 
 namespace FalconEngine
-{
-namespace Sample
 {
 
 class SampleGame : public Game
@@ -30,14 +29,10 @@ public:
     RenderEnd() override;
 
     virtual void
-    Update(double elapsed) override;
-
-    virtual void
-    UpdateInput() override;
+    Update(const GameEngineInput *input, double elapsed) override;
 
 private:
     AssetManager *mAssetManager;
-    GameEngineGraphics *mRenderer;
 
     const BitmapFont *mFontConsole;
     const BitmapFont *mFontDisplay;
@@ -45,5 +40,4 @@ private:
     Model *mModelAxe;
 };
 
-}
 }

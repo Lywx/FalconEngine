@@ -6,8 +6,8 @@ using namespace FalconEngine;
 
 int main(int argc, char **argv)
 {
-    auto game = Sample::SampleGame();
-    auto gameEngine = GameEngine(&game);
+    SampleGame game;
+    GameEngine gameEngine(&game);
     gameEngine.Run();
 
     return 0;

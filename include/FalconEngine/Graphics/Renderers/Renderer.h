@@ -404,9 +404,6 @@ public:
     void
     SetWindowSize(int width, int height);
 
-    void
-    GetWindow();
-
     /************************************************************************/
     /* Default Framebuffer Management                                       */
     /************************************************************************/
@@ -435,6 +432,7 @@ private:
     void
     DrawPrimitive(const Visual *visual);
 
+private:
     PlatformRendererData *mData;
 };
 

@@ -5,20 +5,15 @@
 #include <memory>
 
 #include <FalconEngine/Input/InputHandler.h>
+#include <FalconEngine/Input/MouseState.h>
 
 namespace FalconEngine
 {
 
-typedef bool(*MouseHandlerPrototype)(std::shared_ptr<Mouse> mouse, void *userData);
-
-class MouseHandler : public InputHandler
+class MouseHandler : public InputHandler<MouseStateSharedPtr>
 {
 public:
-    MouseHandlerPrototype mPHandler;
-    MouseHandler()
-        : InputHandler()
-        , mPHandler(0)
-    {}
+    MouseHandler();
 };
 
 }

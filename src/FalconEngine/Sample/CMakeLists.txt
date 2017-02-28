@@ -28,6 +28,7 @@ function(add_sample sampleProject sampleDir)
         FalconEngine.Context.lib
         FalconEngine.Core.lib
         FalconEngine.Graphics.lib
+        FalconEngine.Input.lib
         FalconEngine.Math.lib
         ${FALCON_ENGINE_CONTENT_PIPELINE_EXTRA_BINRARY_FILES})
 

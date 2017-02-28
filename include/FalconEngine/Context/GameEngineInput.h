@@ -5,14 +5,14 @@
 #include <memory>
 #include <vector>
 
-#include <FalconEngine/Input/Mouse.h>
-#include <FalconEngine/Input/MouseHandler.h>
-#include <FalconEngine/Input/Keyboard.h>
-#include <FalconEngine/Input/KeyboardHandler.h>
+#include <FalconEngine/Context/GameEngineSettings.h>
+#include <FalconEngine/Input/MouseState.h>
+#include <FalconEngine/Input/KeyboardState.h>
 
 namespace FalconEngine
 {
 
+class GameEngineData;
 class GameEngineInput
 {
 public:
@@ -27,6 +27,8 @@ public:
     }
 
 public:
+    friend class GameEngineInputDispatcher;
+
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
@@ -34,55 +36,33 @@ public:
     ~GameEngineInput();
 
 public:
-    void
-    Initialize(const GameEngineData *data, GameEngineInputSettingsSharedPtr settings);
-
-    std::shared_ptr<Keyboard>
-    CreateKeyboard();
-
-    std::shared_ptr<Mouse>
-    CreateMouse();
-
-    void
-    Update(float elapsed);
-
-    std::shared_ptr<Keyboard>
-    GetKeyboard() const
+    KeyboardStateSharedPtr
+    GetKeyboardState() const
     {
-        return mKeyboard;
+        return mKeyboardState;
     }
 
-    std::shared_ptr<Mouse>
-    GetMouse() const
+    MouseStateSharedPtr
+    GetMouseState() const
     {
-        return mMouseCurrent;
+        return mMouseState;
     }
 
-    //// Keyboard Handling
-    //void HandleKeyboard();
-    //void RegisterKeyboardHandler(fnKeyboardHandler pHandler, void *caller = 0, size_t priority = IN_DEFAULT);
-    //void UnregisterKeyboardHandler(fnKeyboardHandler pHandler);
+    void
+    Initialize(const GameEngineData *data, GameEngineSettingsSharedPtr settings);
 
-    //// Mouse Handling
-    //void HandleMouse();
-    //void RegisterMouseHandler(fnMouseHandler pHandler, void *caller = 0, size_t priority = IN_DEFAULT);
-    //void UnregisterMouseHandler(fnMouseHandler pHandler);
 private:
     void
     InitializePlatform(const GameEngineData *data);
 
+    void
+    DestroyPlatform();
+
 private:
-
-    std::shared_ptr<Keyboard>   mKeyboard;
-    std::shared_ptr<Mouse>      mMouse;
-
-    std::vector<KeyboardHandlerPrototype> mKeyboard_handlers;
-    std::vector<MouseHandler>     mMouse_handlers;
-
-    float mLastUpdate;
+    GameEngineInputDispatcher       *mDispatcher;
     GameEngineInputSettingsSharedPtr mSettings;
-    MouseState mMouseCurrent;
-    MouseState mMousePrevious;
+    KeyboardStateSharedPtr           mKeyboardState;
+    MouseStateSharedPtr              mMouseState;
 };
 
 }

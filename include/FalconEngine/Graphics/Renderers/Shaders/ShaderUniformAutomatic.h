@@ -8,8 +8,6 @@ namespace FalconEngine
 template <typename T>
 class ShaderUniformAutomatic : public ShaderUniformValue<T>
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */

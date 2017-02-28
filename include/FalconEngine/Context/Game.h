@@ -8,7 +8,8 @@
 
 namespace FalconEngine
 {
-
+class GameEngineGraphics;
+class GameEngineInput;
 class GameEngine;
 class GameEngineSettings;
 
@@ -70,10 +71,12 @@ public:
     /************************************************************************/
     /* Update Operation                                                     */
     /************************************************************************/
-    virtual void
-    Update(double elapsed);
 
+    // @param elapsed -- Millisecond elapsed during last update / render cycle.
     virtual void
+    Update(const GameEngineInput *input, double elapsed);
+
+    void
     UpdateInput();
 
 protected:

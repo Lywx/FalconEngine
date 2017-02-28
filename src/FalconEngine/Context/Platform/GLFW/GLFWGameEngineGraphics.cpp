@@ -4,7 +4,7 @@ namespace FalconEngine
 {
 
 void
-GameEngineGraphics::InitializePlatform(GameEngineData *data)
+GameEngineGraphics::InitializePlatform(const GameEngineData *data)
 {
 }
 

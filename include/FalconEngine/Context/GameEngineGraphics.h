@@ -80,7 +80,7 @@ public:
 
 private:
     void
-    InitializePlatform(GameEngineData *data);
+    InitializePlatform(const GameEngineData *data);
 
 protected:
     BitmapFontRenderer                 *mRendererForFont;

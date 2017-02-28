@@ -4,13 +4,14 @@ namespace FalconEngine
 {
 
 PlatformRendererData::PlatformRendererData() :
-    mState(nullptr),
+    mState(new PlatformRendererState()),
     mWindow(nullptr)
 {
 }
 
 PlatformRendererData::~PlatformRendererData()
 {
+    delete mState;
 }
 
 }

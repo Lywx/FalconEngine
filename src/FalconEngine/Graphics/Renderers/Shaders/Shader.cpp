@@ -1,6 +1,7 @@
 #include <FalconEngine/Graphics/Renderers/Shaders/Shader.h>
 
 #include <fstream>
+#include <iostream>
 
 #include <FalconEngine/Content/AssetManager.h>
 
@@ -85,7 +86,7 @@ Shader::PushShaderFile(ShaderType shaderType, const std::string& shaderPath)
     }
     else
     {
-        cerr << "Error loading shader \"" << shaderPath << "\"." << endl;
+        std::cerr << "Error loading shader \"" << shaderPath << "\"." << endl;
     }
 }
 

@@ -17,7 +17,7 @@ public:
     static GameEnginePlatform *
     GetInstance()
     {
-        GameEnginePlatform sInstance;
+        static GameEnginePlatform sInstance;
         return &sInstance;
     }
 

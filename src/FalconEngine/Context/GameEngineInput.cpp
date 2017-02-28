@@ -7,43 +7,26 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 GameEngineInput::GameEngineInput() :
-    mKeyboard(nullptr),
-    mMouse(nullptr)
+    mDispatcher(nullptr),
+    mKeyboardState(std::make_shared<KeyboardState>()),
+    mMouseState(std::make_shared<MouseState>())
 {
-
 }
 
 GameEngineInput::~GameEngineInput()
 {
+    DestroyPlatform();
 }
 
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
 void
-GameEngineInput::Initialize(const GameEngineData *data, GameEngineInputSettingsSharedPtr settings)
+GameEngineInput::Initialize(const GameEngineData *data, GameEngineSettingsSharedPtr settings)
 {
-    mSettings = settings;
+    mSettings = settings->mInput;
 
     InitializePlatform(data);
 }
 
-std::shared_ptr<Keyboard>
-GameEngineInput::CreateKeyboard()
-{
-    if (mKeyboard)
-    {
-        return mKeyboard;
-    }
-
-    mKeyboard = std::make_shared<Keyboard>();
-    mKeyboard->Initialize(false);
-    return mKeyboard;
-
-}
-
-void
-GameEngineInput::Update(float elapsed)
-{
-}
 }

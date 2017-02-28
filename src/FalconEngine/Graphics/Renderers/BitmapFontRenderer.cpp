@@ -42,7 +42,7 @@ BitmapFontRenderer::Initialize(int width, int height)
 
     // Setup text effect.
     {
-        auto font = assetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.bin");
+        auto font = assetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.fnt.bin");
 
         // Prepare text effect.
         mTextEffect = make_shared<BitmapFontEffect>(&mTextHandedness);

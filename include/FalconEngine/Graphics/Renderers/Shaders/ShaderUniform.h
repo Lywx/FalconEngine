@@ -35,10 +35,8 @@ class Visual;
 
 using ShaderUniformUpdatePrototype = void(const Visual *, const Camera *);
 using ShaderUniformUpdateFunction = std::function<ShaderUniformUpdatePrototype>;
-class ShaderUniform : public Object
+class ShaderUniform
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -60,8 +58,6 @@ using ShaderUniformPtrVector = std::vector<ShaderUniformSharedPtr>;
 template<typename T>
 class ShaderUniformValue : public ShaderUniform
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -143,6 +139,13 @@ inline ShaderUniformValue<Vector3f>::ShaderUniformValue(const std::string& name,
 template <>
 inline ShaderUniformValue<Vector4f>::ShaderUniformValue(const std::string& name, const Vector4f& value) :
     ShaderUniform(name, ShaderUniformType::FloatVec4),
+    mValue(value)
+{
+}
+
+template <>
+inline ShaderUniformValue<Matrix4f>::ShaderUniformValue(const std::string& name, const Matrix4f& value) :
+    ShaderUniform(name, ShaderUniformType::FloatMat4),
     mValue(value)
 {
 }

@@ -3,8 +3,6 @@
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(ShaderUniform, Object);
-
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/

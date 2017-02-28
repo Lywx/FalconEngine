@@ -28,6 +28,14 @@
 namespace FalconEngine
 {
 
+template<typename T, unsigned N>
+inline size_t
+ArraySize(T(&arr)[N])
+{
+    return N;
+}
+
+
 inline void
 ThrowNullException(const std::string& name)
 {

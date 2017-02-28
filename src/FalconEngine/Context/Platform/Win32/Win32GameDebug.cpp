@@ -3,7 +3,8 @@
 #include <windows.h>
 #include <string>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 /* static */ void GameDebug::OutputString(std::string str)
 {

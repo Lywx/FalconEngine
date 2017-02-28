@@ -6,6 +6,7 @@
 
 #include <FalconEngine/Context/GameEngineGraphicsSettings.h>
 #include <FalconEngine/Context/GameEngineSettings.h>
+#include <FalconEngine/Graphics/Renderers/Renderer.h>
 #include <FalconEngine/Math/Color.h>
 #include <FalconEngine/Math/Vector2.h>
 
@@ -47,6 +48,33 @@ public:
     ~GameEngineGraphics();
 
 public:
+    /************************************************************************/
+    /* Renderer API                                                         */
+    /************************************************************************/
+    void
+    ClearColorBuffer(Vector4f color)
+    {
+        mRenderer->ClearColorBuffer(color);
+    }
+
+    void
+    ClearDepthBuffer(float depth)
+    {
+        mRenderer->ClearDepthBuffer(depth);
+    }
+
+    void
+    ClearStencilBuffer(unsigned int stencil)
+    {
+        mRenderer->ClearDepthBuffer(stencil);
+    }
+
+    void
+    ClearBuffers(Vector4f color, float depth, unsigned int stencil)
+    {
+        mRenderer->ClearBuffers(color, depth, stencil);
+    }
+
     void
     DrawStaticString(const BitmapFont *font,
                      float             fontSize,

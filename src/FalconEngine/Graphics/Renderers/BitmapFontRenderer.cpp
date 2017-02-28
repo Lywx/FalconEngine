@@ -86,15 +86,15 @@ BitmapFontRenderer::BatchTextDynamic(
     float             fontSize,
     std::string textString,
     Vector2f    textPosition,
-    float       textLineWidth,
-    Color       textColor)
+    Color       textColor,
+    float       textLineWidth)
 {
     auto text = BitmapText(fontSize, textString, textPosition, textLineWidth);
     PrepareText(mDynamicTextItem, font, &text, textColor);
 }
 
 void
-BitmapFontRenderer::BatchTextStatic(const BitmapFont *font, float fontSize, std::string textString, Vector2f textPosition, float textLineWidth, Color textColor)
+BitmapFontRenderer::BatchTextStatic(const BitmapFont *font, float fontSize, std::string textString, Vector2f textPosition, Color textColor, float textLineWidth)
 {
     auto text = BitmapText(fontSize, textString, textPosition, textLineWidth);
     PrepareText(mStaticTextItem, font, &text, textColor);

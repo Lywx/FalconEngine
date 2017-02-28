@@ -27,12 +27,14 @@ public:
     void save(Archive & ar, const unsigned int version) const
     {
         ar << boost::serialization::base_object<const Texture>(*this);
+        ar << mDataByteNum;
     }
 
     template<class Archive>
     void load(Archive & ar, const unsigned int version)
     {
         ar >> boost::serialization::base_object<Texture>(*this);
+        ar >> mDataByteNum;
     }
 
     BOOST_SERIALIZATION_SPLIT_MEMBER()

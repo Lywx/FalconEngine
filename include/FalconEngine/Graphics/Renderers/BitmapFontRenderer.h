@@ -45,16 +45,16 @@ public:
                      float             fontSize,
                      std::string textString,
                      Vector2f    textPosition,
-                     float       textLineWidth = std::numeric_limits<float>().max(),
-                     Color       textColor = ColorPalette::White);
+                     Color       textColor = ColorPalette::White,
+                     float       textLineWidth = std::numeric_limits<float>().max());
 
     void
     BatchTextStatic(const BitmapFont *font,
                     float             fontSize,
                     std::string textString,
                     Vector2f    textPosition,
-                    float       textLineWidth = std::numeric_limits<float>().max(),
-                    Color       textColor = ColorPalette::White);
+                    Color       textColor = ColorPalette::White,
+                    float       textLineWidth = std::numeric_limits<float>().max());
 
     void RenderBegin();
     void Render(Renderer *renderer, double percent);

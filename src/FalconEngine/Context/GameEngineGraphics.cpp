@@ -27,13 +27,13 @@ GameEngineGraphics::~GameEngineGraphics()
 void
 GameEngineGraphics::DrawStaticString(const BitmapFont *font, float fontSize, Vector2f textPosition, const std::string& text, const Color textColor, float textLineWidth)
 {
-    mRendererForFont->BatchTextStatic(font, fontSize, text, textPosition, textLineWidth);
+    mRendererForFont->BatchTextStatic(font, fontSize, text, textPosition, textColor, textLineWidth);
 }
 
 void
 GameEngineGraphics::DrawString(const BitmapFont *font, float fontSize, Vector2f textPosition, const std::string& text, const Color textColor, float textLineWidth)
 {
-    mRendererForFont->BatchTextDynamic(font, fontSize, text, textPosition, textLineWidth);
+    mRendererForFont->BatchTextDynamic(font, fontSize, text, textPosition, textColor, textLineWidth);
 }
 
 void
@@ -88,6 +88,7 @@ void
 GameEngineGraphics::RenderEnd()
 {
     mRendererForFont->RenderEnd();
+    mRenderer->SwapBuffers();
 }
 
 }

@@ -61,6 +61,8 @@ BitmapFontEffect::BitmapFontEffect(const Handedness *handedness) :
     pass->SetBlendState(move(blendState));
 
     auto cullState = make_unique<CullState>();
+    cullState->mEnabled = true;
+    cullState->mCounterClockwise = false;
     pass->SetCullState(move(cullState));
 
     auto depthTestState = make_unique<DepthTestState>();
@@ -69,7 +71,10 @@ BitmapFontEffect::BitmapFontEffect(const Handedness *handedness) :
 
     pass->SetOffsetState(make_unique<OffsetState>());
     pass->SetStencilTestState(make_unique<StencilTestState>());
-    pass->SetWireframeState(make_unique<WireframeState>());
+
+    auto wireframwState = make_unique<WireframeState>();
+    wireframwState->mEnabled = false;
+    pass->SetWireframeState(move(wireframwState));
 
     InsertPass(move(pass));
 }

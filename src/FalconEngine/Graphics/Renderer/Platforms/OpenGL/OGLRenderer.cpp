@@ -75,12 +75,13 @@ Renderer::SetCullState(const CullState *cullState)
             mData->mState->mCullEnabled = true;
             glEnable(GL_CULL_FACE);
             glFrontFace(GL_CCW);
+            glCullFace(GL_BACK);
         }
 
-        bool face = mCullStateCurrent->mCounterClockwise;
-        if (face != mData->mState->mCullCounterClockwise)
+        bool cullCounterClockwise = mCullStateCurrent->mCounterClockwise;
+        if (cullCounterClockwise != mData->mState->mCullCounterClockwise)
         {
-            mData->mState->mCullCounterClockwise = face;
+            mData->mState->mCullCounterClockwise = cullCounterClockwise;
             if (mData->mState->mCullCounterClockwise)
             {
                 glCullFace(GL_FRONT);

@@ -1,11 +1,11 @@
 #include <FalconEngine/ContentInclude.h>
 #include <FalconEngine/Content/AssetProcessor.h>
 
-using namespace boost;
 using namespace std;
 using namespace FalconEngine;
 
-int main(int argc, char **argv)
+int
+main(int argc, char **argv)
 {
     auto assetProcessor = AssetProcessor();
 

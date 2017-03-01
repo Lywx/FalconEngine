@@ -57,7 +57,7 @@ PlatformRendererState::Initialize(const BlendState *blendState,
 
     mCullEnabled ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
     glFrontFace(GL_CCW);
-    glCullFace(mCullCounterClockwise ? GL_BACK : GL_FRONT);
+    glCullFace(mCullCounterClockwise ? GL_FRONT : GL_BACK);
 
     // Depth Test
     mDepthTestEnabled = depthTestState->mTestEnabled;

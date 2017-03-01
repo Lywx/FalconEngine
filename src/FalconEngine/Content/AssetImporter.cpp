@@ -26,7 +26,7 @@ VertexGroupSharedPtr
 CreateModelVertexBuffer(const aiMesh *aiMesh)
 {
     // Memory allocation for vertex buffer.
-    int vertexNum = int(aiMesh->mNumVertices);
+    auto vertexNum = int(aiMesh->mNumVertices);
     auto vertexBuffer = std::make_shared<VertexBuffer>(vertexNum, sizeof(ModelVertex), BufferUsage::Static);
     auto vertexes = reinterpret_cast<ModelVertex *>(vertexBuffer->GetData());
 

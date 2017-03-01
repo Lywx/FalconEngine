@@ -1,4 +1,5 @@
 #include <FalconEngine/Graphics/Renderers/Primitives.h>
+#include <FalconEngine/Graphics/Renderers/Resources/VertexGroup.h>
 
 namespace FalconEngine
 {
@@ -31,6 +32,24 @@ Primitives::~Primitives()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+int
+Primitives::GetVertexNum() const
+{
+    return mVertexGroup->GetVertexNum();
+}
+
+void
+Primitives::SetVertexNum(int vertexNum) const
+{
+    mVertexGroup->SetVertexNum(vertexNum);
+}
+
+const VertexGroup *
+Primitives::GetVertexGroup() const
+{
+    return mVertexGroup.get();
+}
+
 void
 Primitives::SetVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer, int offset, int stride)
 {

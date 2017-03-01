@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 
 #include <map>
 #include <vector>
@@ -88,16 +88,16 @@ public:
     Renderer(const GameEngineData *data, int width, int height);
     virtual ~Renderer();
 
-    typedef std::map<const VertexBuffer *, PlatformVertexBuffer *> PlatformVertexBufferTable;
-    typedef std::map<const VertexFormat *, PlatformVertexFormat *> PlatformVertexFormatTable;
-    typedef std::map<const IndexBuffer *,  PlatformIndexBuffer *> PlatformIndexBufferTable;
-    typedef std::map<const Texture1d *, PlatformTexture1d *> PlatformTexture1dTable;
-    typedef std::map<const Texture2d *, PlatformTexture2d *> PlatformTexture2dTable;
-    typedef std::map<const Texture2dArray *, PlatformTexture2dArray *> PlatformTexture2dArrayTable;
-    typedef std::map<const Texture3d *, PlatformTexture3d *> PlatformTexture3dTable;
-    typedef std::map<const Sampler *, PlatformSampler *> PlatformTextureSamplerTable;
+    using PlatformVertexBufferMap   = std::map<const VertexBuffer *, PlatformVertexBuffer *>;
+    using PlatformVertexFormatMap   = std::map<const VertexFormat *, PlatformVertexFormat *>;
+    using PlatformIndexBufferMap    = std::map<const IndexBuffer *,  PlatformIndexBuffer *>;
+    using PlatformTexture1dMap      = std::map<const Texture1d *, PlatformTexture1d *>;
+    using PlatformTexture2dMap      = std::map<const Texture2d *, PlatformTexture2d *>;
+    using PlatformTexture2dArrayMap = std::map<const Texture2dArray *, PlatformTexture2dArray *>;
+    using PlatformTexture3dMap      = std::map<const Texture3d *, PlatformTexture3d *>;
+    using PlatformTextureSamplerMap = std::map<const Sampler *, PlatformSampler *>;
 
-    typedef std::map<const Shader *, PlatformShader *> PlatformShaderTable;
+    using PlatformShaderMap         = std::map<const Shader *, PlatformShader *>;
 
 private:
     void
@@ -342,14 +342,14 @@ private:
     /************************************************************************/
     /* Platform Hash Table                                                  */
     /************************************************************************/
-    PlatformIndexBufferTable        mIndexBufferTable;
-    PlatformVertexBufferTable       mVertexBufferTable;
-    PlatformVertexFormatTable       mVertexFormatTable;
-    PlatformTexture2dTable          mTexture2dTable;
-    PlatformTexture2dArrayTable     mTexture2dArrayTable;
-    PlatformTextureSamplerTable     mSamplerTable;
+    PlatformIndexBufferMap        mIndexBufferTable;
+    PlatformVertexBufferMap       mVertexBufferTable;
+    PlatformVertexFormatMap       mVertexFormatTable;
+    PlatformTexture2dMap          mTexture2dTable;
+    PlatformTexture2dArrayMap     mTexture2dArrayTable;
+    PlatformTextureSamplerMap     mSamplerTable;
 
-    PlatformShaderTable             mShaderTable;
+    PlatformShaderMap             mShaderTable;
 
     /************************************************************************/
     /* Renderer State                                                       */

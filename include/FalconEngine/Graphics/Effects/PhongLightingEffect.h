@@ -1,14 +1,13 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
-
+#include <FalconEngine/GraphicsInclude.h>
 #include <FalconEngine/Graphics/Renderers/VisualEffect.h>
-#include <FalconEngine/Graphics/Renderers/VisualEffectInstance.h>
-#include <FalconEngine/Graphics/Scenes/Light.h>
-#include <FalconEngine/Graphics/Scenes/Material.h>
 
 namespace FalconEngine
 {
+
+class Light;
+class Material;
 
 class PhongLightingEffect : public VisualEffect
 {
@@ -21,6 +20,7 @@ public:
     PhongLightingEffect();
     virtual ~PhongLightingEffect();
 
+public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/

@@ -6,8 +6,6 @@
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(Texture, Asset);
-
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/

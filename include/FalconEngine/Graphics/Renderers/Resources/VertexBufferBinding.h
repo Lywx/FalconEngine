@@ -1,14 +1,15 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 
 #include <map>
 #include <vector>
 
-#include <FalconEngine/Graphics/Renderers/Resources/VertexBuffer.h>
-
 namespace FalconEngine
 {
+
+class VertexBuffer;
+using VertexBufferSharedPtr = std::shared_ptr<VertexBuffer>;
 
 class VertexBufferBinding
 {
@@ -56,9 +57,5 @@ private:
     int                   mStride;
     VertexBufferSharedPtr mBuffer;
 };
-
-using VertexBufferBindingVector = std::vector<VertexBufferBinding>;
-using VertexBufferBindingTable = std::map<int, VertexBufferBinding>;
-
 
 }

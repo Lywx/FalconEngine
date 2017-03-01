@@ -1,5 +1,7 @@
 #include <FalconEngine/Content/Path.h>
 
+#include <boost/filesystem.hpp>
+
 using namespace boost;
 using namespace std;
 

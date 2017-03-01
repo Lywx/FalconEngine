@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Input/InputInclude.h>
+#include <FalconEngine/InputInclude.h>
 
 #include <unordered_map>
 
@@ -28,7 +28,5 @@ public:
     void
     KeySetState(Key key, bool pressed, double time);
 };
-
-using KeyboardStateSharedPtr = std::shared_ptr<KeyboardState>;
 
 }

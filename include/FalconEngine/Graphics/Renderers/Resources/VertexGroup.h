@@ -1,15 +1,16 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
+
+#include <vector>
+
 #include <FalconEngine/Graphics/Renderers/Resources/VertexBufferBinding.h>
 
 namespace FalconEngine
 {
 
-class VertexGroup : public Object
+class VertexGroup
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
 public:
     VertexGroup();
     virtual ~VertexGroup();
@@ -44,13 +45,11 @@ public:
     }
 
 public:
-    VertexBufferBindingTable mVertexBufferTable;
+    std::map<int, VertexBufferBinding> mVertexBufferTable;
 
 private:
     int mVertexNum;
 
 };
-
-using VertexGroupSharedPtr = std::shared_ptr<VertexGroup>;
 
 }

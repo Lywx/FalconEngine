@@ -4,7 +4,7 @@
 
 #include <boost/serialization/access.hpp>
 
-#include <FalconEngine/Content/ContentInclude.h>
+#include <FalconEngine/ContentInclude.h>
 
 namespace FalconEngine
 {
@@ -16,10 +16,8 @@ enum class AssetSource
     Stream,
 };
 
-class Asset : Object
+class Asset
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
 public:
     Asset(const std::string& fileName, const std::string& filePath);
     Asset(const Asset&) = delete;

@@ -3,8 +3,6 @@
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(TextureBuffer, Texture);
-
 TextureBuffer::TextureBuffer(const std::string& fileName, const std::string& filePath, int width, int height, int depth, TextureFormat format, TextureType type, BufferUsage usage, int mipmapLevel) :
     Texture(fileName, filePath, width, height, depth, format, type, usage, mipmapLevel)
 {

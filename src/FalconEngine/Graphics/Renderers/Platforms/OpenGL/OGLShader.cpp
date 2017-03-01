@@ -9,6 +9,7 @@
 #include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Content/Path.h>
 #include <FalconEngine/Graphics/Renderers/Shaders/ShaderSource.h>
+#include <FalconEngine/Graphics/Renderers/Shaders/ShaderUniform.h>
 
 using namespace std;
 
@@ -129,7 +130,7 @@ PlatformShader::PlatformShader(Shader *shader) :
     {
         auto shaderIndex = shaderSourcePair.first;
         auto shaderType = shader->GetShaderType(shaderIndex);
-        auto& shaderSource = shaderSourcePair.second;
+        auto shaderSource = shaderSourcePair.second.get();
         ProcessShaderSource(shaderSource);
 
         // Compile for each part of shader

@@ -1,13 +1,15 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/Graphics/SceneInclude.h>
 
 #include <memory>
 
 namespace FalconEngine
 {
 
-class Texture;
+class Texture2d;
+using Texture2dSharedPtr = std::shared_ptr<Texture2d>;
+
 class Material : public Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
@@ -20,13 +22,11 @@ public:
     virtual ~Material ();
 
 public:
-    const Texture *mAmbient;
-    const Texture *mDiffuse;
-    const Texture *mEmissive;
-    const Texture *mSpecular;
-    const Texture *mShininess;
+    Texture2dSharedPtr mAmbient;
+    Texture2dSharedPtr mDiffuse;
+    Texture2dSharedPtr mEmissive;
+    Texture2dSharedPtr mSpecular;
+    Texture2dSharedPtr mShininess;
 };
-
-using MaterialSharedPtr = std::shared_ptr<Material>;
 
 }

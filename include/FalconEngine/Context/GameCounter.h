@@ -3,29 +3,21 @@
 #include <chrono>
 #include <memory>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 class GameCounterImp;
-class GameCounter
+class GameCounter sealed
 {
 public:
-    GameCounter();
-
-    // Copy Operation
-    GameCounter(const GameCounter& rhs);
-    GameCounter& operator=(const GameCounter& rhs);
-
-    // Move Operation
-    GameCounter(GameCounter&& rhs) noexcept;
-    GameCounter& operator=(GameCounter&& rhs) noexcept;
-
-    ~GameCounter();
-
-    double GetMilliseconds() const;
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
+    static double
+    GetMilliseconds();
 
 private:
-    std::chrono::time_point<std::chrono::steady_clock> mInitializationPoint;
-    std::shared_ptr<GameCounterImp> mImplementation;
+    static std::shared_ptr<GameCounterImp> sImplementation;
 };
 
 }

@@ -1,4 +1,6 @@
 #include <FalconEngine/Context/GameEngineSettings.h>
+#include <FalconEngine/Context/GameEngineGraphicsSettings.h>
+#include <FalconEngine/Context/GameEngineInputSettings.h>
 
 namespace FalconEngine
 {

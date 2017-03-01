@@ -1,26 +1,47 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 
 #include <memory>
-
-#include <FalconEngine/Graphics/Renderers/States/BlendState.h>
-#include <FalconEngine/Graphics/Renderers/States/CullState.h>
-#include <FalconEngine/Graphics/Renderers/States/DepthTestState.h>
-#include <FalconEngine/Graphics/Renderers/States/OffsetState.h>
-#include <FalconEngine/Graphics/Renderers/States/StencilTestState.h>
-#include <FalconEngine/Graphics/Renderers/States/WireframeState.h>
-#include <FalconEngine/Graphics/Renderers/Resources/Texture.h>
-#include <FalconEngine/Graphics/Renderers/Resources/Sampler.h>
-#include <FalconEngine/Graphics/Renderers/Shaders/Shader.h>
+#include <map>
+#include <vector>
 
 namespace FalconEngine
 {
 
-class VisualPass : public Object
-{
-    FALCON_ENGINE_RTTI_DECLARE;
+class Sampler;
+using SamplerMap = std::map<int, const Sampler *>;
 
+class Texture;
+using TextureMap = std::map<int, const Texture *>;
+
+class Shader;
+using ShaderSharedPtr = std::shared_ptr<Shader>;
+
+class ShaderUniform;
+using ShaderUniformSharedPtr = std::shared_ptr<ShaderUniform>;
+using ShaderUniformSharedPtrVector = std::vector<ShaderUniformSharedPtr>;
+
+class BlendState;
+using BlendStateUniquePtr = std::unique_ptr<BlendState>;
+
+class CullState;
+using CullStateUniquePtr = std::unique_ptr<CullState>;
+
+class DepthTestState;
+using DepthTestStateUniquePtr = std::unique_ptr<DepthTestState>;
+
+class OffsetState;
+using OffsetStateUniquePtr = std::unique_ptr<OffsetState>;
+
+class StencilTestState;
+using StencilTestStateUniquePtr = std::unique_ptr<StencilTestState>;
+
+class WireframeState;
+using WireframeStateUniquePtr = std::unique_ptr<WireframeState>;
+
+class VisualPass
+{
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -106,10 +127,10 @@ public:
     GetWireframeState() const;
 
 protected:
-    ShaderSharedPtr           mShader;
-    ShaderUniformPtrVector    mShaderUniformVector;
-    TextureTable              mShaderTextureTable;
-    SamplerTable              mShaderSamplerTable;
+    ShaderSharedPtr              mShader;
+    ShaderUniformSharedPtrVector mShaderUniformList;
+    TextureMap                   mShaderTextureTable;
+    SamplerMap                   mShaderSamplerTable;
 
     BlendStateUniquePtr       mBlendStateHandle;
     CullStateUniquePtr        mCullStateHandle;
@@ -120,8 +141,5 @@ protected:
 
     friend class Renderer;
 };
-
-using VisualPassUniquePtr = std::unique_ptr<VisualPass>;
-using VisualPassUniquePtrVector = std::vector<VisualPassUniquePtr>;
 
 }

@@ -5,10 +5,17 @@
 #include <assimp/scene.h>
 
 #include <FalconEngine/Content/AssetManager.h>
-#include <FalconEngine/Graphics/Scenes/Material.h>
-#include <FalconEngine/Graphics/Scenes/Mesh.h>
-#include <FalconEngine/Graphics/Scenes/Model.h>
-#include <FalconEngine/Graphics/Scenes/Node.h>
+#include <FalconEngine/Graphics/Renderers/Resources/Buffer.h>
+#include <FalconEngine/Graphics/Renderers/Resources/IndexBuffer.h>
+#include <FalconEngine/Graphics/Renderers/Resources/Texture2d.h>
+#include <FalconEngine/Graphics/Renderers/Resources/VertexAttribute.h>
+#include <FalconEngine/Graphics/Renderers/Resources/VertexBuffer.h>
+#include <FalconEngine/Graphics/Renderers/Resources/VertexFormat.h>
+#include <FalconEngine/Graphics/Renderers/Resources/VertexGroup.h>
+#include <FalconEngine/Graphics/Scene/Material.h>
+#include <FalconEngine/Graphics/Scene/Mesh.h>
+#include <FalconEngine/Graphics/Scene/Model.h>
+#include <FalconEngine/Graphics/Scene/Node.h>
 
 using namespace std;
 
@@ -19,7 +26,7 @@ VertexGroupSharedPtr
 CreateModelVertexBuffer(const aiMesh *aiMesh)
 {
     // Memory allocation for vertex buffer.
-    auto vertexNum = aiMesh->mNumVertices;
+    int vertexNum = int(aiMesh->mNumVertices);
     auto vertexBuffer = std::make_shared<VertexBuffer>(vertexNum, sizeof(ModelVertex), BufferUsage::Static);
     auto vertexes = reinterpret_cast<ModelVertex *>(vertexBuffer->GetData());
 
@@ -116,7 +123,7 @@ CreateModelIndexBuffer(const aiMesh *mesh)
     return indexBuffer;
 }
 
-Texture *
+Texture2dSharedPtr
 LoadMaterialTexture(
     _IN_     const aiMaterial *material,
     _IN_     aiTextureType     materialType)

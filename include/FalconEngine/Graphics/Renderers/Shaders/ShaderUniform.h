@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 
 #include <functional>
 #include <map>
@@ -57,10 +57,6 @@ public:
     ShaderUniformType mType;
     bool              mUpdated;
 };
-
-using ShaderUniformTable = std::unordered_map<std::string, ShaderUniform>;
-using ShaderUniformSharedPtr = std::shared_ptr<ShaderUniform>;
-using ShaderUniformPtrVector = std::vector<ShaderUniformSharedPtr>;
 
 template<typename T>
 class ShaderUniformValue : public ShaderUniform

@@ -50,6 +50,10 @@ public:
     template <typename TArchive>
     inline void serialize(TArchive & ar, const unsigned int version)
     {
+        // http://www.boost.org/doc/libs/1_63_0/libs/serialization/doc/
+
+        // NOTE(Wuxiang): Since this class doesn't have default constructor. The
+        // serialization code is moved to below.
     }
 };
 

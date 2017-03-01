@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Scenes/Material.h>
+#include <FalconEngine/Graphics/Scene/Material.h>
 
 namespace FalconEngine
 {

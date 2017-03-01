@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Scenes/Node.h>
+#include <FalconEngine/Graphics/Scene/Node.h>
 
 #include <assimp/scene.h>
 

@@ -1,10 +1,8 @@
 #pragma once
 
-#include <FalconEngine/Context/ContextInclude.h>
+#include <FalconEngine/ContextInclude.h>
 
 #include <string>
-
-#include <FalconEngine/Context/GameEngineSettings.h>
 
 namespace FalconEngine
 {
@@ -12,6 +10,7 @@ class GameEngineGraphics;
 class GameEngineInput;
 class GameEngine;
 class GameEngineSettings;
+using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
 
 // @summary This is the context that runs the customized code. The GameEngine class
 // would use this class's

@@ -1,26 +1,26 @@
 #pragma once
 
-#include <FalconEngine/Content/ContentInclude.h>
+#include <FalconEngine/ContentInclude.h>
 
 #include <map>
-
-#include <FalconEngine/Graphics/Renderers/BitmapFont.h>
-#include <FalconEngine/Graphics/Renderers/Resources/Texture2d.h>
-#include <FalconEngine/Graphics/Renderers/Shaders/ShaderSource.h>
-#include <FalconEngine/Graphics/Scenes/Model.h>
 
 namespace FalconEngine
 {
 
 class BitmapFont;
+using BitmapFontSharedPtr = std::shared_ptr<BitmapFont>;
+
 class Model;
-class TextureArray;
+using ModelSharedPtr = std::shared_ptr<Model>;
+
 class Texture2d;
+using Texture2dSharedPtr = std::shared_ptr<Texture2d>;
 
-class AssetManager : Object
+class ShaderSource;
+using ShaderSourceSharedPtr = std::shared_ptr<ShaderSource>;
+
+class AssetManager
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
 public:
     static AssetManager *
     GetInstance()
@@ -44,49 +44,49 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
-    BitmapFont *
+    BitmapFontSharedPtr
     GetFontNamed(const std::string& fontName);
 
-    BitmapFont *
+    BitmapFontSharedPtr
     GetFont(const std::string& fontFilePath);
 
-    BitmapFont *
+    BitmapFontSharedPtr
     LoadFont(const std::string& fontAssetPath);
 
-    Model *
+    ModelSharedPtr
     GetModel(const std::string& modelFilePath);
 
-    Model *
+    ModelSharedPtr
     LoadModel(const std::string& modelFilePath);
 
-    ShaderSource *
+    ShaderSourceSharedPtr
     GetShaderSource(const std::string& shaderFilePath);
 
-    ShaderSource *
+    ShaderSourceSharedPtr
     LoadShaderSource(const std::string& shaderFilePath);
 
-    Texture2d *
+    Texture2dSharedPtr
     GetTexture(const std::string& textureFilePath);
 
-    Texture2d *
+    Texture2dSharedPtr
     LoadTexture(const std::string& textureAssetPath);
 
 private:
-    BitmapFontUniquePtr
+    BitmapFontSharedPtr
     LoadFontInternal(const std::string& fontAssetPath);
 
-    ModelUniquePtr
+    ModelSharedPtr
     LoadModelInternal(const std::string& modelFilePath);
 
-    ShaderSourceUniquePtr
+    ShaderSourceSharedPtr
     LoadShaderSourceInternal(const std::string& shaderFilePath);
 
-    Texture2dUniquePtr
+    Texture2dSharedPtr
     LoadTextureInternal(const std::string& textureAssetPath);
 
-    std::map<std::string, BitmapFontUniquePtr>     mFontTable;                  // Index is file path.
-    std::map<std::string, ModelUniquePtr>          mModelTable;                 // Index is file path.
-    std::map<std::string, ShaderSourceUniquePtr>   mShaderSourceTable;          // Index is file path.
-    std::map<std::string, Texture2dUniquePtr>      mTextureTable;             // Index is file path.
+    std::map<std::string, BitmapFontSharedPtr>     mFontTable;                  // Index is file path.
+    std::map<std::string, ModelSharedPtr>          mModelTable;                 // Index is file path.
+    std::map<std::string, ShaderSourceSharedPtr>   mShaderSourceTable;          // Index is file path.
+    std::map<std::string, Texture2dSharedPtr>      mTextureTable;               // Index is file path.
 };
 }

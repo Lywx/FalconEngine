@@ -1,11 +1,15 @@
 #pragma once
 
-#include <FalconEngine/Context/ContextInclude.h>
-#include <FalconEngine/Context/GameEngineGraphicsSettings.h>
-#include <FalconEngine/Context/GameEngineInputSettings.h>
+#include <FalconEngine/ContextInclude.h>
 
 namespace FalconEngine
 {
+
+class GameEngineGraphicsSettings;
+using GameEngineGraphicsSettingsSharedPtr = std::shared_ptr<GameEngineGraphicsSettings>;
+
+class GameEngineInputSettings;
+using GameEngineInputSettingsSharedPtr = std::shared_ptr<GameEngineInputSettings>;
 
 class GameEngineSettings
 {
@@ -18,5 +22,4 @@ public:
     GameEngineInputSettingsSharedPtr    mInput;
 };
 
-using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
 }

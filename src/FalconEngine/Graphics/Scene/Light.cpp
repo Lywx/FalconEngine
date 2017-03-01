@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Scenes/Light.h>
+#include <FalconEngine/Graphics/Scene/Light.h>
 
 namespace FalconEngine
 {

@@ -4,13 +4,12 @@
 #include <iostream>
 
 #include <FalconEngine/Content/AssetManager.h>
+#include <FalconEngine/Graphics/Renderers/Shaders/ShaderUniform.h>
 
 using namespace std;
 
 namespace FalconEngine
 {
-
-FALCON_ENGINE_RTTI_IMPLEMENT(Shader, Object);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -65,7 +64,7 @@ int Shader::GetShaderNum() const
 ShaderSource *
 Shader::GetShaderSource(int shaderIndex) const
 {
-    return mSourceTable.at(shaderIndex);
+    return mSourceTable.at(shaderIndex).get();
 }
 
 ShaderType

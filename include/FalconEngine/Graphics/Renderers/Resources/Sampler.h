@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 
 #include <map>
 #include <vector>
@@ -39,10 +39,8 @@ enum class SamplerWrapMode
     Count,
 };
 
-class Sampler : public Object
+class Sampler
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
 public:
     Sampler();
     Sampler(SamplerMinificationFilter minificationFilter,
@@ -60,9 +58,5 @@ public:
     SamplerWrapMode            mWrapT;
     SamplerWrapMode            mWrapR;
 };
-
-using SamplerSharedPtr = std::shared_ptr<Sampler>;
-using SamplerVector = std::vector<const Sampler *>;
-using SamplerTable = std::map<int, const Sampler *>;
 
 }

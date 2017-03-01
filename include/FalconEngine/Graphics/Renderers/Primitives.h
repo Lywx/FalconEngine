@@ -1,10 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Renderers/VisualEffectInstance.h>
-#include <FalconEngine/Graphics/Renderers/Resources/IndexBuffer.h>
-#include <FalconEngine/Graphics/Renderers/Resources/VertexGroup.h>
-#include <FalconEngine/Graphics/Renderers/Resources/VertexFormat.h>
-#include <FalconEngine/Graphics/Scenes/Spatial.h>
+#include <FalconEngine/Graphics/Scene/Spatial.h>
 
 namespace FalconEngine
 {
@@ -18,6 +14,18 @@ enum class PrimitiveType
     Triangle,
     Count,
 };
+
+class IndexBuffer;
+using IndexBufferSharedPtr = std::shared_ptr<IndexBuffer>;
+
+class VertexBuffer;
+using VertexBufferSharedPtr = std::shared_ptr<VertexBuffer>;
+
+class VertexFormat;
+using VertexFormatSharedPtr = std::shared_ptr<VertexFormat>;
+
+class VertexGroup;
+using VertexGroupSharedPtr = std::shared_ptr<VertexGroup>;
 
 class Primitives : public Spatial
 {
@@ -41,22 +49,13 @@ public:
     /************************************************************************/
 
     int
-    GetVertexNum() const
-    {
-        return mVertexGroup->GetVertexNum();
-    }
+    GetVertexNum() const;
 
     void
-    SetVertexNum(int vertexNum) const
-    {
-        mVertexGroup->SetVertexNum(vertexNum);
-    }
+    SetVertexNum(int vertexNum) const;
 
     const VertexGroup *
-    GetVertexGroup() const
-    {
-        return mVertexGroup.get();
-    }
+    GetVertexGroup() const;
 
     void
     SetVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer, int offset, int stride);

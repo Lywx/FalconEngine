@@ -42,22 +42,6 @@ PlatformTexture2dArray::PlatformTexture2dArray(const Texture2dArray *textureArra
         assert(mTextureArraySize == mDimension.size());
     }
 
-    // Allocate current texture memory
-    glGenTextures(1, &mTexture);
-    {
-        // Bind newly created texture
-        GLuint textureBindingPrevious = BindTexture(TextureType::Texture2dArray, mTexture);
-        for (int textureArrayIndex = 0; textureArrayIndex < mTextureArraySize; ++textureArrayIndex)
-        {
-            glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, textureArrayIndex,
-                            mDimension[textureArrayIndex][0], mDimension[textureArrayIndex][1], 1,
-                            mFormat, mType, nullptr);
-        }
-
-        // Restore previous texture binding
-        glBindTexture(GL_TEXTURE_2D_ARRAY, textureBindingPrevious);
-    }
-
     // Fill in the texture data
     for (int textureArrayIndex = 0; textureArrayIndex < mTextureArraySize; ++textureArrayIndex)
     {
@@ -66,6 +50,28 @@ PlatformTexture2dArray::PlatformTexture2dArray(const Texture2dArray *textureArra
         memcpy(textureData, texture->mData, texture->mDataByteNum);
         Unmap(textureArrayIndex, 0);
     }
+
+    // Allocate current texture memory
+    glGenTextures(1, &mTexture);
+    {
+        GLuint textureBindingPrevious = BindTexture(TextureType::Texture2dArray, mTexture);
+        glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, mFormatInternal, textureArray->mDimension[0], textureArray->mDimension[1], textureArray->mDimension[2]);
+
+        // Bind newly created texture
+        for (int textureArrayIndex = 0; textureArrayIndex < mTextureArraySize; ++textureArrayIndex)
+        {
+            auto texture = textureArray->GetTextureSlice(textureArrayIndex);
+            //glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBuffer[textureArrayIndex]);
+            glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, textureArrayIndex,
+                            mDimension[textureArrayIndex][0], mDimension[textureArrayIndex][1], 1,
+                            mFormat, mType, texture->mData);
+        }
+
+        //glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+        // Restore previous texture binding
+        glBindTexture(GL_TEXTURE_2D_ARRAY, textureBindingPrevious);
+    }
+
 }
 
 PlatformTexture2dArray::~PlatformTexture2dArray()

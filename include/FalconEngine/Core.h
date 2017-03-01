@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Core/CoreInclude.h>
+#include <FalconEngine/CoreInclude.h>
 #include <FalconEngine/Core/EventHandler.h>
 #include <FalconEngine/Core/Memory.h>
 #include <FalconEngine/Core/MemoryPool.h>

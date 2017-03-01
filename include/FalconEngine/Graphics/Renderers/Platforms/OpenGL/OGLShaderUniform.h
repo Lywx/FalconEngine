@@ -1,11 +1,13 @@
 #pragma once
 
 #include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLInclude.h>
-
-#include <glm/gtc/type_ptr.hpp>
+#include <FalconEngine/Graphics/Renderers/Shaders/ShaderUniform.h>
 
 namespace FalconEngine
 {
+
+template <typename T>
+class ShaderUniformValue;
 
 class PlatformShaderUniform
 {

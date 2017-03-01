@@ -1,14 +1,16 @@
 #pragma once
 
-#include <FalconEngine/Input/InputInclude.h>
+#include <FalconEngine/InputInclude.h>
 
 #include <memory>
 
 #include <FalconEngine/Input/InputHandler.h>
-#include <FalconEngine/Input/MouseState.h>
 
 namespace FalconEngine
 {
+
+class MouseState;
+using MouseStateSharedPtr = std::shared_ptr<MouseState>;
 
 class MouseHandler : public InputHandler<MouseStateSharedPtr>
 {

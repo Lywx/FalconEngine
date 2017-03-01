@@ -1,24 +1,27 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
-#include <FalconEngine/Graphics/Renderers/VisualPass.h>
-#include <FalconEngine/Graphics/Renderers/States/BlendState.h>
-#include <FalconEngine/Graphics/Renderers/States/CullState.h>
-#include <FalconEngine/Graphics/Renderers/States/DepthTestState.h>
-#include <FalconEngine/Graphics/Renderers/States/OffsetState.h>
-#include <FalconEngine/Graphics/Renderers/States/StencilTestState.h>
-#include <FalconEngine/Graphics/Renderers/States/WireframeState.h>
-#include <FalconEngine/Graphics/Renderers/Shaders/Shader.h>
-#include <FalconEngine/Graphics/Renderers/Shaders/ShaderUniformAutomatic.h>
-#include <FalconEngine/Graphics/Renderers/Shaders/ShaderUniformConstant.h>
-#include <FalconEngine/Graphics/Renderers/Shaders/ShaderUniformManual.h>
+#include <FalconEngine/GraphicsInclude.h>
+
+#include <vector>
+
+#include <FalconEngine/Core/Object.h>
 
 namespace FalconEngine
 {
 
 class VisualEffectInstance;
-class VisualEffect;
-using VisualEffectSharedPtr = std::shared_ptr<VisualEffect>;
+
+class VisualPass;
+using VisualPassUniquePtr = std::unique_ptr<VisualPass>;
+
+class Shader;
+class BlendState;
+class CullState;
+class DepthTestState;
+class OffsetState;
+class StencilTestState;
+class WireframeState;
+
 class VisualEffect : public Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
@@ -47,7 +50,7 @@ public:
 
     Shader *
     GetShader(int passIndex);
-
+    ;
     const BlendState *
     GetBlendState(int passIndex) const;
 
@@ -71,8 +74,7 @@ protected:
     CheckEffectCompatible(VisualEffectInstance *instance) const;
 
 protected:
-    VisualEffectSharedPtr     mEffect;                                             // Effect shared_ptr controls the destruction of this class.
-    VisualPassUniquePtrVector mPassHandleVector;                                   // Passes contained in this effect.
+    std::vector<VisualPassUniquePtr> mPassHandleVector; // Passes contained in this effect.
 };
 
 }

@@ -5,6 +5,9 @@
 namespace FalconEngine
 {
 
+class VisualEffectInstance;
+using VisualEffectInstanceSharedPtr = std::shared_ptr<VisualEffectInstance>;
+
 // @summary This class governs the all the information the user would like to draw
 // a set of primitives. Visual effect instance in the Visual class represents all
 // uniforms, textures, samplers etc used in the draw calls. However, the effect

@@ -7,7 +7,7 @@
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/split_member.hpp>
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 #include <FalconEngine/Graphics/Renderers/Resources/Buffer.h>
 #include <FalconEngine/Content/Asset.h>
 
@@ -64,8 +64,6 @@ const int TexelSize[int(TextureFormat::Count)] =
 
 class Texture : public Asset
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -108,9 +106,6 @@ public:
 
     BOOST_SERIALIZATION_SPLIT_MEMBER()
 };
-
-typedef std::vector<Texture *> TextureVector;
-typedef std::map<int, const Texture *> TextureTable;
 
 }
 

@@ -3,8 +3,6 @@
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(BlendState, Object);
-
 BlendState::BlendState() :
     mEnabled(false),
     mSourceFactor(BlendSourceFactor::SRC_ALPHA),

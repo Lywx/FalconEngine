@@ -1,7 +1,8 @@
 #pragma once
 
-#include <FalconEngine/Input/InputInclude.h>
+#include <FalconEngine/InputInclude.h>
 #include <FalconEngine/Input/MouseButtonState.h>
+#include <FalconEngine/Math/Vector2.h>
 
 namespace FalconEngine
 {
@@ -61,7 +62,5 @@ private:
     int                 mWheelValue;
     int                 mWheelValueDiff;
 };
-
-using MouseStateSharedPtr = std::shared_ptr<MouseState>;
 
 }

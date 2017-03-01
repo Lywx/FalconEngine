@@ -14,6 +14,9 @@
 #include <stb/stb_image.h>
 
 #include <FalconEngine/Content/Path.h>
+#include <FalconEngine/Graphics/Renderers/BitmapFont.h>
+#include <FalconEngine/Graphics/Renderers/Resources/Texture2d.h>
+#include <FalconEngine/Graphics/Scene/Model.h>
 
 using namespace boost;
 using namespace std;
@@ -38,8 +41,8 @@ AssetProcessor::BakeFont(const std::string& fntFilePath)
         for (int fontPageId = 0; fontPageId < fontHandle->mTexturePages; ++fontPageId)
         {
             auto textureFilePath = fntDirPath + fontHandle->mTextureFileNameVector[fontPageId];
-            auto texture = LoadRawTexture2d(textureFilePath);
-            BakeTexture2d(texture.get(), AddAssetExtension(textureFilePath));
+            auto texture = LoadRawTexture(textureFilePath);
+            BakeTexture(texture.get(), AddAssetExtension(textureFilePath));
         }
     }
 }
@@ -162,7 +165,7 @@ LoadFntPageLine(BitmapFont& font, vector<string>& fontPageElems)
 
 // @Return: whether should continue reading texture file. If you should, the
 // pointer points to the half loaded font.
-std::unique_ptr<BitmapFont>
+BitmapFontSharedPtr
 LoadFntFile(const std::string& fntFilePath)
 {
     static vector<string> sFntElems;
@@ -207,7 +210,7 @@ LoadFntFile(const std::string& fntFilePath)
     }
 
     // Create font
-    auto font = new BitmapFont(GetFileStem(fntFilePath), fntFilePath);
+    auto font = std::make_shared<BitmapFont>(GetFileStem(fntFilePath), fntFilePath);
     font->mFileType = AssetSource::Normal;
 
     // Read page number and read page specific filename
@@ -293,10 +296,10 @@ LoadFntFile(const std::string& fntFilePath)
     fntStream.close();
 
     font->SetSize(fontSize);
-    return unique_ptr<BitmapFont>(font);
+    return font;
 }
 
-BitmapFontUniquePtr
+BitmapFontSharedPtr
 AssetProcessor::LoadRawFont(const std::string& fntFilePath)
 {
     if (Exist(fntFilePath))
@@ -309,19 +312,19 @@ AssetProcessor::LoadRawFont(const std::string& fntFilePath)
 }
 
 void
-AssetProcessor::BakeTexture2d(const std::string& textureFilePath)
+AssetProcessor::BakeTexture(const std::string& textureFilePath)
 {
     if (GetFileExtension(textureFilePath) != u8".png")
     {
         FALCON_ENGINE_NOT_SUPPORT();
     }
 
-    auto textureHandle = LoadRawTexture2d(textureFilePath);
-    BakeTexture2d(textureHandle.get(), AddAssetExtension(textureFilePath));
+    auto textureHandle = LoadRawTexture(textureFilePath);
+    BakeTexture(textureHandle.get(), AddAssetExtension(textureFilePath));
 }
 
 void
-AssetProcessor::BakeTexture2d(Texture2d *texture, const string& textureOutputPath)
+AssetProcessor::BakeTexture(Texture2d *texture, const string& textureOutputPath)
 {
     // http://stackoverflow.com/questions/24313359/data-dependent-failure-when-serializing-stdvector-to-boost-binary-archive
     ofstream textureAssetStream(textureOutputPath, ios::binary);
@@ -329,8 +332,8 @@ AssetProcessor::BakeTexture2d(Texture2d *texture, const string& textureOutputPat
     textureAssetArchive << *texture;
 }
 
-std::unique_ptr<Texture2d>
-AssetProcessor::LoadRawTexture2d(const std::string& textureFilePath)
+Texture2dSharedPtr
+AssetProcessor::LoadRawTexture(const std::string& textureFilePath)
 {
     // NOTE(Wuxiang): Since the stb_image default loading format goes from top-left to bottom-right,
     // it is necessary to flip to make it compatible for OpenGL.
@@ -347,12 +350,11 @@ AssetProcessor::LoadRawTexture2d(const std::string& textureFilePath)
     }
 
     // NOTE(Wuxiang): Copy the memory allocated from the stb library.
-    auto *texture = new Texture2d(GetFileStem(textureFilePath), textureFilePath, textureDimension[0], textureDimension[1], TextureFormat::R8G8B8A8);
+    auto texture = std::make_shared<Texture2d>(GetFileStem(textureFilePath), textureFilePath, textureDimension[0], textureDimension[1], TextureFormat::R8G8B8A8);
     texture->mFileType = AssetSource::Stream;
     memcpy(texture->mData, textureData, texture->mDataByteNum);
     stbi_image_free(textureData);
-
-    return unique_ptr<Texture2d>(texture);
+    return texture;
 }
 
 void
@@ -374,7 +376,7 @@ BakeMaterial(aiMaterial               *material,
         }
         else
         {
-            AssetProcessor::BakeTexture2d(textureFilePathString);
+            AssetProcessor::BakeTexture(textureFilePathString);
             texturePathsBaked.push_back(textureFilePathString);
         }
     }

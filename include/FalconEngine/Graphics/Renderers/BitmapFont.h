@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 
 #include <map>
 #include <stdexcept>
@@ -14,11 +14,15 @@
 
 #include <FalconEngine/Content/Asset.h>
 #include <FalconEngine/Graphics/Renderers/BitmapGlyph.h>
-#include <FalconEngine/Graphics/Renderers/Resources/Texture2dArray.h>
-#include <FalconEngine/Graphics/Renderers/Resources/Sampler.h>
 
 namespace FalconEngine
 {
+
+class Sampler;
+using SamplerSharedPtr = std::shared_ptr<Sampler>;
+
+class Texture2dArray;
+using Texture2dArraySharedPtr = std::shared_ptr<Texture2dArray>;
 
 // @summary Bitmap font store the unmodified information in the imported bitmap
 // font. In the rendering phrase, the font size is used with the bitmap glyph
@@ -27,8 +31,6 @@ namespace FalconEngine
 class BitmapFont : public Asset
 {
 public:
-    FALCON_ENGINE_RTTI_DECLARE;
-
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
@@ -162,8 +164,5 @@ public:
 
     BOOST_SERIALIZATION_SPLIT_MEMBER()
 };
-
-typedef std::shared_ptr<BitmapFont> BitmapFontSharedPtr;
-typedef std::unique_ptr<BitmapFont> BitmapFontUniquePtr;
 
 }

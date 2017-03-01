@@ -1,4 +1,6 @@
 #include <FalconEngine/Graphics/Renderers/VisualTriangles.h>
+#include <FalconEngine/Graphics/Renderers/Resources/IndexBuffer.h>
+#include <FalconEngine/Graphics/Renderers/Resources/VertexGroup.h>
 
 namespace FalconEngine
 {
@@ -11,8 +13,6 @@ FALCON_ENGINE_RTTI_IMPLEMENT(VisualTriangles, Visual);
 VisualTriangles::VisualTriangles(VertexFormatSharedPtr vertexFormat) :
     Visual(PrimitiveType::Triangle, vertexFormat)
 {
-    // NOTE(Wuxiang): The user for this constructor should be responsible for
-    // correctly initializing the mTriangleNum.
 }
 
 VisualTriangles::VisualTriangles(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer) :

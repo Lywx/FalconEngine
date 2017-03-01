@@ -2,12 +2,14 @@
 
 namespace FalconEngine
 {
-
-FALCON_ENGINE_RTTI_IMPLEMENT(Buffer, Object);
-
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
+Buffer::Buffer(int elementNum, size_t elementByteNum, BufferUsage usage)
+    : Buffer(elementNum, int(elementByteNum), usage)
+{
+}
+
 // @param elementNum - the element number
 // @param elementByteNum - the element size in total.
 Buffer::Buffer(int elementNum, int elementByteNum, BufferUsage usage) :

@@ -1,11 +1,10 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/Graphics/SceneInclude.h>
 
-#include <FalconEngine/Graphics/Renderers/Resources/Texture2d.h>
-#include <FalconEngine/Graphics/Renderers/Resources/Sampler.h>
-#include <FalconEngine/Graphics/Scenes/Mesh.h>
-#include <FalconEngine/Graphics/Scenes/Node.h>
+#include <vector>
+
+#include <FalconEngine/Content/Asset.h>
 
 namespace FalconEngine
 {
@@ -18,6 +17,12 @@ struct ModelVertex
 };
 
 using ModelIndex = int;
+
+class Sampler;
+using SamplerSharedPtr = std::shared_ptr<Sampler>;
+
+class Node;
+using NodeSharedPtr = std::shared_ptr<Node>;
 
 class Model : public Asset
 {
@@ -69,8 +74,5 @@ private:
     NodeSharedPtr            mNode;                                            // Model root node.
     SamplerSharedPtr         mSampler;                                         // Model texture sampler.
 };
-
-typedef std::shared_ptr<Model> ModelSharedPtr;
-typedef std::unique_ptr<Model> ModelUniquePtr;
 
 }

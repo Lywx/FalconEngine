@@ -1,4 +1,7 @@
 #include <FalconEngine/Context/GameEngineInput.h>
+#include <FalconEngine/Input/MouseButton.h>
+#include <FalconEngine/Input/MouseState.h>
+#include <FalconEngine/Input/KeyboardState.h>
 #include <FalconEngine/Input/KeyState.h>
 
 #if FALCON_ENGINE_PLATFORM_GLFW

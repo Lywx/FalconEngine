@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 
 #include <stdexcept>
 #include <memory>
@@ -19,8 +19,6 @@ enum class IndexType
 class IndexBuffer : public Buffer
 {
 public:
-    FALCON_ENGINE_RTTI_DECLARE;
-
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/

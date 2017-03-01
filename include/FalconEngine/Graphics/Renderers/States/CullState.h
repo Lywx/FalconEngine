@@ -1,27 +1,22 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
-
-#include <memory>
+#include <FalconEngine/GraphicsInclude.h>
 
 namespace FalconEngine
 {
 
-class CullState : public Object
+class CullState sealed
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
 public:
     CullState ();
-    virtual ~CullState ();
+    ~CullState ();
 
+public:
     // Which face to cull
     bool mCounterClockwise = false;
 
     // Whether enable face culling
     bool mEnabled = true;
 };
-
-using CullStateUniquePtr = std::unique_ptr<CullState> ;
 
 }

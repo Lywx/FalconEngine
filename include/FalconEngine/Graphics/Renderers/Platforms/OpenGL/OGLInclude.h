@@ -2,7 +2,7 @@
 
 #include <map>
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 
 #if FALCON_ENGINE_PLATFORM_GLFW
 #define GLEW_STATIC

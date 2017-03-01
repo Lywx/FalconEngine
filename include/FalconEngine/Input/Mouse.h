@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Input/InputInclude.h>
+#include <FalconEngine/InputInclude.h>
 #include <FalconEngine/Input/MouseState.h>
 
 namespace FalconEngine

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 
 #include <memory>
 #include <vector>
@@ -11,10 +11,11 @@ namespace FalconEngine
 {
 
 class Texture2d;
+using Texture2dSharedPtr = std::shared_ptr<Texture2d>;
+using Texture2dVector = std::vector<Texture2dSharedPtr>;
+
 class Texture2dArray : public Texture
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -27,13 +28,10 @@ public:
     GetTextureSlice(int index) const;
 
     void
-    PushTextureSlice(const Texture2d *texture);
+    PushTextureSlice(Texture2dSharedPtr texture);
 
 protected:
-    std::vector<const Texture2d *> mTexture2dVector;
+    Texture2dVector mTexture2dVector;
 };
-
-typedef std::shared_ptr<Texture2dArray> Texture2dArraySharedPtr;
-typedef std::unique_ptr<Texture2dArray> Texture2dArrayUniquePtr;
 
 }

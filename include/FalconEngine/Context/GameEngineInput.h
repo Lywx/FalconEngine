@@ -1,16 +1,24 @@
 #pragma once
 
-#include <FalconEngine/Context/ContextInclude.h>
+#include <FalconEngine/ContextInclude.h>
 
 #include <memory>
 #include <vector>
 
-#include <FalconEngine/Context/GameEngineSettings.h>
-#include <FalconEngine/Input/MouseState.h>
-#include <FalconEngine/Input/KeyboardState.h>
-
 namespace FalconEngine
 {
+
+class GameEngineSettings;
+using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
+
+class GameEngineInputSettings;
+using GameEngineInputSettingsSharedPtr = std::shared_ptr<GameEngineInputSettings>;
+
+class KeyboardState;
+using KeyboardStateSharedPtr = std::shared_ptr<KeyboardState>;
+
+class MouseState;
+using MouseStateSharedPtr = std::shared_ptr<MouseState>;
 
 class GameEngineData;
 class GameEngineInput

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 
 #include <string>
 #include <map>
@@ -57,10 +57,8 @@ const int VertexAttributeSize[int(VertexAttributeType::Count)] =
     16  // IntVec4
 };
 
-class VertexAttribute : Object
+class VertexAttribute
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -80,8 +78,5 @@ public:
     // NOTE(Wuxiang): Initialized based on mType.
     int                 mChannel;                                             // Vertex attribute dimension.
 };
-
-typedef std::map<std::string, VertexAttribute> ShaderVertexAttributeTable;
-typedef std::vector<VertexAttribute>           VertexAttributeVector;
 
 }

@@ -49,7 +49,6 @@ public:
     double              mMillisecondPerRender    = 16.66666666666;
 
 private:
-    GameCounter         mCounter;
     GameEngineData     *mData;
     Game               *mGame;
     GameEngineInput    *mInput;

@@ -3,8 +3,6 @@
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(DepthTestState, Object);
-
 DepthTestState::DepthTestState()
 {
 }

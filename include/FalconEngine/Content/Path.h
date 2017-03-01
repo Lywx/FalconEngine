@@ -1,13 +1,11 @@
 #pragma once
 
+#include <FalconEngine/ContentInclude.h>
+
 #include <codecvt>
 #include <fstream>
 #include <locale>
 #include <string>
-
-#include <FalconEngine/Content/ContentInclude.h>
-
-#include <boost/filesystem.hpp>
 
 #if FALCON_ENGINE_OS_WINDOWS
 #define DIR_SEPARATOR "\\"

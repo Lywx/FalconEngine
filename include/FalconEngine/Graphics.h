@@ -3,7 +3,7 @@
 #include <FalconEngine/Core.h>
 #include <FalconEngine/Math.h>
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 
 #include <FalconEngine/Graphics/Renderers/BitmapFont.h>
 #include <FalconEngine/Graphics/Renderers/BitmapFontRenderer.h>
@@ -51,9 +51,9 @@
 #include <FalconEngine/Graphics/Renderers/States/StencilTestState.h>
 #include <FalconEngine/Graphics/Renderers/States/WireframeState.h>
 
-#include <FalconEngine/Graphics/Scenes/Light.h>
-#include <FalconEngine/Graphics/Scenes/Material.h>
-#include <FalconEngine/Graphics/Scenes/Mesh.h>
-#include <FalconEngine/Graphics/Scenes/Model.h>
-#include <FalconEngine/Graphics/Scenes/Node.h>
-#include <FalconEngine/Graphics/Scenes/Spatial.h>
+#include <FalconEngine/Graphics/Scene/Light.h>
+#include <FalconEngine/Graphics/Scene/Material.h>
+#include <FalconEngine/Graphics/Scene/Mesh.h>
+#include <FalconEngine/Graphics/Scene/Model.h>
+#include <FalconEngine/Graphics/Scene/Node.h>
+#include <FalconEngine/Graphics/Scene/Spatial.h>

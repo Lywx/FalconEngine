@@ -1,8 +1,6 @@
 #pragma once
 
-#include <memory>
-
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 
 namespace FalconEngine
 {
@@ -13,22 +11,19 @@ namespace FalconEngine
 // resolvable depth difference (OpenGL implementation specific). Negative
 // values move polygons closer to the eye.
 // @ref Dave Shreiner, etc OpenGL Programming Guide, 8th, 2013, P164
-class OffsetState : public Object
+class OffsetState sealed
 {
-    FALCON_ENGINE_RTTI_DECLARE;
+public:
+    OffsetState();
+    ~OffsetState();
 
 public:
-    OffsetState ();
-    virtual ~OffsetState ();
-
-    bool mFillEnabled  = false;
-    bool mLineEnabled  = false;
-    bool mPointEnabled = false;
+    bool  mFillEnabled  = false;
+    bool  mLineEnabled  = false;
+    bool  mPointEnabled = false;
 
     float mFactor = 0.0f; // Offset factor, positive or negative
     float mUnit   = 0.0f; // Offset unit, positive or negative
 };
-
-using OffsetStateUniquePtr = std::unique_ptr<OffsetState>;
 
 }

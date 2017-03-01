@@ -3,7 +3,7 @@
 #include <memory>
 #include <boost/serialization/access.hpp>
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 #include <FalconEngine/Graphics/Renderers/Resources/Texture.h>
 
 namespace FalconEngine

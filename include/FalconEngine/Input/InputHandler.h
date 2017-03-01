@@ -1,6 +1,7 @@
 #pragma once
 
-#include <FalconEngine/Input/InputInclude.h>
+#include <FalconEngine/InputInclude.h>
+#include <FalconEngine/Core/EventHandler.h>
 
 namespace FalconEngine
 {

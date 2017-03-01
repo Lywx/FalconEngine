@@ -3,6 +3,7 @@
 #include <FalconEngine/Context/GameEngineSettings.h>
 #include <FalconEngine/Graphics/Renderers/Renderer.h>
 #include <FalconEngine/Graphics/Renderers/BitmapFontRenderer.h>
+#include <FalconEngine/Math/Color.h>
 
 namespace FalconEngine
 {
@@ -24,6 +25,30 @@ GameEngineGraphics::~GameEngineGraphics()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+void
+GameEngineGraphics::ClearColorBuffer(Vector4f color)
+{
+    mRenderer->ClearColorBuffer(color);
+}
+
+void
+GameEngineGraphics::ClearDepthBuffer(float depth)
+{
+    mRenderer->ClearDepthBuffer(depth);
+}
+
+void
+GameEngineGraphics::ClearStencilBuffer(unsigned stencil)
+{
+    mRenderer->ClearStencilBuffer(stencil);
+}
+
+void
+GameEngineGraphics::ClearBuffers(Vector4f color, float depth, unsigned stencil)
+{
+    mRenderer->ClearBuffers(color, depth, stencil);
+}
+
 void
 GameEngineGraphics::DrawStaticString(const BitmapFont *font, float fontSize, Vector2f textPosition, const std::string& text, const Color textColor, float textLineWidth)
 {

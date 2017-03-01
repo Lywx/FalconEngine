@@ -1,18 +1,16 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 #include <FalconEngine/Graphics/Renderers/Resources/VertexAttribute.h>
-#include <FalconEngine/Graphics/Renderers/Resources/VertexBuffer.h>
 
 namespace FalconEngine
 {
 
 enum class VertexAttributeType;
+using VertexAttributeVector = std::vector<VertexAttribute>;
 
-class VertexFormat : public Object
+class VertexFormat
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -46,11 +44,11 @@ public:
 public:
     // NOTE(Wuxiang): The vertex attribute vector is assumed to be in order of
     // layout location in OpenGL. This rule is enforced by the PushAttribute function.
-    VertexAttributeVector    mVertexAttributeVector;
+    VertexAttributeVector mVertexAttributeVector;
 
 private:
-    int                      mVertexAttributeOffset;
-    bool                     mVertexAttributeFinished;
+    int                   mVertexAttributeOffset;
+    bool                  mVertexAttributeFinished;
 
 };
 

@@ -4,8 +4,6 @@
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(Texture2dArray, Texture);
-
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
@@ -24,11 +22,11 @@ Texture2dArray::~Texture2dArray()
 const Texture2d *
 Texture2dArray::GetTextureSlice(int index) const
 {
-    return mTexture2dVector.at(index);
+    return mTexture2dVector.at(index).get();
 }
 
 void
-Texture2dArray::PushTextureSlice(const Texture2d *texture)
+Texture2dArray::PushTextureSlice(Texture2dSharedPtr texture)
 {
     mTexture2dVector.push_back(texture);
 }

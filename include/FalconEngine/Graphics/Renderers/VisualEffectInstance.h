@@ -1,13 +1,26 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Core/Object.h>
 #include <FalconEngine/Graphics/Renderers/VisualEffect.h>
 #include <FalconEngine/Graphics/Renderers/VisualPass.h>
-#include <FalconEngine/Graphics/Renderers/Resources/Texture.h>
-#include <FalconEngine/Graphics/Renderers/Resources/Sampler.h>
 
 namespace FalconEngine
 {
+
+class Sampler;
+class Texture;
+
+class VisualEffect;
+using VisualEffectSharedPtr = std::shared_ptr<VisualEffect>;
+
+template <typename T>
+class ShaderUniformValue;
+
+template<typename T>
+using ShaderUniformValueSharedPtr = std::shared_ptr<ShaderUniformValue<T>>;
+
+class VisualPass;
 
 class VisualEffectInstance : public Object
 {

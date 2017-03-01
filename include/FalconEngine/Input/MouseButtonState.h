@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Input/InputInclude.h>
+#include <FalconEngine/InputInclude.h>
 #include <FalconEngine/Input/MouseButton.h>
 
 #include <unordered_map>

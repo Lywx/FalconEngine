@@ -1,4 +1,15 @@
 #include <FalconEngine/Graphics/Effects/PhongLightingEffect.h>
+#include <FalconEngine/Graphics/Renderers/VisualEffectInstance.h>
+#include <FalconEngine/Graphics/Renderers/Shaders/Shader.h>
+#include <FalconEngine/Graphics/Renderers/Shaders/ShaderUniformConstant.h>
+#include <FalconEngine/Graphics/Renderers/States/BlendState.h>
+#include <FalconEngine/Graphics/Renderers/States/CullState.h>
+#include <FalconEngine/Graphics/Renderers/States/DepthTestState.h>
+#include <FalconEngine/Graphics/Renderers/States/OffsetState.h>
+#include <FalconEngine/Graphics/Renderers/States/StencilTestState.h>
+#include <FalconEngine/Graphics/Renderers/States/WireframeState.h>
+#include <FalconEngine/Graphics/Scene/Light.h>
+#include <FalconEngine/Graphics/Scene/Material.h>
 
 using namespace std;
 
@@ -31,7 +42,7 @@ PhongLightingEffect::PhongLightingEffect()
     pass->SetBlendState(make_unique<BlendState>());
     pass->SetCullState(make_unique<CullState>());
     pass->SetDepthTestState(make_unique<DepthTestState>());
-    pass->SetOffsetState(make_unique< OffsetState>());
+    pass->SetOffsetState(make_unique<OffsetState>());
     pass->SetStencilTestState(make_unique<StencilTestState>());
     pass->SetWireframeState(make_unique<WireframeState>());
     InsertPass(move(pass));

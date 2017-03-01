@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 
 #include <memory>
 #include <vector>
@@ -12,12 +12,11 @@ namespace FalconEngine
 
 class VertexBuffer : public Buffer
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
+    VertexBuffer(int vertexNum, size_t vertexByteNum, BufferUsage usage);
     VertexBuffer(int vertexNum, int vertexByteNum, BufferUsage usage);
     virtual ~VertexBuffer();
 };

@@ -1,17 +1,16 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/Graphics/SceneInclude.h>
 
 #include <vector>
 
 #include <FalconEngine/Graphics/Renderers/VisualTriangles.h>
-#include <FalconEngine/Graphics/Renderers/Resources/IndexBuffer.h>
-#include <FalconEngine/Graphics/Renderers/Resources/VertexBuffer.h>
-#include <FalconEngine/Graphics/Scenes/Material.h>
 
 namespace FalconEngine
 {
 
+class Material;
+using MaterialSharedPtr = std::shared_ptr<Material>;
 class Mesh : public VisualTriangles
 {
     FALCON_ENGINE_RTTI_DECLARE;

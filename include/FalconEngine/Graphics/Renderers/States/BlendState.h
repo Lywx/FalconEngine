@@ -1,8 +1,6 @@
 #pragma once
 
-#include <memory>
-
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 #include <FalconEngine/Math/Vector4.h>
 
 namespace FalconEngine
@@ -58,16 +56,14 @@ enum class BlendDestinationFactor
     Count
 };
 
-class BlendState : public Object
+class BlendState sealed
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
     BlendState();
-    virtual ~BlendState ();
+    ~BlendState();
 
 public:
     bool                   mEnabled           = false;
@@ -75,7 +71,5 @@ public:
     BlendDestinationFactor mDestinationFactor = BlendDestinationFactor::ONE_MINUS_CONSTANT_ALPHA;
     Vector4f               mConstantFactor    = Vector4f::Zero;
 };
-
-using BlendStateUniquePtr = std::unique_ptr<BlendState>;
 
 }

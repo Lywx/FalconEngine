@@ -1,7 +1,7 @@
-#include <FalconEngine/Graphics/Scenes/Mesh.h>
+#include <FalconEngine/Graphics/Scene/Mesh.h>
 
 #include <FalconEngine/Content/AssetManager.h>
-#include <FalconEngine/Graphics/Scenes/Model.h>
+#include <FalconEngine/Graphics/Scene/Model.h>
 
 using namespace std;
 

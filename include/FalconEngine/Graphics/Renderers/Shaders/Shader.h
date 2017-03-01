@@ -1,10 +1,13 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
-#include <FalconEngine/Graphics/Renderers/Shaders/ShaderUniform.h>
+#include <FalconEngine/GraphicsInclude.h>
+
+#include <unordered_map>
 
 namespace FalconEngine
 {
+
+enum class ShaderUniformType;
 
 // @remark The integer number is used to index into the shader source table, which
 // is referred as shader type index.
@@ -25,7 +28,11 @@ enum ShaderIndex
 };
 
 class ShaderSource;
-using ShaderSourceTable = std::unordered_map<int, ShaderSource *>;
+using ShaderSourceSharedPtr = std::shared_ptr<ShaderSource>;
+using ShaderSourceSharedPtrMap = std::unordered_map<int, ShaderSourceSharedPtr>;
+
+class ShaderUniform;
+using ShaderUniformMap = std::unordered_map<std::string, ShaderUniform>;
 
 // @remark Shader contains information about input vertex variables, output
 // fragment variables and uniform variables. Sharing shaders for different
@@ -33,10 +40,8 @@ using ShaderSourceTable = std::unordered_map<int, ShaderSource *>;
 // so that one should think about what is responsible for updating shader uniform
 // variable for each update (which is done by setting shader uniform in visual
 // effect instance).
-class Shader : Object
+class Shader
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
     friend class PlatformShader;
 
 public:
@@ -80,10 +85,8 @@ public:
     PushShaderFile(ShaderType shaderType, const std::string& shaderPath);
 
 private:
-    ShaderSourceTable  mSourceTable;
-    ShaderUniformTable mUniformTable;
+    ShaderSourceSharedPtrMap mSourceTable;
+    ShaderUniformMap         mUniformTable;
 };
-
-typedef std::shared_ptr<Shader> ShaderSharedPtr;
 
 }

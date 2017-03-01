@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include <FalconEngine/Graphics/Scenes/Mesh.h>
-#include <FalconEngine/Graphics/Scenes/Spatial.h>
+#include <FalconEngine/Graphics/Scene/Mesh.h>
+#include <FalconEngine/Graphics/Scene/Spatial.h>
 
 namespace FalconEngine
 {

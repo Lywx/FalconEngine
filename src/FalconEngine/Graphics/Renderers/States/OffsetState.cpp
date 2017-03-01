@@ -3,9 +3,7 @@
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(OffsetState, Object);
-
-OffsetState::OffsetState () :
+OffsetState::OffsetState() :
     mFillEnabled(false),
     mLineEnabled(false),
     mPointEnabled(false),
@@ -14,7 +12,7 @@ OffsetState::OffsetState () :
 {
 }
 
-OffsetState::~OffsetState ()
+OffsetState::~OffsetState()
 {
 }
 

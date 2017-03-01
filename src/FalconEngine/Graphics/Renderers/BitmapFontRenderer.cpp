@@ -1,14 +1,18 @@
 #include <FalconEngine/Graphics/Renderers/BitmapFontRenderer.h>
 
 #include <boost/algorithm/string.hpp>
-#include <glm/gtc/matrix_transform.inl>
-#include <glm/gtc/type_ptr.hpp>
 
 #include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Graphics/Effects/BitmapFontEffect.h>
+#include <FalconEngine/Graphics/Renderers/BitmapFont.h>
 #include <FalconEngine/Graphics/Renderers/BitmapLine.h>
+#include <FalconEngine/Graphics/Renderers/BitmapText.h>
 #include <FalconEngine/Graphics/Renderers/Renderer.h>
+#include <FalconEngine/Graphics/Renderers/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderers/VisualQuads.h>
+#include <FalconEngine/Graphics/Renderers/Resources/VertexGroup.h>
+#include <FalconEngine/Graphics/Renderers/Resources/VertexFormat.h>
+#include <FalconEngine/Graphics/Renderers/Resources/VertexBuffer.h>
 
 using namespace std;
 using namespace FalconEngine;
@@ -47,7 +51,7 @@ BitmapFontRenderer::Initialize(int width, int height)
         // Prepare text effect.
         mTextEffect = make_shared<BitmapFontEffect>(&mTextHandedness);
         mTextEffectInstance = make_shared<VisualEffectInstance>(mTextEffect);
-        mTextEffect->CreateInstance(mTextEffectInstance.get(), font, width, height);
+        mTextEffect->CreateInstance(mTextEffectInstance.get(), font.get(), width, height);
     }
 
     auto textVertexFormat = mTextEffect->CreateVertexFormat();

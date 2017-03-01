@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 
 namespace FalconEngine
 {
@@ -27,14 +27,14 @@ enum class BufferUsage
     Count
 };
 
-class Buffer : public Object
+class Buffer
 {
-    FALCON_ENGINE_RTTI_DECLARE;
 
 protected:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
+    Buffer(int elementNum, size_t elementByteNum, BufferUsage usage);
     Buffer(int elementNum, int elementByteNum, BufferUsage usage);
     Buffer(const Buffer&) = delete;
     Buffer& operator=(const Buffer&) = delete;
@@ -43,22 +43,26 @@ public:
     virtual ~Buffer();
 
 public:
-    unsigned char *GetData()
+    unsigned char *
+    GetData()
     {
         return mData;
     }
 
-    const unsigned char *GetData() const
+    const unsigned char *
+    GetData() const
     {
         return mData;
     }
 
-    int GetDataByteNum() const
+    int
+    GetDataByteNum() const
     {
         return mDataByteNum;
     }
 
-    int GetElementNum() const
+    int
+    GetElementNum() const
     {
         return mElementNum;
     }
@@ -69,7 +73,8 @@ public:
         mElementNum = elementNum;
     }
 
-    BufferUsage GetUsage() const
+    BufferUsage
+    GetUsage() const
     {
         return mUsage;
     }

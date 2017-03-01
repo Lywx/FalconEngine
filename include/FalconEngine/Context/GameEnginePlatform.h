@@ -1,11 +1,14 @@
 #pragma once
 
-#include <FalconEngine/Context/ContextInclude.h>
+#include <FalconEngine/ContextInclude.h>
 
 #include <FalconEngine/Context/GameEngineSettings.h>
 
 namespace FalconEngine
 {
+
+class GameEngineSettings;
+using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
 
 class GameEngineData;
 class GameEnginePlatform

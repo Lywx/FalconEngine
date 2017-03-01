@@ -1,19 +1,31 @@
 #pragma once
 
+#include <FalconEngine/GraphicsInclude.h>
+
 #include <string>
 #include <vector>
 #include <limits>
 
-#include <FalconEngine/Graphics/Effects/BitmapFontEffect.h>
-#include <FalconEngine/Graphics/Renderers/BitmapFont.h>
-#include <FalconEngine/Graphics/Renderers/BitmapText.h>
-#include <FalconEngine/Graphics/Renderers/VisualEffectInstance.h>
-#include <FalconEngine/Graphics/Renderers/Resources/VertexBuffer.h>
-#include "VisualQuads.h"
-
-// TODO(Wuxiang 2016-12-29 22:27): Integrate the font renderer with current renderer.
 namespace FalconEngine
 {
+
+class BitmapText;
+
+class BitmapFont;
+
+class BitmapFontEffect;
+using BitmapFontEffectSharedPtr = std::shared_ptr<BitmapFontEffect>;
+
+class Renderer;
+
+class VertexBuffer;
+using VertexBufferSharedPtr = std::shared_ptr<VertexBuffer>;
+
+class Visual;
+using VisualSharedPtr = std::shared_ptr<Visual>;
+
+class VisualEffectInstance;
+using VisualEffectInstanceSharedPtr = std::shared_ptr<VisualEffectInstance>;
 
 class BitmapFontRenderItem
 {
@@ -22,11 +34,9 @@ public:
     size_t                mTextBufferDataIndex = 0;
 };
 
-class BitmapFontEffect;
-
 // @summary The font renderer is the class you would call to draw a string on
 // the screen.
-#if defined(EMBTI_QT_EMBEDDING)
+#if defined(FALCON_ENGINE_PLATFORM_QT)
 #include <QtGui/QOpenGLFunctions>
 class BitmapFontRenderer : QOpenGLFunctions
 #else

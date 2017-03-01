@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 #include <FalconEngine/Graphics/Renderers/Resources/Texture.h>
 
 namespace FalconEngine
@@ -8,8 +8,6 @@ namespace FalconEngine
 
 class TextureBuffer : public Texture
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
 public:
     TextureBuffer(const std::string& fileName, const std::string& filePath, int width, int height, int depth, TextureFormat format, TextureType type, BufferUsage usage, int mipmapLevel);
     virtual ~TextureBuffer();

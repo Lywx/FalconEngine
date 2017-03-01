@@ -1,18 +1,15 @@
 #pragma once
 
-#include <FalconEngine/Context/ContextInclude.h>
+#include <FalconEngine/ContextInclude.h>
 
 #include <limits>
 
-#include <FalconEngine/Context/GameEngineGraphicsSettings.h>
-#include <FalconEngine/Context/GameEngineSettings.h>
-#include <FalconEngine/Graphics/Renderers/Renderer.h>
 #include <FalconEngine/Math/Color.h>
 #include <FalconEngine/Math/Vector2.h>
+#include <FalconEngine/Math/Vector4.h>
 
 namespace FalconEngine
 {
-
 
 /************************************************************************/
 /* Specialized Renderer                                                 */
@@ -25,6 +22,12 @@ class BitmapText;
 /* General Renderer                                                     */
 /************************************************************************/
 class Renderer;
+
+class GameEngineSettings;
+using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
+
+class GameEngineGraphicsSettings;
+using GameEngineGraphicsSettingsSharedPtr = std::shared_ptr<GameEngineGraphicsSettings>;
 
 class GameEngineData;
 class GameEngineGraphics
@@ -52,28 +55,16 @@ public:
     /* Renderer API                                                         */
     /************************************************************************/
     void
-    ClearColorBuffer(Vector4f color)
-    {
-        mRenderer->ClearColorBuffer(color);
-    }
+    ClearColorBuffer(Vector4f color);
 
     void
-    ClearDepthBuffer(float depth)
-    {
-        mRenderer->ClearDepthBuffer(depth);
-    }
+    ClearDepthBuffer(float depth);
 
     void
-    ClearStencilBuffer(unsigned int stencil)
-    {
-        mRenderer->ClearStencilBuffer(stencil);
-    }
+    ClearStencilBuffer(unsigned int stencil);
 
     void
-    ClearBuffers(Vector4f color, float depth, unsigned int stencil)
-    {
-        mRenderer->ClearBuffers(color, depth, stencil);
-    }
+    ClearBuffers(Vector4f color, float depth, unsigned int stencil);
 
     void
     DrawStaticString(const BitmapFont *font,

@@ -1,23 +1,16 @@
 #pragma once
 
-#include <FalconEngine/Input/InputInclude.h>
-
-#include <memory>
-
+#include <FalconEngine/InputInclude.h>
 #include <FalconEngine/Input/InputHandler.h>
-#include <FalconEngine/Input/KeyboardState.h>
 
 namespace FalconEngine
 {
 
-class GameEngineInput;
+class KeyboardState;
+using KeyboardStateSharedPtr = std::shared_ptr<KeyboardState>;
 
 class KeyboardHandler : public InputHandler<KeyboardStateSharedPtr>
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
-    friend class GameEngineInput;
-
 public:
     KeyboardHandler();
     virtual ~KeyboardHandler() = default;

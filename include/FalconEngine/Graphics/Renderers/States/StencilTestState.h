@@ -1,8 +1,6 @@
 #pragma once
 
-#include <memory>
-
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 
 namespace FalconEngine
 {
@@ -51,14 +49,13 @@ enum class StencilOperation
     Count,
 };
 
-class StencilTestState : public Object
+class StencilTestState sealed
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
 public:
     StencilTestState ();
-    virtual ~StencilTestState ();
+    ~StencilTestState ();
 
+public:
     bool            mTestEnabled      = false;
     StencilFunction mCompareFunction  = StencilFunction::NEVER;
     unsigned int    mCompareReference = 0;
@@ -69,7 +66,5 @@ public:
     StencilOperation OnDepthTestFail   = StencilOperation::KEEP;
     StencilOperation OnDepthTestPass   = StencilOperation::KEEP;
 };
-
-using StencilTestStateUniquePtr = std::unique_ptr<StencilTestState>;
 
 }

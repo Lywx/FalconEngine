@@ -3,8 +3,6 @@
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(Asset, Object);
-
 Asset::Asset(const std::string& fileName, const std::string& filePath) :
     mFileName(fileName),
     mFilePath(filePath)

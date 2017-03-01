@@ -1,5 +1,7 @@
 #include <FalconEngine/Context/Game.h>
 #include <FalconEngine/Context/GameEngineGraphics.h>
+#include <FalconEngine/Context/GameEngineGraphicsSettings.h>
+#include <FalconEngine/Context/GameEngineSettings.h>
 
 namespace FalconEngine
 {

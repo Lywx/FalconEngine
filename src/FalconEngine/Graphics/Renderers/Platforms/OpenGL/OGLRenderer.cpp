@@ -1,13 +1,16 @@
 #include <FalconEngine/Graphics/Renderers/Renderer.h>
+#include <FalconEngine/Graphics/Renderers/VisualLines.h>
+#include <FalconEngine/Graphics/Renderers/VisualPoints.h>
+#include <FalconEngine/Graphics/Renderers/VisualTriangles.h>
+#include <FalconEngine/Graphics/Renderers/Resources/IndexBuffer.h>
+#include <FalconEngine/Graphics/Renderers/States/CullState.h>
+#include <FalconEngine/Graphics/Renderers/States/OffsetState.h>
+#include <FalconEngine/Graphics/Renderers/States/WireframeState.h>
 
 #if FALCON_ENGINE_PLATFORM_GLFW
 #include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
 #include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLRendererData.h>
 #include <FalconEngine/Graphics/Renderers/Platforms/OpenGL/OGLRendererState.h>
-
-#include <FalconEngine/Graphics/Renderers/VisualLines.h>
-#include <FalconEngine/Graphics/Renderers/VisualPoints.h>
-#include <FalconEngine/Graphics/Renderers/VisualTriangles.h>
 
 using namespace std;
 

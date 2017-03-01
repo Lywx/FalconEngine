@@ -1,4 +1,5 @@
 #include <FalconEngine/Graphics/Renderers/VisualLines.h>
+#include <FalconEngine/Graphics/Renderers/Resources/VertexGroup.h>
 
 namespace FalconEngine
 {

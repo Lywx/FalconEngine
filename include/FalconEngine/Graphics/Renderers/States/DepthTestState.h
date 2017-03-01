@@ -1,8 +1,6 @@
 #pragma once
 
-#include <memory>
-
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 
 namespace FalconEngine
 {
@@ -21,19 +19,16 @@ enum class DepthFunction
     Count
 };
 
-class DepthTestState : public Object
+class DepthTestState sealed
 {
-    FALCON_ENGINE_RTTI_DECLARE;
+public:
+    DepthTestState();
+    ~DepthTestState();
 
 public:
-    DepthTestState ();
-    virtual ~DepthTestState ();
-
     bool          mTestEnabled     = true; // Enable depth testing
     bool          mWriteEnabled    = true; // Enable depth value writing in frame buffer
     DepthFunction mCompareFunction = DepthFunction::LEQUAL;
 };
-
-using DepthTestStateUniquePtr = std::unique_ptr<DepthTestState>;
 
 }

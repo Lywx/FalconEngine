@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 
 #include <memory>
 #include <boost/serialization/access.hpp>
@@ -51,9 +51,6 @@ public:
 
     BOOST_SERIALIZATION_SPLIT_MEMBER()
 };
-
-typedef std::shared_ptr<Texture2d> Texture2dSharedPtr;
-typedef std::unique_ptr<Texture2d> Texture2dUniquePtr;
 
 }
 

@@ -87,12 +87,11 @@ GameEngine::Initialize()
 void
 GameEngine::Loop()
 {
-    mCounter = GameCounter();
     char lastFramePerformanceString[256];
 
     if (mGame != nullptr)
     {
-        double lastFrameBegunMillisecond = mCounter.GetMilliseconds();
+        double lastFrameBegunMillisecond = GameCounter::GetMilliseconds();
         double lastRenderBegunMillisecond = lastFrameBegunMillisecond;
         int    lastUpdateTotalCount = 0;
 
@@ -101,7 +100,7 @@ GameEngine::Loop()
 
         while (mRunning)
         {
-            double lastFrameEndedMillisecond = mCounter.GetMilliseconds();
+            double lastFrameEndedMillisecond = GameCounter::GetMilliseconds();
             double lastRenderEndedMillisecond = lastFrameEndedMillisecond;
 
             // Get the time elapsed during the LAST frame.
@@ -116,14 +115,14 @@ GameEngine::Loop()
             // Reset update accumulated time elapsed.
             int    currentUpdateTotalCount = 0;
             double currentUpdateTotalElapsedMillisecond = 0;
-            double lastUpdateBegunMillisecond = mCounter.GetMilliseconds();
+            double lastUpdateBegunMillisecond = GameCounter::GetMilliseconds();
             double lastUpdateEndedMillisecond = 0;
             do
             {
                 mGame->Update(mInput, currentUpdateTotalCount == 0 ? lastUpdateElapsedMillisecond + lastRenderElapsedMillisecond : lastUpdateElapsedMillisecond);
                 ++currentUpdateTotalCount;
 
-                lastUpdateEndedMillisecond = mCounter.GetMilliseconds();
+                lastUpdateEndedMillisecond = GameCounter::GetMilliseconds();
 
                 // Get the time elapsed during the LAST update.
                 lastUpdateElapsedMillisecond = lastUpdateEndedMillisecond - lastUpdateBegunMillisecond;

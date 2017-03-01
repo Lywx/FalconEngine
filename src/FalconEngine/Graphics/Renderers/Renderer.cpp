@@ -21,6 +21,7 @@ using namespace std;
 #include <FalconEngine/Graphics/Renderers/Resources/IndexBuffer.h>
 #include <FalconEngine/Graphics/Renderers/Resources/VertexBuffer.h>
 #include <FalconEngine/Graphics/Renderers/Resources/VertexFormat.h>
+#include <FalconEngine/Graphics/Renderers/Resources/VertexGroup.h>
 #include <FalconEngine/Graphics/Renderers/Resources/Texture1d.h>
 #include <FalconEngine/Graphics/Renderers/Resources/Texture2d.h>
 #include <FalconEngine/Graphics/Renderers/Resources/Texture2dArray.h>

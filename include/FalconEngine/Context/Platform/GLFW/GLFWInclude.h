@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Context/ContextInclude.h>
+#include <FalconEngine/ContextInclude.h>
 
 #if FALCON_ENGINE_PLATFORM_GLFW
 #define GLEW_STATIC

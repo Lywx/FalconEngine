@@ -3,8 +3,6 @@
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(StencilTestState, Object);
-
 StencilTestState::StencilTestState() :
     mTestEnabled(false),
     mCompareFunction(StencilFunction::NEVER),

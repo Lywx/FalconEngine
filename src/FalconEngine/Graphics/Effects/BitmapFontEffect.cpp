@@ -1,7 +1,18 @@
 #include <FalconEngine/Graphics/Effects/BitmapFontEffect.h>
+
 #include <FalconEngine/Graphics/Renderers/BitmapFont.h>
+#include <FalconEngine/Graphics/Renderers/VisualEffectInstance.h>
+#include <FalconEngine/Graphics/Renderers/Resources/Texture2dArray.h>
 #include <FalconEngine/Graphics/Renderers/Resources/VertexFormat.h>
-#include <glm/gtc/matrix_transform.inl>
+#include <FalconEngine/Graphics/Renderers/Resources/VertexFormat.h>
+#include <FalconEngine/Graphics/Renderers/Shaders/Shader.h>
+#include <FalconEngine/Graphics/Renderers/Shaders/ShaderUniformConstant.h>
+#include <FalconEngine/Graphics/Renderers/States/BlendState.h>
+#include <FalconEngine/Graphics/Renderers/States/DepthTestState.h>
+#include <FalconEngine/Graphics/Renderers/States/CullState.h>
+#include <FalconEngine/Graphics/Renderers/States/OffsetState.h>
+#include <FalconEngine/Graphics/Renderers/States/StencilTestState.h>
+#include <FalconEngine/Graphics/Renderers/States/WireframeState.h>
 
 using namespace std;
 

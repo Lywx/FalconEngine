@@ -1,9 +1,17 @@
 #include <FalconEngine/Graphics/Renderers/VisualPass.h>
+#include <FalconEngine/Graphics/Renderers/States/BlendState.h>
+#include <FalconEngine/Graphics/Renderers/States/CullState.h>
+#include <FalconEngine/Graphics/Renderers/States/DepthTestState.h>
+#include <FalconEngine/Graphics/Renderers/States/OffsetState.h>
+#include <FalconEngine/Graphics/Renderers/States/StencilTestState.h>
+#include <FalconEngine/Graphics/Renderers/States/WireframeState.h>
+#include <FalconEngine/Graphics/Renderers/Resources/Texture.h>
+#include <FalconEngine/Graphics/Renderers/Resources/Sampler.h>
+#include <FalconEngine/Graphics/Renderers/Shaders/Shader.h>
+#include <FalconEngine/Graphics/Renderers/Shaders/ShaderUniform.h>
 
 namespace FalconEngine
 {
-
-FALCON_ENGINE_RTTI_IMPLEMENT(VisualPass, Object);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -30,7 +38,7 @@ VisualPass::SetShaderUniform(ShaderUniformSharedPtr shaderUniform)
 {
     if (mShader->ContainUniform(shaderUniform->mName))
     {
-        mShaderUniformVector.push_back(shaderUniform);
+        mShaderUniformList.push_back(shaderUniform);
     }
     else
     {
@@ -99,13 +107,13 @@ VisualPass::GetShader() const
 int
 VisualPass::GetShaderUniformNum() const
 {
-    return int(mShaderUniformVector.size());
+    return int(mShaderUniformList.size());
 }
 
 ShaderUniform *
 VisualPass::GetShaderUniform(int uniformIndex) const
 {
-    return mShaderUniformVector.at(uniformIndex).get();
+    return mShaderUniformList.at(uniformIndex).get();
 }
 
 int

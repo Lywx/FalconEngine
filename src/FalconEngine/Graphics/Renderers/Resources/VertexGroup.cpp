@@ -1,11 +1,10 @@
 #include <FalconEngine/Graphics/Renderers/Resources/VertexGroup.h>
+#include <FalconEngine/Graphics/Renderers/Resources/VertexBuffer.h>
 
 using namespace std;
 
 namespace FalconEngine
 {
-
-FALCON_ENGINE_RTTI_IMPLEMENT(VertexGroup, Object);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

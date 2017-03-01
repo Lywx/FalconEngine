@@ -1,15 +1,16 @@
 #pragma once
 
-#include <FalconEngine/Graphics/GraphicsInclude.h>
+#include <FalconEngine/GraphicsInclude.h>
 
 #include <FalconEngine/Graphics/Renderers/VisualEffect.h>
-#include <FalconEngine/Graphics/Renderers/VisualEffectInstance.h>
-#include <FalconEngine/Graphics/Renderers/Resources/VertexFormat.h>
 
 namespace FalconEngine
 {
 
 class BitmapFont;
+
+class VertexFormat;
+using VertexFormatSharedPtr = std::shared_ptr<VertexFormat>;
 
 class BitmapFontVertex
 {

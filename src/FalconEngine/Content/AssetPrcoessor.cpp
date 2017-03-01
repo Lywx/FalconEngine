@@ -14,8 +14,8 @@
 #include <stb/stb_image.h>
 
 #include <FalconEngine/Content/Path.h>
-#include <FalconEngine/Graphics/Renderers/BitmapFont.h>
-#include <FalconEngine/Graphics/Renderers/Resources/Texture2d.h>
+#include <FalconEngine/Graphics/Renderer/BitmapFont.h>
+#include <FalconEngine/Graphics/Renderer/Resources/Texture2d.h>
 #include <FalconEngine/Graphics/Scene/Model.h>
 
 using namespace boost;

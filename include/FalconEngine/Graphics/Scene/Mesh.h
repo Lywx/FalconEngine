@@ -4,7 +4,7 @@
 
 #include <vector>
 
-#include <FalconEngine/Graphics/Renderers/VisualTriangles.h>
+#include <FalconEngine/Graphics/Renderer/VisualTriangles.h>
 
 namespace FalconEngine
 {

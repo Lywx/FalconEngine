@@ -1,8 +1,8 @@
 #include <FalconEngine/Context/GameEngineGraphics.h>
 #include <FalconEngine/Context/GameEngineGraphicsSettings.h>
 #include <FalconEngine/Context/GameEngineSettings.h>
-#include <FalconEngine/Graphics/Renderers/Renderer.h>
-#include <FalconEngine/Graphics/Renderers/BitmapFontRenderer.h>
+#include <FalconEngine/Graphics/Renderer/Renderer.h>
+#include <FalconEngine/Graphics/Renderer/BitmapFontRenderer.h>
 #include <FalconEngine/Math/Color.h>
 
 namespace FalconEngine

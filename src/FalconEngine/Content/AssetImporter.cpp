@@ -5,13 +5,13 @@
 #include <assimp/scene.h>
 
 #include <FalconEngine/Content/AssetManager.h>
-#include <FalconEngine/Graphics/Renderers/Resources/Buffer.h>
-#include <FalconEngine/Graphics/Renderers/Resources/IndexBuffer.h>
-#include <FalconEngine/Graphics/Renderers/Resources/Texture2d.h>
-#include <FalconEngine/Graphics/Renderers/Resources/VertexAttribute.h>
-#include <FalconEngine/Graphics/Renderers/Resources/VertexBuffer.h>
-#include <FalconEngine/Graphics/Renderers/Resources/VertexFormat.h>
-#include <FalconEngine/Graphics/Renderers/Resources/VertexGroup.h>
+#include <FalconEngine/Graphics/Renderer/Resources/Buffer.h>
+#include <FalconEngine/Graphics/Renderer/Resources/IndexBuffer.h>
+#include <FalconEngine/Graphics/Renderer/Resources/Texture2d.h>
+#include <FalconEngine/Graphics/Renderer/Resources/VertexAttribute.h>
+#include <FalconEngine/Graphics/Renderer/Resources/VertexBuffer.h>
+#include <FalconEngine/Graphics/Renderer/Resources/VertexFormat.h>
+#include <FalconEngine/Graphics/Renderer/Resources/VertexGroup.h>
 #include <FalconEngine/Graphics/Scene/Material.h>
 #include <FalconEngine/Graphics/Scene/Mesh.h>
 #include <FalconEngine/Graphics/Scene/Model.h>

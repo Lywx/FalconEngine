@@ -9,12 +9,12 @@
 #include <FalconEngine/Content/Asset.h>
 #include <FalconEngine/Content/AssetImporter.h>
 #include <FalconEngine/Content/Path.h>
-#include <FalconEngine/Graphics/Renderers/BitmapFont.h>
-#include <FalconEngine/Graphics/Renderers/Resources/Buffer.h>
-#include <FalconEngine/Graphics/Renderers/Resources/Sampler.h>
-#include <FalconEngine/Graphics/Renderers/Resources/Texture2d.h>
-#include <FalconEngine/Graphics/Renderers/Resources/Texture2dArray.h>
-#include <FalconEngine/Graphics/Renderers/Shaders/ShaderSource.h>
+#include <FalconEngine/Graphics/Renderer/BitmapFont.h>
+#include <FalconEngine/Graphics/Renderer/Resources/Buffer.h>
+#include <FalconEngine/Graphics/Renderer/Resources/Sampler.h>
+#include <FalconEngine/Graphics/Renderer/Resources/Texture2d.h>
+#include <FalconEngine/Graphics/Renderer/Resources/Texture2dArray.h>
+#include <FalconEngine/Graphics/Renderer/Shader/ShaderSource.h>
 #include <FalconEngine/Graphics/Scene/Model.h>
 
 using namespace std;

@@ -434,6 +434,9 @@ private:
     InitializePlatform(const GameEngineData *data);
 
     void
+    DestroyExceptPlatform();
+
+    void
     DestroyPlatform();
 
     void

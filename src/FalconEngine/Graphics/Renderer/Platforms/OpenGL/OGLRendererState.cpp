@@ -13,7 +13,15 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PlatformRendererState::PlatformRendererState()
+PlatformRendererState::PlatformRendererState() :
+    mBlendEnabled(false), mBlendSourceFactor(0), mBlendDestinationFactor(0),
+    mCullEnabled(false), mCullCounterClockwise(false), mDepthTestEnabled(false),
+    mDepthWriteEnabled(false), mDepthCompareFunction(0), mOffsetFillEnabled(false),
+    mOffsetLineEnabled(false), mOffsetPointEnabled(false), mOffsetFactor(0),
+    mOffsetUnit(0), mStencilTestEnabled(false), mStencilCompareFunction(0),
+    mStencilCompareReference(0), mStencilCompareMask(0), mStencilWriteMask(0),
+    mStencilOnStencilTestFail(0), mStencilOnDepthTestFail(0),
+    mStencilOnDepthTestPass(0), mWireframeEnabled(false)
 {
     // Initialization must be deferred until an OpenGL context has been
     // created.

@@ -89,6 +89,17 @@ Renderer::InitializeExceptPlatform(int width, int height)
     mCamera = nullptr;
 }
 
+void
+Renderer::DestroyExceptPlatform()
+{
+    delete mBlendStateDefault;
+    delete mCullStateDefault;
+    delete mDepthTestStateDefault;
+    delete mOffsetStateDefault;
+    delete mStencilTestStateDefault;
+    delete mWireframeStateDefault;
+}
+
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/

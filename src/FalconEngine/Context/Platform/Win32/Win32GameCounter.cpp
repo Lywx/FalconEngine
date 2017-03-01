@@ -58,6 +58,8 @@ GameCounter::GetMilliseconds()
     return sImplementation->GetMilliseconds();
 }
 
+std::shared_ptr<GameCounterImp> GameCounter::sImplementation;
+
 }
 
 #endif

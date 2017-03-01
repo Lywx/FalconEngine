@@ -18,7 +18,7 @@ class PlatformRendererState
 {
 public:
     PlatformRendererState();
-    virtual ~PlatformRendererState() = default;
+    ~PlatformRendererState() = default;
 
 public:
     void

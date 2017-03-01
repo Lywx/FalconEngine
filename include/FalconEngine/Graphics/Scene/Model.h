@@ -26,8 +26,6 @@ using NodeSharedPtr = std::shared_ptr<Node>;
 
 class Model : public Asset
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */

@@ -1,5 +1,6 @@
 #include <FalconEngine/Context/GameEngine.h>
 #include <FalconEngine/Context/GameEnginePlatform.h>
+#include <FalconEngine/Context/GameEngineProfiler.h>
 #include <FalconEngine/Context/GameEngineGraphics.h>
 #include <FalconEngine/Context/GameEngineInput.h>
 #include <FalconEngine/Context/GameEngineSettings.h>
@@ -62,6 +63,13 @@ GameEngine::Initialize()
         mPlatform->Initialize(mData, settings);
     }
 
+    mProfiler = GameEngineProfiler::GetInstance();
+    if (mProfiler != nullptr)
+    {
+        auto settings = mGame->GetEngineSettings();
+        mProfiler->Initialize(mData, settings);
+    }
+
     mGraphics = GameEngineGraphics::GetInstance();
     if (mGraphics != nullptr)
     {
@@ -93,7 +101,7 @@ GameEngine::Loop()
     {
         double lastFrameBegunMillisecond = GameCounter::GetMilliseconds();
         double lastRenderBegunMillisecond = lastFrameBegunMillisecond;
-        int    lastUpdateTotalCount = 0;
+        int    lastFrameUpdateTotalCount = 0;
 
         // First update has no previous elapsed time
         double lastUpdateElapsedMillisecond = 0;
@@ -113,14 +121,14 @@ GameEngine::Loop()
             mGame->UpdateInput();
 
             // Reset update accumulated time elapsed.
-            int    currentUpdateTotalCount = 0;
+            int    currentFrameUpdateTotalCount = 0;
             double currentUpdateTotalElapsedMillisecond = 0;
             double lastUpdateBegunMillisecond = GameCounter::GetMilliseconds();
             double lastUpdateEndedMillisecond = 0;
             do
             {
-                mGame->Update(mInput, currentUpdateTotalCount == 0 ? lastUpdateElapsedMillisecond + lastRenderElapsedMillisecond : lastUpdateElapsedMillisecond);
-                ++currentUpdateTotalCount;
+                mGame->Update(mInput, currentFrameUpdateTotalCount == 0 ? lastUpdateElapsedMillisecond + lastRenderElapsedMillisecond : lastUpdateElapsedMillisecond);
+                ++currentFrameUpdateTotalCount;
 
                 lastUpdateEndedMillisecond = GameCounter::GetMilliseconds();
 
@@ -135,16 +143,23 @@ GameEngine::Loop()
 
             // Output performance profile
             double lastFrameFPS = 1000 / lastFrameElapsedMillisecond;
+
+            mProfiler->mLastFrameElapsedMillisecond  = lastFrameElapsedMillisecond;
+            mProfiler->mLastFrameUpdateTotalCount    = lastFrameUpdateTotalCount;
+            mProfiler->mLastFrameFPS                 = lastFrameFPS;
+            mProfiler->mLastUpdateElapsedMillisecond = lastUpdateElapsedMillisecond;
+            mProfiler->mLastRenderElapsedMillisecond = lastRenderElapsedMillisecond;
+
             sprintf_s(lastFramePerformanceString, "f%.02fms, u%.02fms, r%.02fms, %du/f, %0.2ff/s\n",
                       lastFrameElapsedMillisecond,
                       lastUpdateElapsedMillisecond,
                       lastRenderElapsedMillisecond,
-                      lastUpdateTotalCount,
+                      lastFrameUpdateTotalCount,
                       lastFrameFPS);
             GameDebug::OutputString(lastFramePerformanceString);
 
             // Store last update count
-            lastUpdateTotalCount = currentUpdateTotalCount;
+            lastFrameUpdateTotalCount = currentFrameUpdateTotalCount;
 
             // Reset render start point.
             lastRenderBegunMillisecond = lastUpdateEndedMillisecond;

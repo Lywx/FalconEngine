@@ -1,5 +1,7 @@
 #include "SampleGame.h"
 
+#include <FalconEngine/Context/GameEngineProfiler.h>
+
 using namespace std;
 using namespace FalconEngine;
 
@@ -34,19 +36,16 @@ SampleGame::Initialize()
     GameDebug::Initialize();
     mAssetManager = mAssetManager->GetInstance();
 
-    int width = 1280;
-    int height = 800;
-
     mFontConsole = mAssetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.fnt.bin").get();
     //mFontDisplay = mAssetManager->LoadFont("Content/Fonts/NSimSunDistanceField.fnt.bin");
 
-    mModelNanosuit = mAssetManager->LoadModel("Content/Models/nanosuit.obj").get();
+    //mModelNanosuit = mAssetManager->LoadModel("Content/Models/nanosuit.obj").get();
 
     mScene = make_shared<Node>();
     mScene->mWorldTransform = Matrix4f::Zero;
-    mScene->AttachChild(mModelNanosuit->GetNode());
+    //mScene->AttachChild(mModelNanosuit->GetNode());
 
-    mScene->Update(0.0, true);
+    //mScene->Update(0.0, true);
 }
 
 void
@@ -54,8 +53,25 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
 {
     graphics->ClearColorBuffer(ColorPalette::White);
 
-    graphics->DrawString(mFontConsole, 53, Vector2f(300, 300), to_string(GameCounter::GetMilliseconds()), ColorPalette::Black);
-    graphics->Draw(mModelNanosuit->GetNode());
+    // Draw FPS
+    {
+        auto engine = GetEngine();
+        auto engineGraphicsSettings = GetEngineSettings()->mGraphics;
+        auto width  = engineGraphicsSettings->mWidth;
+        auto height = engineGraphicsSettings->mHeight;
+
+        auto lastFrameFPS = int(engine->GetProfiler()->GetLastFrameFPS());
+        auto lastFrameUpdateCount = int(engine->GetProfiler()->GetLastFrameUpdateTotalCount());
+
+        graphics->DrawString(mFontConsole, 16.f, Vector2f(50.f, height - 50.f), "U: " + to_string(lastFrameUpdateCount) + " F: " + to_string(lastFrameFPS), ColorPalette::DarkGoldenrod);
+    }
+
+    //for (int i = 0; i < 100; ++i)
+    //{
+    //    graphics->DrawString(mFontConsole, 23, Vector2f(0, i + 10), to_string(GameCounter::GetMilliseconds()), ColorPalette::Black);
+    //}
+    //graphics->DrawString(mFontConsole, 53, Vector2f(300, 300), to_string(GameCounter::GetMilliseconds()), ColorPalette::Black);
+    //graphics->Draw(mModelNanosuit->GetNode());
     Game::Render(graphics, percent);
 }
 

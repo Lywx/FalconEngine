@@ -28,7 +28,7 @@ BitmapFontRenderer::BitmapFontRenderer() :
     mDynamicTextQuads(nullptr),
     mStaticTextBuffer(nullptr),
     mStaticTextQuads(nullptr),
-    mTextEffect()
+    mDebugTextEffect()
 {
 }
 
@@ -44,43 +44,42 @@ BitmapFontRenderer::Initialize(int width, int height)
 {
     auto assetManager = AssetManager::GetInstance();
 
-    // Setup text effect.
+    // Setup debug text effect.
     {
         auto font = assetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.fnt.bin");
 
-        // Prepare text effect.
-        mTextEffect = make_shared<BitmapFontEffect>(&mTextHandedness);
-        mTextEffectInstance = make_shared<VisualEffectInstance>(mTextEffect);
-        mTextEffect->CreateInstance(mTextEffectInstance.get(), font.get(), width, height);
+        mDebugTextEffect = make_shared<BitmapFontEffect>(&mHandedness);
+        mDebugTextEffectInstance = make_shared<VisualEffectInstance>(mDebugTextEffect);
+        mDebugTextEffect->CreateInstance(mDebugTextEffectInstance.get(), font.get(), width, height);
     }
 
-    auto textVertexFormat = mTextEffect->CreateVertexFormat();
-
-    // Setup static text rendering.
+    // Setup debug text batch.
     {
-        // TODO(Wuxiang): Should I change the size of the buffer?
-        mStaticTextBuffer = make_shared<VertexBuffer>(1024, sizeof(BitmapFontVertex), BufferUsage::Dynamic);
+        auto vertexFormat = mDebugTextEffect->CreateVertexFormat();
 
-        auto textVertexGroupDynamic = make_shared<VertexGroup>();
-        textVertexGroupDynamic->SetVertexBuffer(0, mStaticTextBuffer, 0, textVertexFormat->GetVertexAttributeStride());
-        mStaticTextQuads = make_shared<VisualQuads>(textVertexFormat, textVertexGroupDynamic);
+        // Setup static text rendering.
+        {
+            static const int sStaticTextBufferSize = 10240;
+            mStaticTextBuffer = make_shared<VertexBuffer>(sStaticTextBufferSize, sizeof(BitmapFontVertex), BufferUsage::Dynamic);
 
-        mStaticTextItem = BitmapFontRenderItem();
-        mStaticTextItem.mTextBuffer = mStaticTextBuffer;
-    }
+            auto vertexGroup = make_shared<VertexGroup>();
+            vertexGroup->SetVertexBuffer(0, mStaticTextBuffer, 0, vertexFormat->GetVertexAttributeStride());
+            mStaticTextQuads = make_shared<VisualQuads>(vertexFormat, vertexGroup);
 
-    // Setup dynamic text rendering.
-    {
-        // TODO(Wuxiang): Should I change the size of the buffer?
-        mDynamicTextBuffer = make_shared<VertexBuffer>(1024, sizeof(BitmapFontVertex), BufferUsage::Stream);
+            mStaticTextBatch = BitmapFontBatch(mStaticTextBuffer);
+        }
 
-        auto dynamicTextVertexGroup = make_shared<VertexGroup>();
-        dynamicTextVertexGroup->SetVertexBuffer(0, mDynamicTextBuffer, 0, textVertexFormat->GetVertexAttributeStride());
-        mDynamicTextQuads = make_shared<VisualQuads>(textVertexFormat, dynamicTextVertexGroup);
-        //mDynamicTextQuads->SetVertexNum()
+        // Setup dynamic text rendering.
+        {
+            static const int sDynamicTextBufferSize = 10240;
+            mDynamicTextBuffer = make_shared<VertexBuffer>(sDynamicTextBufferSize, sizeof(BitmapFontVertex), BufferUsage::Stream);
 
-        mDynamicTextItem = BitmapFontRenderItem();
-        mDynamicTextItem.mTextBuffer = mDynamicTextBuffer;
+            auto dynamicTextVertexGroup = make_shared<VertexGroup>();
+            dynamicTextVertexGroup->SetVertexBuffer(0, mDynamicTextBuffer, 0, vertexFormat->GetVertexAttributeStride());
+            mDynamicTextQuads = make_shared<VisualQuads>(vertexFormat, dynamicTextVertexGroup);
+
+            mDynamicTextBatch = BitmapFontBatch(mDynamicTextBuffer);
+        }
     }
 }
 
@@ -94,14 +93,14 @@ BitmapFontRenderer::BatchTextDynamic(
     float       textLineWidth)
 {
     auto text = BitmapText(fontSize, textString, textPosition, textLineWidth);
-    PrepareText(mDynamicTextItem, font, &text, textColor);
+    PrepareText(mDynamicTextBatch, font, &text, textColor);
 }
 
 void
 BitmapFontRenderer::BatchTextStatic(const BitmapFont *font, float fontSize, std::string textString, Vector2f textPosition, Color textColor, float textLineWidth)
 {
     auto text = BitmapText(fontSize, textString, textPosition, textLineWidth);
-    PrepareText(mStaticTextItem, font, &text, textColor);
+    PrepareText(mStaticTextBatch, font, &text, textColor);
 }
 
 // @summary Construct all the necessary lexical separation of given text into
@@ -295,22 +294,22 @@ FillTextLines(
 
 void
 BitmapFontRenderer::PrepareText(
-    BitmapFontRenderItem& item,
-    const BitmapFont *font,
-    const BitmapText *text,
-    Color             textColor)
+    _IN_OUT_ BitmapFontBatch& item,
+    _IN_     const BitmapFont     *font,
+    _IN_     const BitmapText     *text,
+    _IN_     Color                 textColor)
 {
     static auto sTextLines = vector<BitmapLine>();
     sTextLines.clear();
 
     // Construct lines with glyph information.
     int textGlyphCount = CreateTextLines(font, text, sTextLines);
-    item.mTextBufferGlyphNum += textGlyphCount;
+    item.mBufferGlyphNum += textGlyphCount;
 
     // Fill the vertex attribute into the buffer
     FillTextLines(font, text->mFontSize, Vector2f(text->mTextBounds.x, text->mTextBounds.y),
-                  Vector4f(textColor), sTextLines, item.mTextBufferDataIndex,
-                  reinterpret_cast<float *>(item.mTextBuffer->GetData()));
+                  Vector4f(textColor), sTextLines, item.mBufferDataIndex,
+                  reinterpret_cast<float *>(item.mBuffer->GetData()));
 }
 
 void
@@ -321,17 +320,19 @@ BitmapFontRenderer::RenderBegin()
 void
 BitmapFontRenderer::Render(Renderer *renderer, double percent)
 {
-    renderer->Draw(mStaticTextQuads.get(), mTextEffectInstance.get());
+    renderer->Draw(mStaticTextQuads.get(), mDebugTextEffectInstance.get());
 
     // Update buffer data before drawing
+    mDynamicTextBuffer->SetElementNum(mDynamicTextBatch.mBufferGlyphNum * 6);
     renderer->Update(mDynamicTextBuffer.get());
-    renderer->Draw(mDynamicTextQuads.get(), mTextEffectInstance.get());
+    renderer->Draw(mDynamicTextQuads.get(), mDebugTextEffectInstance.get());
 }
 
 void
 BitmapFontRenderer::RenderEnd()
 {
-    mDynamicTextItem.mTextBufferDataIndex = 0;
+    mDynamicTextBatch.mBufferDataIndex = 0;
+    mDynamicTextBatch.mBufferGlyphNum = 0;
 }
 
 }

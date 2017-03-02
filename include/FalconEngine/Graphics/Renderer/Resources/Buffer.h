@@ -43,6 +43,12 @@ public:
     virtual ~Buffer();
 
 public:
+    int
+    GetCapacityByteNum() const
+    {
+        return mCapacityByteNum;
+    }
+
     unsigned char *
     GetData()
     {
@@ -71,6 +77,7 @@ public:
     SetElementNum(int elementNum)
     {
         mElementNum = elementNum;
+        mDataByteNum = mElementByteNum * mElementNum;
     }
 
     BufferUsage
@@ -81,8 +88,14 @@ public:
 
 private:
     unsigned char *mData;
+
+    int            mCapacityByteNum;
+    int            mCapacityElementNum;
+
     int            mDataByteNum;
     int            mElementNum;
+    int            mElementByteNum;
+
     BufferUsage    mUsage;
 };
 

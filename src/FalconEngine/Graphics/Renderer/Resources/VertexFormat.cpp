@@ -31,7 +31,6 @@ VertexFormat::GetVertexAttribute(int attributeIndex)
     return mVertexAttributeVector.at(attributeIndex);
 }
 
-// ReSharper disable once CppNotAllPathsReturnValue
 int
 VertexFormat::GetVertexAttributeStride() const
 {

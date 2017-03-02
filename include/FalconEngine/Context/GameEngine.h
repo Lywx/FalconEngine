@@ -11,6 +11,7 @@ class GameEngineData;
 class GameEngineGraphics;
 class GameEngineInput;
 class GameEnginePlatform;
+class GameEngineProfiler;
 class GameEngine
 {
 public:
@@ -25,6 +26,12 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
+    const GameEngineProfiler *
+    GetProfiler() const
+    {
+        return mProfiler;
+    }
+
     void
     Run();
 
@@ -32,6 +39,9 @@ public:
     Exit();
 
 private:
+    /************************************************************************/
+    /* Private Members                                                      */
+    /************************************************************************/
     void
     Initialize();
 
@@ -53,6 +63,7 @@ private:
     Game               *mGame;
     GameEngineInput    *mInput;
     GameEnginePlatform *mPlatform;
+    GameEngineProfiler *mProfiler;
     GameEngineGraphics *mGraphics;
 
     bool                mInitialized = false;

@@ -16,12 +16,14 @@ namespace FalconEngine
 /************************************************************************/
 class BitmapFont;
 class BitmapFontRenderer;
+using BitmapFontRendererSharedPtr = std::shared_ptr<BitmapFontRenderer>;
 class BitmapText;
 
 /************************************************************************/
 /* General Renderer                                                     */
 /************************************************************************/
 class Renderer;
+using RendererSharedPtr = std::shared_ptr<Renderer>;
 
 class GameEngineSettings;
 using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
@@ -52,7 +54,7 @@ public:
 
 public:
     /************************************************************************/
-    /* Renderer API                                                         */
+    /* Rendering API                                                        */
     /************************************************************************/
     void
     ClearColorBuffer(Vector4f color);
@@ -105,8 +107,8 @@ private:
     Destroy();
 
 protected:
-    BitmapFontRenderer                 *mRendererForFont;
-    Renderer                           *mRenderer;
+    BitmapFontRendererSharedPtr         mFontRenderer;
+    RendererSharedPtr                   mMasterRenderer;
     GameEngineGraphicsSettingsSharedPtr mSettings;
 };
 

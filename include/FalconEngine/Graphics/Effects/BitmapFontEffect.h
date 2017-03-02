@@ -34,6 +34,7 @@ public:
     BitmapFontEffect(const Handedness *handedness);
     virtual ~BitmapFontEffect();
 
+public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/

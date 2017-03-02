@@ -19,5 +19,4 @@ support multiple buffer switching without switch vertex format.
 ++ Added more members in Light class.
 
 ++ Finished blin phong lighting.
-++ Finished font primitive count in font renderer.
 ++ Implemented mesh renderer.

@@ -12,8 +12,8 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 GameEngineGraphics::GameEngineGraphics() :
-    mRendererForFont(nullptr),
-    mRenderer(nullptr)
+    mFontRenderer(nullptr),
+    mMasterRenderer(nullptr)
 {
 }
 
@@ -28,37 +28,37 @@ GameEngineGraphics::~GameEngineGraphics()
 void
 GameEngineGraphics::ClearColorBuffer(Vector4f color)
 {
-    mRenderer->ClearColorBuffer(color);
+    mMasterRenderer->ClearColorBuffer(color);
 }
 
 void
 GameEngineGraphics::ClearDepthBuffer(float depth)
 {
-    mRenderer->ClearDepthBuffer(depth);
+    mMasterRenderer->ClearDepthBuffer(depth);
 }
 
 void
 GameEngineGraphics::ClearStencilBuffer(unsigned stencil)
 {
-    mRenderer->ClearStencilBuffer(stencil);
+    mMasterRenderer->ClearStencilBuffer(stencil);
 }
 
 void
 GameEngineGraphics::ClearBuffers(Vector4f color, float depth, unsigned stencil)
 {
-    mRenderer->ClearBuffers(color, depth, stencil);
+    mMasterRenderer->ClearBuffers(color, depth, stencil);
 }
 
 void
 GameEngineGraphics::DrawStaticString(const BitmapFont *font, float fontSize, Vector2f textPosition, const std::string& text, const Color textColor, float textLineWidth)
 {
-    mRendererForFont->BatchTextStatic(font, fontSize, text, textPosition, textColor, textLineWidth);
+    mFontRenderer->BatchTextStatic(font, fontSize, text, textPosition, textColor, textLineWidth);
 }
 
 void
 GameEngineGraphics::DrawString(const BitmapFont *font, float fontSize, Vector2f textPosition, const std::string& text, const Color textColor, float textLineWidth)
 {
-    mRendererForFont->BatchTextDynamic(font, fontSize, text, textPosition, textColor, textLineWidth);
+    mFontRenderer->BatchTextDynamic(font, fontSize, text, textPosition, textColor, textLineWidth);
 }
 
 void
@@ -68,23 +68,11 @@ GameEngineGraphics::Initialize(
 {
     mSettings = settings->mGraphics;
 
-    {
-        if (mRenderer)
-        {
-            delete mRenderer;
-        }
-
-        mRenderer = new Renderer(data, mSettings->mWidth, mSettings->mHeight);
-    }
+    mMasterRenderer = std::make_shared<Renderer>(data, mSettings->mWidth, mSettings->mHeight);
 
     {
-        if (mRendererForFont)
-        {
-            delete mRendererForFont;
-        }
-
-        mRendererForFont = new BitmapFontRenderer();
-        mRendererForFont->Initialize(mSettings->mWidth, mSettings->mHeight);
+        mFontRenderer = std::make_shared<BitmapFontRenderer>();
+        mFontRenderer->Initialize(mSettings->mWidth, mSettings->mHeight);
     }
 
     InitializePlatform(data);
@@ -93,27 +81,27 @@ GameEngineGraphics::Initialize(
 void
 GameEngineGraphics::Destroy()
 {
-    delete mRenderer;
-    delete mRendererForFont;
 }
 
 void
 GameEngineGraphics::RenderBegin()
 {
-    mRendererForFont->RenderBegin();
+    mFontRenderer->RenderBegin();
 }
 
 void
 GameEngineGraphics::Render(double percent)
 {
-    mRendererForFont->Render(mRenderer, percent);
+    mFontRenderer->Render(mMasterRenderer.get(), percent);
 }
 
 void
 GameEngineGraphics::RenderEnd()
 {
-    mRendererForFont->RenderEnd();
-    mRenderer->SwapBuffers();
+    mFontRenderer->RenderEnd();
+
+    // Has to be the last.
+    mMasterRenderer->SwapBuffers();
 }
 
 }

@@ -1,4 +1,4 @@
-#include "SampleGame.h"
+﻿#include "SampleGame.h"
 
 #include <FalconEngine/Context/GameEngineProfiler.h>
 
@@ -37,7 +37,7 @@ SampleGame::Initialize()
     mAssetManager = mAssetManager->GetInstance();
 
     mFontConsole = mAssetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.fnt.bin").get();
-    //mFontDisplay = mAssetManager->LoadFont("Content/Fonts/NSimSunDistanceField.fnt.bin");
+    mFontDisplay = mAssetManager->LoadFont("Content/Fonts/NSimSunDistanceField.fnt.bin").get();
 
     //mModelNanosuit = mAssetManager->LoadModel("Content/Models/nanosuit.obj").get();
 
@@ -53,6 +53,8 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
 {
     graphics->ClearColorBuffer(ColorPalette::White);
 
+    graphics->DrawString(mFontDisplay, 16.f, Vector2f(50.f, 50.f), L"中文支持", ColorPalette::DarkGoldenrod);
+
     // Draw FPS
     {
         auto engine = GetEngine();
@@ -61,9 +63,14 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
         auto height = engineGraphicsSettings->mHeight;
 
         auto lastFrameFPS = int(engine->GetProfiler()->GetLastFrameFPS());
+        auto lastUpdateElapsedMillisecond = int(engine->GetProfiler()->GetLastUpdateElapsedMillisecond());
         auto lastFrameUpdateCount = int(engine->GetProfiler()->GetLastFrameUpdateTotalCount());
+        auto lastRenderElapsedMillisecond = int(engine->GetProfiler()->GetLastRenderElapsedMillisecond());
 
-        graphics->DrawString(mFontConsole, 16.f, Vector2f(50.f, height - 50.f), "U: " + to_string(lastFrameUpdateCount) + " F: " + to_string(lastFrameFPS), ColorPalette::DarkGoldenrod);
+        graphics->DrawString(mFontConsole, 16.f, Vector2f(50.f, height - 50.f),
+                             L"U: " + to_wstring(lastUpdateElapsedMillisecond) + L"ms Uc: " + to_wstring(lastFrameUpdateCount) +
+                             L" R: " + to_wstring(lastRenderElapsedMillisecond) + L"ms Rc: " + to_wstring(lastFrameFPS),
+                             ColorPalette::DarkGoldenrod);
     }
 
     //for (int i = 0; i < 100; ++i)

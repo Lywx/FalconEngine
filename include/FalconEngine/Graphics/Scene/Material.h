@@ -8,7 +8,6 @@ namespace FalconEngine
 {
 
 class Texture2d;
-using Texture2dSharedPtr = std::shared_ptr<Texture2d>;
 
 class Material : public Object
 {
@@ -22,11 +21,11 @@ public:
     virtual ~Material ();
 
 public:
-    Texture2dSharedPtr mAmbient;
-    Texture2dSharedPtr mDiffuse;
-    Texture2dSharedPtr mEmissive;
-    Texture2dSharedPtr mSpecular;
-    Texture2dSharedPtr mShininess;
+    Texture2d *mAmbient;
+    Texture2d *mDiffuse;
+    Texture2d *mEmissive;
+    Texture2d *mSpecular;
+    Texture2d *mShininess;
 };
 
 }

@@ -23,7 +23,7 @@ public:
         return mSegmentStrip;
     }
 
-    virtual int
+    virtual size_t
     GetSegmentNum() const;
 
 protected:

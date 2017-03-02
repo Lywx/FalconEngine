@@ -26,6 +26,7 @@ PlatformTexture2d::PlatformTexture2d(const Texture2d *texture) :
     glBufferData(GL_PIXEL_UNPACK_BUFFER, texture->mDataByteNum, nullptr, mUsage);
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
+    // TODO(Wuxiang): 2017-03-02 20:20 Possible error here!
     // Allocate current texture memory
     glGenTextures(1, &mTexture);
     {

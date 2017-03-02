@@ -69,20 +69,12 @@ public:
     ClearBuffers(Vector4f color, float depth, unsigned int stencil);
 
     void
-    DrawStaticString(const BitmapFont *font,
-                     float             fontSize,
-                     Vector2f           textPosition,
-                     const std::string& text,
-                     const Color        textColor = ColorPalette::White,
-                     float              textLineWidth = std::numeric_limits<float>().max());
-
-    void
-    DrawString(const BitmapFont *font,
-               float             fontSize,
-               Vector2f           textPosition,
-               const std::string& text,
-               const Color        textColor = ColorPalette::White,
-               float              textLineWidth = std::numeric_limits<float>().max());
+    DrawString(const BitmapFont   *font,
+               float               fontSize,
+               Vector2f            textPosition,
+               const std::wstring& text,
+               const Color         textColor = ColorPalette::White,
+               float               textLineWidth = std::numeric_limits<float>().max());
 
 public:
     void

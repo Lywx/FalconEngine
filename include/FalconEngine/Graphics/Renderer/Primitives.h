@@ -53,7 +53,7 @@ public:
     const VertexGroup *
     GetVertexGroup() const;
 
-    int
+    size_t
     GetVertexNum() const;
 
     const VertexFormat *

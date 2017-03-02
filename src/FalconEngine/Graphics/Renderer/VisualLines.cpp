@@ -23,7 +23,7 @@ VisualLines::~VisualLines()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-int
+size_t
 VisualLines::GetSegmentNum() const
 {
     return mSegmentStrip

@@ -3,12 +3,10 @@
 namespace FalconEngine
 {
 
-VertexBuffer::VertexBuffer(int vertexNum, size_t vertexByteNum, BufferUsage usage) :
-    Buffer(vertexNum, vertexByteNum, usage)
-{
-}
-
-VertexBuffer::VertexBuffer(int vertexNum, int vertexByteNum, BufferUsage usage) :
+/************************************************************************/
+/* Constructors and Destructor                                          */
+/************************************************************************/
+VertexBuffer::VertexBuffer(size_t vertexNum, size_t vertexByteNum, BufferUsage usage) :
     Buffer(vertexNum, vertexByteNum, usage)
 {
 }

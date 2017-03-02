@@ -22,7 +22,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    IndexBuffer(int indexNum, IndexType indexType, BufferUsage usage);
+    IndexBuffer(size_t indexNum, IndexType indexType, BufferUsage usage);
     virtual ~IndexBuffer();
 
 public:

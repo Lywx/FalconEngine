@@ -2,8 +2,10 @@
 
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Visual.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
+#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformAutomatic.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformConstant.h>
 #include <FalconEngine/Graphics/Renderer/States/BlendState.h>
 #include <FalconEngine/Graphics/Renderer/States/CullState.h>
@@ -11,7 +13,6 @@
 #include <FalconEngine/Graphics/Renderer/States/OffsetState.h>
 #include <FalconEngine/Graphics/Renderer/States/StencilTestState.h>
 #include <FalconEngine/Graphics/Renderer/States/WireframeState.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformAutomatic.h>
 #include <FalconEngine/Graphics/Scene/Light.h>
 #include <FalconEngine/Graphics/Scene/Material.h>
 
@@ -41,7 +42,7 @@ PhongLightingEffect::PhongLightingEffect()
     shader->PushUniform("DirectionalLight.EyeDirection", ShaderUniformType::FloatVec3);
 
 
-    auto pass = make_unique<VisualPass>();
+    auto pass = make_unique<VisualEffectPass>();
     pass->SetShader(shader);
 
     auto blendState = make_unique<BlendState>();

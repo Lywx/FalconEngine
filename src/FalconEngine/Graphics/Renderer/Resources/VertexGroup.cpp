@@ -17,7 +17,7 @@ VertexGroup::~VertexGroup()
 {
 }
 
-int
+size_t
 VertexGroup::GetVertexNum() const
 {
     if (mVertexBufferTable.size() == 0)

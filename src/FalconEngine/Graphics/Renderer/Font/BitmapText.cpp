@@ -8,7 +8,7 @@ using namespace FalconEngine;
 namespace FalconEngine
 {
 
-BitmapText::BitmapText(float fontSize, std::string textString,
+BitmapText::BitmapText(float fontSize, std::wstring textString,
                        Vector2f textPosition, float textLineWidth) :
     mFontSize(fontSize),
     mTextBounds(textPosition.x, textPosition.y, textLineWidth,
@@ -17,7 +17,7 @@ BitmapText::BitmapText(float fontSize, std::string textString,
 {
 }
 
-BitmapText::BitmapText(float fontSize, std::string textString, Vector4f textBounds) :
+BitmapText::BitmapText(float fontSize, std::wstring textString, Vector4f textBounds) :
     mFontSize(fontSize),
     mTextBounds(textBounds),
     mTextString(textString)

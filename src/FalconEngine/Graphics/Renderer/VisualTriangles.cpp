@@ -27,7 +27,7 @@ VisualTriangles::~VisualTriangles()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-int
+size_t
 VisualTriangles::GetTriangleNum() const
 {
     if (mIndexBuffer)

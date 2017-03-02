@@ -9,16 +9,28 @@ namespace FalconEngine
 /* Memory Allocation                                                    */
 /************************************************************************/
 inline int64_t
-Kilobytes(int i);
+Kilobytes(int i)
+{
+    return i * 1024LL;
+}
 
 inline int64_t
-Megabytes(int i);
+Megabytes(int i)
+{
+    return Kilobytes(i) * 1024LL;
+}
 
 inline int64_t
-Gigabytes(int i);
+Gigabytes(int i)
+{
+    return Megabytes(i) * 1024LL;
+}
 
 inline int64_t
-Terabytes(int i);
+Terabytes(int i)
+{
+    return Gigabytes(i) * 1024LL;
+}
 
 void
 PushMemoryRecord(void *pointer, const char *file, size_t line);

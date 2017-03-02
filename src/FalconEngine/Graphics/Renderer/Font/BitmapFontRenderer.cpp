@@ -3,6 +3,7 @@
 #include <boost/algorithm/string.hpp>
 
 #include <FalconEngine/Content/AssetManager.h>
+#include <FalconEngine/Core/Memory.h>
 #include <FalconEngine/Graphics/Effects/BitmapFontEffect.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
@@ -23,12 +24,7 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-BitmapFontRenderer::BitmapFontRenderer() :
-    mDynamicTextBuffer(nullptr),
-    mDynamicTextQuads(nullptr),
-    mStaticTextBuffer(nullptr),
-    mStaticTextQuads(nullptr),
-    mDebugTextEffect()
+BitmapFontRenderer::BitmapFontRenderer()
 {
 }
 
@@ -42,65 +38,24 @@ BitmapFontRenderer::~BitmapFontRenderer()
 void
 BitmapFontRenderer::Initialize(int width, int height)
 {
-    auto assetManager = AssetManager::GetInstance();
-
-    // Setup debug text effect.
-    {
-        auto font = assetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.fnt.bin");
-
-        mDebugTextEffect = make_shared<BitmapFontEffect>(&mHandedness);
-        mDebugTextEffectInstance = make_shared<VisualEffectInstance>(mDebugTextEffect);
-        mDebugTextEffect->CreateInstance(mDebugTextEffectInstance.get(), font.get(), width, height);
-    }
-
-    // Setup debug text batch.
-    {
-        auto vertexFormat = mDebugTextEffect->CreateVertexFormat();
-
-        // Setup static text rendering.
-        {
-            static const int sStaticTextBufferSize = 10240;
-            mStaticTextBuffer = make_shared<VertexBuffer>(sStaticTextBufferSize, sizeof(BitmapFontVertex), BufferUsage::Dynamic);
-
-            auto vertexGroup = make_shared<VertexGroup>();
-            vertexGroup->SetVertexBuffer(0, mStaticTextBuffer, 0, vertexFormat->GetVertexAttributeStride());
-            mStaticTextQuads = make_shared<VisualQuads>(vertexFormat, vertexGroup);
-
-            mStaticTextBatch = BitmapFontBatch(mStaticTextBuffer);
-        }
-
-        // Setup dynamic text rendering.
-        {
-            static const int sDynamicTextBufferSize = 10240;
-            mDynamicTextBuffer = make_shared<VertexBuffer>(sDynamicTextBufferSize, sizeof(BitmapFontVertex), BufferUsage::Stream);
-
-            auto dynamicTextVertexGroup = make_shared<VertexGroup>();
-            dynamicTextVertexGroup->SetVertexBuffer(0, mDynamicTextBuffer, 0, vertexFormat->GetVertexAttributeStride());
-            mDynamicTextQuads = make_shared<VisualQuads>(vertexFormat, dynamicTextVertexGroup);
-
-            mDynamicTextBatch = BitmapFontBatch(mDynamicTextBuffer);
-        }
-    }
+    mWidth  = width;
+    mHeight = height;
 }
 
 void
-BitmapFontRenderer::BatchTextDynamic(
+BitmapFontRenderer::BatchText(
     const BitmapFont *font,
     float             fontSize,
-    std::string textString,
-    Vector2f    textPosition,
-    Color       textColor,
-    float       textLineWidth)
+    const wstring& textString,
+    Vector2f       textPosition,
+    Color          textColor,
+    float          textLineWidth)
 {
-    auto text = BitmapText(fontSize, textString, textPosition, textLineWidth);
-    PrepareText(mDynamicTextBatch, font, &text, textColor);
-}
+    FALCON_ENGINE_CHECK_NULLPTR(font);
 
-void
-BitmapFontRenderer::BatchTextStatic(const BitmapFont *font, float fontSize, std::string textString, Vector2f textPosition, Color textColor, float textLineWidth)
-{
     auto text = BitmapText(fontSize, textString, textPosition, textLineWidth);
-    PrepareText(mStaticTextBatch, font, &text, textColor);
+    auto batch = PrepareBatch(font);
+    PrepareText(*batch, font, &text, textColor);
 }
 
 // @summary Construct all the necessary lexical separation of given text into
@@ -109,14 +64,14 @@ BitmapFontRenderer::BatchTextStatic(const BitmapFont *font, float fontSize, std:
 // @return The glyph number inside the text lines.
 int
 CreateTextLines(
-    _IN_  const BitmapFont   *font,
-    _IN_  const BitmapText   *text,
-    _OUT_ vector<BitmapLine>& lines)
+    _IN_  const BitmapFont    *font,
+    _IN_  const BitmapText    *text,
+    _OUT_ vector<BitmapLine>&  lines)
 {
     using namespace boost;
-    static auto sLineStrings = vector<string>();
+    static auto sLineStrings = vector<wstring>();
     sLineStrings.clear();
-    split(sLineStrings, text->mTextString, is_any_of("\n"));
+    split(sLineStrings, text->mTextString, is_any_of(L"\n"));
 
     // Bounds is formatted as [x, y, width, height]
     const auto lineWidth = text->mTextBounds[2];
@@ -175,7 +130,7 @@ inline void FillDataAs(T *data, size_t& dataIndex, V value)
 }
 
 void
-FillFontAttribute(float             *textData,
+FillFontAttribute(float              *textData,
                   size_t&            textDataIndex,
                   const BitmapGlyph *textGlyph,
                   Vector4f           textColor,
@@ -202,7 +157,7 @@ FillFontAttribute(float             *textData,
 
 void
 FillGlyphAttribute(
-    _OUT_    float             *textData,
+    _OUT_    float              *textData,
     _IN_OUT_ size_t&            textDataIndex,
     _IN_     const BitmapGlyph *textGlyph,
     _IN_     Vector4f           textColor,
@@ -264,13 +219,13 @@ FillGlyphAttribute(
 // @summary Fill the vertex buffer with the text line information.
 void
 FillTextLines(
-    _IN_  const BitmapFont   *font,
+    _IN_  const BitmapFont    *font,
     _IN_  float               fontSize,
     _IN_  Vector2f                  textPosition,
     _IN_  Vector4f                  textColor,
     _IN_  const vector<BitmapLine>& textLines,
     _IN_  size_t&                   textDataIndex,
-    _OUT_ float                    *textData
+    _OUT_ float                     *textData
 )
 {
     float x = textPosition.x;
@@ -293,12 +248,93 @@ FillTextLines(
 }
 
 void
+BitmapFontRenderer::RenderBegin()
+{
+    for (auto& batchPair : mTextBatchTable)
+    {
+        auto& batch = batchPair.second;
+        batch->mBufferDataIndex = 0;
+        batch->mBufferGlyphNum = 0;
+    }
+}
+
+void
+BitmapFontRenderer::Render(Renderer *renderer, double percent)
+{
+    for (auto& batchPair : mTextBatchTable)
+    {
+        auto& batch = batchPair.second;
+        if (batch->mBufferGlyphNum > 0)
+        {
+            // Update buffer data before drawing
+            batch->mBuffer->SetElementNum(batch->mBufferGlyphNum * 6);
+            renderer->Update(batch->mBuffer.get());
+            renderer->Draw(batch->mQuads.get());
+        }
+    }
+}
+
+void
+BitmapFontRenderer::RenderEnd()
+{
+}
+
+/************************************************************************/
+/* Protected Members                                                    */
+/************************************************************************/
+BitmapFontBatchSharedPtr
+BitmapFontRenderer::PrepareBatch(const BitmapFont *font)
+{
+    // When the font is prepared before.
+    auto iter = mTextBatchTable.find(font);
+    if (iter != mTextBatchTable.end())
+    {
+        return iter->second;
+    }
+
+    static const size_t                 sFontBufferSize = Kilobytes(10);
+    static VertexFormatSharedPtr        sFontBufferVertexFormat;
+    static shared_ptr<BitmapFontEffect> sFontEffect;
+
+    if (sFontEffect == nullptr)
+    {
+        sFontEffect = make_shared<BitmapFontEffect>(&mTextHandedness);
+    }
+
+    if (sFontBufferVertexFormat == nullptr)
+    {
+        sFontBufferVertexFormat = sFontEffect->CreateVertexFormat();
+    }
+
+    auto fontBuffer = make_shared<VertexBuffer>(sFontBufferSize, sizeof(BitmapFontVertex), BufferUsage::Dynamic);
+
+    // Setup font specific visual quad.
+    shared_ptr<VisualQuads> fontQuads;
+    {
+        auto vertexGroup = make_shared<VertexGroup>();
+        vertexGroup->SetVertexBuffer(0, fontBuffer, 0, sFontBufferVertexFormat->GetVertexAttributeStride());
+
+        auto fontEffectInstance = make_shared<VisualEffectInstance>(sFontEffect);
+        sFontEffect->CreateInstance(fontEffectInstance.get(), font, mWidth, mHeight);
+
+        fontQuads = make_shared<VisualQuads>(sFontBufferVertexFormat, vertexGroup);
+        fontQuads->SetEffectInstance(fontEffectInstance);
+    }
+
+    auto fontBatch = make_shared<BitmapFontBatch>(fontBuffer, fontQuads);
+    mTextBatchTable.insert({ font, fontBatch });
+    return fontBatch;
+}
+
+void
 BitmapFontRenderer::PrepareText(
     _IN_OUT_ BitmapFontBatch&  batch,
     _IN_     const BitmapFont *font,
     _IN_     const BitmapText *text,
     _IN_     Color             textColor)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(font);
+
     static auto sTextLines = vector<BitmapLine>();
     sTextLines.clear();
 
@@ -312,27 +348,5 @@ BitmapFontRenderer::PrepareText(
                   reinterpret_cast<float *>(batch.mBuffer->GetData()));
 }
 
-void
-BitmapFontRenderer::RenderBegin()
-{
-}
-
-void
-BitmapFontRenderer::Render(Renderer *renderer, double percent)
-{
-    renderer->Draw(mStaticTextQuads.get(), mDebugTextEffectInstance.get());
-
-    // Update buffer data before drawing
-    mDynamicTextBuffer->SetElementNum(mDynamicTextBatch.mBufferGlyphNum * 6);
-    renderer->Update(mDynamicTextBuffer.get());
-    renderer->Draw(mDynamicTextQuads.get(), mDebugTextEffectInstance.get());
-}
-
-void
-BitmapFontRenderer::RenderEnd()
-{
-    mDynamicTextBatch.mBufferDataIndex = 0;
-    mDynamicTextBatch.mBufferGlyphNum = 0;
-}
 
 }

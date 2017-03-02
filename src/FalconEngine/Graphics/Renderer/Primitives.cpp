@@ -32,7 +32,7 @@ Primitives::~Primitives()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-int
+size_t
 Primitives::GetVertexNum() const
 {
     return mVertexGroup->GetVertexNum();

@@ -105,8 +105,9 @@ private:
 
     // NOTE(Wuxiang): The reason texture array is in form of shared_ptr is that
     // the texture array could not be reused anywhere so that it is better to
-    // dispose of the texture array when font is destroyed. However, individual
-    // textures would not be destroyed since texture array is just a container.
+    // dispose of the texture array when font is destroyed. Further more, individual
+    // textures would not be destroyed because Texture2DArray class use shared_ptr
+    // to manage Texture2D.
 
     Texture2dArraySharedPtr       mTexture;                                    // Font texture.
     SamplerSharedPtr              mSampler;                                    // Font texture sampler.

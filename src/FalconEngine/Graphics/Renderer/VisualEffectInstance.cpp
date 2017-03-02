@@ -1,6 +1,6 @@
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
-#include <FalconEngine/Graphics/Renderer/VisualPass.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/Resources/Texture.h>
 #include <FalconEngine/Graphics/Renderer/Resources/Sampler.h>
 
@@ -13,6 +13,10 @@ namespace FalconEngine
 VisualEffectInstance::VisualEffectInstance(VisualEffectSharedPtr effect) :
     mEffect(effect)
 {
+    for (int i = 0; i < mEffect->GetPassNum(); ++i)
+    {
+        mPassList.push_back(std::make_unique<VisualEffectInstancePass>(mEffect->GetShader(i)));
+    }
 }
 
 VisualEffectInstance::~VisualEffectInstance()
@@ -34,34 +38,34 @@ VisualEffectInstance::GetPassNum() const
     return mEffect->GetPassNum();
 }
 
-VisualPass *
+VisualEffectInstancePass *
 VisualEffectInstance::GetPass(int passIndex)
 {
-    return mEffect->GetPass(passIndex);
+    return mPassList.at(passIndex).get();
 }
 
 const Texture *
 VisualEffectInstance::GetShaderTexture(int passIndex, int textureUnit) const
 {
-    return mEffect->GetPass(passIndex)->GetShaderTexture(textureUnit);
+    return mPassList.at(passIndex)->GetShaderTexture(textureUnit);
 }
 
 void
 VisualEffectInstance::SetShaderTexture(int passIndex, int textureUnit, const Texture *texture)
 {
-    mEffect->GetPass(passIndex)->SetShaderTexture(textureUnit, texture);
+    mPassList.at(passIndex)->SetShaderTexture(textureUnit, texture);
 }
 
 const Sampler *
 VisualEffectInstance::GetShaderSampler(int passIndex, int textureUnit) const
 {
-    return mEffect->GetPass(passIndex)->GetShaderSampler(textureUnit);
+    return mPassList.at(passIndex)->GetShaderSampler(textureUnit);
 }
 
 void
 VisualEffectInstance::SetShaderSampler(int passIndex, int textureUnit, const Sampler *sampler)
 {
-    return mEffect->GetPass(passIndex)->SetShaderSampler(textureUnit, sampler);
+    mPassList.at(passIndex)->SetShaderSampler(textureUnit, sampler);
 }
 
 }

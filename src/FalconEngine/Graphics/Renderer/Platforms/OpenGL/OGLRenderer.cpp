@@ -366,37 +366,37 @@ Renderer::DrawPrimitive(const Visual *visual)
     const GLenum  primitiveMode = OpenGLPrimitiveType[int(primitiveType)];
     if (primitiveType == PrimitiveType::Point)
     {
-        int vertexNum = visual->GetVertexNum();
+        auto vertexNum = visual->GetVertexNum();
         if (vertexNum > 0)
         {
-            glDrawArrays(primitiveMode, 0, vertexNum);
+            glDrawArrays(primitiveMode, 0, GLuint(vertexNum));
         }
     }
     else if (primitiveType == PrimitiveType::Line)
     {
-        int vertexNum = visual->GetVertexNum();
+        auto vertexNum = visual->GetVertexNum();
         if (vertexNum > 0)
         {
-            glDrawArrays(primitiveMode, 0, vertexNum);
+            glDrawArrays(primitiveMode, 0, GLuint(vertexNum));
         }
     }
     else if (primitiveType == PrimitiveType::LineStrip)
     {
-        int vertexNum = visual->GetVertexNum();
+        auto vertexNum = visual->GetVertexNum();
         if (vertexNum > 0)
         {
-            glDrawArrays(primitiveMode, 0, vertexNum);
+            glDrawArrays(primitiveMode, 0, GLuint(vertexNum));
         }
     }
     else if (primitiveType == PrimitiveType::Triangle)
     {
-        int vertexNum = visual->GetVertexNum();
+        auto vertexNum = visual->GetVertexNum();
 
         // When use index buffer
         auto indexBuffer = visual->GetIndexBuffer();
         if (indexBuffer)
         {
-            int indexNum = indexBuffer->GetElementNum();
+            auto indexNum = indexBuffer->GetElementNum();
             if (vertexNum > 0 && indexNum > 0)
             {
                 GLenum indexType = 0;
@@ -417,12 +417,12 @@ Renderer::DrawPrimitive(const Visual *visual)
                     FALCON_ENGINE_NOT_POSSIBLE();
                 }
 
-                glDrawRangeElements(primitiveMode, 0, vertexNum - 1, indexNum, indexType, indexData);
+                glDrawRangeElements(primitiveMode, 0, GLuint(vertexNum - 1), GLsizei(indexNum), indexType, indexData);
             }
         }
         else
         {
-            glDrawArrays(primitiveMode, 0, vertexNum);
+            glDrawArrays(primitiveMode, 0, GLuint(vertexNum));
         }
     }
     else

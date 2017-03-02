@@ -294,22 +294,22 @@ FillTextLines(
 
 void
 BitmapFontRenderer::PrepareText(
-    _IN_OUT_ BitmapFontBatch& item,
-    _IN_     const BitmapFont     *font,
-    _IN_     const BitmapText     *text,
-    _IN_     Color                 textColor)
+    _IN_OUT_ BitmapFontBatch&  batch,
+    _IN_     const BitmapFont *font,
+    _IN_     const BitmapText *text,
+    _IN_     Color             textColor)
 {
     static auto sTextLines = vector<BitmapLine>();
     sTextLines.clear();
 
     // Construct lines with glyph information.
     int textGlyphCount = CreateTextLines(font, text, sTextLines);
-    item.mBufferGlyphNum += textGlyphCount;
+    batch.mBufferGlyphNum += textGlyphCount;
 
     // Fill the vertex attribute into the buffer
     FillTextLines(font, text->mFontSize, Vector2f(text->mTextBounds.x, text->mTextBounds.y),
-                  Vector4f(textColor), sTextLines, item.mBufferDataIndex,
-                  reinterpret_cast<float *>(item.mBuffer->GetData()));
+                  Vector4f(textColor), sTextLines, batch.mBufferDataIndex,
+                  reinterpret_cast<float *>(batch.mBuffer->GetData()));
 }
 
 void

@@ -76,10 +76,10 @@ public:
 
 protected:
     void
-    PrepareText(_IN_OUT_ BitmapFontBatch& item,
-                _IN_     const BitmapFont     *font,
-                _IN_     const BitmapText     *text,
-                _IN_     Color                 textColor = ColorPalette::White);
+    PrepareText(_IN_OUT_ BitmapFontBatch&  batch,
+                _IN_     const BitmapFont *font,
+                _IN_     const BitmapText *text,
+                _IN_     Color             textColor = ColorPalette::White);
 
 private:
     BitmapFontBatch               mDynamicTextBatch;

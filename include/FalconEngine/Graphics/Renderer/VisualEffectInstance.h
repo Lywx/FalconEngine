@@ -2,8 +2,7 @@
 
 #include <FalconEngine/GraphicsInclude.h>
 #include <FalconEngine/Core/Object.h>
-#include <FalconEngine/Graphics/Renderer/VisualEffect.h>
-#include <FalconEngine/Graphics/Renderer/VisualPass.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffectInstancePass.h>
 
 namespace FalconEngine
 {
@@ -20,7 +19,8 @@ class ShaderUniformValue;
 template<typename T>
 using ShaderUniformValueSharedPtr = std::shared_ptr<ShaderUniformValue<T>>;
 
-class VisualPass;
+class VisualEffectInstancePass;
+using VisualEffectInstancePassUniquePtr = std::unique_ptr<VisualEffectInstancePass>;
 
 class VisualEffectInstance : public Object
 {
@@ -41,7 +41,7 @@ public:
     int
     GetPassNum() const;
 
-    VisualPass *
+    VisualEffectInstancePass *
     GetPass(int passIndex);
 
     template <typename T>
@@ -65,7 +65,9 @@ public:
     SetShaderSampler(int passIndex, int textureUnit, const Sampler *sampler);
 
 protected:
-    VisualEffectSharedPtr mEffect;
+
+    VisualEffectSharedPtr                          mEffect;
+    std::vector<VisualEffectInstancePassUniquePtr> mPassList; // Passes contained in this effect.
 };
 
 using VisualEffectInstanceSharedPtr = std::shared_ptr<VisualEffectInstance>;
@@ -74,14 +76,14 @@ template <typename T>
 ShaderUniformValue<T> *
 VisualEffectInstance::GetShaderUniform(int passIndex, int uniformIndex)
 {
-    return mEffect->GetPass(passIndex)->GetShaderUniform(uniformIndex);
+    return mPassList.at(passIndex)->GetShaderUniform(uniformIndex);
 }
 
 template <typename T>
 void
 VisualEffectInstance::SetShaderUniform(int passIndex, ShaderUniformValueSharedPtr<T> uniform)
 {
-    mEffect->GetPass(passIndex)->SetShaderUniform(uniform);
+    mPassList.at(passIndex)->SetShaderUniform(uniform);
 }
 
 typedef std::shared_ptr<VisualEffectInstance> VisualEffectInstanceSharedPtr;

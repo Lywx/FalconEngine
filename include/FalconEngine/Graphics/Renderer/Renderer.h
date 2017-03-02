@@ -6,6 +6,7 @@
 #include <vector>
 
 #include <FalconEngine/Graphics/Renderer/Viewport.h>
+#include "VisualEffectInstancePass.h"
 
 namespace FalconEngine
 {
@@ -25,7 +26,7 @@ class Shader;
 class ShaderUniform;
 class Visual;
 class VisualEffectInstance;
-class VisualPass;
+class VisualEffectPass;
 
 /************************************************************************/
 /* Renderer Resource                                                    */
@@ -307,16 +308,20 @@ public:
     /* Pass Management                                                      */
     /************************************************************************/
     void
-    Enable(const VisualPass *pass, const Visual *visual);
+    Enable(const VisualEffectPass *pass);
 
     void
-    Disable(const VisualPass *pass);
+    Disable(const VisualEffectPass *pass);
 
-    /************************************************************************/
-    /* Uniform Management                                                   */
-    /************************************************************************/
     void
-    Update(const VisualPass *pass, ShaderUniform *uniform, const Visual *visual);
+    Enable(const VisualEffectInstancePass *pass, const Visual *visual);
+
+    void
+    Disable(const VisualEffectInstancePass *pass);
+
+    // @summary Update effect instance's uniform.
+    void
+    Update(const VisualEffectInstancePass *pass, ShaderUniform *uniform, const Visual *visual);
 
     /************************************************************************/
     /* Draw                                                                 */
@@ -328,7 +333,7 @@ public:
 
     // @summary Draw single instance of visual.
     void
-    Draw(const Visual *visual, VisualEffectInstance *instance);
+    Draw(const Visual *visual, VisualEffectInstance *effectInstance);
 
 public:
     int                     mWidth;

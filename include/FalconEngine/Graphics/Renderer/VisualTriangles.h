@@ -18,7 +18,7 @@ public:
     virtual ~VisualTriangles();
 
 public:
-    virtual int
+    virtual size_t
     GetTriangleNum() const;
 };
 

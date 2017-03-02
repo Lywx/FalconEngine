@@ -7,4 +7,5 @@ Rendering Pipeline Specifics
 
 (1) Finished blin phong lighting.
 (1) Implemented mesh renderer.
-(0) Added multiple font support.
+
+(0) Fixed texture array construction bug.

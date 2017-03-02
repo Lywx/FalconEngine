@@ -123,7 +123,7 @@ CreateModelIndexBuffer(const aiMesh *mesh)
     return indexBuffer;
 }
 
-Texture2dSharedPtr
+Texture2d *
 LoadMaterialTexture(
     _IN_ const string&     modelDirectoryPath,
     _IN_ const aiMaterial *material,
@@ -147,7 +147,8 @@ LoadMaterialTexture(
 
             // NOTE(Wuxiang): Add .bin to file path so that the texture file is
             // loaded from preprocessed asset file.
-            return assetManager->LoadTexture(modelDirectoryPath + AddAssetExtension(textureFilePath.C_Str()));
+            auto texture = assetManager->LoadTexture(modelDirectoryPath + AddAssetExtension(textureFilePath.C_Str()));
+            return texture.get();
         }
     }
 

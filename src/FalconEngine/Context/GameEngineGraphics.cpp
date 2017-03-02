@@ -1,4 +1,6 @@
 #include <FalconEngine/Context/GameEngineGraphics.h>
+
+#include <FalconEngine/Content/Path.h>
 #include <FalconEngine/Context/GameEngineGraphicsSettings.h>
 #include <FalconEngine/Context/GameEngineSettings.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
@@ -50,15 +52,19 @@ GameEngineGraphics::ClearBuffers(Vector4f color, float depth, unsigned stencil)
 }
 
 void
-GameEngineGraphics::DrawStaticString(const BitmapFont *font, float fontSize, Vector2f textPosition, const std::string& text, const Color textColor, float textLineWidth)
+GameEngineGraphics::DrawString(const BitmapFont *font, float fontSize, Vector2f textPosition, const std::string& text, const Color textColor, float textLineWidth)
 {
-    mFontRenderer->BatchTextStatic(font, fontSize, text, textPosition, textColor, textLineWidth);
+    FALCON_ENGINE_CHECK_NULLPTR(font);
+
+    mFontRenderer->BatchText(font, fontSize, GetWString(text), textPosition, textColor, textLineWidth);
 }
 
 void
-GameEngineGraphics::DrawString(const BitmapFont *font, float fontSize, Vector2f textPosition, const std::string& text, const Color textColor, float textLineWidth)
+GameEngineGraphics::DrawString(const BitmapFont *font, float fontSize, Vector2f textPosition, const std::wstring& text, const Color textColor, float textLineWidth)
 {
-    mFontRenderer->BatchTextDynamic(font, fontSize, text, textPosition, textColor, textLineWidth);
+    FALCON_ENGINE_CHECK_NULLPTR(font);
+
+    mFontRenderer->BatchText(font, fontSize, text, textPosition, textColor, textLineWidth);
 }
 
 void

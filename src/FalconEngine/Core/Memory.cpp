@@ -6,26 +6,6 @@
 namespace FalconEngine
 {
 
-inline int64_t Kilobytes(int i)
-{
-    return i * 1024LL;
-}
-
-inline int64_t Megabytes(int i)
-{
-    return Kilobytes(i) * 1024LL;
-}
-
-inline int64_t Gigabytes(int i)
-{
-    return Megabytes(i) * 1024LL;
-}
-
-inline int64_t Terabytes(int i)
-{
-    return Gigabytes(i) * 1024LL;
-}
-
 const char *__file__ = "Unknown";
 size_t      __line__ = 0;
 

@@ -11,8 +11,8 @@ namespace FalconEngine
 
 class VisualEffectInstance;
 
-class VisualPass;
-using VisualPassUniquePtr = std::unique_ptr<VisualPass>;
+class VisualEffectPass;
+using VisualEffectPassUniquePtr = std::unique_ptr<VisualEffectPass>;
 
 class Shader;
 class BlendState;
@@ -40,17 +40,20 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    InsertPass(VisualPassUniquePtr pass);
+    InsertPass(VisualEffectPassUniquePtr pass);
 
     int
     GetPassNum() const;
 
-    VisualPass *
+    const VisualEffectPass *
+    GetPass(int passIndex) const;
+
+    VisualEffectPass *
     GetPass(int passIndex);
 
     Shader *
     GetShader(int passIndex);
-    ;
+
     const BlendState *
     GetBlendState(int passIndex) const;
 
@@ -74,7 +77,7 @@ protected:
     CheckEffectCompatible(VisualEffectInstance *instance) const;
 
 protected:
-    std::vector<VisualPassUniquePtr> mPassHandleVector; // Passes contained in this effect.
+    std::vector<VisualEffectPassUniquePtr> mPassList; // Passes contained in this effect.
 };
 
 }

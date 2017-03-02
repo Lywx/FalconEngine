@@ -12,7 +12,6 @@ namespace FalconEngine
 
 class Texture2d;
 using Texture2dSharedPtr = std::shared_ptr<Texture2d>;
-using Texture2dVector = std::vector<Texture2dSharedPtr>;
 
 class Texture2dArray : public Texture
 {
@@ -31,7 +30,9 @@ public:
     PushTextureSlice(Texture2dSharedPtr texture);
 
 protected:
-    Texture2dVector mTexture2dVector;
+    // NOTE(Wuxiang): The Texture2D should not be released before owner of them
+    // being released.
+    std::vector<Texture2dSharedPtr> mTexture2dVector;
 };
 
 }

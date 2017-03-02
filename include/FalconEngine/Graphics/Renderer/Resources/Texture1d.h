@@ -19,6 +19,4 @@ public:
     virtual ~Texture1d();
 };
 
-typedef std::shared_ptr<Texture1d> Texture1dSharedPtr;
-
 }

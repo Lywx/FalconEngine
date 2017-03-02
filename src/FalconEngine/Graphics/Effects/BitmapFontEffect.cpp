@@ -1,9 +1,9 @@
 #include <FalconEngine/Graphics/Effects/BitmapFontEffect.h>
 
+#include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
 #include <FalconEngine/Graphics/Renderer/Resources/Texture2dArray.h>
-#include <FalconEngine/Graphics/Renderer/Resources/VertexFormat.h>
 #include <FalconEngine/Graphics/Renderer/Resources/VertexFormat.h>
 #include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformConstant.h>
@@ -51,7 +51,7 @@ BitmapFontEffect::BitmapFontEffect(const Handedness *handedness) :
 
     shader->PushUniform("ProjectionTransform", ShaderUniformType::FloatMat4);
 
-    auto pass = make_unique<VisualPass>();
+    auto pass = make_unique<VisualEffectPass>();
     pass->SetShader(shader);
 
     auto blendState = make_unique<BlendState>();

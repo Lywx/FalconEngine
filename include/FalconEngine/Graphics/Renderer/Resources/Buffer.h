@@ -34,8 +34,7 @@ protected:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Buffer(int elementNum, size_t elementByteNum, BufferUsage usage);
-    Buffer(int elementNum, int elementByteNum, BufferUsage usage);
+    Buffer(size_t elementNum, size_t elementByteNum, BufferUsage usage);
     Buffer(const Buffer&) = delete;
     Buffer& operator=(const Buffer&) = delete;
 
@@ -43,7 +42,7 @@ public:
     virtual ~Buffer();
 
 public:
-    int
+    size_t
     GetCapacityByteNum() const
     {
         return mCapacityByteNum;
@@ -61,20 +60,20 @@ public:
         return mData;
     }
 
-    int
+    size_t
     GetDataByteNum() const
     {
         return mDataByteNum;
     }
 
-    int
+    size_t
     GetElementNum() const
     {
         return mElementNum;
     }
 
     void
-    SetElementNum(int elementNum)
+    SetElementNum(size_t elementNum)
     {
         mElementNum = elementNum;
         mDataByteNum = mElementByteNum * mElementNum;
@@ -89,12 +88,12 @@ public:
 private:
     unsigned char *mData;
 
-    int            mCapacityByteNum;
-    int            mCapacityElementNum;
+    size_t         mCapacityByteNum;
+    size_t         mCapacityElementNum;
 
-    int            mDataByteNum;
-    int            mElementNum;
-    int            mElementByteNum;
+    size_t         mDataByteNum;
+    size_t         mElementNum;
+    size_t         mElementByteNum;
 
     BufferUsage    mUsage;
 };

@@ -2,9 +2,10 @@
 
 #include <FalconEngine/GraphicsInclude.h>
 
+#include <limits>
+#include <map>
 #include <string>
 #include <vector>
-#include <limits>
 
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFontBatch.h>
 
@@ -12,16 +13,11 @@ namespace FalconEngine
 {
 
 class BitmapFont;
-class BitmapFontEffect;
-using BitmapFontEffectSharedPtr = std::shared_ptr<BitmapFontEffect>;
+class BitmapFontBatch;
+using BitmapFontBatchSharedPtr = std::shared_ptr<BitmapFontBatch>;
 class BitmapText;
 
 class Renderer;
-
-class Visual;
-using VisualSharedPtr = std::shared_ptr<Visual>;
-class VisualEffectInstance;
-using VisualEffectInstanceSharedPtr = std::shared_ptr<VisualEffectInstance>;
 
 // @summary The font renderer is the class you would call to draw a string on
 // the screen.
@@ -44,20 +40,12 @@ public:
     /* Rendering API                                                        */
     /************************************************************************/
     void
-    BatchTextDynamic(const BitmapFont *font,
-                     float             fontSize,
-                     std::string textString,
-                     Vector2f    textPosition,
-                     Color       textColor = ColorPalette::White,
-                     float       textLineWidth = std::numeric_limits<float>().max());
-
-    void
-    BatchTextStatic(const BitmapFont *font,
-                    float             fontSize,
-                    std::string textString,
-                    Vector2f    textPosition,
-                    Color       textColor = ColorPalette::White,
-                    float       textLineWidth = std::numeric_limits<float>().max());
+    BatchText(const BitmapFont *font,
+              float             fontSize,
+              const std::wstring& textString,
+              Vector2f            textPosition,
+              Color               textColor = ColorPalette::White,
+              float               textLineWidth = std::numeric_limits<float>().max());
 
     /************************************************************************/
     /* Rendering Engine API                                                 */
@@ -75,6 +63,9 @@ public:
     RenderEnd();
 
 protected:
+    BitmapFontBatchSharedPtr
+    PrepareBatch(_IN_ const BitmapFont *font);
+
     void
     PrepareText(_IN_OUT_ BitmapFontBatch&  batch,
                 _IN_     const BitmapFont *font,
@@ -82,18 +73,19 @@ protected:
                 _IN_     Color             textColor = ColorPalette::White);
 
 private:
-    BitmapFontBatch               mDynamicTextBatch;
-    VertexBufferSharedPtr         mDynamicTextBuffer;
-    VisualSharedPtr               mDynamicTextQuads;
+    // NOTE(Wuxiang): Since the shader sampler could not be indexed using vertex
+    // attribute input, it is impossible to use vertex attribute to do texture
+    // selection. So I need to use different draw call to implement multiple font
+    // support.
+    // http://stackoverflow.com/questions/21524535/opengl-sampler-array-limit
+    // http://stackoverflow.com/questions/12030711/glsl-array-of-textures-of-differing-size/
+    using TextBatchMap = std::map<const BitmapFont *, BitmapFontBatchSharedPtr>;
 
-    BitmapFontBatch               mStaticTextBatch;
-    VertexBufferSharedPtr         mStaticTextBuffer;
-    VisualSharedPtr               mStaticTextQuads;
+    TextBatchMap          mTextBatchTable;
+    HandednessRight       mTextHandedness;
 
-    BitmapFontEffectSharedPtr     mDebugTextEffect;
-    VisualEffectInstanceSharedPtr mDebugTextEffectInstance;
-
-    HandednessRight               mHandedness;
+    int                   mWidth  = 0; // Viewport width.
+    int                   mHeight = 0; // Viewport height.
 };
 
 }

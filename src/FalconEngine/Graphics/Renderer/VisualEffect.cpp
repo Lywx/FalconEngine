@@ -1,6 +1,6 @@
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
-#include <FalconEngine/Graphics/Renderer/VisualPass.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/States/BlendState.h>
 #include <FalconEngine/Graphics/Renderer/States/CullState.h>
 #include <FalconEngine/Graphics/Renderer/States/DepthTestState.h>
@@ -33,63 +33,69 @@ VisualEffect::~VisualEffect()
 /* Public Members                                                       */
 /************************************************************************/
 void
-VisualEffect::InsertPass(VisualPassUniquePtr pass)
+VisualEffect::InsertPass(VisualEffectPassUniquePtr pass)
 {
-    mPassHandleVector.push_back(move(pass));
+    mPassList.push_back(move(pass));
 }
 
-VisualPass *
+const VisualEffectPass *
+VisualEffect::GetPass(int passIndex) const
+{
+    return mPassList.at(passIndex).get();
+}
+
+VisualEffectPass *
 VisualEffect::GetPass(int passIndex)
 {
-    return mPassHandleVector.at(passIndex).get();
+    return mPassList.at(passIndex).get();
 }
 
 int
 VisualEffect::GetPassNum() const
 {
-    return int(mPassHandleVector.size());
+    return int(mPassList.size());
 }
 
 Shader *
 VisualEffect::GetShader(int passIndex)
 {
-    return mPassHandleVector.at(passIndex)->GetShader();
+    return mPassList.at(passIndex)->GetShader();
 }
 
 const BlendState *
 VisualEffect::GetBlendState(int passIndex) const
 {
-    return mPassHandleVector.at(passIndex)->GetBlendState();
+    return mPassList.at(passIndex)->GetBlendState();
 }
 
 const CullState *
 VisualEffect::GetCullState(int passIndex) const
 {
-    return mPassHandleVector.at(passIndex)->GetCullState();
+    return mPassList.at(passIndex)->GetCullState();
 }
 
 const DepthTestState *
 VisualEffect::GetDepthTestState(int passIndex) const
 {
-    return mPassHandleVector.at(passIndex)->GetDepthTestState();
+    return mPassList.at(passIndex)->GetDepthTestState();
 }
 
 const OffsetState *
 VisualEffect::GetOffsetState(int passIndex) const
 {
-    return mPassHandleVector.at(passIndex)->GetOffsetState();
+    return mPassList.at(passIndex)->GetOffsetState();
 }
 
 const StencilTestState *
 VisualEffect::GetStencilTestState(int passIndex) const
 {
-    return mPassHandleVector.at(passIndex)->GetStencilTestState();
+    return mPassList.at(passIndex)->GetStencilTestState();
 }
 
 const WireframeState *
 VisualEffect::GetWireframeState(int passIndex) const
 {
-    return mPassHandleVector.at(passIndex)->GetWireframeState();
+    return mPassList.at(passIndex)->GetWireframeState();
 }
 
 void

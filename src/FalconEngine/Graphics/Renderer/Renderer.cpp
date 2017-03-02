@@ -7,8 +7,9 @@ using namespace std;
 
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Visual.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffect.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
-#include <FalconEngine/Graphics/Renderer/VisualPass.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapText.h>
 #include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
@@ -201,7 +202,7 @@ Renderer::Update(const VertexBuffer *vertexBuffer)
 {
     FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
 
-    int sourceDataByteNum = vertexBuffer->GetDataByteNum();
+    auto sourceDataByteNum = vertexBuffer->GetDataByteNum();
     auto *sourceData = vertexBuffer->GetData();
     void *destinationData = Map(vertexBuffer, BufferAccessMode::Write);
     memcpy(destinationData, sourceData, sourceDataByteNum);
@@ -388,7 +389,7 @@ Renderer::Update(const IndexBuffer *indexBuffer)
 {
     FALCON_ENGINE_CHECK_NULLPTR(indexBuffer);
 
-    int sourceDataByteNum = indexBuffer->GetDataByteNum();
+    auto sourceDataByteNum = indexBuffer->GetDataByteNum();
     auto *sourceData = indexBuffer->GetData();
     void *destinationData = Map(indexBuffer, BufferAccessMode::Write);
     memcpy(destinationData, sourceData, sourceDataByteNum);
@@ -835,27 +836,24 @@ Renderer::Disable(const Shader *shader)
 }
 
 void
-Renderer::Update(const VisualPass *pass, ShaderUniform *uniform, const Visual *visual)
+Renderer::Enable(const VisualEffectPass *pass)
 {
-    // Update uniform location
-    if (uniform->mLocation == 0)
-    {
-        auto shader = pass->GetShader();
-        uniform->mLocation = shader->GetUniformLocation(uniform->mName);
-    }
-
-    // Update uniform value
-    uniform->Update(visual, mCamera);
-
-    // Update uniform value in context.
-    if (uniform->mUpdated)
-    {
-        PlatformShaderUniform::UpdateContext(uniform);
-    }
+    // Set pass' render states.
+    SetBlendState(pass->GetBlendState());
+    SetCullState(pass->GetCullState());
+    SetDepthTestState(pass->GetDepthTestState());
+    SetOffsetState(pass->GetOffsetState());
+    SetStencilTestState(pass->GetStencilTestState());
+    SetWireframeState(pass->GetWireframeState());
 }
 
 void
-Renderer::Enable(const VisualPass *pass, const Visual *visual)
+Renderer::Disable(const VisualEffectPass *pass)
+{
+}
+
+void
+Renderer::Enable(const VisualEffectInstancePass *pass, const Visual *visual)
 {
     FALCON_ENGINE_CHECK_NULLPTR(pass);
 
@@ -884,18 +882,10 @@ Renderer::Enable(const VisualPass *pass, const Visual *visual)
         auto uniform = pass->GetShaderUniform(uniformIndex);
         Update(pass, uniform, visual);
     }
-
-    // Set pass' render states.
-    SetBlendState(pass->GetBlendState());
-    SetCullState(pass->GetCullState());
-    SetDepthTestState(pass->GetDepthTestState());
-    SetOffsetState(pass->GetOffsetState());
-    SetStencilTestState(pass->GetStencilTestState());
-    SetWireframeState(pass->GetWireframeState());
 }
 
 void
-Renderer::Disable(const VisualPass *pass)
+Renderer::Disable(const VisualEffectInstancePass *pass)
 {
     FALCON_ENGINE_CHECK_NULLPTR(pass);
 
@@ -913,24 +903,45 @@ Renderer::Disable(const VisualPass *pass)
 }
 
 void
+Renderer::Update(const VisualEffectInstancePass *pass, ShaderUniform *uniform, const Visual *visual)
+{
+    // Update uniform location
+    if (uniform->mLocation == 0)
+    {
+        auto shader = pass->GetShader();
+        uniform->mLocation = shader->GetUniformLocation(uniform->mName);
+    }
+
+    // Update uniform value
+    uniform->Update(visual, mCamera);
+
+    // Update uniform value in context.
+    if (uniform->mUpdated)
+    {
+        PlatformShaderUniform::UpdateContext(uniform);
+    }
+}
+
+void
 Renderer::Draw(Visual *visual)
 {
     FALCON_ENGINE_CHECK_NULLPTR(visual);
 
-    auto instance = visual->GetEffectInstance();
-    Draw(visual, instance);
+    auto effectInstance = visual->GetEffectInstance();
+    Draw(visual, effectInstance);
 }
 
 void
 Renderer::Draw(const Visual *visual,
-               VisualEffectInstance *instance)
+               VisualEffectInstance *effectInstance)
 {
     // NOTE(Wuxiang): The non-constness of instance comes from the fact that
     // during the binding of shader, the renderer would look up the shader's
     // location for each vertex attribute and each uniform.
 
     FALCON_ENGINE_CHECK_NULLPTR(visual);
-    FALCON_ENGINE_CHECK_NULLPTR(instance);
+    FALCON_ENGINE_CHECK_NULLPTR(effectInstance);
+    auto effect = effectInstance->GetEffect();
 
     // NOTE(Wuxiang): Currently this function assume that all passes are using
     // same vertex attribute array, so that we don't switch vertex format between
@@ -951,23 +962,31 @@ Renderer::Draw(const Visual *visual,
         Enable(indexBuffer);
     }
 
-    const int passNum = instance->GetPassNum();
+    const int passNum = effectInstance->GetPassNum();
     for (int passIndex = 0; passIndex < passNum; ++passIndex)
     {
-        auto *pass = instance->GetPass(passIndex);
-        auto *shader = pass->GetShader();
+        auto *effectInstancePass = effectInstance->GetPass(passIndex);
+        auto *effectPass = effect->GetPass(passIndex);
+
+        auto *shader = effectInstancePass->GetShader();
 
         // Enable the shader.
         Enable(shader);
 
-        // Enable the pass.
-        Enable(pass, visual);
+        // Enable effect instance pass.
+        Enable(effectInstancePass, visual);
+
+        // Enable effect pass.
+        Enable(effectPass);
 
         // Draw the primitive.
         DrawPrimitive(visual);
 
-        // Disable the pass.
-        Disable(pass);
+        // Disable effect pass.
+        Disable(effectPass);
+
+        // Disable effect instance pass.
+        Disable(effectInstancePass);
 
         // Disable the shader.
         Disable(shader);

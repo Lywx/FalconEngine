@@ -29,7 +29,7 @@ public:
                && mVertexBufferTable.at(bindingIndex).GetBuffer() == vertexBuffer.get();
     }
 
-    int
+    size_t
     GetVertexNum() const;
 
     void

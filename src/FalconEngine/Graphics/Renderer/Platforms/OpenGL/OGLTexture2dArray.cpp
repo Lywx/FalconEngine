@@ -60,18 +60,19 @@ PlatformTexture2dArray::PlatformTexture2dArray(const Texture2dArray *textureArra
         // Bind newly created texture
         for (int textureArrayIndex = 0; textureArrayIndex < mTextureArraySize; ++textureArrayIndex)
         {
-            auto texture = textureArray->GetTextureSlice(textureArrayIndex);
-            //glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBuffer[textureArrayIndex]);
+            // Bind PBO to provide asynchronous copy of texture data.
+            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBuffer[textureArrayIndex]);
             glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, textureArrayIndex,
                             mDimension[textureArrayIndex][0], mDimension[textureArrayIndex][1], 1,
-                            mFormat, mType, texture->mData);
+                            mFormat, mType, nullptr);
         }
 
-        //glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+        // Unbind the PBO.
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+
         // Restore previous texture binding
         glBindTexture(GL_TEXTURE_2D_ARRAY, textureBindingPrevious);
     }
-
 }
 
 PlatformTexture2dArray::~PlatformTexture2dArray()

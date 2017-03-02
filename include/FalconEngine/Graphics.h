@@ -12,8 +12,8 @@
 #include <FalconEngine/Graphics/Renderer/Visual.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/VisualLines.h>
-#include <FalconEngine/Graphics/Renderer/VisualPass.h>
 #include <FalconEngine/Graphics/Renderer/VisualPoints.h>
 #include <FalconEngine/Graphics/Renderer/VisualQuads.h>
 #include <FalconEngine/Graphics/Renderer/VisualTriangles.h>

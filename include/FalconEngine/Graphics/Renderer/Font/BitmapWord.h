@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Renderer/BitmapGlyph.h>
+#include <FalconEngine/Graphics/Renderer/Font/BitmapGlyph.h>
 
 namespace FalconEngine
 {

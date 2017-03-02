@@ -9,7 +9,7 @@
 #include <FalconEngine/Content/Asset.h>
 #include <FalconEngine/Content/AssetImporter.h>
 #include <FalconEngine/Content/Path.h>
-#include <FalconEngine/Graphics/Renderer/BitmapFont.h>
+#include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
 #include <FalconEngine/Graphics/Renderer/Resources/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resources/Sampler.h>
 #include <FalconEngine/Graphics/Renderer/Resources/Texture2d.h>

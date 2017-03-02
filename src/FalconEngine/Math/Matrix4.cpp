@@ -1,4 +1,5 @@
 #include <FalconEngine/Math/Matrix4.h>
+#include <FalconEngine/Math/Matrix3.h>
 #include <FalconEngine/Math/Vector4.h>
 #include <FalconEngine/Math/Quaternion.h>
 
@@ -20,17 +21,20 @@ Matrix4f Matrix4f::Identity = glm::mat4(1.0, 0.0, 0.0, 0.0,
                                         0.0, 0.0, 1.0, 0.0,
                                         0.0, 0.0, 0.0, 1.0);
 
-Matrix4f Matrix4f::Inverse(const Matrix4f& mat)
+Matrix4f
+Matrix4f::Inverse(const Matrix4f& mat)
 {
     return glm::inverse(mat);
 }
 
-Matrix4f Matrix4f::Transpose(const Matrix4f& mat)
+Matrix4f
+Matrix4f::Transpose(const Matrix4f& mat)
 {
     return glm::transpose(mat);
 }
 
-Matrix4f Matrix4f::CreateRotationX(const float& radians)
+Matrix4f
+Matrix4f::CreateRotationX(const float& radians)
 {
     const float cosine = cos(radians);
     const float sine = sin(radians);
@@ -42,12 +46,14 @@ Matrix4f Matrix4f::CreateRotationX(const float& radians)
                     0.0, 0.0, 0.0, 1.0);
 }
 
-void Matrix4f::CreateRotationX(const float& radians, Matrix4f& transform)
+void
+Matrix4f::CreateRotationX(const float& radians, Matrix4f& transform)
 {
     transform = CreateRotationX(radians);
 }
 
-Matrix4f Matrix4f::CreateRotationY(const float& radians)
+Matrix4f
+Matrix4f::CreateRotationY(const float& radians)
 {
     const float cosine = cos(radians);
     const float sine = sin(radians);
@@ -60,12 +66,14 @@ Matrix4f Matrix4f::CreateRotationY(const float& radians)
 
 }
 
-void Matrix4f::CreateRotationY(const float& radians, Matrix4f& transform)
+void
+Matrix4f::CreateRotationY(const float& radians, Matrix4f& transform)
 {
     transform = CreateRotationY(radians);
 }
 
-Matrix4f Matrix4f::CreateRotationZ(const float& radians)
+Matrix4f
+Matrix4f::CreateRotationZ(const float& radians)
 {
     const float cosine = cos(radians);
     const float sine = sin(radians);
@@ -78,12 +86,14 @@ Matrix4f Matrix4f::CreateRotationZ(const float& radians)
 
 }
 
-void Matrix4f::CreateRotationZ(const float& radians, Matrix4f& transform)
+void
+Matrix4f::CreateRotationZ(const float& radians, Matrix4f& transform)
 {
     transform = CreateRotationZ(radians);
 }
 
-Matrix4f Matrix4f::CreateFromRotation(const Quaternion& q)
+Matrix4f
+Matrix4f::CreateFromRotation(const Quaternion& q)
 {
     Matrix4f result = Identity;
 
@@ -103,7 +113,8 @@ Matrix4f Matrix4f::CreateFromRotation(const Quaternion& q)
     return result;
 }
 
-Matrix4f Matrix4f::CreateRotation(const float& pitch, const float& yaw, const float& roll)
+Matrix4f
+Matrix4f::CreateRotation(const float& pitch, const float& yaw, const float& roll)
 {
     Quaternion rotation_yaw   = Quaternion::CreateFromAxisAngle(Vector3f::UnitY, yaw);
     Quaternion rotation_pitch = Quaternion::CreateFromAxisAngle(Vector3f::UnitX, pitch);
@@ -114,7 +125,8 @@ Matrix4f Matrix4f::CreateRotation(const float& pitch, const float& yaw, const fl
     return CreateFromRotation(rotation);
 }
 
-Matrix4f Matrix4f::CreateScaleIsomorphic(const float& scale)
+Matrix4f
+Matrix4f::CreateScaleIsomorphic(const float& scale)
 {
     return Matrix4f(scale, 0.0f, 0.0f, 0.0f,
                     0.0f, scale, 0.0f, 0.0f,
@@ -122,7 +134,8 @@ Matrix4f Matrix4f::CreateScaleIsomorphic(const float& scale)
                     0.0f, 0.0f, 0.0f, 1.f);
 }
 
-Matrix4f Matrix4f::CreateScale(const float& scaleX, const float& scaleY, const float& scaleZ)
+Matrix4f
+Matrix4f::CreateScale(const float& scaleX, const float& scaleY, const float& scaleZ)
 {
     return Matrix4f(scaleX, 0.0f, 0.0f, 0.0f,
                     0.0f, scaleY, 0.0f, 0.0f,
@@ -130,12 +143,14 @@ Matrix4f Matrix4f::CreateScale(const float& scaleX, const float& scaleY, const f
                     0.0f, 0.0f, 0.0f, 1.f);
 }
 
-Matrix4f Matrix4f::CreateTranslation(const float& x, const float& y, const float& z)
+Matrix4f
+Matrix4f::CreateTranslation(const float& x, const float& y, const float& z)
 {
     return CreateTranslation(Vector3f(x, y, z));
 }
 
-Matrix4f Matrix4f::CreateTranslation(const Vector3f& v)
+Matrix4f
+Matrix4f::CreateTranslation(const Vector3f& v)
 {
     Matrix4f result = Identity;
 
@@ -174,16 +189,24 @@ Matrix4f::~Matrix4f()
 }
 
 // Implicit Conversion
-Matrix4f::Matrix4f(const glm::mat4& m) : glm::mat4(m) { }
+Matrix4f::Matrix4f(const glm::mat4& m) :
+    glm::mat4(m)
+{
+}
 
-// Explicit Conversion
-Matrix4f::operator glm::mat4()
+Matrix4f::operator glm::mat4() const
 {
     return glm::mat4(this->operator[](0),
                      this->operator[](1),
                      this->operator[](2),
                      this->operator[](3));
 
+}
+
+// Explicit Conversion
+Matrix4f::operator Matrix3f() const
+{
+    return Matrix3f(*this);
 }
 
 /************************************************************************/

@@ -40,10 +40,10 @@ public:
         mNode = node;
     }
 
-    Node *
+    NodeSharedPtr
     GetNode()
     {
-        return mNode.get();
+        return mNode;
     }
 
     void

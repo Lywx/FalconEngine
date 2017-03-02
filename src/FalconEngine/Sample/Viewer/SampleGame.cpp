@@ -7,7 +7,7 @@ SampleGame::SampleGame() :
     mAssetManager(nullptr),
     mFontConsole(nullptr),
     mFontDisplay(nullptr),
-    mModelAxe(nullptr)
+    mModelNanosuit(nullptr)
 {
 }
 
@@ -15,25 +15,47 @@ SampleGame::~SampleGame()
 {
 }
 
+GameEngineSettingsSharedPtr
+SampleGame::GetEngineSettings()
+{
+    if (!mGameEngineSettings)
+    {
+        mGameEngineSettings = std::make_shared<GameEngineSettings>();
+        mGameEngineSettings->mGraphics->mWidth  = 1600;
+        mGameEngineSettings->mGraphics->mHeight = 900;
+    }
+
+    return mGameEngineSettings;
+}
+
 void
 SampleGame::Initialize()
 {
+    GameDebug::Initialize();
     mAssetManager = mAssetManager->GetInstance();
 
     int width = 1280;
     int height = 800;
 
-    mFontConsole = mAssetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.fnt.bin");
-    mFontDisplay = mAssetManager->LoadFont("Content/Fonts/NSimSunDistanceField.fnt.bin");
+    mFontConsole = mAssetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.fnt.bin").get();
+    //mFontDisplay = mAssetManager->LoadFont("Content/Fonts/NSimSunDistanceField.fnt.bin");
 
-    //mModelAxe = mAssetManager->LoadModel("Content/Models/Axe.obj");
+    mModelNanosuit = mAssetManager->LoadModel("Content/Models/nanosuit.obj").get();
+
+    mScene = make_shared<Node>();
+    mScene->mWorldTransform = Matrix4f::Zero;
+    mScene->AttachChild(mModelNanosuit->GetNode());
+
+    mScene->Update(0.0, true);
 }
 
 void
 SampleGame::Render(GameEngineGraphics *graphics, double percent)
 {
-    graphics->DrawString(mFontConsole, 13, Vector2f(100, 100), "Hello", ColorPalette::AliceBlue);
+    graphics->ClearColorBuffer(ColorPalette::White);
 
+    graphics->DrawString(mFontConsole, 53, Vector2f(300, 300), to_string(GameCounter::GetMilliseconds()), ColorPalette::Black);
+    graphics->Draw(mModelNanosuit->GetNode());
     Game::Render(graphics, percent);
 }
 
@@ -46,9 +68,5 @@ SampleGame::Update(GameEngineInput *input, double elapsed)
         GetEngine()->Exit();
     }
 
-    auto mouse = input->GetMouseState();
-    if (mouse->ButtonDown(MouseButton::LeftButton))
-    {
-        GetEngine()->Exit();
-    }
+    mScene->Update(elapsed, true);
 }

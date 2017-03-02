@@ -1,5 +1,5 @@
-#include <FalconEngine/Graphics/Renderer/BitmapLine.h>
-#include <FalconEngine/Graphics/Renderer/BitmapGlyph.h>
+#include <FalconEngine/Graphics/Renderer/Font/BitmapLine.h>
+#include <FalconEngine/Graphics/Renderer/Font/BitmapGlyph.h>
 
 namespace FalconEngine
 {

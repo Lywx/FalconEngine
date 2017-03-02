@@ -351,12 +351,14 @@ Renderer::ClearBuffers(Vector4f color, float depth, unsigned stencil)
             | GL_STENCIL_BUFFER_BIT);
 }
 
-void Renderer::SwapBuffers()
+void
+Renderer::SwapBuffers()
 {
     glfwSwapBuffers(mData->mWindow);
 }
 
-void Renderer::DrawPrimitive(const Visual *visual)
+void
+Renderer::DrawPrimitive(const Visual *visual)
 {
     FALCON_ENGINE_CHECK_NULLPTR(visual);
 

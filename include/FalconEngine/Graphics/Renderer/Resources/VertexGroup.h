@@ -29,26 +29,14 @@ public:
                && mVertexBufferTable.at(bindingIndex).GetBuffer() == vertexBuffer.get();
     }
 
+    int
+    GetVertexNum() const;
+
     void
     SetVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer, int offset, int stride);
 
-    int
-    GetVertexNum() const
-    {
-        return mVertexNum;
-    }
-
-    void
-    SetVertexNum(int vertexNum)
-    {
-        mVertexNum = vertexNum;
-    }
-
 public:
     std::map<int, VertexBufferBinding> mVertexBufferTable;
-
-private:
-    int mVertexNum;
 
 };
 

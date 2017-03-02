@@ -14,7 +14,7 @@
 #include <stb/stb_image.h>
 
 #include <FalconEngine/Content/Path.h>
-#include <FalconEngine/Graphics/Renderer/BitmapFont.h>
+#include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
 #include <FalconEngine/Graphics/Renderer/Resources/Texture2d.h>
 #include <FalconEngine/Graphics/Scene/Model.h>
 
@@ -358,9 +358,11 @@ AssetProcessor::LoadRawTexture(const std::string& textureFilePath)
 }
 
 void
-BakeMaterial(aiMaterial               *material,
-             aiTextureType             textureType,
-             std::vector<std::string>& texturePathsBaked)
+BakeMaterial(
+    _IN_     const string&             modelDirectoryPath,
+    _IN_     aiMaterial               *material,
+    _IN_     aiTextureType             textureType,
+    _IN_OUT_ std::vector<std::string>& texturePathsBaked)
 {
     for (unsigned int textureIndex = 0; textureIndex < material->GetTextureCount(textureType); ++textureIndex)
     {
@@ -376,7 +378,7 @@ BakeMaterial(aiMaterial               *material,
         }
         else
         {
-            AssetProcessor::BakeTexture(textureFilePathString);
+            AssetProcessor::BakeTexture(modelDirectoryPath + textureFilePathString);
             texturePathsBaked.push_back(textureFilePathString);
         }
     }
@@ -394,16 +396,17 @@ AssetProcessor::BakeModel(const std::string& modelFilePath)
     }
 
     // Bake texture in model
+    auto modelDirectoryPath = GetFileDirectory(modelFilePath);
     vector<string> texturePathsBaked;
     for (unsigned int materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex)
     {
         auto material = scene->mMaterials[materialIndex];
 
-        BakeMaterial(material, aiTextureType_AMBIENT, texturePathsBaked);
-        BakeMaterial(material, aiTextureType_DIFFUSE, texturePathsBaked);
-        BakeMaterial(material, aiTextureType_EMISSIVE, texturePathsBaked);
-        BakeMaterial(material, aiTextureType_SHININESS, texturePathsBaked);
-        BakeMaterial(material, aiTextureType_SPECULAR, texturePathsBaked);
+        BakeMaterial(modelDirectoryPath, material, aiTextureType_AMBIENT, texturePathsBaked);
+        BakeMaterial(modelDirectoryPath, material, aiTextureType_DIFFUSE, texturePathsBaked);
+        BakeMaterial(modelDirectoryPath, material, aiTextureType_EMISSIVE, texturePathsBaked);
+        BakeMaterial(modelDirectoryPath, material, aiTextureType_SHININESS, texturePathsBaked);
+        BakeMaterial(modelDirectoryPath, material, aiTextureType_SPECULAR, texturePathsBaked);
     }
 
     // We don't need to get the fully initialized model at processor. The model

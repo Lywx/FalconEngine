@@ -101,6 +101,7 @@ glDebugCallback(
     const GLchar *message,
     GLvoid       *userParam)
 {
+    // Only break on high severity.
     if (severity == GL_DEBUG_SEVERITY_HIGH)
     {
         GameDebug::OutputString("OpenGL Error:\n");
@@ -120,21 +121,20 @@ glDebugCallback(
 }
 
 void
-glDebugInitMessage()
+glDebugInitialize()
 {
-    // TODO(Wuxiang): The gl debugging has something wrong.
     if (glDebugMessageControl != NULL)
     {
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 
         // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glDebugMessageControl.xhtml
         glDebugMessageControl(
-            GL_DONT_CARE,           // source filter
-            GL_DONT_CARE,           // type filter
-            GL_DEBUG_SEVERITY_HIGH, // severity filter
-            0,                      // count, which ignores ids array.
-            NULL,                   // ids, which is ignored when count = 0.
-            GL_TRUE                 // enable message
+            GL_DONT_CARE, // source filter
+            GL_DONT_CARE, // type filter
+            GL_DONT_CARE, // severity filter
+            0,            // count, which ignores ids array.
+            NULL,         // ids, which is ignored when count = 0.
+            GL_TRUE       // enable message
         );
 
         // https://www.opengl.org/sdk/docs/man/html/glDebugMessageCallback.xhtml
@@ -143,9 +143,9 @@ glDebugInitMessage()
 }
 
 void
-GameDebug::InitializeContext()
+GameDebug::Initialize()
 {
-    glDebugInitMessage();
+    glDebugInitialize();
 }
 
 }

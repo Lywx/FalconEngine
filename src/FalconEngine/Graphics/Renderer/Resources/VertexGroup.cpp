@@ -9,8 +9,7 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-VertexGroup::VertexGroup() :
-    mVertexNum(0)
+VertexGroup::VertexGroup()
 {
 }
 
@@ -18,13 +17,21 @@ VertexGroup::~VertexGroup()
 {
 }
 
-void VertexGroup::SetVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer, int offset, int stride)
+int
+VertexGroup::GetVertexNum() const
 {
-    if (GetVertexNum() == 0)
+    if (mVertexBufferTable.size() == 0)
     {
-        SetVertexNum(vertexBuffer->GetElementNum());
+        FALCON_ENGINE_THROW_EXCEPTION("The vertex group is empty.");
     }
 
+    return mVertexBufferTable.begin()->second.GetBuffer()->GetElementNum();
+}
+
+void
+VertexGroup::SetVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer, int offset, int stride)
+{
     mVertexBufferTable.insert(std::make_pair(bindingIndex, VertexBufferBinding(vertexBuffer, bindingIndex, offset, stride)));
 }
+
 }

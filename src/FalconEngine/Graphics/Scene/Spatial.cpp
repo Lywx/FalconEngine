@@ -10,6 +10,8 @@ FALCON_ENGINE_RTTI_IMPLEMENT(Spatial, Object);
 /************************************************************************/
 
 Spatial::Spatial() :
+    mLocalTransform(Matrix4f::Identity),
+    mWorldTransform(Matrix4f::Identity),
     mWorldTransformIsCurrent(false),
     mParent(nullptr)
 {

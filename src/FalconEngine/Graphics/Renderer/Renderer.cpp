@@ -5,12 +5,12 @@
 
 using namespace std;
 
-#include <FalconEngine/Graphics/Renderer/BitmapFont.h>
-#include <FalconEngine/Graphics/Renderer/BitmapText.h>
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Visual.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/VisualPass.h>
+#include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
+#include <FalconEngine/Graphics/Renderer/Font/BitmapText.h>
 #include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
 #include <FalconEngine/Graphics/Renderer/States/BlendState.h>
 #include <FalconEngine/Graphics/Renderer/States/CullState.h>
@@ -28,9 +28,10 @@ using namespace std;
 #include <FalconEngine/Graphics/Renderer/Resources/Texture3d.h>
 #include <FalconEngine/Graphics/Renderer/Resources/Sampler.h>
 
+
 #if FALCON_ENGINE_PLATFORM_GLFW
 #include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
-#include <FalconEngine/Graphics/Renderer/BitmapFontRenderer.h>
+#include <FalconEngine/Graphics/Renderer/Font/BitmapFontRenderer.h>
 #include <FalconEngine/Graphics/Renderer/Platforms/OpenGL/OGLIndexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Platforms/OpenGL/OGLVertexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Platforms/OpenGL/OGLVertexFormat.h>

@@ -47,18 +47,14 @@ public:
     /************************************************************************/
     /* Vertex Buffer Management                                             */
     /************************************************************************/
-
-    int
-    GetVertexNum() const;
-
     void
-    SetVertexNum(int vertexNum) const;
+    SetVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer, int offset, int stride);
 
     const VertexGroup *
     GetVertexGroup() const;
 
-    void
-    SetVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer, int offset, int stride);
+    int
+    GetVertexNum() const;
 
     const VertexFormat *
     GetVertexFormat() const

@@ -2,11 +2,11 @@
 
 #fe_extension : enable
 #include "fe_Texture.glsl"
+#include "fe_Function.glsl"
 #fe_extension : disable
 
 in Vout
 {
-    noperspective vec3 WorldPosition;
     noperspective vec3 EyePosition
     noperspective vec3 EyeNormal;
     vec2               TexCoord;
@@ -16,20 +16,20 @@ layout(location = 0) out vec4 FragColor;
 
 struct DirectionalLight
 {
-    vec4 Ambient;
-    vec4 Diffuse;
-    vec4 Specular;
+    vec3 Ambient;
+    vec3 Diffuse;
+    vec3 Specular;
 
-    vec3 Direction;
+    vec3 EyeDirection;
 };
 
 struct PointLight
 {
-    vec4 Ambient;
-    vec4 Diffuse;
-    vec4 Specular;
+    vec3 Ambient;
+    vec3 Diffuse;
+    vec3 Specular;
 
-    vec3 Position;
+    vec3 EyePosition;
 
     float Constant;
     float Linear;
@@ -38,14 +38,14 @@ struct PointLight
 
 struct SpotLight
 {
-    vec4 Ambient;
-    vec4 Diffuse;
-    vec4 Specular;
+    vec3 Ambient;
+    vec3 Diffuse;
+    vec3 Specular;
 
     float CosAngleInner;
     float CosAngleOuter;
-    vec3 Direction;
-    vec3 Position;
+    vec3 EyeDirection;
+    vec3 EyePosition;
 
     float Constant;
     float Linear;
@@ -53,83 +53,96 @@ struct SpotLight
 };
 
 uniform DirectionalLight          DirectionalLight;
-#define PointLightNum 6
-uniform PointLight[PointLightNum] PointLightArray;
+// #define PointLightNum 6
+// uniform PointLight[PointLightNum] PointLightArray;
 
-uniform mat4                      MVTransform;
+uniform mat4 MVTransform;
+
+// @status Finished.
+vec3 CalcDirectionalLight(DirectionalLight light, vec3 eyeN, vec3 eyeV)
+{
+    // Point to light source.
+    vec3 eyeL = normalize(light.EyeDirection);
+
+    vec3 cAmbient;
+    vec3 cDiffuse;
+    vec3 cSpecular; 
+
+    CalcPhongLighting(eyeN, eyeV, eyeL, light.Ambient, light.Diffuse, light.Specular,
+    cAmbient, cDiffuse, cSpecular);
+
+    return cAmbient + cDiffuse + cSpecular;
+}
+
+// @status Finished.
+vec3 CalcPointLight(PointLight light, vec3 eyeN, vec3 eyeV, vec3 eyePosition)
+{
+    // Point to light source.
+    vec3 eyeL = normalize(light.EyePosition - eyePosition);
+
+    vec3 cAmbient;
+    vec3 cDiffuse;
+    vec3 cSpecular;
+
+    CalcPhongLighting(eyeN, eyeV, eyeL, light.Ambient, light.Diffuse, light.Specular,
+    cAmbient, cDiffuse, cSpecular);
+
+    // Attenuation
+    float distance = length(light.EyePosition - eyePosition);
+    float attenuation = 1.0f / (light.Constant + light.Linear * distance + 
+                 light.Quadratic * (distance * distance));    
+
+    cAmbient  *= attenuation;
+    cDiffuse  *= attenuation;
+    cSpecular *= attenuation;
+
+    return cAmbient + cDiffuse + cSpecular;
+} 
+
+// @status Finished.
+vec3 CalcSpotLight(SpotLight light, vec3 eyeN, vec3 eyeV, vec3 eyePosition)
+{
+    // Point to light source.
+    vec3 eyeL = normalize(light.EyePosition - eyePosition);
+
+    vec3 cAmbient;
+    vec3 cDiffuse;
+    vec3 cSpecular;
+
+    CalcPhongLighting(eyeN, eyeV, eyeL, light.Ambient, light.Diffuse, light.Specular,
+    cAmbient, cDiffuse, cSpecular);
+
+    // Attenuation
+    float distance = length(light.EyePosition - eyePosition);
+    float attenuation = 1.0f / (light.Constant + light.Linear * distance + light.Quadratic * (distance * distance));
+
+    // Spotlight intensity
+    float cosAngleDifference = dot(eyeL, normalize(light.EyeDirection)); 
+    float cosMaxDifference = light.CosAngleInner - light.CosAngleOuter;
+    float intensity = clamp((cosAngleDifference - light.CosAngleOuter) / cosMaxDifference, 0.0, 1.0);
+
+    cAmbient *= attenuation * intensity;
+    cDiffuse *= attenuation * intensity;
+    cSpecular *= attenuation * intensity;
+    
+    return cAmbient + cDiffuse + cSpecular;
+}
 
 void main() 
 { 
-    vec3 eyeNormalNormalized = normalize(fin.EyeNormal);
+    vec3 eyeN = normalize(fin.EyeNormal);
 
     // Point to camera.
-    vec3 viewDirection = normalize(-fin.EyePosition); 
+    vec3 eyeV = normalize(-fin.EyePosition); 
 
-    vec3 result = CalcDirectionalLight(DirectionalLight, eyeNormalNormalized, viewDirection);
-    for(int i = 0; i < PointLightNum; ++i) 
-    {
-        result += CalcPointLight(PointLightArray[i], eyeNormalNormalized, viewDirection, fin.WorldPosition);
-    }
+    vec3 result = CalcDirectionalLight(DirectionalLight, eyeN, eyeV);
+    // for(int i = 0; i < PointLightNum; ++i) 
+    // {
+    //     result += CalcPointLight(PointLightArray[i], eyeN, eyeV, fin.EyePosition);
+    // }
+
+    // result += CalcSpotLight(Spotlight, eyeN, eyeV, fin.EyePosition);
 
     FragColor = vec4(result, 1.0);
 }
 
-// @status Finished.
-vec3 CalcDirectionalLight(DirectionalLight light, vec3 eyeNormalNormalized, vec3 viewDirection)
-{
-    vec3 eyeLightDirectionNormalized = normalize(MVTransform * vec4(light.Direction, 0)).xyz;
-    vec3 eyeReflectionDirectionNormalized = reflect(-eyeLightDirectionNormalized, eyeNormalNormalized);
-
-    // dot(n, l)
-    float dotNL = max(0, dot(eyeNormalNormalized, eyeLightDirectionNormalized));     
-
-    // dot(v, r)
-    float dotVR = max(dot(viewDirection, eyeReflectionDirectionNormalized), 0.0);
-
-    vec3 materialAmbient   = vec3(texture(fe_TextureAmbient,   fin.TexCoords));
-    vec3 materialDiffuse   = vec3(texture(fe_TextureDiffuse,   fin.TexCoords));
-    vec3 materialEmissive  = vec3(texture(fe_TextureEmissive,  fin.TexCoords));
-    vec3 materialShininess = vec3(texture(fe_TextureShininess, fin.TexCoords));
-    vec3 materialSpecular  = vec3(texture(fe_TextureSpecular,  fin.TexCoords));
-
-    vec3 ambient  = light.Ambient * materialAmbient;
-    vec3 diffuse  = light.Diffuse * materialDiffuse * dotNL;
-    vec3 specular = light.Specular * materialSpecular * pow(dotVR, materialShininess);
-    vec3 emissive = materialEmissive;
-
-    return ambient + diffuse + emissive + specular;
-}
-
-// @status TODO.
-vec3 CalcSpotLight(SpotLight light, vec3 eyeNormalNormalized, vec3 viewDirection, vec3 worldPosition)
-{
-    // TODO
-    vec3 worldLightDirection = normalize(worldPosition - light.Position);
-
-    // Diffuse shading
-    float diff = max(dot(normal, lightDir), 0.0);
-
-    // Specular shading
-    vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-
-    // Attenuation
-    float distance = length(light.position - fragPos);
-    float attenuation = 1.0f / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
-
-    // Spotlight intensity
-    float theta = dot(lightDir, normalize(-light.direction)); 
-    float epsilon = light.cutOff - light.outerCutOff;
-    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
-
-    // Combine results
-    vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoords));
-    vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, TexCoords));
-    vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoords));
-
-    ambient *= attenuation * intensity;
-    diffuse *= attenuation * intensity;
-    specular *= attenuation * intensity;
-    
-    return (ambient + diffuse + specular);
-}

@@ -5,6 +5,7 @@
 #include <assimp/scene.h>
 
 #include <FalconEngine/Content/AssetManager.h>
+#include <FalconEngine/Content/Path.h>
 #include <FalconEngine/Graphics/Renderer/Resources/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resources/IndexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resources/Texture2d.h>
@@ -85,7 +86,6 @@ CreateModelVertexBuffer(const aiMesh *aiMesh)
     // TODO(Wuxiang): Should I change the binding index?
     auto vertexGroup = make_shared<VertexGroup>();
     vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, sizeof(ModelVertex));
-    vertexGroup->SetVertexNum(vertexNum);
     return vertexGroup;
 }
 
@@ -125,8 +125,9 @@ CreateModelIndexBuffer(const aiMesh *mesh)
 
 Texture2dSharedPtr
 LoadMaterialTexture(
-    _IN_     const aiMaterial *material,
-    _IN_     aiTextureType     materialType)
+    _IN_ const string&     modelDirectoryPath,
+    _IN_ const aiMaterial *material,
+    _IN_ aiTextureType     materialType)
 {
     // NOTE(Wuxiang): I think most material only has one texture for each texture type.
     int textureNum = material->GetTextureCount(materialType);
@@ -146,7 +147,7 @@ LoadMaterialTexture(
 
             // NOTE(Wuxiang): Add .bin to file path so that the texture file is
             // loaded from preprocessed asset file.
-            return assetManager->LoadTexture(AddAssetExtension(textureFilePath.C_Str()));
+            return assetManager->LoadTexture(modelDirectoryPath + AddAssetExtension(textureFilePath.C_Str()));
         }
     }
 
@@ -155,8 +156,9 @@ LoadMaterialTexture(
 
 MaterialSharedPtr
 CreateMaterial(
-    _IN_      const aiScene *aiScene,
-    _IN_      const aiMesh  *aiMesh)
+    _IN_ const string&  modelDirectoryPath,
+    _IN_ const aiScene *aiScene,
+    _IN_ const aiMesh  *aiMesh)
 {
     // When material exists.
     if (aiMesh->mMaterialIndex > 0)
@@ -164,11 +166,11 @@ CreateMaterial(
         auto aiMaterial = aiScene->mMaterials[aiMesh->mMaterialIndex];
 
         auto material = make_shared<Material>();
-        material->mAmbient   = LoadMaterialTexture(aiMaterial, aiTextureType_AMBIENT);
-        material->mDiffuse   = LoadMaterialTexture(aiMaterial, aiTextureType_DIFFUSE);
-        material->mEmissive  = LoadMaterialTexture(aiMaterial, aiTextureType_EMISSIVE);
-        material->mShininess = LoadMaterialTexture(aiMaterial, aiTextureType_SHININESS);
-        material->mSpecular  = LoadMaterialTexture(aiMaterial, aiTextureType_SPECULAR);
+        material->mAmbient   = LoadMaterialTexture(modelDirectoryPath, aiMaterial, aiTextureType_AMBIENT);
+        material->mDiffuse   = LoadMaterialTexture(modelDirectoryPath, aiMaterial, aiTextureType_DIFFUSE);
+        material->mEmissive  = LoadMaterialTexture(modelDirectoryPath, aiMaterial, aiTextureType_EMISSIVE);
+        material->mShininess = LoadMaterialTexture(modelDirectoryPath, aiMaterial, aiTextureType_SHININESS);
+        material->mSpecular  = LoadMaterialTexture(modelDirectoryPath, aiMaterial, aiTextureType_SPECULAR);
 
         return material;
     }
@@ -189,8 +191,9 @@ CreateModelVertexFormat()
 
 MeshSharedPtr
 CreateMesh(
-    _IN_     const aiScene *aiScene,
-    _IN_     const aiMesh  *aiMesh)
+    _IN_ const string&  modelDirectoryPath,
+    _IN_ const aiScene *aiScene,
+    _IN_ const aiMesh  *aiMesh)
 {
     shared_ptr<Mesh> mesh;
 
@@ -205,7 +208,7 @@ CreateMesh(
 
     // Load texture data in term of material.
     {
-        mesh->SetMaterial(CreateMaterial(aiScene, aiMesh));
+        mesh->SetMaterial(CreateMaterial(modelDirectoryPath, aiScene, aiMesh));
     }
 
     return mesh;
@@ -213,8 +216,9 @@ CreateMesh(
 
 NodeSharedPtr
 CreateNode(
-    _IN_     const aiScene *aiScene,
-    _IN_     const aiNode  *aiNode)
+    _IN_ const string&  modelDirectoryPath,
+    _IN_ const aiScene *aiScene,
+    _IN_ const aiNode  *aiNode)
 {
     auto node = make_shared<Node>();
 
@@ -223,13 +227,13 @@ CreateNode(
     {
         // The node object only contains indices to index the actual objects in the scene.
         // The scene contains all the data, node is just to keep stuff organized (like relations between nodes).
-        node->AttachChild(CreateMesh(aiScene, aiScene->mMeshes[aiNode->mMeshes[i]]));
+        node->AttachChild(CreateMesh(modelDirectoryPath, aiScene, aiScene->mMeshes[aiNode->mMeshes[i]]));
     }
 
     // After we've processed all of the meshes (if any) we then recursively process each of the children nodes
     for (size_t i = 0; i < aiNode->mNumChildren; ++i)
     {
-        node->AttachChild(CreateNode(aiScene, aiNode->mChildren[i]));
+        node->AttachChild(CreateNode(modelDirectoryPath, aiScene, aiNode->mChildren[i]));
     }
 
     return node;
@@ -247,7 +251,7 @@ AssetImporter::ImportModel(Model *model, const std::string& modelFilePath)
     }
 
     // NOTE(Wuxiang): The node constructor would recursively load the necessary children nodes and textures.
-    model->SetNode(CreateNode(aiScene, aiScene->mRootNode));
+    model->SetNode(CreateNode(GetFileDirectory(modelFilePath), aiScene, aiScene->mRootNode));
 }
 
 }

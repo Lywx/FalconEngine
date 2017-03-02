@@ -32,6 +32,7 @@ class BitmapFontRenderItem
 public:
     VertexBufferSharedPtr mTextBuffer;
     size_t                mTextBufferDataIndex = 0;
+    size_t                mTextBufferGlyphNum = 0;
 };
 
 // @summary The font renderer is the class you would call to draw a string on

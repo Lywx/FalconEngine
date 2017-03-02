@@ -18,4 +18,6 @@ support multiple buffer switching without switch vertex format.
 ++ Added model sampler.
 ++ Added more members in Light class.
 
-++ Added GameEngineGraphics as facade class into rendering system.
+++ Finished blin phong lighting.
+++ Finished font primitive count in font renderer.
+++ Implemented mesh renderer.

@@ -1,15 +1,15 @@
-#include <FalconEngine/Graphics/Renderer/BitmapFontRenderer.h>
+#include <FalconEngine/Graphics/Renderer/Font/BitmapFontRenderer.h>
 
 #include <boost/algorithm/string.hpp>
 
 #include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Graphics/Effects/BitmapFontEffect.h>
-#include <FalconEngine/Graphics/Renderer/BitmapFont.h>
-#include <FalconEngine/Graphics/Renderer/BitmapLine.h>
-#include <FalconEngine/Graphics/Renderer/BitmapText.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/VisualQuads.h>
+#include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
+#include <FalconEngine/Graphics/Renderer/Font/BitmapLine.h>
+#include <FalconEngine/Graphics/Renderer/Font/BitmapText.h>
 #include <FalconEngine/Graphics/Renderer/Resources/VertexGroup.h>
 #include <FalconEngine/Graphics/Renderer/Resources/VertexFormat.h>
 #include <FalconEngine/Graphics/Renderer/Resources/VertexBuffer.h>
@@ -265,13 +265,13 @@ FillGlyphAttribute(
 // @summary Fill the vertex buffer with the text line information.
 void
 FillTextLines(
-    _IN_ const BitmapFont   *font,
-    _IN_ float               fontSize,
-    _IN_ Vector2f                  textPosition,
-    _IN_ Vector4f                  textColor,
-    _IN_ const vector<BitmapLine>& textLines,
-    _IN_ size_t&                   textDataIndex,
-    _OUT_ float                   *textData
+    _IN_  const BitmapFont   *font,
+    _IN_  float               fontSize,
+    _IN_  Vector2f                  textPosition,
+    _IN_  Vector4f                  textColor,
+    _IN_  const vector<BitmapLine>& textLines,
+    _IN_  size_t&                   textDataIndex,
+    _OUT_ float                    *textData
 )
 {
     float x = textPosition.x;
@@ -305,6 +305,7 @@ BitmapFontRenderer::PrepareText(
 
     // Construct lines with glyph information.
     int textGlyphCount = CreateTextLines(font, text, sTextLines);
+    item.mTextBufferGlyphNum += textGlyphCount;
 
     // Fill the vertex attribute into the buffer
     FillTextLines(font, text->mFontSize, Vector2f(text->mTextBounds.x, text->mTextBounds.y),
@@ -321,18 +322,10 @@ void
 BitmapFontRenderer::Render(Renderer *renderer, double percent)
 {
     renderer->Draw(mStaticTextQuads.get(), mTextEffectInstance.get());
+
+    // Update buffer data before drawing
+    renderer->Update(mDynamicTextBuffer.get());
     renderer->Draw(mDynamicTextQuads.get(), mTextEffectInstance.get());
-
-    //// NOTE(Wuxiang): Use orphaning strategy
-    //// TODO(Wuxiang): Wrong. Use glMapBuffer to access asynchronously
-    //glBindBuffer(GL_ARRAY_BUFFER, renderGroupBuffer);
-    //glBufferData(GL_ARRAY_BUFFER, renderGroupAttributes.size() * sizeof(float), nullptr, GL_STREAM_DRAW);
-    //auto *va = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-
-    //// TODO(Move this to data creation?)
-    //va copy &renderGroupAttributes[0];
-
-    //glDrawArrays(GL_TRIANGLES, 0, renderGroup.mTextVertexCount);
 }
 
 void

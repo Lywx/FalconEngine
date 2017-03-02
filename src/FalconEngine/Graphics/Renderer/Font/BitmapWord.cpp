@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Renderer/BitmapWord.h>
+#include <FalconEngine/Graphics/Renderer/Font/BitmapWord.h>
 
 namespace FalconEngine
 {

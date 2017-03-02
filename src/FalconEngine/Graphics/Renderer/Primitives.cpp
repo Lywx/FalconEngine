@@ -38,12 +38,6 @@ Primitives::GetVertexNum() const
     return mVertexGroup->GetVertexNum();
 }
 
-void
-Primitives::SetVertexNum(int vertexNum) const
-{
-    mVertexGroup->SetVertexNum(vertexNum);
-}
-
 const VertexGroup *
 Primitives::GetVertexGroup() const
 {

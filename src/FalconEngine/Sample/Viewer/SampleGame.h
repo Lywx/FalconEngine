@@ -16,6 +16,10 @@ public:
     SampleGame();
     ~SampleGame();
 
+public:
+    virtual GameEngineSettingsSharedPtr
+    GetEngineSettings() override;
+
     virtual void
     Initialize() override;
 
@@ -31,7 +35,8 @@ private:
     const BitmapFont *mFontConsole;
     const BitmapFont *mFontDisplay;
 
-    Model            *mModelAxe;
+    Model            *mModelNanosuit;
+    NodeSharedPtr     mScene;
 };
 
 }

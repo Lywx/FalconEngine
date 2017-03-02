@@ -27,7 +27,7 @@ PlatformShaderUniform::UpdateContext(ShaderUniform *shaderUniform)
         FALCON_ENGINE_NOT_SUPPORT();
         break;
     case ShaderUniformType::FloatMat3:
-        FALCON_ENGINE_NOT_SUPPORT();
+        Update(Cast<Matrix3f>(shaderUniform));
         break;
     case ShaderUniformType::FloatMat4:
         Update(Cast<Matrix4f>(shaderUniform));

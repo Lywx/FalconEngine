@@ -8,7 +8,7 @@
 #include <string>
 
 #if FALCON_ENGINE_OS_WINDOWS
-#define DIR_SEPARATOR "\\"
+#define DIR_SEPARATOR "/"
 #elif FALCON_ENGINE_OS_LINUX
 #define DIR_SEPARATOR "/"
 #endif

@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Renderer/BitmapText.h>
+#include <FalconEngine/Graphics/Renderer/Font/BitmapText.h>
 
 #include <limits>
 

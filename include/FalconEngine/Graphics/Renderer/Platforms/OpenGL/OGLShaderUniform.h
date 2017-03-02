@@ -93,6 +93,14 @@ PlatformShaderUniform::Update<Vector4f>(ShaderUniformValue<Vector4f> *shaderUnif
 
 template<>
 inline void
+PlatformShaderUniform::Update<Matrix3f>(ShaderUniformValue<Matrix3f> *shaderUniform)
+{
+    auto& value = shaderUniform->GetValue();
+    glUniformMatrix3fv(shaderUniform->mLocation, 1, GL_FALSE, &value[0][0]);
+}
+
+template<>
+inline void
 PlatformShaderUniform::Update<Matrix4f>(ShaderUniformValue<Matrix4f> *shaderUniform)
 {
     auto& value = shaderUniform->GetValue();

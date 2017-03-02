@@ -66,7 +66,7 @@ Node::AttachChild(SpatialSharedPtr child)
     }
 
     // All slots are used, so append the child to the array.
-    auto insertedIndex = static_cast<int>(mChildren.size());
+    auto insertedIndex = int(mChildren.size());
     mChildren.push_back(child);
     return insertedIndex;
 }

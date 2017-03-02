@@ -5,8 +5,6 @@
 #include <map>
 #include <vector>
 
-#include <FalconEngine/Context/GameEngineGraphicsSettings.h>
-#include <FalconEngine/Graphics/Renderer/Resources/Texture2dArray.h>
 #include <FalconEngine/Graphics/Renderer/Viewport.h>
 
 namespace FalconEngine
@@ -42,6 +40,7 @@ class IndexBuffer;
 class Texture;
 class Texture1d;
 class Texture2d;
+class Texture2dArray;
 class Texture3d;
 class Sampler;
 

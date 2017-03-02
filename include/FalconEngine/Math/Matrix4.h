@@ -5,6 +5,7 @@
 namespace FalconEngine
 {
 
+class Matrix3f;
 class Quaternion;
 class Vector3f;
 
@@ -66,19 +67,20 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
     Matrix4f();
-    virtual ~Matrix4f();
-
     Matrix4f(const glm::vec4& v0, const glm::vec4& v1, const glm::vec4& v2, const glm::vec4& v3);
-
     Matrix4f(
         const float& x0, const float& y0, const float& z0, const float& w0,
         const float& x1, const float& y1, const float& z1, const float& w1,
         const float& x2, const float& y2, const float& z2, const float& w2,
         const float& x3, const float& y3, const float& z3, const float& w3);
+    virtual ~Matrix4f();
 
     // Implicit Conversion
     Matrix4f(const glm::mat4& m);
-    operator glm::mat4();
+    operator glm::mat4() const;
+
+    // Explicit Conversion
+    explicit operator Matrix3f() const;
 };
 
 /************************************************************************/

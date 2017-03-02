@@ -32,7 +32,7 @@ function(add_sample sampleProject sampleDir)
         FalconEngine.Math.lib
         ${FALCON_ENGINE_CONTENT_PIPELINE_EXTRA_BINRARY_FILES})
 
-    set_target_properties(${sampleProject} PROPERTIES COMPILE_FLAGS "/MTd")
+    set_target_properties(${sampleProject} PROPERTIES COMPILE_FLAGS "/MTd /ZI")
     set_target_properties(${sampleProject} PROPERTIES LINK_FLAGS "/IMPLIB:")
     #set_target_properties(${sampleProject} PROPERTIES LINK_FLAGS "/INCREMENTAL /IMPLIB:")
     set_target_properties(${sampleProject} PROPERTIES FOLDER "FalconEngine Sample Targets")

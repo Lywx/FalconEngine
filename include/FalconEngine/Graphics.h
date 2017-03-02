@@ -5,12 +5,6 @@
 
 #include <FalconEngine/GraphicsInclude.h>
 
-#include <FalconEngine/Graphics/Renderer/BitmapFont.h>
-#include <FalconEngine/Graphics/Renderer/BitmapFontRenderer.h>
-#include <FalconEngine/Graphics/Renderer/BitmapGlyph.h>
-#include <FalconEngine/Graphics/Renderer/BitmapLine.h>
-#include <FalconEngine/Graphics/Renderer/BitmapText.h>
-#include <FalconEngine/Graphics/Renderer/BitmapWord.h>
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Primitives.h>
@@ -23,6 +17,13 @@
 #include <FalconEngine/Graphics/Renderer/VisualPoints.h>
 #include <FalconEngine/Graphics/Renderer/VisualQuads.h>
 #include <FalconEngine/Graphics/Renderer/VisualTriangles.h>
+
+#include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
+#include <FalconEngine/Graphics/Renderer/Font/BitmapFontRenderer.h>
+#include <FalconEngine/Graphics/Renderer/Font/BitmapGlyph.h>
+#include <FalconEngine/Graphics/Renderer/Font/BitmapLine.h>
+#include <FalconEngine/Graphics/Renderer/Font/BitmapText.h>
+#include <FalconEngine/Graphics/Renderer/Font/BitmapWord.h>
 
 #include <FalconEngine/Graphics/Renderer/Resources/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resources/IndexBuffer.h>

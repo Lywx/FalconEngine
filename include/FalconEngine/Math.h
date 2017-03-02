@@ -13,6 +13,7 @@
 #include <FalconEngine/Math/Function.h>
 #include <FalconEngine/Math/Handedness.h>
 #include <FalconEngine/Math/Integer.h>
+#include <FalconEngine/Math/Matrix3.h>
 #include <FalconEngine/Math/Matrix4.h>
 #include <FalconEngine/Math/Quaternion.h>
 #include <FalconEngine/Math/Rectangle.h>

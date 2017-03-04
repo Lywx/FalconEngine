@@ -5,16 +5,16 @@
 namespace FalconEngine
 {
 
-class VisualQuads;
-using VisualQuadsSharedPtr = std::shared_ptr<VisualQuads>;
-
 class VertexBuffer;
 using VertexBufferSharedPtr = std::shared_ptr<VertexBuffer>;
+
+class Visual;
+using VisualSharedPtr = std::shared_ptr<Visual>;
 
 class BitmapFontBatch
 {
 public:
-    BitmapFontBatch(VertexBufferSharedPtr buffer, VisualQuadsSharedPtr quads) :
+    BitmapFontBatch(VertexBufferSharedPtr buffer, VisualSharedPtr quads) :
         mBuffer(buffer),
         mQuads(quads)
     {
@@ -27,7 +27,7 @@ public:
     size_t                        mBufferDataIndex = 0;
     size_t                        mBufferGlyphNum = 0;
 
-    VisualQuadsSharedPtr          mQuads;
+    VisualSharedPtr               mQuads;
 };
 
 }

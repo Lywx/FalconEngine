@@ -6,6 +6,7 @@
 
 #include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Content/Path.h>
+#include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
 #include <FalconEngine/Graphics/Renderer/Resources/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resources/IndexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resources/Texture2d.h>
@@ -130,13 +131,13 @@ LoadMaterialTexture(
     _IN_ aiTextureType     materialType)
 {
     // NOTE(Wuxiang): I think most material only has one texture for each texture type.
-    int textureNum = material->GetTextureCount(materialType);
+    auto textureNum = material->GetTextureCount(materialType);
     if (textureNum > 0)
     {
         auto assetManager = AssetManager::GetInstance();
 
         // Walk through every piece of material and load texture if needed
-        for (int textureIndex = 0; textureIndex < textureNum; ++textureIndex)
+        for (decltype(textureNum) textureIndex = 0; textureIndex < textureNum; ++textureIndex)
         {
             // Read texture file path.
             aiString textureFilePath;
@@ -204,7 +205,8 @@ CreateMesh(
         auto vertexGroup  = CreateModelVertexBuffer(aiMesh);
         auto indexBuffer  = CreateModelIndexBuffer(aiMesh);
 
-        mesh = make_shared<Mesh>(vertexFormat, vertexGroup, indexBuffer);
+        auto primitives = make_shared<PrimitiveTriangles>(vertexFormat, vertexGroup, indexBuffer);
+        mesh = make_shared<Mesh>(primitives);
     }
 
     // Load texture data in term of material.
@@ -241,7 +243,7 @@ CreateNode(
 }
 
 void
-AssetImporter::ImportModel(Model *model, const std::string& modelFilePath)
+AssetImporter::Import(Model *model, const std::string& modelFilePath)
 {
     // Load model using Assimp
     static Assimp::Importer sAiModelImporter;

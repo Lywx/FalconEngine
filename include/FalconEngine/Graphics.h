@@ -7,16 +7,16 @@
 
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
-#include <FalconEngine/Graphics/Renderer/Primitives.h>
+#include <FalconEngine/Graphics/Renderer/Primitive.h>
+#include <FalconEngine/Graphics/Renderer/PrimitiveLines.h>
+#include <FalconEngine/Graphics/Renderer/PrimitivePoints.h>
+#include <FalconEngine/Graphics/Renderer/PrimitiveQuads.h>
+#include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
 #include <FalconEngine/Graphics/Renderer/Viewport.h>
 #include <FalconEngine/Graphics/Renderer/Visual.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
-#include <FalconEngine/Graphics/Renderer/VisualLines.h>
-#include <FalconEngine/Graphics/Renderer/VisualPoints.h>
-#include <FalconEngine/Graphics/Renderer/VisualQuads.h>
-#include <FalconEngine/Graphics/Renderer/VisualTriangles.h>
 
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFontRenderer.h>

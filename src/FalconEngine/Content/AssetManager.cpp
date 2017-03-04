@@ -223,7 +223,7 @@ AssetManager::LoadModelInternal(const std::string& modelFilePath)
     // beneficial for model texture loading.
     auto model = make_shared<Model>(GetFileStem(modelFilePath), modelFilePath);
     model->mFileType = AssetSource::Normal;
-    AssetImporter::ImportModel(model.get(), modelFilePath);
+    AssetImporter::Import(model.get(), modelFilePath);
     return model;
 }
 

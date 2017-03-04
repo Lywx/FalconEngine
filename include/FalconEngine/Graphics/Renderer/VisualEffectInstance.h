@@ -65,12 +65,9 @@ public:
     SetShaderSampler(int passIndex, int textureUnit, const Sampler *sampler);
 
 protected:
-
     VisualEffectSharedPtr                          mEffect;
     std::vector<VisualEffectInstancePassUniquePtr> mPassList; // Passes contained in this effect.
 };
-
-using VisualEffectInstanceSharedPtr = std::shared_ptr<VisualEffectInstance>;
 
 template <typename T>
 ShaderUniformValue<T> *
@@ -85,7 +82,5 @@ VisualEffectInstance::SetShaderUniform(int passIndex, ShaderUniformValueSharedPt
 {
     mPassList.at(passIndex)->SetShaderUniform(uniform);
 }
-
-typedef std::shared_ptr<VisualEffectInstance> VisualEffectInstanceSharedPtr;
 
 }

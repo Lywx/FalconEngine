@@ -1,30 +1,37 @@
-#include <FalconEngine/Graphics/Renderer/VisualLines.h>
+#include <FalconEngine/Graphics/Renderer/PrimitiveLines.h>
 #include <FalconEngine/Graphics/Renderer/Resources/VertexGroup.h>
 
 namespace FalconEngine
 {
 
+FALCON_ENGINE_RTTI_IMPLEMENT(PrimitiveLines, Primitive);
+
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-VisualLines::VisualLines(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, bool vertexStrip) :
-    Visual(
-        vertexStrip
-        ? PrimitiveType::LineStrip
-        : PrimitiveType::Line, vertexFormat, vertexGroup, nullptr),
+PrimitiveLines::PrimitiveLines(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, bool vertexStrip) :
+    Primitive(vertexStrip
+              ? PrimitiveType::LineStrip
+              : PrimitiveType::Line, vertexFormat, vertexGroup, nullptr),
     mSegmentStrip(vertexStrip)
 {
 }
 
-VisualLines::~VisualLines()
+PrimitiveLines::~PrimitiveLines()
 {
 }
 
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+bool
+PrimitiveLines::SegmentStrip() const
+{
+    return mSegmentStrip;
+}
+
 size_t
-VisualLines::GetSegmentNum() const
+PrimitiveLines::GetSegmentNum() const
 {
     return mSegmentStrip
            ? mVertexGroup->GetVertexNum() - 1

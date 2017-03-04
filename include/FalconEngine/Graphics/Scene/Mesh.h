@@ -1,17 +1,30 @@
 #pragma once
 
 #include <FalconEngine/Graphics/SceneInclude.h>
-
-#include <vector>
-
-#include <FalconEngine/Graphics/Renderer/VisualTriangles.h>
+#include <FalconEngine/Graphics/Renderer/Visual.h>
 
 namespace FalconEngine
 {
 
+class IndexBuffer;
+using IndexBufferSharedPtr = std::shared_ptr<IndexBuffer>;
+
 class Material;
 using MaterialSharedPtr = std::shared_ptr<Material>;
-class Mesh : public VisualTriangles
+
+class PrimitiveTriangles;
+using PrimitiveTrianglesSharedPtr = std::shared_ptr<PrimitiveTriangles>;
+
+class VertexBuffer;
+using VertexBufferSharedPtr = std::shared_ptr<VertexBuffer>;
+
+class VertexFormat;
+using VertexFormatSharedPtr = std::shared_ptr<VertexFormat>;
+
+class VertexGroup;
+using VertexGroupSharedPtr = std::shared_ptr<VertexGroup>;
+
+class Mesh : public Visual
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
@@ -19,25 +32,20 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Mesh(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer);
+    explicit Mesh(PrimitiveTrianglesSharedPtr primitive);
     virtual ~Mesh();
 
-    void
-    SetMaterial(MaterialSharedPtr material)
-    {
-        mMaterial = material;
-    }
-
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
     const Material *
-    GetMaterial() const
-    {
-        return mMaterial.get();
-    }
+    GetMaterial() const;
+
+    void
+    SetMaterial(MaterialSharedPtr material);
 
 protected:
     MaterialSharedPtr mMaterial;
 };
-
-typedef std::shared_ptr<Mesh> MeshSharedPtr;
 
 }

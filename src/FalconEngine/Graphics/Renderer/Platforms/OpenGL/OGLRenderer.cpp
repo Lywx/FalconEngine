@@ -1,7 +1,9 @@
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
-#include <FalconEngine/Graphics/Renderer/VisualLines.h>
-#include <FalconEngine/Graphics/Renderer/VisualPoints.h>
-#include <FalconEngine/Graphics/Renderer/VisualTriangles.h>
+
+#include <FalconEngine/Graphics/Renderer/PrimitiveLines.h>
+#include <FalconEngine/Graphics/Renderer/PrimitivePoints.h>
+#include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
+#include <FalconEngine/Graphics/Renderer/Visual.h>
 #include <FalconEngine/Graphics/Renderer/Resources/IndexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/States/CullState.h>
 #include <FalconEngine/Graphics/Renderer/States/OffsetState.h>
@@ -358,15 +360,15 @@ Renderer::SwapBuffers()
 }
 
 void
-Renderer::DrawPrimitive(const Visual *visual)
+Renderer::DrawPrimitive(const Primitive *primitive)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(visual);
+    FALCON_ENGINE_CHECK_NULLPTR(primitive);
 
-    PrimitiveType primitiveType = visual->GetPrimitiveType();
+    PrimitiveType primitiveType = primitive->GetPrimitiveType();
     const GLenum  primitiveMode = OpenGLPrimitiveType[int(primitiveType)];
     if (primitiveType == PrimitiveType::Point)
     {
-        auto vertexNum = visual->GetVertexNum();
+        auto vertexNum = primitive->GetVertexNum();
         if (vertexNum > 0)
         {
             glDrawArrays(primitiveMode, 0, GLuint(vertexNum));
@@ -374,7 +376,7 @@ Renderer::DrawPrimitive(const Visual *visual)
     }
     else if (primitiveType == PrimitiveType::Line)
     {
-        auto vertexNum = visual->GetVertexNum();
+        auto vertexNum = primitive->GetVertexNum();
         if (vertexNum > 0)
         {
             glDrawArrays(primitiveMode, 0, GLuint(vertexNum));
@@ -382,7 +384,7 @@ Renderer::DrawPrimitive(const Visual *visual)
     }
     else if (primitiveType == PrimitiveType::LineStrip)
     {
-        auto vertexNum = visual->GetVertexNum();
+        auto vertexNum = primitive->GetVertexNum();
         if (vertexNum > 0)
         {
             glDrawArrays(primitiveMode, 0, GLuint(vertexNum));
@@ -390,10 +392,10 @@ Renderer::DrawPrimitive(const Visual *visual)
     }
     else if (primitiveType == PrimitiveType::Triangle)
     {
-        auto vertexNum = visual->GetVertexNum();
+        auto vertexNum = primitive->GetVertexNum();
 
         // When use index buffer
-        auto indexBuffer = visual->GetIndexBuffer();
+        auto indexBuffer = primitive->GetIndexBuffer();
         if (indexBuffer)
         {
             auto indexNum = indexBuffer->GetElementNum();

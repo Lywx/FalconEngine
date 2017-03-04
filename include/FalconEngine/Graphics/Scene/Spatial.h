@@ -47,6 +47,4 @@ public:
     Spatial *mParent;
 };
 
-typedef std::shared_ptr<Spatial> SpatialSharedPtr;
-
 }

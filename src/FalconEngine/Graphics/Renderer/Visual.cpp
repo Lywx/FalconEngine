@@ -3,18 +3,13 @@
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(Visual, Primitives);
+FALCON_ENGINE_RTTI_IMPLEMENT(Visual, Object);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Visual::Visual(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat) :
-    Primitives(primitiveType, vertexFormat)
-{
-}
-
-Visual::Visual(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer) :
-    Primitives(primitiveType, vertexFormat, vertexGroup, indexBuffer)
+Visual::Visual(PrimitiveSharedPtr primitive) :
+    mPrimitive(primitive)
 {
 }
 
@@ -35,6 +30,18 @@ void
 Visual::SetEffectInstance(VisualEffectInstanceSharedPtr effectInstance)
 {
     mEffectInstance = effectInstance;
+}
+
+const Primitive *
+Visual::GetPrimitive() const
+{
+    return mPrimitive.get();
+}
+
+void
+Visual::SetPrimitive(PrimitiveSharedPtr primitive)
+{
+    mPrimitive = primitive;
 }
 
 }

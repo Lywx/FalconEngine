@@ -14,6 +14,7 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 GameEngineGraphics::GameEngineGraphics() :
+    mEnitityRenderer(nullptr),
     mFontRenderer(nullptr),
     mMasterRenderer(nullptr)
 {
@@ -49,6 +50,14 @@ void
 GameEngineGraphics::ClearBuffers(Vector4f color, float depth, unsigned stencil)
 {
     mMasterRenderer->ClearBuffers(color, depth, stencil);
+}
+
+void
+GameEngineGraphics::Draw(const Visual *visual)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(visual);
+
+    //mEntityRenderer->Draw();
 }
 
 void

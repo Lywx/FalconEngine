@@ -1,20 +1,20 @@
-#include <FalconEngine/Graphics/Renderer/Primitives.h>
+#include <FalconEngine/Graphics/Renderer/Primitive.h>
 #include <FalconEngine/Graphics/Renderer/Resources/VertexGroup.h>
 
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(Primitives, Spatial);
+FALCON_ENGINE_RTTI_IMPLEMENT(Primitive, Object);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Primitives::Primitives(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat) :
-    Primitives(primitiveType, vertexFormat, nullptr, nullptr)
+Primitive::Primitive(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat) :
+    Primitive(primitiveType, vertexFormat, nullptr, nullptr)
 {
 }
 
-Primitives::Primitives(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer) :
+Primitive::Primitive(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer) :
     mPrimitiveType(primitiveType),
     mVertexGroup(vertexGroup),
     mVertexFormat(vertexFormat),
@@ -25,27 +25,57 @@ Primitives::Primitives(PrimitiveType primitiveType, VertexFormatSharedPtr vertex
     // class's constructor.
 }
 
-Primitives::~Primitives()
+Primitive::~Primitive()
 {
 }
 
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+PrimitiveType
+Primitive::GetPrimitiveType() const
+{
+    return mPrimitiveType;
+}
+
 size_t
-Primitives::GetVertexNum() const
+Primitive::GetVertexNum() const
 {
     return mVertexGroup->GetVertexNum();
 }
 
+const VertexFormat *
+Primitive::GetVertexFormat() const
+{
+    return mVertexFormat.get();
+}
+
+void
+Primitive::SetVertexFormat(VertexFormatSharedPtr vertexFormat)
+{
+    mVertexFormat = vertexFormat;
+}
+
+const IndexBuffer *
+Primitive::GetIndexBuffer() const
+{
+    return mIndexBuffer.get();
+}
+
+void
+Primitive::SetIndexBuffer(IndexBufferSharedPtr indexBuffer)
+{
+    mIndexBuffer = indexBuffer;
+}
+
 const VertexGroup *
-Primitives::GetVertexGroup() const
+Primitive::GetVertexGroup() const
 {
     return mVertexGroup.get();
 }
 
 void
-Primitives::SetVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer, int offset, int stride)
+Primitive::SetVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer, int offset, int stride)
 {
     if (mVertexGroup->ContainVertexBuffer(bindingIndex, vertexBuffer))
     {

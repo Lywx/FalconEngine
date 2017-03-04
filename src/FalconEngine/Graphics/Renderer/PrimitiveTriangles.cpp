@@ -1,26 +1,26 @@
-#include <FalconEngine/Graphics/Renderer/VisualTriangles.h>
+#include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
 #include <FalconEngine/Graphics/Renderer/Resources/IndexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resources/VertexGroup.h>
 
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(VisualTriangles, Visual);
+FALCON_ENGINE_RTTI_IMPLEMENT(PrimitiveTriangles, Primitive);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-VisualTriangles::VisualTriangles(VertexFormatSharedPtr vertexFormat) :
-    Visual(PrimitiveType::Triangle, vertexFormat)
+PrimitiveTriangles::PrimitiveTriangles(VertexFormatSharedPtr vertexFormat) :
+    Primitive(PrimitiveType::Triangle, vertexFormat)
 {
 }
 
-VisualTriangles::VisualTriangles(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer) :
-    Visual(PrimitiveType::Triangle, vertexFormat, vertexGroup, indexBuffer)
+PrimitiveTriangles::PrimitiveTriangles(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer) :
+    Primitive(PrimitiveType::Triangle, vertexFormat, vertexGroup, indexBuffer)
 {
 }
 
-VisualTriangles::~VisualTriangles()
+PrimitiveTriangles::~PrimitiveTriangles()
 {
 }
 
@@ -28,7 +28,7 @@ VisualTriangles::~VisualTriangles()
 /* Public Members                                                       */
 /************************************************************************/
 size_t
-VisualTriangles::GetTriangleNum() const
+PrimitiveTriangles::GetTriangleNum() const
 {
     if (mIndexBuffer)
     {

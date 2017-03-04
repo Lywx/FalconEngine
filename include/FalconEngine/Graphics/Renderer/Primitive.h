@@ -1,6 +1,7 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Scene/Spatial.h>
+#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Core/Object.h>
 
 namespace FalconEngine
 {
@@ -27,22 +28,19 @@ using VertexFormatSharedPtr = std::shared_ptr<VertexFormat>;
 class VertexGroup;
 using VertexGroupSharedPtr = std::shared_ptr<VertexGroup>;
 
-class Primitives : public Spatial
+class Primitive : public Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
 protected:
-    Primitives(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat);
-    Primitives(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer);
+    Primitive(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat);
+    Primitive(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer);
 public:
-    virtual ~Primitives();
+    virtual ~Primitive();
 
 public:
     PrimitiveType
-    GetPrimitiveType() const
-    {
-        return mPrimitiveType;
-    }
+    GetPrimitiveType() const;
 
     /************************************************************************/
     /* Vertex Buffer Management                                             */
@@ -57,28 +55,16 @@ public:
     GetVertexNum() const;
 
     const VertexFormat *
-    GetVertexFormat() const
-    {
-        return mVertexFormat.get();
-    }
+    GetVertexFormat() const;
 
     void
-    SetVertexFormat(VertexFormatSharedPtr vertexFormat)
-    {
-        mVertexFormat = vertexFormat;
-    }
+    SetVertexFormat(VertexFormatSharedPtr vertexFormat);
 
     const IndexBuffer *
-    GetIndexBuffer() const
-    {
-        return mIndexBuffer.get();
-    }
+    GetIndexBuffer() const;
 
     void
-    SetIndexBuffer(IndexBufferSharedPtr indexBuffer)
-    {
-        mIndexBuffer = indexBuffer;
-    }
+    SetIndexBuffer(IndexBufferSharedPtr indexBuffer);
 
 protected:
     PrimitiveType         mPrimitiveType;

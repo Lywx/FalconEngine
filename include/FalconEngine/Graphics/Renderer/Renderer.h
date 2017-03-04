@@ -7,6 +7,7 @@
 
 #include <FalconEngine/Graphics/Renderer/Viewport.h>
 #include "VisualEffectInstancePass.h"
+#include "Primitive.h"
 
 namespace FalconEngine
 {
@@ -103,7 +104,7 @@ private:
     void
     InitializeExceptPlatform(int width, int height);
 
-public:
+internal:
     /************************************************************************/
     /* Vertex Buffer Management                                             */
     /************************************************************************/
@@ -444,7 +445,7 @@ private:
     DestroyPlatform();
 
     void
-    DrawPrimitive(const Visual *visual);
+    DrawPrimitive(const Primitive *primitive);
 
 private:
     PlatformRendererData *mData;

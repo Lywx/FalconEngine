@@ -6,8 +6,9 @@
 #include <FalconEngine/Core/Memory.h>
 #include <FalconEngine/Graphics/Effects/BitmapFontEffect.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
+#include <FalconEngine/Graphics/Renderer/Visual.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
-#include <FalconEngine/Graphics/Renderer/VisualQuads.h>
+#include <FalconEngine/Graphics/Renderer/PrimitiveQuads.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapLine.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapText.h>
@@ -309,7 +310,7 @@ BitmapFontRenderer::PrepareBatch(const BitmapFont *font)
     auto fontBuffer = make_shared<VertexBuffer>(sFontBufferSize, sizeof(BitmapFontVertex), BufferUsage::Dynamic);
 
     // Setup font specific visual quad.
-    shared_ptr<VisualQuads> fontQuads;
+    shared_ptr<Visual> fontQuads;
     {
         auto vertexGroup = make_shared<VertexGroup>();
         vertexGroup->SetVertexBuffer(0, fontBuffer, 0, sFontBufferVertexFormat->GetVertexAttributeStride());
@@ -317,7 +318,8 @@ BitmapFontRenderer::PrepareBatch(const BitmapFont *font)
         auto fontEffectInstance = make_shared<VisualEffectInstance>(sFontEffect);
         sFontEffect->CreateInstance(fontEffectInstance.get(), font, mWidth, mHeight);
 
-        fontQuads = make_shared<VisualQuads>(sFontBufferVertexFormat, vertexGroup);
+        auto fontQuadPrimitives = make_shared<PrimitiveQuads>(sFontBufferVertexFormat, vertexGroup);
+        fontQuads = make_shared<Visual>(fontQuadPrimitives);
         fontQuads->SetEffectInstance(fontEffectInstance);
     }
 

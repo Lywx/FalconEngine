@@ -1,6 +1,7 @@
 #include <FalconEngine/Graphics/Scene/Mesh.h>
 
 #include <FalconEngine/Content/AssetManager.h>
+#include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
 #include <FalconEngine/Graphics/Scene/Model.h>
 
 using namespace std;
@@ -8,13 +9,13 @@ using namespace std;
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(Mesh, VisualTriangles);
+FALCON_ENGINE_RTTI_IMPLEMENT(Mesh, Visual);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Mesh::Mesh(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer) :
-    VisualTriangles(vertexFormat, vertexGroup, indexBuffer)
+Mesh::Mesh(PrimitiveTrianglesSharedPtr primitives) :
+    Visual(primitives)
 {
 }
 
@@ -22,4 +23,18 @@ Mesh::~Mesh()
 {
 }
 
+/************************************************************************/
+/* Public Members                                                       */
+/************************************************************************/
+const Material *
+Mesh::GetMaterial() const
+{
+    return mMaterial.get();
+}
+
+void
+Mesh::SetMaterial(MaterialSharedPtr material)
+{
+    mMaterial = material;
+}
 }

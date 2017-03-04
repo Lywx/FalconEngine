@@ -10,7 +10,7 @@
 #include <GLFW/glfw3.h>
 #endif
 
-#include <FalconEngine/Graphics/Renderer/Primitives.h>
+#include <FalconEngine/Graphics/Renderer/Primitive.h>
 #include <FalconEngine/Graphics/Renderer/Resources/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resources/Texture.h>
 #include <FalconEngine/Graphics/Renderer/Resources/Sampler.h>

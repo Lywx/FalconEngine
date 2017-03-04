@@ -23,9 +23,9 @@ class Renderer;
 // the screen.
 #if defined(FALCON_ENGINE_PLATFORM_QT)
 #include <QtGui/QOpenGLFunctions>
-class BitmapFontRenderer : QOpenGLFunctions
+class BitmapFontRenderer sealed : QOpenGLFunctions
 #else
-class BitmapFontRenderer
+class BitmapFontRenderer sealed
 #endif
 {
 public:
@@ -33,7 +33,7 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
     BitmapFontRenderer();
-    ~BitmapFontRenderer();
+    virtual ~BitmapFontRenderer();
 
 public:
     /************************************************************************/

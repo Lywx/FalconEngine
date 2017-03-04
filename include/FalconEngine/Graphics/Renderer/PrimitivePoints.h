@@ -1,12 +1,11 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Renderer/Visual.h>
-#include <FalconEngine/Graphics/Renderer/VisualTriangles.h>
+#include <FalconEngine/Graphics/Renderer/Primitive.h>
 
 namespace FalconEngine
 {
 
-class VisualQuads : public VisualTriangles
+class PrimitivePoints : public Primitive
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
@@ -14,10 +13,12 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    VisualQuads(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup);
-    virtual ~VisualQuads();
+    explicit PrimitivePoints(VertexFormatSharedPtr vertexFormat);
+    PrimitivePoints(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup);
+    virtual ~PrimitivePoints();
 
 public:
+    virtual size_t
+    GetPointNum() const;
 };
-
 }

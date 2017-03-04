@@ -940,6 +940,8 @@ Renderer::Draw(const Visual *visual,
     // location for each vertex attribute and each uniform.
 
     FALCON_ENGINE_CHECK_NULLPTR(visual);
+    auto primitive = visual->GetPrimitive();
+
     FALCON_ENGINE_CHECK_NULLPTR(effectInstance);
     auto effect = effectInstance->GetEffect();
 
@@ -948,14 +950,14 @@ Renderer::Draw(const Visual *visual,
     // the shader.
 
     // Enable vertex attribute array.
-    auto vertexFormat = visual->GetVertexFormat();
+    auto vertexFormat = primitive->GetVertexFormat();
     Enable(vertexFormat);
 
     // Enable vertex buffer.
-    auto vertexGroup = visual->GetVertexGroup();
+    auto vertexGroup = primitive->GetVertexGroup();
     Enable(vertexGroup);
 
-    auto indexBuffer = visual->GetIndexBuffer();
+    auto indexBuffer = primitive->GetIndexBuffer();
     if (indexBuffer)
     {
         // Enable index buffer.
@@ -980,7 +982,7 @@ Renderer::Draw(const Visual *visual,
         Enable(effectPass);
 
         // Draw the primitive.
-        DrawPrimitive(visual);
+        DrawPrimitive(primitive);
 
         // Disable effect pass.
         Disable(effectPass);

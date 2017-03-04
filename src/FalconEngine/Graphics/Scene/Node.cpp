@@ -1,7 +1,5 @@
 #include <FalconEngine/Graphics/Scene/Node.h>
 
-#include <assimp/scene.h>
-
 using namespace std;
 
 namespace FalconEngine
@@ -32,6 +30,12 @@ Node::~Node()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+size_t
+Node::ChildrenNum() const
+{
+    return mChildren.size();
+}
+
 int
 Node::AttachChild(SpatialSharedPtr child)
 {

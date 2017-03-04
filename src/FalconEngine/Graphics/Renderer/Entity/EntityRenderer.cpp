@@ -1,4 +1,6 @@
-#include <FalconEngine/Graphics/Renderer/VisualPoints.h>
+#include <FalconEngine/Graphics/Renderer/Entity/EntityRenderer.h>
+
+#include <FalconEngine/Graphics/Renderer/Renderer.h>
 
 namespace FalconEngine
 {
@@ -6,27 +8,29 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-VisualPoints::VisualPoints(VertexFormatSharedPtr vertexFormat) :
-    Visual(PrimitiveType::Point, vertexFormat)
+EntityRenderer::EntityRenderer()
 {
 }
 
-VisualPoints::VisualPoints(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup) :
-    Visual(PrimitiveType::Point, vertexFormat, vertexGroup, nullptr)
-{
-}
-
-VisualPoints::~VisualPoints()
+EntityRenderer::~EntityRenderer()
 {
 }
 
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-int
-VisualPoints::GetPointNum() const
+void
+EntityRenderer::RenderBegin()
 {
-    return GetVertexNum();
 }
 
+void
+EntityRenderer::Render(Renderer *renderer, double percent)
+{
+}
+
+void
+EntityRenderer::RenderEnd()
+{
+}
 }

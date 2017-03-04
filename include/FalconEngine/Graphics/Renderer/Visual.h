@@ -1,9 +1,13 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Renderer/Primitives.h>
+#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Scene/Spatial.h>
 
 namespace FalconEngine
 {
+
+class Primitive;
+using PrimitiveSharedPtr = std::shared_ptr<Primitive>;
 
 class VisualEffectInstance;
 using VisualEffectInstanceSharedPtr = std::shared_ptr<VisualEffectInstance>;
@@ -13,16 +17,19 @@ using VisualEffectInstanceSharedPtr = std::shared_ptr<VisualEffectInstance>;
 // uniforms, textures, samplers etc used in the draw calls. However, the effect
 // instance is not required as long as you are providing another effect instance
 // during draw request.
-class Visual : public Primitives
+//
+// @remark If you would need to process primitive in different ways, the Visual
+// class is the ideal place to differentiate when drawing -- transparency, etc
+// special treatment information should be stored in this class.
+class Visual : public Spatial
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
-protected:
+public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Visual(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat);
-    Visual(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer);
+    explicit Visual(PrimitiveSharedPtr primitive);
     virtual ~Visual();
 
 public:
@@ -32,10 +39,15 @@ public:
     void
     SetEffectInstance(VisualEffectInstanceSharedPtr effectInstance);
 
+    const Primitive *
+    GetPrimitive() const;
+
+    void
+    SetPrimitive(PrimitiveSharedPtr primitives);
+
 protected:
     VisualEffectInstanceSharedPtr mEffectInstance;
+    PrimitiveSharedPtr            mPrimitive;
 };
-
-using VisualSharedPtr = std::shared_ptr<Visual>;
 
 }

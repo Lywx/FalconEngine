@@ -9,20 +9,21 @@
 namespace FalconEngine
 {
 
-struct ModelVertex
-{
-    Vector3f mPosition;
-    Vector3f mNormal;
-    Vector2f mTexCoord;
-};
-
-using ModelIndex = int;
-
 class Sampler;
 using SamplerSharedPtr = std::shared_ptr<Sampler>;
 
 class Node;
 using NodeSharedPtr = std::shared_ptr<Node>;
+
+using ModelIndex = int;
+
+class ModelVertex
+{
+public:
+    Vector3f mPosition;
+    Vector3f mNormal;
+    Vector2f mTexCoord;
+};
 
 class Model : public Asset
 {
@@ -34,29 +35,17 @@ public:
     virtual ~Model();
 
 public:
-    void
-    SetNode(NodeSharedPtr node)
-    {
-        mNode = node;
-    }
-
     NodeSharedPtr
-    GetNode()
-    {
-        return mNode;
-    }
+    GetNode();
 
     void
-    SetSampler(SamplerSharedPtr sampler)
-    {
-        mSampler = sampler;
-    }
+    SetNode(NodeSharedPtr node);
+
+    void
+    SetSampler(SamplerSharedPtr sampler);
 
     const Sampler *
-    GetSampler() const
-    {
-        return mSampler.get();
-    }
+    GetSampler() const;
 
     /************************************************************************/
     /* Model Loadtime Data                                                  */
@@ -69,8 +58,8 @@ public:
     /* Model Runtime Data                                                   */
     /************************************************************************/
 private:
-    NodeSharedPtr            mNode;                                            // Model root node.
-    SamplerSharedPtr         mSampler;                                         // Model texture sampler.
+    NodeSharedPtr    mNode;                                            // Model root node.
+    SamplerSharedPtr mSampler;                                         // Model texture sampler.
 };
 
 }

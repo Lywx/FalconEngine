@@ -24,6 +24,15 @@
 #define FALCON_ENGINE_DEBUG_MEMORY 1
 
 /************************************************************************/
+/* Development Items                                                    */
+/************************************************************************/
+#define internal public
+
+#define _IN_
+#define _IN_OUT_
+#define _OUT_
+
+/************************************************************************/
 /* Helper Items                                                         */
 /************************************************************************/
 namespace FalconEngine
@@ -70,7 +79,3 @@ CheckNullPointer(const std::shared_ptr<T> pointer, const std::string name)
 #define FALCON_ENGINE_NOT_POSSIBLE() assert(0);
 
 #define FALCON_ENGINE_THROW_EXCEPTION(information) throw std::runtime_error(information);
-
-#define _IN_
-#define _IN_OUT_
-#define _OUT_

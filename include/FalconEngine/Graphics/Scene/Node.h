@@ -2,17 +2,21 @@
 
 #include <vector>
 
-#include <FalconEngine/Graphics/Scene/Mesh.h>
 #include <FalconEngine/Graphics/Scene/Spatial.h>
 
 namespace FalconEngine
 {
+
+using SpatialSharedPtr = std::shared_ptr<Spatial>;
 
 class Node : public Spatial
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
 public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
     Node();
     ~Node();
 
@@ -90,13 +94,5 @@ protected:
 private:
     std::vector<SpatialSharedPtr> mChildren;
 };
-
-inline size_t
-Node::ChildrenNum() const
-{
-    return mChildren.size();
-}
-
-typedef std::shared_ptr<Node> NodeSharedPtr;
 
 }

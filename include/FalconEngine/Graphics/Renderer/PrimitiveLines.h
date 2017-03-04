@@ -1,11 +1,11 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Renderer/Visual.h>
+#include <FalconEngine/Graphics/Renderer/Primitive.h>
 
 namespace FalconEngine
 {
 
-class VisualLines : public Visual
+class PrimitiveLines : public Primitive
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
@@ -13,20 +13,17 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    VisualLines(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, bool vertexStrip = false);
-    virtual ~VisualLines();
+    PrimitiveLines(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, bool vertexStrip = false);
+    virtual ~PrimitiveLines();
 
 public:
     bool
-    IsSegmentStrip() const
-    {
-        return mSegmentStrip;
-    }
+    SegmentStrip() const;
 
     virtual size_t
     GetSegmentNum() const;
 
 protected:
-    bool   mSegmentStrip;
+    bool mSegmentStrip;
 };
 }

@@ -12,7 +12,7 @@ PlatformVertexFormat::PlatformVertexFormat(const VertexFormat *vertexFormat)
     glCreateVertexArrays(1, &mVertexArray);
     glBindVertexArray(mVertexArray);
 
-    for (auto& vertexAttrib : vertexFormat->mVertexAttributeVector)
+    for (auto& vertexAttrib : vertexFormat->mVertexAttributeList)
     {
         glVertexAttribFormat(vertexAttrib.mLocation, vertexAttrib.mChannel,
                              OpenGLShaderAttributeType[int(vertexAttrib.mType)],

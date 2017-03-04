@@ -1,14 +1,17 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
-#include <FalconEngine/Graphics/Renderer/Entity/Entity.h>
+#include <FalconEngine/Graphics/SceneInclude.h>
 
 namespace FalconEngine
 {
 
-class Charadcter : public Entity
+class Character : public Entity
 {
+    FALCON_ENGINE_RTTI_DECLARE;
 
+public:
+    explicit Character(const NodeSharedPtr node);
+    virtual ~Character();
 };
 
 }

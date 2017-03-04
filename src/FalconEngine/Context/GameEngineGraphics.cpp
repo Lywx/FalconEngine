@@ -4,6 +4,7 @@
 #include <FalconEngine/Context/GameEngineGraphicsSettings.h>
 #include <FalconEngine/Context/GameEngineSettings.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
+#include <FalconEngine/Graphics/Renderer/Entity/EntityRenderer.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFontRenderer.h>
 #include <FalconEngine/Math/Color.h>
 
@@ -14,7 +15,7 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 GameEngineGraphics::GameEngineGraphics() :
-    mEnitityRenderer(nullptr),
+    mEntityRenderer(nullptr),
     mFontRenderer(nullptr),
     mMasterRenderer(nullptr)
 {
@@ -53,11 +54,11 @@ GameEngineGraphics::ClearBuffers(Vector4f color, float depth, unsigned stencil)
 }
 
 void
-GameEngineGraphics::Draw(const Visual *visual)
+GameEngineGraphics::Draw(const Entity *enitity)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(visual);
+    FALCON_ENGINE_CHECK_NULLPTR(enitity);
 
-    //mEntityRenderer->Draw();
+    mEntityRenderer->Draw(enitity);
 }
 
 void
@@ -85,10 +86,11 @@ GameEngineGraphics::Initialize(
 
     mMasterRenderer = std::make_shared<Renderer>(data, mSettings->mWidth, mSettings->mHeight);
 
-    {
-        mFontRenderer = std::make_shared<BitmapFontRenderer>();
-        mFontRenderer->Initialize(mSettings->mWidth, mSettings->mHeight);
-    }
+    mEntityRenderer = std::make_shared<EntityRenderer>();
+    mEntityRenderer->Initialize();
+
+    mFontRenderer = std::make_shared<BitmapFontRenderer>();
+    mFontRenderer->Initialize(mSettings->mWidth, mSettings->mHeight);
 
     InitializePlatform(data);
 }
@@ -101,18 +103,21 @@ GameEngineGraphics::Destroy()
 void
 GameEngineGraphics::RenderBegin()
 {
+    mEntityRenderer->RenderBegin();
     mFontRenderer->RenderBegin();
 }
 
 void
 GameEngineGraphics::Render(double percent)
 {
+    mEntityRenderer->Render(mMasterRenderer.get(), percent);
     mFontRenderer->Render(mMasterRenderer.get(), percent);
 }
 
 void
 GameEngineGraphics::RenderEnd()
 {
+    mEntityRenderer->RenderEnd();
     mFontRenderer->RenderEnd();
 
     // Has to be the last.

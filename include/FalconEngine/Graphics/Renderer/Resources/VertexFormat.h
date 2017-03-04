@@ -44,7 +44,7 @@ public:
 public:
     // NOTE(Wuxiang): The vertex attribute vector is assumed to be in order of
     // layout location in OpenGL. This rule is enforced by the PushAttribute function.
-    VertexAttributeVector mVertexAttributeVector;
+    VertexAttributeVector mVertexAttributeList;
 
 private:
     int                   mVertexAttributeOffset;

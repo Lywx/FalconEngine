@@ -1,9 +1,12 @@
 #pragma once
 
 #include <FalconEngine/GraphicsInclude.h>
+#include <vector>
 
 namespace FalconEngine
 {
+
+class Entity;
 
 class Renderer;
 
@@ -26,7 +29,7 @@ public:
     /* Rendering API                                                        */
     /************************************************************************/
     void
-    Draw();
+    Draw(const Entity *entity);
 
     /************************************************************************/
     /* Rendering Engine API                                                 */
@@ -42,6 +45,9 @@ public:
 
     void
     RenderEnd();
+
+private:
+    std::vector<const Entity *> mEntityList;
 };
 
 }

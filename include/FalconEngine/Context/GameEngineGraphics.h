@@ -21,8 +21,8 @@ class BitmapFontRenderer;
 using BitmapFontRendererSharedPtr = std::shared_ptr<BitmapFontRenderer>;
 class BitmapText;
 
-class EnitityRenderer;
-using EnitityRendererSharedPtr = std::shared_ptr<EnitityRenderer>;
+class EntityRenderer;
+using EntityRendererSharedPtr = std::shared_ptr<EntityRenderer>;
 
 /************************************************************************/
 /* General Renderer                                                     */
@@ -74,7 +74,7 @@ public:
     ClearBuffers(Vector4f color, float depth, unsigned int stencil);
 
     void
-    Draw(const Visual *visual);
+    Draw(const Entity *enitity);
 
     void
     DrawString(const BitmapFont   *font,
@@ -115,7 +115,7 @@ private:
     Destroy();
 
 protected:
-    EnitityRendererSharedPtr            mEnitityRenderer;
+    EntityRendererSharedPtr            mEntityRenderer;
     BitmapFontRendererSharedPtr         mFontRenderer;
     RendererSharedPtr                   mMasterRenderer;
     GameEngineGraphicsSettingsSharedPtr mSettings;

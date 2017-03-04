@@ -137,6 +137,9 @@ LoadMaterialTexture(
         auto assetManager = AssetManager::GetInstance();
 
         // Walk through every piece of material and load texture if needed
+
+        // NOTE(Wuxiang): Since currently we only support one material per type,
+        // we return immediately after get the texture at index 0.
         for (decltype(textureNum) textureIndex = 0; textureIndex < textureNum; ++textureIndex)
         {
             // Read texture file path.

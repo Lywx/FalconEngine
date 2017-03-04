@@ -23,6 +23,10 @@ public:
     virtual ~Light();
 
 public:
+    LightType
+    GetLightType() const;
+
+public:
     /************************************************************************/
     /* General Members                                                      */
     /************************************************************************/
@@ -51,13 +55,6 @@ public:
     float    mCosAngle;  // default: -1
     float    mSinAngle;  // default:  0
     float    mExponent;  // default:  1
-
-
-    LightType
-    GetLightType() const
-    {
-        return mLightType;
-    }
 
 private:
     LightType mLightType;

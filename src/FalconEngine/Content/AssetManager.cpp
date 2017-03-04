@@ -181,7 +181,7 @@ AssetManager::LoadFontInternal(const std::string& fontAssetPath)
             // Load the first texture, then, use the texture metadata to create texture array.
             Texture2dArraySharedPtr fontPageTextureArray;
             {
-                auto fontPage0TextureAssetName = font->mTextureArchiveNameVector[0];
+                auto fontPage0TextureAssetName = font->mTextureArchiveNameList[0];
                 auto fontPage0TextureAssetPath = fontAssetDirPath + fontPage0TextureAssetName;
                 auto fontPage0Texture = LoadTexture(fontPage0TextureAssetPath);
 
@@ -194,7 +194,7 @@ AssetManager::LoadFontInternal(const std::string& fontAssetPath)
             // Load the other textures.
             for (int fontPageId = 0; fontPageId < font->mTexturePages; ++fontPageId)
             {
-                auto textureAssetName = font->mTextureArchiveNameVector[fontPageId];
+                auto textureAssetName = font->mTextureArchiveNameList[fontPageId];
                 auto textureAssetPath = fontAssetDirPath + textureAssetName;
 
                 auto fontPageTexture = LoadTexture(textureAssetPath);

@@ -16,4 +16,12 @@ Light::~Light()
 {
 }
 
+/************************************************************************/
+/* Constructors and Destructor                                          */
+/************************************************************************/
+LightType Light::GetLightType() const
+{
+    return mLightType;
+}
+
 }

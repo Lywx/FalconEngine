@@ -36,6 +36,7 @@ private:
     const BitmapFont *mFontDisplay;
 
     Model            *mModelNanosuit;
+    EntitySharedPtr   mModelPerson;
     NodeSharedPtr     mScene;
 };
 

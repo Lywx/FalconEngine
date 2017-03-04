@@ -24,7 +24,7 @@ public:
     // elements are not all guaranteed to be non-null. Thus, when you
     // iterate over the array and access children with GetChild(...), you
     // should test the return pointer to be non-null before dereferencing it.
-    size_t
+    int
     ChildrenNum() const;
 
     // @summary Attach a child to this node. If the function succeeds, the return
@@ -72,6 +72,13 @@ public:
     SpatialSharedPtr
     DetachChildAt(size_t i);
 
+    // @summary Get the child at the specified index. If 0 <= i < GetNumChildren(),
+    // the function succeeds and returns the child at that index--keep in mind
+    // that child[i] could very well be null. If i is out of range, the
+    // function returns null.
+    SpatialSharedPtr
+    GetChildAt(size_t i);
+
     // The same comments for AttachChild apply here regarding the inability
     // to have multiple parents. If 0 <= i < ChildrenNum(), the function
     // succeeds and returns i. If i is out of range, the function *still*
@@ -79,13 +86,6 @@ public:
     // value is the previous child stored at index i.
     SpatialSharedPtr
     SetChild(size_t i, SpatialSharedPtr child);
-
-    // @summary Get the child at the specified index. If 0 <= i < GetNumChildren(),
-    // the function succeeds and returns the child at that index--keep in mind
-    // that child[i] could very well be null. If i is out of range, the
-    // function returns null.
-    SpatialSharedPtr
-    ChildAt(size_t i);
 
 protected:
     virtual void

@@ -32,7 +32,7 @@ public:
 protected:
     // NOTE(Wuxiang): The Texture2D should not be released before owner of them
     // being released.
-    std::vector<Texture2dSharedPtr> mTexture2dVector;
+    std::vector<Texture2dSharedPtr> mTexture2dList;
 };
 
 }

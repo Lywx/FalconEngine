@@ -22,13 +22,13 @@ VertexFormat::~VertexFormat()
 int
 VertexFormat::GetVertexAttributeNum() const
 {
-    return int(mVertexAttributeVector.size());
+    return int(mVertexAttributeList.size());
 }
 
 VertexAttribute&
 VertexFormat::GetVertexAttribute(int attributeIndex)
 {
-    return mVertexAttributeVector.at(attributeIndex);
+    return mVertexAttributeList.at(attributeIndex);
 }
 
 int
@@ -47,7 +47,7 @@ VertexFormat::GetVertexAttributeStride() const
 void
 VertexFormat::PushVertexAttribute(int attributeLocation, std::string attributeName, VertexAttributeType attributeType, bool attributeNormalized, int attributeBindingIndex)
 {
-    if (attributeLocation != mVertexAttributeVector.size())
+    if (attributeLocation != mVertexAttributeList.size())
     {
         // NOTE(Wuxiang): It is not supported for out of order attribute registration.
         FALCON_ENGINE_NOT_SUPPORT();
@@ -59,8 +59,8 @@ VertexFormat::PushVertexAttribute(int attributeLocation, std::string attributeNa
     }
 
     // NOTE(Wuxiang): mVertexAttributeOffset is summed
-    mVertexAttributeVector.push_back(VertexAttribute(attributeLocation, attributeName, attributeType, attributeNormalized, mVertexAttributeOffset, attributeBindingIndex));
-    mVertexAttributeOffset += VertexAttributeSize[int(mVertexAttributeVector.back().mType)];
+    mVertexAttributeList.push_back(VertexAttribute(attributeLocation, attributeName, attributeType, attributeNormalized, mVertexAttributeOffset, attributeBindingIndex));
+    mVertexAttributeOffset += VertexAttributeSize[int(mVertexAttributeList.back().mType)];
 }
 
 void

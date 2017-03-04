@@ -64,8 +64,8 @@ public:
     int                           mTextureHeight;
     int                           mTexturePages;                               // Font texture page number
 
-    std::vector<std::string>      mTextureArchiveNameVector;                   // Font raw texture filenames, index is the page id
-    std::vector<std::string>      mTextureFileNameVector;                      // Font texture archive filenames, index is the page id
+    std::vector<std::string>      mTextureArchiveNameList;                   // Font raw texture filenames, index is the page id
+    std::vector<std::string>      mTextureFileNameList;                      // Font texture archive filenames, index is the page id
 
     void
     SetSize(double size)
@@ -136,8 +136,8 @@ public:
         ar << mTextureHeight;
         ar << mTexturePages;
 
-        ar << mTextureArchiveNameVector;
-        ar << mTextureFileNameVector;
+        ar << mTextureArchiveNameList;
+        ar << mTextureFileNameList;
     }
 
     template<class Archive>
@@ -159,8 +159,8 @@ public:
         ar >> mTextureHeight;
         ar >> mTexturePages;
 
-        ar >> mTextureArchiveNameVector;
-        ar >> mTextureFileNameVector;
+        ar >> mTextureArchiveNameList;
+        ar >> mTextureFileNameList;
     }
 
     BOOST_SERIALIZATION_SPLIT_MEMBER()

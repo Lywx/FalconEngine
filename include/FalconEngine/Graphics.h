@@ -52,6 +52,8 @@
 #include <FalconEngine/Graphics/Renderer/States/StencilTestState.h>
 #include <FalconEngine/Graphics/Renderer/States/WireframeState.h>
 
+#include <FalconEngine/Graphics/Scene/Character.h>
+#include <FalconEngine/Graphics/Scene/Lamp.h>
 #include <FalconEngine/Graphics/Scene/Light.h>
 #include <FalconEngine/Graphics/Scene/Material.h>
 #include <FalconEngine/Graphics/Scene/Mesh.h>

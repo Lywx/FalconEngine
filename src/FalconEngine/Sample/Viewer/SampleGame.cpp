@@ -39,12 +39,13 @@ SampleGame::Initialize()
     mFontConsole = mAssetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.fnt.bin").get();
     // mFontDisplay = mAssetManager->LoadFont("Content/Fonts/NSimSunDistanceField.fnt.bin").get();
 
-    //mModelNanosuit = mAssetManager->LoadModel("Content/Models/nanosuit.obj").get();
+    mModelNanosuit = mAssetManager->LoadModel("Content/Models/nanosuit.obj").get();
+    mModelPerson = make_shared<Character>(mModelNanosuit->GetNode());
 
-    //mScene = make_shared<Node>();
-    //mScene->mWorldTransform = Matrix4f::Zero;
-    //mScene->AttachChild(mModelNanosuit->GetNode());
-    //mScene->Update(0.0, true);
+    mScene = make_shared<Node>();
+    mScene->mWorldTransform = Matrix4f::Zero;
+    mScene->AttachChild(mModelPerson->GetNode());
+    mScene->Update(0.0, true);
 }
 
 void
@@ -70,7 +71,7 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
                              ColorPalette::DarkGoldenrod);
     }
 
-    //graphics->Draw(mModelNanosuit->GetNode());
+    graphics->Draw(mModelPerson.get());
     Game::Render(graphics, percent);
 }
 
@@ -83,5 +84,5 @@ SampleGame::Update(GameEngineInput *input, double elapsed)
         GetEngine()->Exit();
     }
 
-    //mScene->Update(elapsed, true);
+    mScene->Update(elapsed, true);
 }

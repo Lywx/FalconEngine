@@ -11,7 +11,11 @@ class Lamp : public Entity
     FALCON_ENGINE_RTTI_DECLARE;
 
 public:
-    Lamp();
+    Lamp(const NodeSharedPtr node, const Light& light)
+        : Entity(node),
+          mLight(light)
+    {
+    }
 
 protected:
     Light mLight;

@@ -51,8 +51,8 @@ public:
     /* Model Loadtime Data                                                  */
     /************************************************************************/
 public:
-    std::vector<std::string> mTextureArchivePathVector;                        // Model texture archive paths
-    std::vector<std::string> mTextureFilePathVector;                           // Model raw texture paths
+    std::vector<std::string> mTextureArchivePathList;                        // Model texture archive paths
+    std::vector<std::string> mTextureFilePathList;                           // Model raw texture paths
 
     /************************************************************************/
     /* Model Runtime Data                                                   */

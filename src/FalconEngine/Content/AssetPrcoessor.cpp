@@ -40,7 +40,7 @@ AssetProcessor::BakeFont(const std::string& fntFilePath)
         auto fntDirPath = GetFileDirectory(fntFilePath);
         for (int fontPageId = 0; fontPageId < fontHandle->mTexturePages; ++fontPageId)
         {
-            auto textureFilePath = fntDirPath + fontHandle->mTextureFileNameVector[fontPageId];
+            auto textureFilePath = fntDirPath + fontHandle->mTextureFileNameList[fontPageId];
             auto texture = LoadRawTexture(textureFilePath);
             BakeTexture(texture.get(), AddAssetExtension(textureFilePath));
         }
@@ -159,8 +159,8 @@ LoadFntPageLine(BitmapFont& font, vector<string>& fontPageElems)
     }
 
     auto fontTextureFileName = trim_copy_if(sFontPagePairs.at("file"), is_any_of("\""));
-    font.mTextureFileNameVector.push_back(fontTextureFileName);
-    font.mTextureArchiveNameVector.push_back(AddAssetExtension(fontTextureFileName));
+    font.mTextureFileNameList.push_back(fontTextureFileName);
+    font.mTextureArchiveNameList.push_back(AddAssetExtension(fontTextureFileName));
 }
 
 // @Return: whether should continue reading texture file. If you should, the

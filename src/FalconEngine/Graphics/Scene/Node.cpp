@@ -30,10 +30,10 @@ Node::~Node()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-size_t
+int
 Node::ChildrenNum() const
 {
-    return mChildren.size();
+    return int(mChildren.size());
 }
 
 int
@@ -115,6 +115,17 @@ Node::DetachChildAt(size_t i)
 }
 
 SpatialSharedPtr
+Node::GetChildAt(size_t i)
+{
+    if (0 <= i && i < ChildrenNum())
+    {
+        return mChildren[i];
+    }
+
+    return nullptr;
+}
+
+SpatialSharedPtr
 Node::SetChild(size_t i, SpatialSharedPtr child)
 {
     if (child)
@@ -150,17 +161,6 @@ Node::SetChild(size_t i, SpatialSharedPtr child)
     }
 
     mChildren.push_back(child);
-
-    return nullptr;
-}
-
-SpatialSharedPtr
-Node::ChildAt(size_t i)
-{
-    if (0 <= i && i < ChildrenNum())
-    {
-        return mChildren[i];
-    }
 
     return nullptr;
 }

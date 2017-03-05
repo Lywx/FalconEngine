@@ -6,7 +6,7 @@
 using namespace std;
 
 #include <FalconEngine/Graphics/Renderer/Camera.h>
-#include <FalconEngine/Graphics/Renderer/Visual.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
@@ -87,8 +87,6 @@ Renderer::InitializeExceptPlatform(int width, int height)
     mOffsetStateCurrent = mOffsetStateDefault;
     mStencilTestStateCurrent = mStencilTestStateDefault;
     mWireframeStateCurrent = mWireframeStateDefault;
-
-    mCamera = nullptr;
 }
 
 void
@@ -270,9 +268,9 @@ Renderer::Disable(const VertexFormat *vertexFormat)
 void
 Renderer::Enable(const VertexGroup *vertexGroup)
 {
-    for (const auto& vertexBufferPair : vertexGroup->mVertexBufferTable)
+    for (const auto& vertexBindingBufferPair : vertexGroup->mVertexBufferTable)
     {
-        auto const & vertexBufferBinding = vertexBufferPair.second;
+        auto const & vertexBufferBinding = vertexBindingBufferPair.second;
 
         Enable(vertexBufferBinding.GetBuffer(),
                vertexBufferBinding.GetIndex(),
@@ -284,9 +282,9 @@ Renderer::Enable(const VertexGroup *vertexGroup)
 void
 Renderer::Disable(const VertexGroup *vertexGroup)
 {
-    for (const auto& vertexBufferPair : vertexGroup->mVertexBufferTable)
+    for (const auto& vertexBindingBufferPair : vertexGroup->mVertexBufferTable)
     {
-        auto const & vertexBufferBinding = vertexBufferPair.second;
+        auto const & vertexBufferBinding = vertexBindingBufferPair.second;
 
         Disable(vertexBufferBinding.GetBuffer(),
                 vertexBufferBinding.GetIndex());
@@ -404,7 +402,7 @@ Renderer::Enable(int textureUnit, const Texture *texture)
     switch (texture->mType)
     {
     case TextureType::None:
-        FALCON_ENGINE_NOT_SUPPORT();
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
         break;
     case TextureType::Texture1d:
         Enable(textureUnit, reinterpret_cast<const Texture1d *>(texture));
@@ -419,10 +417,10 @@ Renderer::Enable(int textureUnit, const Texture *texture)
         Enable(textureUnit, reinterpret_cast<const Texture3d *>(texture));
         break;
     case TextureType::TextureCube:
-        FALCON_ENGINE_NOT_SUPPORT();
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
         break;
     default:
-        FALCON_ENGINE_NOT_POSSIBLE();
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
 }
 
@@ -434,7 +432,7 @@ Renderer::Disable(int textureUnit, const Texture *texture)
     switch (texture->mType)
     {
     case TextureType::None:
-        FALCON_ENGINE_NOT_SUPPORT();
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
         break;
     case TextureType::Texture1d:
         Disable(textureUnit, reinterpret_cast<const Texture1d *>(texture));
@@ -449,53 +447,53 @@ Renderer::Disable(int textureUnit, const Texture *texture)
         Disable(textureUnit, reinterpret_cast<const Texture3d *>(texture));
         break;
     case TextureType::TextureCube:
-        FALCON_ENGINE_NOT_SUPPORT();
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
         break;
     default:
-        FALCON_ENGINE_NOT_POSSIBLE();
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
 }
 
 void
 Renderer::Bind(const Texture1d *texture)
 {
-    FALCON_ENGINE_NOT_SUPPORT();
+    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
 Renderer::Unbind(const Texture1d *texture)
 {
-    FALCON_ENGINE_NOT_SUPPORT();
+    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
 Renderer::Enable(int textureUnit, const Texture1d *texture)
 {
-    FALCON_ENGINE_NOT_SUPPORT();
+    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
 Renderer::Disable(int textureUnit, const Texture1d *texture)
 {
-    FALCON_ENGINE_NOT_SUPPORT();
+    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void *
 Renderer::Map(const Texture1d *texture, int mipmapLevel, BufferAccessMode mode)
 {
-    FALCON_ENGINE_NOT_SUPPORT();
+    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
 Renderer::Unmap(const Texture1d *texture, int mipmapLevel)
 {
-    FALCON_ENGINE_NOT_SUPPORT();
+    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
 Renderer::Update(const Texture1d *texture, int mipmapLevel)
 {
-    FALCON_ENGINE_NOT_SUPPORT();
+    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
@@ -662,61 +660,61 @@ Renderer::Disable(int textureUnit, const Texture2dArray *textureArray)
 void *
 Renderer::Map(const Texture2dArray *textureArray, int mipmapLevel, BufferAccessMode mode)
 {
-    FALCON_ENGINE_NOT_SUPPORT();
+    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
 Renderer::Unmap(const Texture2dArray *textureArray, int mipmapLevel)
 {
-    FALCON_ENGINE_NOT_SUPPORT();
+    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
 Renderer::Update(const Texture2dArray *textureArray, int mipmapLevel)
 {
-    FALCON_ENGINE_NOT_SUPPORT();
+    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
 Renderer::Bind(const Texture3d *texture)
 {
-    FALCON_ENGINE_NOT_SUPPORT();
+    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
 Renderer::Unbind(const Texture3d *texture)
 {
-    FALCON_ENGINE_NOT_SUPPORT();
+    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
 Renderer::Enable(int textureUnit, const Texture3d *texture)
 {
-    FALCON_ENGINE_NOT_SUPPORT();
+    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
 Renderer::Disable(int textureUnit, const Texture3d *texture)
 {
-    FALCON_ENGINE_NOT_SUPPORT();
+    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void *
 Renderer::Map(const Texture3d *texture, int mipmapLevel, BufferAccessMode mode)
 {
-    FALCON_ENGINE_NOT_SUPPORT();
+    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
 Renderer::Unmap(const Texture3d *texture, int mipmapLevel)
 {
-    FALCON_ENGINE_NOT_SUPPORT();
+    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
 Renderer::Update(const Texture3d *texture, int mipmapLevel)
 {
-    FALCON_ENGINE_NOT_SUPPORT();
+    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
@@ -853,7 +851,7 @@ Renderer::Disable(const VisualEffectPass *pass)
 }
 
 void
-Renderer::Enable(const VisualEffectInstancePass *pass, const Visual *visual)
+Renderer::Enable(const VisualEffectInstancePass *pass, const Camera *camera, const Visual *visual)
 {
     FALCON_ENGINE_CHECK_NULLPTR(pass);
 
@@ -880,7 +878,7 @@ Renderer::Enable(const VisualEffectInstancePass *pass, const Visual *visual)
         // NOTE(Wuxiang): The location of the shader uniform would be stored in
         // shader's uniform table after the binding of the shader.
         auto uniform = pass->GetShaderUniform(uniformIndex);
-        Update(pass, uniform, visual);
+        Update(pass, uniform, camera, visual);
     }
 }
 
@@ -903,7 +901,7 @@ Renderer::Disable(const VisualEffectInstancePass *pass)
 }
 
 void
-Renderer::Update(const VisualEffectInstancePass *pass, ShaderUniform *uniform, const Visual *visual)
+Renderer::Update(const VisualEffectInstancePass *pass, ShaderUniform *uniform, const Camera *camera, const Visual *visual)
 {
     // Update uniform location
     if (uniform->mLocation == 0)
@@ -913,7 +911,7 @@ Renderer::Update(const VisualEffectInstancePass *pass, ShaderUniform *uniform, c
     }
 
     // Update uniform value
-    uniform->Update(visual, mCamera);
+    uniform->Update(camera, visual);
 
     // Update uniform value in context.
     if (uniform->mUpdated)
@@ -923,17 +921,24 @@ Renderer::Update(const VisualEffectInstancePass *pass, ShaderUniform *uniform, c
 }
 
 void
-Renderer::Draw(Visual *visual)
+Renderer::Draw(
+    _IN_     const Camera *camera,
+    _IN_OUT_ Visual       *visual)
 {
+    // NOTE(Wuxiang): We don't need to check the camera is not null here, because
+    // certain rendering task won't need camera information.
+
     FALCON_ENGINE_CHECK_NULLPTR(visual);
 
     auto effectInstance = visual->GetEffectInstance();
-    Draw(visual, effectInstance);
+    Draw(camera, visual, effectInstance);
 }
 
 void
-Renderer::Draw(const Visual *visual,
-               VisualEffectInstance *effectInstance)
+Renderer::Draw(
+    _IN_     const Camera         *camera,
+    _IN_     const Visual         *visual,
+    _IN_OUT_ VisualEffectInstance *effectInstance)
 {
     // NOTE(Wuxiang): The non-constness of instance comes from the fact that
     // during the binding of shader, the renderer would look up the shader's
@@ -976,7 +981,7 @@ Renderer::Draw(const Visual *visual,
         Enable(shader);
 
         // Enable effect instance pass.
-        Enable(effectInstancePass, visual);
+        Enable(effectInstancePass, camera, visual);
 
         // Enable effect pass.
         Enable(effectPass);

@@ -13,7 +13,6 @@
 #include <FalconEngine/Graphics/Renderer/PrimitiveQuads.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
 #include <FalconEngine/Graphics/Renderer/Viewport.h>
-#include <FalconEngine/Graphics/Renderer/Visual.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
@@ -45,6 +44,15 @@
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformConstant.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformManual.h>
 
+#include <FalconEngine/Graphics/Renderer/Scene/Light.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Material.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Mesh.h>
+#include <FalconEngine/Graphics/Renderer/Scene/MeshEffect.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Model.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Node.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Spatial.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
+
 #include <FalconEngine/Graphics/Renderer/States/BlendState.h>
 #include <FalconEngine/Graphics/Renderer/States/CullState.h>
 #include <FalconEngine/Graphics/Renderer/States/DepthTestState.h>
@@ -54,9 +62,3 @@
 
 #include <FalconEngine/Graphics/Scene/Character.h>
 #include <FalconEngine/Graphics/Scene/Lamp.h>
-#include <FalconEngine/Graphics/Scene/Light.h>
-#include <FalconEngine/Graphics/Scene/Material.h>
-#include <FalconEngine/Graphics/Scene/Mesh.h>
-#include <FalconEngine/Graphics/Scene/Model.h>
-#include <FalconEngine/Graphics/Scene/Node.h>
-#include <FalconEngine/Graphics/Scene/Spatial.h>

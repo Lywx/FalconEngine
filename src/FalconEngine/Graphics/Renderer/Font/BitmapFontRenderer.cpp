@@ -6,7 +6,7 @@
 #include <FalconEngine/Core/Memory.h>
 #include <FalconEngine/Graphics/Effects/BitmapFontEffect.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
-#include <FalconEngine/Graphics/Renderer/Visual.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveQuads.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
@@ -251,9 +251,9 @@ FillTextLines(
 void
 BitmapFontRenderer::RenderBegin()
 {
-    for (auto& batchPair : mTextBatchTable)
+    for (auto& fontBatchPair : mTextBatchTable)
     {
-        auto& batch = batchPair.second;
+        auto& batch = fontBatchPair.second;
         batch->mBufferDataIndex = 0;
         batch->mBufferGlyphNum = 0;
     }
@@ -262,15 +262,15 @@ BitmapFontRenderer::RenderBegin()
 void
 BitmapFontRenderer::Render(Renderer *renderer, double percent)
 {
-    for (auto& batchPair : mTextBatchTable)
+    for (auto& fontBatchPair : mTextBatchTable)
     {
-        auto& batch = batchPair.second;
+        auto& batch = fontBatchPair.second;
         if (batch->mBufferGlyphNum > 0)
         {
             // Update buffer data before drawing
             batch->mBuffer->SetElementNum(batch->mBufferGlyphNum * 6);
             renderer->Update(batch->mBuffer.get());
-            renderer->Draw(batch->mQuads.get());
+            renderer->Draw(nullptr, batch->mQuads.get());
         }
     }
 }

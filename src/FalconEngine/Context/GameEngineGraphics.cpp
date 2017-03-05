@@ -3,6 +3,7 @@
 #include <FalconEngine/Content/Path.h>
 #include <FalconEngine/Context/GameEngineGraphicsSettings.h>
 #include <FalconEngine/Context/GameEngineSettings.h>
+#include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Entity/EntityRenderer.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFontRenderer.h>
@@ -54,11 +55,11 @@ GameEngineGraphics::ClearBuffers(Vector4f color, float depth, unsigned stencil)
 }
 
 void
-GameEngineGraphics::Draw(const Entity *enitity)
+GameEngineGraphics::Draw(const Camera *camera, const Entity *enitity)
 {
     FALCON_ENGINE_CHECK_NULLPTR(enitity);
 
-    mEntityRenderer->Draw(enitity);
+    mEntityRenderer->Draw(camera, enitity);
 }
 
 void
@@ -79,7 +80,7 @@ GameEngineGraphics::DrawString(const BitmapFont *font, float fontSize, Vector2f 
 
 void
 GameEngineGraphics::Initialize(
-    _IN_  const GameEngineData *data,
+    _IN_  const GameEngineData       *data,
     _OUT_ GameEngineSettingsSharedPtr settings)
 {
     mSettings = settings->mGraphics;

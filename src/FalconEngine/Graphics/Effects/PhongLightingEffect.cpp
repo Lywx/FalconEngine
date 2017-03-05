@@ -1,7 +1,7 @@
 #include <FalconEngine/Graphics/Effects/PhongLightingEffect.h>
 
 #include <FalconEngine/Graphics/Renderer/Camera.h>
-#include <FalconEngine/Graphics/Renderer/Visual.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
@@ -13,8 +13,10 @@
 #include <FalconEngine/Graphics/Renderer/States/OffsetState.h>
 #include <FalconEngine/Graphics/Renderer/States/StencilTestState.h>
 #include <FalconEngine/Graphics/Renderer/States/WireframeState.h>
-#include <FalconEngine/Graphics/Scene/Light.h>
-#include <FalconEngine/Graphics/Scene/Material.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Light.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Material.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Mesh.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Node.h>
 
 using namespace std;
 
@@ -32,8 +34,8 @@ PhongLightingEffect::PhongLightingEffect()
     shader->PushShaderFile(ShaderType::VertexShader, "Content/Shaders/PhongLighting.vert.glsl");
     shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shaders/PhongLighting.frag.glsl");
 
-    shader->PushUniform("MVPTransform", ShaderUniformType::FloatMat4);
-    shader->PushUniform("MVTransform", ShaderUniformType::FloatMat4);
+    shader->PushUniform("ModelViewProjectionTransform", ShaderUniformType::FloatMat4);
+    shader->PushUniform("ModelViewTransform", ShaderUniformType::FloatMat4);
     shader->PushUniform("NormalTransform", ShaderUniformType::FloatMat3);
 
     shader->PushUniform("DirectionalLight.Ambient", ShaderUniformType::FloatVec3);
@@ -41,18 +43,17 @@ PhongLightingEffect::PhongLightingEffect()
     shader->PushUniform("DirectionalLight.Specular", ShaderUniformType::FloatVec3);
     shader->PushUniform("DirectionalLight.EyeDirection", ShaderUniformType::FloatVec3);
 
-
     auto pass = make_unique<VisualEffectPass>();
     pass->SetShader(shader);
 
     auto blendState = make_unique<BlendState>();
-    blendState->mEnabled = true;
+    blendState->mEnabled = false;
     blendState->mSourceFactor = BlendSourceFactor::SRC_ALPHA;
     blendState->mDestinationFactor = BlendDestinationFactor::ONE_MINUS_SRC_ALPHA;
     pass->SetBlendState(move(blendState));
 
     auto cullState = make_unique<CullState>();
-    cullState->mEnabled = true;
+    cullState->mEnabled = false;
     cullState->mCounterClockwise = false;
     pass->SetCullState(move(cullState));
 
@@ -64,7 +65,7 @@ PhongLightingEffect::PhongLightingEffect()
     pass->SetStencilTestState(make_unique<StencilTestState>());
 
     auto wireframwState = make_unique<WireframeState>();
-    wireframwState->mEnabled = false;
+    wireframwState->mEnabled = true;
     pass->SetWireframeState(move(wireframwState));
 
     InsertPass(move(pass));
@@ -84,14 +85,14 @@ PhongLightingEffect::CreateInstance(VisualEffectInstance *instance, const Light 
 
     CheckEffectCompatible(instance);
 
-    instance->SetShaderUniform(0, ShareAutomatic<Matrix4f>("MVPTransform",
+    instance->SetShaderUniform(0, ShareAutomatic<Matrix4f>("ModelViewProjectionTransform",
                                std::bind([](const Visual * visual, const Camera * camera)
     {
         // TODO(Wuxiang): Optimize this by merging projection and view transform into Dirty Flag pattern.
         return camera->GetProjection() * camera->GetView()  * visual->mWorldTransform;
     }, _1, _2)));
 
-    instance->SetShaderUniform(0, ShareAutomatic<Matrix4f>("MVTransform",
+    instance->SetShaderUniform(0, ShareAutomatic<Matrix4f>("ModelViewTransform",
                                std::bind([](const Visual * visual, const Camera * camera)
     {
         return camera->GetView() * visual->mWorldTransform;
@@ -127,6 +128,32 @@ PhongLightingEffect::CreateInstance(VisualEffectInstance *instance, const Light 
     {
         return camera->GetView() * light->mDirection;
     }, _1, _2)));
+}
+
+void
+PhongLightingEffect::CreateInstance(VisualEffectSharedPtr effect, Node *meshRoot, const Light *light)
+{
+    using namespace placeholders;
+
+    CheckEffectSame(effect.get());
+
+    auto meshCreateInstance = std::bind([effect, &light, this](Mesh * mesh)
+    {
+        auto instance = make_shared<VisualEffectInstance>(effect);
+        CreateInstance(mesh, instance, light);
+    }, _1);
+
+    TraverseLevelOrder(meshRoot, meshCreateInstance);
+}
+
+void
+PhongLightingEffect::CreateInstance(
+    _IN_OUT_ Mesh                         *mesh,
+    _IN_OUT_ VisualEffectInstanceSharedPtr instance,
+    _IN_     const Light                  *light) const
+{
+    CreateInstance(instance.get(), light, mesh->GetMaterial());
+    SetEffectInstance(mesh, instance);
 }
 
 }

@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Scene/Node.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Node.h>
 
 using namespace std;
 
@@ -117,12 +117,7 @@ Node::DetachChildAt(size_t i)
 SpatialSharedPtr
 Node::GetChildAt(size_t i)
 {
-    if (0 <= i && i < ChildrenNum())
-    {
-        return mChildren[i];
-    }
-
-    return nullptr;
+    return mChildren.at(i);
 }
 
 SpatialSharedPtr

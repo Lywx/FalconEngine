@@ -1,4 +1,5 @@
 #include <FalconEngine/Context/GameDebug.h>
+#include <FalconEngine/ContextInclude.h>
 
 #include <algorithm>
 #include <windows.h>
@@ -104,13 +105,13 @@ glDebugCallback(
     // Only break on high severity.
     if (severity == GL_DEBUG_SEVERITY_HIGH)
     {
-        GameDebug::OutputString("OpenGL Error:\n");
-        GameDebug::OutputString("=============\n");
-        GameDebug::OutputString(string("Object:    ") + to_string(id) + "\n");
-        GameDebug::OutputString(string("Severity:  ") + glDebugSeverityString(severity) + "\n");
-        GameDebug::OutputString(string("Type:      ") + glDebugTypeString(type) + "\n");
-        GameDebug::OutputString(string("Source:    ") + glDebugSourceString(source) + "\n");
-        GameDebug::OutputString(string("Message:   ") + message + "\n");
+        Debug::OutputString("OpenGL Error:\n");
+        Debug::OutputString("=============\n");
+        Debug::OutputString(string("Object:    ") + to_string(id) + "\n");
+        Debug::OutputString(string("Severity:  ") + glDebugSeverityString(severity) + "\n");
+        Debug::OutputString(string("Type:      ") + glDebugTypeString(type) + "\n");
+        Debug::OutputString(string("Source:    ") + glDebugSourceString(source) + "\n");
+        Debug::OutputString(string("Message:   ") + message + "\n");
 
         // Trigger a breakpoint in gDEBugger...
         glFinish();

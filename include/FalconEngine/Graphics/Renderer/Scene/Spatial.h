@@ -1,9 +1,7 @@
 #pragma once
 
-#include <memory>
-
-#include <FalconEngine/Core/Object.h>
 #include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Core/Object.h>
 
 namespace FalconEngine
 {

@@ -1,14 +1,6 @@
-void CalcEyeSpace(
-    in vec3 modelPosition, 
-    in vec3 modelNormal,
-    out vec4 eyePosition,
-    out vec3 eyeNormal) 
-{
-    eyeNormal = normalize(NormalTransform * modelNormal);
-    eyePosition = (MVTransform * vec4(modelPosition, 1.0)).xyz;
-}
-
-void CalcPhongLighting(
+void 
+CalcPhongLighting(
+    in vec2 texCoord,
     in vec3 eyeN, 
     in vec3 eyeV,
     in vec3 eyeL,
@@ -27,12 +19,12 @@ void CalcPhongLighting(
     // dot(v, r)
     float dotVR = max(dot(eyeV, eyeR), 0.0);
 
-    // vec3 materialAmbient   = vec3(texture(fe_TextureAmbient,   fin.TexCoords));
-    vec3 materialDiffuse   = vec3(texture(fe_TextureDiffuse,   fin.TexCoords));
-    // vec3 materialEmissive  = vec3(texture(fe_TextureEmissive,  fin.TexCoords));
-    // vec3 materialShininess = texture(fe_TextureShininess, fin.TexCoords).a;
-    vec3 materialShininess = 0.2;
-    vec3 materialSpecular  = vec3(texture(fe_TextureSpecular,  fin.TexCoords));
+    // vec3 materialAmbient = vec3(texture(fe_TextureAmbient, texCoord));
+    vec3 materialDiffuse = vec3(texture(fe_TextureDiffuse, texCoord));
+    // vec3 materialEmissive = vec3(texture(fe_TextureEmissive, texCoord));
+    // float materialShininess = texture(fe_TextureShininess, texCoord).a;
+    float materialShininess = 0.2;
+    vec3 materialSpecular  = vec3(texture(fe_TextureSpecular, texCoord));
 
     // cAmbient  = sAmbient * materialAmbient;
     cAmbient  = sAmbient * materialDiffuse;

@@ -1,7 +1,9 @@
-#include <FalconEngine/Graphics/Scene/Light.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Light.h>
 
 namespace FalconEngine
 {
+
+FALCON_ENGINE_RTTI_IMPLEMENT(Light, Object);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

@@ -16,7 +16,7 @@
 #include <FalconEngine/Content/Path.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
 #include <FalconEngine/Graphics/Renderer/Resources/Texture2d.h>
-#include <FalconEngine/Graphics/Scene/Model.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Model.h>
 
 using namespace boost;
 using namespace std;
@@ -94,7 +94,7 @@ LoadFntGlyphLine(
 {
     // NOTE(Wuxiang): Using preallocated map to improved performance. There is no
     // need to clear the map because all the data is overwritten by new glyph.
-    static map<string, string> sFontGlyphPairTable;
+    static map<string, string> sFontGlyphKeyValuePairTable;
 
     // Skip "char", the first element
     for (size_t i = 1; i < fontGlyphElems.size(); ++i)
@@ -102,7 +102,7 @@ LoadFntGlyphLine(
         if (fontGlyphElems[i].size() != 0)
         {
             pair<string, string> keyValuePair = ReadFntPair(fontGlyphElems[i]);
-            sFontGlyphPairTable[keyValuePair.first] = keyValuePair.second;
+            sFontGlyphKeyValuePairTable[keyValuePair.first] = keyValuePair.second;
         }
     }
 
@@ -110,26 +110,26 @@ LoadFntGlyphLine(
     int fontGlyphPWidth = fontGlyphPL + fontGlyphPR;
 
     // NOTE(Wuxiang): The fnt file has to configured to padding = 0 in all directions.
-    int id = lexical_cast<int>(sFontGlyphPairTable.at("id").c_str());
-    double width = lexical_cast<double>(sFontGlyphPairTable.at("width").c_str());
-    double height = lexical_cast<double>(sFontGlyphPairTable.at("height").c_str());
+    int id = lexical_cast<int>(sFontGlyphKeyValuePairTable.at("id").c_str());
+    double width = lexical_cast<double>(sFontGlyphKeyValuePairTable.at("width").c_str());
+    double height = lexical_cast<double>(sFontGlyphKeyValuePairTable.at("height").c_str());
 
     // NOTE(Wuxiang): Only amend padding data in vertex related data. Texture quad
     // should be expanded as the padding expands.
-    double offsetX = lexical_cast<double>(sFontGlyphPairTable.at("xoffset").c_str()) + fontGlyphPL;
-    double offsetY = lexical_cast<double>(sFontGlyphPairTable.at("yoffset").c_str()) + fontGlyphPT;
-    double advance = lexical_cast<double>(sFontGlyphPairTable.at("xadvance").c_str()) - fontGlyphPWidth;
+    double offsetX = lexical_cast<double>(sFontGlyphKeyValuePairTable.at("xoffset").c_str()) + fontGlyphPL;
+    double offsetY = lexical_cast<double>(sFontGlyphKeyValuePairTable.at("yoffset").c_str()) + fontGlyphPT;
+    double advance = lexical_cast<double>(sFontGlyphKeyValuePairTable.at("xadvance").c_str()) - fontGlyphPWidth;
 
     // NOTE(Wuxiang): The fnt file x, y represents left and top pixel coordinate
     // origined from top-left corner of the png file. However, in opengl s1, t1
     // represents left and bottom coordinate origined from bottom-left corner of
     // the screen.
-    double s1 = lexical_cast<double>(sFontGlyphPairTable.at("x").c_str()) / font.mTextureWidth;
+    double s1 = lexical_cast<double>(sFontGlyphKeyValuePairTable.at("x").c_str()) / font.mTextureWidth;
     double s2 = s1 + width / font.mTextureWidth;
-    double t2 = (font.mTextureHeight - lexical_cast<double>(sFontGlyphPairTable.at("y").c_str())) / font.mTextureHeight;
+    double t2 = (font.mTextureHeight - lexical_cast<double>(sFontGlyphKeyValuePairTable.at("y").c_str())) / font.mTextureHeight;
     double t1 = t2 - height / font.mTextureHeight;
 
-    int page = lexical_cast<int>(sFontGlyphPairTable.at("page").c_str());
+    int page = lexical_cast<int>(sFontGlyphKeyValuePairTable.at("page").c_str());
 
     // NOTE(Wuxiang): Indirect lookup in glyph table. First you look up the glyph
     // index with the codepoint, which indexes into the glyph table. Then you use
@@ -316,7 +316,7 @@ AssetProcessor::BakeTexture(const std::string& textureFilePath)
 {
     if (GetFileExtension(textureFilePath) != u8".png")
     {
-        FALCON_ENGINE_NOT_SUPPORT();
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
     }
 
     auto textureHandle = LoadRawTexture(textureFilePath);

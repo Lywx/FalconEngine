@@ -50,7 +50,7 @@ VertexFormat::PushVertexAttribute(int attributeLocation, std::string attributeNa
     if (attributeLocation != mVertexAttributeList.size())
     {
         // NOTE(Wuxiang): It is not supported for out of order attribute registration.
-        FALCON_ENGINE_NOT_SUPPORT();
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
     }
 
     if (mVertexAttributeFinished)

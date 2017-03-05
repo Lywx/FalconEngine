@@ -1,7 +1,7 @@
 #pragma once
 
 #include <FalconEngine/GraphicsInclude.h>
-#include <FalconEngine/Graphics/Scene/Spatial.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Spatial.h>
 
 namespace FalconEngine
 {

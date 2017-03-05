@@ -8,6 +8,9 @@
 namespace FalconEngine
 {
 
+class Camera;
+using CameraSharedPtr = std::shared_ptr<Camera>;
+
 class Camera
 {
 public:

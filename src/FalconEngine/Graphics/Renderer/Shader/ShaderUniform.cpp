@@ -19,7 +19,7 @@ ShaderUniform::~ShaderUniform()
 }
 
 void
-ShaderUniform::Update(const Visual *visual, const Camera *camera)
+ShaderUniform::Update(const Camera *camera, const Visual *visual)
 {
 }
 

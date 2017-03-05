@@ -15,7 +15,7 @@
 #include <FalconEngine/Graphics/Renderer/Resources/Texture2d.h>
 #include <FalconEngine/Graphics/Renderer/Resources/Texture2dArray.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderSource.h>
-#include <FalconEngine/Graphics/Scene/Model.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Model.h>
 
 using namespace std;
 
@@ -39,11 +39,11 @@ AssetManager::~AssetManager()
 BitmapFontSharedPtr
 AssetManager::GetFontNamed(const std::string& fontName)
 {
-    for (const auto &fontPair : mFontTable)
+    for (const auto &fontNameFontPair : mFontTable)
     {
-        if (GetFileStem(fontPair.first) == fontName)
+        if (GetFileStem(fontNameFontPair.first) == fontName)
         {
-            return GetFont(fontPair.first);
+            return GetFont(fontNameFontPair.first);
         }
     }
 

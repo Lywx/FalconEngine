@@ -38,7 +38,7 @@ public:
     // function. If you intent to enforce reusability, you could override this
     // method using a fixed template class argument.
     virtual void
-    Update(const Visual *visual, const Camera *camera) override;
+    Update(const Camera *camera, const Visual *visual) override;
 
 protected:
     ShaderUniformUpdateFunction<T> mUpdateFunction;
@@ -74,7 +74,7 @@ ShaderUniformAutomatic<T>::SetUpdateFunction(ShaderUniformUpdateFunction<T> upda
 
 template <typename T>
 void
-ShaderUniformAutomatic<T>::Update(const Visual *visual, const Camera *camera)
+ShaderUniformAutomatic<T>::Update(const Camera *camera, const Visual *visual)
 {
     if (mUpdateFunction)
     {

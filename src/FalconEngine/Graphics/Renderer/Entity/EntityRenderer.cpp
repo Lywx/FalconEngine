@@ -1,12 +1,14 @@
 #include <FalconEngine/Graphics/Renderer/Entity/EntityRenderer.h>
 
+#include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
-#include <FalconEngine/Graphics/Renderer/Visual.h>
 #include <FalconEngine/Graphics/Renderer/Entity/Entity.h>
-#include <FalconEngine/Graphics/Scene/Node.h>
-#include <queue>
+#include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Node.h>
+#include <FalconEngine/Math/Bound/AABBBoundingBox.h>
 
 using namespace std;
+
 namespace FalconEngine
 {
 
@@ -22,12 +24,33 @@ EntityRenderer::~EntityRenderer()
 }
 
 /************************************************************************/
-/* Public Members                                                       */
+/* Rendering API                                                        */
 /************************************************************************/
 void
-EntityRenderer::Draw(const Entity *entity)
+EntityRenderer::Draw(const Camera *camera, const Entity *entity)
 {
-    mEntityList.push_back(entity);
+    mEntityRenderTable[camera].push_back(entity);
+}
+
+void
+EntityRenderer::DrawBoundingBox(const Camera *camera, const BoundingBox *boundingBox)
+{
+    mBoundingBoxRenderTable[camera].push_back(boundingBox);
+}
+
+void
+EntityRenderer::DrawBoundingBox(const Camera *camera, const Entity *entity)
+{
+}
+
+void
+EntityRenderer::DrawBoundingBox(const Camera *camera, const Node *node)
+{
+}
+
+void
+EntityRenderer::DrawBoundingBox(const Camera *camera, const Visual *visual)
+{
 }
 
 void
@@ -38,62 +61,65 @@ EntityRenderer::Initialize()
 void
 EntityRenderer::RenderBegin()
 {
-    mEntityList.clear();
+    // Clean every bucket in the bounding box table.
+    for (auto& cameraBoundingBoxListPair : mBoundingBoxRenderTable)
+    {
+        auto& boundingBoxList = cameraBoundingBoxListPair.second;
+        boundingBoxList.clear();
+    }
+
+    // Clean every bucket in the entity table.
+    for (auto& cameraEntityListPair : mEntityRenderTable)
+    {
+        auto& entityList = cameraEntityListPair.second;
+        entityList.clear();
+    }
 }
 
 void
 EntityRenderer::Render(Renderer *renderer, double percent)
 {
-    //queue<pair<const Node *, int>> taskCurrentQueue, taskNextQueue;
-    //taskCurrentQueue.push(make_pair(root, 1));
-
-    //while (!taskCurrentQueue.empty())
-    //{
-    //    // Initialize traversal result for this level.
-    //    resultVector.push_back(vector<int>());
-
-    //    // Complete traversing current level.
-    //    while (!taskCurrentQueue.empty())
-    //    {
-    //        auto taskCurrent = taskCurrentQueue.front();
-    //        auto *nodeCurrent = taskCurrent.first;
-    //        auto &depthCurrent = taskCurrent.second;
-
-    //        taskCurrentQueue.pop();
-
-    //        // Visit the node.
-    //        resultVector.back().push_back(nodeCurrent->val);
-
-    //        if (nodeCurrent->left)
-    //        {
-    //            taskNextQueue.push(make_pair(nodeCurrent->left, depthCurrent + 1));
-    //        }
-
-    //        if (nodeCurrent->right)
-    //        {
-    //            taskNextQueue.push(make_pair(nodeCurrent->right, depthCurrent + 1));
-    //        }
-    //    }
-
-    //    swap(taskCurrentQueue, taskNextQueue);
-    //}
-
-
-    for (auto entity : mEntityList)
+    // TODO(Wuxiang): Replace it with normal traversal
+    for (auto& cameraEntityListPair : mEntityRenderTable)
     {
-        auto node = entity->GetNode();
-        auto nodeNum = node->ChildrenNum();
-        for (auto nodeIndex = 0; nodeIndex < nodeNum; ++nodeIndex)
+        auto camera = cameraEntityListPair.first;
+        auto& entityList = cameraEntityListPair.second;
+
+        for (auto entity : entityList)
         {
-            auto child = node->GetChildAt(nodeIndex);
-            if (auto visual = dynamic_pointer_cast<Visual>(child))
+            mNodeRenderQueueCurrent.push(make_pair(entity->GetNode().get(), 1));
+        }
+
+        // NOTE(Wuxiang): Use level order traversal to render each visual in the hierarchy.
+        while (!mNodeRenderQueueCurrent.empty())
+        {
+            // Complete traversing current level.
+            while (!mNodeRenderQueueCurrent.empty())
             {
-                renderer->Draw(visual.get());
+                auto renderItemCurrent = mNodeRenderQueueCurrent.front();
+                auto renderNodeCurrent = renderItemCurrent.first;
+                auto &sceneDepthCurrent = renderItemCurrent.second;
+
+                mNodeRenderQueueCurrent.pop();
+
+                // Visit the children.
+                auto nodeNum = renderNodeCurrent->ChildrenNum();
+                for (auto childIndex = 0; childIndex < nodeNum; ++childIndex)
+                {
+                    auto child = renderNodeCurrent->GetChildAt(childIndex);
+                    if (auto childVisual = dynamic_pointer_cast<Visual>(child))
+                    {
+                        renderer->Draw(camera, childVisual.get());
+                    }
+                    else if (auto childNode = dynamic_pointer_cast<Node>(child))
+                    {
+                        // Prepare for traversing next level.
+                        mNodeRenderQueueNext.push(make_pair(childNode.get(), sceneDepthCurrent + 1));
+                    }
+                }
             }
-            //else if (auto entityChild = dynamic_pointer_cast<Entity>(child))
-            //{
-            //    Draw(entityChild.get());
-            //}
+
+            swap(mNodeRenderQueueCurrent, mNodeRenderQueueNext);
         }
     }
 }

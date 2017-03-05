@@ -27,7 +27,8 @@ link_directories(
 add_executable(FalconEngine.Content.Pipeline Pipeline/PipelineMain.cpp)
 
 if (WIN32)
-set(FALCON_ENGINE_CONTENT_PIPELINE_EXTRA_BINRARY_FILES assimp-vc140-mt.lib)
+# TODO(Wuxiang): Could I remove this dependency?
+set(FALCON_ENGINE_CONTENT_PIPELINE_EXTRA_BINRARY_FILES assimp-vc140-mt.lib glew32sd.lib glfw3.lib opengl32.lib )
 else()
 message(WARNING "Dependency not available in linux.")
 endif()
@@ -36,6 +37,7 @@ target_link_libraries(FalconEngine.Content.Pipeline
     FalconEngine.Core.lib
     FalconEngine.Content.lib
     FalconEngine.Graphics.lib
+    FalconEngine.Math.lib
     ${FALCON_ENGINE_CONTENT_PIPELINE_EXTRA_BINRARY_FILES}
     )
 

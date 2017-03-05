@@ -2,8 +2,6 @@
 
 #include <FalconEngine/Graphics/SceneInclude.h>
 
-#include <memory>
-
 namespace FalconEngine
 {
 

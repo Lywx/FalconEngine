@@ -1,5 +1,7 @@
 #include <FalconEngine/Math/Vector3.h>
 
+#include <string>
+
 namespace FalconEngine
 {
 
@@ -14,16 +16,48 @@ const Vector3f Vector3f::UnitX = glm::vec3(1.f, 0.f, 0.f);
 const Vector3f Vector3f::UnitY = glm::vec3(0.f, 1.f, 0.f);
 const Vector3f Vector3f::UnitZ = glm::vec3(0.f, 0.f, 1.f);
 
+/* static */ Vector3f
+Vector3f::Cross(const Vector3f& v1, const Vector3f& v2)
+{
+    return glm::cross(v1, v2);
+}
+
+/* static */
+float
+Vector3f::Dot(const Vector3f& v1, const Vector3f& v2)
+{
+    return glm::dot<float>(v1, v2);
+}
+
+/* static */ Vector3f
+Vector3f::Normalize(const Vector3f& v)
+{
+    if (v == Zero)
+    {
+        throw std::invalid_argument("Cannot normalize a zero vector\n");
+    }
+
+    auto vec = glm::vec3(v);
+    return glm::normalize(vec);
+}
+
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Vector3f::Vector3f() : glm::vec3() {}
-
-Vector3f::Vector3f(const float& x) : glm::vec3(x)
+Vector3f::Vector3f() :
+    glm::vec3()
 {
 }
 
-Vector3f::Vector3f(const float& x, const float& y, const float& z) : glm::vec3(x, y, z) {};
+Vector3f::Vector3f(const float& x) :
+    glm::vec3(x)
+{
+}
+
+Vector3f::Vector3f(const float& x, const float& y, const float& z) :
+    glm::vec3(x, y, z)
+{
+}
 
 // Implicit Conversion
 Vector3f::Vector3f(const glm::vec3& v) : glm::vec3(v)
@@ -39,6 +73,12 @@ Vector3f::operator glm::vec3() const
 Vector3f::operator Vector3i() const
 {
     return Vector3i(int(x), int(y), int(z));
+}
+
+std::string
+to_string(const Vector3f& v)
+{
+    return std::string("(" + std::to_string(v.x) + ", " + std::to_string(v.y) + ", " + std::to_string(v.z) + ")");
 }
 
 /************************************************************************/

@@ -38,6 +38,18 @@ Primitive::GetPrimitiveType() const
     return mPrimitiveType;
 }
 
+BoundingBoxSharedPtr
+Primitive::GetBoundingBox() const
+{
+    return mBoundingBox;
+}
+
+void
+Primitive::SetBoundingBox(BoundingBoxSharedPtr boundingBox)
+{
+    mBoundingBox = boundingBox;
+}
+
 size_t
 Primitive::GetVertexNum() const
 {
@@ -80,7 +92,7 @@ Primitive::SetVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer,
     if (mVertexGroup->ContainVertexBuffer(bindingIndex, vertexBuffer))
     {
         // NOTE(Wuxiang): It is not allowed to reset vertex buffer's offset or stride.
-        FALCON_ENGINE_NOT_SUPPORT();
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
     }
     else
     {

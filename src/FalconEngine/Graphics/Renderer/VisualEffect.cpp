@@ -1,6 +1,7 @@
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Graphics/Renderer/States/BlendState.h>
 #include <FalconEngine/Graphics/Renderer/States/CullState.h>
 #include <FalconEngine/Graphics/Renderer/States/DepthTestState.h>
@@ -11,7 +12,6 @@
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformAutomatic.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformConstant.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformManual.h>
-
 
 namespace FalconEngine
 {
@@ -103,8 +103,23 @@ VisualEffect::CheckEffectCompatible(VisualEffectInstance *instance) const
 {
     if (!GetType().IsExactly(instance->GetEffect()->GetType()))
     {
-        FALCON_ENGINE_NOT_SUPPORT();
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
     }
+}
+
+void
+VisualEffect::CheckEffectSame(VisualEffect *effect) const
+{
+    if (this != effect)
+    {
+        FALCON_ENGINE_THROW_EXCEPTION("Effect is supposed to be the same.");
+    }
+}
+
+void
+VisualEffect::SetEffectInstance(Visual *visual, VisualEffectInstanceSharedPtr instance) const
+{
+    visual->SetEffectInstance(instance);
 }
 
 }

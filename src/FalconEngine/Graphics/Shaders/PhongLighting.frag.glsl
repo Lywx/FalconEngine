@@ -1,4 +1,4 @@
-#version 330 core
+#version 430 core
 
 #fe_extension : enable
 #include "fe_Texture.glsl"
@@ -7,14 +7,14 @@
 
 in Vout
 {
-    noperspective vec3 EyePosition
+    noperspective vec3 EyePosition;
     noperspective vec3 EyeNormal;
     vec2               TexCoord;
 } fin;
 
 layout(location = 0) out vec4 FragColor;
 
-struct DirectionalLight
+struct DirectionalLightData
 {
     vec3 Ambient;
     vec3 Diffuse;
@@ -23,7 +23,7 @@ struct DirectionalLight
     vec3 EyeDirection;
 };
 
-struct PointLight
+struct PointLightData
 {
     vec3 Ambient;
     vec3 Diffuse;
@@ -36,7 +36,7 @@ struct PointLight
     float Quadratic;
 };
 
-struct SpotLight
+struct SpotLightData
 {
     vec3 Ambient;
     vec3 Diffuse;
@@ -52,14 +52,14 @@ struct SpotLight
     float Quadratic;
 };
 
-uniform DirectionalLight          DirectionalLight;
+uniform DirectionalLightData DirectionalLight;
 // #define PointLightNum 6
 // uniform PointLight[PointLightNum] PointLightArray;
 
-uniform mat4 MVTransform;
+uniform mat4 ModelViewTransform;
 
 // @status Finished.
-vec3 CalcDirectionalLight(DirectionalLight light, vec3 eyeN, vec3 eyeV)
+vec3 CalcDirectionalLight(DirectionalLightData light, vec3 eyeN, vec3 eyeV)
 {
     // Point to light source.
     vec3 eyeL = normalize(light.EyeDirection);
@@ -68,14 +68,14 @@ vec3 CalcDirectionalLight(DirectionalLight light, vec3 eyeN, vec3 eyeV)
     vec3 cDiffuse;
     vec3 cSpecular; 
 
-    CalcPhongLighting(eyeN, eyeV, eyeL, light.Ambient, light.Diffuse, light.Specular,
+    CalcPhongLighting(fin.TexCoord, eyeN, eyeV, eyeL, light.Ambient, light.Diffuse, light.Specular,
     cAmbient, cDiffuse, cSpecular);
 
     return cAmbient + cDiffuse + cSpecular;
 }
 
 // @status Finished.
-vec3 CalcPointLight(PointLight light, vec3 eyeN, vec3 eyeV, vec3 eyePosition)
+vec3 CalcPointLight(PointLightData light, vec3 eyeN, vec3 eyeV, vec3 eyePosition)
 {
     // Point to light source.
     vec3 eyeL = normalize(light.EyePosition - eyePosition);
@@ -84,7 +84,7 @@ vec3 CalcPointLight(PointLight light, vec3 eyeN, vec3 eyeV, vec3 eyePosition)
     vec3 cDiffuse;
     vec3 cSpecular;
 
-    CalcPhongLighting(eyeN, eyeV, eyeL, light.Ambient, light.Diffuse, light.Specular,
+    CalcPhongLighting(fin.TexCoord, eyeN, eyeV, eyeL, light.Ambient, light.Diffuse, light.Specular,
     cAmbient, cDiffuse, cSpecular);
 
     // Attenuation
@@ -100,7 +100,7 @@ vec3 CalcPointLight(PointLight light, vec3 eyeN, vec3 eyeV, vec3 eyePosition)
 } 
 
 // @status Finished.
-vec3 CalcSpotLight(SpotLight light, vec3 eyeN, vec3 eyeV, vec3 eyePosition)
+vec3 CalcSpotLight(SpotLightData light, vec3 eyeN, vec3 eyeV, vec3 eyePosition)
 {
     // Point to light source.
     vec3 eyeL = normalize(light.EyePosition - eyePosition);
@@ -109,7 +109,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 eyeN, vec3 eyeV, vec3 eyePosition)
     vec3 cDiffuse;
     vec3 cSpecular;
 
-    CalcPhongLighting(eyeN, eyeV, eyeL, light.Ambient, light.Diffuse, light.Specular,
+    CalcPhongLighting(fin.TexCoord, eyeN, eyeV, eyeL, light.Ambient, light.Diffuse, light.Specular,
     cAmbient, cDiffuse, cSpecular);
 
     // Attenuation
@@ -143,6 +143,7 @@ void main()
 
     // result += CalcSpotLight(Spotlight, eyeN, eyeV, fin.EyePosition);
 
+    result += vec3(0.5, 0.5, 0.5);
     FragColor = vec4(result, 1.0);
 }
 

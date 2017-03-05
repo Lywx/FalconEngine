@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Renderer/Visual.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 
 namespace FalconEngine
 {

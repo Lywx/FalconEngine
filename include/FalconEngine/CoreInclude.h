@@ -8,6 +8,8 @@
 #include <boost/predef.h>
 #include <memory>
 
+#include <FalconEngine/Core/Debug.h>
+
 /************************************************************************/
 /* Deployment Items                                                     */
 /************************************************************************/
@@ -38,18 +40,29 @@
 namespace FalconEngine
 {
 
+// Array Handlinig
 template<typename T, unsigned N>
-inline size_t
+size_t
 ArraySize(T(&arr)[N])
 {
     return N;
 }
 
+// Exception Handlinig
+class RuntimeException : public std::runtime_error
+{
+public:
+    RuntimeException(const std::string& message) :
+        runtime_error(message)
+    {
+        Debug::OutputString(message);
+    }
+};
 
 inline void
 ThrowNullException(const std::string& name)
 {
-    throw std::invalid_argument(name + " is null.");
+    throw std::invalid_argument(name + " is null.\n");
 }
 
 inline void
@@ -75,7 +88,7 @@ CheckNullPointer(const std::shared_ptr<T> pointer, const std::string name)
 
 #define FALCON_ENGINE_CHECK_NULLPTR(pointer) FalconEngine::CheckNullPointer(pointer, #pointer);
 
-#define FALCON_ENGINE_NOT_SUPPORT() throw std::runtime_error("No support for this yet.");
-#define FALCON_ENGINE_NOT_POSSIBLE() assert(0);
+#define FALCON_ENGINE_THROW_ASSERTION_EXCEPTION() assert(0);
+#define FALCON_ENGINE_THROW_EXCEPTION(message) throw FalconEngine::RuntimeException(message);
+#define FALCON_ENGINE_THROW_SUPPORT_EXCEPTION() throw FalconEngine::RuntimeException("No support for this yet.\n");
 
-#define FALCON_ENGINE_THROW_EXCEPTION(information) throw std::runtime_error(information);

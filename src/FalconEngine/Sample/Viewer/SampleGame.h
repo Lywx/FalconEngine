@@ -32,11 +32,16 @@ public:
 private:
     AssetManager     *mAssetManager;
 
+    CameraSharedPtr  mCamera;
+
     const BitmapFont *mFontConsole;
     const BitmapFont *mFontDisplay;
 
+    HandednessRight   mHandedness;
+
     Model            *mModelNanosuit;
     EntitySharedPtr   mModelPerson;
+
     NodeSharedPtr     mScene;
 };
 

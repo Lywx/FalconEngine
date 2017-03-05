@@ -1,7 +1,8 @@
 #pragma once
 
-#include <FalconEngine/ContextInclude.h>
 #include <string>
+
+#include <FalconEngine/Core/Debug.h>
 
 namespace FalconEngine
 {
@@ -11,8 +12,17 @@ class GameDebug
 public:
     static void Initialize();
 
-    static void OutputString(char *str);
-    static void OutputString(std::string str);
+    static void
+    OutputString(char *str)
+    {
+        Debug::OutputString(str);
+    }
+
+    static void
+    OutputString(const std::string& str)
+    {
+        Debug::OutputString(str);
+    }
 };
 
 }

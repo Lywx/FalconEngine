@@ -1,8 +1,8 @@
 #pragma once
 
-#include <vector>
+#include <FalconEngine/Graphics/Renderer/Scene/Spatial.h>
 
-#include <FalconEngine/Graphics/Scene/Spatial.h>
+#include <vector>
 
 namespace FalconEngine
 {

@@ -7,8 +7,6 @@
 #include <FalconEngine/Math/Color.h>
 #include <FalconEngine/Math/Vector2.h>
 #include <FalconEngine/Math/Vector4.h>
-#include "FalconEngine/Graphics/Scene/Model.h"
-#include "FalconEngine/Graphics/Scene/Node.h"
 
 namespace FalconEngine
 {
@@ -21,6 +19,7 @@ class BitmapFontRenderer;
 using BitmapFontRendererSharedPtr = std::shared_ptr<BitmapFontRenderer>;
 class BitmapText;
 
+class Entity;
 class EntityRenderer;
 using EntityRendererSharedPtr = std::shared_ptr<EntityRenderer>;
 
@@ -74,7 +73,7 @@ public:
     ClearBuffers(Vector4f color, float depth, unsigned int stencil);
 
     void
-    Draw(const Entity *enitity);
+    Draw(const Camera *camera, const Entity *enitity);
 
     void
     DrawString(const BitmapFont   *font,

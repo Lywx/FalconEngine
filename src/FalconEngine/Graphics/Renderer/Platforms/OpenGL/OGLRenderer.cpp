@@ -3,7 +3,7 @@
 #include <FalconEngine/Graphics/Renderer/PrimitiveLines.h>
 #include <FalconEngine/Graphics/Renderer/PrimitivePoints.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
-#include <FalconEngine/Graphics/Renderer/Visual.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Graphics/Renderer/Resources/IndexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/States/CullState.h>
 #include <FalconEngine/Graphics/Renderer/States/OffsetState.h>
@@ -416,7 +416,7 @@ Renderer::DrawPrimitive(const Primitive *primitive)
                 }
                 else
                 {
-                    FALCON_ENGINE_NOT_POSSIBLE();
+                    FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
                 }
 
                 glDrawRangeElements(primitiveMode, 0, GLuint(vertexNum - 1), GLsizei(indexNum), indexType, indexData);
@@ -429,7 +429,7 @@ Renderer::DrawPrimitive(const Primitive *primitive)
     }
     else
     {
-        FALCON_ENGINE_NOT_POSSIBLE();
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
 }
 

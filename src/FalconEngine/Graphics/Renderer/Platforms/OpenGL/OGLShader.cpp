@@ -1,12 +1,10 @@
 #include <FalconEngine/Graphics/Renderer/Platforms/OpenGL/OGLShader.h>
 
-#include <fstream>
-#include <iostream>
-
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/trim.hpp>
 
 #include <FalconEngine/Content/AssetManager.h>
+#include <FalconEngine/Context/GameDebug.h>
 #include <FalconEngine/Content/Path.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderSource.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
@@ -126,11 +124,11 @@ PlatformShader::PlatformShader(Shader *shader) :
     std::fill_n(mShaders, int(ShaderType::Count), 0);
 
     // Compile all shader source.
-    for (auto& shaderSourcePair : shader->mSourceTable)
+    for (auto& shaderIndexSourcePair : shader->mSourceTable)
     {
-        auto shaderIndex = shaderSourcePair.first;
+        auto shaderIndex = shaderIndexSourcePair.first;
         auto shaderType = shader->GetShaderType(shaderIndex);
-        auto shaderSource = shaderSourcePair.second.get();
+        auto shaderSource = shaderIndexSourcePair.second.get();
         ProcessShaderSource(shaderSource);
 
         // Compile for each part of shader
@@ -172,9 +170,10 @@ PlatformShader::CreateFromString(int shaderIndex, GLenum shaderType, const strin
 
         GLchar *infoLog = new GLchar[infoLogLength];
         glGetShaderInfoLog(shader, infoLogLength, nullptr, infoLog);
-
-        cerr << "Shader compile error: " << infoLog << endl;
+        string infoLogString(infoLog);
         delete[] infoLog;
+
+        FALCON_ENGINE_THROW_EXCEPTION("Shader compile error: " + infoLogString);
     }
 
     mShaders[shaderIndex] = shader;
@@ -213,9 +212,10 @@ PlatformShader::LinkProgram()
 
         GLchar *infoLog = new GLchar[infoLogLength];
         glGetProgramInfoLog(mProgram, infoLogLength, nullptr, infoLog);
-
-        cerr << "Shader link error: " << infoLog << endl;
+        string infoLogString(infoLog);
         delete[] infoLog;
+
+        FALCON_ENGINE_THROW_EXCEPTION("Shader link error: " + infoLogString);
     }
 
     // Remove the unnecessary shader handle.
@@ -262,6 +262,27 @@ PlatformShader::Disable() const
 /************************************************************************/
 /* Private Members                                                      */
 /************************************************************************/
+void
+PlatformShader::CollectUniformActive()
+{
+    const GLsizei nameBufferSize = 64; // Maximum variable name number in GLSL
+    GLchar nameArray[nameBufferSize];  // Variable name in GLSL
+    GLsizei nameLength;                // Variable name length in GLSL
+
+    GLint uniformNum;
+    glGetProgramiv(mProgram, GL_ACTIVE_UNIFORMS, &uniformNum);
+    GameDebug::OutputString(string("Uniforms Active: ") + std::to_string(uniformNum) + "\n");
+
+    GLint size; // size of the variable
+    GLenum type; // type of the variable (float, vec3 or mat4, etc)
+    for (auto uniformIndex = 0; uniformIndex < uniformNum; ++uniformIndex)
+    {
+        glGetActiveUniform(mProgram, GLuint(uniformIndex), nameBufferSize, &nameLength, &size, &type, nameArray);
+
+        GameDebug::OutputString("Uniform #" + std::to_string(uniformIndex) + " Type:" + std::to_string(type) + " Name: " + string(nameArray) + "\n");
+    }
+}
+
 void
 PlatformShader::CollectUniformLocation(Shader *shader) const
 {

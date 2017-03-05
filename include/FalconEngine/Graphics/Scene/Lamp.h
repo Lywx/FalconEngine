@@ -1,7 +1,7 @@
 #pragma once
 
 #include <FalconEngine/Graphics/SceneInclude.h>
-#include <FalconEngine/Graphics/Scene/Light.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Light.h>
 
 namespace FalconEngine
 {

@@ -16,6 +16,9 @@ enum class PrimitiveType
     Count,
 };
 
+class BoundingBox;
+using BoundingBoxSharedPtr = std::shared_ptr<BoundingBox>;
+
 class IndexBuffer;
 using IndexBufferSharedPtr = std::shared_ptr<IndexBuffer>;
 
@@ -35,12 +38,19 @@ class Primitive : public Object
 protected:
     Primitive(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat);
     Primitive(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer);
+
 public:
     virtual ~Primitive();
 
 public:
     PrimitiveType
     GetPrimitiveType() const;
+
+    BoundingBoxSharedPtr
+    GetBoundingBox() const;
+
+    void
+    SetBoundingBox(BoundingBoxSharedPtr boundingBox);
 
     /************************************************************************/
     /* Vertex Buffer Management                                             */
@@ -54,12 +64,18 @@ public:
     size_t
     GetVertexNum() const;
 
+    /************************************************************************/
+    /* Vertex Format Management                                             */
+    /************************************************************************/
     const VertexFormat *
     GetVertexFormat() const;
 
     void
     SetVertexFormat(VertexFormatSharedPtr vertexFormat);
 
+    /************************************************************************/
+    /* Index Buffer Management                                              */
+    /************************************************************************/
     const IndexBuffer *
     GetIndexBuffer() const;
 
@@ -67,6 +83,7 @@ public:
     SetIndexBuffer(IndexBufferSharedPtr indexBuffer);
 
 protected:
+    BoundingBoxSharedPtr  mBoundingBox;
     PrimitiveType         mPrimitiveType;
     VertexGroupSharedPtr  mVertexGroup;
     VertexFormatSharedPtr mVertexFormat;

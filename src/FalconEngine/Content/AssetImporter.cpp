@@ -14,84 +14,43 @@
 #include <FalconEngine/Graphics/Renderer/Resources/VertexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resources/VertexFormat.h>
 #include <FalconEngine/Graphics/Renderer/Resources/VertexGroup.h>
-#include <FalconEngine/Graphics/Scene/Material.h>
-#include <FalconEngine/Graphics/Scene/Mesh.h>
-#include <FalconEngine/Graphics/Scene/Model.h>
-#include <FalconEngine/Graphics/Scene/Node.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Material.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Mesh.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Model.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Node.h>
+#include <FalconEngine/Math/Bound/AABBBoundingBox.h>
 
 using namespace std;
 
 namespace FalconEngine
 {
 
-VertexGroupSharedPtr
-CreateModelVertexBuffer(const aiMesh *aiMesh)
-{
-    // Memory allocation for vertex buffer.
-    auto vertexNum = int(aiMesh->mNumVertices);
-    auto vertexBuffer = std::make_shared<VertexBuffer>(vertexNum, sizeof(ModelVertex), BufferUsage::Static);
-    auto vertexes = reinterpret_cast<ModelVertex *>(vertexBuffer->GetData());
+using AABBBoundingBoxSharedPtr = shared_ptr<AABBBoundingBox>;
 
+AABBBoundingBoxSharedPtr
+CreateMeshAABBBoundingBox(const aiMesh *aiMesh)
+{
     if (!aiMesh->mVertices)
     {
         FALCON_ENGINE_THROW_EXCEPTION("Model doesn't have vertex data.");
     }
 
-    if (!aiMesh->mNormals)
-    {
-        FALCON_ENGINE_THROW_EXCEPTION("Model doesn't have normal data.");
-    }
+    auto boundingBox = make_shared<AABBBoundingBox>(Vector3f(aiMesh->mVertices[0].x,
+                       aiMesh->mVertices[0].y,
+                       aiMesh->mVertices[0].z));
 
-    if (!aiMesh->mTextureCoords)
-    {
-        FALCON_ENGINE_THROW_EXCEPTION("Model doesn't have uv data.");
-    }
-
-    // Walk through vertex data and create vertex buffer content in an interlaced fashion.
     for (size_t i = 0; i < aiMesh->mNumVertices; ++i)
     {
-        ModelVertex vertex;
-        Vector3f vec3;
-        Vector2f vec2;
-
-        // Position
-        vec3.x = aiMesh->mVertices[i].x;
-        vec3.y = aiMesh->mVertices[i].y;
-        vec3.z = aiMesh->mVertices[i].z;
-        vertex.mPosition = vec3;
-
-        // Normal
-        vec3.x = aiMesh->mNormals[i].x;
-        vec3.y = aiMesh->mNormals[i].y;
-        vec3.z = aiMesh->mNormals[i].z;
-        vertex.mNormal = vec3;
-
-        // Texture coordinate
-        if (aiMesh->mTextureCoords[0])
-        {
-            // NOTE(Wuxiang): A vertex can contain up to 8 different texture
-            // coordinates.
-            vec2.x = aiMesh->mTextureCoords[0][i].x;
-            vec2.y = aiMesh->mTextureCoords[0][i].y;
-            vertex.mTexCoord = vec2;
-        }
-        else
-        {
-            vertex.mTexCoord = Vector2f::Zero;
-        }
-
-        // NOTE(Wuxiang): The vertex data is interlaced.
-        vertexes[i] = vertex;
+        boundingBox->Update(Vector3f(aiMesh->mVertices[i].x,
+                                     aiMesh->mVertices[i].y,
+                                     aiMesh->mVertices[i].z));
     }
 
-    // TODO(Wuxiang): Should I change the binding index?
-    auto vertexGroup = make_shared<VertexGroup>();
-    vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, sizeof(ModelVertex));
-    return vertexGroup;
+    return boundingBox;
 }
 
 IndexBufferSharedPtr
-CreateModelIndexBuffer(const aiMesh *mesh)
+CreateMeshIndexBuffer(const aiMesh *mesh)
 {
     // Sum space for the index buffer memory allocation.
     int indexNum = 0;
@@ -122,6 +81,69 @@ CreateModelIndexBuffer(const aiMesh *mesh)
     }
 
     return indexBuffer;
+}
+
+VertexGroupSharedPtr
+CreateMeshVertexBuffer(const aiMesh *aiMesh)
+{
+    // Memory allocation for vertex buffer.
+    auto vertexNum = int(aiMesh->mNumVertices);
+    auto vertexBuffer = std::make_shared<VertexBuffer>(vertexNum, sizeof(ModelVertex), BufferUsage::Static);
+    auto vertexes = reinterpret_cast<ModelVertex *>(vertexBuffer->GetData());
+
+    if (!aiMesh->mVertices)
+    {
+        FALCON_ENGINE_THROW_EXCEPTION("Model doesn't have vertex data.");
+    }
+
+    if (!aiMesh->mNormals)
+    {
+        FALCON_ENGINE_THROW_EXCEPTION("Model doesn't have normal data.");
+    }
+
+    if (!aiMesh->mTextureCoords)
+    {
+        FALCON_ENGINE_THROW_EXCEPTION("Model doesn't have uv data.");
+    }
+
+    // Walk through vertex data and create vertex buffer content in an interlaced fashion.
+    for (size_t i = 0; i < aiMesh->mNumVertices; ++i)
+    {
+        ModelVertex vertex;
+
+        // Position
+        vertex.mPosition = Vector3f(aiMesh->mVertices[i].x,
+                                    aiMesh->mVertices[i].y,
+                                    aiMesh->mVertices[i].z);
+
+        // Normal
+        vertex.mNormal = Vector3f(aiMesh->mNormals[i].x,
+                                  aiMesh->mNormals[i].y,
+                                  aiMesh->mNormals[i].z);
+
+        // Texture coordinate
+        if (aiMesh->mTextureCoords[0])
+        {
+            // NOTE(Wuxiang): A vertex can contain up to 8 different texture
+            // coordinates.
+            vertex.mTexCoord = Vector2f(aiMesh->mTextureCoords[0][i].x,
+                                        aiMesh->mTextureCoords[0][i].y);
+        }
+
+        // NOTE(Wuxiang): It is allowed to have no texture coordinate.
+        else
+        {
+            vertex.mTexCoord = Vector2f::Zero;
+        }
+
+        // NOTE(Wuxiang): The vertex data is interlaced.
+        vertexes[i] = vertex;
+    }
+
+    // TODO(Wuxiang): Should I change the binding index?
+    auto vertexGroup = make_shared<VertexGroup>();
+    vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, sizeof(ModelVertex));
+    return vertexGroup;
 }
 
 Texture2d *
@@ -184,14 +206,19 @@ CreateMaterial(
 }
 
 VertexFormatSharedPtr
-CreateModelVertexFormat()
+CreateMeshVertexFormat()
 {
-    auto vertexFormat = make_shared<VertexFormat>();
-    vertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
-    vertexFormat->PushVertexAttribute(1, "Normal", VertexAttributeType::FloatVec3, false, 0);
-    vertexFormat->PushVertexAttribute(2, "TexCoord", VertexAttributeType::FloatVec2, false, 0);
-    vertexFormat->FinishVertexAttribute();
-    return vertexFormat;
+    shared_ptr<VertexFormat> static sVertexFormat;
+    if (sVertexFormat == nullptr)
+    {
+        sVertexFormat = make_shared<VertexFormat>();
+        sVertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
+        sVertexFormat->PushVertexAttribute(1, "Normal", VertexAttributeType::FloatVec3, false, 0);
+        sVertexFormat->PushVertexAttribute(2, "TexCoord", VertexAttributeType::FloatVec2, false, 0);
+        sVertexFormat->FinishVertexAttribute();
+    }
+
+    return sVertexFormat;
 }
 
 MeshSharedPtr
@@ -200,22 +227,19 @@ CreateMesh(
     _IN_ const aiScene *aiScene,
     _IN_ const aiMesh  *aiMesh)
 {
-    shared_ptr<Mesh> mesh;
-
     // Load vertex and index data.
-    {
-        auto vertexFormat = CreateModelVertexFormat();
-        auto vertexGroup  = CreateModelVertexBuffer(aiMesh);
-        auto indexBuffer  = CreateModelIndexBuffer(aiMesh);
+    auto boundingBox  = CreateMeshAABBBoundingBox(aiMesh);
+    auto indexBuffer  = CreateMeshIndexBuffer(aiMesh);
+    auto vertexFormat = CreateMeshVertexFormat();
+    auto vertexGroup  = CreateMeshVertexBuffer(aiMesh);
 
-        auto primitives = make_shared<PrimitiveTriangles>(vertexFormat, vertexGroup, indexBuffer);
-        mesh = make_shared<Mesh>(primitives);
-    }
+    auto primitives = make_shared<PrimitiveTriangles>(vertexFormat, vertexGroup, indexBuffer);
+    primitives->SetBoundingBox(boundingBox);
+
+    auto mesh = make_shared<Mesh>(primitives);
 
     // Load texture data in term of material.
-    {
-        mesh->SetMaterial(CreateMaterial(modelDirectoryPath, aiScene, aiMesh));
-    }
+    mesh->SetMaterial(CreateMaterial(modelDirectoryPath, aiScene, aiMesh));
 
     return mesh;
 }

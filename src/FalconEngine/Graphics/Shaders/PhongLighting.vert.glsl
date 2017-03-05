@@ -16,15 +16,17 @@ out Vout
     vec2               TexCoord;
 } vout;
  
-uniform mat4 MVPTransform;
-uniform mat4 MVTransform;
+uniform mat4 ModelViewProjectionTransform;
+uniform mat4 ModelViewTransform;
 uniform mat3 NormalTransform;
 
-void main()
+void 
+main()
 {      
-    CalcEyeSpace(Position, Normal, vout.EyePosition, vout.EyeNormal);
+    vout.EyeNormal = normalize(NormalTransform * Normal);
+    vout.EyePosition = (ModelViewTransform * vec4(Position, 1.0)).xyz;
     vout.TexCoord = TexCoord;
 
-    gl_Position = MVPTransform * vec4(Position, 1); 
+    gl_Position = ModelViewProjectionTransform * vec4(Position, 1); 
 }
  

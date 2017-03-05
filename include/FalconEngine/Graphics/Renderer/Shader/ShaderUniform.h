@@ -49,7 +49,7 @@ public:
     virtual ~ShaderUniform();
 
     virtual void
-    Update(const Visual *visual, const Camera *camera);
+    Update(const Camera *camera, const Visual *visual);
 
 public:
     std::string       mName;
@@ -143,6 +143,13 @@ inline ShaderUniformValue<Vector3f>::ShaderUniformValue(const std::string& name,
 template <>
 inline ShaderUniformValue<Vector4f>::ShaderUniformValue(const std::string& name, const Vector4f& value) :
     ShaderUniform(name, ShaderUniformType::FloatVec4),
+    mValue(value)
+{
+}
+
+template <>
+inline ShaderUniformValue<Matrix3f>::ShaderUniformValue(const std::string& name, const Matrix3f& value) :
+    ShaderUniform(name, ShaderUniformType::FloatMat3),
     mValue(value)
 {
 }

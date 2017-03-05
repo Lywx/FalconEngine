@@ -20,6 +20,7 @@ public:
     PlatformShader(Shader *shader);
     ~PlatformShader();
 
+public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
@@ -41,7 +42,12 @@ public:
     void
     Disable() const;
 
+    // @remark This function is primarily used in debugging.
+    void
+    CollectUniformActive();
+
 protected:
+
     // @remark This function modify the shader rather than the platform shader.
     void
     CollectUniformLocation(Shader *shader) const;

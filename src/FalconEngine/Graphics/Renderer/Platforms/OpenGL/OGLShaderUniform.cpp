@@ -9,7 +9,7 @@ PlatformShaderUniform::UpdateContext(ShaderUniform *shaderUniform)
     switch (shaderUniform->mType)
     {
     case ShaderUniformType::None:
-        FALCON_ENGINE_NOT_SUPPORT();
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
         break;
     case ShaderUniformType::Float:
         Update(Cast<float>(shaderUniform));
@@ -24,7 +24,7 @@ PlatformShaderUniform::UpdateContext(ShaderUniform *shaderUniform)
         Update(Cast<Vector4f>(shaderUniform));
         break;
     case ShaderUniformType::FloatMat2:
-        FALCON_ENGINE_NOT_SUPPORT();
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
         break;
     case ShaderUniformType::FloatMat3:
         Update(Cast<Matrix3f>(shaderUniform));
@@ -45,7 +45,7 @@ PlatformShaderUniform::UpdateContext(ShaderUniform *shaderUniform)
         Update(Cast<Vector4i>(shaderUniform));
         break;
     default:
-        FALCON_ENGINE_NOT_POSSIBLE();
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
 
     shaderUniform->mUpdated = false;

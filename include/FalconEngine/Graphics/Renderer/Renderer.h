@@ -6,8 +6,6 @@
 #include <vector>
 
 #include <FalconEngine/Graphics/Renderer/Viewport.h>
-#include "VisualEffectInstancePass.h"
-#include "Primitive.h"
 
 namespace FalconEngine
 {
@@ -23,10 +21,12 @@ class GameEngineData;
 class BitmapFont;
 class BitmapText;
 class Camera;
+class Primitive;
 class Shader;
 class ShaderUniform;
 class Visual;
 class VisualEffectInstance;
+class VisualEffectInstancePass;
 class VisualEffectPass;
 
 /************************************************************************/
@@ -315,14 +315,14 @@ internal:
     Disable(const VisualEffectPass *pass);
 
     void
-    Enable(const VisualEffectInstancePass *pass, const Visual *visual);
+    Enable(const VisualEffectInstancePass *pass, const Camera *camera, const Visual *visual);
 
     void
     Disable(const VisualEffectInstancePass *pass);
 
     // @summary Update effect instance's uniform.
     void
-    Update(const VisualEffectInstancePass *pass, ShaderUniform *uniform, const Visual *visual);
+    Update(const VisualEffectInstancePass *pass, ShaderUniform *uniform, const Camera *camera, const Visual *visual);
 
     /************************************************************************/
     /* Draw                                                                 */
@@ -330,17 +330,16 @@ internal:
 
     // @summary Draw single instance of visual.
     void
-    Draw(Visual *visual);
+    Draw(const Camera *camera, Visual *visual);
 
     // @summary Draw single instance of visual.
     void
-    Draw(const Visual *visual, VisualEffectInstance *effectInstance);
+    Draw(const Camera *camera, const Visual *visual, VisualEffectInstance *effectInstance);
 
 public:
     int                     mWidth;
     int                     mHeight;
 
-    Camera                 *mCamera;
     Viewport                mViewport;
 
 private:

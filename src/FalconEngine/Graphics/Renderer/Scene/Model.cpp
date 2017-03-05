@@ -1,40 +1,46 @@
-#include <FalconEngine/Graphics/Scene/Mesh.h>
-
-#include <FalconEngine/Content/AssetManager.h>
-#include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
-#include <FalconEngine/Graphics/Scene/Model.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Model.h>
 
 using namespace std;
 
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(Mesh, Visual);
-
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Mesh::Mesh(PrimitiveTrianglesSharedPtr primitives) :
-    Visual(primitives)
+Model::Model(const std::string& fileName, const std::string& filePath) :
+    Asset(fileName, filePath)
 {
 }
 
-Mesh::~Mesh()
+Model::~Model()
 {
 }
 
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-const Material *
-Mesh::GetMaterial() const
+NodeSharedPtr
+Model::GetNode()
 {
-    return mMaterial.get();
+    return mNode;
+}
+
+void Model::SetNode(NodeSharedPtr node)
+{
+    mNode = node;
 }
 
 void
-Mesh::SetMaterial(MaterialSharedPtr material)
+Model::SetSampler(SamplerSharedPtr sampler)
 {
-    mMaterial = material;
+    mSampler = sampler;
 }
+
+const Sampler *
+Model::GetSampler() const
+{
+    return mSampler.get();
+}
+
 }

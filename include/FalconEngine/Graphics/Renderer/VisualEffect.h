@@ -9,7 +9,9 @@
 namespace FalconEngine
 {
 
+class Visual;
 class VisualEffectInstance;
+using VisualEffectInstanceSharedPtr = std::shared_ptr<VisualEffectInstance>;
 
 class VisualEffectPass;
 using VisualEffectPassUniquePtr = std::unique_ptr<VisualEffectPass>;
@@ -75,6 +77,14 @@ public:
 protected:
     void
     CheckEffectCompatible(VisualEffectInstance *instance) const;
+
+    void
+    CheckEffectSame(VisualEffect *effect) const;
+
+    void
+    SetEffectInstance(
+        _IN_OUT_ Visual                       *visual,
+        _IN_     VisualEffectInstanceSharedPtr instance) const;
 
 protected:
     std::vector<VisualEffectPassUniquePtr> mPassList; // Passes contained in this effect.

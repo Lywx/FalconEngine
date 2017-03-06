@@ -84,7 +84,7 @@ CreateMeshIndexBuffer(const aiMesh *mesh)
 }
 
 VertexGroupSharedPtr
-CreateMeshVertexBuffer(const aiMesh *aiMesh)
+CreateMeshVertexGroup(const aiMesh *aiMesh)
 {
     // Memory allocation for vertex buffer.
     auto vertexNum = int(aiMesh->mNumVertices);
@@ -231,7 +231,7 @@ CreateMesh(
     auto boundingBox  = CreateMeshAABBBoundingBox(aiMesh);
     auto indexBuffer  = CreateMeshIndexBuffer(aiMesh);
     auto vertexFormat = CreateMeshVertexFormat();
-    auto vertexGroup  = CreateMeshVertexBuffer(aiMesh);
+    auto vertexGroup  = CreateMeshVertexGroup(aiMesh);
 
     auto primitives = make_shared<PrimitiveTriangles>(vertexFormat, vertexGroup, indexBuffer);
     primitives->SetBoundingBox(boundingBox);

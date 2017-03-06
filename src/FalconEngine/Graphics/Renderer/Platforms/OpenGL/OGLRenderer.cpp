@@ -360,7 +360,7 @@ Renderer::SwapBuffers()
 }
 
 void
-Renderer::DrawPrimitive(const Primitive *primitive)
+Renderer::DrawPrimitive(const Primitive *primitive, size_t primitiveInstancingNum)
 {
     FALCON_ENGINE_CHECK_NULLPTR(primitive);
 
@@ -371,7 +371,8 @@ Renderer::DrawPrimitive(const Primitive *primitive)
         auto vertexNum = primitive->GetVertexNum();
         if (vertexNum > 0)
         {
-            glDrawArrays(primitiveMode, 0, GLuint(vertexNum));
+            // glDrawArrays(primitiveMode, 0, GLuint(vertexNum));
+            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(primitiveInstancingNum));
         }
     }
     else if (primitiveType == PrimitiveType::Line)
@@ -379,7 +380,8 @@ Renderer::DrawPrimitive(const Primitive *primitive)
         auto vertexNum = primitive->GetVertexNum();
         if (vertexNum > 0)
         {
-            glDrawArrays(primitiveMode, 0, GLuint(vertexNum));
+            // glDrawArrays(primitiveMode, 0, GLuint(vertexNum));
+            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(primitiveInstancingNum));
         }
     }
     else if (primitiveType == PrimitiveType::LineStrip)
@@ -387,7 +389,8 @@ Renderer::DrawPrimitive(const Primitive *primitive)
         auto vertexNum = primitive->GetVertexNum();
         if (vertexNum > 0)
         {
-            glDrawArrays(primitiveMode, 0, GLuint(vertexNum));
+            // glDrawArrays(primitiveMode, 0, GLuint(vertexNum));
+            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(primitiveInstancingNum));
         }
     }
     else if (primitiveType == PrimitiveType::Triangle)
@@ -402,29 +405,31 @@ Renderer::DrawPrimitive(const Primitive *primitive)
             if (vertexNum > 0 && indexNum > 0)
             {
                 GLenum indexType = 0;
-                const GLvoid *indexData = nullptr;
+                const GLvoid *indexOffset = nullptr;
 
                 if (indexBuffer->mType == IndexType::UnsignedShort)
                 {
                     indexType = GL_UNSIGNED_SHORT;
-                    indexData = static_cast<unsigned short *>(nullptr) + indexBuffer->mOffset;
+                    indexOffset = static_cast<unsigned short *>(nullptr) + indexBuffer->mOffset;
                 }
                 else if (indexBuffer->mType == IndexType::UnsignedInt)
                 {
                     indexType = GL_UNSIGNED_INT;
-                    indexData = static_cast<unsigned int *>(nullptr) + indexBuffer->mOffset;
+                    indexOffset = static_cast<unsigned int *>(nullptr) + indexBuffer->mOffset;
                 }
                 else
                 {
                     FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
                 }
 
-                glDrawRangeElements(primitiveMode, 0, GLuint(vertexNum - 1), GLsizei(indexNum), indexType, indexData);
+                glDrawRangeElements(primitiveMode, 0, GLuint(vertexNum - 1), GLsizei(indexNum), indexType, indexOffset);
+                //glDrawElementsInstanced(primitiveMode, GLsizei(indexNum), indexType, indexOffset, GLsizei(primitiveInstancingNum));
             }
         }
         else
         {
-            glDrawArrays(primitiveMode, 0, GLuint(vertexNum));
+            // glDrawArrays(primitiveMode, 0, GLuint(vertexNum));
+            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(primitiveInstancingNum));
         }
     }
     else

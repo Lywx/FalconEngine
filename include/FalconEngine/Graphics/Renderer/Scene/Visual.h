@@ -6,6 +6,8 @@
 namespace FalconEngine
 {
 
+class BoundingBox;
+
 class Primitive;
 using PrimitiveSharedPtr = std::shared_ptr<Primitive>;
 
@@ -33,6 +35,9 @@ public:
     virtual ~Visual();
 
 public:
+    const BoundingBox *
+    GetBoundingBox() const;
+
     VisualEffectInstance *
     GetEffectInstance() const;
 
@@ -45,9 +50,16 @@ public:
     void
     SetPrimitive(PrimitiveSharedPtr primitives);
 
+    size_t
+    GetPrimitiveInstancingNum() const;
+
+    void
+    SetPrimitiveInstancingNum(size_t primitiveInstancingNum);
+
 protected:
     VisualEffectInstanceSharedPtr mEffectInstance;
     PrimitiveSharedPtr            mPrimitive;
+    size_t                        mPrimitiveInstancingNum;
 };
 
 }

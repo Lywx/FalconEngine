@@ -38,10 +38,10 @@ Primitive::GetPrimitiveType() const
     return mPrimitiveType;
 }
 
-BoundingBoxSharedPtr
+const BoundingBox *
 Primitive::GetBoundingBox() const
 {
-    return mBoundingBox;
+    return mBoundingBox.get();
 }
 
 void

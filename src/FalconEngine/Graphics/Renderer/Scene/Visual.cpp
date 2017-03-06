@@ -1,5 +1,7 @@
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 
+#include <FalconEngine/Graphics/Renderer/Primitive.h>
+
 namespace FalconEngine
 {
 
@@ -9,7 +11,8 @@ FALCON_ENGINE_RTTI_IMPLEMENT(Visual, Object);
 /* Constructors and Destructor                                          */
 /************************************************************************/
 Visual::Visual(PrimitiveSharedPtr primitive) :
-    mPrimitive(primitive)
+    mPrimitive(primitive),
+    mPrimitiveInstancingNum(1)
 {
 }
 
@@ -20,6 +23,12 @@ Visual::~Visual()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+const BoundingBox *
+Visual::GetBoundingBox() const
+{
+    return mPrimitive->GetBoundingBox();
+}
+
 VisualEffectInstance *
 Visual::GetEffectInstance() const
 {
@@ -44,4 +53,15 @@ Visual::SetPrimitive(PrimitiveSharedPtr primitive)
     mPrimitive = primitive;
 }
 
+size_t
+Visual::GetPrimitiveInstancingNum() const
+{
+    return mPrimitiveInstancingNum;
+}
+
+void
+Visual::SetPrimitiveInstancingNum(size_t primitiveInstancingNum)
+{
+    mPrimitiveInstancingNum = primitiveInstancingNum;
+}
 }

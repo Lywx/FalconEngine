@@ -45,7 +45,7 @@ VertexFormat::GetVertexAttributeStride() const
 }
 
 void
-VertexFormat::PushVertexAttribute(int attributeLocation, std::string attributeName, VertexAttributeType attributeType, bool attributeNormalized, int attributeBindingIndex)
+VertexFormat::PushVertexAttribute(int attributeLocation, std::string attributeName, VertexAttributeType attributeType, bool attributeNormalized, int attributeBindingIndex, int attributeDivision)
 {
     if (attributeLocation != mVertexAttributeList.size())
     {
@@ -59,7 +59,7 @@ VertexFormat::PushVertexAttribute(int attributeLocation, std::string attributeNa
     }
 
     // NOTE(Wuxiang): mVertexAttributeOffset is summed
-    mVertexAttributeList.push_back(VertexAttribute(attributeLocation, attributeName, attributeType, attributeNormalized, mVertexAttributeOffset, attributeBindingIndex));
+    mVertexAttributeList.push_back(VertexAttribute(attributeLocation, attributeName, attributeType, attributeNormalized, mVertexAttributeOffset, attributeBindingIndex, attributeDivision));
     mVertexAttributeOffset += VertexAttributeSize[int(mVertexAttributeList.back().mType)];
 }
 

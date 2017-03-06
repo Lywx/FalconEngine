@@ -55,15 +55,23 @@ GameEngineGraphics::ClearBuffers(Vector4f color, float depth, unsigned stencil)
 }
 
 void
-GameEngineGraphics::Draw(const Camera *camera, const Entity *enitity)
+GameEngineGraphics::Draw(const Camera *camera, const Entity *entity)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(enitity);
+    FALCON_ENGINE_CHECK_NULLPTR(entity);
 
-    mEntityRenderer->Draw(camera, enitity);
+    mEntityRenderer->Draw(camera, entity);
 }
 
 void
-GameEngineGraphics::DrawString(const BitmapFont *font, float fontSize, Vector2f textPosition, const std::string& text, const Color textColor, float textLineWidth)
+GameEngineGraphics::DrawBoundingBox(const Camera *camera, const Entity *entity, Color color)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(entity);
+
+    mEntityRenderer->DrawBoundingBox(camera, entity, color);
+}
+
+void
+GameEngineGraphics::DrawString(const BitmapFont *font, float fontSize, Vector2f textPosition, const std::string& text, Color textColor, float textLineWidth)
 {
     FALCON_ENGINE_CHECK_NULLPTR(font);
 
@@ -71,7 +79,7 @@ GameEngineGraphics::DrawString(const BitmapFont *font, float fontSize, Vector2f 
 }
 
 void
-GameEngineGraphics::DrawString(const BitmapFont *font, float fontSize, Vector2f textPosition, const std::wstring& text, const Color textColor, float textLineWidth)
+GameEngineGraphics::DrawString(const BitmapFont *font, float fontSize, Vector2f textPosition, const std::wstring& text, Color textColor, float textLineWidth)
 {
     FALCON_ENGINE_CHECK_NULLPTR(font);
 

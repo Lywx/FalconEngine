@@ -11,3 +11,5 @@ Rendering Pipeline Specifics
 (0) Added camera operation in renderer.
 (0) Implemented entity renderer.
 (0) Added AABB Bounding box support.
+
+(0) glVertexAttribDivisor.

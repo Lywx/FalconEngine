@@ -18,6 +18,7 @@ PlatformVertexFormat::PlatformVertexFormat(const VertexFormat *vertexFormat)
                              OpenGLShaderAttributeType[int(vertexAttrib.mType)],
                              vertexAttrib.mNormalized, vertexAttrib.mOffset);
         glVertexAttribBinding(vertexAttrib.mLocation, vertexAttrib.mBindingIndex);
+        glVertexAttribDivisor(vertexAttrib.mLocation, vertexAttrib.mDivision);
 
         glEnableVertexAttribArray(vertexAttrib.mLocation);
     }

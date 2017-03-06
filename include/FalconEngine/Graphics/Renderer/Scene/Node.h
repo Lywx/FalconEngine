@@ -76,6 +76,9 @@ public:
     // the function succeeds and returns the child at that index--keep in mind
     // that child[i] could very well be null. If i is out of range, the
     // function returns null.
+    Spatial *
+    GetChildAt(size_t i) const;
+
     SpatialSharedPtr
     GetChildAt(size_t i);
 

@@ -946,6 +946,7 @@ Renderer::Draw(
 
     FALCON_ENGINE_CHECK_NULLPTR(visual);
     auto primitive = visual->GetPrimitive();
+    auto primitiveInstancingNum = visual->GetPrimitiveInstancingNum();
 
     FALCON_ENGINE_CHECK_NULLPTR(effectInstance);
     auto effect = effectInstance->GetEffect();
@@ -987,7 +988,7 @@ Renderer::Draw(
         Enable(effectPass);
 
         // Draw the primitive.
-        DrawPrimitive(primitive);
+        DrawPrimitive(primitive, primitiveInstancingNum);
 
         // Disable effect pass.
         Disable(effectPass);

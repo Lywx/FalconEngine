@@ -115,57 +115,39 @@ CreateTextLines(
     return glyphCount;
 }
 
-template<typename T>
-inline void FillData(T *data, size_t& dataIndex, T value)
-{
-    data[dataIndex] = value;
-    ++dataIndex;
-}
-
-// @param T is the data pointer type you need to fill in.
-// @param V is the data type you provide to fill with.
-template<typename T, typename V>
-inline void FillDataAs(T *data, size_t& dataIndex, V value)
-{
-    FillData<T>(data, dataIndex, T(value));
-}
-
 void
-FillFontAttribute(float              *textData,
-                  size_t&            textDataIndex,
-                  const BitmapGlyph *textGlyph,
-                  Vector4f           textColor,
-                  double fontSizeScale)
+FillBufferFontAttribute(float             *textVertexBufferData,
+                        size_t&            textVertexBufferDataIndex,
+                        const BitmapGlyph *textGlyph,
+                        Vector4f           textColor,
+                        double fontSizeScale)
 {
     // Font color
-    FillDataAs<float, double>(textData, textDataIndex, textColor.x);
-    FillDataAs<float, double>(textData, textDataIndex, textColor.y);
-    FillDataAs<float, double>(textData, textDataIndex, textColor.z);
-    FillDataAs<float, double>(textData, textDataIndex, textColor.w);
+    FillBufferDataAsVector4f(textVertexBufferData, textVertexBufferDataIndex, textColor);
 
     // NOTE(Wuxiang): 1.32 is value the when imported font size is 33. 1.32 is
     // used as origin for scaling.
 
     // Font width
-    FillDataAs<float, double>(textData, textDataIndex, 0.50 * (1 + 0.15 * (fontSizeScale - 1.32)));
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, 0.50 * (1 + 0.15 * (fontSizeScale - 1.32)));
 
     // Font edge
-    FillDataAs<float, double>(textData, textDataIndex, 0.03 / (1 + 1.05 * (fontSizeScale - 1.32)));
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, 0.03 / (1 + 1.05 * (fontSizeScale - 1.32)));
 
     // Font page
-    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mPage);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mPage);
 }
 
 void
-FillGlyphAttribute(
-    _OUT_    float              *textData,
-    _IN_OUT_ size_t&            textDataIndex,
+FillBufferGlyphAttribute(
+    _OUT_    float             *textVertexBufferData,
+    _IN_OUT_ size_t&            textVertexBufferDataIndex,
     _IN_     const BitmapGlyph *textGlyph,
     _IN_     Vector4f           textColor,
     _IN_     float              textGlyphX,
     _IN_     float              textGlyphY,
-    _IN_     const BitmapFont *font,
-    _IN_     double            fontSizeScale)
+    _IN_     const BitmapFont  *font,
+    _IN_     double             fontSizeScale)
 {
     // NOTE(Wuxiang): Since x1, y1 represents left-bottom coordinate, we need to
     // process base and yoffset differently. Notably, x1 is amended to center the
@@ -180,53 +162,53 @@ FillGlyphAttribute(
     double y1 = y2 - textGlyph->mHeight * fontSizeScale;
     double x2 = x1 + textGlyph->mWidth * fontSizeScale;
 
-    FillDataAs<float, double>(textData, textDataIndex, x1);
-    FillDataAs<float, double>(textData, textDataIndex, y1);
-    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mS1);
-    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mT1);
-    FillFontAttribute(textData, textDataIndex, textGlyph, textColor, fontSizeScale);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, x1);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, y1);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mS1);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mT1);
+    FillBufferFontAttribute(textVertexBufferData, textVertexBufferDataIndex, textGlyph, textColor, fontSizeScale);
 
-    FillDataAs<float, double>(textData, textDataIndex, x2);
-    FillDataAs<float, double>(textData, textDataIndex, y2);
-    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mS2);
-    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mT2);
-    FillFontAttribute(textData, textDataIndex, textGlyph, textColor, fontSizeScale);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, x2);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, y2);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mS2);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mT2);
+    FillBufferFontAttribute(textVertexBufferData, textVertexBufferDataIndex, textGlyph, textColor, fontSizeScale);
 
-    FillDataAs<float, double>(textData, textDataIndex, x1);
-    FillDataAs<float, double>(textData, textDataIndex, y2);
-    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mS1);
-    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mT2);
-    FillFontAttribute(textData, textDataIndex, textGlyph, textColor, fontSizeScale);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, x1);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, y2);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mS1);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mT2);
+    FillBufferFontAttribute(textVertexBufferData, textVertexBufferDataIndex, textGlyph, textColor, fontSizeScale);
 
-    FillDataAs<float, double>(textData, textDataIndex, x2);
-    FillDataAs<float, double>(textData, textDataIndex, y1);
-    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mS2);
-    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mT1);
-    FillFontAttribute(textData, textDataIndex, textGlyph, textColor, fontSizeScale);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, x2);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, y1);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mS2);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mT1);
+    FillBufferFontAttribute(textVertexBufferData, textVertexBufferDataIndex, textGlyph, textColor, fontSizeScale);
 
-    FillDataAs<float, double>(textData, textDataIndex, x2);
-    FillDataAs<float, double>(textData, textDataIndex, y2);
-    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mS2);
-    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mT2);
-    FillFontAttribute(textData, textDataIndex, textGlyph, textColor, fontSizeScale);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, x2);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, y2);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mS2);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mT2);
+    FillBufferFontAttribute(textVertexBufferData, textVertexBufferDataIndex, textGlyph, textColor, fontSizeScale);
 
-    FillDataAs<float, double>(textData, textDataIndex, x1);
-    FillDataAs<float, double>(textData, textDataIndex, y1);
-    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mS1);
-    FillDataAs<float, double>(textData, textDataIndex, textGlyph->mT1);
-    FillFontAttribute(textData, textDataIndex, textGlyph, textColor, fontSizeScale);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, x1);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, y1);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mS1);
+    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mT1);
+    FillBufferFontAttribute(textVertexBufferData, textVertexBufferDataIndex, textGlyph, textColor, fontSizeScale);
 }
 
 // @summary Fill the vertex buffer with the text line information.
 void
-FillTextLines(
+FillBufferTextLines(
     _IN_  const BitmapFont    *font,
-    _IN_  float               fontSize,
+    _IN_  float                fontSize,
     _IN_  Vector2f                  textPosition,
     _IN_  Vector4f                  textColor,
     _IN_  const vector<BitmapLine>& textLines,
-    _IN_  size_t&                   textDataIndex,
-    _OUT_ float                     *textData
+    _IN_  size_t&                   textVertexBufferDataIndex,
+    _OUT_ float                    *textVertexBufferData
 )
 {
     float x = textPosition.x;
@@ -238,7 +220,7 @@ FillTextLines(
     {
         for (auto& glyph : line.mLineGlyphs)
         {
-            FillGlyphAttribute(textData, textDataIndex, &glyph, textColor, x, y, font, fontSizeScale);
+            FillBufferGlyphAttribute(textVertexBufferData, textVertexBufferDataIndex, &glyph, textColor, x, y, font, fontSizeScale);
 
             x += float(glyph.mAdvance * fontSizeScale);
         }
@@ -254,8 +236,8 @@ BitmapFontRenderer::RenderBegin()
     for (auto& fontBatchPair : mTextBatchTable)
     {
         auto& batch = fontBatchPair.second;
-        batch->mBufferDataIndex = 0;
-        batch->mBufferGlyphNum = 0;
+        batch->mVertexBufferDataIndex = 0;
+        batch->mGlyphNum = 0;
     }
 }
 
@@ -265,12 +247,12 @@ BitmapFontRenderer::Render(Renderer *renderer, double percent)
     for (auto& fontBatchPair : mTextBatchTable)
     {
         auto& batch = fontBatchPair.second;
-        if (batch->mBufferGlyphNum > 0)
+        if (batch->mGlyphNum > 0)
         {
             // Update buffer data before drawing
-            batch->mBuffer->SetElementNum(batch->mBufferGlyphNum * 6);
-            renderer->Update(batch->mBuffer.get());
-            renderer->Draw(nullptr, batch->mQuads.get());
+            batch->mVertexBuffer->SetElementNum(batch->mGlyphNum * 6);
+            renderer->Update(batch->mVertexBuffer.get());
+            renderer->Draw(nullptr, batch->mVertexQuads.get());
         }
     }
 }
@@ -294,7 +276,6 @@ BitmapFontRenderer::PrepareBatch(const BitmapFont *font)
     }
 
     static const size_t                 sFontBufferSize = Kilobytes(10);
-    static VertexFormatSharedPtr        sFontBufferVertexFormat;
     static shared_ptr<BitmapFontEffect> sFontEffect;
 
     if (sFontEffect == nullptr)
@@ -302,28 +283,24 @@ BitmapFontRenderer::PrepareBatch(const BitmapFont *font)
         sFontEffect = make_shared<BitmapFontEffect>(&mTextHandedness);
     }
 
-    if (sFontBufferVertexFormat == nullptr)
-    {
-        sFontBufferVertexFormat = sFontEffect->CreateVertexFormat();
-    }
-
-    auto fontBuffer = make_shared<VertexBuffer>(sFontBufferSize, sizeof(BitmapFontVertex), BufferUsage::Dynamic);
+    auto fontVertexBuffer = make_shared<VertexBuffer>(sFontBufferSize, sizeof(BitmapFontVertex), BufferUsage::Dynamic);
+    auto fontVertexFormat = sFontEffect->CreateVertexFormat();
 
     // Setup font specific visual quad.
     shared_ptr<Visual> fontQuads;
     {
         auto vertexGroup = make_shared<VertexGroup>();
-        vertexGroup->SetVertexBuffer(0, fontBuffer, 0, sFontBufferVertexFormat->GetVertexAttributeStride());
+        vertexGroup->SetVertexBuffer(0, fontVertexBuffer, 0, fontVertexFormat->GetVertexAttributeStride());
 
         auto fontEffectInstance = make_shared<VisualEffectInstance>(sFontEffect);
         sFontEffect->CreateInstance(fontEffectInstance.get(), font, mWidth, mHeight);
 
-        auto fontQuadPrimitives = make_shared<PrimitiveQuads>(sFontBufferVertexFormat, vertexGroup);
-        fontQuads = make_shared<Visual>(fontQuadPrimitives);
+        auto fontPrimitiveQuads = make_shared<PrimitiveQuads>(fontVertexFormat, vertexGroup);
+        fontQuads = make_shared<Visual>(fontPrimitiveQuads);
         fontQuads->SetEffectInstance(fontEffectInstance);
     }
 
-    auto fontBatch = make_shared<BitmapFontBatch>(fontBuffer, fontQuads);
+    auto fontBatch = make_shared<BitmapFontBatch>(fontVertexBuffer, fontQuads);
     mTextBatchTable.insert({ font, fontBatch });
     return fontBatch;
 }
@@ -342,12 +319,12 @@ BitmapFontRenderer::PrepareText(
 
     // Construct lines with glyph information.
     int textGlyphCount = CreateTextLines(font, text, sTextLines);
-    batch.mBufferGlyphNum += textGlyphCount;
+    batch.mGlyphNum += textGlyphCount;
 
     // Fill the vertex attribute into the buffer
-    FillTextLines(font, text->mFontSize, Vector2f(text->mTextBounds.x, text->mTextBounds.y),
-                  Vector4f(textColor), sTextLines, batch.mBufferDataIndex,
-                  reinterpret_cast<float *>(batch.mBuffer->GetData()));
+    FillBufferTextLines(font, text->mFontSize, Vector2f(text->mTextBounds.x, text->mTextBounds.y),
+                        Vector4f(textColor), sTextLines, batch.mVertexBufferDataIndex,
+                        reinterpret_cast<float *>(batch.mVertexBuffer->GetData()));
 }
 
 

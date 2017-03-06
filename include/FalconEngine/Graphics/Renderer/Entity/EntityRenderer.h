@@ -6,13 +6,18 @@
 #include <map>
 #include <queue>
 
+#include <FalconEngine/Graphics/Renderer/Entity/BoundingBoxBatch.h>
+
 namespace FalconEngine
 {
 
 class BoundingBox;
+using BoundingBoxBatchSharedPtr = std::shared_ptr<BoundingBoxBatch>;
+
 class Camera;
 class Entity;
 class Node;
+class Primitive;
 class Renderer;
 class Visual;
 
@@ -38,16 +43,13 @@ public:
     Draw(const Camera *camera, const Entity *entity);
 
     void
-    DrawBoundingBox(const Camera *camera, const BoundingBox *boundingBox);
+    DrawBoundingBox(const Camera *camera, const Entity *entity, Color boundingBoxColor);
 
     void
-    DrawBoundingBox(const Camera *camera, const Entity *entity);
+    DrawBoundingBox(const Camera *camera, const Node *node, Color boundingBoxColor);
 
     void
-    DrawBoundingBox(const Camera *camera, const Node *node);
-
-    void
-    DrawBoundingBox(const Camera *camera, const Visual *visual);
+    DrawBoundingBox(const Camera *camera, const Visual *visual, Color boundingBoxColor = ColorPalette::White);
 
     /************************************************************************/
     /* Rendering Engine API                                                 */
@@ -65,15 +67,29 @@ public:
     RenderEnd();
 
 private:
-    using BoundingBoxVectorMap = std::map<const Camera *, std::vector<const BoundingBox *>>;
+    void
+    DrawBoundingBox(const Camera *camera, const Visual *visual, const BoundingBox *boundingBox, Color boundingBoxColor = ColorPalette::White);
+
+    BoundingBoxBatchSharedPtr
+    PrepareBatch(const Camera *camera, size_t boundingBoxVertexNum);
+
+    void
+    PrepareBoundingBox(_IN_ BoundingBoxBatch&  batch,
+                       _IN_ const Camera      *camera,
+                       _IN_ const Visual      *visual,
+                       _IN_ const BoundingBox *boundingBox,
+                       _IN_ Color              boundingBoxColor = ColorPalette::White);
+private:
     using EntityVectorMap = std::map<const Camera *, std::vector<const Entity *>>;
     using NodeQueue = std::queue<std::pair<Node *, int>>;
 
-    BoundingBoxVectorMap mBoundingBoxRenderTable;
-    EntityVectorMap      mEntityRenderTable;
+    using BoundingBoxBatchMap = std::map<const Camera *, BoundingBoxBatchSharedPtr>;
 
-    NodeQueue            mNodeRenderQueueCurrent;
-    NodeQueue            mNodeRenderQueueNext;
+    BoundingBoxBatchMap mEntityBoundingBoxBatchTable;
+    EntityVectorMap     mEntityTable;
+
+    NodeQueue           mNodeQueueCurrent;
+    NodeQueue           mNodeQueueNext;
 };
 
 }

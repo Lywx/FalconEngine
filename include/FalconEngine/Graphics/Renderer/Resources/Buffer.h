@@ -98,4 +98,50 @@ private:
     BufferUsage    mUsage;
 };
 
+template<typename T>
+inline void
+FillBufferData(T *data, size_t& dataIndex, T value)
+{
+    data[dataIndex] = value;
+    ++dataIndex;
+}
+
+// @param T is the data pointer type you need to fill in.
+// @param V is the data type you provide to fill with.
+template<typename T, typename V>
+inline void
+FillBufferDataAs(T *data, size_t& dataIndex, V value)
+{
+    FillBufferData<T>(data, dataIndex, T(value));
+}
+
+template<typename T>
+inline void
+FillBufferDataAsVector3f(T *data, size_t& dataIndex, Vector3f value)
+{
+    FillBufferDataAs<T, float>(data, dataIndex, value.x);
+    FillBufferDataAs<T, float>(data, dataIndex, value.y);
+    FillBufferDataAs<T, float>(data, dataIndex, value.z);
+}
+
+template<typename T>
+inline void
+FillBufferDataAsVector4f(T *data, size_t& dataIndex, Vector4f value)
+{
+    FillBufferDataAs<T, float>(data, dataIndex, value.x);
+    FillBufferDataAs<T, float>(data, dataIndex, value.y);
+    FillBufferDataAs<T, float>(data, dataIndex, value.z);
+    FillBufferDataAs<T, float>(data, dataIndex, value.w);
+}
+
+template<typename T>
+inline void
+FillBufferDataAsMatrix4f(T *data, size_t& dataIndex, Matrix4f value)
+{
+    for (auto i = 0; i < 4; ++i)
+    {
+        FillBufferDataAsVector4f(data, dataIndex, value[i]);
+    }
+}
+
 }

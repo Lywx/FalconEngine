@@ -20,6 +20,12 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
+    virtual int
+    GetPositionNum() const override;
+
+    virtual std::vector<Vector3f>
+    GetPositionList() const override;
+
     void
     Update(Vector3f position);
 
@@ -39,6 +45,11 @@ public:
 
     float mZmax;
     float mZmin;
+
+private:
+    bool                          mInitialized;
+    mutable std::vector<Vector3f> mModelPosition;
+    mutable bool                  mModelPositionInitialized;
 };
 
 }

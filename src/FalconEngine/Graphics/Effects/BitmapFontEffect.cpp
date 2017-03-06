@@ -22,24 +22,6 @@ namespace FalconEngine
 FALCON_ENGINE_RTTI_IMPLEMENT(BitmapFontEffect, VisualEffect);
 
 /************************************************************************/
-/* Static Members                                                       */
-/************************************************************************/
-VertexFormatSharedPtr
-BitmapFontEffect::CreateVertexFormat()
-{
-    auto vertexFormat = std::make_shared<VertexFormat>();
-    vertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec2, false, 0);
-    vertexFormat->PushVertexAttribute(1, "TexCoord", VertexAttributeType::FloatVec2, false, 0);
-    vertexFormat->PushVertexAttribute(2, "FontColor", VertexAttributeType::FloatVec4, false, 0);
-    vertexFormat->PushVertexAttribute(3, "FontWidth", VertexAttributeType::Float, false, 0);
-    vertexFormat->PushVertexAttribute(4, "FontEdge", VertexAttributeType::Float, false, 0);
-    vertexFormat->PushVertexAttribute(5, "FontPage", VertexAttributeType::Float, false, 0);
-    vertexFormat->FinishVertexAttribute();
-
-    return vertexFormat;
-}
-
-/************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
 BitmapFontEffect::BitmapFontEffect(const Handedness *handedness) :
@@ -99,6 +81,25 @@ BitmapFontEffect::CreateInstance(VisualEffectInstance *instance, const BitmapFon
 
     instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Font), font->GetTexture());
     instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Font), font->GetSampler());
+}
+
+VertexFormatSharedPtr
+BitmapFontEffect::CreateVertexFormat()
+{
+    static VertexFormatSharedPtr sVertexFormat;
+    if (sVertexFormat == nullptr)
+    {
+        sVertexFormat = std::make_shared<VertexFormat>();
+        sVertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec2, false, 0);
+        sVertexFormat->PushVertexAttribute(1, "TexCoord", VertexAttributeType::FloatVec2, false, 0);
+        sVertexFormat->PushVertexAttribute(2, "FontColor", VertexAttributeType::FloatVec4, false, 0);
+        sVertexFormat->PushVertexAttribute(3, "FontWidth", VertexAttributeType::Float, false, 0);
+        sVertexFormat->PushVertexAttribute(4, "FontEdge", VertexAttributeType::Float, false, 0);
+        sVertexFormat->PushVertexAttribute(5, "FontPage", VertexAttributeType::Float, false, 0);
+        sVertexFormat->FinishVertexAttribute();
+    }
+
+    return sVertexFormat;
 }
 
 }

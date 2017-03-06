@@ -14,6 +14,7 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
     explicit PrimitiveTriangles(VertexFormatSharedPtr vertexFormat);
+    PrimitiveTriangles(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup);
     PrimitiveTriangles(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer);
     virtual ~PrimitiveTriangles();
 

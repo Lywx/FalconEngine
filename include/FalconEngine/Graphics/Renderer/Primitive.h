@@ -46,7 +46,7 @@ public:
     PrimitiveType
     GetPrimitiveType() const;
 
-    BoundingBoxSharedPtr
+    const BoundingBox *
     GetBoundingBox() const;
 
     void

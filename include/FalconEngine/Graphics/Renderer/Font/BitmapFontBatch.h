@@ -14,20 +14,21 @@ using VisualSharedPtr = std::shared_ptr<Visual>;
 class BitmapFontBatch
 {
 public:
-    BitmapFontBatch(VertexBufferSharedPtr buffer, VisualSharedPtr quads) :
-        mBuffer(buffer),
-        mQuads(quads)
+    BitmapFontBatch(VertexBufferSharedPtr vertexBuffer, VisualSharedPtr vertexQuads) :
+        mVertexBuffer(vertexBuffer),
+        mVertexQuads(vertexQuads)
     {
     }
 
     ~BitmapFontBatch() = default;
 
 public:
-    VertexBufferSharedPtr         mBuffer;
-    size_t                        mBufferDataIndex = 0;
-    size_t                        mBufferGlyphNum = 0;
+    size_t                mGlyphNum = 0;
 
-    VisualSharedPtr               mQuads;
+    VertexBufferSharedPtr mVertexBuffer;
+    size_t                mVertexBufferDataIndex = 0;
+
+    VisualSharedPtr       mVertexQuads;
 };
 
 }

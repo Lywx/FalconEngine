@@ -56,8 +56,10 @@ CompileShaders()
 
     // Shader Compiling Test
     auto shader = std::make_shared<Shader>();
-    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shaders/PhongLighting.vert.glsl");
-    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shaders/PhongLighting.frag.glsl");
+    //shader->PushShaderFile(ShaderType::VertexShader, "Content/Shaders/PhongLighting.vert.glsl");
+    //shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shaders/PhongLighting.frag.glsl");
+    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shaders/BoundingBox.vert.glsl");
+    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shaders/BoundingBox.frag.glsl");
     auto platformShader = PlatformShader(shader.get());
     platformShader.CollectUniformActive();
 }

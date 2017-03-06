@@ -91,6 +91,8 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
     }
 
     graphics->Draw(mCamera.get(), mModelPerson.get());
+    //graphics->DrawBoundingBox(mCamera.get(), mModelPerson.get(), ColorPalette::Red);
+
     Game::Render(graphics, percent);
 }
 
@@ -98,10 +100,15 @@ void
 SampleGame::Update(GameEngineInput *input, double elapsed)
 {
     auto keyboard = input->GetKeyboardState();
+    auto mouse = input->GetMouseState();
+
     if (keyboard->KeyPressed(Key::Escape))
     {
         GetEngine()->Exit();
     }
+
+    auto diff = mouse->GetPositionDiff();
+    mCamera->SetRotation(diff.x, diff.y, 0);
 
     if (keyboard->KeyPressed(Key::S))
     {

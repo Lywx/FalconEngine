@@ -19,6 +19,7 @@ class BitmapFontRenderer;
 using BitmapFontRendererSharedPtr = std::shared_ptr<BitmapFontRenderer>;
 class BitmapText;
 
+class Camera;
 class Entity;
 class EntityRenderer;
 using EntityRendererSharedPtr = std::shared_ptr<EntityRenderer>;
@@ -73,14 +74,17 @@ public:
     ClearBuffers(Vector4f color, float depth, unsigned int stencil);
 
     void
-    Draw(const Camera *camera, const Entity *enitity);
+    Draw(const Camera *camera, const Entity *entity);
+
+    void
+    DrawBoundingBox(const Camera *camera, const Entity *entity, Color color);
 
     void
     DrawString(const BitmapFont   *font,
                float               fontSize,
                Vector2f            textPosition,
                const std::string&  text,
-               const Color         textColor = ColorPalette::White,
+               Color               textColor = ColorPalette::White,
                float               textLineWidth = std::numeric_limits<float>().max());
 
     void
@@ -88,7 +92,7 @@ public:
                float               fontSize,
                Vector2f            textPosition,
                const std::wstring& text,
-               const Color         textColor = ColorPalette::White,
+               Color               textColor = ColorPalette::White,
                float               textLineWidth = std::numeric_limits<float>().max());
 
 public:

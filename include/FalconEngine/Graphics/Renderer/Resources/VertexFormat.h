@@ -36,7 +36,7 @@ public:
     GetVertexAttributeStride() const;
 
     void
-    PushVertexAttribute(int attributeLocation, std::string attributeName, VertexAttributeType attributeType, bool attributeNormalized, int attributeBindingIndex);
+    PushVertexAttribute(int attributeLocation, std::string attributeName, VertexAttributeType attributeType, bool attributeNormalized, int attributeBindingIndex, int attributeDivision = 0);
 
     void
     FinishVertexAttribute();

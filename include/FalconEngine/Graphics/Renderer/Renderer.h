@@ -444,7 +444,7 @@ private:
     DestroyPlatform();
 
     void
-    DrawPrimitive(const Primitive *primitive);
+    DrawPrimitive(const Primitive *primitive, size_t primitiveInstancingNum);
 
 private:
     PlatformRendererData *mData;

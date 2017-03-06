@@ -114,6 +114,12 @@ Node::DetachChildAt(size_t i)
     return nullptr;
 }
 
+const Spatial *
+Node::GetChildAt(size_t i) const
+{
+    return mChildren.at(i).get();
+}
+
 SpatialSharedPtr
 Node::GetChildAt(size_t i)
 {

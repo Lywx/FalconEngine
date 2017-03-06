@@ -15,6 +15,11 @@ PrimitiveTriangles::PrimitiveTriangles(VertexFormatSharedPtr vertexFormat) :
 {
 }
 
+PrimitiveTriangles::PrimitiveTriangles(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup) :
+    PrimitiveTriangles(vertexFormat, vertexGroup, nullptr)
+{
+}
+
 PrimitiveTriangles::PrimitiveTriangles(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer) :
     Primitive(PrimitiveType::Triangle, vertexFormat, vertexGroup, indexBuffer)
 {

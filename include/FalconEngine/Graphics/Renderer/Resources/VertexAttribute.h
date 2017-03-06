@@ -63,12 +63,13 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    VertexAttribute(int location, std::string name, VertexAttributeType type, bool normalized, int offset, int bindingIndex);
+    VertexAttribute(int location, std::string name, VertexAttributeType type, bool normalized, int offset, int bindingIndex, int division);
     virtual ~VertexAttribute();
 
 public:
     // NOTE(Wuxiang): Initialized on construction.
     int                 mBindingIndex;                                        // Vertex attribute buffer binding index.
+    int                 mDivision;                                            // Vertex attribute update division when instancing.
     int                 mLocation;                                            // Vertex attribute layout location.
     std::string         mName;                                                // Vertex attribute name.
     bool                mNormalized;                                          // Vertex attribute should be normalized or not.

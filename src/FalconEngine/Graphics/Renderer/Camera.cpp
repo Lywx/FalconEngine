@@ -24,7 +24,7 @@ Camera::Camera(const Handedness *handedness, float fovy, float aspectRatio, floa
     mNearPlane(nearPlane),
     mFovy(fovy),
     mPosition(Vector3f::Zero),
-    mRotation(Quaternion::Identity),
+    mOrientation(Quaternion::Identity),
     mView(Matrix4f::Identity),
     mWorld(Matrix4f::Identity),
     mHandedness(handedness)
@@ -82,12 +82,6 @@ Camera::GetDown() const
     return mHandedness->Down(mView);
 }
 
-const Quaternion&
-Camera::Rotation() const
-{
-    return mRotation;
-}
-
 void
 Camera::MoveForward(float distance)
 {
@@ -132,13 +126,31 @@ Camera::SetRotation(const Matrix4f& rotation)
 }
 
 void
-Camera::SetRotation(float pitch, float yaw, float roll)
+Camera::SetRotation(const Quaternion& rotation)
+{
+    mOrientation = mOrientation * rotation;
+}
+
+const Quaternion&
+Camera::GetOrientation() const
+{
+    return mOrientation;
+}
+
+void
+Camera::SetOrientation(float pitch, float yaw, float roll)
 {
     Quaternion rotationPitch = Quaternion::CreateFromAxisAngle(Vector3f::UnitX, pitch);
     Quaternion rotationYaw   = Quaternion::CreateFromAxisAngle(Vector3f::UnitY, yaw);
     Quaternion rotationRoll  = Quaternion::CreateFromAxisAngle(Vector3f::UnitZ, roll);
 
-    mRotation = rotationPitch * rotationYaw * rotationRoll;
+    mOrientation = rotationPitch * rotationYaw * rotationRoll;
+}
+
+void
+Camera::SetOrientation(const Quaternion& orientation)
+{
+    mOrientation = orientation;
 }
 
 float
@@ -239,13 +251,13 @@ Camera::LookAt(const Vector3f& from, const Vector3f& to, const Vector3f& up)
     mPosition = from;
     mView = mHandedness->CreateLookAt(from, to, up);
     mWorld = Matrix4f::Inverse(mView);
-    mRotation = Quaternion::CreateFromRotationMatrix(mWorld);
+    mOrientation = Quaternion::CreateFromRotationMatrix(mWorld);
 }
 
 void
 Camera::Update(double elapsed)
 {
-    mWorld = Matrix4f::CreateTranslation(mPosition) * Matrix4f::CreateRotation(mRotation);
+    mWorld = Matrix4f::CreateTranslation(mPosition) * Matrix4f::CreateRotation(mOrientation);
     mView = Matrix4f::Inverse(mWorld);
 }
 

@@ -27,11 +27,13 @@ public:
     Update(GameEngineInput *input, double elapsed);
 
 public:
-    float mPitch;
-    float mYaw;
-    float mRoll;
+    float mSensitivity = 1;
 
-    float mMouseSensitivity = 1;
+    float mPitch       = 0;
+    float mYaw         = 0;
+    float mRoll        = 0;
+
+    float mSpeed       = 9.0; // Meter per second
 };
 
 }

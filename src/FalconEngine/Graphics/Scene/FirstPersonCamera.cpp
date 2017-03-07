@@ -11,20 +11,17 @@ namespace FalconEngine
 FALCON_ENGINE_RTTI_IMPLEMENT(FirstPersonCamera, Camera);
 
 FirstPersonCamera::FirstPersonCamera(const Handedness *handedness) :
-    Camera(handedness),
-    mPitch(0), mYaw(0), mRoll(0)
+    Camera(handedness)
 {
 }
 
 FirstPersonCamera::FirstPersonCamera(const Handedness *handedness, const Viewport& viewport, float nearPlane, float farPlane):
-    Camera(handedness, viewport, nearPlane, farPlane),
-    mYaw(0), mRoll(0), mPitch(0)
+    Camera(handedness, viewport, nearPlane, farPlane)
 {
 }
 
 FirstPersonCamera::FirstPersonCamera(const Handedness *handedness, float fovy, float aspectRatio, float nearPlane, float farPlane):
-    Camera(handedness, fovy, aspectRatio, nearPlane, farPlane),
-    mYaw(0), mRoll(0), mPitch(0)
+    Camera(handedness, fovy, aspectRatio, nearPlane, farPlane)
 {
 }
 
@@ -47,48 +44,54 @@ FirstPersonCamera::Update(GameEngineInput *input, double elapsed)
         // static auto yawDegreeRotationPerSecondMax = 360 / 0.8;
         // static auto pitchDegreeRotationPerSecondMax = 360 / 0.8;
 
-        auto yawDegreeRotation = float(yawDegreeRotationPerSecond * tSecond);
-        auto pitchDegreeRotation = float(pitchDegreeRotationPerSecond * tSecond);
-
-        auto pitchDegreePrevious = Degree(mPitch);
-        pitchDegreePrevious = pitchDegreePrevious + mousePositionDiff.y * mMouseSensitivity * pitchDegreeRotation;
+        auto pitchDegreeRotation = float(mousePositionDiff.y * mSensitivity * pitchDegreeRotationPerSecond * tSecond);
+        auto yawDegreeRotation = -float(mousePositionDiff.x * mSensitivity * yawDegreeRotationPerSecond * tSecond);
 
         // NOTE(Wuxiang): Camera is not allowed to do front / back flip movement.
-        mPitch = Radian(Clamp<float>(pitchDegreePrevious, -90, 90));
+        auto pitchDegreePrevious = Degree(mPitch);
+        auto pitchDegree = pitchDegreePrevious + pitchDegreeRotation;
+        mPitch = Radian(Clamp<float>(pitchDegree, -90, 90));
+        auto pitchQuaternion = Quaternion::CreateFromAxisAngle(Vector3f::UnitX, mPitch);
 
         auto yawDegreePrevious = Degree(mYaw);
-        yawDegreePrevious -= mousePositionDiff.x * mMouseSensitivity * yawDegreeRotation;
+        auto yawDegree = yawDegreePrevious + yawDegreeRotation;
+        mYaw = Radian(Clamp<float>(DegreeNormalize(yawDegree), -360, 360));
+        auto yawQuaternion = Quaternion::CreateFromAxisAngle(Vector3f::UnitY, mYaw);
 
-        mYaw = Radian(Clamp<float>(DegreeNormalize(yawDegreePrevious), -360, 360));
+        auto pitchYawQuaternion = yawQuaternion * pitchQuaternion;
 
-        SetRotation(mPitch, mYaw, mRoll);
+        // NOTE(Wuxiang): Inspired by NumberXaero's answer
+        // https://www.gamedev.net/topic/653628-quaternion-camera-performs-unwanted-roll/
+        auto forward = GetForward() * pitchYawQuaternion;
+
+        auto rollQuaternion = Quaternion::CreateFromAxisAngle(forward, 0);
+
+        SetOrientation(rollQuaternion * pitchYawQuaternion);
     }
 
     // Keyboard
     {
         auto keyboard = input->GetKeyboardState();
-
-        static auto meterPerSecond = 3.0;
-        auto meterDistance = float(meterPerSecond * tSecond);
+        auto distanceMeter = float(mSpeed * tSecond);
 
         if (keyboard->KeyPressed(Key::S))
         {
-            MoveBackward(meterDistance);
+            MoveBackward(distanceMeter);
         }
 
         if (keyboard->KeyPressed(Key::W))
         {
-            MoveForward(meterDistance);
+            MoveForward(distanceMeter);
         }
 
         if (keyboard->KeyPressed(Key::A))
         {
-            MoveLeft(meterDistance);
+            MoveLeft(distanceMeter);
         }
 
         if (keyboard->KeyPressed(Key::D))
         {
-            MoveRight(meterDistance);
+            MoveRight(distanceMeter);
         }
     }
 

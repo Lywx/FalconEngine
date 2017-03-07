@@ -79,7 +79,6 @@ MouseState::SetButtonInternal(MouseButton button, bool pressed, double time)
     {
         buttonState.mUp = false;
     }
-
 }
 
 Vector2f

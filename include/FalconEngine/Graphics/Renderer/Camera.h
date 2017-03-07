@@ -70,14 +70,21 @@ public:
     void
     MoveDown(float distance);
 
-    const Quaternion&
-    Rotation() const;
-
     void
     SetRotation(const Matrix4f& rotation);
 
     void
-    SetRotation(float pitch, float yaw, float roll);
+    SetRotation(const Quaternion& rotation);
+
+    const Quaternion&
+    GetOrientation() const;
+
+    // NOTE(Wuxiang): This method intrinsically suffers from Gimbal lock.
+    void
+    SetOrientation(float pitch, float yaw, float roll);
+
+    void
+    SetOrientation(const Quaternion& orientation);
 
     /************************************************************************/
     /* Camera Setup                                                         */
@@ -144,7 +151,7 @@ protected:
     // Each update converts storage data into transform data.
 
     Vector3f           mPosition;                                               // Storage for position
-    Quaternion         mRotation;                                               // Storage for rotation
+    Quaternion         mOrientation;                                            // Storage for rotation
 
     /************************************************************************/
     /* Transform Data                                                       */

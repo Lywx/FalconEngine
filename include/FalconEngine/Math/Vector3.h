@@ -13,6 +13,9 @@ class Vector3i;
 class Vector3f : public glm::vec3
 {
 public:
+    /************************************************************************/
+    /* Static Members                                                       */
+    /************************************************************************/
     const static Vector3f Zero;
     const static Vector3f One;
 
@@ -21,10 +24,18 @@ public:
     const static Vector3f UnitZ;
 
     // @summary Right handed cross product.
-    static Vector3f Cross(const Vector3f& v1, const Vector3f& v2);
-    static float    Dot(const Vector3f& v1, const Vector3f& v2);
-    static Vector3f Normalize(const Vector3f& v);
+    static Vector3f
+    Cross(const Vector3f& v1, const Vector3f& v2);
 
+    static float
+    Dot(const Vector3f& v1, const Vector3f& v2);
+
+    static Vector3f
+    Normalize(const Vector3f& v);
+
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
     Vector3f();
     explicit Vector3f(const float& x);
     Vector3f(const float& x, const float& y, const float& z);

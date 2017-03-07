@@ -98,4 +98,33 @@ Quaternion::CreateFromRotationMatrix(const Matrix4f& rotation)
     return result;
 }
 
+Quaternion
+Quaternion::Normalize(const Quaternion& quat)
+{
+    auto q = glm::quat(quat);
+    return glm::normalize(q);
+}
+
+Quaternion::Quaternion() :
+    glm::quat()
+{
+}
+
+Quaternion::Quaternion(const float w, const float x, const float y, const float z) :
+    glm::quat(w, x, y, z)
+{
+}
+
+// Implicit Conversion
+Quaternion::Quaternion(const glm::quat quat):
+    glm::quat(quat)
+{
+}
+
+// Explicit Conversion
+Quaternion::operator glm::quat() const
+{
+    return glm::quat(w, x, y, z);
+}
+
 }

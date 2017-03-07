@@ -16,24 +16,34 @@ public:
     /* Static Members                                                       */
     /************************************************************************/
     static Quaternion Identity;
-    static Quaternion CreateFromAxisAngle(const Vector3f& axis, float angle);;
 
-    // TODO(Wuxiang)
-    // static Quaternion CreateFromEulerAngle(const Vector3& axis, float angle);;
+    static Quaternion
+    CreateFromAxisAngle(const Vector3f& axis, float angle);;
 
-    static Quaternion CreateFromRotationMatrix(const Matrix4f& rotation);
+    // TODO(Wuxiang): Implement conversion from euler angle.
+    // static Quaternion
+    // CreateFromEulerAngle(const Vector3& axis, float angle);;
 
-    Quaternion() : glm::quat() { }
-    Quaternion
-    (
-        const float w,
-        const float x,
-        const float y,
-        const float z
-    ) : glm::quat(w, x, y, z) {}
+    static Quaternion
+    CreateFromRotationMatrix(const Matrix4f& rotation);
+
+    static Quaternion
+    Normalize(const Quaternion& quat);
+
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
+    Quaternion();
+    Quaternion(const float w,
+               const float x,
+               const float y,
+               const float z);
 
     // Implicit Conversion
-    Quaternion(const glm::quat quat) : glm::quat(quat) {}
+    Quaternion(const glm::quat quat);
+
+    // Explicit Conversion
+    explicit operator glm::quat() const;
 };
 
 }

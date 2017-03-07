@@ -8,17 +8,31 @@ namespace FalconEngine
 {
 
 template <typename T>
+T
+DegreeNormalize(T degree)
+{
+    degree = remainder(degree, T(360.0));
+
+    if (degree < 0)
+    {
+        degree += 360.0;
+    }
+
+    return degree;
+}
+
+template <typename T>
 constexpr T
 Degree(const T radian)
 {
-    return 180.0 * radian / Pi;
+    return T(180.0 * radian / Pi);
 }
 
 template <typename T>
 constexpr T
 Radian(const T degree)
 {
-    return Pi * degree / 180.0;
+    return T(Pi * degree / 180.0);
 }
 
 template <typename T>

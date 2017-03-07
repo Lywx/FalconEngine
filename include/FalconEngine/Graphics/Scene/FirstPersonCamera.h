@@ -5,6 +5,8 @@
 namespace FalconEngine
 {
 
+class GameEngineInput;
+
 class FirstPersonCamera;
 using FirstPersonCameraSharedPtr = std::shared_ptr<FirstPersonCamera>;
 
@@ -22,12 +24,14 @@ public:
 
 public:
     virtual void
-    Update(double elapsed) override;
+    Update(GameEngineInput *input, double elapsed);
 
 public:
     float mPitch;
     float mYaw;
     float mRoll;
+
+    float mMouseSensitivity = 1;
 };
 
 }

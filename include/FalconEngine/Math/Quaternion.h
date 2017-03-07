@@ -12,8 +12,10 @@ class Matrix4f;
 class Quaternion : public glm::quat
 {
 public:
+    /************************************************************************/
+    /* Static Members                                                       */
+    /************************************************************************/
     static Quaternion Identity;
-
     static Quaternion CreateFromAxisAngle(const Vector3f& axis, float angle);;
 
     // TODO(Wuxiang)

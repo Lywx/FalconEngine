@@ -61,7 +61,19 @@ GameEngineInputDispatcher::ScrollCallback(GLFWwindow *window, double xoffset, do
 void
 GameEngineInputDispatcher::MousePositionCallback(GLFWwindow *window, double x, double y)
 {
-    mInput->mMouseState->SetPositionInternal(x, y, glfwGetTime());
+    static bool sScreenInitialized = false;;
+    static int  sScreenHeight = 0;
+    static int  sScreenWidth  = 0;
+
+    // NOTE(Wuxiang): I invert the Y coordinate of screen space so that (0, 0)
+    // as left lower corner to be consistent with the OpenGL NDC convention.
+    if (!sScreenInitialized)
+    {
+        glfwGetWindowSize(window, &sScreenWidth, &sScreenHeight);
+        sScreenInitialized = true;
+    }
+
+    mInput->mMouseState->SetPositionInternal(x, sScreenHeight - y, glfwGetTime());
 }
 
 void

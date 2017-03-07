@@ -8,8 +8,7 @@ Rendering Pipeline Specifics
 (0) Fixed texture array construction bug.
 (0) Model sampler.
 
-(0) Added camera operation in renderer.
-(0) Implemented entity renderer.
-(0) Added AABB Bounding box support.
+(0) Fixed Phong lighting.
+(0) Fixed bounding box rendering.
 
-(0) glVertexAttribDivisor.
+(0) Fixed glVertexAttribDivisor problem in renderer.

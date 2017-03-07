@@ -9,15 +9,10 @@
 
 namespace FalconEngine
 {
-class Visual;
 
-class Light;
-class Material;
+class Visual;
 class Mesh;
 class Node;
-
-using VisualEffectInstanceSharedPtr = std::shared_ptr<VisualEffectInstance>;
-
 
 class MeshEffect : public VisualEffect
 {
@@ -31,7 +26,6 @@ public:
     virtual ~MeshEffect();
 
 protected:
-
     void
     TraverseLevelOrder(Node *meshRoot, std::function<void(Mesh *)> meshOperation);
 

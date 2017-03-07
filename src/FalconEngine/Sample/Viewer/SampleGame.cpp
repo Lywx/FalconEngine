@@ -129,67 +129,6 @@ SampleGame::Update(GameEngineInput *input, double elapsed)
         GetEngine()->Exit();
     }
 
-    auto engine = GetEngine();
-    auto engineGraphicsSettings = GetEngineSettings()->mGraphics;
-    auto width  = engineGraphicsSettings->mWidth;
-    auto height = engineGraphicsSettings->mHeight;
-    auto speed = engine->GetMillisecondPerRender();
-
-    auto sensitivity = 1.000;
-    auto cameralooksmoothing = 2.0;
-    auto cameraypositionsmoothing = 3.0;
-    auto smoothedcamerapositiony = 0;
-
-    auto mousePositionCenter = Vector2f(width / 2, height / 2);
-    auto mousePosition = mouse->GetPosition();
-    auto mousePositionOffset = mouse->GetPositionDiff();
-    //if (mousePositionOffset == Vector2f::Zero)
-    //{
-    //    GameDebug::Break();
-    //}
-
-    auto b = Vector2f(mousePositionOffset.x / width,
-                      mousePositionOffset.y / height);
-
-    // auto mouseController = input->GetMouseController();
-    // mouseController->SetPosition(mousePositionCenter);
-
-    //auto mousespeed = Vector2f();
-    //mousespeed.x = Math::Curve(mousePositionOffset.x, mousespeed.x, cameralooksmoothing / elapsed);
-    //mousespeed.y = Math::Curve(mousePositionOffset.y, mousespeed.y, cameralooksmoothing / elapsed);
-
-    auto pitch = mCamera->mPitch;
-    auto pitchDegree = Degree(pitch);
-    pitchDegree = Clamp<float>(pitchDegree + mousePositionOffset.y * sensitivity * elapsed / speed, 0, 180);
-    mCamera->mPitch = Radian(pitchDegree);
-
-    auto yaw = mCamera->mYaw;
-    auto yawDegree = Degree(yaw);
-    yawDegree = Clamp<float>(yawDegree - mousePositionOffset.x * sensitivity * elapsed / speed, -180, 180);
-    mCamera->mYaw = Radian(yawDegree);
-
-    //mCamera->SetRotation(mousePositionOffset.y, mousePositionOffset.x, 0);
-    auto f = elapsed / speed;
-    if (keyboard->KeyPressed(Key::S))
-    {
-        mCamera->MoveBackward(1 * f);
-    }
-
-    if (keyboard->KeyPressed(Key::W))
-    {
-        mCamera->MoveForward(1 * f);
-    }
-
-    if (keyboard->KeyPressed(Key::A))
-    {
-        mCamera->MoveLeft(1 * f);
-    }
-
-    if (keyboard->KeyPressed(Key::D))
-    {
-        mCamera->MoveRight(1 * f);
-    }
-
-    mCamera->Update(elapsed);
+    mCamera->Update(input, elapsed);
     mScene->Update(elapsed, true);
 }

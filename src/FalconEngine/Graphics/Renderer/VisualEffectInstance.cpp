@@ -1,8 +1,8 @@
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
-#include <FalconEngine/Graphics/Renderer/Resources/Texture.h>
-#include <FalconEngine/Graphics/Renderer/Resources/Sampler.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>
 
 namespace FalconEngine
 {

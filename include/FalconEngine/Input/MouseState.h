@@ -33,14 +33,11 @@ public:
     bool
     ButtonUp(MouseButton button) const;
 
-    void
-    ButtonSetState(MouseButton button, bool pressed, double time);
-
     Vector2f
     GetPosition() const;
 
     void
-    SetPosition(double x, double y, double time);
+    UpdatePosition(Vector2f mousePositionPrevious, Vector2f mousePositionCurrent);
 
     Vector2f
     GetPositionDiff() const;
@@ -50,16 +47,30 @@ public:
 
     int
     GetWheelValueDiff() const;
+    void UpdateWheelValue(int wheelValueCurrent, int wheelValuePrevious);
+
+internal:
+    void
+    SetButtonInternal(MouseButton button, bool pressed, double time);
 
     void
-    SetWheelValue(double yoffset, double time);
+    SetPositionInternal(double x, double y, double time);
+
+    void
+    SetWheelValueInternal(double yoffset, double time);
+
+    void
+    UpdateEvent();
 
 private:
     MouseButtonStateMap mButtonTable;
     Vector2f            mPosition;
+    bool                mPositionChanged = false;
     Vector2f            mPositionDiff;
+
     MouseWheelDirection mWheelDirection = MouseWheelDirection::None;
     int                 mWheelValue;
+    bool                mWheelValueChanged = false;
     int                 mWheelValueDiff;
 };
 

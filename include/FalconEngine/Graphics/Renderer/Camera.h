@@ -1,9 +1,10 @@
 #pragma once
 
+#include <FalconEngine/Core/Object.h>
+#include <FalconEngine/Graphics/Renderer/Viewport.h>
 #include <FalconEngine/Math/Handedness.h>
 #include <FalconEngine/Math/Quaternion.h>
 #include <FalconEngine/Math/Vector3.h>
-#include <FalconEngine/Graphics/Renderer/Viewport.h>
 
 namespace FalconEngine
 {
@@ -11,10 +12,11 @@ namespace FalconEngine
 class Camera;
 using CameraSharedPtr = std::shared_ptr<Camera>;
 
-class Camera
+class Camera : public Object
 {
-public:
+    FALCON_ENGINE_RTTI_DECLARE;
 
+public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/

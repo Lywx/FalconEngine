@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/vec2.hpp>
+#include <string>
 
 namespace FalconEngine
 {
@@ -22,7 +23,10 @@ public:
     Vector2f(const glm::vec2& v);
 };
 
-/// Represents a point in 2D space
+std::string
+to_string(const Vector2f& v);
+
+// @summary Represents a point in 2D space
 class Vector2i : public glm::ivec2
 {
 public:
@@ -41,5 +45,8 @@ public:
     explicit operator glm::ivec2() const;
     explicit operator Vector2f() const;
 };
+
+std::string
+to_string(const Vector2i& v);
 
 }

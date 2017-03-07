@@ -24,19 +24,19 @@
 #include <FalconEngine/Graphics/Renderer/Font/BitmapText.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapWord.h>
 
-#include <FalconEngine/Graphics/Renderer/Resources/Buffer.h>
-#include <FalconEngine/Graphics/Renderer/Resources/IndexBuffer.h>
-#include <FalconEngine/Graphics/Renderer/Resources/Sampler.h>
-#include <FalconEngine/Graphics/Renderer/Resources/Texture.h>
-#include <FalconEngine/Graphics/Renderer/Resources/Texture1d.h>
-#include <FalconEngine/Graphics/Renderer/Resources/Texture2d.h>
-#include <FalconEngine/Graphics/Renderer/Resources/Texture3d.h>
-#include <FalconEngine/Graphics/Renderer/Resources/Texture2dArray.h>
-#include <FalconEngine/Graphics/Renderer/Resources/VertexAttribute.h>
-#include <FalconEngine/Graphics/Renderer/Resources/VertexBuffer.h>
-#include <FalconEngine/Graphics/Renderer/Resources/VertexBufferBinding.h>
-#include <FalconEngine/Graphics/Renderer/Resources/VertexFormat.h>
-#include <FalconEngine/Graphics/Renderer/Resources/VertexGroup.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/IndexBuffer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture1d.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture3d.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture2dArray.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexAttribute.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexBufferBinding.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
 
 #include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
@@ -53,12 +53,13 @@
 #include <FalconEngine/Graphics/Renderer/Scene/Spatial.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 
-#include <FalconEngine/Graphics/Renderer/States/BlendState.h>
-#include <FalconEngine/Graphics/Renderer/States/CullState.h>
-#include <FalconEngine/Graphics/Renderer/States/DepthTestState.h>
-#include <FalconEngine/Graphics/Renderer/States/OffsetState.h>
-#include <FalconEngine/Graphics/Renderer/States/StencilTestState.h>
-#include <FalconEngine/Graphics/Renderer/States/WireframeState.h>
+#include <FalconEngine/Graphics/Renderer/State/BlendState.h>
+#include <FalconEngine/Graphics/Renderer/State/CullState.h>
+#include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
+#include <FalconEngine/Graphics/Renderer/State/OffsetState.h>
+#include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
+#include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
 
 #include <FalconEngine/Graphics/Scene/Character.h>
+#include <FalconEngine/Graphics/Scene/FirstPersonCamera.h>
 #include <FalconEngine/Graphics/Scene/Lamp.h>

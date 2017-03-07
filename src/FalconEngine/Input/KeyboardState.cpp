@@ -51,7 +51,7 @@ KeyboardState::KeyUp(Key key) const
 }
 
 void
-KeyboardState::KeySetState(Key key, bool pressed, double time)
+KeyboardState::SetKeyInternal(Key key, bool pressed, double time)
 {
     auto keyPressedPrevious = at(key).mPressed;
     auto keyPressedCurrent = pressed;

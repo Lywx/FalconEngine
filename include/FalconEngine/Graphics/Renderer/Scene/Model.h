@@ -5,6 +5,8 @@
 #include <vector>
 
 #include <FalconEngine/Content/Asset.h>
+#include <FalconEngine/Math/Vector2.h>
+#include <FalconEngine/Math/Vector3.h>
 
 namespace FalconEngine
 {

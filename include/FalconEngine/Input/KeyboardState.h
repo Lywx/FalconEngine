@@ -24,9 +24,10 @@ public:
     bool
     KeyUp(Key key) const;
 
+internal:
     // @param time -- Millisecond time stamp.
     void
-    KeySetState(Key key, bool pressed, double time);
+    SetKeyInternal(Key key, bool pressed, double time);
 };
 
 }

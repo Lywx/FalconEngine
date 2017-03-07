@@ -3,6 +3,8 @@
 namespace FalconEngine
 {
 
+FALCON_ENGINE_RTTI_IMPLEMENT(Camera, Object);
+
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
@@ -132,11 +134,11 @@ Camera::SetRotation(const Matrix4f& rotation)
 void
 Camera::SetRotation(float pitch, float yaw, float roll)
 {
-    Quaternion rotation_yaw   = Quaternion::CreateFromAxisAngle(Vector3f::UnitY, yaw);
-    Quaternion rotation_pitch = Quaternion::CreateFromAxisAngle(Vector3f::UnitX, pitch);
-    Quaternion rotation_roll  = Quaternion::CreateFromAxisAngle(Vector3f::UnitZ, roll);
+    Quaternion rotationPitch = Quaternion::CreateFromAxisAngle(Vector3f::UnitX, pitch);
+    Quaternion rotationYaw   = Quaternion::CreateFromAxisAngle(Vector3f::UnitY, yaw);
+    Quaternion rotationRoll  = Quaternion::CreateFromAxisAngle(Vector3f::UnitZ, roll);
 
-    mRotation = rotation_yaw * rotation_pitch * rotation_roll;
+    mRotation = rotationPitch * rotationYaw * rotationRoll;
 }
 
 float
@@ -243,7 +245,7 @@ Camera::LookAt(const Vector3f& from, const Vector3f& to, const Vector3f& up)
 void
 Camera::Update(double elapsed)
 {
-    mWorld = Matrix4f::CreateFromRotation(mRotation) *  Matrix4f::CreateTranslation(mPosition);
+    mWorld = Matrix4f::CreateTranslation(mPosition) * Matrix4f::CreateFromRotation(mRotation);
     mView = Matrix4f::Inverse(mWorld);
 }
 

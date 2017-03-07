@@ -10,7 +10,14 @@ namespace FalconEngine
 class GameDebug
 {
 public:
-    static void Initialize();
+    static void
+    Break()
+    {
+        Debug::Break();
+    }
+
+    static void
+    Initialize();
 
     static void
     OutputString(char *str)

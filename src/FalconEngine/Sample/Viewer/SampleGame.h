@@ -30,19 +30,19 @@ public:
     Update(GameEngineInput *input, double elapsed) override;
 
 private:
-    AssetManager     *mAssetManager;
+    AssetManager              *mAssetManager;
 
-    CameraSharedPtr  mCamera;
+    FirstPersonCameraSharedPtr mCamera;
 
-    const BitmapFont *mFontConsole;
-    const BitmapFont *mFontDisplay;
+    const BitmapFont          *mFontConsole;
+    const BitmapFont          *mFontDisplay;
 
-    HandednessRight   mHandedness;
+    HandednessRight            mHandedness;
 
-    Model            *mModelNanosuit;
-    EntitySharedPtr   mModelPerson;
+    Model                     *mModelNanosuit;
+    EntitySharedPtr            mModelPerson;
 
-    NodeSharedPtr     mScene;
+    NodeSharedPtr              mScene;
 };
 
 }

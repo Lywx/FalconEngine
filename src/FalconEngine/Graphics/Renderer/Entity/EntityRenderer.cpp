@@ -6,10 +6,10 @@
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/Entity/Entity.h>
-#include <FalconEngine/Graphics/Renderer/Resources/Buffer.h>
-#include <FalconEngine/Graphics/Renderer/Resources/VertexBuffer.h>
-#include <FalconEngine/Graphics/Renderer/Resources/VertexFormat.h>
-#include <FalconEngine/Graphics/Renderer/Resources/VertexGroup.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Node.h>
 #include <FalconEngine/Math/Bound/AABBBoundingBox.h>
@@ -58,12 +58,12 @@ EntityRenderer::DrawBoundingBox(const Camera *camera, const Node *node, Color bo
     auto nodeChildNum = node->ChildrenNum();
     for (auto childIndex = 0; childIndex < nodeChildNum; ++childIndex)
     {
-        auto child = node->GetChildAt(childIndex);
-        if (auto childVisual = dynamic_cast<Visual *>(child))
+        const Spatial *child = node->GetChildAt(childIndex);
+        if (auto childVisual = dynamic_cast<const Visual *>(child))
         {
             DrawBoundingBox(camera, childVisual, boundingBoxColor);
         }
-        else if (auto childNode = dynamic_cast<Node *>(child))
+        else if (auto childNode = dynamic_cast<const Node *>(child))
         {
             DrawBoundingBox(camera, childNode, boundingBoxColor);
         }

@@ -17,6 +17,9 @@ using GameEngineInputSettingsSharedPtr = std::shared_ptr<GameEngineInputSettings
 class KeyboardState;
 using KeyboardStateSharedPtr = std::shared_ptr<KeyboardState>;
 
+class MouseController;
+using MouseControllerSharedPtr = std::shared_ptr<MouseController>;;
+
 class MouseState;
 using MouseStateSharedPtr = std::shared_ptr<MouseState>;
 
@@ -45,19 +48,21 @@ public:
 
 public:
     KeyboardStateSharedPtr
-    GetKeyboardState() const
-    {
-        return mKeyboardState;
-    }
+    GetKeyboardState() const;
+
+    MouseControllerSharedPtr
+    GetMouseController() const;
 
     MouseStateSharedPtr
-    GetMouseState() const
-    {
-        return mMouseState;
-    }
+    GetMouseState() const;
 
+internal:
     void
     Initialize(const GameEngineData *data, GameEngineSettingsSharedPtr settings);
+
+    // @remark Update gets called every frame by game engine.
+    void
+    Update();
 
 private:
     void
@@ -66,10 +71,17 @@ private:
     void
     DestroyPlatform();
 
+    void
+    PollEvent();
+
+    void
+    UpdateEvent();
+
 private:
     GameEngineInputDispatcher       *mDispatcher;
     GameEngineInputSettingsSharedPtr mSettings;
     KeyboardStateSharedPtr           mKeyboardState;
+    MouseControllerSharedPtr         mMouseController;
     MouseStateSharedPtr              mMouseState;
 };
 

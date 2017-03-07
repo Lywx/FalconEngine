@@ -7,14 +7,6 @@
 #if FALCON_ENGINE_PLATFORM_GLFW
 #include <FalconEngine/Context/Platform/GLFW/GLFWInclude.h>
 
-#ifdef _MSC_VER
-// NOTE(Wuxiang): Breakpoints that should ALWAYS trigger (even in release builds)!
-# define FALCON_ENGINE_DEBUG_BREAK() if (IsDebuggerPresent()) __debugbreak();
-#else
-// TODO(Wuxiang): Get it work under linux.
-# define FALCON_ENGINE_DEBUG_BREAK()
-#endif
-
 using namespace std;
 
 namespace FalconEngine
@@ -27,7 +19,7 @@ glDebugCheckError()
 }
 
 const char *
-glDebugSourceString(GLenum source)
+GetOpenGLDebugSourceString(GLenum source)
 {
     static const char *sourceNames[] =
     {
@@ -45,7 +37,7 @@ glDebugSourceString(GLenum source)
 }
 
 const char *
-glDebugTypeString(GLenum type)
+GetOpenGLDebugTypeString(GLenum type)
 {
     static const char *typeNames[] =
     {
@@ -63,7 +55,7 @@ glDebugTypeString(GLenum type)
 }
 
 const char *
-glDebugSeverityString(GLenum severity)
+GetOpenGLDebugSeverityString(GLenum severity)
 {
     static const char *sevirityNames[] =
     {
@@ -93,7 +85,7 @@ glDebugColorString(GLenum severity)
 }
 
 void
-glDebugCallback(
+OpenGLDebugCallback(
     GLenum        source,
     GLenum        type,
     GLuint        id,
@@ -108,21 +100,21 @@ glDebugCallback(
         Debug::OutputString("OpenGL Error:\n");
         Debug::OutputString("=============\n");
         Debug::OutputString(string("Object:    ") + to_string(id) + "\n");
-        Debug::OutputString(string("Severity:  ") + glDebugSeverityString(severity) + "\n");
-        Debug::OutputString(string("Type:      ") + glDebugTypeString(type) + "\n");
-        Debug::OutputString(string("Source:    ") + glDebugSourceString(source) + "\n");
+        Debug::OutputString(string("Severity:  ") + GetOpenGLDebugSeverityString(severity) + "\n");
+        Debug::OutputString(string("Type:      ") + GetOpenGLDebugTypeString(type) + "\n");
+        Debug::OutputString(string("Source:    ") + GetOpenGLDebugSourceString(source) + "\n");
         Debug::OutputString(string("Message:   ") + message + "\n");
 
         // Trigger a breakpoint in gDEBugger...
         glFinish();
 
         // Trigger a breakpoint in traditional debuggers...
-        FALCON_ENGINE_DEBUG_BREAK();
+        Debug::Break();
     }
 }
 
 void
-glDebugInitialize()
+OpenGLDebugInitialize()
 {
     if (glDebugMessageControl != NULL)
     {
@@ -139,14 +131,14 @@ glDebugInitialize()
         );
 
         // https://www.opengl.org/sdk/docs/man/html/glDebugMessageCallback.xhtml
-        glDebugMessageCallback(reinterpret_cast<GLDEBUGPROCARB>(glDebugCallback), NULL);
+        glDebugMessageCallback(reinterpret_cast<GLDEBUGPROCARB>(OpenGLDebugCallback), NULL);
     }
 }
 
 void
 GameDebug::Initialize()
 {
-    glDebugInitialize();
+    OpenGLDebugInitialize();
 }
 
 }

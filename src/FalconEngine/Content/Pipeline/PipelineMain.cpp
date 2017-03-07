@@ -2,7 +2,7 @@
 #include <FalconEngine/Content/AssetProcessor.h>
 #include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
 
-#include <FalconEngine/Graphics/Renderer/Platforms/OpenGL/OGLShader.h>
+#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLShader.h>
 
 using namespace std;
 using namespace FalconEngine;

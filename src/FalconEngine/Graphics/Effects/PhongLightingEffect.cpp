@@ -7,12 +7,12 @@
 #include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformAutomatic.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformConstant.h>
-#include <FalconEngine/Graphics/Renderer/States/BlendState.h>
-#include <FalconEngine/Graphics/Renderer/States/CullState.h>
-#include <FalconEngine/Graphics/Renderer/States/DepthTestState.h>
-#include <FalconEngine/Graphics/Renderer/States/OffsetState.h>
-#include <FalconEngine/Graphics/Renderer/States/StencilTestState.h>
-#include <FalconEngine/Graphics/Renderer/States/WireframeState.h>
+#include <FalconEngine/Graphics/Renderer/State/BlendState.h>
+#include <FalconEngine/Graphics/Renderer/State/CullState.h>
+#include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
+#include <FalconEngine/Graphics/Renderer/State/OffsetState.h>
+#include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
+#include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Light.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Material.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Mesh.h>
@@ -53,7 +53,7 @@ PhongLightingEffect::PhongLightingEffect()
     pass->SetBlendState(move(blendState));
 
     auto cullState = make_unique<CullState>();
-    cullState->mEnabled = false;
+    cullState->mEnabled = true;
     cullState->mCounterClockwise = false;
     pass->SetCullState(move(cullState));
 
@@ -65,7 +65,7 @@ PhongLightingEffect::PhongLightingEffect()
     pass->SetStencilTestState(make_unique<StencilTestState>());
 
     auto wireframwState = make_unique<WireframeState>();
-    wireframwState->mEnabled = true;
+    wireframwState->mEnabled = false;
     pass->SetWireframeState(move(wireframwState));
 
     InsertPass(move(pass));

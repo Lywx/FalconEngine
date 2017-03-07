@@ -7,6 +7,12 @@
 #include <vector>
 #include <unordered_map>
 
+#include <FalconEngine/Math/Vector2.h>
+#include <FalconEngine/Math/Vector3.h>
+#include <FalconEngine/Math/Vector4.h>
+#include <FalconEngine/Math/Matrix3.h>
+#include <FalconEngine/Math/Matrix4.h>
+
 namespace FalconEngine
 {
 

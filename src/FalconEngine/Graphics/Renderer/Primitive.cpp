@@ -1,5 +1,5 @@
 #include <FalconEngine/Graphics/Renderer/Primitive.h>
-#include <FalconEngine/Graphics/Renderer/Resources/VertexGroup.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
 
 namespace FalconEngine
 {

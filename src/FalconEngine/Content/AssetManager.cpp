@@ -10,10 +10,10 @@
 #include <FalconEngine/Content/AssetImporter.h>
 #include <FalconEngine/Content/Path.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
-#include <FalconEngine/Graphics/Renderer/Resources/Buffer.h>
-#include <FalconEngine/Graphics/Renderer/Resources/Sampler.h>
-#include <FalconEngine/Graphics/Renderer/Resources/Texture2d.h>
-#include <FalconEngine/Graphics/Renderer/Resources/Texture2dArray.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture2dArray.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderSource.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Model.h>
 

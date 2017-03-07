@@ -10,6 +10,7 @@ layout(location = 0) out vec4 FragColor;
 void
 main()
 {
-    FragColor = fin.Color;
+    // FragColor = fin.Color;
+    FragColor = vec4(1,1,1,1);
 }
 

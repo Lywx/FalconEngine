@@ -12,9 +12,9 @@
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapLine.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapText.h>
-#include <FalconEngine/Graphics/Renderer/Resources/VertexGroup.h>
-#include <FalconEngine/Graphics/Renderer/Resources/VertexFormat.h>
-#include <FalconEngine/Graphics/Renderer/Resources/VertexBuffer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
 
 using namespace std;
 using namespace FalconEngine;
@@ -275,7 +275,7 @@ BitmapFontRenderer::PrepareBatch(const BitmapFont *font)
         return iter->second;
     }
 
-    static const size_t                 sFontBufferSize = Kilobytes(10);
+    static const size_t                 sFontBufferSize = Kilobytes(100);
     static shared_ptr<BitmapFontEffect> sFontEffect;
 
     if (sFontEffect == nullptr)

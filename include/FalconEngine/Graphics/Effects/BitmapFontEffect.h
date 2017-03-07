@@ -3,6 +3,9 @@
 #include <FalconEngine/GraphicsInclude.h>
 
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
+#include <FalconEngine/Math/Handedness.h>
+#include <FalconEngine/Math/Vector2.h>
+#include <FalconEngine/Math/Vector4.h>
 
 namespace FalconEngine
 {

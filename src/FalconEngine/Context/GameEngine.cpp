@@ -30,6 +30,24 @@ GameEngine::~GameEngine()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+double
+GameEngine::GetMillisecondPerRender() const
+{
+    return mMillisecondPerRender;
+}
+
+void
+GameEngine::SetMillisecondPerRender(double millisecondPerRender)
+{
+    mMillisecondPerRender = millisecondPerRender;
+}
+
+const GameEngineData *
+GameEngine::GetData() const
+{
+    return mData;
+}
+
 void
 GameEngine::Run()
 {
@@ -118,7 +136,7 @@ GameEngine::Loop()
             // Reset frame start point.
             lastFrameBegunMillisecond = lastFrameEndedMillisecond;
 
-            mGame->UpdateInput();
+            mInput->Update();
 
             // Reset update accumulated time elapsed.
             int    currentFrameUpdateTotalCount = 0;

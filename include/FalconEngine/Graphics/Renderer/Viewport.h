@@ -2,8 +2,14 @@
 
 #include <FalconEngine/GraphicsInclude.h>
 
+#include <FalconEngine/Math/Rectangle.h>
+#include <FalconEngine/Math/Vector2.h>
+#include <FalconEngine/Math/Vector3.h>
+
 namespace FalconEngine
 {
+
+class Matrix4f;
 
 // @summary Describe the clip space region.
 class Viewport

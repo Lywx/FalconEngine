@@ -111,4 +111,10 @@ Vector3i::operator Vector3f() const
     return Vector3f(float(x), float(y), float(z));
 }
 
+std::string
+to_string(const Vector3i& v)
+{
+    return std::string("(" + std::to_string(v.x) + ", " + std::to_string(v.y) + ", " + std::to_string(v.z) + ")");
+}
+
 }

@@ -1,18 +1,21 @@
 #include <FalconEngine/Math/Quaternion.h>
 #include <FalconEngine/Math/Matrix4.h>
+#include "FalconEngine/CoreInclude.h"
 
 namespace FalconEngine
 {
 
 Quaternion Quaternion::Identity = Quaternion(1, 0, 0, 0);
 
-Quaternion Quaternion::CreateFromAxisAngle(const Vector3f& axis, float angle)
+Quaternion
+Quaternion::CreateFromAxisAngle(const Vector3f& axis, float angle)
 {
     const float sin_angle = sinf(angle * 0.5f);
-    return Quaternion(axis.x * sin_angle, axis.y * sin_angle, axis.z * sin_angle, cosf(angle * 0.5f));
+    return Quaternion(cosf(angle * 0.5f), axis.x * sin_angle, axis.y * sin_angle, axis.z * sin_angle);
 }
 
-Quaternion Quaternion::CreateFromRotationMatrix(const Matrix4f& rotation)
+Quaternion
+Quaternion::CreateFromRotationMatrix(const Matrix4f& rotation)
 {
     Quaternion result;
 
@@ -87,6 +90,9 @@ Quaternion Quaternion::CreateFromRotationMatrix(const Matrix4f& rotation)
         result.y = (rotation[2][1] - rotation[1][2]) * equation_1_over_4_wxyz_biggest;
 
         break;
+
+    default:
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
 
     return result;

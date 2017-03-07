@@ -1,6 +1,6 @@
 #include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
-#include <FalconEngine/Graphics/Renderer/Resources/IndexBuffer.h>
-#include <FalconEngine/Graphics/Renderer/Resources/VertexGroup.h>
+#include <FalconEngine/Graphics/Renderer/Resource/IndexBuffer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
 
 namespace FalconEngine
 {

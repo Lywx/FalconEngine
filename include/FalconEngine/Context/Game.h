@@ -75,9 +75,6 @@ public:
     virtual void
     Update(GameEngineInput *input, double elapsed);
 
-    void
-    UpdateInput();
-
 protected:
     GameEngine                 *mGameEngine;
     GameEngineSettingsSharedPtr mGameEngineSettings;

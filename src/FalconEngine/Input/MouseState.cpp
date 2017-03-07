@@ -41,7 +41,7 @@ MouseState::ButtonUp(MouseButton button) const
 }
 
 void
-MouseState::ButtonSetState(MouseButton button, bool pressed, double time)
+MouseState::SetButtonInternal(MouseButton button, bool pressed, double time)
 {
     auto& buttonState = mButtonTable.at(button);
     auto buttonPressedCurrent = pressed;
@@ -89,11 +89,8 @@ MouseState::GetPosition() const
 }
 
 void
-MouseState::SetPosition(double x, double y, double time)
+MouseState::UpdatePosition(Vector2f mousePositionPrevious, Vector2f mousePositionCurrent)
 {
-    auto mousePositionPrevious = mPosition;
-    auto mousePositionCurrent = Vector2f(float(x), float(y));
-
     if (mousePositionCurrent != mousePositionPrevious)
     {
         mPositionDiff = mousePositionCurrent - mousePositionPrevious;
@@ -103,6 +100,17 @@ MouseState::SetPosition(double x, double y, double time)
     {
         mPositionDiff = Vector2f::Zero;
     }
+}
+
+void
+MouseState::SetPositionInternal(double x, double y, double time)
+{
+    mPositionChanged = true;
+
+    auto mousePositionPrevious = mPosition;
+    auto mousePositionCurrent = Vector2f(float(x), float(y));
+
+    UpdatePosition(mousePositionPrevious, mousePositionCurrent);
 }
 
 Vector2f
@@ -124,10 +132,18 @@ MouseState::GetWheelValueDiff() const
 }
 
 void
-MouseState::SetWheelValue(double yoffset, double time)
+MouseState::SetWheelValueInternal(double yoffset, double time)
 {
+    mWheelValueChanged = true;
+
     auto wheelValueCurrent = int(yoffset);
     auto wheelValuePrevious = mWheelValue;
+    UpdateWheelValue(wheelValueCurrent, wheelValuePrevious);
+}
+
+void
+MouseState::UpdateWheelValue(int wheelValueCurrent, int wheelValuePrevious)
+{
     if (wheelValueCurrent != wheelValuePrevious)
     {
         mWheelValue = int(wheelValueCurrent);
@@ -144,5 +160,32 @@ MouseState::SetWheelValue(double yoffset, double time)
         mWheelValueDiff = 0;
     }
 }
+
+void
+MouseState::UpdateEvent()
+{
+    if (!mPositionChanged)
+    {
+        // NOTE(Wuxiang): The event polling has not polled anything reflecting
+        // position changes. So the position is not changed. We have to reset
+        // position difference.
+        UpdatePosition(mPosition, mPosition);
+    }
+    else
+    {
+        mPositionChanged = false;
+    }
+
+    if (!mWheelValueChanged)
+    {
+        // NOTE(Wuxiang): Same idea as above.
+        UpdateWheelValue(mWheelValue, mWheelValue);
+    }
+    else
+    {
+        mWheelValueChanged = false;
+    }
+}
+
 
 }

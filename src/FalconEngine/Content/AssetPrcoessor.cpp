@@ -15,8 +15,9 @@
 
 #include <FalconEngine/Content/Path.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
-#include <FalconEngine/Graphics/Renderer/Resources/Texture2d.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Model.h>
+#include <FalconEngine/Math/Integer.h>
 
 using namespace boost;
 using namespace std;

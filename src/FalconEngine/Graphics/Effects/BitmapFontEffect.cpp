@@ -3,16 +3,16 @@
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
-#include <FalconEngine/Graphics/Renderer/Resources/Texture2dArray.h>
-#include <FalconEngine/Graphics/Renderer/Resources/VertexFormat.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture2dArray.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 #include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformConstant.h>
-#include <FalconEngine/Graphics/Renderer/States/BlendState.h>
-#include <FalconEngine/Graphics/Renderer/States/DepthTestState.h>
-#include <FalconEngine/Graphics/Renderer/States/CullState.h>
-#include <FalconEngine/Graphics/Renderer/States/OffsetState.h>
-#include <FalconEngine/Graphics/Renderer/States/StencilTestState.h>
-#include <FalconEngine/Graphics/Renderer/States/WireframeState.h>
+#include <FalconEngine/Graphics/Renderer/State/BlendState.h>
+#include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
+#include <FalconEngine/Graphics/Renderer/State/CullState.h>
+#include <FalconEngine/Graphics/Renderer/State/OffsetState.h>
+#include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
+#include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
 
 using namespace std;
 

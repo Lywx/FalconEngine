@@ -1,12 +1,12 @@
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
-#include <FalconEngine/Graphics/Renderer/States/BlendState.h>
-#include <FalconEngine/Graphics/Renderer/States/CullState.h>
-#include <FalconEngine/Graphics/Renderer/States/DepthTestState.h>
-#include <FalconEngine/Graphics/Renderer/States/OffsetState.h>
-#include <FalconEngine/Graphics/Renderer/States/StencilTestState.h>
-#include <FalconEngine/Graphics/Renderer/States/WireframeState.h>
-#include <FalconEngine/Graphics/Renderer/Resources/Texture.h>
-#include <FalconEngine/Graphics/Renderer/Resources/Sampler.h>
+#include <FalconEngine/Graphics/Renderer/State/BlendState.h>
+#include <FalconEngine/Graphics/Renderer/State/CullState.h>
+#include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
+#include <FalconEngine/Graphics/Renderer/State/OffsetState.h>
+#include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
+#include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>
 #include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
 

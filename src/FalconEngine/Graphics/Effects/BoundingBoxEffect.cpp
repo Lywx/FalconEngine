@@ -2,15 +2,15 @@
 
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
-#include <FalconEngine/Graphics/Renderer/Resources/VertexAttribute.h>
-#include <FalconEngine/Graphics/Renderer/Resources/VertexFormat.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexAttribute.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 #include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
-#include <FalconEngine/Graphics/Renderer/States/BlendState.h>
-#include <FalconEngine/Graphics/Renderer/States/DepthTestState.h>
-#include <FalconEngine/Graphics/Renderer/States/CullState.h>
-#include <FalconEngine/Graphics/Renderer/States/OffsetState.h>
-#include <FalconEngine/Graphics/Renderer/States/StencilTestState.h>
-#include <FalconEngine/Graphics/Renderer/States/WireframeState.h>
+#include <FalconEngine/Graphics/Renderer/State/BlendState.h>
+#include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
+#include <FalconEngine/Graphics/Renderer/State/CullState.h>
+#include <FalconEngine/Graphics/Renderer/State/OffsetState.h>
+#include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
+#include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
 
 using namespace std;
 
@@ -40,7 +40,7 @@ BoundingBoxEffect::BoundingBoxEffect()
     pass->SetCullState(move(cullState));
 
     auto depthTestState = make_unique<DepthTestState>();
-    depthTestState->mTestEnabled = true;
+    depthTestState->mTestEnabled = false;
     pass->SetDepthTestState(move(depthTestState));
 
     pass->SetOffsetState(make_unique<OffsetState>());
@@ -78,7 +78,10 @@ BoundingBoxEffect::CreateVertexFormat(size_t boundingBoxVertexNum)
 
         // NOTE(Wuxiang): Transform matrix would use instancing. Different transformation
         // buffer would be used to provide the matrix data.
-        sVertexFormat->PushVertexAttribute(2, "ModelViewProjectionTransform", VertexAttributeType::FloatVec4, false, 1, boundingBoxVertexNum);
+
+
+        // TODO(Wuxiang): Wrong!
+        sVertexFormat->PushVertexAttribute(2, "ModelViewProjectionTransform", VertexAttributeType::FloatVec4, false, 1, int(boundingBoxVertexNum));
 
         // NOTE(Wuxiang): The name is not meant to be valid for mat4.
         sVertexFormat->PushVertexAttribute(3, "", VertexAttributeType::FloatVec4, false, 1, boundingBoxVertexNum);

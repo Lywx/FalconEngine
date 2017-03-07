@@ -58,4 +58,7 @@ public:
     explicit operator Vector3f() const;
 };
 
+std::string
+to_string(const Vector3i& v);
+
 }

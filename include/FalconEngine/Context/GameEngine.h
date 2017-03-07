@@ -26,11 +26,14 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
-    const GameEngineProfiler *
-    GetProfiler() const
-    {
-        return mProfiler;
-    }
+    double
+    GetMillisecondPerRender() const;
+
+    void
+    SetMillisecondPerRender(double millisecondPerRender);
+
+    const GameEngineData *
+    GetData() const;
 
     void
     Run();
@@ -54,11 +57,9 @@ private:
     void
     Destory();
 
-public:
-    double              mMillisecondPerUpdateMax = 16.66666666666;
-    double              mMillisecondPerRender    = 16.66666666666;
-
 private:
+    double mMillisecondPerRender = 16.66666666666;
+
     GameEngineData     *mData;
     Game               *mGame;
     GameEngineInput    *mInput;

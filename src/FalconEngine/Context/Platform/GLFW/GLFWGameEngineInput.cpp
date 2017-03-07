@@ -1,11 +1,13 @@
 #include <FalconEngine/Context/GameEngineInput.h>
 #include <FalconEngine/Input/MouseButton.h>
+#include <FalconEngine/Input/MouseController.h>
 #include <FalconEngine/Input/MouseState.h>
 #include <FalconEngine/Input/KeyboardState.h>
 #include <FalconEngine/Input/KeyState.h>
 
 #if FALCON_ENGINE_PLATFORM_GLFW
 #include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
+#include <FalconEngine/Input/Platform/GLFW/GLFWMouseControllerData.h>
 
 namespace FalconEngine
 {
@@ -40,25 +42,26 @@ GameEngineInputDispatcher::GameEngineInputDispatcher(GameEngineInput *input) :
 void
 GameEngineInputDispatcher::KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
-    mInput->mKeyboardState->KeySetState(Key(key), action == GLFW_PRESS, glfwGetTime());
+    auto keyPressed = action == GLFW_PRESS || action == GLFW_REPEAT;
+    mInput->mKeyboardState->SetKeyInternal(Key(key), keyPressed, glfwGetTime());
 }
 
 void
 GameEngineInputDispatcher::MouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
 {
-    mInput->mMouseState->ButtonSetState(MouseButton(button), action == GLFW_PRESS, glfwGetTime());
+    mInput->mMouseState->SetButtonInternal(MouseButton(button), action == GLFW_PRESS, glfwGetTime());
 }
 
 void
 GameEngineInputDispatcher::ScrollCallback(GLFWwindow *window, double xoffset, double yoffset)
 {
-    mInput->mMouseState->SetWheelValue(yoffset, glfwGetTime());
+    mInput->mMouseState->SetWheelValueInternal(yoffset, glfwGetTime());
 }
 
 void
 GameEngineInputDispatcher::MousePositionCallback(GLFWwindow *window, double x, double y)
 {
-    mInput->mMouseState->SetPosition(x, y, glfwGetTime());
+    mInput->mMouseState->SetPositionInternal(x, y, glfwGetTime());
 }
 
 void
@@ -105,6 +108,7 @@ void
 GameEngineInput::InitializePlatform(const GameEngineData *data)
 {
     mDispatcher = new GameEngineInputDispatcher(this);
+    mMouseController->Initialize(std::make_shared<MouseControllerData>(data->mWindow));
 
     glfwSetKeyCallback(data->mWindow, KeyCallbackDispatch);
     glfwSetMouseButtonCallback(data->mWindow, MouseButtonCallbackDispatch);
@@ -118,6 +122,12 @@ void
 GameEngineInput::DestroyPlatform()
 {
     delete mDispatcher;
+}
+
+void
+GameEngineInput::PollEvent()
+{
+    glfwPollEvents();
 }
 
 }

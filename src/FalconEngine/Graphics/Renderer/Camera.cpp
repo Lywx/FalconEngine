@@ -245,7 +245,7 @@ Camera::LookAt(const Vector3f& from, const Vector3f& to, const Vector3f& up)
 void
 Camera::Update(double elapsed)
 {
-    mWorld = Matrix4f::CreateTranslation(mPosition) * Matrix4f::CreateFromRotation(mRotation);
+    mWorld = Matrix4f::CreateTranslation(mPosition) * Matrix4f::CreateRotation(mRotation);
     mView = Matrix4f::Inverse(mWorld);
 }
 

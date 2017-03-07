@@ -93,7 +93,7 @@ Matrix4f::CreateRotationZ(const float& radians, Matrix4f& transform)
 }
 
 Matrix4f
-Matrix4f::CreateFromRotation(const Quaternion& q)
+Matrix4f::CreateRotation(const Quaternion& q)
 {
     Matrix4f result = Identity;
 
@@ -111,18 +111,6 @@ Matrix4f::CreateFromRotation(const Quaternion& q)
     result[2][2] = 1.f - 2.f * (q.x * q.x + q.y * q.y);
 
     return result;
-}
-
-Matrix4f
-Matrix4f::CreateRotation(const float& pitch, const float& yaw, const float& roll)
-{
-    Quaternion rotation_yaw   = Quaternion::CreateFromAxisAngle(Vector3f::UnitY, yaw);
-    Quaternion rotation_pitch = Quaternion::CreateFromAxisAngle(Vector3f::UnitX, pitch);
-    Quaternion rotation_roll  = Quaternion::CreateFromAxisAngle(Vector3f::UnitZ, roll);
-
-    Quaternion rotation = rotation_yaw * rotation_pitch * rotation_roll;
-
-    return CreateFromRotation(rotation);
 }
 
 Matrix4f

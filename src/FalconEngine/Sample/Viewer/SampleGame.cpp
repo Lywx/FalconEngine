@@ -71,9 +71,8 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
     auto width  = engineGraphicsSettings->mWidth;
     auto height = engineGraphicsSettings->mHeight;
 
-    // Draw FPS
+    // Draw Profiler
     {
-
         auto profiler = GameEngineProfiler::GetInstance();
         auto lastFrameFPS = int(profiler->GetLastFrameFPS());
         auto lastUpdateElapsedMillisecond = int(profiler->GetLastUpdateElapsedMillisecond());

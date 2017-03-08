@@ -55,7 +55,7 @@ FirstPersonCamera::Update(GameEngineInput *input, double elapsed)
 
         auto yawDegreePrevious = Degree(mYaw);
         auto yawDegree = yawDegreePrevious + yawDegreeRotation;
-        mYaw = Radian(Clamp<float>(DegreeNormalize(yawDegree), -360, 360));
+        mYaw = Radian(DegreeNormalize<float>(yawDegree, -180, 180));
         auto yawQuaternion = Quaternion::CreateFromAxisAngle(Vector3f::UnitY, mYaw);
 
         auto pitchYawQuaternion = yawQuaternion * pitchQuaternion;
@@ -63,7 +63,6 @@ FirstPersonCamera::Update(GameEngineInput *input, double elapsed)
         // NOTE(Wuxiang): Inspired by NumberXaero's answer
         // https://www.gamedev.net/topic/653628-quaternion-camera-performs-unwanted-roll/
         auto forward = GetForward() * pitchYawQuaternion;
-
         auto rollQuaternion = Quaternion::CreateFromAxisAngle(forward, 0);
 
         SetOrientation(rollQuaternion * pitchYawQuaternion);

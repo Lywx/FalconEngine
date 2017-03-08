@@ -201,7 +201,8 @@ Matrix4f::operator Matrix3f() const
 /* Operator Members                                                     */
 /************************************************************************/
 
-Vector3f operator*(const Matrix4f& matrix,  const Vector3f& vector)
+Vector3f
+operator*(const Matrix4f& matrix,  const Vector3f& vector)
 {
     return Vector3f(matrix * Vector4f(vector));
 }

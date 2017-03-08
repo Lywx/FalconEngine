@@ -8,6 +8,6 @@ Rendering Pipeline Specifics
 (0) Model sampler.
 
 (0) Fixed glVertexAttribDivisor problem in renderer.
+(0) Fixed bounding box rendering.
 
 (0) Fixed Phong lighting.
-(0) Fixed bounding box rendering.

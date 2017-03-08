@@ -9,11 +9,11 @@ namespace FalconEngine
 
 template <typename T>
 T
-DegreeNormalize(T degree)
+DegreeNormalize(T degree, T begin, T end)
 {
     degree = remainder(degree, T(360.0));
 
-    if (degree < 0)
+    if (degree < begin)
     {
         degree += 360.0;
     }

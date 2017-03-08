@@ -110,25 +110,25 @@ PhongLightingEffect::CreateInstance(VisualEffectInstance *instance, const Light 
     instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Ambient",
                                std::bind([light](const Visual * visual, const Camera * camera)
     {
-        return Vector3f(light->mAmbient);
+        return light->mAmbient;
     }, _1, _2)));
 
     instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Diffuse",
                                std::bind([light](const Visual * visual, const Camera * camera)
     {
-        return Vector3f(light->mDiffuse);
+        return light->mDiffuse;
     }, _1, _2)));
 
     instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Specular",
                                std::bind([light](const Visual * visual, const Camera * camera)
     {
-        return Vector3f(light->mSpecular);
+        return light->mSpecular;
     }, _1, _2)));
 
     instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.EyeDirection",
                                std::bind([light](const Visual * visual, const Camera * camera)
     {
-        return Vector3f(camera->GetView() * light->mDirection);
+        return camera->GetView() * light->mDirection;
     }, _1, _2)));
 
     instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Diffuse), material->mDiffuse);

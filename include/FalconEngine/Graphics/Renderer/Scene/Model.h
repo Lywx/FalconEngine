@@ -19,6 +19,7 @@ using NodeSharedPtr = std::shared_ptr<Node>;
 
 using ModelIndex = int;
 
+#pragma pack(push, 1)
 class ModelVertex
 {
 public:
@@ -26,6 +27,7 @@ public:
     Vector3f mNormal;
     Vector2f mTexCoord;
 };
+#pragma pack(pop)
 
 class Model : public Asset
 {

@@ -33,10 +33,10 @@ namespace FalconEngine
 class BitmapText
 {
 public:
-    BitmapText(float fontSize, std::wstring textString, Vector2f textPosition,
+    BitmapText(float fontSize, const std::wstring& textString, Vector2f textPosition,
                float textLineWidth);
 
-    BitmapText(float fontSize, std::wstring textString, Vector4f textBounds);
+    BitmapText(float fontSize, const std::wstring& textString, Vector4f textBounds);
 
     float        mFontSize;
 

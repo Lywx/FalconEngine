@@ -15,6 +15,7 @@ class BitmapFont;
 class VertexFormat;
 using VertexFormatSharedPtr = std::shared_ptr<VertexFormat>;
 
+#pragma pack(push, 1)
 class BitmapFontVertex
 {
 public:
@@ -25,6 +26,7 @@ public:
     float    mFontEdge;
     float    mFontPage;
 };
+#pragma pack(pop)
 
 class BitmapFontEffect : public VisualEffect
 {

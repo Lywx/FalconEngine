@@ -63,7 +63,7 @@ BitmapFontRenderer::BatchText(
 // lines of words.
 //
 // @return The glyph number inside the text lines.
-int
+size_t
 CreateTextLines(
     _IN_  const BitmapFont    *font,
     _IN_  const BitmapText    *text,
@@ -77,7 +77,7 @@ CreateTextLines(
     // Bounds is formatted as [x, y, width, height]
     const auto lineWidth = text->mTextBounds[2];
 
-    int glyphCount = 0;
+    size_t glyphCount = 0;
     auto lineCurrent = BitmapLine(lineWidth);
     for (int lineIndex = 0; lineIndex < sLineStrings.size(); ++lineIndex)
     {
@@ -250,7 +250,8 @@ BitmapFontRenderer::Render(Renderer *renderer, double percent)
         if (batch->mGlyphNum > 0)
         {
             // Update buffer data before drawing
-            batch->mVertexBuffer->SetElementNum(batch->mGlyphNum * 6);
+            size_t vertexNum = batch->mGlyphNum * 6;
+            batch->mVertexBuffer->SetElementNum(vertexNum);
             renderer->Update(batch->mVertexBuffer.get());
             renderer->Draw(nullptr, batch->mVertexQuads.get());
         }
@@ -318,7 +319,7 @@ BitmapFontRenderer::PrepareText(
     sTextLines.clear();
 
     // Construct lines with glyph information.
-    int textGlyphCount = CreateTextLines(font, text, sTextLines);
+    auto textGlyphCount = CreateTextLines(font, text, sTextLines);
     batch.mGlyphNum += textGlyphCount;
 
     // Fill the vertex attribute into the buffer

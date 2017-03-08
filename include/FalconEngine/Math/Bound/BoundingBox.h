@@ -17,12 +17,14 @@ public:
     Matrix4f mModelViewPrjectionTransform;
 };
 
+#pragma pack(push, 1)
 class BoundingBoxVertex
 {
 public:
     Vector3f mPosition;
     Vector4f mColor;
 };
+#pragma pack(pop)
 
 class BoundingBox
 {

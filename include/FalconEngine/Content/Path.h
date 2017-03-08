@@ -20,37 +20,37 @@ namespace FalconEngine
 //
 // @return
 std::wstring
-GetWString(std::string str);
+GetWString(const std::string& str);
 
 bool
-Exist(const std::string relativePath);
+Exist(const std::string& relativePath);
 
 std::string
 GetCurrentPath();
 
 std::string
-GetFileExtension(const std::string path);
+GetFileExtension(const std::string& path);
 
 std::string
-GetFileDirectory(const std::string path);
+GetFileDirectory(const std::string& path);
 
 std::string
-GetFileName(const std::string path);
+GetFileName(const std::string& path);
 
 std::string
-GetFileStem(const std::string path);
+GetFileStem(const std::string& path);
 
 // @return Byte number of the given file.
 std::ifstream::pos_type
-GetFileSize(const std::string relativePath);
+GetFileSize(const std::string& relativePath);
 
 std::string
-ChangeFileExtension(const std::string path, const std::string extension);
+ChangeFileExtension(const std::string& path, const std::string& extension);
 
 std::string
-RemoveFileExtension(const std::string path);
+RemoveFileExtension(const std::string& path);
 
 bool
-CreateDirectory(const std::string relativePath);
+CreateDirectory(const std::string& relativePath);
 
 }

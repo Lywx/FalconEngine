@@ -3,6 +3,7 @@
 #include <FalconEngine/GraphicsInclude.h>
 
 #include <FalconEngine/Math/Matrix4.h>
+#include <FalconEngine/Math/Vector3.h>
 #include <FalconEngine/Math/Vector4.h>
 
 namespace FalconEngine
@@ -105,6 +106,9 @@ template<typename T>
 inline void
 FillBufferData(T *data, size_t& dataIndex, T value)
 {
+    // NOTE(Wuxiang): Notice that the data indexing is based on the T. So if
+    // you use int or float at the same time, the indexing would work differently.
+    // That usually won't cause problems, if you use reinterpret_cast properly.
     data[dataIndex] = value;
     ++dataIndex;
 }

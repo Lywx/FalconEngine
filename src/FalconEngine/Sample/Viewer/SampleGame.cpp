@@ -2,6 +2,7 @@
 
 #include <FalconEngine/Context/GameEngineProfiler.h>
 #include <FalconEngine/Graphics/Effects/PhongLightingEffect.h>
+#include "FalconEngine/Graphics/Effects/BitmapFontEffect.h"
 
 using namespace std;
 using namespace FalconEngine;
@@ -62,7 +63,7 @@ SampleGame::Initialize()
 void
 SampleGame::Render(GameEngineGraphics *graphics, double percent)
 {
-    graphics->ClearBuffers(ColorPalette::Black, 1.f, 0.0f);
+    graphics->ClearBuffers(ColorPalette::Black, 1.f, 0);
 
     auto engine = GetEngine();
     auto engineGraphicsSettings = GetEngineSettings()->mGraphics;
@@ -71,16 +72,16 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
 
     // Draw Profiler
     {
-        auto profiler = GameEngineProfiler::GetInstance();
-        auto lastFrameFPS = int(profiler->GetLastFrameFPS());
-        auto lastUpdateElapsedMillisecond = int(profiler->GetLastUpdateElapsedMillisecond());
-        auto lastFrameUpdateCount = int(profiler->GetLastFrameUpdateTotalCount());
-        auto lastRenderElapsedMillisecond = int(profiler->GetLastRenderElapsedMillisecond());
+        //auto profiler = GameEngineProfiler::GetInstance();
+        //auto lastFrameFPS = int(profiler->GetLastFrameFPS());
+        //auto lastUpdateElapsedMillisecond = int(profiler->GetLastUpdateElapsedMillisecond());
+        //auto lastFrameUpdateCount = int(profiler->GetLastFrameUpdateTotalCount());
+        //auto lastRenderElapsedMillisecond = int(profiler->GetLastRenderElapsedMillisecond());
 
-        graphics->DrawString(mFontConsole, 16.f, Vector2f(50.f, height - 50.f),
-                             "U: " + std::to_string(lastUpdateElapsedMillisecond) + "ms Uc: " + std::to_string(lastFrameUpdateCount) +
-                             " R: " + std::to_string(lastRenderElapsedMillisecond) + "ms Rc: " + std::to_string(lastFrameFPS),
-                             ColorPalette::DarkGoldenrod);
+        //graphics->DrawString(mFontConsole, 16.f, Vector2f(50.f, height - 50.f),
+        //                     "U: " + std::to_string(lastUpdateElapsedMillisecond) + "ms Uc: " + std::to_string(lastFrameUpdateCount) +
+        //                     " R: " + std::to_string(lastRenderElapsedMillisecond) + "ms Rc: " + std::to_string(lastFrameFPS),
+        //                     ColorPalette::DarkGoldenrod);
     }
 
     auto input = GameEngineInput::GetInstance();
@@ -89,18 +90,18 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
 
     // Draw Mouse
     {
-        auto mousePositionDiff = mouse->GetPositionDiff();
-        auto mousePosition = mouse->GetPosition();
+        //auto mousePositionDiff = mouse->GetPositionDiff();
+        //auto mousePosition = mouse->GetPosition();
 
-        graphics->DrawString(mFontConsole, 16.f, Vector2f(50.f, height - 100.f),
-                             "Mouse Postion: " + to_string(mousePosition) + " Diff: " + to_string(mousePositionDiff), ColorPalette::DarkRed);
+        //graphics->DrawString(mFontConsole, 16.f, Vector2f(50.f, height - 100.f),
+        //                     "Mouse Postion: " + to_string(mousePosition) + " Diff: " + to_string(mousePositionDiff), ColorPalette::DarkRed);
     }
 
     // Draw Camera
     {
-        auto position = mCamera->GetPosition();
-        graphics->DrawString(mFontConsole, 16.f, Vector2f(50.f, 50.f),
-                             "Camera Position: " + to_string(position), ColorPalette::DarkRed);
+        //auto position = mCamera->GetPosition();
+        //graphics->DrawString(mFontConsole, 16.f, Vector2f(50.f, 50.f),
+        //                     "Camera Position: " + to_string(position), ColorPalette::DarkRed);
 
         auto pitch = Degree(mCamera->mPitch);
         auto yaw = Degree(mCamera->mYaw);
@@ -108,6 +109,8 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
         graphics->DrawString(mFontConsole, 16.f, Vector2f(50.f, 100.f),
                              "Camera Pitch: " + std::to_string(pitch) + " Yaw: " + std::to_string(yaw) + " Roll: " + std::to_string(roll), ColorPalette::DarkRed);
 
+        graphics->DrawString(mFontConsole, 16.f, Vector2f(50.f, 10 * 50 + 100.f),
+                             "01234567890", ColorPalette::DarkRed);
     }
 
     graphics->Draw(mCamera.get(), mModelPerson.get());
@@ -129,4 +132,6 @@ SampleGame::Update(GameEngineInput *input, double elapsed)
 
     mCamera->Update(input, elapsed);
     mScene->Update(elapsed, true);
+
+    Game::Update(input, elapsed);
 }

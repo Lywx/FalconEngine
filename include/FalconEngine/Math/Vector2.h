@@ -7,6 +7,7 @@ namespace FalconEngine
 {
 
 // Assume vector are column vector
+#pragma pack(push, 1)
 class Vector2f : public glm::vec2
 {
 public:
@@ -22,11 +23,13 @@ public:
     // Implicit Conversion
     Vector2f(const glm::vec2& v);
 };
+#pragma pack(pop)
 
 std::string
 to_string(const Vector2f& v);
 
 // @summary Represents a point in 2D space
+#pragma pack(push, 1)
 class Vector2i : public glm::ivec2
 {
 public:
@@ -45,6 +48,7 @@ public:
     explicit operator glm::ivec2() const;
     explicit operator Vector2f() const;
 };
+#pragma pack(pop)
 
 std::string
 to_string(const Vector2i& v);

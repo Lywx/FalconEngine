@@ -12,6 +12,7 @@ PlatformTexture2d::PlatformTexture2d(const Texture2d *texture) :
 {
     mDimension[0] = texture->mDimension[0];
     mDimension[1] = texture->mDimension[1];
+
     mType = OpenGLTextureType[int(texture->mFormat)];
     mFormat = OpenGLTextureFormat[int(texture->mFormat)];
     mFormatInternal = OpenGLTextureInternalFormat[int(texture->mFormat)];
@@ -26,23 +27,26 @@ PlatformTexture2d::PlatformTexture2d(const Texture2d *texture) :
     glBufferData(GL_PIXEL_UNPACK_BUFFER, texture->mDataByteNum, nullptr, mUsage);
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
-    // TODO(Wuxiang): 2017-03-02 20:20 Possible error here!
+    // Fill in the texture data
+    void *textureData = Map(0, BufferAccessMode::Write);
+    memcpy(textureData, texture->mData, texture->mDataByteNum);
+    Unmap(0);
+
     // Allocate current texture memory
     glGenTextures(1, &mTexture);
     {
         // Bind newly created texture
         GLuint textureBindingPrevious = BindTexture(TextureType::Texture2d, mTexture);
+        glTexStorage2D(GL_TEXTURE_2D, 1, mFormatInternal, mDimension[0], mDimension[1]);
+
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBuffer);
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, mDimension[0], mDimension[1],
                         mFormat, mType, nullptr);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
         // Restore previous texture binding
         glBindTexture(GL_TEXTURE_2D, textureBindingPrevious);
     }
-
-    // Fill in the texture data
-    void *textureData = Map(0, BufferAccessMode::Write);
-    memcpy(textureData, texture->mData, texture->mDataByteNum);
-    Unmap(0);
 }
 
 PlatformTexture2d::~PlatformTexture2d()

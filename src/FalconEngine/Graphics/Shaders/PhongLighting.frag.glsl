@@ -143,7 +143,6 @@ void main()
 
     // result += CalcSpotLight(Spotlight, eyeN, eyeV, fin.EyePosition);
 
-    result += vec3(0.5, 0.5, 0.5);
     FragColor = vec4(result, 1.0);
 }
 

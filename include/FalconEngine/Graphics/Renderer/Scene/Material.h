@@ -19,11 +19,11 @@ public:
     virtual ~Material ();
 
 public:
-    Texture2d *mAmbient;
-    Texture2d *mDiffuse;
-    Texture2d *mEmissive;
-    Texture2d *mSpecular;
-    Texture2d *mShininess;
+    const Texture2d *mAmbient;
+    const Texture2d *mDiffuse;
+    const Texture2d *mEmissive;
+    const Texture2d *mSpecular;
+    const Texture2d *mShininess;
 };
 
 }

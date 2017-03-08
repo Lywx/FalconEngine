@@ -6,6 +6,7 @@
 #include <FalconEngine/Graphics.h>
 #include <FalconEngine/Input.h>
 #include <FalconEngine/Math.h>
+#include "FalconEngine/Graphics/Effects/PhongLightingEffect.h"
 
 namespace FalconEngine
 {
@@ -32,17 +33,22 @@ public:
 private:
     AssetManager              *mAssetManager;
 
+    // Camera
     FirstPersonCameraSharedPtr mCamera;
 
+    // Fonts
     const BitmapFont          *mFontConsole;
     const BitmapFont          *mFontDisplay;
 
-    HandednessRight            mHandedness;
+    HandednessRight mHandedness;
 
-    Model                     *mModelNanosuit;
-    EntitySharedPtr            mModelPerson;
+    // Scene
+    Model                       *mModelNanosuit;
+    EntitySharedPtr              mModelPerson;
 
-    NodeSharedPtr              mScene;
+    NodeSharedPtr                mScene;
+    LightSharedPtr               mSceneDirectionalLight;
+    PhongLightingEffectSharedPtr mScenePhongLightingEffect;
 };
 
 }

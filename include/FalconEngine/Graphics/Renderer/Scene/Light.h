@@ -16,6 +16,9 @@ enum class LightType
     Count,
 };
 
+class Light;
+using LightSharedPtr = std::shared_ptr<Light>;
+
 class Light : public Object
 {
     FALCON_ENGINE_RTTI_DECLARE;

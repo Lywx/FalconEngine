@@ -15,6 +15,9 @@ class Visual;
 using VisualEffectSharedPtr = std::shared_ptr<VisualEffect>;
 using VisualEffectInstanceSharedPtr = std::shared_ptr<VisualEffectInstance>;
 
+class PhongLightingEffect;
+using PhongLightingEffectSharedPtr = std::shared_ptr<PhongLightingEffect>;
+
 class PhongLightingEffect : public MeshEffect
 {
     FALCON_ENGINE_RTTI_DECLARE;

@@ -17,6 +17,8 @@
 #include <FalconEngine/Graphics/Renderer/Scene/Material.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Mesh.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Node.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
 
 using namespace std;
 
@@ -108,26 +110,30 @@ PhongLightingEffect::CreateInstance(VisualEffectInstance *instance, const Light 
     instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Ambient",
                                std::bind([light](const Visual * visual, const Camera * camera)
     {
-        return light->mAmbient;
+        return Vector3f(light->mAmbient);
     }, _1, _2)));
 
     instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Diffuse",
                                std::bind([light](const Visual * visual, const Camera * camera)
     {
-        return light->mDiffuse;
+        return Vector3f(light->mDiffuse);
     }, _1, _2)));
 
     instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Specular",
                                std::bind([light](const Visual * visual, const Camera * camera)
     {
-        return light->mSpecular;
+        return Vector3f(light->mSpecular);
     }, _1, _2)));
 
     instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.EyeDirection",
                                std::bind([light](const Visual * visual, const Camera * camera)
     {
-        return camera->GetView() * light->mDirection;
+        return Vector3f(camera->GetView() * light->mDirection);
     }, _1, _2)));
+
+    instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Diffuse), material->mDiffuse);
+    //instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Diffuse), material->mDiffuse);
+    // instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Specular), material->mSpecular);
 }
 
 void

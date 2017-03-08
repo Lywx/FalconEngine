@@ -94,6 +94,11 @@ public:
         ar << boost::serialization::base_object<const Asset>(*this);
         ar << mChannel;
         ar << mDimension;
+
+        ar << mFormat;
+        ar << mMipmapLevel;
+        ar << mType;
+        ar << mUsage;
     }
 
     template<class Archive>
@@ -102,6 +107,11 @@ public:
         ar >> boost::serialization::base_object<Asset>(*this);
         ar >> mChannel;
         ar >> mDimension;
+
+        ar >> mFormat;
+        ar >> mMipmapLevel;
+        ar >> mType;
+        ar >> mUsage;
     }
 
     BOOST_SERIALIZATION_SPLIT_MEMBER()

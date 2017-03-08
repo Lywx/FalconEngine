@@ -42,6 +42,7 @@ public:
         ar >> boost::serialization::base_object<TextureBuffer>(*this);
 
         // NOTE(Wuxiang): mDataByteNum is serialized in TextureBuffer.
+        delete[] mData;
         mData = new unsigned char[mDataByteNum];
         for (int i = 0; i < mDataByteNum; ++i)
         {

@@ -13,13 +13,13 @@ BakeAssets()
     auto assetProcessor = AssetProcessor();
 
     // Fonts
-    // assetProcessor.BakeFont("Content/Fonts/LuciadaConsoleDistanceField.fnt");
-    assetProcessor.BakeFont("Content/Fonts/NSimSunDistanceField.fnt");
+    assetProcessor.BakeFont("Content/Fonts/LuciadaConsoleDistanceField.fnt");
+    //assetProcessor.BakeFont("Content/Fonts/NSimSunDistanceField.fnt");
 
     // Models
     // assetProcessor.BakeModel("Content/Models/Axe.obj");
     // assetProcessor.BakeModel("Content/Models/Carl.stl");
-    // assetProcessor.BakeModel("Content/Models/nanosuit.obj");
+    //assetProcessor.BakeModel("Content/Models/nanosuit.obj");
 }
 
 void
@@ -67,7 +67,8 @@ CompileShaders()
 int
 main(int argc, char **argv)
 {
-    CompileShaders();
+    BakeAssets();
+    //CompileShaders();
 
     return 0;
 }

@@ -44,15 +44,13 @@ SampleGame::Initialize()
     mModelNanosuit = mAssetManager->LoadModel("Content/Models/nanosuit.obj").get();
     mModelPerson = make_shared<Character>(mModelNanosuit->GetNode());
 
-    auto phongLightingEffect = make_shared<PhongLightingEffect>();
-    auto a = make_shared<VisualEffectInstance>(phongLightingEffect);
-    auto b = make_shared<Light>(LightType::Directional);
-    b->mDirection = Vector3f(1, 1, 1);
-    b->mAmbient = Color(255, 255, 255);
-    b->mDiffuse = Color(255, 255, 255);
-    b->mSpecular = Color(255, 255, 255);
-
-    phongLightingEffect->CreateInstance(phongLightingEffect, mModelPerson->GetNode().get(), b.get());
+    mScenePhongLightingEffect = make_shared<PhongLightingEffect>();
+    mSceneDirectionalLight = make_shared<Light>(LightType::Directional);
+    mSceneDirectionalLight->mAmbient = Color(255, 255, 255);
+    mSceneDirectionalLight->mDiffuse = Color(255, 255, 255);
+    mSceneDirectionalLight->mSpecular = Color(255, 255, 255);
+    mSceneDirectionalLight->mDirection = Vector3f(1, 1, 1);
+    mScenePhongLightingEffect->CreateInstance(mScenePhongLightingEffect, mModelPerson->GetNode().get(), mSceneDirectionalLight.get());
 
     mScene = make_shared<Node>();
     mScene->mWorldTransform = Matrix4f::Zero;

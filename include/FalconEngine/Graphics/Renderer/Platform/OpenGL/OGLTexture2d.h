@@ -30,7 +30,7 @@ private:
 
     GLuint mTexture;
     GLuint mTexturePrevious;
-    GLint  mDimension[3];
+    GLint  mDimension[2];
 
     GLuint mFormatInternal;
     GLuint mFormat;

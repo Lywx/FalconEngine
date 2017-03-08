@@ -5,7 +5,6 @@ Rendering Pipeline Specifics
 (1) Added more members in Light class.
 (1) Finished blin phong lighting.
 
-(0) Fixed texture array construction bug.
 (0) Model sampler.
 
 (0) Fixed glVertexAttribDivisor problem in renderer.

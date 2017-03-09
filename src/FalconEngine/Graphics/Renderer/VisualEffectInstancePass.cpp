@@ -24,14 +24,12 @@ VisualEffectInstancePass::~VisualEffectInstancePass()
 void
 VisualEffectInstancePass::SetShaderUniform(ShaderUniformSharedPtr shaderUniform)
 {
-    if (mShader->ContainUniform(shaderUniform->mName))
-    {
-        mShaderUniformList.push_back(shaderUniform);
-    }
-    else
+    if (!mShader->ContainUniform(shaderUniform->mName))
     {
         mShader->PushUniform(shaderUniform->mName, shaderUniform->mType);
     }
+
+    mShaderUniformList.push_back(shaderUniform);
 }
 
 void

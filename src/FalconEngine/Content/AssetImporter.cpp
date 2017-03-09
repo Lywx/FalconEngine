@@ -232,8 +232,6 @@ CreateMaterial(
         material->mEmissiveTexture = LoadMaterialTexture(modelDirectoryPath, aiMaterial, aiTextureType_EMISSIVE);
         material->mShininessTexture = LoadMaterialTexture(modelDirectoryPath, aiMaterial, aiTextureType_SHININESS);
         material->mSpecularTexture = LoadMaterialTexture(modelDirectoryPath, aiMaterial, aiTextureType_SPECULAR);
-
-        return material;
     }
 
     return material;

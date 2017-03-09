@@ -20,7 +20,7 @@ file(COPY ${FALCON_ENGINE_GRAPHICS_SHADER_FILES} DESTINATION "${CMAKE_RUNTIME_OU
 target_link_libraries(FalconEngine.Graphics 
     glew32sd.lib glfw3.lib opengl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib)
 
-set_target_properties(FalconEngine.Graphics PROPERTIES COMPILE_FLAGS "/MTd /Gm")
+set_target_properties(FalconEngine.Graphics PROPERTIES COMPILE_FLAGS "/MTd /Gm /ZI")
 set_target_properties(FalconEngine.Graphics PROPERTIES LINK_FLAGS "/INCREMENTAL")
 set_target_properties(FalconEngine.Graphics PROPERTIES SUFFIX ".lib")
 set_target_properties(FalconEngine.Graphics PROPERTIES FOLDER "FalconEngine Library Targets")

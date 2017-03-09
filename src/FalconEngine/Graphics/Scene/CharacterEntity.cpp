@@ -1,19 +1,19 @@
-#include <FalconEngine/Graphics/Scene/Character.h>
+#include <FalconEngine/Graphics/Scene/CharacterEntity.h>
 
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(Character, Entity);
+FALCON_ENGINE_RTTI_IMPLEMENT(CharacterEntity, Entity);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Character::Character(const NodeSharedPtr node)  :
+CharacterEntity::CharacterEntity(const NodeSharedPtr node)  :
     Entity(node)
 {
 }
 
-Character::~Character()
+CharacterEntity::~CharacterEntity()
 {
 }
 

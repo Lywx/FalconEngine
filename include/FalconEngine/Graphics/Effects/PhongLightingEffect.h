@@ -23,6 +23,10 @@ class PhongLightingEffect : public MeshEffect
     FALCON_ENGINE_RTTI_DECLARE;
 
 public:
+    static int PointLightNumMax;
+    static int SpotLightNumMax;
+
+public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
@@ -36,23 +40,29 @@ public:
     // @summary Add required parameters to the existing visual effect instance.
     void
     CreateInstance(
-        _IN_OUT_ VisualEffectInstance *instance,
-        _IN_     const Light          *light,
-        _IN_     const Material       *material) const;
+        _IN_     VisualEffectSharedPtr             effect,
+        _IN_OUT_ Node                             *nodeRoot,
+        _IN_     const Light                      *directionalLight,
+        _IN_     const std::vector<const Light *>& pointLightList,
+        _IN_     const std::vector<const Light *>& spotLightList);
 
+    // @summary Add required parameters to the existing visual effect instance.
     void
     CreateInstance(
-        _IN_     VisualEffectSharedPtr effect,
-        _IN_OUT_ Node                 *meshRoot,
-        _IN_     const Light          *light);
-
+        _IN_OUT_ VisualEffectInstance         *instance,
+        _IN_ const Material                   *material,
+        _IN_ const Light                      *directionalLight,
+        _IN_ const std::vector<const Light *>& pointLightList,
+        _IN_ const std::vector<const Light *>& spotLightList) const;
 
 private:
     void
     CreateInstance(
-        _IN_OUT_ Mesh                         *mesh,
         _IN_OUT_ VisualEffectInstanceSharedPtr instance,
-        _IN_     const Light                  *light) const;
+        _IN_OUT_ Mesh                         *mesh,
+        _IN_ const Light                      *directionalLight,
+        _IN_ const std::vector<const Light *>& pointLightList,
+        _IN_ const std::vector<const Light *>& spotLightList) const;
 };
 
 }

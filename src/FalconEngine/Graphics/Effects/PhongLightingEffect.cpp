@@ -28,6 +28,12 @@ namespace FalconEngine
 FALCON_ENGINE_RTTI_IMPLEMENT(PhongLightingEffect, VisualEffect);
 
 /************************************************************************/
+/* Static Members                                                       */
+/************************************************************************/
+int PhongLightingEffect::PointLightNumMax = 10;
+int PhongLightingEffect::SpotLightNumMax = 10;
+
+/************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
 PhongLightingEffect::PhongLightingEffect()
@@ -81,12 +87,37 @@ PhongLightingEffect::~PhongLightingEffect()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PhongLightingEffect::CreateInstance(VisualEffectInstance *instance, const Light *light, const Material *material) const
+PhongLightingEffect::CreateInstance(_IN_     VisualEffectSharedPtr        effect,
+                                    _IN_OUT_ Node                        *nodeRoot,
+                                    _IN_     const Light                 *directionalLight,
+                                    _IN_     const vector<const Light *>& pointLightList,
+                                    _IN_     const vector<const Light *>& spotLightList)
+{
+    using namespace placeholders;
+
+    CheckEffectSame(effect.get());
+
+    auto meshCreateInstance = std::bind([effect, &directionalLight, &pointLightList, &spotLightList, this](Mesh * mesh)
+    {
+        auto instance = make_shared<VisualEffectInstance>(effect);
+        CreateInstance(instance, mesh, directionalLight, pointLightList, spotLightList);
+    }, _1);
+
+    TraverseLevelOrder(nodeRoot, meshCreateInstance);
+}
+
+void
+PhongLightingEffect::CreateInstance(_IN_OUT_ VisualEffectInstance        *instance,
+                                    _IN_     const Material              *material,
+                                    _IN_     const Light                 *directionalLight,
+                                    _IN_     const vector<const Light *>& pointLightList,
+                                    _IN_     const vector<const Light *>& spotLightList) const
 {
     using namespace placeholders;
 
     CheckEffectCompatible(instance);
 
+    // Transform
     instance->SetShaderUniform(0, ShareAutomatic<Matrix4f>("ModelViewProjectionTransform",
                                std::bind([](const Visual * visual, const Camera * camera)
     {
@@ -107,58 +138,145 @@ PhongLightingEffect::CreateInstance(VisualEffectInstance *instance, const Light 
         return Matrix3f(normalTransform);
     }, _1, _2)));
 
+    // Directional light
     instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Ambient",
-                               std::bind([light](const Visual * visual, const Camera * camera)
+                               std::bind([directionalLight](const Visual * visual, const Camera * camera)
     {
-        return light->mAmbient;
+        return directionalLight->mAmbient;
     }, _1, _2)));
 
     instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Diffuse",
-                               std::bind([light](const Visual * visual, const Camera * camera)
+                               std::bind([directionalLight](const Visual * visual, const Camera * camera)
     {
-        return light->mDiffuse;
+        return directionalLight->mDiffuse;
     }, _1, _2)));
 
     instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Specular",
-                               std::bind([light](const Visual * visual, const Camera * camera)
+                               std::bind([directionalLight](const Visual * visual, const Camera * camera)
     {
-        return light->mSpecular;
+        return directionalLight->mSpecular;
     }, _1, _2)));
 
     instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.EyeDirection",
-                               std::bind([light](const Visual * visual, const Camera * camera)
+                               std::bind([directionalLight](const Visual * visual, const Camera * camera)
     {
-        return camera->GetView() * light->mDirection;
+        return camera->GetView() * directionalLight->mDirection;
     }, _1, _2)));
 
-    instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Diffuse), material->mDiffuse);
+    // Point light
+    {
+        // TODO(Wuxiang): 2017-03-09 14:31 This is wrong. If you cannot have the maximum i in the start you won't be able to increase it.
+        for (int i = 0; i < PointLightNumMax; ++i)
+        {
+            instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].Ambient",
+                                       std::bind([i, &pointLightList](const Visual * visual, const Camera * camera)
+            {
+                if (i < pointLightList.size())
+                {
+                    auto *pointLight = pointLightList[i];
+                    return Vector3f(pointLight->mAmbient);
+                }
+
+                return Vector3f::Zero;
+            }, _1, _2)));
+
+            instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].Diffuse",
+                                       std::bind([i, &pointLightList](const Visual * visual, const Camera * camera)
+            {
+                if (i < pointLightList.size())
+                {
+                    auto *pointLight = pointLightList[i];
+                    return Vector3f(pointLight->mDiffuse);
+                }
+
+                return Vector3f::Zero;
+            }, _1, _2)));
+
+            instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].Specular",
+                                       std::bind([i, &pointLightList](const Visual * visual, const Camera * camera)
+            {
+                if (i < pointLightList.size())
+                {
+                    auto *pointLight = pointLightList[i];
+                    return Vector3f(pointLight->mSpecular);
+                }
+
+                return Vector3f::Zero;
+            }, _1, _2)));
+
+            instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].EyePosition",
+                                       std::bind([i, &pointLightList](const Visual * visual, const Camera * camera)
+            {
+                if (i < pointLightList.size())
+                {
+                    // TODO(Wuxiang): Hook lamp position and light position.
+                    auto *pointLight = pointLightList[i];
+                    return camera->GetView() * pointLight->mPosition;
+                }
+
+                return Vector3f::Zero;
+            }, _1, _2)));
+
+            instance->SetShaderUniform(0, ShareAutomatic<float>("PointLightArray[" + std::to_string(i) + "].Constant",
+                                       std::bind([i, &pointLightList](const Visual * visual, const Camera * camera)
+            {
+                if (i < pointLightList.size())
+                {
+                    auto *pointLight = pointLightList[i];
+                    return pointLight->mConstant;
+                }
+
+                return 0.0f;
+            }, _1, _2)));
+
+            instance->SetShaderUniform(0, ShareAutomatic<float>("PointLightArray[" + std::to_string(i) + "].Linear",
+                                       std::bind([i, &pointLightList](const Visual * visual, const Camera * camera)
+            {
+                if (i < pointLightList.size())
+                {
+                    auto *pointLight = pointLightList[i];
+                    return pointLight->mLinear;
+                }
+
+                return 0.0f;
+            }, _1, _2)));
+
+            instance->SetShaderUniform(0, ShareAutomatic<float>("PointLightArray[" + std::to_string(i) + "].Quadratic",
+                                       std::bind([i, &pointLightList](const Visual * visual, const Camera * camera)
+            {
+                if (i < pointLightList.size())
+                {
+                    auto *pointLight = pointLightList[i];
+                    return pointLight->mQuadratic;
+                }
+
+                return 0.0f;
+            }, _1, _2)));
+        }
+    }
+
+    // Material
+    {
+        instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Ambient), material->mAmbientTexture);
+        instance->SetShaderTexture(0,, material->mAmbientTexture == nullptr);
+
+        instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Diffuse), material->mDiffuseTexture);
+    }
     //instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Diffuse), material->mDiffuse);
     // instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Specular), material->mSpecular);
 }
 
+/************************************************************************/
+/* Private Members                                                      */
+/************************************************************************/
 void
-PhongLightingEffect::CreateInstance(VisualEffectSharedPtr effect, Node *meshRoot, const Light *light)
+PhongLightingEffect::CreateInstance(_IN_OUT_ VisualEffectInstanceSharedPtr instance,
+                                    _IN_OUT_ Mesh                         *mesh,
+                                    _IN_     const Light                  *directionalLight,
+                                    _IN_     const vector<const Light *>&  pointLightList,
+                                    _IN_     const vector<const Light *>&  spotLightList) const
 {
-    using namespace placeholders;
-
-    CheckEffectSame(effect.get());
-
-    auto meshCreateInstance = std::bind([effect, &light, this](Mesh * mesh)
-    {
-        auto instance = make_shared<VisualEffectInstance>(effect);
-        CreateInstance(mesh, instance, light);
-    }, _1);
-
-    TraverseLevelOrder(meshRoot, meshCreateInstance);
-}
-
-void
-PhongLightingEffect::CreateInstance(
-    _IN_OUT_ Mesh                         *mesh,
-    _IN_OUT_ VisualEffectInstanceSharedPtr instance,
-    _IN_     const Light                  *light) const
-{
-    CreateInstance(instance.get(), light, mesh->GetMaterial());
+    CreateInstance(instance.get(), mesh->GetMaterial(), directionalLight, pointLightList, spotLightList);
     SetEffectInstance(mesh, instance);
 }
 

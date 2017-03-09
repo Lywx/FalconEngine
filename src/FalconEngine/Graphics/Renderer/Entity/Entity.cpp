@@ -32,5 +32,9 @@ Entity::GetNode()
     return mNode;
 }
 
+void
+Entity::Update(GameEngineInput *input, double elapsed)
+{
+}
 
 }

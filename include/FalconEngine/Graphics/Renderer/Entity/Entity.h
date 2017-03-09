@@ -6,14 +6,16 @@
 namespace FalconEngine
 {
 
-class Visual;
-using VisualSharedPtr = std::shared_ptr<Visual>;
+class Entity;
+using EntitySharedPtr = std::shared_ptr<Entity>;
+
+class GameEngineInput;
 
 class Node;
 using NodeSharedPtr = std::shared_ptr<Node>;
 
-class Entity;
-using EntitySharedPtr = std::shared_ptr<Entity>;
+class Visual;
+using VisualSharedPtr = std::shared_ptr<Visual>;
 
 class Entity : public Object
 {
@@ -32,6 +34,9 @@ public:
 
     NodeSharedPtr
     GetNode();
+
+    virtual void
+    Update(GameEngineInput *input, double elapsed);
 
 public:
     int         mId;

@@ -79,7 +79,6 @@ BoundingBoxEffect::CreateVertexFormat(size_t boundingBoxVertexNum)
         // NOTE(Wuxiang): Transform matrix would use instancing. Different transformation
         // buffer would be used to provide the matrix data.
 
-
         // TODO(Wuxiang): Wrong!
         sVertexFormat->PushVertexAttribute(2, "ModelViewProjectionTransform", VertexAttributeType::FloatVec4, false, 1, int(boundingBoxVertexNum));
 

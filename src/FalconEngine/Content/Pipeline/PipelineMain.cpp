@@ -19,7 +19,8 @@ BakeAssets()
     // Models
     // assetProcessor.BakeModel("Content/Models/Axe.obj");
     // assetProcessor.BakeModel("Content/Models/Carl.stl");
-    //assetProcessor.BakeModel("Content/Models/nanosuit.obj");
+    assetProcessor.BakeModel("Content/Models/Bedroom.obj");
+    // assetProcessor.BakeModel("Content/Models/nanosuit.obj");
 }
 
 void
@@ -56,10 +57,10 @@ CompileShaders()
 
     // Shader Compiling Test
     auto shader = std::make_shared<Shader>();
-    //shader->PushShaderFile(ShaderType::VertexShader, "Content/Shaders/PhongLighting.vert.glsl");
-    //shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shaders/PhongLighting.frag.glsl");
-    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shaders/BoundingBox.vert.glsl");
-    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shaders/BoundingBox.frag.glsl");
+    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shaders/PhongLighting.vert.glsl");
+    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shaders/PhongLighting.frag.glsl");
+    //shader->PushShaderFile(ShaderType::VertexShader, "Content/Shaders/BoundingBox.vert.glsl");
+    //shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shaders/BoundingBox.frag.glsl");
     auto platformShader = PlatformShader(shader.get());
     platformShader.CollectUniformActive();
 }
@@ -67,8 +68,8 @@ CompileShaders()
 int
 main(int argc, char **argv)
 {
-    BakeAssets();
-    //CompileShaders();
+    //BakeAssets();
+    CompileShaders();
 
     return 0;
 }

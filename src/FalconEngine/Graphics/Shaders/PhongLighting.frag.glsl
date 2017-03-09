@@ -1,10 +1,5 @@
 #version 430 core
 
-#fe_extension : enable
-#include "fe_Texture.glsl"
-#include "fe_Function.glsl"
-#fe_extension : disable
-
 in Vout
 {
     noperspective vec3 EyePosition;
@@ -14,78 +9,99 @@ in Vout
 
 layout(location = 0) out vec4 FragColor;
 
-struct DirectionalLightData
-{
-    vec3 Ambient;
-    vec3 Diffuse;
-    vec3 Specular;
+#fe_extension : enable
+#include "fe_Material.glsl"
+#fe_extension : disable
 
-    vec3 EyeDirection;
-};
+uniform MaterialColorData MaterialColor;
 
-struct PointLightData
-{
-    vec3 Ambient;
-    vec3 Diffuse;
-    vec3 Specular;
+uniform bool TextureAmbientExist;
+uniform bool TextureDiffuseExist;
+uniform bool TextureEmissiveExist;
+uniform bool TextureSpecularExist;
+uniform bool TextureShininessExist;
 
-    vec3 EyePosition;
-
-    float Constant;
-    float Linear;
-    float Quadratic;
-};
-
-struct SpotLightData
-{
-    vec3 Ambient;
-    vec3 Diffuse;
-    vec3 Specular;
-
-    float CosAngleInner;
-    float CosAngleOuter;
-    vec3 EyeDirection;
-    vec3 EyePosition;
-
-    float Constant;
-    float Linear;
-    float Quadratic;
-};
+#fe_extension : enable
+#include "fe_Texture.glsl"
+#include "fe_Lighting.glsl"
+#fe_extension : disable
 
 uniform DirectionalLightData DirectionalLight;
-// #define PointLightNum 6
-// uniform PointLight[PointLightNum] PointLightArray;
+
+#define PointLightNumMax 6
+uniform int PointLightNum;
+uniform PointLightData[PointLightNumMax] PointLightArray;
+
+#define SpotLightNumMax 6
+uniform int SpotLightNum;
+uniform SpotLightData[SpotLightNumMax] SpotLightArray;
 
 uniform mat4 ModelViewTransform;
 
 // @status Finished.
-vec3 CalcDirectionalLight(DirectionalLightData light, vec3 eyeN, vec3 eyeV)
+vec3 
+CalcDirectionalLight(DirectionalLightData light, vec3 eyeN, vec3 eyeV)
 {
     // Point to light source.
     vec3 eyeL = normalize(light.EyeDirection);
 
     vec3 cAmbient;
     vec3 cDiffuse;
+    vec3 cEmissive;
     vec3 cSpecular; 
 
-    CalcPhongLighting(fin.TexCoord, eyeN, eyeV, eyeL, light.Ambient, light.Diffuse, light.Specular,
-    cAmbient, cDiffuse, cSpecular);
+    CalcPhongLighting(
+        fin.TexCoord, 
 
-    return cAmbient + cDiffuse + cSpecular;
+    // @parameter Transform.
+        eyeN, 
+        eyeV, 
+        eyeL, 
+
+    // @parameter Light Source.
+        light.Ambient, 
+        light.Diffuse, 
+        light.Specular,
+
+    // @return Standard Phong lighting contribution.
+        cAmbient, 
+        cDiffuse, 
+        cEmissive,
+        cSpecular);
+
+    return cAmbient + cDiffuse + cEmissive + cSpecular;
 }
 
 // @status Finished.
-vec3 CalcPointLight(PointLightData light, vec3 eyeN, vec3 eyeV, vec3 eyePosition)
+vec3 
+CalcPointLight(PointLightData light, vec3 eyeN, vec3 eyeV, vec3 eyePosition)
 {
     // Point to light source.
     vec3 eyeL = normalize(light.EyePosition - eyePosition);
 
     vec3 cAmbient;
     vec3 cDiffuse;
+    vec3 cEmissive;
     vec3 cSpecular;
 
-    CalcPhongLighting(fin.TexCoord, eyeN, eyeV, eyeL, light.Ambient, light.Diffuse, light.Specular,
-    cAmbient, cDiffuse, cSpecular);
+    CalcPhongLighting(
+        fin.TexCoord, 
+
+    // @parameter Transform.
+        eyeN, 
+        eyeV, 
+        eyeL, 
+
+    // @parameter Light Source.
+        light.Ambient, 
+        light.Diffuse, 
+        light.Specular,
+
+    // @return Standard Phong lighting contribution.
+        cAmbient, 
+        cDiffuse, 
+        cEmissive,
+        cSpecular);
 
     // Attenuation
     float distance = length(light.EyePosition - eyePosition);
@@ -96,21 +112,39 @@ vec3 CalcPointLight(PointLightData light, vec3 eyeN, vec3 eyeV, vec3 eyePosition
     cDiffuse  *= attenuation;
     cSpecular *= attenuation;
 
-    return cAmbient + cDiffuse + cSpecular;
+    return cAmbient + cDiffuse + cEmissive + cSpecular;
 } 
 
 // @status Finished.
-vec3 CalcSpotLight(SpotLightData light, vec3 eyeN, vec3 eyeV, vec3 eyePosition)
+vec3 
+CalcSpotLight(SpotLightData light, vec3 eyeN, vec3 eyeV, vec3 eyePosition)
 {
     // Point to light source.
     vec3 eyeL = normalize(light.EyePosition - eyePosition);
 
     vec3 cAmbient;
     vec3 cDiffuse;
+    vec3 cEmissive;
     vec3 cSpecular;
 
-    CalcPhongLighting(fin.TexCoord, eyeN, eyeV, eyeL, light.Ambient, light.Diffuse, light.Specular,
-    cAmbient, cDiffuse, cSpecular);
+    CalcPhongLighting(
+        fin.TexCoord, 
+
+        // @parameter Transform.
+        eyeN, 
+        eyeV, 
+        eyeL, 
+
+        // @parameter Light Source.
+        light.Ambient, 
+        light.Diffuse, 
+        light.Specular,
+
+        // @return Standard Phong lighting contribution.
+        cAmbient, 
+        cDiffuse, 
+        cEmissive,
+        cSpecular);
 
     // Attenuation
     float distance = length(light.EyePosition - eyePosition);
@@ -125,10 +159,11 @@ vec3 CalcSpotLight(SpotLightData light, vec3 eyeN, vec3 eyeV, vec3 eyePosition)
     cDiffuse *= attenuation * intensity;
     cSpecular *= attenuation * intensity;
     
-    return cAmbient + cDiffuse + cSpecular;
+    return cAmbient + cDiffuse + cEmissive + cSpecular;
 }
 
-void main() 
+void 
+main() 
 { 
     vec3 eyeN = normalize(fin.EyeNormal);
 
@@ -136,12 +171,15 @@ void main()
     vec3 eyeV = normalize(-fin.EyePosition); 
 
     vec3 result = CalcDirectionalLight(DirectionalLight, eyeN, eyeV);
-    // for(int i = 0; i < PointLightNum; ++i) 
-    // {
-    //     result += CalcPointLight(PointLightArray[i], eyeN, eyeV, fin.EyePosition);
-    // }
+    for(int i = 0; i < PointLightNum; ++i) 
+    {
+        result += CalcPointLight(PointLightArray[i], eyeN, eyeV, fin.EyePosition);
+    }
 
-    // result += CalcSpotLight(Spotlight, eyeN, eyeV, fin.EyePosition);
+    // for(int i = 0; i < SpotLightNum; ++i) 
+    // {
+    //     result += CalcSpotLight(SpotLightArray[i], eyeN, eyeV, fin.EyePosition);
+    // }
 
     FragColor = vec4(result, 1.0);
 }

@@ -9,16 +9,7 @@ namespace FalconEngine
 
 FALCON_ENGINE_RTTI_IMPLEMENT(Material, Object);
 
-Material::Material() :
-    mAmbient(nullptr),
-    mDiffuse(nullptr),
-    mEmissive(nullptr),
-    mSpecular(nullptr),
-    mShininess(nullptr)
-{
-}
-
-Material::~Material()
+Material::Material()
 {
 }
 

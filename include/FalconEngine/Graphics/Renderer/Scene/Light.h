@@ -37,11 +37,12 @@ public:
     /************************************************************************/
     float    mIntensity = 1;
 
-    Color    mAmbient;
-    Color    mDiffuse;
-    Color    mSpecular;
+    Color    mAmbient = ColorPalette::White;
+    Color    mDiffuse = ColorPalette::White;
+    Color    mSpecular = ColorPalette::White;
 
-    Vector3f mDirection; // Used for directional light or spot light.
+    // NOTE(Wuxiang): Used for directional light or spot light.
+    Vector3f mDirection = Vector3f::Zero;
 
     /************************************************************************/
     /* Point Light Members                                                  */

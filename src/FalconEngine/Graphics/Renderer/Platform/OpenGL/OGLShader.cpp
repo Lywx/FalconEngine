@@ -15,7 +15,7 @@ namespace FalconEngine
 {
 
 void
-ProcessShaderInclude(
+ProcessShaderIncludeStatement(
     _IN_OUT_ std::string&       shaderSourceString,
     _IN_     const std::string& shaderExtensionLine,
     _IN_     const std::string& shaderPath,
@@ -43,7 +43,7 @@ ProcessShaderInclude(
 }
 
 void
-ProcessShaderExtension(
+ProcessShaderExtensionBlock(
     _IN_OUT_ std::string&       shaderSourceString,
     _IN_OUT_ std::string&       shaderExtension,
     _IN_     const std::string& shaderPath,
@@ -61,56 +61,54 @@ ProcessShaderExtension(
         trim(shaderExtensionLine);
         if (!shaderExtensionLine.empty())
         {
-            ProcessShaderInclude(shaderSourceString, shaderExtensionLine, shaderPath, extensionBeginIndex);
+            ProcessShaderIncludeStatement(shaderSourceString, shaderExtensionLine, shaderPath, extensionBeginIndex);
         }
     }
 }
 
 // ReSharper disable once CppNotAllPathsReturnValue
-string
-ExtractShaderExtension(
-    _IN_OUT_ std::string& shaderSourceString,
-    _OUT_    int&         extensionHeaderBeginIndex)
+void
+ProcessShaderExtension(ShaderSource *shaderSource)
 {
     static const string extensionHeaderBeginString = "#fe_extension : enable";
     static const string extensionHeaderEndString   = "#fe_extension : disable";
 
-    extensionHeaderBeginIndex = int(shaderSourceString.find(extensionHeaderBeginString));
+    auto& shaderSourceString = shaderSource->mSource;
+    auto extensionHeaderBeginIndex = int(shaderSourceString.find(extensionHeaderBeginString));
     auto extensionHeaderEndIndex = int(shaderSourceString.find(extensionHeaderEndString));
 
     auto extensionHeaderBeginFound = extensionHeaderBeginIndex != string::npos;
     auto extensionHeaderEndFound = extensionHeaderEndIndex != string::npos;
 
-    if (extensionHeaderBeginFound && extensionHeaderEndFound
-            && extensionHeaderEndIndex > extensionHeaderBeginIndex)
+    while(extensionHeaderBeginFound || extensionHeaderEndFound)
     {
-        auto extensionContentBeginIndex = extensionHeaderBeginIndex + extensionHeaderBeginString.size();
-        auto extensionContentEndIndex = extensionHeaderEndIndex - 1;
-        string extensionContent = shaderSourceString.substr(extensionContentBeginIndex,
-                                  extensionContentEndIndex - extensionContentBeginIndex);
+        if (extensionHeaderBeginFound && extensionHeaderEndFound
+                && extensionHeaderEndIndex > extensionHeaderBeginIndex)
+        {
+            auto extensionContentBeginIndex = extensionHeaderBeginIndex + extensionHeaderBeginString.size();
+            auto extensionContentEndIndex = extensionHeaderEndIndex - 1;
+            string extensionContent = shaderSourceString.substr(extensionContentBeginIndex,
+                                      extensionContentEndIndex - extensionContentBeginIndex);
 
-        shaderSourceString.erase(extensionHeaderBeginIndex,
-                                 extensionHeaderEndIndex - extensionHeaderBeginIndex
-                                 + extensionHeaderEndString.size());
+            // Erase the whole extension block remove the original string.
+            shaderSourceString.erase(extensionHeaderBeginIndex,
+                                     extensionHeaderEndIndex - extensionHeaderBeginIndex
+                                     + extensionHeaderEndString.size());
 
-        return extensionContent;
-    }
-    else if (!extensionHeaderBeginFound && !extensionHeaderEndFound)
-    {
-        return "";
-    }
-    else
-    {
-        FALCON_ENGINE_THROW_EXCEPTION("Extension is not defined correctly.");
-    }
-}
+            // Process found extension block.
+            ProcessShaderExtensionBlock(shaderSourceString, extensionContent, shaderSource->mFilePath, extensionHeaderBeginIndex);
+        }
+        else
+        {
+            FALCON_ENGINE_THROW_EXCEPTION("Extension is not defined correctly.");
+        }
 
-void
-ProcessShaderSource(ShaderSource *shaderSource)
-{
-    auto extensionBeginIndex = 0;
-    auto extensionContent = ExtractShaderExtension(shaderSource->mSource, extensionBeginIndex);
-    ProcessShaderExtension(shaderSource->mSource, extensionContent, shaderSource->mFilePath, extensionBeginIndex);
+        // Try to find next extension block.
+        extensionHeaderBeginIndex = int(shaderSourceString.find(extensionHeaderBeginString));
+        extensionHeaderEndIndex = int(shaderSourceString.find(extensionHeaderEndString));
+        extensionHeaderBeginFound = extensionHeaderBeginIndex != string::npos;
+        extensionHeaderEndFound = extensionHeaderEndIndex != string::npos;
+    }
 }
 
 /************************************************************************/
@@ -129,7 +127,7 @@ PlatformShader::PlatformShader(Shader *shader) :
         auto shaderIndex = shaderIndexSourcePair.first;
         auto shaderType = shader->GetShaderType(shaderIndex);
         auto shaderSource = shaderIndexSourcePair.second.get();
-        ProcessShaderSource(shaderSource);
+        ProcessShaderExtension(shaderSource);
 
         // Compile for each part of shader
         CreateFromString(shaderIndex, OpenGLShaderType[int(shaderType)], shaderSource->mSource);

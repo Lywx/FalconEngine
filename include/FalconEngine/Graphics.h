@@ -5,6 +5,10 @@
 
 #include <FalconEngine/GraphicsInclude.h>
 
+#include <FalconEngine/Graphics/Effects/BitmapFontEffect.h>
+#include <FalconEngine/Graphics/Effects/BoundingBoxEffect.h>
+#include <FalconEngine/Graphics/Effects/PhongLightingEffect.h>
+
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Primitive.h>
@@ -60,6 +64,6 @@
 #include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
 #include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
 
-#include <FalconEngine/Graphics/Scene/Character.h>
+#include <FalconEngine/Graphics/Scene/CharacterEntity.h>
 #include <FalconEngine/Graphics/Scene/FirstPersonCamera.h>
-#include <FalconEngine/Graphics/Scene/Lamp.h>
+#include <FalconEngine/Graphics/Scene/LightEntity.h>

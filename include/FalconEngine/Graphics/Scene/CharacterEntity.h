@@ -5,13 +5,13 @@
 namespace FalconEngine
 {
 
-class Character : public Entity
+class CharacterEntity : public Entity
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
 public:
-    explicit Character(const NodeSharedPtr node);
-    virtual ~Character();
+    explicit CharacterEntity(const NodeSharedPtr node);
+    virtual ~CharacterEntity();
 };
 
 }

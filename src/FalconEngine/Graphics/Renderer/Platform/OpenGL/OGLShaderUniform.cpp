@@ -11,6 +11,9 @@ PlatformShaderUniform::UpdateContext(ShaderUniform *shaderUniform)
     case ShaderUniformType::None:
         FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
         break;
+    case ShaderUniformType::Bool:
+        Update(Cast<bool>(shaderUniform));
+        break;
     case ShaderUniformType::Float:
         Update(Cast<float>(shaderUniform));
         break;

@@ -150,7 +150,7 @@ CalcPhongLighting(
     }
 
     float mShininess;
-    if (TextureSpecularExist)
+    if (TextureShininessExist)
     {
         mShininess = texture(fe_TextureShininess, texCoord).a;
     }

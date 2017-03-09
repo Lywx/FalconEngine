@@ -10,5 +10,6 @@
 #include <FalconEngine/Context/GameEngineInput.h>
 #include <FalconEngine/Context/GameEngineInputSettings.h>
 #include <FalconEngine/Context/GameEnginePlatform.h>
+#include <FalconEngine/Context/GameEngineProfiler.h>
 #include <FalconEngine/Context/GameEngineSettings.h>
 

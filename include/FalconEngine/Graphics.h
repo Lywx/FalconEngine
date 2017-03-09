@@ -5,9 +5,9 @@
 
 #include <FalconEngine/GraphicsInclude.h>
 
-#include <FalconEngine/Graphics/Effects/BitmapFontEffect.h>
-#include <FalconEngine/Graphics/Effects/BoundingBoxEffect.h>
-#include <FalconEngine/Graphics/Effects/PhongLightingEffect.h>
+#include <FalconEngine/Graphics/Effect/BitmapFontEffect.h>
+#include <FalconEngine/Graphics/Effect/BoundingBoxEffect.h>
+#include <FalconEngine/Graphics/Effect/PhongLightingEffect.h>
 
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
@@ -67,3 +67,4 @@
 #include <FalconEngine/Graphics/Scene/CharacterEntity.h>
 #include <FalconEngine/Graphics/Scene/FirstPersonCamera.h>
 #include <FalconEngine/Graphics/Scene/LightEntity.h>
+#include <FalconEngine/Graphics/Scene/SceneEntity.h>

@@ -1,6 +1,6 @@
 #include <FalconEngine/Graphics/Renderer/Entity/EntityRenderer.h>
 
-#include <FalconEngine/Graphics/Effects/BoundingBoxEffect.h>
+#include <FalconEngine/Graphics/Effect/BoundingBoxEffect.h>
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>

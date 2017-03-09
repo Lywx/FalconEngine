@@ -4,7 +4,7 @@
 
 #include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Core/Memory.h>
-#include <FalconEngine/Graphics/Effects/BitmapFontEffect.h>
+#include <FalconEngine/Graphics/Effect/BitmapFontEffect.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>

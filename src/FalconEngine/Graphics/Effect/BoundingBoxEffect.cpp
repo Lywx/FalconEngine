@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Effects/BoundingBoxEffect.h>
+#include <FalconEngine/Graphics/Effect/BoundingBoxEffect.h>
 
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>

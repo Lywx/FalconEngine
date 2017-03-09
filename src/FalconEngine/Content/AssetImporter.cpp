@@ -214,11 +214,11 @@ CreateMaterial(
     _IN_ const aiMesh  *aiMesh)
 {
     // When material exists.
+    auto material = make_shared<Material>();
+
     if (aiMesh->mMaterialIndex > 0)
     {
         auto aiMaterial = aiScene->mMaterials[aiMesh->mMaterialIndex];
-
-        auto material = make_shared<Material>();
 
         // @ref http://assimp.sourceforge.net/lib_html/materials.html
         material->mAmbientColor = LoadMaterialColor(aiMaterial, AI_MATKEY_COLOR_AMBIENT);
@@ -236,7 +236,7 @@ CreateMaterial(
         return material;
     }
 
-    return nullptr;
+    return material;
 }
 
 VertexFormatSharedPtr

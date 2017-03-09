@@ -1,9 +1,5 @@
 ﻿#include "SampleGame.h"
 
-#include <FalconEngine/Context/GameEngineProfiler.h>
-#include <FalconEngine/Graphics/Effects/PhongLightingEffect.h>
-#include "FalconEngine/Graphics/Effects/BitmapFontEffect.h"
-
 using namespace std;
 using namespace FalconEngine;
 
@@ -32,41 +28,61 @@ SampleGame::GetEngineSettings()
 void
 SampleGame::Initialize()
 {
+    // Initialize debug context.
     GameDebug::Initialize();
-    mAssetManager = mAssetManager->GetInstance();
 
-    // Initialize Fonts
-    mFontConsole = mAssetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.fnt.bin").get();
-    // mFontDisplay = mAssetManager->LoadFont("Content/Fonts/NSimSunDistanceField.fnt.bin").get();
+    // Load all assets.
+    {
+        auto assetManager = AssetManager::GetInstance();
 
-    // Initialize Entities
-    mCharacter = make_shared<CharacterEntity>(mAssetManager->LoadModel("Content/Models/nanosuit.obj")->GetNode());
-    mLamp1 = make_shared<LightEntity>(mAssetManager->LoadModel("Content/Models/Lamp.obj")->GetNode());
-    mLamp2 = make_shared<LightEntity>(mAssetManager->LoadModel("Content/Models/Lamp.obj")->GetNode());
+        // Fonts
+        {
+            mFont_Console = assetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.fnt.bin").get();
+            // mFontDisplay = mAssetManager->LoadFont("Content/Fonts/NSimSunDistanceField.fnt.bin").get();
+        }
 
-    mScenePointLightList.push_back(mLamp1->mLight.get());
-    mScenePointLightList.push_back(mLamp2->mLight.get());
+        // Entities
+        {
+            // mCharacter = make_shared<CharacterEntity>(assetManager->LoadModel("Content/Models/nanosuit.obj")->GetNode());
+            mRoom = make_shared<SceneEntity>(assetManager->LoadModel("Content/Models/Bedroom.dae")->GetNode());
+        }
+    }
 
-    //mLamp1->GetNode()->mWorldTransform =
-    // mLamp1->mLight.mPosition
+    {
+        {
+            mDirectionalLight = make_shared<Light>(LightType::Directional);
+            mDirectionalLight->mAmbient = Color(255, 255, 255);
+            mDirectionalLight->mDiffuse = Color(255, 255, 255);
+            mDirectionalLight->mSpecular = Color(255, 255, 255);
+            mDirectionalLight->mDirection = Vector3f(1, 1, 1);
+        }
 
-    // Initialize Scene
-    mScene = make_shared<Node>();
-    mScene->mWorldTransform = Matrix4f::Zero;
-    mScene->AttachChild(mCharacter->GetNode());
+        {
+            mPointLight1 = make_shared<Light>(LightType::Point);
+        }
 
-    //
-    mSceneLightingEffect = make_shared<PhongLightingEffect>();
-    mSceneDirectionalLight = make_shared<Light>(LightType::Directional);
-    mSceneDirectionalLight->mAmbient = Color(255, 255, 255);
-    mSceneDirectionalLight->mDiffuse = Color(255, 255, 255);
-    mSceneDirectionalLight->mSpecular = Color(255, 255, 255);
-    mSceneDirectionalLight->mDirection = Vector3f(1, 1, 1);
+        {
+            mPointLight2 = make_shared<Light>(LightType::Point);
+        }
 
-    // Initialize Effect
-    mSceneLightingEffect->CreateInstance(mSceneLightingEffect, mCharacter->GetNode().get(), mSceneDirectionalLight.get(), mScenePointLightList, mSceneSpotLightList);
+        // Initialize Scene
+        mScenePointLightList = { mPointLight1.get(), mPointLight2.get() };
 
-    mCamera->LookAt(Vector3f(0, 0, 10), Vector3f(0, 0, 0), Vector3f::UnitY);
+        mSceneNode = make_shared<Node>();
+        mSceneNode->mWorldTransform = Matrix4f::Zero;
+        mSceneNode->AttachChild(mRoom->GetNode());
+
+        //
+        mSceneLightingEffect = make_shared<PhongLightingEffect>();
+
+        // Initialize Effect
+        mSceneLightingEffect->CreateInstance(mSceneLightingEffect, mRoom->GetNode().get(), *mDirectionalLight, mScenePointLightList, mSceneSpotLightList);
+    }
+
+    // Initialize interaction.
+    {
+        mCamera->LookAt(Vector3f(0, 0, 10), Vector3f(0, 0, 0), Vector3f::UnitY);
+    }
 }
 
 void
@@ -87,7 +103,7 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
         auto lastFrameUpdateCount = int(profiler->GetLastFrameUpdateTotalCount());
         auto lastRenderElapsedMillisecond = int(profiler->GetLastRenderElapsedMillisecond());
 
-        graphics->DrawString(mFontConsole, 16.f, Vector2f(50.f, height - 50.f),
+        graphics->DrawString(mFont_Console, 16.f, Vector2f(50.f, height - 50.f),
                              "U: " + std::to_string(lastUpdateElapsedMillisecond) + "ms Uc: " + std::to_string(lastFrameUpdateCount) +
                              " R: " + std::to_string(lastRenderElapsedMillisecond) + "ms Rc: " + std::to_string(lastFrameFPS),
                              ColorPalette::DarkGoldenrod);
@@ -102,28 +118,24 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
         auto mousePositionDiff = mouse->GetPositionDiff();
         auto mousePosition = mouse->GetPosition();
 
-        graphics->DrawString(mFontConsole, 16.f, Vector2f(50.f, height - 100.f),
-                             "Mouse Postion: " + to_string(mousePosition) + " Diff: " + to_string(mousePositionDiff), ColorPalette::DarkRed);
+        graphics->DrawString(mFont_Console, 16.f, Vector2f(50.f, height - 100.f),
+                             "Mouse Position: " + to_string(mousePosition) + " Diff: " + to_string(mousePositionDiff), ColorPalette::DarkRed);
     }
 
     // Draw Camera
     {
         auto position = mCamera->GetPosition();
-        graphics->DrawString(mFontConsole, 16.f, Vector2f(50.f, 50.f),
+        graphics->DrawString(mFont_Console, 16.f, Vector2f(50.f, 50.f),
                              "Camera Position: " + to_string(position), ColorPalette::DarkRed);
 
         auto pitch = Degree(mCamera->mPitch);
         auto yaw = Degree(mCamera->mYaw);
         auto roll = Degree(mCamera->mRoll);
-        graphics->DrawString(mFontConsole, 16.f, Vector2f(50.f, 100.f),
+        graphics->DrawString(mFont_Console, 16.f, Vector2f(50.f, 100.f),
                              "Camera Pitch: " + std::to_string(pitch) + " Yaw: " + std::to_string(yaw) + " Roll: " + std::to_string(roll), ColorPalette::DarkRed);
-
-        graphics->DrawString(mFontConsole, 16.f, Vector2f(50.f, 10 * 50 + 100.f),
-                             "01234567890", ColorPalette::DarkRed);
     }
 
-    graphics->Draw(mCamera.get(), mCharacter.get());
-    //graphics->DrawBoundingBox(mCamera.get(), mModelPerson.get(), ColorPalette::Red);
+    graphics->Draw(mCamera.get(), mRoom.get());
 
     Game::Render(graphics, percent);
 }
@@ -140,7 +152,7 @@ SampleGame::Update(GameEngineInput *input, double elapsed)
     }
 
     mCamera->Update(input, elapsed);
-    mScene->Update(elapsed, true);
+    mSceneNode->Update(elapsed, true);
 
     Game::Update(input, elapsed);
 }

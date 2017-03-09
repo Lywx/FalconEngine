@@ -31,6 +31,13 @@ private:
 
 template<>
 inline void
+PlatformShaderUniform::Update<bool>(ShaderUniformValue<bool> *shaderUniform)
+{
+    glUniform1i(shaderUniform->mLocation, shaderUniform->GetValue());
+}
+
+template<>
+inline void
 PlatformShaderUniform::Update<int>(ShaderUniformValue<int> *shaderUniform)
 {
     glUniform1i(shaderUniform->mLocation, shaderUniform->GetValue());

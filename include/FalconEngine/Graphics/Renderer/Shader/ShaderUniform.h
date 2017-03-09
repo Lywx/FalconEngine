@@ -20,6 +20,8 @@ enum class ShaderUniformType
 {
     None,
 
+    Bool,
+
     Float,
     FloatVec2,
     FloatVec3,
@@ -97,6 +99,13 @@ ShareUniform(Args&& ... args)
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
+template <>
+inline ShaderUniformValue<bool>::ShaderUniformValue(const std::string& name, const bool& value) :
+    ShaderUniform(name, ShaderUniformType::Bool),
+    mValue(value)
+{
+}
+
 template <>
 inline ShaderUniformValue<int>::ShaderUniformValue(const std::string& name, const int& value) :
     ShaderUniform(name, ShaderUniformType::Int),

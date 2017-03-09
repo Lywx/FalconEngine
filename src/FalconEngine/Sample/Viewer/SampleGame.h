@@ -30,30 +30,31 @@ public:
     Update(GameEngineInput *input, double elapsed) override;
 
 private:
-    AssetManager *mAssetManager = nullptr;
+    HandednessRight mHandedness;
 
     // Camera
     FirstPersonCameraSharedPtr mCamera;
 
     // Fonts
-    const BitmapFont *mFontConsole = nullptr;
-    const BitmapFont *mFontDisplay = nullptr;
-
-    HandednessRight mHandedness;
+    const BitmapFont *mFont_Console = nullptr;
+    const BitmapFont *mFont_Chinese = nullptr;
 
     // Scene
-    NodeSharedPtr mScene;
-    PhongLightingEffectSharedPtr mSceneLightingEffect;
+    NodeSharedPtr mSceneNode;
 
-    LightSharedPtr mSceneDirectionalLight;
+    PhongLightingEffectSharedPtr mSceneLightingEffect;
+    std::shared_ptr<Light> mDirectionalLight;
+    std::shared_ptr<Light> mPointLight1;
+    std::shared_ptr<Light> mPointLight2;
+
     std::vector<const Light *> mScenePointLightList;
     std::vector<const Light *> mSceneSpotLightList;
 
     // Entities
-    EntitySharedPtr mCharacter;
-
-    std::shared_ptr<LightEntity> mLamp1;
-    std::shared_ptr<LightEntity> mLamp2;
+    // std::shared_ptrEntity> mCharacter;
+    // std::shared_ptr<LightEntity> mLamp1;
+    // std::shared_ptr<LightEntity> mLamp2;
+    std::shared_ptr<SceneEntity> mRoom;
 };
 
 }

@@ -315,11 +315,6 @@ AssetProcessor::LoadRawFont(const std::string& fntFilePath)
 void
 AssetProcessor::BakeTexture(const std::string& textureFilePath)
 {
-    if (GetFileExtension(textureFilePath) != u8".png")
-    {
-        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-    }
-
     auto textureHandle = LoadRawTexture(textureFilePath);
     BakeTexture(textureHandle.get(), AddAssetExtension(textureFilePath));
 }

@@ -35,6 +35,8 @@ Mesh::GetMaterial() const
 void
 Mesh::SetMaterial(MaterialSharedPtr material)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(material);
+
     mMaterial = material;
 }
 }

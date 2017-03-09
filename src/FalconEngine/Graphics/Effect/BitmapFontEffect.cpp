@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Effects/BitmapFontEffect.h>
+#include <FalconEngine/Graphics/Effect/BitmapFontEffect.h>
 
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
@@ -6,6 +6,7 @@
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2dArray.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 #include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
+#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformAutomatic.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformConstant.h>
 #include <FalconEngine/Graphics/Renderer/State/BlendState.h>
 #include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
@@ -69,10 +70,16 @@ BitmapFontEffect::~BitmapFontEffect()
 void
 BitmapFontEffect::CreateInstance(VisualEffectInstance *instance, const BitmapFont *font, int width, int height) const
 {
+    using namespace placeholders;
+
     CheckEffectCompatible(instance);
 
     auto projection = mCameraHandedness->CreateOrthogonal(0, float(width), 0, float(height), -1.0f, 1.0f);
-    instance->SetShaderUniform(0, ShareConstant<Matrix4f>("ProjectionTransform", projection));
+    instance->SetShaderUniform(0, ShareAutomatic<Matrix4f>("ProjectionTransform",
+                               std::bind([projection](const Visual * visual, const Camera * camera)
+    {
+        return projection;
+    }, _1, _2)));
 
     // NOTE(Wuxiang): You don't need to set the texture sampler uniform because
     // they are predefined in the fe_Texture.glsl as #include extension.

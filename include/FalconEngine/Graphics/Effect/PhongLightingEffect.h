@@ -42,7 +42,7 @@ public:
     CreateInstance(
         _IN_     VisualEffectSharedPtr             effect,
         _IN_OUT_ Node                             *nodeRoot,
-        _IN_     const Light                      *directionalLight,
+        _IN_     const Light&                      directionalLight,
         _IN_     const std::vector<const Light *>& pointLightList,
         _IN_     const std::vector<const Light *>& spotLightList);
 
@@ -50,8 +50,8 @@ public:
     void
     CreateInstance(
         _IN_OUT_ VisualEffectInstance         *instance,
-        _IN_ const Material                   *material,
-        _IN_ const Light                      *directionalLight,
+        _IN_ const Material&                   material,
+        _IN_ const Light&                      directionalLight,
         _IN_ const std::vector<const Light *>& pointLightList,
         _IN_ const std::vector<const Light *>& spotLightList) const;
 
@@ -60,7 +60,7 @@ private:
     CreateInstance(
         _IN_OUT_ VisualEffectInstanceSharedPtr instance,
         _IN_OUT_ Mesh                         *mesh,
-        _IN_ const Light                      *directionalLight,
+        _IN_ const Light&                      directionalLight,
         _IN_ const std::vector<const Light *>& pointLightList,
         _IN_ const std::vector<const Light *>& spotLightList) const;
 };

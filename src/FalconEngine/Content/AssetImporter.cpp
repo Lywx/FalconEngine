@@ -194,6 +194,19 @@ LoadMaterialColor(aiMaterial *aiMaterial, const char *param1, int param2, int pa
     return Color(color.r, color.g, color.b);
 }
 
+float
+LoadMaterialFloat(aiMaterial *aiMaterial, const char *param1, int param2, int param3)
+{
+    float constant;
+    if (AI_SUCCESS != aiMaterial->Get(param1, param2, param3, constant))
+    {
+        return 0.0f;
+    }
+
+    return constant;
+
+}
+
 MaterialSharedPtr
 CreateMaterial(
     _IN_ const string&  modelDirectoryPath,
@@ -207,10 +220,11 @@ CreateMaterial(
 
         auto material = make_shared<Material>();
 
+        // @ref http://assimp.sourceforge.net/lib_html/materials.html
         material->mAmbientColor = LoadMaterialColor(aiMaterial, AI_MATKEY_COLOR_AMBIENT);
         material->mDiffuseColor = LoadMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE);
         material->mEmissiveColor = LoadMaterialColor(aiMaterial, AI_MATKEY_COLOR_EMISSIVE);
-        material->mShininessColor = LoadMaterialColor(aiMaterial, AI_MATKEY_COLOR_REFLECTIVE);
+        material->mShininess = LoadMaterialFloat(aiMaterial, AI_MATKEY_SHININESS);
         material->mSpecularColor  = LoadMaterialColor(aiMaterial, AI_MATKEY_COLOR_SPECULAR);
 
         material->mAmbientTexture = LoadMaterialTexture(modelDirectoryPath, aiMaterial, aiTextureType_AMBIENT);

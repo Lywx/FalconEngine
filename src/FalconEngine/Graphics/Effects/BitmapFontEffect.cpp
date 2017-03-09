@@ -31,8 +31,6 @@ BitmapFontEffect::BitmapFontEffect(const Handedness *handedness) :
     shader->PushShaderFile(ShaderType::VertexShader, "Content/Shaders/BitmapFont.vert.glsl");
     shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shaders/BitmapFont.frag.glsl");
 
-    shader->PushUniform("ProjectionTransform", ShaderUniformType::FloatMat4);
-
     auto pass = make_unique<VisualEffectPass>();
     pass->SetShader(shader);
 

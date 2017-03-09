@@ -30,8 +30,8 @@ FALCON_ENGINE_RTTI_IMPLEMENT(PhongLightingEffect, VisualEffect);
 /************************************************************************/
 /* Static Members                                                       */
 /************************************************************************/
-int PhongLightingEffect::PointLightNumMax = 10;
-int PhongLightingEffect::SpotLightNumMax = 10;
+int PhongLightingEffect::PointLightNumMax = 6;
+int PhongLightingEffect::SpotLightNumMax = 6;
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -41,15 +41,6 @@ PhongLightingEffect::PhongLightingEffect()
     auto shader = std::make_shared<Shader>();
     shader->PushShaderFile(ShaderType::VertexShader, "Content/Shaders/PhongLighting.vert.glsl");
     shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shaders/PhongLighting.frag.glsl");
-
-    shader->PushUniform("ModelViewProjectionTransform", ShaderUniformType::FloatMat4);
-    shader->PushUniform("ModelViewTransform", ShaderUniformType::FloatMat4);
-    shader->PushUniform("NormalTransform", ShaderUniformType::FloatMat3);
-
-    shader->PushUniform("DirectionalLight.Ambient", ShaderUniformType::FloatVec3);
-    shader->PushUniform("DirectionalLight.Diffuse", ShaderUniformType::FloatVec3);
-    shader->PushUniform("DirectionalLight.Specular", ShaderUniformType::FloatVec3);
-    shader->PushUniform("DirectionalLight.EyeDirection", ShaderUniformType::FloatVec3);
 
     auto pass = make_unique<VisualEffectPass>();
     pass->SetShader(shader);
@@ -165,7 +156,12 @@ PhongLightingEffect::CreateInstance(_IN_OUT_ VisualEffectInstance        *instan
 
     // Point light
     {
-        // TODO(Wuxiang): 2017-03-09 14:31 This is wrong. If you cannot have the maximum i in the start you won't be able to increase it.
+        instance->SetShaderUniform(0, ShareAutomatic<int>("PointLightNum",
+                                   std::bind([&pointLightList](const Visual * visual, const Camera * camera)
+        {
+            return int(pointLightList.size());
+        }, _1, _2)));
+
         for (int i = 0; i < PointLightNumMax; ++i)
         {
             instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].Ambient",
@@ -257,13 +253,118 @@ PhongLightingEffect::CreateInstance(_IN_OUT_ VisualEffectInstance        *instan
 
     // Material
     {
-        instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Ambient), material->mAmbientTexture);
-        instance->SetShaderTexture(0,, material->mAmbientTexture == nullptr);
+        // TODO(Wuxiang): 2017-03-09 15:30 Add sampler.
+        // Ambient
+        {
+            instance->SetShaderUniform(0, ShareAutomatic<bool>("TextureAmbientExist",
+                                       std::bind([material](const Visual * visual, const Camera * camera)
+            {
+                return material->mAmbientTexture != nullptr;
+            }, _1, _2)));
 
-        instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Diffuse), material->mDiffuseTexture);
+            // TODO(Wuxiang): Possibly add dynamic material updating?
+            if (material->mAmbientTexture != nullptr)
+            {
+                instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Ambient), material->mAmbientTexture);
+            }
+            else
+            {
+                instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("MaterialColor.Ambient",
+                                           std::bind([material](const Visual * visual, const Camera * camera)
+                {
+                    return Vector3f(material->mAmbientColor);
+                }, _1, _2)));
+            }
+        }
+
+        // Diffuse
+        {
+            instance->SetShaderUniform(0, ShareAutomatic<bool>("TextureDiffuseExist",
+                                       std::bind([material](const Visual * visual, const Camera * camera)
+            {
+                return material->mDiffuseTexture != nullptr;
+            }, _1, _2)));
+
+            if (material->mDiffuseTexture != nullptr)
+            {
+                instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Diffuse), material->mDiffuseTexture);
+            }
+            else
+            {
+                instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("MaterialColor.Diffuse",
+                                           std::bind([material](const Visual * visual, const Camera * camera)
+                {
+                    return Vector3f(material->mDiffuseColor);
+                }, _1, _2)));
+            }
+        }
+
+        // Emissive
+        {
+            instance->SetShaderUniform(0, ShareAutomatic<bool>("TextureEmissiveExist",
+                                       std::bind([material](const Visual * visual, const Camera * camera)
+            {
+                return material->mEmissiveTexture != nullptr;
+            }, _1, _2)));
+
+            if (material->mEmissiveTexture != nullptr)
+            {
+                instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Emissive), material->mEmissiveTexture);
+            }
+            else
+            {
+                instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("MaterialColor.Emissive",
+                                           std::bind([material](const Visual * visual, const Camera * camera)
+                {
+                    return Vector3f(material->mEmissiveColor);
+                }, _1, _2)));
+            }
+        }
+
+        // Shininess
+        {
+            instance->SetShaderUniform(0, ShareAutomatic<bool>("TextureShininessExist",
+                                       std::bind([material](const Visual * visual, const Camera * camera)
+            {
+                return material->mShininessTexture != nullptr;
+            }, _1, _2)));
+
+            if (material->mShininessTexture != nullptr)
+            {
+                instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Shininess), material->mShininessTexture);
+            }
+            else
+            {
+                instance->SetShaderUniform(0, ShareAutomatic<float>("MaterialColor.Shininess",
+                                           std::bind([material](const Visual * visual, const Camera * camera)
+                {
+                    return material->mShininess;
+                }, _1, _2)));
+            }
+        }
+
+        // Specular
+        {
+            instance->SetShaderUniform(0, ShareAutomatic<bool>("TextureSpecularExist",
+                                       std::bind([material](const Visual * visual, const Camera * camera)
+            {
+                return material->mSpecularTexture != nullptr;
+            }, _1, _2)));
+
+            if (material->mSpecularTexture != nullptr)
+            {
+                instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Specular), material->mSpecularTexture);
+            }
+            else
+            {
+                instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("MaterialColor.Specular",
+                                           std::bind([material](const Visual * visual, const Camera * camera)
+                {
+                    return Vector3f(material->mSpecularColor);
+                }, _1, _2)));
+            }
+        }
     }
-    //instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Diffuse), material->mDiffuse);
-    // instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Specular), material->mSpecular);
 }
 
 /************************************************************************/

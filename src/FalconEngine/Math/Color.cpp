@@ -167,8 +167,8 @@ Color::Color(uint32 hex) :
 {
 }
 
-Color::Color(int r, int g, int b)
-    : Color(r, g, b, 255)
+Color::Color(int r, int g, int b) :
+    Color(r, g, b, 255)
 {
 }
 
@@ -180,6 +180,11 @@ Color::Color(int r, int g, int b, int a)
     G = static_cast<uint8>(Clamp<int>(g, uint8Limit::min(), uint8Limit::max()));
     B = static_cast<uint8>(Clamp<int>(b, uint8Limit::min(), uint8Limit::max()));
     A = static_cast<uint8>(Clamp<int>(a, uint8Limit::min(), uint8Limit::max()));
+}
+
+Color::Color(float r, float g, float b) :
+    Color(r, g, b, 1.0f)
+{
 }
 
 Color::Color(float r, float g, float b, float a)

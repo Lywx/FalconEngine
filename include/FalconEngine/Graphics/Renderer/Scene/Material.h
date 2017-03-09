@@ -22,10 +22,10 @@ public:
 
 public:
     Color            mAmbientColor = ColorPalette::Transparent;
-    Color            mDiffuseColor = ColorPalette::Transparent;;
-    Color            mEmissiveColor = ColorPalette::Transparent;;
-    Color            mSpecularColor = ColorPalette::Transparent;;
-    Color            mShininessColor = ColorPalette::Transparent;;
+    Color            mDiffuseColor = ColorPalette::Transparent;
+    Color            mEmissiveColor = ColorPalette::Transparent;
+    Color            mSpecularColor = ColorPalette::Transparent;
+    float            mShininess = 0.0f;
 
     const Texture2d *mAmbientTexture = nullptr;
     const Texture2d *mDiffuseTexture = nullptr;

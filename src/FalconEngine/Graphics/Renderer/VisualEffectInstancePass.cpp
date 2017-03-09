@@ -30,7 +30,7 @@ VisualEffectInstancePass::SetShaderUniform(ShaderUniformSharedPtr shaderUniform)
     }
     else
     {
-        FALCON_ENGINE_THROW_EXCEPTION("Uniform is not registered.");
+        mShader->PushUniform(shaderUniform->mName, shaderUniform->mType);
     }
 }
 

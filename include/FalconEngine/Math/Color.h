@@ -16,6 +16,7 @@ public:
     explicit Color(uint32 hex);
     Color(int r, int g, int b);
     Color(int r, int g, int b, int a);
+    Color(float r, float g, float b);
     Color(float r, float g, float b, float a);
     Color();
 

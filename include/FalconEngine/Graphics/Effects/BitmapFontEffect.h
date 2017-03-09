@@ -36,7 +36,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    BitmapFontEffect(const Handedness *handedness);
+    explicit BitmapFontEffect(const Handedness *handedness);
     virtual ~BitmapFontEffect();
 
 public:

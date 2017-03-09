@@ -253,12 +253,6 @@ CreateMeshVertexFormat()
     return sVertexFormat;
 }
 
-void
-CreateMeshTransform(const aiMesh *aiMesh)
-{
-
-}
-
 MeshSharedPtr
 CreateMesh(
     _IN_ const string&  modelDirectoryPath,
@@ -270,7 +264,6 @@ CreateMesh(
     auto indexBuffer  = CreateMeshIndexBuffer(aiMesh);
     auto vertexFormat = CreateMeshVertexFormat();
     auto vertexGroup  = CreateMeshVertexGroup(aiMesh);
-    CreateMeshTransform(aiMesh);
 
     auto primitives = make_shared<PrimitiveTriangles>(vertexFormat, vertexGroup, indexBuffer);
     primitives->SetBoundingBox(boundingBox);
@@ -290,6 +283,13 @@ CreateNode(
     _IN_ const aiNode  *aiNode)
 {
     auto node = make_shared<Node>();
+
+    // Load node transform.
+    node->mLocalTransform = Matrix4f(
+                                aiNode->mTransformation[0][0], aiNode->mTransformation[1][0], aiNode->mTransformation[2][0], aiNode->mTransformation[3][0],
+                                aiNode->mTransformation[0][1], aiNode->mTransformation[1][1], aiNode->mTransformation[2][1], aiNode->mTransformation[3][1],
+                                aiNode->mTransformation[0][2], aiNode->mTransformation[1][2], aiNode->mTransformation[2][2], aiNode->mTransformation[3][2],
+                                aiNode->mTransformation[0][3], aiNode->mTransformation[1][3], aiNode->mTransformation[2][3], aiNode->mTransformation[3][3]);
 
     // Process each mesh located at the current node
     for (unsigned int i = 0; i < aiNode->mNumMeshes; ++i)

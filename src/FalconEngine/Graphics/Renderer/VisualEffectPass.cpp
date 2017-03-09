@@ -30,42 +30,74 @@ VisualEffectPass::~VisualEffectPass()
 void
 VisualEffectPass::SetShader(ShaderSharedPtr shader)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(shader);
+
     mShader = shader;
 }
 
 void
 VisualEffectPass::SetBlendState(BlendStateUniquePtr blendStateHandle)
 {
+    if (blendStateHandle == nullptr)
+    {
+        FALCON_ENGINE_THROW_NULLPTR_EXCEPTION(blendStateHandle);
+    }
+
     mBlendState.reset(blendStateHandle.release());
 }
 
 void
 VisualEffectPass::SetCullState(CullStateUniquePtr cullStateHandle)
 {
+    if (cullStateHandle == nullptr)
+    {
+        FALCON_ENGINE_THROW_NULLPTR_EXCEPTION(blendStateHandle);
+    }
+
     mCullState.reset(cullStateHandle.release());
 }
 
 void
 VisualEffectPass::SetDepthTestState(DepthTestStateUniquePtr depthTestStateHandle)
 {
+    if (depthTestStateHandle == nullptr)
+    {
+        FALCON_ENGINE_THROW_NULLPTR_EXCEPTION(blendStateHandle);
+    }
+
     mDepthTestState.reset(depthTestStateHandle.release());
 }
 
 void
 VisualEffectPass::SetOffsetState(OffsetStateUniquePtr offsetStateHandle)
 {
+    if (offsetStateHandle == nullptr)
+    {
+        FALCON_ENGINE_THROW_NULLPTR_EXCEPTION(blendStateHandle);
+    }
+
     mOffsetState.reset(offsetStateHandle.release());
 }
 
 void
 VisualEffectPass::SetStencilTestState(StencilTestStateUniquePtr stencilTestStateHandle)
 {
+    if (stencilTestStateHandle == nullptr)
+    {
+        FALCON_ENGINE_THROW_NULLPTR_EXCEPTION(blendStateHandle);
+    }
+
     mStencilTestState.reset(stencilTestStateHandle.release());
 }
 
 void
 VisualEffectPass::SetWireframeState(WireframeStateUniquePtr wireframeStateHandle)
 {
+    if (wireframeStateHandle == nullptr)
+    {
+        FALCON_ENGINE_THROW_NULLPTR_EXCEPTION(blendStateHandle);
+    }
+
     mWireframeState.reset(wireframeStateHandle.release());
 }
 

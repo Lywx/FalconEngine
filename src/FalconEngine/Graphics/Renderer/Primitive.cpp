@@ -47,6 +47,8 @@ Primitive::GetBoundingBox() const
 void
 Primitive::SetBoundingBox(BoundingBoxSharedPtr boundingBox)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(boundingBox);
+
     mBoundingBox = boundingBox;
 }
 
@@ -65,6 +67,8 @@ Primitive::GetVertexFormat() const
 void
 Primitive::SetVertexFormat(VertexFormatSharedPtr vertexFormat)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(vertexFormat);
+
     mVertexFormat = vertexFormat;
 }
 
@@ -77,6 +81,8 @@ Primitive::GetIndexBuffer() const
 void
 Primitive::SetIndexBuffer(IndexBufferSharedPtr indexBuffer)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(indexBuffer);
+
     mIndexBuffer = indexBuffer;
 }
 
@@ -89,6 +95,8 @@ Primitive::GetVertexGroup() const
 void
 Primitive::SetVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer, int offset, int stride)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
+
     if (mVertexGroup->ContainVertexBuffer(bindingIndex, vertexBuffer))
     {
         // NOTE(Wuxiang): It is not allowed to reset vertex buffer's offset or stride.

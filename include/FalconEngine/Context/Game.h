@@ -40,6 +40,8 @@ public:
     void
     SetEngine(GameEngine *gameEngine)
     {
+        FALCON_ENGINE_CHECK_NULLPTR(gameEngine);
+
         mGameEngine = gameEngine;
     }
 

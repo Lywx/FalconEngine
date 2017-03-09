@@ -31,6 +31,8 @@ VertexGroup::GetVertexNum() const
 void
 VertexGroup::SetVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer, int offset, int stride)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
+
     mVertexBufferTable.insert(std::make_pair(bindingIndex, VertexBufferBinding(vertexBuffer, bindingIndex, offset, stride)));
 }
 

@@ -253,6 +253,12 @@ CreateMeshVertexFormat()
     return sVertexFormat;
 }
 
+void
+CreateMeshTransform(const aiMesh *aiMesh)
+{
+
+}
+
 MeshSharedPtr
 CreateMesh(
     _IN_ const string&  modelDirectoryPath,
@@ -264,6 +270,7 @@ CreateMesh(
     auto indexBuffer  = CreateMeshIndexBuffer(aiMesh);
     auto vertexFormat = CreateMeshVertexFormat();
     auto vertexGroup  = CreateMeshVertexGroup(aiMesh);
+    CreateMeshTransform(aiMesh);
 
     auto primitives = make_shared<PrimitiveTriangles>(vertexFormat, vertexGroup, indexBuffer);
     primitives->SetBoundingBox(boundingBox);

@@ -77,6 +77,8 @@ public:
     void
     SetSampler(SamplerSharedPtr sampler)
     {
+        FALCON_ENGINE_CHECK_NULLPTR(sampler);
+
         mSampler = sampler;
     }
 
@@ -89,6 +91,8 @@ public:
     void
     SetTexture(Texture2dArraySharedPtr texture)
     {
+        FALCON_ENGINE_CHECK_NULLPTR(texture);
+
         mTexture = texture;
     }
 

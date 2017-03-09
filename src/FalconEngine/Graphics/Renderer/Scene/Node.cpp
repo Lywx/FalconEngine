@@ -129,6 +129,9 @@ Node::GetChildAt(size_t i)
 SpatialSharedPtr
 Node::SetChild(size_t i, SpatialSharedPtr child)
 {
+    // NOTE(Wuxiang): The child is allowed to be null so that you would be able
+    // to clear the child from the children list.
+
     if (child)
     {
         // The child already has a parent

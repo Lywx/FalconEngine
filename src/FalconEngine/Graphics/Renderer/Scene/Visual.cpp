@@ -38,6 +38,8 @@ Visual::GetEffectInstance() const
 void
 Visual::SetEffectInstance(VisualEffectInstanceSharedPtr effectInstance)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(effectInstance);
+
     mEffectInstance = effectInstance;
 }
 
@@ -50,6 +52,8 @@ Visual::GetPrimitive() const
 void
 Visual::SetPrimitive(PrimitiveSharedPtr primitive)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(primitive);
+
     mPrimitive = primitive;
 }
 

@@ -53,6 +53,8 @@ VisualEffectInstance::GetShaderTexture(int passIndex, int textureUnit) const
 void
 VisualEffectInstance::SetShaderTexture(int passIndex, int textureUnit, const Texture *texture)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(texture);
+
     mPassList.at(passIndex)->SetShaderTexture(textureUnit, texture);
 }
 
@@ -65,6 +67,8 @@ VisualEffectInstance::GetShaderSampler(int passIndex, int textureUnit) const
 void
 VisualEffectInstance::SetShaderSampler(int passIndex, int textureUnit, const Sampler *sampler)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(sampler);
+
     mPassList.at(passIndex)->SetShaderSampler(textureUnit, sampler);
 }
 

@@ -24,6 +24,8 @@ VisualEffectInstancePass::~VisualEffectInstancePass()
 void
 VisualEffectInstancePass::SetShaderUniform(ShaderUniformSharedPtr shaderUniform)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(shaderUniform);
+
     if (!mShader->ContainUniform(shaderUniform->mName))
     {
         mShader->PushUniform(shaderUniform->mName, shaderUniform->mType);

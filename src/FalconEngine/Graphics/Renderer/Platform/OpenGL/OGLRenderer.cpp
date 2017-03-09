@@ -25,6 +25,8 @@ namespace FalconEngine
 void
 Renderer::SetBlendState(const BlendState *blendState)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(blendState);
+
     mBlendStateCurrent = blendState;
 
     if (mBlendStateCurrent->mEnabled)
@@ -68,6 +70,8 @@ Renderer::SetBlendState(const BlendState *blendState)
 void
 Renderer::SetCullState(const CullState *cullState)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(cullState);
+
     mCullStateCurrent = cullState;
 
     if (mCullStateCurrent->mEnabled)
@@ -107,6 +111,8 @@ Renderer::SetCullState(const CullState *cullState)
 void
 Renderer::SetDepthTestState(const DepthTestState *depthTestState)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(depthTestState);
+
     mDepthTestStateCurrent = depthTestState;
 
     if (mDepthTestStateCurrent->mTestEnabled)
@@ -154,6 +160,8 @@ Renderer::SetDepthTestState(const DepthTestState *depthTestState)
 void
 Renderer::SetOffsetState(const OffsetState *offsetState)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(offsetState);
+
     mOffsetStateCurrent = offsetState;
 
     if (mOffsetStateCurrent->mFillEnabled)
@@ -219,6 +227,8 @@ Renderer::SetOffsetState(const OffsetState *offsetState)
 void
 Renderer::SetStencilTestState(const StencilTestState *stencilTestState)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(stencilTestState);
+
     mStencilTestStateCurrent = stencilTestState;
 
     if (mStencilTestStateCurrent->mTestEnabled)
@@ -273,6 +283,8 @@ Renderer::SetStencilTestState(const StencilTestState *stencilTestState)
 void
 Renderer::SetWireframeState(const WireframeState *wireframeState)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(wireframeState);
+
     mWireframeStateCurrent = wireframeState;
 
     if (mWireframeStateCurrent->mEnabled)

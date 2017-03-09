@@ -80,6 +80,8 @@ template <typename T>
 void
 VisualEffectInstance::SetShaderUniform(int passIndex, ShaderUniformValueSharedPtr<T> uniform)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(uniform);
+
     mPassList.at(passIndex)->SetShaderUniform(uniform);
 }
 

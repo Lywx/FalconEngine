@@ -28,12 +28,16 @@ Model::GetNode()
 
 void Model::SetNode(NodeSharedPtr node)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(node);
+
     mNode = node;
 }
 
 void
 Model::SetSampler(SamplerSharedPtr sampler)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(sampler);
+
     mSampler = sampler;
 }
 

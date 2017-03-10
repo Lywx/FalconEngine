@@ -200,11 +200,23 @@ Renderer::Update(const VertexBuffer *vertexBuffer)
 {
     FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
 
-    auto sourceDataByteNum = vertexBuffer->GetDataByteNum();
-    auto *sourceData = vertexBuffer->GetData();
-    void *destinationData = Map(vertexBuffer, BufferAccessMode::Write);
-    memcpy(destinationData, sourceData, sourceDataByteNum);
-    Unmap(vertexBuffer);
+    auto iter = mVertexBufferTable.find(vertexBuffer);
+    if (iter != mVertexBufferTable.end())
+    {
+        auto vertexBufferPlatform = iter->second;
+
+        auto sourceDataByteNum = vertexBuffer->GetDataByteNum();
+        auto sourceData = vertexBuffer->GetData();
+        auto destinationData = vertexBufferPlatform->Map(BufferAccessMode::Write);
+        memcpy(destinationData, sourceData, sourceDataByteNum);
+
+        vertexBufferPlatform->Unmap();
+    }
+    else
+    {
+        auto vertexBufferPlatform = new PlatformVertexBuffer(vertexBuffer);
+        mVertexBufferTable[vertexBuffer] = vertexBufferPlatform;
+    }
 }
 
 void
@@ -387,11 +399,23 @@ Renderer::Update(const IndexBuffer *indexBuffer)
 {
     FALCON_ENGINE_CHECK_NULLPTR(indexBuffer);
 
-    auto sourceDataByteNum = indexBuffer->GetDataByteNum();
-    auto *sourceData = indexBuffer->GetData();
-    void *destinationData = Map(indexBuffer, BufferAccessMode::Write);
-    memcpy(destinationData, sourceData, sourceDataByteNum);
-    Unmap(indexBuffer);
+    auto iter = mIndexBufferTable.find(indexBuffer);
+    if (iter != mIndexBufferTable.end())
+    {
+        auto indexBufferPlatform = iter->second;
+
+        auto sourceDataByteNum = indexBuffer->GetDataByteNum();
+        auto *sourceData = indexBuffer->GetData();
+        void *destinationData = indexBufferPlatform->Map(BufferAccessMode::Write);
+        memcpy(destinationData, sourceData, sourceDataByteNum);
+
+        indexBufferPlatform->Unmap();
+    }
+    else
+    {
+        auto indexBufferPlatform = new PlatformIndexBuffer(indexBuffer);
+        mIndexBufferTable[indexBuffer] = indexBufferPlatform;
+    }
 }
 
 void
@@ -593,10 +617,21 @@ Renderer::Update(const Texture2d *texture, int mipmapLevel)
     FALCON_ENGINE_CHECK_NULLPTR(texture);
 
     // TODO(Wuxiang): Add mipmap support.
-    unsigned char *sourceData = texture->mData;
-    void *targetData = Map(texture, mipmapLevel, BufferAccessMode::Write);
-    memcpy(targetData, sourceData, texture->mDataByteNum);
-    Unmap(texture, mipmapLevel);
+    auto iter = mTexture2dTable.find(texture);
+    if (iter != mTexture2dTable.end())
+    {
+        auto texturePlatform = iter->second;
+
+        unsigned char *sourceData = texture->mData;
+        void *targetData = texturePlatform->Map(mipmapLevel, BufferAccessMode::Write);
+        memcpy(targetData, sourceData, texture->mDataByteNum);
+        texturePlatform->Unmap(mipmapLevel);
+    }
+    else
+    {
+        auto texturePlatform = new PlatformTexture2d(texture);
+        mTexture2dTable[texture] = texturePlatform;
+    }
 }
 
 void

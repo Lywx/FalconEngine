@@ -6,9 +6,7 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-VertexFormat::VertexFormat() :
-    mVertexAttributeOffset(0),
-    mVertexAttributeFinished(false)
+VertexFormat::VertexFormat()
 {
 }
 
@@ -32,11 +30,11 @@ VertexFormat::GetVertexAttribute(int attributeIndex)
 }
 
 int
-VertexFormat::GetVertexAttributeStride() const
+VertexFormat::GetVertexAttributeStride(int attributeBindingIndex) const
 {
     if (mVertexAttributeFinished)
     {
-        return mVertexAttributeOffset;
+        return mVertexAttributeOffsetList.at(attributeBindingIndex);
     }
     else
     {
@@ -45,22 +43,39 @@ VertexFormat::GetVertexAttributeStride() const
 }
 
 void
-VertexFormat::PushVertexAttribute(int attributeLocation, std::string attributeName, VertexAttributeType attributeType, bool attributeNormalized, int attributeBindingIndex, int attributeDivision)
+VertexFormat::PushVertexAttribute(
+    int                 attributeLocation,
+    std::string         attributeName,
+    VertexAttributeType attributeType,
+    bool                attributeNormalized,
+    int                 attributeBindingIndex,
+    int                 attributeDivision)
 {
-    if (attributeLocation != mVertexAttributeList.size())
-    {
-        // NOTE(Wuxiang): It is not supported for out of order attribute registration.
-        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-    }
-
     if (mVertexAttributeFinished)
     {
         FALCON_ENGINE_THROW_EXCEPTION("Vertex attribute has finished initialization.");
     }
 
-    // NOTE(Wuxiang): mVertexAttributeOffset is summed
-    mVertexAttributeList.push_back(VertexAttribute(attributeLocation, attributeName, attributeType, attributeNormalized, mVertexAttributeOffset, attributeBindingIndex, attributeDivision));
-    mVertexAttributeOffset += VertexAttributeSize[int(mVertexAttributeList.back().mType)];
+    // Check the vertex attribute has been pushed in order.
+    if (attributeLocation != mVertexAttributeList.size())
+    {
+        // NOTE(Wuxiang): It is not supported for out of order attribute registration.
+        // The reason is that in order to correctly count offset for individual
+        // vertex attribute, you have to input vertex index in the order of layout location.
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    }
+
+    // Initialize offset storage for specific binding index.
+    while (attributeBindingIndex >= mVertexAttributeOffsetList.size())
+    {
+        mVertexAttributeOffsetList.push_back(0);
+    }
+
+    // NOTE(Wuxiang): mVertexAttributeOffset is summed.
+    mVertexAttributeList.push_back(
+        VertexAttribute(attributeLocation, attributeName, attributeType, attributeNormalized,
+                        mVertexAttributeOffsetList[attributeBindingIndex], attributeBindingIndex, attributeDivision));
+    mVertexAttributeOffsetList[attributeBindingIndex] += VertexAttributeSize[int(mVertexAttributeList.back().mType)];
 }
 
 void

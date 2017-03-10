@@ -1,8 +1,9 @@
 #pragma once
 
 #include <FalconEngine/MathInclude.h>
-#include <FalconEngine/Math/Bound/BoundingBox.h>
+#include <FalconEngine/Math/Matrix4.h>
 #include <FalconEngine/Math/Vector3.h>
+#include <FalconEngine/Math/Bound/BoundingBox.h>
 
 namespace FalconEngine
 {
@@ -10,6 +11,12 @@ namespace FalconEngine
 class AABBBoundingBox sealed : public BoundingBox
 {
 public:
+    /************************************************************************/
+    /* Static Members                                                       */
+    /************************************************************************/
+    static std::vector<Vector3f>
+    GetCubeModelPositionList();
+
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
@@ -20,21 +27,24 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
+    Matrix4f
+    GetCubeModelPositionTransform() const;
+
     virtual int
-    GetPositionNum() const override;
+    GetModelPositionNum() const override;
 
     virtual std::vector<Vector3f>
-    GetPositionList() const override;
+    GetModelPositionList() const override;
 
     void
-    Update(Vector3f position);
+    UpdatePosition(Vector3f position);
 
 private:
     /************************************************************************/
     /* Private Members                                                      */
     /************************************************************************/
     void
-    Initialize(Vector3f position);
+    InitializePosition(Vector3f position);
 
 public:
     float mXmax;

@@ -291,7 +291,7 @@ BitmapFontRenderer::PrepareBatch(const BitmapFont *font)
     shared_ptr<Visual> fontQuads;
     {
         auto vertexGroup = make_shared<VertexGroup>();
-        vertexGroup->SetVertexBuffer(0, fontVertexBuffer, 0, fontVertexFormat->GetVertexAttributeStride());
+        vertexGroup->SetVertexBuffer(0, fontVertexBuffer, 0, fontVertexFormat->GetVertexAttributeStride(0));
 
         auto fontEffectInstance = make_shared<VisualEffectInstance>(sFontEffect);
         sFontEffect->CreateInstance(fontEffectInstance.get(), font, mWidth, mHeight);

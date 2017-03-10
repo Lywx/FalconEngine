@@ -9,9 +9,15 @@ namespace FalconEngine
 class PlatformIndexBuffer
 {
 public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
     PlatformIndexBuffer(const IndexBuffer *indexBuffer);
     ~PlatformIndexBuffer();
 
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
     void
     Enable();
 

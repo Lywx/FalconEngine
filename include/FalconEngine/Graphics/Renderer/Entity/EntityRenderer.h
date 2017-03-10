@@ -72,7 +72,7 @@ private:
     DrawBoundingBox(const Camera *camera, const Visual *visual, const BoundingBox *boundingBox, Color boundingBoxColor = ColorPalette::White);
 
     BoundingBoxBatchSharedPtr
-    PrepareBatch(const Camera *camera, size_t boundingBoxVertexNum);
+    PrepareBatch(const Camera *camera);
 
     void
     PrepareBoundingBox(_IN_ BoundingBoxBatch&  batch,

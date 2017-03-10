@@ -51,18 +51,34 @@ SampleGame::Initialize()
     {
         {
             mDirectionalLight = make_shared<Light>(LightType::Directional);
-            mDirectionalLight->mAmbient = Color(255, 255, 255);
-            mDirectionalLight->mDiffuse = Color(255, 255, 255);
-            mDirectionalLight->mSpecular = Color(255, 255, 255);
-            mDirectionalLight->mDirection = Vector3f(1, 1, 1);
+            mDirectionalLight->mAmbient = Color(055, 055, 055);
+            //mDirectionalLight->mDiffuse = Color(055, 255, 255);
+            //mDirectionalLight->mSpecular = Color(255, 255, 255);
+            //mDirectionalLight->mDirection = Vector3f(1, 1, 1);
         }
 
         {
             mPointLight1 = make_shared<Light>(LightType::Point);
+            mPointLight1->mAmbient = Color(255, 255, 255);
+            mPointLight1->mDiffuse = Color(255, 255, 255);
+            mPointLight1->mSpecular = Color(255, 255, 255);
+            mPointLight1->mConstant = 0.1;
+            mPointLight1->mLinear = 0.7;
+            mPointLight1->mQuadratic = 1.8;
+            mPointLight1->mPosition = Vector3f(4.9f, 4.5f, 6.5f);
+            //mPointLight1->mPosition = Vector3f(5.09701681137085, -6.6115264892578125, 2.654505729675293);
         }
 
         {
             mPointLight2 = make_shared<Light>(LightType::Point);
+            mPointLight2->mAmbient = Color(255, 255, 255);
+            mPointLight2->mDiffuse = Color(255, 255, 255);
+            mPointLight2->mSpecular = Color(255, 255, 255);
+            mPointLight2->mDirection = Vector3f(1, 1, 1);
+            mPointLight2->mConstant = 1.0;
+            mPointLight2->mLinear = 0.7;
+            mPointLight2->mQuadratic = 1.8;
+            mPointLight2->mPosition = Vector3f(-4.92804479598999, -6.6115264892578125, 2.654505729675293);
         }
 
         // Initialize Scene
@@ -81,7 +97,7 @@ SampleGame::Initialize()
 
     // Initialize interaction.
     {
-        mCamera->LookAt(Vector3f(0, 0, 10), Vector3f(0, 0, 0), Vector3f::UnitY);
+        mCamera->LookAt(Vector3f(0, 0, 0), Vector3f(0, 0, -1), Vector3f::UnitY);
     }
 }
 
@@ -136,6 +152,7 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
     }
 
     graphics->Draw(mCamera.get(), mRoom.get());
+    graphics->DrawBoundingBox(mCamera.get(), mRoom.get(), ColorPalette::Yellow);
 
     Game::Render(graphics, percent);
 }

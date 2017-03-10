@@ -15,7 +15,7 @@ PlatformVertexBuffer::PlatformVertexBuffer(const VertexBuffer *vertexBuffer)
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
 
     // Allocate buffer storage
-    glBufferData(GL_ARRAY_BUFFER, vertexBuffer->GetDataByteNum(),
+    glBufferData(GL_ARRAY_BUFFER, vertexBuffer->GetCapacityByteNum(),
                  nullptr, OpenGLBufferUsage[int(vertexBuffer->GetUsage())]);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 

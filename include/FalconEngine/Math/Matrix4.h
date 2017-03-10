@@ -15,7 +15,8 @@ class Vector3f;
 //  0.1, 1.1, 2.1, 3.1,
 //  0.2, 1.2, 2.2, 3.2,
 //  0.3, 1.3, 2.3, 3.3)
-class Matrix4f : public glm::mat4
+#pragma pack(push, 1)
+class Matrix4f sealed : public glm::mat4
 {
 public:
     /************************************************************************/
@@ -70,7 +71,6 @@ public:
         const float& x1, const float& y1, const float& z1, const float& w1,
         const float& x2, const float& y2, const float& z2, const float& w2,
         const float& x3, const float& y3, const float& z3, const float& w3);
-    virtual ~Matrix4f();
 
     // Implicit Conversion
     Matrix4f(const glm::mat4& m);
@@ -79,6 +79,7 @@ public:
     // Explicit Conversion
     explicit operator Matrix3f() const;
 };
+#pragma pack(pop)
 
 /************************************************************************/
 /* Operator Members                                                     */

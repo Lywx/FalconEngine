@@ -10,6 +10,8 @@ namespace FalconEngine
 
 // Assume vector are column vector
 class Vector3i;
+
+#pragma pack(push ,1)
 class Vector3f : public glm::vec3
 {
 public:
@@ -47,6 +49,7 @@ public:
     explicit operator glm::vec3() const;
     explicit operator Vector3i() const;
 };
+#pragma pack(pop)
 
 std::string
 to_string(const Vector3f& v);

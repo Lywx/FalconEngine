@@ -9,5 +9,3 @@ Rendering Pipeline Specifics
 
 (0) Fixed glVertexAttribDivisor problem in renderer.
 (0) Fixed bounding box rendering.
-
-(0) Fixed mesh transform in model.

@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Effect/BoundingBoxEffect.h>
+#include <FalconEngine/Graphics/Effect/AABBBoundingBoxEffect.h>
 
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
@@ -17,12 +17,12 @@ using namespace std;
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(BoundingBoxEffect, VisualEffect);
+FALCON_ENGINE_RTTI_IMPLEMENT(AABBBoundingBoxEffect, VisualEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-BoundingBoxEffect::BoundingBoxEffect()
+AABBBoundingBoxEffect::AABBBoundingBoxEffect()
 {
     auto shader = std::make_shared<Shader>();
     shader->PushShaderFile(ShaderType::VertexShader, "Content/Shaders/BoundingBox.vert.glsl");
@@ -40,20 +40,20 @@ BoundingBoxEffect::BoundingBoxEffect()
     pass->SetCullState(move(cullState));
 
     auto depthTestState = make_unique<DepthTestState>();
-    depthTestState->mTestEnabled = false;
+    depthTestState->mTestEnabled = true;
     pass->SetDepthTestState(move(depthTestState));
 
     pass->SetOffsetState(make_unique<OffsetState>());
     pass->SetStencilTestState(make_unique<StencilTestState>());
 
     auto wireframwState = make_unique<WireframeState>();
-    wireframwState->mEnabled = false;
+    wireframwState->mEnabled = true;
     pass->SetWireframeState(move(wireframwState));
 
     InsertPass(move(pass));
 }
 
-BoundingBoxEffect::~BoundingBoxEffect()
+AABBBoundingBoxEffect::~AABBBoundingBoxEffect()
 {
 }
 
@@ -61,31 +61,33 @@ BoundingBoxEffect::~BoundingBoxEffect()
 /* Public Members                                                       */
 /************************************************************************/
 void
-BoundingBoxEffect::CreateInstance(VisualEffectInstance *instance, const Camera *camera) const
+AABBBoundingBoxEffect::CreateInstance(VisualEffectInstance *instance, const Camera *camera) const
 {
     CheckEffectCompatible(instance);
 }
 
 VertexFormatSharedPtr
-BoundingBoxEffect::CreateVertexFormat(size_t boundingBoxVertexNum)
+AABBBoundingBoxEffect::CreateVertexFormat()
 {
     static VertexFormatSharedPtr sVertexFormat;
     if (sVertexFormat == nullptr)
     {
         sVertexFormat = std::make_shared<VertexFormat>();
+
+        // NOTE(Wuxiang): Fixed vertex data. No instancing.
         sVertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
-        sVertexFormat->PushVertexAttribute(1, "Color", VertexAttributeType::FloatVec4, false, 0);
+
+        // NOTE(Wuxiang): Each bounding box has only one color, used with instancing.
+        sVertexFormat->PushVertexAttribute(1, "Color", VertexAttributeType::FloatVec4, false, 1, 1);
 
         // NOTE(Wuxiang): Transform matrix would use instancing. Different transformation
         // buffer would be used to provide the matrix data.
-
-        // TODO(Wuxiang): Wrong!
-        sVertexFormat->PushVertexAttribute(2, "ModelViewProjectionTransform", VertexAttributeType::FloatVec4, false, 1, int(boundingBoxVertexNum));
+        sVertexFormat->PushVertexAttribute(2, "ModelViewProjectionTransform", VertexAttributeType::FloatVec4, false, 1, 1);
 
         // NOTE(Wuxiang): The name is not meant to be valid for mat4.
-        sVertexFormat->PushVertexAttribute(3, "", VertexAttributeType::FloatVec4, false, 1, boundingBoxVertexNum);
-        sVertexFormat->PushVertexAttribute(4, "", VertexAttributeType::FloatVec4, false, 1, boundingBoxVertexNum);
-        sVertexFormat->PushVertexAttribute(5, "", VertexAttributeType::FloatVec4, false, 1, boundingBoxVertexNum);
+        sVertexFormat->PushVertexAttribute(3, "", VertexAttributeType::FloatVec4, false, 1, 1);
+        sVertexFormat->PushVertexAttribute(4, "", VertexAttributeType::FloatVec4, false, 1, 1);
+        sVertexFormat->PushVertexAttribute(5, "", VertexAttributeType::FloatVec4, false, 1, 1);
         sVertexFormat->FinishVertexAttribute();
     }
 

@@ -153,13 +153,17 @@ Matrix4f::CreateTranslation(const Vector3f& v)
 /* Constructors and Destructor                                          */
 /************************************************************************/
 
-Matrix4f::Matrix4f() : glm::mat4() { }
+Matrix4f::Matrix4f() :
+    glm::mat4()
+{
+
+}
 
 Matrix4f::Matrix4f(const glm::vec4& v0,
                    const glm::vec4& v1,
                    const glm::vec4& v2,
-                   const glm::vec4& v3)
-    : glm::mat4(v0, v1, v2, v3)
+                   const glm::vec4& v3) :
+    glm::mat4(v0, v1, v2, v3)
 {
 }
 
@@ -169,10 +173,6 @@ Matrix4f::Matrix4f(
     const float& x2, const float& y2, const float& z2, const float& w2,
     const float& x3, const float& y3, const float& z3, const float& w3)
     : glm::mat4(x0, y0, z0, w0, x1, y1, z1, w1, x2, y2, z2, w2, x3, y3, z3, w3)
-{
-}
-
-Matrix4f::~Matrix4f()
 {
 }
 

@@ -429,7 +429,6 @@ Renderer::DrawPrimitive(const Primitive *primitive, size_t primitiveInstancingNu
                     FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
                 }
 
-                // glDrawRangeElements(primitiveMode, 0, GLuint(vertexNum - 1), GLsizei(indexNum), indexType, indexOffset);
                 glDrawElementsInstanced(primitiveMode, GLsizei(indexNum), indexType, indexOffset, GLsizei(primitiveInstancingNum));
             }
         }

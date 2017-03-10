@@ -13,7 +13,7 @@ PlatformIndexBuffer::PlatformIndexBuffer(const IndexBuffer *indexBuffer)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mBuffer);
 
     // Allocate buffer storage
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer->GetDataByteNum(),
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer->GetCapacityByteNum(),
                  nullptr, OpenGLBufferUsage[int(indexBuffer->GetUsage())]);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 

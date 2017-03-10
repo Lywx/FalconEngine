@@ -3,17 +3,37 @@
 #include <FalconEngine/GraphicsInclude.h>
 
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
-
+#include <FalconEngine/Math/Matrix4.h>
+#include <FalconEngine/Math/Vector3.h>
+#include <FalconEngine/Math/Vector4.h>
 
 namespace FalconEngine
 {
+
+#pragma pack(push, 1)
+class BoundingBoxInstance
+{
+public:
+    Vector4f mColor;
+    Matrix4f mModelViewPrjectionTransform;
+};
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+class BoundingBoxVertex
+{
+public:
+    Vector3f mPosition;
+};
+#pragma pack(pop)
+
 
 class Camera;
 
 class VertexFormat;
 using VertexFormatSharedPtr = std::shared_ptr<VertexFormat>;
 
-class BoundingBoxEffect : public VisualEffect
+class AABBBoundingBoxEffect : public VisualEffect
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
@@ -21,8 +41,8 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit BoundingBoxEffect();
-    virtual ~BoundingBoxEffect();
+    explicit AABBBoundingBoxEffect();
+    virtual ~AABBBoundingBoxEffect();
 
 public:
     /************************************************************************/
@@ -35,7 +55,7 @@ public:
         _IN_     const Camera *camera) const;
 
     VertexFormatSharedPtr
-    CreateVertexFormat(size_t boundingBoxVertexNum);
+    CreateVertexFormat();
 };
 
 }

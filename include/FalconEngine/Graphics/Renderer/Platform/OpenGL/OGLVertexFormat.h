@@ -9,10 +9,16 @@ class VertexFormat;
 class PlatformVertexFormat
 {
 public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
     PlatformVertexFormat(const VertexFormat *vertexFormat);
     ~PlatformVertexFormat();
 
 public:
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
     void
     Enable();
 

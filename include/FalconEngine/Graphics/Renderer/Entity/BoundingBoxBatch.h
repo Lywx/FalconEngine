@@ -22,9 +22,9 @@ public:
         const Camera *camera,
         VertexBufferSharedPtr vertexBuffer,
         VisualSharedPtr vertexTriangles,
-        VertexBufferSharedPtr transformBuffer) :
+        VertexBufferSharedPtr instanceBuffer) :
         mCamera(camera),
-        mTransformBuffer(transformBuffer),
+        mInstanceBuffer(instanceBuffer),
 
         // NOTE(Wuxiang): Note that the vertex instancing number is stored in side the triangle visual.
         mVertexTriangles(vertexTriangles),
@@ -39,14 +39,13 @@ public:
     bool                  mCameraViewProjectionComputed = false;
     Matrix4f              mCameraViewProjectionTransform = Matrix4f::Identity;
 
-    VertexBufferSharedPtr mTransformBuffer;
-    size_t                mTransformBufferDataIndex = 0;
+    VertexBufferSharedPtr mInstanceBuffer;
+    size_t                mInstanceBufferDataIndex = 0;
+    size_t                mInstanceNum = 0;
 
     VisualSharedPtr       mVertexTriangles;
 
     VertexBufferSharedPtr mVertexBuffer;
-    size_t                mVertexBufferDataIndex = 0;
-    size_t                mVertexNum = 0;
 };
 
 }

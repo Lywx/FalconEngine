@@ -33,7 +33,7 @@ public:
     GetVertexAttribute(int attributeIndex);
 
     int
-    GetVertexAttributeStride() const;
+    GetVertexAttributeStride(int attributeBindingIndex) const;
 
     void
     PushVertexAttribute(int attributeLocation, std::string attributeName, VertexAttributeType attributeType, bool attributeNormalized, int attributeBindingIndex, int attributeDivision = 0);
@@ -47,8 +47,12 @@ public:
     VertexAttributeVector mVertexAttributeList;
 
 private:
-    int                   mVertexAttributeOffset;
-    bool                  mVertexAttributeFinished;
+    // NOTE(Wuxiang): Vertex attribute stride list. Each element counts buffer's data total stride in byte, at specific vertex buffer binding index.
+    std::vector<int>      mVertexAttributeOffsetList;
+
+    // NOTE(Wuxiang): This is used as an enforcement for making vertex attribute
+    // list immutable once it is set up correctly.
+    bool                  mVertexAttributeFinished = false;
 
 };
 

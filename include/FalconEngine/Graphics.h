@@ -5,8 +5,8 @@
 
 #include <FalconEngine/GraphicsInclude.h>
 
+#include <FalconEngine/Graphics/Effect/AABBBoundingBoxEffect.h>
 #include <FalconEngine/Graphics/Effect/BitmapFontEffect.h>
-#include <FalconEngine/Graphics/Effect/BoundingBoxEffect.h>
 #include <FalconEngine/Graphics/Effect/PhongLightingEffect.h>
 
 #include <FalconEngine/Graphics/Renderer/Camera.h>

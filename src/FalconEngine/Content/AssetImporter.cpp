@@ -41,9 +41,9 @@ CreateMeshAABBBoundingBox(const aiMesh *aiMesh)
 
     for (size_t i = 0; i < aiMesh->mNumVertices; ++i)
     {
-        boundingBox->Update(Vector3f(aiMesh->mVertices[i].x,
-                                     aiMesh->mVertices[i].y,
-                                     aiMesh->mVertices[i].z));
+        boundingBox->UpdatePosition(Vector3f(aiMesh->mVertices[i].x,
+                                             aiMesh->mVertices[i].y,
+                                             aiMesh->mVertices[i].z));
     }
 
     return boundingBox;
@@ -311,7 +311,7 @@ CreateNode(
 void
 AssetImporter::Import(Model *model, const std::string& modelFilePath)
 {
-    // Load model using Assimp
+    // Load model using Assimp.
     static Assimp::Importer sAiModelImporter;
     auto aiScene = sAiModelImporter.ReadFile(modelFilePath, aiProcess_Triangulate | aiProcess_FlipUVs);
     if (!aiScene || aiScene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !aiScene->mRootNode)

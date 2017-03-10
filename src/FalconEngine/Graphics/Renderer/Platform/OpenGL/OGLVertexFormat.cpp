@@ -14,17 +14,18 @@ PlatformVertexFormat::PlatformVertexFormat(const VertexFormat *vertexFormat)
 
     for (auto& vertexAttrib : vertexFormat->mVertexAttributeList)
     {
+        glEnableVertexAttribArray(vertexAttrib.mLocation);
+
+        glVertexAttribBinding(vertexAttrib.mLocation, vertexAttrib.mBindingIndex);
+
         glVertexAttribFormat(vertexAttrib.mLocation, vertexAttrib.mChannel,
                              OpenGLShaderAttributeType[int(vertexAttrib.mType)],
                              vertexAttrib.mNormalized, vertexAttrib.mOffset);
-        glVertexAttribBinding(vertexAttrib.mLocation, vertexAttrib.mBindingIndex);
 
-        //if (vertexAttrib.mDivision != 0)
-        //{
-        //    glVertexAttribDivisor(vertexAttrib.mLocation, vertexAttrib.mDivision);
-        //}
-
-        glEnableVertexAttribArray(vertexAttrib.mLocation);
+        if (vertexAttrib.mDivision != 0)
+        {
+            glVertexBindingDivisor(vertexAttrib.mBindingIndex, vertexAttrib.mDivision);
+        }
     }
 
     glBindVertexArray(0);

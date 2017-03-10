@@ -76,9 +76,12 @@ AABBBoundingBox::AABBBoundingBox(Vector3f position)
 Matrix4f
 AABBBoundingBox::GetCubeModelPositionTransform() const
 {
-    auto center = (Vector3f(mXmax, mYmax, mZmax) - Vector3f(mXmin, mYmin, mZmin)) / 2.0f;
-    auto scaling = Matrix4f::CreateScale(center.x, center.y, center.z);
-    auto translation = Matrix4f::CreateTranslation(center);
+    auto maxCorner = Vector3f(mXmax, mYmax, mZmax);
+    auto minCorner = Vector3f(mXmin, mYmin, mZmin);
+    auto halfSize = (maxCorner - minCorner) / 2.0f;
+
+    auto scaling = Matrix4f::CreateScale(halfSize.x, halfSize.y, halfSize.z);
+    auto translation = Matrix4f::CreateTranslation(minCorner + halfSize);
 
     // NOTE(Wuxiang): Scale (-1, -1, -1), (1, 1, 1) cube first, then translate
     // to correct model position.

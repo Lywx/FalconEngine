@@ -123,7 +123,7 @@ FillBufferFontAttribute(float             *textVertexBufferData,
                         double fontSizeScale)
 {
     // Font color
-    FillBufferDataAsVector4f(textVertexBufferData, textVertexBufferDataIndex, textColor);
+    FillBufferDataAsVector4f<float>(textVertexBufferData, textVertexBufferDataIndex, textColor);
 
     // NOTE(Wuxiang): 1.32 is value the when imported font size is 33. 1.32 is
     // used as origin for scaling.

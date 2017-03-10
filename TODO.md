@@ -6,6 +6,3 @@ Rendering Pipeline Specifics
 (1) Finished blin phong lighting.
 
 (0) Model sampler.
-
-(0) Fixed glVertexAttribDivisor problem in renderer.
-(0) Fixed bounding box rendering.

@@ -107,6 +107,7 @@ EntityRenderer::RenderBegin()
     for (auto& cameraBoundingBoxBatchPair : mEntityBoundingBoxBatchTable)
     {
         auto& batch = cameraBoundingBoxBatchPair.second;
+        batch->mCameraViewProjectionComputed = false;
         batch->mInstanceBufferDataIndex = 0;
         batch->mInstanceNum = 0;
     }
@@ -172,6 +173,12 @@ EntityRenderer::Render(Renderer *renderer, double percent)
             renderer->Update(batch->mInstanceBuffer.get());
 
             // NOTE(Wuxiang): Don't need to update buffer that stores fixed vertex data.
+            static auto sVerterBufferUpdated = false;
+            if (!sVerterBufferUpdated)
+            {
+                renderer->Update(batch->mVertexBuffer.get());
+                sVerterBufferUpdated = true;
+            }
 
             // Update instancing data.
             batch->mVertexTriangles->SetPrimitiveInstancingNum(instanceNum);
@@ -200,7 +207,7 @@ FillBufferBoundingBoxVertex(VertexBuffer *vertexBuffer)
     static auto cubeModelPositionList = AABBBoundingBox::GetCubeModelPositionList();
     for (auto position : cubeModelPositionList)
     {
-        FillBufferDataAsVector3f(bufferData, bufferDataIndex, position);
+        FillBufferDataAsVector3f<float>(reinterpret_cast<float *>(bufferData), bufferDataIndex, position);
     }
 }
 
@@ -210,13 +217,13 @@ FillBufferBoundingBoxColor(
     _IN_OUT_ size_t&            vertexBufferDataIndex,
     _IN_OUT_ float             *vertexBufferData)
 {
-    FillBufferDataAsVector4f(vertexBufferData, vertexBufferDataIndex, vertexColor);
+    FillBufferDataAsVector4f<float>(vertexBufferData, vertexBufferDataIndex, vertexColor);
 }
 
 void
 FillBufferAABBBoundingBoxTransform(
-    _IN_     const AABBBoundingBox *boundingBox,
     _IN_     const Matrix4f&        viewProjectionTransform,
+    _IN_     const AABBBoundingBox *boundingBox,
     _IN_     const Matrix4f&        modelTransform,
     _IN_OUT_ size_t&                transformBufferDataIndex,
     _IN_OUT_ float                 *transformBufferData)
@@ -226,7 +233,7 @@ FillBufferAABBBoundingBoxTransform(
     Matrix4f modelViewProjectionTransform = viewProjectionTransform
                                             * modelTransform
                                             * boundingBox->GetCubeModelPositionTransform();
-    FillBufferDataAsMatrix4f(transformBufferData, transformBufferDataIndex, modelViewProjectionTransform);
+    FillBufferDataAsMatrix4f<float>(transformBufferData, transformBufferDataIndex, modelViewProjectionTransform);
 }
 
 BoundingBoxBatchSharedPtr
@@ -238,7 +245,8 @@ EntityRenderer::PrepareBatch(const Camera *camera)
         return iter->second;
     }
 
-    static const size_t sBoundingBoxBufferSize = Kilobytes(100);
+    static const size_t sAABBBoundingBoxInstanceNum = Kilobytes(1);
+    static const size_t sAABBBoundingBoxVertexNum = 36;
     static shared_ptr<AABBBoundingBoxEffect> sBoungingBoxEffect;
 
     if (sBoungingBoxEffect == nullptr)
@@ -250,21 +258,20 @@ EntityRenderer::PrepareBatch(const Camera *camera)
     auto boundingBoxVertexFormat = sBoungingBoxEffect->CreateVertexFormat();
 
     // Hold fixed data about vertex position in model space.
-    auto boundingBoxModelPositionNum = 36;
-    auto boundingBoxVertexBuffer = make_shared<VertexBuffer>(boundingBoxModelPositionNum, sizeof(BoundingBoxVertex), BufferUsage::Static);
+    auto boundingBoxVertexBuffer = make_shared<VertexBuffer>(sAABBBoundingBoxVertexNum, sizeof(BoundingBoxVertex), BufferUsage::Static);
 
     // Prepare vertex buffer data.
     FillBufferBoundingBoxVertex(boundingBoxVertexBuffer.get());
 
     // Hold dynamic data about each instance of bounding box.
-    auto boundingBoxVertexInstanceBuffer = make_shared<VertexBuffer>(sBoundingBoxBufferSize, sizeof(BoundingBoxInstance), BufferUsage::Dynamic);
+    auto boundingBoxIntanceBuffer = make_shared<VertexBuffer>(sAABBBoundingBoxInstanceNum, sizeof(BoundingBoxInstance), BufferUsage::Dynamic);
 
     // Setup font specific visual quad.
     shared_ptr<Visual> boundingBoxTriangles;
     {
         auto vertexGroup = make_shared<VertexGroup>();
         vertexGroup->SetVertexBuffer(0, boundingBoxVertexBuffer, 0, boundingBoxVertexFormat->GetVertexAttributeStride(0));
-        vertexGroup->SetVertexBuffer(1, boundingBoxVertexInstanceBuffer, 0, boundingBoxVertexFormat->GetVertexAttributeStride(1));
+        vertexGroup->SetVertexBuffer(1, boundingBoxIntanceBuffer, 0, boundingBoxVertexFormat->GetVertexAttributeStride(1));
 
         auto boundingBoxEffectInstance = make_shared<VisualEffectInstance>(sBoungingBoxEffect);
         sBoungingBoxEffect->CreateInstance(boundingBoxEffectInstance.get(), camera);
@@ -274,7 +281,7 @@ EntityRenderer::PrepareBatch(const Camera *camera)
         boundingBoxTriangles->SetEffectInstance(boundingBoxEffectInstance);
     }
 
-    auto boundingBoxBatch = make_shared<BoundingBoxBatch>(camera, boundingBoxVertexBuffer, boundingBoxTriangles, boundingBoxVertexInstanceBuffer);
+    auto boundingBoxBatch = make_shared<BoundingBoxBatch>(camera, boundingBoxVertexBuffer, boundingBoxTriangles, boundingBoxIntanceBuffer);
     mEntityBoundingBoxBatchTable.insert({ camera, boundingBoxBatch });
     return boundingBoxBatch;
 }
@@ -306,9 +313,9 @@ EntityRenderer::PrepareBoundingBox(BoundingBoxBatch& batch, const Camera *camera
         if (auto aabb = dynamic_cast<const AABBBoundingBox *>(boundingBox))
         {
             FillBufferAABBBoundingBoxTransform(
+                batch.mCameraViewProjectionTransform,
                 aabb,
                 visual->mWorldTransform,
-                batch.mCameraViewProjectionTransform,
                 batch.mInstanceBufferDataIndex,
                 reinterpret_cast<float *>(batch.mInstanceBuffer->GetData()));
         }

@@ -102,6 +102,16 @@ private:
     BufferUsage    mUsage;
 };
 
+// @summary Prevent template parameter deduction because the buffer data filling
+// is often where mistakes are made, you better be careful.
+//
+// @ref http://stackoverflow.com/questions/41634538/prevent-implicit-template-instantiation
+template <typename T>
+struct Nondeductible
+{
+    using Type = T;
+};
+
 template<typename T>
 inline void
 FillBufferData(T *data, size_t& dataIndex, T value)
@@ -117,14 +127,14 @@ FillBufferData(T *data, size_t& dataIndex, T value)
 // @param V is the data type you provide to fill with.
 template<typename T, typename V>
 inline void
-FillBufferDataAs(T *data, size_t& dataIndex, V value)
+FillBufferDataAs(typename Nondeductible<T>::Type *data, size_t& dataIndex, V value)
 {
     FillBufferData<T>(data, dataIndex, T(value));
 }
 
 template<typename T>
 inline void
-FillBufferDataAsVector3f(T *data, size_t& dataIndex, Vector3f value)
+FillBufferDataAsVector3f(typename Nondeductible<T>::Type *data, size_t& dataIndex, Vector3f value)
 {
     FillBufferDataAs<T, float>(data, dataIndex, value.x);
     FillBufferDataAs<T, float>(data, dataIndex, value.y);
@@ -133,7 +143,7 @@ FillBufferDataAsVector3f(T *data, size_t& dataIndex, Vector3f value)
 
 template<typename T>
 inline void
-FillBufferDataAsVector4f(T *data, size_t& dataIndex, Vector4f value)
+FillBufferDataAsVector4f(typename Nondeductible<T>::Type *data, size_t& dataIndex, Vector4f value)
 {
     FillBufferDataAs<T, float>(data, dataIndex, value.x);
     FillBufferDataAs<T, float>(data, dataIndex, value.y);
@@ -143,11 +153,11 @@ FillBufferDataAsVector4f(T *data, size_t& dataIndex, Vector4f value)
 
 template<typename T>
 inline void
-FillBufferDataAsMatrix4f(T *data, size_t& dataIndex, Matrix4f value)
+FillBufferDataAsMatrix4f(typename Nondeductible<T>::Type *data, size_t& dataIndex, Matrix4f value)
 {
     for (auto i = 0; i < 4; ++i)
     {
-        FillBufferDataAsVector4f(data, dataIndex, value[i]);
+        FillBufferDataAsVector4f<T>(data, dataIndex, value[i]);
     }
 }
 

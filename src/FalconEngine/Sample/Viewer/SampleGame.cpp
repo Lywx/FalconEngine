@@ -52,9 +52,9 @@ SampleGame::Initialize()
         {
             mDirectionalLight = make_shared<Light>(LightType::Directional);
             mDirectionalLight->mAmbient = Color(055, 055, 055);
-            //mDirectionalLight->mDiffuse = Color(055, 255, 255);
-            //mDirectionalLight->mSpecular = Color(255, 255, 255);
-            //mDirectionalLight->mDirection = Vector3f(1, 1, 1);
+            mDirectionalLight->mDiffuse = Color(055, 255, 255);
+            mDirectionalLight->mSpecular = Color(255, 255, 255);
+            mDirectionalLight->mDirection = Vector3f(1, 1, 1);
         }
 
         {

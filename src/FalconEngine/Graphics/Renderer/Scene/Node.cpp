@@ -189,8 +189,19 @@ Node::GetChildrenSlotNum() const
     return int(mChildrenSlot.size());
 }
 
+void
+Node::Update(double elapsed, bool initiator)
+{
+    UpdateWorldTransform(elapsed);
+
+    for (auto child : mChildrenSlot)
+    {
+        child->Update(elapsed, false);
+    }
+}
+
 /************************************************************************/
-/* Public Members                                                       */
+/* Deep and Shallow Copy                                                */
 /************************************************************************/
 void
 Node::CopyTo(Node *lhs) const
@@ -235,14 +246,6 @@ void
 Node::UpdateWorldTransform(double elapsed)
 {
     Spatial::UpdateWorldTransform(elapsed);
-
-    for (auto child : mChildrenSlot)
-    {
-        if (child)
-        {
-            child->Update(elapsed, false);
-        }
-    }
 }
 
 }

@@ -66,6 +66,9 @@ public:
     const Light *
     GetLight() const;
 
+    virtual void
+    Update(GameEngineInput *input, double elapsed) override;
+
 protected:
     LightSharedPtr mLight;
 };

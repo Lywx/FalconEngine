@@ -170,10 +170,16 @@ main()
     // Point to camera.
     vec3 eyeV = normalize(-fin.EyePosition); 
 
-    vec3 result = CalcDirectionalLight(DirectionalLight, eyeN, eyeV);
+    vec3 frontColor = CalcDirectionalLight(DirectionalLight, eyeN, eyeV);
     for(int i = 0; i < PointLightNum; ++i) 
     {
-        result += CalcPointLight(PointLightArray[i], eyeN, eyeV, fin.EyePosition);
+        frontColor += CalcPointLight(PointLightArray[i], eyeN, eyeV, fin.EyePosition);
+    }
+
+    vec3 backColor = CalcDirectionalLight(DirectionalLight, -eyeN, eyeV);
+    for(int i = 0; i < PointLightNum; ++i) 
+    {
+        backColor += CalcPointLight(PointLightArray[i], -eyeN, eyeV, fin.EyePosition);
     }
 
     // for(int i = 0; i < SpotLightNum; ++i) 
@@ -181,6 +187,14 @@ main()
     //     result += CalcSpotLight(SpotLightArray[i], eyeN, eyeV, fin.EyePosition);
     // }
 
-    FragColor = vec4(result, 1.0);
+    if(gl_FrontFacing) 
+    {
+        FragColor = vec4(frontColor, 1.0);
+    } 
+    else 
+    {
+        // FragColor = vec4(backColor, 1.0);
+        FragColor = mix(vec4(backColor,1.0), vec4(1.0,0.0,0.0,1.0), 0.7 );
+    }
 }
 

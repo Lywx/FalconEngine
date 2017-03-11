@@ -99,14 +99,27 @@ PointLightEntity::GetPosition() const
 void
 PointLightEntity::SetPosition(Vector3f position) const
 {
-    mLight->mPosition = position;
     mNode->mLocalTransform = Matrix4f::CreateTranslation(position);
+    mNode->mWorldTransformIsCurrent = false;
 }
 
 const Light *
 PointLightEntity::GetLight() const
 {
     return mLight.get();
+}
+
+void
+PointLightEntity::Update(GameEngineInput *input, double elapsed)
+{
+    if (mNode->mWorldTransformIsCurrent)
+    {
+        mLight->mPosition = Vector3f(mNode->mWorldTransform * Vector4f(0, 0, 0, 1));
+    }
+    else
+    {
+        Debug::Break();
+    }
 }
 
 }

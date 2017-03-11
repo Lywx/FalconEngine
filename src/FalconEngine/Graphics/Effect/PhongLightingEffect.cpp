@@ -47,12 +47,10 @@ PhongLightingEffect::PhongLightingEffect()
 
     auto blendState = make_unique<BlendState>();
     blendState->mEnabled = false;
-    blendState->mSourceFactor = BlendSourceFactor::SRC_ALPHA;
-    blendState->mDestinationFactor = BlendDestinationFactor::ONE_MINUS_SRC_ALPHA;
     pass->SetBlendState(move(blendState));
 
     auto cullState = make_unique<CullState>();
-    cullState->mEnabled = true;
+    cullState->mEnabled = false;
     cullState->mCounterClockwise = false;
     pass->SetCullState(move(cullState));
 
@@ -125,7 +123,7 @@ PhongLightingEffect::CreateInstance(_IN_OUT_ VisualEffectInstance        *instan
     instance->SetShaderUniform(0, ShareAutomatic<Matrix3f>("NormalTransform",
                                std::bind([](const Visual * visual, const Camera * camera)
     {
-        auto normalTransform = Matrix4f::Transpose(Matrix4f::Inverse(visual->mWorldTransform * camera->GetView()));
+        auto normalTransform = Matrix4f::Transpose(Matrix4f::Inverse(camera->GetView() * visual->mWorldTransform));
         return Matrix3f(normalTransform);
     }, _1, _2)));
 
@@ -151,7 +149,7 @@ PhongLightingEffect::CreateInstance(_IN_OUT_ VisualEffectInstance        *instan
     instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.EyeDirection",
                                std::bind([&directionalLight](const Visual * visual, const Camera * camera)
     {
-        return camera->GetView() * directionalLight.mDirection;
+        return Vector3f(camera->GetView() * Vector4f(directionalLight.mDirection, 0));
     }, _1, _2)));
 
     // Point light
@@ -207,7 +205,7 @@ PhongLightingEffect::CreateInstance(_IN_OUT_ VisualEffectInstance        *instan
                 {
                     // TODO(Wuxiang): Hook lamp position and light position.
                     auto *pointLight = pointLightList[i];
-                    return camera->GetView() * pointLight->mPosition;
+                    return Vector3f(camera->GetView() * Vector4f(pointLight->mPosition, 1));
                 }
 
                 return Vector3f::Zero;

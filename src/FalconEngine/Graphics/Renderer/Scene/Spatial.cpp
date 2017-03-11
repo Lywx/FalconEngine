@@ -62,7 +62,18 @@ Spatial::UpdateWorldTransform(double elaped)
     {
         if (mParent)
         {
+            //if (mParent->mWorldTransformIsCurrent)
+            //{
             mWorldTransform = mParent->mWorldTransform * mLocalTransform;
+            //}
+            //else
+            //{
+            //    // NOTE(Wuxiang): Let parent update transform first. The parent
+            //    // update call would call this method again. By the time, this
+            //    // method is called again, the mWorldTransformIsCurrent field in
+            //    // parent would evaluated to be true.
+            //    mParent->UpdateWorldTransform(elaped);
+            //}
         }
         else
         {

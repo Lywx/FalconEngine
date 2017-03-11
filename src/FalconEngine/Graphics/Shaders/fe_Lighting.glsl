@@ -74,7 +74,7 @@ CalcPhongLighting(
     vec3 eyeR = reflect(-eyeL, eyeN);
 
     // dot(n, l)
-    float dotNL = max(0, dot(eyeN, eyeL));
+    float dotNL = max(dot(eyeN, eyeL), 0.0);
 
     // dot(v, r)
     float dotVR = max(dot(eyeV, eyeR), 0.0);

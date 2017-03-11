@@ -98,6 +98,9 @@ public:
     int
     GetChildrenSlotNum() const;
 
+    virtual void
+    Update(double elapsed, bool initiator) override;
+
     /************************************************************************/
     /* Deep and Shallow Copy                                                */
     /************************************************************************/

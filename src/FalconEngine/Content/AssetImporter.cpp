@@ -216,23 +216,20 @@ CreateMaterial(
     // When material exists.
     auto material = make_shared<Material>();
 
-    if (aiMesh->mMaterialIndex > 0)
-    {
-        auto aiMaterial = aiScene->mMaterials[aiMesh->mMaterialIndex];
+    auto aiMaterial = aiScene->mMaterials[aiMesh->mMaterialIndex];
 
-        // @ref http://assimp.sourceforge.net/lib_html/materials.html
-        material->mAmbientColor = LoadMaterialColor(aiMaterial, AI_MATKEY_COLOR_AMBIENT);
-        material->mDiffuseColor = LoadMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE);
-        material->mEmissiveColor = LoadMaterialColor(aiMaterial, AI_MATKEY_COLOR_EMISSIVE);
-        material->mShininess = LoadMaterialFloat(aiMaterial, AI_MATKEY_SHININESS);
-        material->mSpecularColor  = LoadMaterialColor(aiMaterial, AI_MATKEY_COLOR_SPECULAR);
+    // @ref http://assimp.sourceforge.net/lib_html/materials.html
+    material->mAmbientColor = LoadMaterialColor(aiMaterial, AI_MATKEY_COLOR_AMBIENT);
+    material->mDiffuseColor = LoadMaterialColor(aiMaterial, AI_MATKEY_COLOR_DIFFUSE);
+    material->mEmissiveColor = LoadMaterialColor(aiMaterial, AI_MATKEY_COLOR_EMISSIVE);
+    material->mShininess = LoadMaterialFloat(aiMaterial, AI_MATKEY_SHININESS);
+    material->mSpecularColor  = LoadMaterialColor(aiMaterial, AI_MATKEY_COLOR_SPECULAR);
 
-        material->mAmbientTexture = LoadMaterialTexture(modelDirectoryPath, aiMaterial, aiTextureType_AMBIENT);
-        material->mDiffuseTexture = LoadMaterialTexture(modelDirectoryPath, aiMaterial, aiTextureType_DIFFUSE);
-        material->mEmissiveTexture = LoadMaterialTexture(modelDirectoryPath, aiMaterial, aiTextureType_EMISSIVE);
-        material->mShininessTexture = LoadMaterialTexture(modelDirectoryPath, aiMaterial, aiTextureType_SHININESS);
-        material->mSpecularTexture = LoadMaterialTexture(modelDirectoryPath, aiMaterial, aiTextureType_SPECULAR);
-    }
+    material->mAmbientTexture = LoadMaterialTexture(modelDirectoryPath, aiMaterial, aiTextureType_AMBIENT);
+    material->mDiffuseTexture = LoadMaterialTexture(modelDirectoryPath, aiMaterial, aiTextureType_DIFFUSE);
+    material->mEmissiveTexture = LoadMaterialTexture(modelDirectoryPath, aiMaterial, aiTextureType_EMISSIVE);
+    material->mShininessTexture = LoadMaterialTexture(modelDirectoryPath, aiMaterial, aiTextureType_SHININESS);
+    material->mSpecularTexture = LoadMaterialTexture(modelDirectoryPath, aiMaterial, aiTextureType_SPECULAR);
 
     return material;
 }

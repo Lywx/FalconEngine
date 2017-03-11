@@ -44,7 +44,6 @@ SampleGame::Initialize()
         // Entities
         {
             auto model = assetManager->LoadModel("Content/Models/Bedroom.dae");
-            // mCharacter = make_shared<CharacterEntity>(assetManager->LoadModel("Content/Models/nanosuit.obj")->GetNode());
             mRoom = make_shared<SceneEntity>(shared_ptr<Node>(model->GetNode()->GetClone()));
 
             model = assetManager->LoadModel("Content/Models/Engine/Point Light.dae");
@@ -53,6 +52,7 @@ SampleGame::Initialize()
         }
     }
 
+    // Initialize Scene
     {
         {
             mDirectionalLight = make_shared<Light>(LightType::Directional);
@@ -60,10 +60,6 @@ SampleGame::Initialize()
             mDirectionalLight->mDiffuse = Color(055, 055, 055);
             mDirectionalLight->mSpecular = Color(055, 055, 055);
             mDirectionalLight->mDirection = Vector3f(1, 1, 1);
-            //mDirectionalLight->mAmbient = Color(255, 255, 255);
-            //mDirectionalLight->mDiffuse = Color(255, 255, 255);
-            //mDirectionalLight->mSpecular = Color(255, 255, 255);
-            //mDirectionalLight->mDirection = Vector3f(1, 1, 1);
         }
 
         {
@@ -73,37 +69,35 @@ SampleGame::Initialize()
             mPointLight1->SetConstant(0.1f);
             mPointLight1->SetLinear(0.015f);
             mPointLight1->SetQuadratic(0.0075f);
-            mPointLight1->SetPosition(Vector3f(4.9f, 4.5f, 6.5f));
-            //mPointLight1->SetPosition(Vector3f(4.9f, 6.5f, -6.5f));
+            mPointLight1->SetPosition(Vector3f(-4.92804479598999, -6.6115264892578125, 3.654505729675293));
         }
 
         {
-            //mPointLight2->SetAmbient(Color(255, 255, 255));
-            //mPointLight2->SetDiffuse(Color(255, 255, 255));
-            //mPointLight2->SetSpecular(Color(255, 255, 255));
-            //mPointLight2->SetConstant(1.0f);
-            //mPointLight2->SetLinear(0.07f);
-            //mPointLight2->SetQuadratic(0.017f);
-            mPointLight2->SetPosition(Vector3f(-4.9f, 4.5f, 6.16f));
+            mPointLight2->SetAmbient(ColorPalette::Gold);
+            mPointLight2->SetDiffuse(Color(105, 105, 105));
+            mPointLight2->SetSpecular(Color(105, 105, 105));
+            mPointLight2->SetConstant(0.1f);
+            mPointLight2->SetLinear(0.015f);
+            mPointLight2->SetQuadratic(0.0075f);
+            mPointLight2->SetPosition(Vector3f(5.09701681137085, -6.6115264892578125, 3.654505729675293));
         }
 
-        // Initialize Scene
         mScenePointLightList = { mPointLight1->GetLight(), mPointLight2->GetLight() };
 
+        mRootNode = mRoom->GetNode();
+        mRootNode->AttachChild(mPointLight1->GetNode());
+        mRootNode->AttachChild(mPointLight2->GetNode());
         mSceneNode = make_shared<Node>();
         mSceneNode->mWorldTransform = Matrix4f::Zero;
-        mSceneNode->AttachChild(mRoom->GetNode());
-        mSceneNode->AttachChild(mPointLight1->GetNode());
-        mSceneNode->AttachChild(mPointLight2->GetNode());
+        mSceneNode->AttachChild(mRootNode);
 
-        //
         mSceneLightingEffect = make_shared<PhongLightingEffect>();
 
         // Initialize Effect
         mSceneLightingEffect->CreateInstance(mSceneLightingEffect, mRoom->GetNode().get(), *mDirectionalLight, mScenePointLightList, mSceneSpotLightList);
     }
 
-    // Initialize interaction.
+    // Initialize Interaction.
     {
         mCamera->LookAt(Vector3f(0, 0, 0), Vector3f(0, 0, -1), Vector3f::UnitY);
     }
@@ -176,22 +170,6 @@ SampleGame::Update(GameEngineInput *input, double elapsed)
     {
         GetEngine()->Exit();
     }
-
-    if (keyboard->KeyDown(Key::Up))
-    {
-
-    }
-
-    if (keyboard->KeyDown(Key::Up))
-    {
-        mPointLight1->SetPosition(mPointLight1->GetPosition() + Vector3f(0, 0.1f, 0));
-    }
-
-    if (keyboard->KeyDown(Key::Down))
-    {
-        mPointLight1->SetPosition(mPointLight1->GetPosition() + Vector3f(0, -0.1f, 0));
-    }
-
 
     mCamera->Update(input, elapsed);
     mSceneNode->Update(elapsed, true);

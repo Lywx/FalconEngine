@@ -245,6 +245,18 @@ Node::GetClone() const
 void
 Node::UpdateWorldTransform(double elapsed)
 {
+    // Mark children's world transform dirty.
+    if (!mWorldTransformIsCurrent)
+    {
+        for (auto slot : mChildrenSlot)
+        {
+            if (auto child = slot)
+            {
+                child->mWorldTransformIsCurrent = false;
+            }
+        }
+    }
+
     Spatial::UpdateWorldTransform(elapsed);
 }
 

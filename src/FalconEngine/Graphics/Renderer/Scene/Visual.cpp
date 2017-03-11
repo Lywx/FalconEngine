@@ -77,6 +77,12 @@ Visual::SetEffectInstancingNum(size_t effectInstancingNum)
     mEffectInstancingNum = effectInstancingNum;
 }
 
+void
+Visual::UpdateWorldTransform(double elapsed)
+{
+    Spatial::UpdateWorldTransform(elapsed);
+}
+
 /************************************************************************/
 /* Deep and Shallow Copy                                                */
 /************************************************************************/

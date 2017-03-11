@@ -99,7 +99,7 @@ PointLightEntity::GetPosition() const
 void
 PointLightEntity::SetPosition(Vector3f position) const
 {
-    mNode->mLocalTransform = Matrix4f::CreateTranslation(position);
+    mNode->mLocalTransform = Matrix4f::CreateTranslation(position) * Matrix4f::CreateScaleIsomorphic(0.25f);
     mNode->mWorldTransformIsCurrent = false;
 }
 

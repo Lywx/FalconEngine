@@ -131,19 +131,19 @@ PhongLightingEffect::CreateInstance(_IN_OUT_ VisualEffectInstance        *instan
     instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Ambient",
                                std::bind([&directionalLight](const Visual * visual, const Camera * camera)
     {
-        return directionalLight.mAmbient;
+        return Vector3f(directionalLight.mAmbient);
     }, _1, _2)));
 
     instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Diffuse",
                                std::bind([&directionalLight](const Visual * visual, const Camera * camera)
     {
-        return directionalLight.mDiffuse;
+        return Vector3f(directionalLight.mDiffuse);
     }, _1, _2)));
 
     instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Specular",
                                std::bind([&directionalLight](const Visual * visual, const Camera * camera)
     {
-        return directionalLight.mSpecular;
+        return Vector3f(directionalLight.mSpecular);
     }, _1, _2)));
 
     instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.EyeDirection",
@@ -203,7 +203,6 @@ PhongLightingEffect::CreateInstance(_IN_OUT_ VisualEffectInstance        *instan
             {
                 if (i < pointLightList.size())
                 {
-                    // TODO(Wuxiang): Hook lamp position and light position.
                     auto *pointLight = pointLightList[i];
                     return Vector3f(camera->GetView() * Vector4f(pointLight->mPosition, 1));
                 }

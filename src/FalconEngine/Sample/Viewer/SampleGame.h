@@ -41,6 +41,7 @@ private:
 
     // Scene
     NodeSharedPtr mSceneNode;
+    NodeSharedPtr mRootNode;
 
     PhongLightingEffectSharedPtr mSceneLightingEffect;
     std::shared_ptr<Light> mDirectionalLight;

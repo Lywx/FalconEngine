@@ -193,8 +193,7 @@ main()
     } 
     else 
     {
-        // FragColor = vec4(backColor, 1.0);
-        FragColor = mix(vec4(backColor,1.0), vec4(1.0,0.0,0.0,1.0), 0.7 );
+        FragColor = vec4(backColor, 1.0);
     }
 }
 

@@ -62,6 +62,9 @@ public:
     void
     SetEffectInstancingNum(size_t effectInstancingNum);
 
+    void
+    UpdateWorldTransform(double elapsed) override;
+
     /************************************************************************/
     /* Deep and Shallow Copy                                                */
     /************************************************************************/

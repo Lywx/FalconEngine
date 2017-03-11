@@ -57,23 +57,15 @@ Spatial::CopyTo(Spatial *lhs) const
 void
 Spatial::UpdateWorldTransform(double elaped)
 {
-    // Update world transforms.
+    // NOTE(Wuxiang): Update world transforms in an top-to-bottom way. This
+    // method is only guaranteed to work when you called it on the root of
+    // hierarchy. You should not expect a child node's update would compute world
+    // transform correctly if its parent has changed in transformation.
     if (!mWorldTransformIsCurrent)
     {
         if (mParent)
         {
-            //if (mParent->mWorldTransformIsCurrent)
-            //{
             mWorldTransform = mParent->mWorldTransform * mLocalTransform;
-            //}
-            //else
-            //{
-            //    // NOTE(Wuxiang): Let parent update transform first. The parent
-            //    // update call would call this method again. By the time, this
-            //    // method is called again, the mWorldTransformIsCurrent field in
-            //    // parent would evaluated to be true.
-            //    mParent->UpdateWorldTransform(elaped);
-            //}
         }
         else
         {

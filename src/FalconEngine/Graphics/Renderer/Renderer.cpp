@@ -981,10 +981,10 @@ Renderer::Draw(
 
     FALCON_ENGINE_CHECK_NULLPTR(visual);
     auto primitive = visual->GetPrimitive();
-    auto primitiveInstancingNum = visual->GetPrimitiveInstancingNum();
 
     FALCON_ENGINE_CHECK_NULLPTR(effectInstance);
     auto effect = effectInstance->GetEffect();
+    auto effectInstancingNum = visual->GetEffectInstancingNum();
 
     // NOTE(Wuxiang): Currently this function assume that all passes are using
     // same vertex attribute array, so that we don't switch vertex format between
@@ -1023,7 +1023,7 @@ Renderer::Draw(
         Enable(effectPass);
 
         // Draw the primitive.
-        DrawPrimitive(primitive, primitiveInstancingNum);
+        DrawPrimitive(primitive, effectInstancingNum);
 
         // Disable effect pass.
         Disable(effectPass);

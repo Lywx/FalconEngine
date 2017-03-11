@@ -370,7 +370,7 @@ Renderer::SwapBuffers()
 }
 
 void
-Renderer::DrawPrimitive(const Primitive *primitive, size_t primitiveInstancingNum)
+Renderer::DrawPrimitive(const Primitive *primitive, size_t instancingNum)
 {
     FALCON_ENGINE_CHECK_NULLPTR(primitive);
 
@@ -381,7 +381,7 @@ Renderer::DrawPrimitive(const Primitive *primitive, size_t primitiveInstancingNu
         auto vertexNum = primitive->GetVertexNum();
         if (vertexNum > 0)
         {
-            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(primitiveInstancingNum));
+            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(instancingNum));
         }
     }
     else if (primitiveType == PrimitiveType::Line)
@@ -389,7 +389,7 @@ Renderer::DrawPrimitive(const Primitive *primitive, size_t primitiveInstancingNu
         auto vertexNum = primitive->GetVertexNum();
         if (vertexNum > 0)
         {
-            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(primitiveInstancingNum));
+            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(instancingNum));
         }
     }
     else if (primitiveType == PrimitiveType::LineStrip)
@@ -397,7 +397,7 @@ Renderer::DrawPrimitive(const Primitive *primitive, size_t primitiveInstancingNu
         auto vertexNum = primitive->GetVertexNum();
         if (vertexNum > 0)
         {
-            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(primitiveInstancingNum));
+            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(instancingNum));
         }
     }
     else if (primitiveType == PrimitiveType::Triangle)
@@ -429,12 +429,12 @@ Renderer::DrawPrimitive(const Primitive *primitive, size_t primitiveInstancingNu
                     FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
                 }
 
-                glDrawElementsInstanced(primitiveMode, GLsizei(indexNum), indexType, indexOffset, GLsizei(primitiveInstancingNum));
+                glDrawElementsInstanced(primitiveMode, GLsizei(indexNum), indexType, indexOffset, GLsizei(instancingNum));
             }
         }
         else
         {
-            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(primitiveInstancingNum));
+            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(instancingNum));
         }
     }
     else

@@ -34,7 +34,13 @@ public:
     explicit Visual(PrimitiveSharedPtr primitive);
     virtual ~Visual();
 
+protected:
+    Visual();
+
 public:
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
     const BoundingBox *
     GetBoundingBox() const;
 
@@ -51,15 +57,26 @@ public:
     SetPrimitive(PrimitiveSharedPtr primitives);
 
     size_t
-    GetPrimitiveInstancingNum() const;
+    GetEffectInstancingNum() const;
 
     void
-    SetPrimitiveInstancingNum(size_t primitiveInstancingNum);
+    SetEffectInstancingNum(size_t effectInstancingNum);
+
+    /************************************************************************/
+    /* Deep and Shallow Copy                                                */
+    /************************************************************************/
+    void
+    CopyTo(Visual *lhs) const;
+
+    // @remark This method use return type covariance in the class hierarchy.
+    // @return The clone of this Visual instance. Grant for no shared ownership.
+    virtual Visual *
+    GetClone() const override;
 
 protected:
     VisualEffectInstanceSharedPtr mEffectInstance;
+    size_t                        mEffectInstancingNum;
     PrimitiveSharedPtr            mPrimitive;
-    size_t                        mPrimitiveInstancingNum;
 };
 
 }

@@ -41,13 +41,14 @@ MeshEffect::TraverseLevelOrder(Node *meshRoot, std::function<void(Mesh *)> meshO
             mNodeQueueCurrent.pop();
 
             // Visit the children.
-            auto nodeNum = renderNodeCurrent->ChildrenNum();
-            for (auto childIndex = 0; childIndex < nodeNum; ++childIndex)
+            auto slotNum = renderNodeCurrent->GetChildrenSlotNum();
+            for (auto slotIndex = 0; slotIndex < slotNum; ++slotIndex)
             {
-                auto child = renderNodeCurrent->GetChildAt(childIndex);
-                if (auto mesh = dynamic_pointer_cast<Mesh>(child))
+                auto child = renderNodeCurrent->GetChildAt(slotIndex);
+                if (auto childMesh = dynamic_pointer_cast<Mesh>(child))
                 {
-                    meshOperation(mesh.get());
+                    // Perform the given operation only on Mesh child.
+                    meshOperation(childMesh.get());
                 }
                 else if (auto childNode = dynamic_pointer_cast<Node>(child))
                 {

@@ -11,8 +11,16 @@ FALCON_ENGINE_RTTI_IMPLEMENT(Visual, Object);
 /* Constructors and Destructor                                          */
 /************************************************************************/
 Visual::Visual(PrimitiveSharedPtr primitive) :
-    mPrimitive(primitive),
-    mPrimitiveInstancingNum(1)
+    mEffectInstance(),
+    mEffectInstancingNum(1),
+    mPrimitive(primitive)
+{
+}
+
+Visual::Visual() :
+    mEffectInstance(),
+    mEffectInstancingNum(1),
+    mPrimitive()
 {
 }
 
@@ -58,14 +66,36 @@ Visual::SetPrimitive(PrimitiveSharedPtr primitive)
 }
 
 size_t
-Visual::GetPrimitiveInstancingNum() const
+Visual::GetEffectInstancingNum() const
 {
-    return mPrimitiveInstancingNum;
+    return mEffectInstancingNum;
 }
 
 void
-Visual::SetPrimitiveInstancingNum(size_t primitiveInstancingNum)
+Visual::SetEffectInstancingNum(size_t effectInstancingNum)
 {
-    mPrimitiveInstancingNum = primitiveInstancingNum;
+    mEffectInstancingNum = effectInstancingNum;
 }
+
+/************************************************************************/
+/* Deep and Shallow Copy                                                */
+/************************************************************************/
+void
+Visual::CopyTo(Visual *lhs) const
+{
+    Spatial::CopyTo(lhs);
+
+    lhs->mEffectInstance = mEffectInstance;
+    lhs->mEffectInstancingNum = mEffectInstancingNum;
+    lhs->mPrimitive = mPrimitive;
+}
+
+Visual *
+Visual::GetClone() const
+{
+    auto clone = new Visual();
+    CopyTo(clone);
+    return clone;
+}
+
 }

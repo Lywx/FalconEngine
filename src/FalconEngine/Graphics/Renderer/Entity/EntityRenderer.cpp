@@ -55,10 +55,10 @@ EntityRenderer::DrawBoundingBox(const Camera *camera, const Node *node, Color bo
 {
     FALCON_ENGINE_CHECK_NULLPTR(node);
 
-    auto nodeChildNum = node->ChildrenNum();
-    for (auto childIndex = 0; childIndex < nodeChildNum; ++childIndex)
+    auto slotNum = node->GetChildrenSlotNum();
+    for (auto slotIndex = 0; slotIndex < slotNum; ++slotIndex)
     {
-        const Spatial *child = node->GetChildAt(childIndex);
+        auto child = node->GetChildAt(slotIndex);
         if (auto childVisual = dynamic_cast<const Visual *>(child))
         {
             DrawBoundingBox(camera, childVisual, boundingBoxColor);
@@ -140,10 +140,10 @@ EntityRenderer::Render(Renderer *renderer, double percent)
                 mNodeQueueCurrent.pop();
 
                 // Visit the children.
-                auto nodeNum = renderNodeCurrent->ChildrenNum();
-                for (auto childIndex = 0; childIndex < nodeNum; ++childIndex)
+                auto slotNum = renderNodeCurrent->GetChildrenSlotNum();
+                for (auto slotIndex = 0; slotIndex < slotNum; ++slotIndex)
                 {
-                    auto child = renderNodeCurrent->GetChildAt(childIndex);
+                    auto child = renderNodeCurrent->GetChildAt(slotIndex);
                     if (auto childVisual = dynamic_pointer_cast<Visual>(child))
                     {
                         renderer->Draw(camera, childVisual.get());
@@ -181,7 +181,7 @@ EntityRenderer::Render(Renderer *renderer, double percent)
             }
 
             // Update instancing data.
-            batch->mVertexTriangles->SetPrimitiveInstancingNum(instanceNum);
+            batch->mVertexTriangles->SetEffectInstancingNum(instanceNum);
             renderer->Draw(camera, batch->mVertexTriangles.get());
         }
     }

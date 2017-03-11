@@ -99,7 +99,7 @@ AABBBoundingBox::GetModelPositionList() const
 {
     if (!mInitialized)
     {
-        FALCON_ENGINE_THROW_EXCEPTION("Bounding box is not properly initialized.");
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Bounding box is not properly initialized.");
     }
     else if (mInitialized && !mModelPositionInitialized)
     {

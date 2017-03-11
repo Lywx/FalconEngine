@@ -18,15 +18,12 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
     Node();
-    ~Node();
+    virtual ~Node();
 
-    // @summary This is the current number of elements in the child array. These
-    // elements are not all guaranteed to be non-null. Thus, when you
-    // iterate over the array and access children with GetChild(...), you
-    // should test the return pointer to be non-null before dereferencing it.
-    int
-    ChildrenNum() const;
-
+public:
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
     // @summary Attach a child to this node. If the function succeeds, the return
     // value is the index i of the array where the child was stored, in which
     // case 0 <= i < ChildrenNum(). The first available empty slot of the
@@ -70,17 +67,18 @@ public:
     // return value is the child at index i; otherwise, the function returns
     // null.
     SpatialSharedPtr
-    DetachChildAt(size_t i);
+    DetachChildAt(size_t slotIndex);
 
     // @summary Get the child at the specified index. If 0 <= i < GetNumChildren(),
     // the function succeeds and returns the child at that index--keep in mind
     // that child[i] could very well be null. If i is out of range, the
     // function returns null.
     const Spatial *
-    GetChildAt(size_t i) const;
+    GetChildAt(size_t slotIndex) const;
 
+    // @return Child at specific index. The return value could be null.
     SpatialSharedPtr
-    GetChildAt(size_t i);
+    GetChildAt(size_t slotIndex);
 
     // The same comments for AttachChild apply here regarding the inability
     // to have multiple parents. If 0 <= i < ChildrenNum(), the function
@@ -88,14 +86,36 @@ public:
     // succeeds, appending the child to the end of the array. The return
     // value is the previous child stored at index i.
     SpatialSharedPtr
-    SetChild(size_t i, SpatialSharedPtr child);
+    SetChildAt(size_t slotIndex, SpatialSharedPtr child);
+
+    int
+    GetChildrenNum() const;
+
+    // @summary This is the current number of elements in the child array. These
+    // elements are not all guaranteed to be non-null. Thus, when you
+    // iterate over the array and access children with GetChild(...), you
+    // should test the return pointer to be non-null before dereferencing it.
+    int
+    GetChildrenSlotNum() const;
+
+    /************************************************************************/
+    /* Deep and Shallow Copy                                                */
+    /************************************************************************/
+    void
+    CopyTo(Node *lhs) const;
+
+    Node *
+    GetClone() const override;
 
 protected:
+    /************************************************************************/
+    /* Protected Members                                                    */
+    /************************************************************************/
     virtual void
     UpdateWorldTransform(double elapsed) override;
 
 private:
-    std::vector<SpatialSharedPtr> mChildren;
+    std::vector<SpatialSharedPtr> mChildrenSlot;
 };
 
 }

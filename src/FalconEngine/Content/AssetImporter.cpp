@@ -32,7 +32,7 @@ CreateMeshAABBBoundingBox(const aiMesh *aiMesh)
 {
     if (!aiMesh->mVertices)
     {
-        FALCON_ENGINE_THROW_EXCEPTION("Model doesn't have vertex data.");
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Model doesn't have vertex data.");
     }
 
     auto boundingBox = make_shared<AABBBoundingBox>(Vector3f(aiMesh->mVertices[0].x,
@@ -93,17 +93,17 @@ CreateMeshVertexGroup(const aiMesh *aiMesh)
 
     if (!aiMesh->mVertices)
     {
-        FALCON_ENGINE_THROW_EXCEPTION("Model doesn't have vertex data.");
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Model doesn't have vertex data.");
     }
 
     if (!aiMesh->mNormals)
     {
-        FALCON_ENGINE_THROW_EXCEPTION("Model doesn't have normal data.");
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Model doesn't have normal data.");
     }
 
     if (!aiMesh->mTextureCoords)
     {
-        FALCON_ENGINE_THROW_EXCEPTION("Model doesn't have uv data.");
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Model doesn't have uv data.");
     }
 
     // Walk through vertex data and create vertex buffer content in an interlaced fashion.
@@ -265,15 +265,13 @@ CreateMesh(
     auto vertexFormat = CreateMeshVertexFormat();
     auto vertexGroup  = CreateMeshVertexGroup(aiMesh);
 
-    auto primitives = make_shared<PrimitiveTriangles>(vertexFormat, vertexGroup, indexBuffer);
-    primitives->SetBoundingBox(boundingBox);
-
-    auto mesh = make_shared<Mesh>(primitives);
+    auto primitive = make_shared<PrimitiveTriangles>(vertexFormat, vertexGroup, indexBuffer);
+    primitive->SetBoundingBox(boundingBox);
 
     // Load texture data in term of material.
-    mesh->SetMaterial(CreateMaterial(modelDirectoryPath, aiScene, aiMesh));
+    auto material = CreateMaterial(modelDirectoryPath, aiScene, aiMesh);
 
-    return mesh;
+    return make_shared<Mesh>(primitive, material);
 }
 
 NodeSharedPtr
@@ -316,7 +314,7 @@ AssetImporter::Import(Model *model, const std::string& modelFilePath)
     auto aiScene = sAiModelImporter.ReadFile(modelFilePath, aiProcess_Triangulate | aiProcess_FlipUVs);
     if (!aiScene || aiScene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !aiScene->mRootNode)
     {
-        FALCON_ENGINE_THROW_EXCEPTION(string("Error: ") + sAiModelImporter.GetErrorString());
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(string("Error: ") + sAiModelImporter.GetErrorString());
     }
 
     // NOTE(Wuxiang): The node constructor would recursively load the necessary children nodes and textures.

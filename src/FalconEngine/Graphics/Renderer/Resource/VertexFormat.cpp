@@ -38,7 +38,7 @@ VertexFormat::GetVertexAttributeStride(int attributeBindingIndex) const
     }
     else
     {
-        FALCON_ENGINE_THROW_EXCEPTION("Vertex attribute has not finished initialization.");
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Vertex attribute has not finished initialization.");
     }
 }
 
@@ -53,7 +53,7 @@ VertexFormat::PushVertexAttribute(
 {
     if (mVertexAttributeFinished)
     {
-        FALCON_ENGINE_THROW_EXCEPTION("Vertex attribute has finished initialization.");
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Vertex attribute has finished initialization.");
     }
 
     // Check the vertex attribute has been pushed in order.

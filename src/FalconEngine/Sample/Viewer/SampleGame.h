@@ -44,8 +44,6 @@ private:
 
     PhongLightingEffectSharedPtr mSceneLightingEffect;
     std::shared_ptr<Light> mDirectionalLight;
-    std::shared_ptr<Light> mPointLight1;
-    std::shared_ptr<Light> mPointLight2;
 
     std::vector<const Light *> mScenePointLightList;
     std::vector<const Light *> mSceneSpotLightList;
@@ -54,6 +52,8 @@ private:
     // std::shared_ptrEntity> mCharacter;
     // std::shared_ptr<LightEntity> mLamp1;
     // std::shared_ptr<LightEntity> mLamp2;
+    std::shared_ptr<PointLightEntity> mPointLight1;
+    std::shared_ptr<PointLightEntity> mPointLight2;
     std::shared_ptr<SceneEntity> mRoom;
 };
 

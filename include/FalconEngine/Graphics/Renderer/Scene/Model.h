@@ -39,6 +39,9 @@ public:
     virtual ~Model();
 
 public:
+    const Node *
+    GetNode() const;
+
     NodeSharedPtr
     GetNode();
 

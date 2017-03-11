@@ -14,8 +14,14 @@ FALCON_ENGINE_RTTI_IMPLEMENT(Mesh, Visual);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Mesh::Mesh(PrimitiveTrianglesSharedPtr primitives) :
-    Visual(primitives)
+Mesh::Mesh(PrimitiveTrianglesSharedPtr primitives, MaterialSharedPtr material) :
+    Visual(primitives),
+    mMaterial(material)
+{
+}
+
+Mesh::Mesh() :
+    mMaterial()
 {
 }
 
@@ -39,4 +45,24 @@ Mesh::SetMaterial(MaterialSharedPtr material)
 
     mMaterial = material;
 }
+
+/************************************************************************/
+/* Deep and Shallow Copy                                                */
+/************************************************************************/
+void
+Mesh::CopyTo(Mesh *lhs) const
+{
+    Visual::CopyTo(lhs);
+
+    lhs->mMaterial = mMaterial;
+}
+
+Mesh *
+Mesh::GetClone() const
+{
+    auto clone = new Mesh();
+    CopyTo(clone);
+    return clone;
+}
+
 }

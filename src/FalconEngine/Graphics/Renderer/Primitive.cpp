@@ -32,6 +32,16 @@ Primitive::~Primitive()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+void
+Primitive::CopyTo(Primitive *lhs)
+{
+    lhs->mBoundingBox = mBoundingBox;
+    lhs->mPrimitiveType = mPrimitiveType;
+    lhs->mVertexGroup = mVertexGroup;
+    lhs->mVertexFormat = mVertexFormat;
+    lhs->mIndexBuffer = mIndexBuffer;
+}
+
 PrimitiveType
 Primitive::GetPrimitiveType() const
 {

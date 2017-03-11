@@ -46,12 +46,6 @@ public:
     void
     DrawBoundingBox(const Camera *camera, const Entity *entity, Color boundingBoxColor);
 
-    void
-    DrawBoundingBox(const Camera *camera, const Node *node, Color boundingBoxColor);
-
-    void
-    DrawBoundingBox(const Camera *camera, const Visual *visual, Color boundingBoxColor = ColorPalette::White);
-
     /************************************************************************/
     /* Rendering Engine API                                                 */
     /************************************************************************/
@@ -69,7 +63,13 @@ public:
 
 private:
     void
-    DrawBoundingBox(const Camera *camera, const Visual *visual, const BoundingBox *boundingBox, Color boundingBoxColor = ColorPalette::White);
+    DrawBoundingBox(const Camera *camera, const Node *node, Color boundingBoxColor);
+
+    void
+    DrawBoundingBox(const Camera *camera, const Visual *visual, Color boundingBoxColor);
+
+    void
+    DrawBoundingBox(const Camera *camera, const Visual *visual, const BoundingBox *boundingBox, Color boundingBoxColor);
 
     BoundingBoxBatchSharedPtr
     PrepareBatch(const Camera *camera);

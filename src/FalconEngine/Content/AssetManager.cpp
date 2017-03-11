@@ -212,7 +212,7 @@ AssetManager::LoadFontInternal(const std::string& fontAssetPath)
         return font;
     }
 
-    FALCON_ENGINE_THROW_EXCEPTION("File not found.");
+    FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("File not found.");
 }
 
 ModelSharedPtr
@@ -248,11 +248,11 @@ AssetManager::LoadShaderSourceInternal(const std::string& shaderFilePath)
             return shaderSource;
         }
 
-        FALCON_ENGINE_THROW_EXCEPTION("Failed to load the file.");
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Failed to load the file.");
     }
     else
     {
-        FALCON_ENGINE_THROW_EXCEPTION("Failed to find the file.");
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Failed to find the file.");
     }
 }
 
@@ -271,7 +271,7 @@ AssetManager::LoadTextureInternal(const std::string& textureAssetPath)
         textureAssetArchive >> *texture;
         if (texture->mData == nullptr)
         {
-            FALCON_ENGINE_THROW_EXCEPTION("Failed to load texture asset.");
+            FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Failed to load texture asset.");
         }
 
         texture->mFileType = AssetSource::Stream;
@@ -279,7 +279,7 @@ AssetManager::LoadTextureInternal(const std::string& textureAssetPath)
     }
     else
     {
-        FALCON_ENGINE_THROW_EXCEPTION("Failed to find the file.");
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Failed to find the file.");
     }
 }
 

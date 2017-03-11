@@ -9,6 +9,7 @@ FALCON_ENGINE_RTTI_IMPLEMENT(Entity, Object);
 /* Constructors and Destructor                                          */
 /************************************************************************/
 Entity::Entity(NodeSharedPtr node) :
+    mId(0),
     mNode(node)
 {
 }
@@ -20,7 +21,7 @@ Entity::~Entity()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-const NodeSharedPtr
+NodeSharedPtr
 Entity::GetNode() const
 {
     return mNode;

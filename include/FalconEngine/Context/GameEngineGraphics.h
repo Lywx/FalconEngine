@@ -77,7 +77,7 @@ public:
     Draw(const Camera *camera, const Entity *entity);
 
     void
-    DrawBoundingBox(const Camera *camera, const Entity *entity, Color color);
+    DrawBoundingBox(const Camera *camera, const Entity *entity, Color color = Transparent(ColorPalette::White, 0.5f));
 
     void
     DrawString(const BitmapFont   *font,

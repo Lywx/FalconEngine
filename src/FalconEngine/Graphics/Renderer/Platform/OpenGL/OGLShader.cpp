@@ -100,7 +100,7 @@ ProcessShaderExtension(ShaderSource *shaderSource)
         }
         else
         {
-            FALCON_ENGINE_THROW_EXCEPTION("Extension is not defined correctly.");
+            FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Extension is not defined correctly.");
         }
 
         // Try to find next extension block.
@@ -171,7 +171,7 @@ PlatformShader::CreateFromString(int shaderIndex, GLenum shaderType, const strin
         string infoLogString(infoLog);
         delete[] infoLog;
 
-        FALCON_ENGINE_THROW_EXCEPTION("Shader compile error: " + infoLogString);
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Shader compile error: " + infoLogString);
     }
 
     mShaders[shaderIndex] = shader;
@@ -213,7 +213,7 @@ PlatformShader::LinkProgram()
         string infoLogString(infoLog);
         delete[] infoLog;
 
-        FALCON_ENGINE_THROW_EXCEPTION("Shader link error: " + infoLogString);
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Shader link error: " + infoLogString);
     }
 
     // Remove the unnecessary shader handle.
@@ -289,7 +289,7 @@ PlatformShader::CollectUniformLocation(Shader *shader) const
         GLint uniformLocation = glGetUniformLocation(mProgram, uniformNameValuePair.first.c_str());
         if (uniformLocation == -1)
         {
-            FALCON_ENGINE_THROW_EXCEPTION("The location could not be found.");
+            FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The location could not be found.");
         }
 
         uniformNameValuePair.second.mLocation = uniformLocation;

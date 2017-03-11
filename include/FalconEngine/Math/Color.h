@@ -13,6 +13,9 @@ namespace FalconEngine
 class Color
 {
 public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
     explicit Color(uint32 hex);
     Color(int r, int g, int b);
     Color(int r, int g, int b, int a);
@@ -23,6 +26,7 @@ public:
     operator Vector3f() const;
     operator Vector4f() const;
 
+public:
     uint8 R;
     uint8 G;
     uint8 B;
@@ -745,5 +749,11 @@ public:
     /// </summary>
     static const Color YellowGreen;
 };
+
+Color
+Transparent(Color color, float a);
+
+Color
+Transparent(Color color, uint8 a);
 
 }

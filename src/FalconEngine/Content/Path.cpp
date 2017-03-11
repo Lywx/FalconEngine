@@ -67,7 +67,7 @@ GetFileSize(const string& relativePath)
         return fileStream.tellg();
     }
 
-    FALCON_ENGINE_THROW_EXCEPTION("File not found.");
+    FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("File not found.");
 }
 
 string

@@ -82,6 +82,12 @@ public:
     void
     SetIndexBuffer(IndexBufferSharedPtr indexBuffer);
 
+    /************************************************************************/
+    /* Deep and Shallow Copy                                                */
+    /************************************************************************/
+    void
+    CopyTo(Primitive *rhs);
+
 protected:
     BoundingBoxSharedPtr  mBoundingBox;
     PrimitiveType         mPrimitiveType;

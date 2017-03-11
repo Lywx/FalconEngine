@@ -1,4 +1,5 @@
 #include <FalconEngine/Graphics/Renderer/Scene/Model.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Node.h>
 
 using namespace std;
 
@@ -20,6 +21,12 @@ Model::~Model()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+const Node *
+Model::GetNode() const
+{
+    return mNode.get();
+}
+
 NodeSharedPtr
 Model::GetNode()
 {

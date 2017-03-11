@@ -90,6 +90,6 @@ CheckNullPointer(const std::shared_ptr<T> pointer, const std::string name)
 #define FALCON_ENGINE_THROW_NULLPTR_EXCEPTION(pointer) FalconEngine::ThrowNullException(#pointer);
 
 #define FALCON_ENGINE_THROW_ASSERTION_EXCEPTION() assert(0);
-#define FALCON_ENGINE_THROW_EXCEPTION(message) throw FalconEngine::RuntimeException(message);
+#define FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(message) throw FalconEngine::RuntimeException(message);
 #define FALCON_ENGINE_THROW_SUPPORT_EXCEPTION() throw FalconEngine::RuntimeException("No support for this yet.\n");
 

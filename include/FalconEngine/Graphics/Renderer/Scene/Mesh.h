@@ -32,9 +32,13 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit Mesh(PrimitiveTrianglesSharedPtr primitive);
+    explicit Mesh(PrimitiveTrianglesSharedPtr primitive, MaterialSharedPtr material);
     virtual ~Mesh();
 
+protected:
+    Mesh();
+
+public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
@@ -43,6 +47,15 @@ public:
 
     void
     SetMaterial(MaterialSharedPtr material);
+
+    /************************************************************************/
+    /* Deep and Shallow Copy                                                */
+    /************************************************************************/
+    virtual void
+    CopyTo(Mesh *lhs) const;
+
+    virtual Mesh *
+    GetClone() const override;
 
 protected:
     MaterialSharedPtr mMaterial;

@@ -43,50 +43,53 @@ SampleGame::Initialize()
 
         // Entities
         {
+            auto model = assetManager->LoadModel("Content/Models/Bedroom.dae");
             // mCharacter = make_shared<CharacterEntity>(assetManager->LoadModel("Content/Models/nanosuit.obj")->GetNode());
-            mRoom = make_shared<SceneEntity>(assetManager->LoadModel("Content/Models/Bedroom.dae")->GetNode());
+            mRoom = make_shared<SceneEntity>(shared_ptr<Node>(model->GetNode()->GetClone()));
+
+            model = assetManager->LoadModel("Content/Models/Engine/Point Light.dae");
+            mPointLight1 = make_shared<PointLightEntity>(shared_ptr<Node>(model->GetNode()->GetClone()));
+            mPointLight2 = make_shared<PointLightEntity>(shared_ptr<Node>(model->GetNode()->GetClone()));
         }
     }
 
     {
         {
             mDirectionalLight = make_shared<Light>(LightType::Directional);
-            mDirectionalLight->mAmbient = Color(055, 055, 055);
-            mDirectionalLight->mDiffuse = Color(055, 255, 255);
-            mDirectionalLight->mSpecular = Color(255, 255, 255);
-            mDirectionalLight->mDirection = Vector3f(1, 1, 1);
+            //mDirectionalLight->mAmbient = Color(255, 255, 255);
+            //mDirectionalLight->mDiffuse = Color(255, 255, 255);
+            //mDirectionalLight->mSpecular = Color(255, 255, 255);
+            //mDirectionalLight->mDirection = Vector3f(1, 1, 1);
         }
 
         {
-            mPointLight1 = make_shared<Light>(LightType::Point);
-            mPointLight1->mAmbient = Color(255, 255, 255);
-            mPointLight1->mDiffuse = Color(255, 255, 255);
-            mPointLight1->mSpecular = Color(255, 255, 255);
-            mPointLight1->mConstant = 0.1;
-            mPointLight1->mLinear = 0.7;
-            mPointLight1->mQuadratic = 1.8;
-            mPointLight1->mPosition = Vector3f(4.9f, 4.5f, 6.5f);
-            //mPointLight1->mPosition = Vector3f(5.09701681137085, -6.6115264892578125, 2.654505729675293);
+            mPointLight1->SetAmbient(Color(255, 255, 255));
+            mPointLight1->SetDiffuse(Color(255, 255, 255));
+            mPointLight1->SetSpecular(Color(255, 255, 255));
+            mPointLight1->SetConstant(0.1);
+            mPointLight1->SetLinear(0.7);
+            mPointLight1->SetQuadratic(1.8);
+            mPointLight1->SetPosition(Vector3f(4.9f, 4.5f, 6.5f));
         }
 
         {
-            mPointLight2 = make_shared<Light>(LightType::Point);
-            mPointLight2->mAmbient = Color(255, 255, 255);
-            mPointLight2->mDiffuse = Color(255, 255, 255);
-            mPointLight2->mSpecular = Color(255, 255, 255);
-            mPointLight2->mDirection = Vector3f(1, 1, 1);
-            mPointLight2->mConstant = 1.0;
-            mPointLight2->mLinear = 0.7;
-            mPointLight2->mQuadratic = 1.8;
-            mPointLight2->mPosition = Vector3f(-4.92804479598999, -6.6115264892578125, 2.654505729675293);
+            mPointLight2->SetAmbient(Color(255, 255, 255));
+            mPointLight2->SetDiffuse(Color(255, 255, 255));
+            mPointLight2->SetSpecular(Color(255, 255, 255));
+            mPointLight2->SetConstant(1.0);
+            mPointLight2->SetLinear(0.7);
+            mPointLight2->SetQuadratic(1.8);
+            mPointLight2->SetPosition(Vector3f(-4.92804479598999, 7.04, 6.16));
         }
 
         // Initialize Scene
-        mScenePointLightList = { mPointLight1.get(), mPointLight2.get() };
+        mScenePointLightList = { mPointLight1->GetLight(), mPointLight2->GetLight() };
 
         mSceneNode = make_shared<Node>();
         mSceneNode->mWorldTransform = Matrix4f::Zero;
         mSceneNode->AttachChild(mRoom->GetNode());
+        mSceneNode->AttachChild(mPointLight1->GetNode());
+        mSceneNode->AttachChild(mPointLight2->GetNode());
 
         //
         mSceneLightingEffect = make_shared<PhongLightingEffect>();
@@ -122,7 +125,7 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
         graphics->DrawString(mFont_Console, 16.f, Vector2f(50.f, height - 50.f),
                              "U: " + std::to_string(lastUpdateElapsedMillisecond) + "ms Uc: " + std::to_string(lastFrameUpdateCount) +
                              " R: " + std::to_string(lastRenderElapsedMillisecond) + "ms Rc: " + std::to_string(lastFrameFPS),
-                             ColorPalette::DarkGoldenrod);
+                             ColorPalette::Gold);
     }
 
     auto input = GameEngineInput::GetInstance();
@@ -135,24 +138,25 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
         auto mousePosition = mouse->GetPosition();
 
         graphics->DrawString(mFont_Console, 16.f, Vector2f(50.f, height - 100.f),
-                             "Mouse Position: " + to_string(mousePosition) + " Diff: " + to_string(mousePositionDiff), ColorPalette::DarkRed);
+                             "Mouse Position: " + to_string(mousePosition) + " Diff: " + to_string(mousePositionDiff), ColorPalette::White);
     }
 
     // Draw Camera
     {
         auto position = mCamera->GetPosition();
         graphics->DrawString(mFont_Console, 16.f, Vector2f(50.f, 50.f),
-                             "Camera Position: " + to_string(position), ColorPalette::DarkRed);
+                             "Camera Position: " + to_string(position), ColorPalette::White);
 
         auto pitch = Degree(mCamera->mPitch);
         auto yaw = Degree(mCamera->mYaw);
         auto roll = Degree(mCamera->mRoll);
         graphics->DrawString(mFont_Console, 16.f, Vector2f(50.f, 100.f),
-                             "Camera Pitch: " + std::to_string(pitch) + " Yaw: " + std::to_string(yaw) + " Roll: " + std::to_string(roll), ColorPalette::DarkRed);
+                             "Camera Pitch: " + std::to_string(pitch) + " Yaw: " + std::to_string(yaw) + " Roll: " + std::to_string(roll), ColorPalette::White);
     }
 
     graphics->Draw(mCamera.get(), mRoom.get());
-    graphics->DrawBoundingBox(mCamera.get(), mRoom.get(), ColorPalette::Yellow);
+    graphics->DrawBoundingBox(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 0.5f));
+    graphics->DrawBoundingBox(mCamera.get(), mPointLight2.get(), Transparent(ColorPalette::Green, 0.5f));
 
     Game::Render(graphics, percent);
 }

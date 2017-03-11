@@ -16,63 +16,50 @@ Node::Node()
 
 Node::~Node()
 {
-    for (auto iter = mChildren.begin(); iter != mChildren.end(); ++iter)
+    for (auto child : mChildrenSlot)
     {
-        auto& spatialPtr = *iter;
-        if (spatialPtr)
+        if (child)
         {
-            spatialPtr->mParent = nullptr;
-            spatialPtr = nullptr;
+            child->mParent = nullptr;
         }
     }
+
+    mChildrenSlot.clear();
 }
 
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
 int
-Node::ChildrenNum() const
-{
-    return int(mChildren.size());
-}
-
-int
 Node::AttachChild(SpatialSharedPtr child)
 {
-    if (!child)
-    {
-        // You cannot attach null children to a node.
-        assert(false);
-        return -1;
-    }
+    FALCON_ENGINE_CHECK_NULLPTR(child);
 
     if (child->mParent)
     {
-        // The child already has a parent.
-        assert(false);;
-        return -1;
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The child already has a parent.");
     }
 
     child->mParent = this;
 
     // Insert the child in the first available slot (if any).
-    auto i = 0;
-    for (auto iter = mChildren.begin(); iter != mChildren.end(); ++iter, ++i)
+    auto slotIndex = 0;
+    for (auto iter = mChildrenSlot.begin(); iter != mChildrenSlot.end(); ++iter, ++slotIndex)
     {
-        auto& spatialPtr = *iter;
+        auto& slot = *iter;
 
         // Find a available slot
-        if (!spatialPtr)
+        if (slot == nullptr)
         {
-            spatialPtr = child;
-            return i;
+            slot = child;
+            return slotIndex;
         }
     }
 
     // All slots are used, so append the child to the array.
-    auto insertedIndex = int(mChildren.size());
-    mChildren.push_back(child);
-    return insertedIndex;
+    slotIndex = int(mChildrenSlot.size());
+    mChildrenSlot.push_back(child);
+    return slotIndex;
 }
 
 int
@@ -80,15 +67,24 @@ Node::DetachChild(SpatialSharedPtr child)
 {
     if (child)
     {
-        auto i = 0;
-        for (auto iter = mChildren.begin(); iter != mChildren.end(); ++iter, ++i)
+        auto slotIndex = 0;
+        for (auto iter = mChildrenSlot.begin(); iter != mChildrenSlot.end(); ++iter, ++slotIndex)
         {
-            auto& spatialPtr = *iter;
-            if (spatialPtr == child)
+            auto& slot = *iter;
+            if (slot == child)
             {
-                spatialPtr->mParent = nullptr;
-                spatialPtr = nullptr;
-                return i;
+                slot->mParent = nullptr;
+
+                // NTOE(Wuxiang): The detach operation would not change the vector
+                // arrangement. Since the vector stores pointer, if you would just
+                // erase the slot from the vector, the moving element happens
+                // mostly when the node structure dynamically changes. This happens
+                // in dynamic interaction. If the interaction cause the structure
+                // change so often and so irregular, the cost of erasing slot would
+                // be higher than simply set null to the slot.
+                slot = nullptr;
+
+                return slotIndex;
             }
         }
     }
@@ -97,18 +93,20 @@ Node::DetachChild(SpatialSharedPtr child)
 }
 
 SpatialSharedPtr
-Node::DetachChildAt(size_t i)
+Node::DetachChildAt(size_t slotIndex)
 {
-    if (0 <= i && i < mChildren.size())
+    if (0 <= slotIndex && slotIndex < mChildrenSlot.size())
     {
-        auto child = mChildren[i];
-        if (child)
+        auto slot = mChildrenSlot[slotIndex];
+        if (auto child = slot)
         {
             child->mParent = nullptr;
-            mChildren[i] = nullptr;
+            mChildrenSlot[slotIndex] = nullptr;
+
+            return child;
         }
 
-        return child;
+        return nullptr;
     }
 
     return nullptr;
@@ -117,31 +115,32 @@ Node::DetachChildAt(size_t i)
 const Spatial *
 Node::GetChildAt(size_t i) const
 {
-    return mChildren.at(i).get();
+    return mChildrenSlot.at(i).get();
 }
 
 SpatialSharedPtr
-Node::GetChildAt(size_t i)
+Node::GetChildAt(size_t slotIndex)
 {
-    return mChildren.at(i);
+    return mChildrenSlot.at(slotIndex);
 }
 
 SpatialSharedPtr
-Node::SetChild(size_t i, SpatialSharedPtr child)
+Node::SetChildAt(size_t slotIndex, SpatialSharedPtr child)
 {
     // NOTE(Wuxiang): The child is allowed to be null so that you would be able
     // to clear the child from the children list.
 
-    if (child)
+    if (child && child->mParent)
     {
-        // The child already has a parent
-        assert(child->mParent);;
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The child already has a parent");
     }
 
-    if (0 <= i && i < ChildrenNum())
+    if (0 <= slotIndex && slotIndex < GetChildrenSlotNum())
     {
+        auto& slot = mChildrenSlot[slotIndex];
+
         // Remove the child currently in the slot.
-        auto childPrevious = mChildren[i];
+        auto childPrevious = slot;
         if (childPrevious)
         {
             childPrevious->mParent = nullptr;
@@ -153,7 +152,7 @@ Node::SetChild(size_t i, SpatialSharedPtr child)
             child->mParent = this;
         }
 
-        mChildren[i] = child;
+        slot = child;
 
         return childPrevious;
     }
@@ -164,19 +163,81 @@ Node::SetChild(size_t i, SpatialSharedPtr child)
         child->mParent = this;
     }
 
-    mChildren.push_back(child);
+    mChildrenSlot.push_back(child);
 
     return nullptr;
 }
 
+int
+Node::GetChildrenNum() const
+{
+    auto childrenNum = 0;
+    for (auto slotIndex = 0; slotIndex < GetChildrenSlotNum(); ++slotIndex)
+    {
+        if (GetChildAt(slotIndex) != nullptr)
+        {
+            ++childrenNum;
+        }
+    }
+
+    return childrenNum;
+}
+
+int
+Node::GetChildrenSlotNum() const
+{
+    return int(mChildrenSlot.size());
+}
+
+/************************************************************************/
+/* Public Members                                                       */
+/************************************************************************/
+void
+Node::CopyTo(Node *lhs) const
+{
+    Spatial::CopyTo(lhs);
+
+    // Clear existing children.
+    for (auto slot : lhs->mChildrenSlot)
+    {
+        if (auto child = slot)
+        {
+            child->mParent = nullptr;
+        }
+    }
+
+    lhs->mChildrenSlot.clear();
+
+    // Create new children.
+    for (int slotIndex = 0; slotIndex < GetChildrenSlotNum(); ++slotIndex)
+    {
+        auto slot = GetChildAt(slotIndex);
+        if (auto child = slot)
+        {
+            auto childClone = child->GetClone();
+            lhs->SetChildAt(slotIndex, shared_ptr<Spatial>(childClone));
+        }
+    }
+}
+
+Node *
+Node::GetClone() const
+{
+    auto clone = new Node();
+    CopyTo(clone);
+    return clone;
+}
+
+/************************************************************************/
+/* Protected Members                                                    */
+/************************************************************************/
 void
 Node::UpdateWorldTransform(double elapsed)
 {
     Spatial::UpdateWorldTransform(elapsed);
 
-    for (auto iter = mChildren.begin(); iter != mChildren.end(); ++iter)
+    for (auto child : mChildrenSlot)
     {
-        auto child = *iter;
         if (child)
         {
             child->Update(elapsed, false);

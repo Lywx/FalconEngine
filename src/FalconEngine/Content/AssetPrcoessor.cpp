@@ -176,7 +176,7 @@ LoadFntFile(const std::string& fntFilePath)
     // Try open fnt file.
     if (!fntStream.good())
     {
-        FALCON_ENGINE_THROW_EXCEPTION("Failed to load fnt file.");
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Failed to load fnt file.");
     }
 
     static map<string, string> sFontSettingTable;
@@ -342,7 +342,7 @@ AssetProcessor::LoadRawTexture(const std::string& textureFilePath)
                                  STBI_rgb_alpha);
     if (textureData == nullptr)
     {
-        FALCON_ENGINE_THROW_EXCEPTION("Failed to load texture file.");
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Failed to load texture file.");
     }
 
     // NOTE(Wuxiang): Copy the memory allocated from the stb library.
@@ -388,7 +388,7 @@ AssetProcessor::BakeModel(const std::string& modelFilePath)
     const aiScene *scene = modelImporter.ReadFile(modelFilePath, aiProcess_Triangulate | aiProcess_FlipUVs);
     if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
-        FALCON_ENGINE_THROW_EXCEPTION(modelImporter.GetErrorString());
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(modelImporter.GetErrorString());
     }
 
     // Bake texture in model

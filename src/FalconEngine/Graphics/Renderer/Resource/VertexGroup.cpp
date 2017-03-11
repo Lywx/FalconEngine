@@ -22,7 +22,7 @@ VertexGroup::GetVertexNum() const
 {
     if (mVertexBufferTable.size() == 0)
     {
-        FALCON_ENGINE_THROW_EXCEPTION("The vertex group is empty.");
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The vertex group is empty.");
     }
 
     return mVertexBufferTable.begin()->second.GetBuffer()->GetElementNum();

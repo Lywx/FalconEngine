@@ -112,7 +112,7 @@ VisualEffect::CheckEffectSame(VisualEffect *effect) const
 {
     if (this != effect)
     {
-        FALCON_ENGINE_THROW_EXCEPTION("Effect is supposed to be the same.");
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Effect is supposed to be the same.");
     }
 }
 

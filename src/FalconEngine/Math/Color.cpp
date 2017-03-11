@@ -228,4 +228,20 @@ bool operator!=(Color lhs, Color rhs)
     return !(lhs == rhs);
 }
 
+Color
+Transparent(Color color, uint8 a)
+{
+    color.A = a;
+    return color;
+}
+
+Color
+Transparent(Color color, float a)
+{
+    typedef numeric_limits<uint8> uint8Limit;
+
+    color.A = static_cast<uint8>(Clamp<float>(a * 255, uint8Limit::min(), uint8Limit::max()));
+    return color;
+}
+
 }

@@ -29,7 +29,7 @@ public:
     virtual ~Entity();
 
 public:
-    const NodeSharedPtr
+    NodeSharedPtr
     GetNode() const;
 
     NodeSharedPtr
@@ -39,6 +39,7 @@ public:
     Update(GameEngineInput *input, double elapsed);
 
 public:
+    // TODO(Wuxiang): Id is not implemented.
     int         mId;
     std::string mName;
 

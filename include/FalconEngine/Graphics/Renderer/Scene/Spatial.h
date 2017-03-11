@@ -8,23 +8,48 @@
 namespace FalconEngine
 {
 
+class Spatial;
+using SpatialSharedPtr = std::shared_ptr<Spatial>;
+
 class Spatial : public Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
 protected:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
     Spatial();
 
 public:
     virtual ~Spatial();
 
+public:
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
     // @summary Update everything that need to constantly update themselves.
     // @param initiator - if the caller is the initiator of this round of update. If
     //     so, we need to update the bounding volume in parent because the
     //     bounding volume is computed from leaves to root.
-    virtual void Update(double elapsed, bool initiator);
+    virtual void
+    Update(double elapsed, bool initiator);
+
+    /************************************************************************/
+    /* Deep and Shallow Copy                                                */
+    /************************************************************************/
+    // @remark This method use return type covariance in the class hierarchy.
+    // @return The clone of this Spatial instance. Grant for no shared ownership.
+    virtual Spatial *
+    GetClone() const = 0;
+
+    void
+    CopyTo(Spatial *lhs) const;
 
 protected:
+    /************************************************************************/
+    /* Protected Members                                                    */
+    /************************************************************************/
     virtual void UpdateWorldTransform(double elapsed);
 
 public:

@@ -32,7 +32,9 @@ AABBBoundingBoxEffect::AABBBoundingBoxEffect()
     pass->SetShader(shader);
 
     auto blendState = make_unique<BlendState>();
-    blendState->mEnabled = false;
+    blendState->mEnabled = true;
+    blendState->mSourceFactor = BlendSourceFactor::SRC_ALPHA;
+    blendState->mDestinationFactor = BlendDestinationFactor::ONE_MINUS_SRC_ALPHA;
     pass->SetBlendState(move(blendState));
 
     auto cullState = make_unique<CullState>();

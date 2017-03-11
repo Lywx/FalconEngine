@@ -8,7 +8,6 @@ FALCON_ENGINE_RTTI_IMPLEMENT(Spatial, Object);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-
 Spatial::Spatial() :
     mLocalTransform(Matrix4f::Identity),
     mWorldTransform(Matrix4f::Identity),
@@ -27,8 +26,8 @@ Spatial::~Spatial()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-
-void Spatial::Update(double elaped, bool initiator)
+void
+Spatial::Update(double elaped, bool initiator)
 {
     // Update spatial owned data
     UpdateWorldTransform(elaped);
@@ -39,10 +38,24 @@ void Spatial::Update(double elaped, bool initiator)
 }
 
 /************************************************************************/
+/* Deep and Shallow Copy                                                */
+/************************************************************************/
+void
+Spatial::CopyTo(Spatial *lhs) const
+{
+    lhs->mWorldTransform = mWorldTransform;
+    lhs->mLocalTransform = mLocalTransform;
+    lhs->mWorldTransformIsCurrent = mWorldTransformIsCurrent;
+
+    // NOTE(Wuxiang): The copying won't try to copy the ownership and parentage.
+    lhs->mParent = nullptr;
+}
+
+/************************************************************************/
 /* Protected Members                                                    */
 /************************************************************************/
-
-void Spatial::UpdateWorldTransform(double elaped)
+void
+Spatial::UpdateWorldTransform(double elaped)
 {
     // Update world transforms.
     if (!mWorldTransformIsCurrent)

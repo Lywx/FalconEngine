@@ -51,7 +51,7 @@ PointLightEntity::GetSpecular() const
 void
 PointLightEntity::SetSpecular(Color color)
 {
-    mLight->mDiffuse = color;
+    mLight->mSpecular = color;
 }
 
 float

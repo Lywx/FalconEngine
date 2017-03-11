@@ -95,7 +95,7 @@ Matrix4f::CreateRotationZ(const float& radians, Matrix4f& transform)
 Matrix4f
 Matrix4f::CreateRotation(const Quaternion& q)
 {
-    Matrix4f result = Identity;
+    auto result = Identity;
 
     // @ref Fletcher Dunn, Ian Parberry 3D Math Primer for Graphics and Game Development, 2nd, 2011, P284, (8.20)
     result[0][0] = 1.f - 2.f * (q.y * q.y + q.z * q.z);
@@ -195,16 +195,6 @@ Matrix4f::operator glm::mat4() const
 Matrix4f::operator Matrix3f() const
 {
     return Matrix3f(*this);
-}
-
-/************************************************************************/
-/* Operator Members                                                     */
-/************************************************************************/
-
-Vector3f
-operator*(const Matrix4f& matrix,  const Vector3f& vector)
-{
-    return Vector3f(matrix * Vector4f(vector));
 }
 
 }

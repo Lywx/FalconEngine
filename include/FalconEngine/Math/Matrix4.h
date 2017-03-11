@@ -81,9 +81,4 @@ public:
 };
 #pragma pack(pop)
 
-/************************************************************************/
-/* Operator Members                                                     */
-/************************************************************************/
-Vector3f operator*(const Matrix4f& matrix, const Vector3f& vector);
-
 }

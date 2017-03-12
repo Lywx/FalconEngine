@@ -49,6 +49,7 @@ SampleGame::Initialize()
             model = assetManager->LoadModel("Content/Models/Engine/Point Light.dae");
             mPointLight1 = make_shared<PointLightEntity>(shared_ptr<Node>(model->GetNode()->GetClone()));
             mPointLight2 = make_shared<PointLightEntity>(shared_ptr<Node>(model->GetNode()->GetClone()));
+            mPointLight3 = make_shared<PointLightEntity>(shared_ptr<Node>(model->GetNode()->GetClone()));
         }
     }
 
@@ -82,11 +83,23 @@ SampleGame::Initialize()
             mPointLight2->SetPosition(Vector3f(5.09701681137085, -6.6115264892578125, 3.654505729675293));
         }
 
-        mScenePointLightList = { mPointLight1->GetLight(), mPointLight2->GetLight() };
+        {
+            mPointLight3->SetAmbient(ColorPalette::Gold);
+            mPointLight3->SetDiffuse(Color(105, 105, 105));
+            mPointLight3->SetSpecular(Color(105, 105, 105));
+            mPointLight3->SetConstant(0.1f);
+            mPointLight3->SetLinear(0.015f);
+            mPointLight3->SetQuadratic(0.0075f);
+            mPointLight3->SetPosition(Vector3f(0.0, 0.0, 9.546284675598145));
+
+        }
+
+        mScenePointLightList = { mPointLight1->GetLight(), mPointLight2->GetLight(), mPointLight3->GetLight() };
 
         mRootNode = mRoom->GetNode();
         mRootNode->AttachChild(mPointLight1->GetNode());
         mRootNode->AttachChild(mPointLight2->GetNode());
+        mRootNode->AttachChild(mPointLight3->GetNode());
         mSceneNode = make_shared<Node>();
         mSceneNode->mWorldTransform = Matrix4f::Zero;
         mSceneNode->AttachChild(mRootNode);
@@ -154,8 +167,8 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
     }
 
     graphics->Draw(mCamera.get(), mRoom.get());
-    graphics->DrawBoundingBox(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 0.5f));
-    graphics->DrawBoundingBox(mCamera.get(), mPointLight2.get(), Transparent(ColorPalette::Green, 0.5f));
+    graphics->DrawBoundingBox(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f));
+    graphics->DrawBoundingBox(mCamera.get(), mPointLight2.get(), Transparent(ColorPalette::Green, 1.0f));
 
     Game::Render(graphics, percent);
 }

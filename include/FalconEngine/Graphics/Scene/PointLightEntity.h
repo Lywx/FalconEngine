@@ -19,55 +19,51 @@ public:
     /************************************************************************/
     explicit PointLightEntity(const NodeSharedPtr node);
     PointLightEntity(const NodeSharedPtr node, const LightSharedPtr light);
+    ~PointLightEntity();
 
 public:
     Color
     GetAmbient() const;
 
     void
-    SetAmbient(Color);
+    SetAmbient(Color color);
 
     Color
     GetDiffuse() const;
 
     void
-    SetDiffuse(Color);
+    SetDiffuse(Color color);
 
     Color
     GetSpecular() const;
 
     void
-    SetSpecular(Color);
+    SetSpecular(Color color);
 
     float
     GetConstant() const;
 
     void
-    SetConstant(float);
+    SetConstant(float value);
 
     float
     GetLinear() const;
 
     void
-    SetLinear(float);
+    SetLinear(float value);
 
     float
     GetQuadratic() const;
 
     void
-    SetQuadratic(float);
-
-    Vector3f
-    GetPosition() const;
-
-    void
-    SetPosition(Vector3f) const;
+    SetQuadratic(float value);
 
     const Light *
     GetLight() const;
 
+protected:
     virtual void
-    Update(GameEngineInput *input, double elapsed) override;
+    UpdateLocalTransformFeedback(bool initiator) override;
 
 protected:
     LightSharedPtr mLight;

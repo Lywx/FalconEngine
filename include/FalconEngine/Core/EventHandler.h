@@ -2,17 +2,15 @@
 
 #include <FalconEngine/CoreInclude.h>
 
-#include <functional>
 #include <list>
+
+#include <FalconEngine/Core/EventCallback.h>
 
 namespace FalconEngine
 {
 
 template <typename T>
-using EventCallback = std::function<void(void *, T)>;
-
-template <typename T>
-using EventCallbackList = std::list<EventCallback<T>>;
+using EventCallbackList = std::list<EventCallback<T>*>;
 
 // @ref Luis Sempe User Interface Programming for Games, 2014.
 template <typename T>
@@ -22,25 +20,26 @@ public:
     EventHandler();
     virtual ~EventHandler();
 
+public:
     typename EventCallbackList<T>::iterator
-    operator += (EventCallback<T> callback)
+    operator += (EventCallback<T> *callback)
     {
         mCallbackList.emplace_front(callback);
         return mCallbackList.begin();
     }
 
     void
-    operator -= (typename EventCallbackList<T>::iterator& it)
+    operator -= (EventCallback<T> *callback)
     {
-        mCallbackList.erase(it);
+        mCallbackList.remove(callback);
     }
 
     void
     Invoke(void *sender, T data)
     {
-        for (auto& callback : mCallbackList)
+        for (auto callback : mCallbackList)
         {
-            callback(sender, data);
+            callback->mBinder(sender, data);
         }
     }
 

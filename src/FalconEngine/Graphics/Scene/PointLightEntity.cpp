@@ -10,11 +10,24 @@ PointLightEntity::PointLightEntity(const NodeSharedPtr node) :
     Entity(node),
     mLight(std::make_shared<Light>(LightType::Point))
 {
+    using namespace std::placeholders;
+
+    //EventBinder<bool> a  = std::bind(&PointLightEntity::UpdateLightLocalTransform, this, _1);
+    //mNodeUpdateEndHandler = a;
+    mNode->mUpdateEnded += &mNodeUpdateEndedHandler;
+
+    // NOTE(Wuxiang): The light indicator model is 1 * 1 meter. It is too big for
+    // an indicator.
+    SetScale(Vector3f(0.25f, 0.25f, 0.25f));
 }
 
 PointLightEntity::PointLightEntity(const NodeSharedPtr node, const LightSharedPtr light) :
     Entity(node),
     mLight(light)
+{
+}
+
+PointLightEntity::~PointLightEntity()
 {
 }
 
@@ -90,19 +103,6 @@ PointLightEntity::SetQuadratic(float value)
     mLight->mQuadratic = value;
 }
 
-Vector3f
-PointLightEntity::GetPosition() const
-{
-    return mLight->mPosition;
-}
-
-void
-PointLightEntity::SetPosition(Vector3f position) const
-{
-    mNode->mLocalTransform = Matrix4f::CreateTranslation(position) * Matrix4f::CreateScaleIsomorphic(0.25f);
-    mNode->mWorldTransformIsCurrent = false;
-}
-
 const Light *
 PointLightEntity::GetLight() const
 {
@@ -110,7 +110,7 @@ PointLightEntity::GetLight() const
 }
 
 void
-PointLightEntity::Update(GameEngineInput *input, double elapsed)
+PointLightEntity::UpdateLocalTransformFeedback(bool initiator)
 {
     if (mNode->mWorldTransformIsCurrent)
     {
@@ -118,7 +118,7 @@ PointLightEntity::Update(GameEngineInput *input, double elapsed)
     }
     else
     {
-        Debug::Break();
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
 }
 

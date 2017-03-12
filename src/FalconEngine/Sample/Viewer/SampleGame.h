@@ -55,6 +55,7 @@ private:
     // std::shared_ptr<LightEntity> mLamp2;
     std::shared_ptr<PointLightEntity> mPointLight1;
     std::shared_ptr<PointLightEntity> mPointLight2;
+    std::shared_ptr<PointLightEntity> mPointLight3;
     std::shared_ptr<SceneEntity> mRoom;
 };
 

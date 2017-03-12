@@ -1,8 +1,11 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Renderer/Scene/Spatial.h>
+#include <FalconEngine/GraphicsInclude.h>
 
 #include <vector>
+
+#include <FalconEngine/Graphics/Renderer/Scene/Spatial.h>
+#include <FalconEngine/Core/EventHandler.h>
 
 namespace FalconEngine
 {
@@ -116,6 +119,10 @@ protected:
     /************************************************************************/
     virtual void
     UpdateWorldTransform(double elapsed) override;
+
+public:
+    EventHandler<bool>            mUpdateBegun;
+    EventHandler<bool>            mUpdateEnded;
 
 private:
     std::vector<SpatialSharedPtr> mChildrenSlot;

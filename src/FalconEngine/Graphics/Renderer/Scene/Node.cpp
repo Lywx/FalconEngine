@@ -192,12 +192,16 @@ Node::GetChildrenSlotNum() const
 void
 Node::Update(double elapsed, bool initiator)
 {
+    mUpdateBegun.Invoke(this, initiator);
+
     UpdateWorldTransform(elapsed);
 
     for (auto child : mChildrenSlot)
     {
         child->Update(elapsed, false);
     }
+
+    mUpdateEnded.Invoke(this, initiator);
 }
 
 /************************************************************************/

@@ -4,7 +4,7 @@ A OpenGL 3D Graphics Engine for study and academic use.
 
 Showcase
 ===
-![Bedroom](case/Showcase 1.png)
+![Bedroom](case/Showcase.jpg)
 
 Reference
 ===

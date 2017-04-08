@@ -1,6 +1,6 @@
 Falcon Engine
 ===
-A OpenGL 3D Graphics Engine for study and academic use.
+An OpenGL 3D Graphics Engine for study and academic use.
 
 Showcase
 ===

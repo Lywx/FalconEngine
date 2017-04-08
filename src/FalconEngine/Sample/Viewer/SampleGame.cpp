@@ -186,8 +186,6 @@ SampleGame::Update(GameEngineInput *input, double elapsed)
 
     mCamera->Update(input, elapsed);
     mSceneNode->Update(elapsed, true);
-    mPointLight1->Update(input, elapsed);
-    mPointLight2->Update(input, elapsed);
 
     Game::Update(input, elapsed);
 }

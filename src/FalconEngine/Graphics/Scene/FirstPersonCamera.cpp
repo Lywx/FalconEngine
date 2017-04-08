@@ -38,7 +38,7 @@ FirstPersonCamera::Update(GameEngineInput *input, double elapsed)
         auto mouse = input->GetMouseState();
         auto mousePositionDiff = mouse->GetPositionDiff();
 
-        // NOTE(Wuxiang): 360 degree need 0.8 seconds. I test it myself.
+        // NOTE(Wuxiang): 360 degree need 0.8 seconds. I tested it myself.
         static auto yawDegreeRotationPerSecond = 36 / 0.8;
         static auto pitchDegreeRotationPerSecond = 36 / 0.8;
         // static auto yawDegreeRotationPerSecondMax = 360 / 0.8;

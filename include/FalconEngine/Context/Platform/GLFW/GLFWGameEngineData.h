@@ -5,7 +5,7 @@
 namespace FalconEngine
 {
 
-class GameEngineData sealed
+class GameEngineData final
 {
 public:
     GameEngineData();

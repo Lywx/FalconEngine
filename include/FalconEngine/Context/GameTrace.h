@@ -12,6 +12,7 @@
 namespace FalconEngine
 {
 
+// @summary Dignositic tracer used for both the engine and the game.
 class GameTrace
 {
 public:

@@ -5,7 +5,7 @@
 namespace FalconEngine
 {
 
-class GameEngineInputSettings sealed
+class GameEngineInputSettings final
 {
 public:
 };

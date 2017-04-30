@@ -56,7 +56,7 @@ enum class BlendDestinationFactor
     Count
 };
 
-class BlendState sealed
+class BlendState final
 {
 public:
     /************************************************************************/

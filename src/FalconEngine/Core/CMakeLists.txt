@@ -1,19 +1,18 @@
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${FALCON_ENGINE_ARCHIVE_OUTPUT_DIR})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${FALCON_ENGINE_LIBRARY_OUTPUT_DIR})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${FALCON_ENGINE_RUNTIME_OUTPUT_DIR})
+cmake_minimum_required(VERSION 3.0)
 
-file(GLOB_RECURSE FALCON_ENGINE_CORE_SOURCE_FILES *.cpp)
+include(${FALCON_ENGINE_ROOT_DIR}/cmake/Compiler.cmake)
+include(${FALCON_ENGINE_ROOT_DIR}/cmake/Platform.cmake)
+include(${FALCON_ENGINE_ROOT_DIR}/cmake/Target.cmake)
 
 include_directories(${FALCON_ENGINE_INCLUDE_DIR})
 link_directories(${FALCON_ENGINE_LIBRARY_DIR})
 
-add_library(FalconEngine.Core STATIC
-    ${FALCON_ENGINE_CORE_SOURCE_FILES})
+file(GLOB_RECURSE FALCON_ENGINE_CORE_SOURCE_FILES *.cpp)
 
-target_link_libraries(FalconEngine.Core 
-    glew32sd.lib glfw3.lib 
-    opengl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib)
+add_library(
+    FalconEngine.Core                   # Name
+    ${FALCON_ENGINE_LIBRARY_TYPE} 	    # Type
+    ${FALCON_ENGINE_CORE_SOURCE_FILES}) # Source
 
-set_target_properties(FalconEngine.Core PROPERTIES COMPILE_FLAGS "/MTd")
-set_target_properties(FalconEngine.Core PROPERTIES SUFFIX ".lib")
-set_target_properties(FalconEngine.Core PROPERTIES FOLDER "FalconEngine Library Targets")
+fe_set_target_folder(FalconEngine.Core "FalconEngine Library Targets")
+fe_set_target_output(FalconEngine.Core)

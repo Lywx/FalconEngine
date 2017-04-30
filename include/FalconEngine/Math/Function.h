@@ -9,7 +9,7 @@ namespace FalconEngine
 
 template <typename T>
 T
-DegreeNormalize(T degree, T begin, T end)
+DegreeNormalize(T degree, T begin, T /* end */)
 {
     degree = remainder(degree, T(360.0));
 
@@ -71,8 +71,7 @@ Max(T a, T b)
 }
 
 template <typename T>
-constexpr T
-Clamp(T value, const T lower, const T higher)
+T Clamp(T value, const T lower, const T higher)
 {
     value = value > higher ? higher : value;
     return value < lower ? lower : value;
@@ -86,8 +85,7 @@ Lerp(const T a, const T b, const T t)
 }
 
 template <typename T>
-T
-Smooth(const T x)
+constexpr T Smooth(const T x)
 {
     return x * x * (3 - 2 * x);
 }

@@ -63,7 +63,7 @@ AABBBoundingBoxEffect::~AABBBoundingBoxEffect()
 /* Public Members                                                       */
 /************************************************************************/
 void
-AABBBoundingBoxEffect::CreateInstance(VisualEffectInstance *instance, const Camera *camera) const
+AABBBoundingBoxEffect::CreateInstance(VisualEffectInstance *instance, const Camera * /* camera */) const
 {
     CheckEffectCompatible(instance);
 }

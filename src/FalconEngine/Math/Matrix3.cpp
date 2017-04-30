@@ -19,13 +19,13 @@ Matrix3f Matrix3f::Identity = glm::mat3(1.0, 0.0, 0.0,
 Matrix3f
 Matrix3f::Inverse(const Matrix3f& mat)
 {
-    return glm::inverse(mat);
+    return glm::inverse<float, glm::highp, glm::tmat3x3>(mat);
 }
 
 Matrix3f
 Matrix3f::Transpose(const Matrix3f& mat)
 {
-    return glm::transpose(mat);
+    return glm::transpose<float, glm::highp, glm::tmat3x3>(mat);
 }
 
 Matrix3f::Matrix3f() :

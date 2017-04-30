@@ -114,7 +114,7 @@ EntityRenderer::RenderBegin()
 }
 
 void
-EntityRenderer::Render(Renderer *renderer, double percent)
+EntityRenderer::Render(Renderer *renderer, double /* percent */)
 {
     for (auto& cameraEntityListPair : mEntityTable)
     {

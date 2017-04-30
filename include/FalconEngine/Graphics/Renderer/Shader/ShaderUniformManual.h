@@ -23,8 +23,8 @@ template <typename T>
 void
 ShaderUniformManual<T>::SetValue(T value)
 {
-    mValue = value;
-    mUpdated = true;
+    this->mValue = value;
+    this->mUpdated = true;
 }
 
 template<typename T>

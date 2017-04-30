@@ -6,8 +6,9 @@
 namespace FalconEngine
 {
 
+// @summary Performance counter used for both the engine and the game.
 class GameCounterImp;
-class GameCounter sealed
+class GameCounter final
 {
 public:
     /************************************************************************/

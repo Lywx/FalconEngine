@@ -28,7 +28,7 @@ Debug::OutputString(const std::string& str)
 }
 
 /* static */ void
-Debug::OutputString(char *str)
+Debug::OutputString(const char *str)
 {
     OutputDebugString(str);
 }

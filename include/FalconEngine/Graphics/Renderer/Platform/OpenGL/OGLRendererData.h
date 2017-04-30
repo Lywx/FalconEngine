@@ -6,7 +6,7 @@
 namespace FalconEngine
 {
 
-class PlatformRendererData sealed
+class PlatformRendererData final
 {
 public:
     PlatformRendererData();

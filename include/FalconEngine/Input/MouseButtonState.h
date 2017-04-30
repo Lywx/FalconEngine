@@ -14,7 +14,8 @@ enum class MouseButtonPressState
     Released,
 };
 
-class MouseButtonState sealed
+enum class MouseButton;
+class MouseButtonState final
 {
 public:
     explicit MouseButtonState(MouseButton button);

@@ -5,7 +5,7 @@
 namespace FalconEngine
 {
 
-class GameEngineGraphicsSettings sealed
+class GameEngineGraphicsSettings final
 {
 public:
     GameEngineGraphicsSettings();

@@ -15,9 +15,6 @@ class Texture;
 class Shader;
 using ShaderSharedPtr = std::shared_ptr<Shader>;
 
-class ShaderUniform;
-using ShaderUniformSharedPtr = std::shared_ptr<ShaderUniform>;
-
 class BlendState;
 using BlendStateUniquePtr = std::unique_ptr<BlendState>;
 
@@ -36,7 +33,7 @@ using StencilTestStateUniquePtr = std::unique_ptr<StencilTestState>;
 class WireframeState;
 using WireframeStateUniquePtr = std::unique_ptr<WireframeState>;
 
-class VisualEffectPass sealed
+class VisualEffectPass final
 {
 public:
     /************************************************************************/

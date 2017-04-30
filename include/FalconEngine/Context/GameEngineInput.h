@@ -18,12 +18,13 @@ class KeyboardState;
 using KeyboardStateSharedPtr = std::shared_ptr<KeyboardState>;
 
 class MouseController;
-using MouseControllerSharedPtr = std::shared_ptr<MouseController>;;
+using MouseControllerSharedPtr = std::shared_ptr<MouseController>;
 
 class MouseState;
 using MouseStateSharedPtr = std::shared_ptr<MouseState>;
 
 class GameEngineData;
+class GameEngineInputDispatcher;
 class GameEngineInput
 {
 public:
@@ -56,7 +57,8 @@ public:
     MouseStateSharedPtr
     GetMouseState() const;
 
-internal:
+// internal
+public:
     void
     Initialize(const GameEngineData *data, GameEngineSettingsSharedPtr settings);
 

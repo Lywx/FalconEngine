@@ -63,7 +63,7 @@ Game::RenderEnd(GameEngineGraphics *graphics)
 }
 
 void
-Game::Update(GameEngineInput *input, double elapsed)
+Game::Update(GameEngineInput * /* input */, double /* elapsed */)
 {
 }
 

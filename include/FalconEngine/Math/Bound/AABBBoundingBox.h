@@ -8,7 +8,7 @@
 namespace FalconEngine
 {
 
-class AABBBoundingBox sealed : public BoundingBox
+class AABBBoundingBox final : public BoundingBox
 {
 public:
     /************************************************************************/

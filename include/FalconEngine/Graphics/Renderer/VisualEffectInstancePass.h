@@ -18,7 +18,7 @@ using ShaderUniformSharedPtr = std::shared_ptr<ShaderUniform>;
 
 class Texture;
 
-class VisualEffectInstancePass sealed
+class VisualEffectInstancePass final
 {
 public:
     /************************************************************************/

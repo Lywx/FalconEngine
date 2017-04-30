@@ -76,7 +76,7 @@ Entity::SetPosition(Vector3f position)
 }
 
 void
-Entity::Update(GameEngineInput *input, double elapsed)
+Entity::Update(GameEngineInput * /* input */, double /* elapsed */)
 {
 }
 
@@ -84,7 +84,7 @@ Entity::Update(GameEngineInput *input, double elapsed)
 /* Protected Members                                                    */
 /************************************************************************/
 void
-Entity::UpdateLocalTransform(bool initiator)
+Entity::UpdateLocalTransform(bool /* initiator */)
 {
     if (!mLocalTransformIsCurrent)
     {
@@ -96,7 +96,7 @@ Entity::UpdateLocalTransform(bool initiator)
 }
 
 void
-Entity::UpdateLocalTransformFeedback(bool initiator)
+Entity::UpdateLocalTransformFeedback(bool /* initiator */)
 {
 }
 

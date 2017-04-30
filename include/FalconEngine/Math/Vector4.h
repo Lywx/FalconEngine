@@ -6,6 +6,7 @@
 namespace FalconEngine
 {
 
+class Color;
 class Vector3f;
 
 // Assume vector are column vector
@@ -21,11 +22,8 @@ public:
     const static Vector4f UnitW;
 
     Vector4f();
-
-    Vector4f(const float x, const float y, const float z, const float w);
-
     Vector4f(const Vector3f& v, const float w);
-    Vector4f(const Vector3f& v);
+    Vector4f(const float x, const float y, const float z, const float w);
 
     // Implicit Conversion
     Vector4f(const glm::vec4& v);

@@ -19,7 +19,7 @@ enum class DepthFunction
     Count
 };
 
-class DepthTestState sealed
+class DepthTestState final
 {
 public:
     DepthTestState();

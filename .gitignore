@@ -1,5 +1,6 @@
 bin
 build
+CMakeLists.txt.user
 doc
 include/*
 !include/FalconEngine

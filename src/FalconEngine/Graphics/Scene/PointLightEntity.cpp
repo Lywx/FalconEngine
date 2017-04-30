@@ -110,7 +110,7 @@ PointLightEntity::GetLight() const
 }
 
 void
-PointLightEntity::UpdateLocalTransformFeedback(bool initiator)
+PointLightEntity::UpdateLocalTransformFeedback(bool /* initiator */)
 {
     if (mNode->mWorldTransformIsCurrent)
     {

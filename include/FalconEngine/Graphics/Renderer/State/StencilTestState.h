@@ -49,7 +49,7 @@ enum class StencilOperation
     Count,
 };
 
-class StencilTestState sealed
+class StencilTestState final
 {
 public:
     StencilTestState ();

@@ -1,6 +1,5 @@
 #include <FalconEngine/Content/AssetProcessor.h>
 
-#if FALCON_ENGINE_OS_WINDOWS
 #include <assimp/Importer.hpp>
 #include <assimp/material.h>
 #include <assimp/postprocess.h>
@@ -11,6 +10,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>
+
 #include <stb/stb_image.h>
 
 #include <FalconEngine/Content/Path.h>
@@ -90,7 +90,7 @@ LoadFntGlyphLine(
     size_t          fontGlyphIndex,
     int             fontGlyphPT,
     int             fontGlyphPR,
-    int             fontGlyphPB,
+    int          /* fontGlyphPB */,
     int             fontGlyphPL)
 {
     // NOTE(Wuxiang): Using preallocated map to improved performance. There is no
@@ -410,4 +410,3 @@ AssetProcessor::BakeModel(const std::string& modelFilePath)
 }
 
 }
-#endif

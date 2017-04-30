@@ -12,7 +12,7 @@
 namespace FalconEngine
 {
 
-class GameEngineInputDispatcher sealed
+class GameEngineInputDispatcher final
 {
 public:
     explicit GameEngineInputDispatcher(GameEngineInput *input);
@@ -40,20 +40,20 @@ GameEngineInputDispatcher::GameEngineInputDispatcher(GameEngineInput *input) :
 }
 
 void
-GameEngineInputDispatcher::KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
+GameEngineInputDispatcher::KeyCallback(GLFWwindow * /* window */, int key, int /* scancode */, int action, int /* mods */)
 {
     auto keyPressed = action == GLFW_PRESS || action == GLFW_REPEAT;
     mInput->mKeyboardState->SetKeyInternal(Key(key), keyPressed, glfwGetTime());
 }
 
 void
-GameEngineInputDispatcher::MouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
+GameEngineInputDispatcher::MouseButtonCallback(GLFWwindow * /* window */, int button, int action, int /* mods */)
 {
     mInput->mMouseState->SetButtonInternal(MouseButton(button), action == GLFW_PRESS, glfwGetTime());
 }
 
 void
-GameEngineInputDispatcher::ScrollCallback(GLFWwindow *window, double xoffset, double yoffset)
+GameEngineInputDispatcher::ScrollCallback(GLFWwindow * /* window */, double /* xoffset */, double yoffset)
 {
     mInput->mMouseState->SetWheelValueInternal(yoffset, glfwGetTime());
 }

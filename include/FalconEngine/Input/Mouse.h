@@ -6,7 +6,7 @@
 namespace FalconEngine
 {
 
-class Mouse sealed
+class Mouse final
 {
 public:
     /************************************************************************/

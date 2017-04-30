@@ -1,5 +1,7 @@
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLIndexBuffer.h>
 
+#include <cstring>
+
 namespace FalconEngine
 {
 

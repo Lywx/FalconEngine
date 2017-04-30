@@ -12,7 +12,7 @@ public:
     Break();
 
     static void
-    OutputString(char *str);
+    OutputString(const char *str);
 
     static void
     OutputString(const std::string& str);

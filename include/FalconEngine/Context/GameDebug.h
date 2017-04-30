@@ -7,6 +7,7 @@
 namespace FalconEngine
 {
 
+// @summary Debug utility used for both the engine and the game.
 class GameDebug
 {
 public:
@@ -20,7 +21,7 @@ public:
     Initialize();
 
     static void
-    OutputString(char *str)
+    OutputString(const char *str)
     {
         Debug::OutputString(str);
     }

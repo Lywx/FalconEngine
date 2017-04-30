@@ -56,6 +56,7 @@ public:
     ShaderUniform(const std::string name, ShaderUniformType type);
     virtual ~ShaderUniform();
 
+public:
     virtual void
     Update(const Camera *camera, const Visual *visual);
 
@@ -93,7 +94,7 @@ template <typename T, typename U, typename ... Args>
 ShaderUniformValueSharedPtr<T>
 ShareUniform(Args&& ... args)
 {
-    return static_pointer_cast<ShaderUniformValue<T>>(std::make_shared<U>(args ...));
+    return std::static_pointer_cast<ShaderUniformValue<T>>(std::make_shared<U>(args ...));
 }
 
 /************************************************************************/

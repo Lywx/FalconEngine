@@ -19,7 +19,7 @@ ProcessShaderIncludeStatement(
     _IN_OUT_ std::string&       shaderSourceString,
     _IN_     const std::string& shaderExtensionLine,
     _IN_     const std::string& shaderPath,
-    _IN_OUT_ int&               extensionBeginIndex)
+    _IN_OUT_ size_t&            extensionBeginIndex)
 {
     using namespace boost;
 
@@ -39,7 +39,7 @@ ProcessShaderIncludeStatement(
     auto assetManager = AssetManager::GetInstance();
     auto includeSource = assetManager->LoadShaderSource(includeFilePath);
     shaderSourceString.insert(extensionBeginIndex, includeSource->mSource);
-    extensionBeginIndex += int(includeSource->mSource.size());
+    extensionBeginIndex += includeSource->mSource.size();
 }
 
 void
@@ -47,7 +47,7 @@ ProcessShaderExtensionBlock(
     _IN_OUT_ std::string&       shaderSourceString,
     _IN_OUT_ std::string&       shaderExtension,
     _IN_     const std::string& shaderPath,
-    _IN_OUT_ int&               extensionBeginIndex)
+    _IN_OUT_ size_t&            extensionBeginIndex)
 {
     using namespace boost;
 
@@ -74,8 +74,8 @@ ProcessShaderExtension(ShaderSource *shaderSource)
     static const string extensionHeaderEndString   = "#fe_extension : disable";
 
     auto& shaderSourceString = shaderSource->mSource;
-    auto extensionHeaderBeginIndex = int(shaderSourceString.find(extensionHeaderBeginString));
-    auto extensionHeaderEndIndex = int(shaderSourceString.find(extensionHeaderEndString));
+    auto extensionHeaderBeginIndex = shaderSourceString.find(extensionHeaderBeginString);
+    auto extensionHeaderEndIndex = shaderSourceString.find(extensionHeaderEndString);
 
     auto extensionHeaderBeginFound = extensionHeaderBeginIndex != string::npos;
     auto extensionHeaderEndFound = extensionHeaderEndIndex != string::npos;
@@ -104,8 +104,8 @@ ProcessShaderExtension(ShaderSource *shaderSource)
         }
 
         // Try to find next extension block.
-        extensionHeaderBeginIndex = int(shaderSourceString.find(extensionHeaderBeginString));
-        extensionHeaderEndIndex = int(shaderSourceString.find(extensionHeaderEndString));
+        extensionHeaderBeginIndex = shaderSourceString.find(extensionHeaderBeginString);
+        extensionHeaderEndIndex = shaderSourceString.find(extensionHeaderEndString);
         extensionHeaderBeginFound = extensionHeaderBeginIndex != string::npos;
         extensionHeaderEndFound = extensionHeaderEndIndex != string::npos;
     }

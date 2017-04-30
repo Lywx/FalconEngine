@@ -24,13 +24,13 @@ Matrix4f Matrix4f::Identity = glm::mat4(1.0, 0.0, 0.0, 0.0,
 Matrix4f
 Matrix4f::Inverse(const Matrix4f& mat)
 {
-    return glm::inverse(mat);
+    return glm::inverse<float, glm::highp, glm::tmat4x4>(mat);
 }
 
 Matrix4f
 Matrix4f::Transpose(const Matrix4f& mat)
 {
-    return glm::transpose(mat);
+    return glm::transpose<float, glm::highp, glm::tmat4x4>(mat);
 }
 
 Matrix4f

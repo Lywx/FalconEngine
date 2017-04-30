@@ -70,18 +70,18 @@ public:
     // return value is the child at index i; otherwise, the function returns
     // null.
     SpatialSharedPtr
-    DetachChildAt(size_t slotIndex);
+    DetachChildAt(int slotIndex);
 
     // @summary Get the child at the specified index. If 0 <= i < GetNumChildren(),
     // the function succeeds and returns the child at that index--keep in mind
     // that child[i] could very well be null. If i is out of range, the
     // function returns null.
     const Spatial *
-    GetChildAt(size_t slotIndex) const;
+    GetChildAt(int slotIndex) const;
 
     // @return Child at specific index. The return value could be null.
     SpatialSharedPtr
-    GetChildAt(size_t slotIndex);
+    GetChildAt(int slotIndex);
 
     // The same comments for AttachChild apply here regarding the inability
     // to have multiple parents. If 0 <= i < ChildrenNum(), the function
@@ -89,7 +89,7 @@ public:
     // succeeds, appending the child to the end of the array. The return
     // value is the previous child stored at index i.
     SpatialSharedPtr
-    SetChildAt(size_t slotIndex, SpatialSharedPtr child);
+    SetChildAt(int slotIndex, SpatialSharedPtr child);
 
     int
     GetChildrenNum() const;

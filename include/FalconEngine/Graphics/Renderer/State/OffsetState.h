@@ -11,7 +11,7 @@ namespace FalconEngine
 // resolvable depth difference (OpenGL implementation specific). Negative
 // values move polygons closer to the eye.
 // @ref Dave Shreiner, etc OpenGL Programming Guide, 8th, 2013, P164
-class OffsetState sealed
+class OffsetState final
 {
 public:
     OffsetState();

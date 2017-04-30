@@ -18,8 +18,11 @@ ShaderUniform::~ShaderUniform()
 {
 }
 
+/************************************************************************/
+/* Public Members                                                       */
+/************************************************************************/
 void
-ShaderUniform::Update(const Camera *camera, const Visual *visual)
+ShaderUniform::Update(const Camera * /* camera */, const Visual * /* visual */)
 {
 }
 

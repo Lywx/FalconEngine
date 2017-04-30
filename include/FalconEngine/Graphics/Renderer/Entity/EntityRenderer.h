@@ -24,9 +24,9 @@ class Visual;
 
 #if defined(FALCON_ENGINE_PLATFORM_QT)
 #include <QtGui/QOpenGLFunctions>
-class EntityRenderer sealed : QOpenGLFunctions
+class EntityRenderer final : QOpenGLFunctions
 #else
-class EntityRenderer sealed
+class EntityRenderer final
 #endif
 {
 public:

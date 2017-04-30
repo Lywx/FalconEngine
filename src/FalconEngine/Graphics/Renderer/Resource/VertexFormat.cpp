@@ -57,7 +57,7 @@ VertexFormat::PushVertexAttribute(
     }
 
     // Check the vertex attribute has been pushed in order.
-    if (attributeLocation != mVertexAttributeList.size())
+    if (attributeLocation != int(mVertexAttributeList.size()))
     {
         // NOTE(Wuxiang): It is not supported for out of order attribute registration.
         // The reason is that in order to correctly count offset for individual
@@ -66,7 +66,7 @@ VertexFormat::PushVertexAttribute(
     }
 
     // Initialize offset storage for specific binding index.
-    while (attributeBindingIndex >= mVertexAttributeOffsetList.size())
+    while (attributeBindingIndex >= int(mVertexAttributeOffsetList.size()))
     {
         mVertexAttributeOffsetList.push_back(0);
     }

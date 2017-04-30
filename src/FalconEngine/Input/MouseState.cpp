@@ -102,7 +102,7 @@ MouseState::UpdatePosition(Vector2f mousePositionPrevious, Vector2f mousePositio
 }
 
 void
-MouseState::SetPositionInternal(double x, double y, double time)
+MouseState::SetPositionInternal(double x, double y, double /* time */)
 {
     mPositionChanged = true;
 
@@ -131,7 +131,7 @@ MouseState::GetWheelValueDiff() const
 }
 
 void
-MouseState::SetWheelValueInternal(double yoffset, double time)
+MouseState::SetWheelValueInternal(double yoffset, double /* time */)
 {
     mWheelValueChanged = true;
 

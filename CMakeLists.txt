@@ -1,27 +1,18 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.0)
 
-# Global Dependency 
-set(FALCON_ENGINE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE PATH "Path to include folder")
-set(FALCON_ENGINE_LIBRARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib     CACHE PATH "Path to library folder")
+# Set up deployment configuration
+option(FALCON_ENGINE_PLATFORM_QT "Using Qt window system" OFF)
+option(FALCON_ENGINE_PLATFORM_GLFW "Using GLFW windows system" ON)
 
-message("FALCON_ENGINE_INCLUDE_DIR = " ${FALCON_ENGINE_INCLUDE_DIR})
-message("FALCON_ENGINE_LIBRARY_DIR = " ${FALCON_ENGINE_LIBRARY_DIR})
-
-# Global Output
-set(FALCON_ENGINE_ARCHIVE_OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/bin CACHE PATH "Path to bin folder")
-set(FALCON_ENGINE_LIBRARY_OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/bin CACHE PATH "Path to bin folder")
-set(FALCON_ENGINE_RUNTIME_OUTPUT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/bin CACHE PATH "Path to bin folder")
-
-message("FALCON_ENGINE_ARCHIVE_OUTPUT_DIR = " ${FALCON_ENGINE_ARCHIVE_OUTPUT_DIR})
-message("FALCON_ENGINE_LIBRARY_OUTPUT_DIR = " ${FALCON_ENGINE_LIBRARY_OUTPUT_DIR})
-message("FALCON_ENGINE_RUNTIME_OUTPUT_DIR = " ${FALCON_ENGINE_RUNTIME_OUTPUT_DIR})
+# Set up solution root
+set(FALCON_ENGINE_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Falcon Engine root path.")
 
 add_subdirectory(include)
 add_subdirectory(src)
 
-# Global Solution
-project(FalconEngine)
+# Set up IDE solution
+project(FalconEngine CXX)
 
-# Visual Studio project folder
+# Set up IDE project folder
 set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "CMake Targets")
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)

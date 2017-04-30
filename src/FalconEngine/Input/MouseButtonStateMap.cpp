@@ -1,5 +1,7 @@
 #include <FalconEngine/Input/MouseButtonState.h>
 
+#include <vector>
+
 namespace FalconEngine
 {
 
@@ -14,9 +16,11 @@ MouseButtonState::MouseButtonState(MouseButton button) :
 MouseButtonStateMap::MouseButtonStateMap()
 {
     static std::vector<MouseButton> sButtons = { MouseButton::LeftButton, MouseButton::RightButton, MouseButton::MiddleButton };
-    for (int i = 0; i < sButtons.size(); ++i)
+
+    int buttonNum = int(sButtons.size());
+    for (int buttonIndex = 0; buttonIndex < buttonNum; ++buttonIndex)
     {
-        auto button = sButtons[i];
+        auto button = sButtons[buttonIndex];
         insert({ button, MouseButtonState(button) });
     }
 }

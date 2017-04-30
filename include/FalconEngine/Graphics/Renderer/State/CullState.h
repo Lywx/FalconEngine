@@ -5,7 +5,7 @@
 namespace FalconEngine
 {
 
-class CullState sealed
+class CullState final
 {
 public:
     CullState ();

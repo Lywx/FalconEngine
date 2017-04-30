@@ -479,43 +479,43 @@ Renderer::Disable(int textureUnit, const Texture *texture)
 }
 
 void
-Renderer::Bind(const Texture1d *texture)
+Renderer::Bind(const Texture1d * /* texture */)
 {
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
-Renderer::Unbind(const Texture1d *texture)
+Renderer::Unbind(const Texture1d * /* texture */)
 {
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
-Renderer::Enable(int textureUnit, const Texture1d *texture)
+Renderer::Enable(int /* textureUnit */, const Texture1d * /* texture */)
 {
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
-Renderer::Disable(int textureUnit, const Texture1d *texture)
+Renderer::Disable(int /* textureUnit */, const Texture1d * /* texture */)
 {
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void *
-Renderer::Map(const Texture1d *texture, int mipmapLevel, BufferAccessMode mode)
+Renderer::Map(const Texture1d * /* texture */, int /* mipmapLevel */, BufferAccessMode /* mode */)
 {
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
-Renderer::Unmap(const Texture1d *texture, int mipmapLevel)
+Renderer::Unmap(const Texture1d * /* texture */, int /* mipmapLevel */)
 {
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
-Renderer::Update(const Texture1d *texture, int mipmapLevel)
+Renderer::Update(const Texture1d * /* texture */, int /* mipmapLevel */)
 {
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
@@ -693,61 +693,61 @@ Renderer::Disable(int textureUnit, const Texture2dArray *textureArray)
 }
 
 void *
-Renderer::Map(const Texture2dArray *textureArray, int mipmapLevel, BufferAccessMode mode)
+Renderer::Map(const Texture2dArray * /* textureArray */, int /* mipmapLevel */, BufferAccessMode /* mode */)
 {
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
-Renderer::Unmap(const Texture2dArray *textureArray, int mipmapLevel)
+Renderer::Unmap(const Texture2dArray * /* textureArray */, int /* mipmapLevel */)
 {
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
-Renderer::Update(const Texture2dArray *textureArray, int mipmapLevel)
+Renderer::Update(const Texture2dArray * /* textureArray */, int /* mipmapLevel */)
 {
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
-Renderer::Bind(const Texture3d *texture)
+Renderer::Bind(const Texture3d * /* texture */)
 {
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
-Renderer::Unbind(const Texture3d *texture)
+Renderer::Unbind(const Texture3d * /* texture */)
 {
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
-Renderer::Enable(int textureUnit, const Texture3d *texture)
+Renderer::Enable(int /* textureUnit */, const Texture3d * /* texture */)
 {
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
-Renderer::Disable(int textureUnit, const Texture3d *texture)
+Renderer::Disable(int /* textureUnit */, const Texture3d * /* texture */)
 {
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void *
-Renderer::Map(const Texture3d *texture, int mipmapLevel, BufferAccessMode mode)
+Renderer::Map(const Texture3d * /* texture */, int /* mipmapLevel */, BufferAccessMode /* mode */)
 {
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
-Renderer::Unmap(const Texture3d *texture, int mipmapLevel)
+Renderer::Unmap(const Texture3d * /* texture */, int /* mipmapLevel */)
 {
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
-Renderer::Update(const Texture3d *texture, int mipmapLevel)
+Renderer::Update(const Texture3d * /* texture */, int /* mipmapLevel */)
 {
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
@@ -881,7 +881,7 @@ Renderer::Enable(const VisualEffectPass *pass)
 }
 
 void
-Renderer::Disable(const VisualEffectPass *pass)
+Renderer::Disable(const VisualEffectPass * /* pass */)
 {
 }
 

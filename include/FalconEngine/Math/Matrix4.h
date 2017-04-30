@@ -16,7 +16,7 @@ class Vector3f;
 //  0.2, 1.2, 2.2, 3.2,
 //  0.3, 1.3, 2.3, 3.3)
 #pragma pack(push, 1)
-class Matrix4f sealed : public glm::mat4
+class Matrix4f final : public glm::mat4
 {
 public:
     /************************************************************************/

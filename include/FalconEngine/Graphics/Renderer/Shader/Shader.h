@@ -4,6 +4,8 @@
 
 #include <unordered_map>
 
+#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
+
 namespace FalconEngine
 {
 
@@ -31,7 +33,6 @@ class ShaderSource;
 using ShaderSourceSharedPtr = std::shared_ptr<ShaderSource>;
 using ShaderSourceSharedPtrMap = std::unordered_map<int, ShaderSourceSharedPtr>;
 
-class ShaderUniform;
 using ShaderUniformMap = std::unordered_map<std::string, ShaderUniform>;
 
 // @remark Shader contains information about input vertex variables, output

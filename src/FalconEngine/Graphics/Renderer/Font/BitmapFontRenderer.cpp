@@ -79,7 +79,8 @@ CreateTextLines(
 
     size_t glyphCount = 0;
     auto lineCurrent = BitmapLine(lineWidth);
-    for (int lineIndex = 0; lineIndex < sLineStrings.size(); ++lineIndex)
+    int lineNum = int(sLineStrings.size());
+    for (int lineIndex = 0; lineIndex < lineNum; ++lineIndex)
     {
         for (const wchar_t& c : sLineStrings[lineIndex])
         {
@@ -242,7 +243,7 @@ BitmapFontRenderer::RenderBegin()
 }
 
 void
-BitmapFontRenderer::Render(Renderer *renderer, double percent)
+BitmapFontRenderer::Render(Renderer *renderer, double /* percent */)
 {
     for (auto& fontBatchPair : mTextBatchTable)
     {

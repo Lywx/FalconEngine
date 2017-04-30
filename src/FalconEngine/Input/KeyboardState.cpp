@@ -24,9 +24,10 @@ KeyboardState::KeyboardState()
                                          343, 344, 345, 346, 347, 348
                                        };
 
-    for (int i = 0; i < sKeyCode.size(); ++i)
+    int keyNum = int(sKeyCode.size());
+    for (int keyIndex = 0; keyIndex < keyNum ; ++keyIndex)
     {
-        auto key = Key(sKeyCode[i]);
+        auto key = Key(sKeyCode[keyIndex]);
         insert({ key, KeyState(key) });
     }
 }

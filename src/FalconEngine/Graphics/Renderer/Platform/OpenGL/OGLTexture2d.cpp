@@ -1,5 +1,7 @@
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLTexture2d.h>
 
+#include <cstring>
+
 namespace FalconEngine
 {
 
@@ -74,7 +76,7 @@ PlatformTexture2d::Disable(int textureUnit)
 }
 
 void *
-PlatformTexture2d::Map(int mipmapLevel, BufferAccessMode mode)
+PlatformTexture2d::Map(int /* mipmapLevel */, BufferAccessMode mode)
 {
     // TODO(Wuxiang): Add mipmap support.
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBuffer);
@@ -85,7 +87,7 @@ PlatformTexture2d::Map(int mipmapLevel, BufferAccessMode mode)
 }
 
 void
-PlatformTexture2d::Unmap(int mipmapLevel)
+PlatformTexture2d::Unmap(int /* mipmapLevel */)
 {
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBuffer);
     glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);

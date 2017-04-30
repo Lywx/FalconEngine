@@ -78,8 +78,8 @@ ShaderUniformAutomatic<T>::Update(const Camera *camera, const Visual *visual)
 {
     if (mUpdateFunction)
     {
-        mValue = mUpdateFunction(visual, camera);
-        mUpdated = true;
+        this->mValue = mUpdateFunction(visual, camera);
+        this->mUpdated = true;
     }
 }
 

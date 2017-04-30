@@ -5,7 +5,7 @@
 namespace FalconEngine
 {
 
-class WireframeState sealed
+class WireframeState final
 {
 public:
     WireframeState();

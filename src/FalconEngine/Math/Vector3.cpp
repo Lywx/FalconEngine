@@ -26,7 +26,7 @@ Vector3f::Cross(const Vector3f& v1, const Vector3f& v2)
 float
 Vector3f::Dot(const Vector3f& v1, const Vector3f& v2)
 {
-    return glm::dot<float>(v1, v2);
+    return glm::dot<float, glm::highp, glm::tvec3>(v1, v2);
 }
 
 /* static */ Vector3f

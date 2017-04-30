@@ -1,49 +1,42 @@
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${FALCON_ENGINE_ARCHIVE_OUTPUT_DIR})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${FALCON_ENGINE_LIBRARY_OUTPUT_DIR})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${FALCON_ENGINE_RUNTIME_OUTPUT_DIR})
+cmake_minimum_required(VERSION 3.0)
+
+include(${FALCON_ENGINE_ROOT_DIR}/cmake/Compiler.cmake)
+include(${FALCON_ENGINE_ROOT_DIR}/cmake/Platform.cmake)
+include(${FALCON_ENGINE_ROOT_DIR}/cmake/Target.cmake)
+
+include_directories(${FALCON_ENGINE_INCLUDE_DIR})
+link_directories(${FALCON_ENGINE_LIBRARY_DIR} ${FALCON_ENGINE_ARCHIVE_OUTPUT_DIR})
 
 file(GLOB FALCON_ENGINE_CONTENT_SOURCE_FILES *.cpp)
 
-include_directories(${FALCON_ENGINE_INCLUDE_DIR})
-link_directories(${FALCON_ENGINE_LIBRARY_DIR})
+add_library(FalconEngine.Content           # Name
+    ${FALCON_ENGINE_LIBRARY_TYPE} 	       # Type
+    ${FALCON_ENGINE_CONTENT_SOURCE_FILES}) # Source
 
-# Content
-add_library(FalconEngine.Content STATIC
-    ${FALCON_ENGINE_CONTENT_SOURCE_FILES})
+target_link_libraries(FalconEngine.Content
+    FalconEngine.Core
+    FalconEngine.Graphics)
 
-target_link_libraries(FalconEngine.Content 
-    FalconEngine.Core.lib
-    FalconEngine.Graphics.lib)
+fe_set_target_folder(FalconEngine.Content "FalconEngine Library Targets")
+fe_set_target_output(FalconEngine.Content)
 
-set_target_properties(FalconEngine.Content PROPERTIES COMPILE_FLAGS "/MTd")
-set_target_properties(FalconEngine.Content PROPERTIES SUFFIX ".lib")
-set_target_properties(FalconEngine.Content PROPERTIES FOLDER "FalconEngine Library Targets")
+add_executable(FalconEngine.Content.Pipeline
+    Pipeline/PipelineMain.cpp)
 
-link_directories(
-    ${FALCON_ENGINE_LIBRARY_DIR}
-    ${FALCON_ENGINE_RUNTIME_OUTPUT_DIR})
+# TODO(Wuxiang)
+# set(FALCON_ENGINE_CONTENT_PIPELINE_EXTRA_LIBRARY_FILES
+#     assimp-vc140-mt
+#     glew32sd
+#     glfw3
+#     opengl32)
 
-# Content Pipeline
-add_executable(FalconEngine.Content.Pipeline Pipeline/PipelineMain.cpp)
+target_link_libraries(FalconEngine.Content.Pipeline
+    FalconEngine.Core
+    FalconEngine.Content
+    FalconEngine.Graphics
+    FalconEngine.Math
+    ${FALCON_ENGINE_CONTENT_PIPELINE_EXTRA_LIBRARY_FILES}
+)
 
-if (WIN32)
-# TODO(Wuxiang): Could I remove this dependency?
-set(FALCON_ENGINE_CONTENT_PIPELINE_EXTRA_BINRARY_FILES assimp-vc140-mt.lib glew32sd.lib glfw3.lib opengl32.lib )
-else()
-message(WARNING "Dependency not available in linux.")
-endif()
-
-target_link_libraries(FalconEngine.Content.Pipeline 
-    FalconEngine.Core.lib
-    FalconEngine.Content.lib
-    FalconEngine.Graphics.lib
-    FalconEngine.Math.lib
-    ${FALCON_ENGINE_CONTENT_PIPELINE_EXTRA_BINRARY_FILES}
-    )
-
-set_target_properties(FalconEngine.Content.Pipeline PROPERTIES COMPILE_FLAGS "/MTd /Gm-")
-
-# Prevent strangely setting the import library: https://msdn.microsoft.com/en-us/library/67wc07b9.aspx
-set_target_properties(FalconEngine.Content.Pipeline PROPERTIES LINK_FLAGS "/INCREMENTAL:NO /IMPLIB:")
-set_target_properties(FalconEngine.Content.Pipeline PROPERTIES SUFFIX ".exe")
-set_target_properties(FalconEngine.Content.Pipeline PROPERTIES FOLDER "FalconEngine Executable Targets")
+fe_set_target_folder(FalconEngine.Content.Pipeline "FalconEngine Executable Targets")
+fe_set_target_output(FalconEngine.Content.Pipeline)

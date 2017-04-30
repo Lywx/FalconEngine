@@ -1,5 +1,7 @@
-#include <FalconEngine/Math/Vector3.h>
 #include <FalconEngine/Math/Vector4.h>
+
+#include <FalconEngine/Math/Color.h>
+#include <FalconEngine/Math/Vector3.h>
 
 namespace FalconEngine
 {
@@ -27,11 +29,6 @@ Vector4f::Vector4f(const float x, const float y, const float z, const float w)
 
 Vector4f::Vector4f(const Vector3f& v, const float w)
     : glm::vec4(v, w)
-{
-}
-
-Vector4f::Vector4f(const Vector3f& v)
-    : glm::vec4(v, 0)
 {
 }
 

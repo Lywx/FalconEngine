@@ -23,6 +23,7 @@ public:
     Color(float r, float g, float b, float a);
     Color();
 
+public:
     operator Vector3f() const;
     operator Vector4f() const;
 

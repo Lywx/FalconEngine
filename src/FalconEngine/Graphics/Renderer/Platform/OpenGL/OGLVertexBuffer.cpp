@@ -1,6 +1,6 @@
-#pragma once
-
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLVertexBuffer.h>
+
+#include <cstring>
 
 namespace FalconEngine
 {

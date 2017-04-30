@@ -19,17 +19,11 @@
 #define FALCON_ENGINE_OS_LINUX 1
 #endif
 #define FALCON_ENGINE_API_OPENGL 1
-#if FALCON_ENGINE_API_OPENGL
-#define FALCON_ENGINE_PLATFORM_GLFW 1
-// #define FALCON_ENGINE_PLATFORM_QT 1
-#endif
 #define FALCON_ENGINE_DEBUG_MEMORY 1
 
 /************************************************************************/
 /* Development Items                                                    */
 /************************************************************************/
-#define internal public
-
 #define _IN_
 #define _IN_OUT_
 #define _OUT_
@@ -43,7 +37,7 @@ namespace FalconEngine
 // Array Handlinig
 template<typename T, unsigned N>
 size_t
-ArraySize(T(&arr)[N])
+ArraySize(T(& /* array */)[N])
 {
     return N;
 }
@@ -92,4 +86,3 @@ CheckNullPointer(const std::shared_ptr<T> pointer, const std::string name)
 #define FALCON_ENGINE_THROW_ASSERTION_EXCEPTION() assert(0);
 #define FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(message) throw FalconEngine::RuntimeException(message);
 #define FALCON_ENGINE_THROW_SUPPORT_EXCEPTION() throw FalconEngine::RuntimeException("No support for this yet.\n");
-

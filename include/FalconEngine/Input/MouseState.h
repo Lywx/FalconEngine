@@ -14,7 +14,7 @@ enum class MouseWheelDirection
     Up = 2
 };
 
-class MouseState sealed
+class MouseState final
 {
 public:
     MouseState();
@@ -47,9 +47,12 @@ public:
 
     int
     GetWheelValueDiff() const;
-    void UpdateWheelValue(int wheelValueCurrent, int wheelValuePrevious);
 
-internal:
+    void
+    UpdateWheelValue(int wheelValueCurrent, int wheelValuePrevious);
+
+// internal
+public:
     void
     SetButtonInternal(MouseButton button, bool pressed, double time);
 

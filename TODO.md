@@ -7,3 +7,11 @@ Rendering Pipeline Specifics
 
 (1) Finished blin phong lighting.
 (0) Model sampler.
+
+(0) Add GameWindow class and its interaction with GameEnginePlatform.
+
+OS Specifics
+===
+(1) Fix Unix building cmake script.
+(1) Add Unix dependency: Assimp, Glew, GLFW, boost etc.
+(1) Add Windows dependency: Qt.

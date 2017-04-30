@@ -11,7 +11,7 @@ class Spatial;
 using SpatialSharedPtr = std::shared_ptr<Spatial>;
 
 class Visual;
-class VisualGroup sealed
+class VisualGroup final
 {
 public:
     /************************************************************************/

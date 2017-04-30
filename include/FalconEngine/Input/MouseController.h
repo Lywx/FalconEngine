@@ -9,7 +9,7 @@ namespace FalconEngine
 class MouseControllerData;
 using MouseControllerDataSharedPtr = std::shared_ptr<MouseControllerData>;
 
-class MouseController sealed
+class MouseController final
 {
 public:
     MouseController();

@@ -93,9 +93,9 @@ Node::DetachChild(SpatialSharedPtr child)
 }
 
 SpatialSharedPtr
-Node::DetachChildAt(size_t slotIndex)
+Node::DetachChildAt(int slotIndex)
 {
-    if (0 <= slotIndex && slotIndex < mChildrenSlot.size())
+    if (0 <= slotIndex && slotIndex < GetChildrenSlotNum())
     {
         auto slot = mChildrenSlot[slotIndex];
         if (auto child = slot)
@@ -113,23 +113,32 @@ Node::DetachChildAt(size_t slotIndex)
 }
 
 const Spatial *
-Node::GetChildAt(size_t i) const
+Node::GetChildAt(int slotIndex) const
 {
-    return mChildrenSlot.at(i).get();
+    if (0 <= slotIndex && slotIndex < GetChildrenSlotNum())
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The slot index out of bound.");
+    }
+
+    return mChildrenSlot.at(slotIndex).get();
 }
 
 SpatialSharedPtr
-Node::GetChildAt(size_t slotIndex)
+Node::GetChildAt(int slotIndex)
 {
+    if (0 <= slotIndex && slotIndex < GetChildrenSlotNum())
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The slot index out of bound.");
+    }
+
     return mChildrenSlot.at(slotIndex);
 }
 
 SpatialSharedPtr
-Node::SetChildAt(size_t slotIndex, SpatialSharedPtr child)
+Node::SetChildAt(int slotIndex, SpatialSharedPtr child)
 {
     // NOTE(Wuxiang): The child is allowed to be null so that you would be able
     // to clear the child from the children list.
-
     if (child && child->mParent)
     {
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The child already has a parent");

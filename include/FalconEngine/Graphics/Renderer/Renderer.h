@@ -104,7 +104,8 @@ private:
     void
     InitializeExceptPlatform(int width, int height);
 
-internal:
+// internal
+public:
     /************************************************************************/
     /* Vertex Buffer Management                                             */
     /************************************************************************/

@@ -2,8 +2,6 @@
 
 #include <FalconEngine/ContentInclude.h>
 
-#if FALCON_ENGINE_OS_WINDOWS
-
 #include <map>
 #include <string>
 #include <vector>
@@ -47,5 +45,3 @@ private:
     LoadRawTexture(const std::string& textureFilePath);
 };
 }
-
-#endif

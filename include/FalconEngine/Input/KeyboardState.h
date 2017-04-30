@@ -9,7 +9,7 @@
 namespace FalconEngine
 {
 
-class KeyboardState sealed : private std::unordered_map<Key, KeyState>
+class KeyboardState final : private std::unordered_map<Key, KeyState>
 {
 public:
     KeyboardState();
@@ -24,7 +24,8 @@ public:
     bool
     KeyUp(Key key) const;
 
-internal:
+// internal
+public:
     // @param time -- Millisecond time stamp.
     void
     SetKeyInternal(Key key, bool pressed, double time);

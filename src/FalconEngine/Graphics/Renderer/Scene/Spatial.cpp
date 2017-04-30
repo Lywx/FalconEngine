@@ -55,7 +55,7 @@ Spatial::CopyTo(Spatial *lhs) const
 /* Protected Members                                                    */
 /************************************************************************/
 void
-Spatial::UpdateWorldTransform(double elaped)
+Spatial::UpdateWorldTransform(double /* elaped */)
 {
     // NOTE(Wuxiang): Update world transforms in an top-to-bottom way. This
     // method is only guaranteed to work when you called it on the root of

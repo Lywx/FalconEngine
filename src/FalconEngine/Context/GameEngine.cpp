@@ -168,12 +168,15 @@ GameEngine::Loop()
             mProfiler->mLastUpdateElapsedMillisecond = lastUpdateElapsedMillisecond;
             mProfiler->mLastRenderElapsedMillisecond = lastRenderElapsedMillisecond;
 
-            sprintf_s(lastFramePerformanceString, "f%.02fms, u%.02fms, r%.02fms, %du/f, %0.2ff/s\n",
-                      lastFrameElapsedMillisecond,
-                      lastUpdateElapsedMillisecond,
-                      lastRenderElapsedMillisecond,
-                      lastFrameUpdateTotalCount,
-                      lastFrameFPS);
+            const int lastFramePerformanceStringLength = 100;
+            snprintf(lastFramePerformanceString,
+                     lastFramePerformanceStringLength,
+                     "f%.02fms, u%.02fms, r%.02fms, %du/f, %0.2ff/s\n",
+                     lastFrameElapsedMillisecond,
+                     lastUpdateElapsedMillisecond,
+                     lastRenderElapsedMillisecond,
+                     lastFrameUpdateTotalCount,
+                     lastFrameFPS);
             GameDebug::OutputString(lastFramePerformanceString);
 
             // Store last update count
@@ -181,6 +184,7 @@ GameEngine::Loop()
 
             // Reset render start point.
             lastRenderBegunMillisecond = lastUpdateEndedMillisecond;
+
             mGame->RenderBegin(mGraphics);
             mGame->Render(mGraphics, 1.0f);
             mGame->RenderEnd(mGraphics);

@@ -131,7 +131,9 @@ enum class Key
     Menu = 348,
 };
 
-class KeyState sealed
+using KeyHash = std::hash<int>;
+
+class KeyState final
 {
 public:
     explicit KeyState(Key key);
@@ -141,8 +143,22 @@ public:
     Key    mKey;
     bool   mPressed;
     double mPressedMoment = 0;   // Millisecond time stamp.
-    bool   mDown;                // Transition from being released to being pressed.
     bool   mUp;                  // Transition from being pressed to being released.
+    bool   mDown;                // Transition from being released to being pressed.
+};
+
+}
+
+namespace std
+{
+
+template <>
+struct hash<FalconEngine::Key>
+{
+    size_t operator()(const FalconEngine::Key& key) const
+    {
+        return FalconEngine::KeyHash {} (int(key));
+    }
 };
 
 }

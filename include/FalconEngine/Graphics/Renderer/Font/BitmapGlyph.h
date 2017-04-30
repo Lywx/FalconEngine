@@ -48,12 +48,12 @@ public:
     /************************************************************************/
     friend class boost::serialization::access;
     template <typename TArchive>
-    inline void serialize(TArchive & ar, const unsigned int version)
+    inline void serialize(TArchive & /* ar */, const unsigned int /* version */)
     {
-        // http://www.boost.org/doc/libs/1_63_0/libs/serialization/doc/
-
         // NOTE(Wuxiang): Since this class doesn't have default constructor. The
         // serialization code is moved to below.
+        //
+        // http://www.boost.org/doc/libs/1_63_0/libs/serialization/doc/
     }
 };
 
@@ -65,7 +65,7 @@ namespace serialization
 {
 template<class Archive>
 inline void save_construct_data(
-    Archive & ar, const FalconEngine::BitmapGlyph *t, const unsigned int file_version)
+    Archive & ar, const FalconEngine::BitmapGlyph *t, const unsigned int /* version */)
 {
     ar << t->mId;
     ar << t->mPage;
@@ -85,7 +85,7 @@ inline void save_construct_data(
 
 template<class Archive>
 inline void load_construct_data(
-    Archive & ar, FalconEngine::BitmapGlyph *t, const unsigned int file_version)
+    Archive & ar, FalconEngine::BitmapGlyph *t, const unsigned int /* version */)
 {
     int id, page;
     ar >> id;

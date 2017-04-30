@@ -2,7 +2,7 @@
 #include <FalconEngine/ContextInclude.h>
 
 #include <algorithm>
-#include <windows.h>
+// #include <windows.h>
 
 #if FALCON_ENGINE_PLATFORM_GLFW
 #include <FalconEngine/Context/Platform/GLFW/GLFWInclude.h>
@@ -90,9 +90,9 @@ OpenGLDebugCallback(
     GLenum        type,
     GLuint        id,
     GLenum        severity,
-    GLsizei       length,
+    GLsizei    /* length */,
     const GLchar *message,
-    GLvoid       *userParam)
+    GLvoid   * /* userParam */)
 {
     // Only break on high severity.
     if (severity == GL_DEBUG_SEVERITY_HIGH)

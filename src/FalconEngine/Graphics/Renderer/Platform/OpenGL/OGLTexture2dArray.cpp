@@ -1,4 +1,7 @@
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLTexture2dArray.h>
+
+#include <cstring>
+
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
 
 namespace FalconEngine
@@ -38,8 +41,10 @@ PlatformTexture2dArray::PlatformTexture2dArray(const Texture2dArray *textureArra
             glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
         }
 
-        assert(mTextureArraySize == mBuffer.size());
-        assert(mTextureArraySize == mDimension.size());
+        // NOTE(Wuxiang): mBuffer, mDimension vector size is relatively small. Don't
+        // worry about the overflowing.
+        assert(mTextureArraySize == int(mBuffer.size()));
+        assert(mTextureArraySize == int(mDimension.size()));
     }
 
     // Fill in the texture data
@@ -103,7 +108,7 @@ PlatformTexture2dArray::Disable(int textureUnit)
 }
 
 void *
-PlatformTexture2dArray::Map(int arrayIndex, int mipmapLevel, BufferAccessMode mode)
+PlatformTexture2dArray::Map(int arrayIndex, int /* mipmapLevel */, BufferAccessMode mode)
 {
     // TODO(Wuxiang): Add mipmap support.
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBuffer[arrayIndex]);
@@ -114,7 +119,7 @@ PlatformTexture2dArray::Map(int arrayIndex, int mipmapLevel, BufferAccessMode mo
 }
 
 void
-PlatformTexture2dArray::Unmap(int arrayIndex, int mipmapLevel)
+PlatformTexture2dArray::Unmap(int arrayIndex, int /* mipmapLevel */)
 {
     // TODO(Wuxiang): Add mipmap support.
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBuffer[arrayIndex]);

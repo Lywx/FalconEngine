@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <vector>
 
@@ -13,10 +13,12 @@ class Visual;
 class VisualEffectInstance;
 using VisualEffectInstanceSharedPtr = std::shared_ptr<VisualEffectInstance>;
 
+// NOTE(Wuxiang): Having trouble using unique_ptr with vector in DLL exported library, resort to use shared_ptr instead.
 class VisualEffectPass;
-using VisualEffectPassUniquePtr = std::unique_ptr<VisualEffectPass>;
+using VisualEffectPassUniquePtr = std::shared_ptr<VisualEffectPass>;
 
 class Shader;
+
 class BlendState;
 class CullState;
 class DepthTestState;
@@ -24,7 +26,8 @@ class OffsetState;
 class StencilTestState;
 class WireframeState;
 
-class VisualEffect : public Object
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS VisualEffect : public Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
@@ -89,5 +92,8 @@ protected:
 protected:
     std::vector<VisualEffectPassUniquePtr> mPassList; // Passes contained in this effect.
 };
+#pragma warning(default: 4251)
+
+FALCON_ENGINE_RTTI_DECLARE_EXPORT(VisualEffect);
 
 }

@@ -1,4 +1,12 @@
 cmake_minimum_required(VERSION 3.0)
+cmake_policy(SET CMP0054 NEW)
+
+# NOTE(Wuxiang): Include guard.
+if (FALCON_ENGINE_TARGET_INITIALIZED)
+    return()
+endif()
+
+set(FALCON_ENGINE_TARGET_INITIALIZED TRUE)
 
 # Set up solution dependency
 set(FALCON_ENGINE_INCLUDE_DIR ${FALCON_ENGINE_ROOT_DIR}/include)
@@ -10,7 +18,12 @@ set(FALCON_ENGINE_LIBRARY_OUTPUT_DIR ${FALCON_ENGINE_ROOT_DIR}/bin)
 set(FALCON_ENGINE_RUNTIME_OUTPUT_DIR ${FALCON_ENGINE_ROOT_DIR}/bin)
 
 # Set up library type
+assert_defined(FALCON_ENGINE_BUILD_DYNAMIC_LIBRARY)
+if(FALCON_ENGINE_BUILD_DYNAMIC_LIBRARY)
+set(FALCON_ENGINE_LIBRARY_TYPE "SHARED")
+else()
 set(FALCON_ENGINE_LIBRARY_TYPE "STATIC")
+endif()
 
 function(fe_set_target_output CURRENT_TARGET_NAME)
 
@@ -31,7 +44,9 @@ function(fe_set_target_output CURRENT_TARGET_NAME)
         RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${FALCON_ENGINE_RUNTIME_OUTPUT_DIR}/Release
         RUNTIME_OUTPUT_DIRECTORY_MINSIZEREL     ${FALCON_ENGINE_RUNTIME_OUTPUT_DIR}/Release
 
-        DEBUG_POSTFIX                           "d"
+        DEBUG_POSTFIX                           "-d"
+        RELEASE_POSTFIX                         ""
+        
         OUTPUT_NAME                             "${CURRENT_TARGET_NAME}${FALCON_ENGINE_OUTPUT_SUFFIX}"
     )
 endfunction()

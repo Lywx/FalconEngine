@@ -1,9 +1,16 @@
 #pragma once
 
+#include <FalconEngine/Math/Header.h>
+
 #include <stdexcept>
+
+// NOTE(Wuxiang): Disable warning C4201: nonstandard extension used : nameless struct/union.
+#pragma warning(disable : 4201)
 
 #include <glm/glm.hpp>
 #include <glm/vec3.hpp>
+
+#pragma warning(default : 4201)
 
 namespace FalconEngine
 {
@@ -11,8 +18,8 @@ namespace FalconEngine
 // Assume vector are column vector
 class Vector3i;
 
-#pragma pack(push ,1)
-class Vector3f : public glm::vec3
+#pragma pack(push, 1)
+class FALCON_ENGINE_ITEM_MATH Vector3f : public glm::vec3
 {
 public:
     /************************************************************************/
@@ -54,8 +61,8 @@ public:
 std::string
 to_string(const Vector3f& v);
 
-/// Represents a point in 3D space
-class Vector3i : public glm::ivec3
+#pragma pack(push, 1)
+class FALCON_ENGINE_ITEM_MATH Vector3i : public glm::ivec3
 {
 public:
     static const Vector3i Zero;
@@ -71,6 +78,7 @@ public:
     explicit operator glm::ivec3() const;
     explicit operator Vector3f() const;
 };
+#pragma pack(pop)
 
 std::string
 to_string(const Vector3i& v);

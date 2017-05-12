@@ -1,10 +1,10 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <unordered_map>
 
-#include <FalconEngine/Content/Asset.h>
+#include <FalconEngine/Core/Asset.h>
 
 namespace FalconEngine
 {
@@ -13,7 +13,8 @@ class ShaderSource;
 using ShaderSourceSharedPtr = std::shared_ptr<ShaderSource>;
 using ShaderSourceUniquePtr = std::unique_ptr<ShaderSource>;
 
-class ShaderSource : public Asset
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS ShaderSource : public Asset
 {
 public:
     ShaderSource(std::string fileName, std::string filePath);
@@ -22,5 +23,6 @@ public:
 public:
     std::string mSource;
 };
+#pragma warning(default: 4251)
 
 }

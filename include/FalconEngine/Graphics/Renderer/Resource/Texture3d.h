@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <memory>
 #include <boost/serialization/access.hpp>
@@ -10,7 +10,7 @@
 namespace FalconEngine
 {
 
-class Texture3d : public TextureBuffer
+class FALCON_ENGINE_ITEM_GRAPHICS Texture3d : public TextureBuffer
 {
 public:
     /************************************************************************/

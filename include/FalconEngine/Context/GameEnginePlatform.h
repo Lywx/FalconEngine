@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/ContextInclude.h>
+#include <FalconEngine/Context/Header.h>
 
 #include <FalconEngine/Context/GameEngineSettings.h>
 
@@ -11,7 +11,7 @@ class GameEngineSettings;
 using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
 
 class GameEngineData;
-class GameEnginePlatform
+class FALCON_ENGINE_ITEM_CONTEXT GameEnginePlatform
 {
 public:
     /************************************************************************/

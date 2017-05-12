@@ -1,20 +1,20 @@
 #pragma once
 
-#include <FalconEngine/InputInclude.h>
+#include <FalconEngine/Input/Header.h>
 #include <FalconEngine/Input/MouseButtonState.h>
 #include <FalconEngine/Math/Vector2.h>
 
 namespace FalconEngine
 {
 
-enum class MouseWheelDirection
+enum class FALCON_ENGINE_ITEM_INPUT MouseWheelDirection
 {
     None = 0,
     Down = 1,
     Up = 2
 };
 
-class MouseState final
+class FALCON_ENGINE_ITEM_INPUT MouseState final
 {
 public:
     MouseState();

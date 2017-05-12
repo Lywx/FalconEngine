@@ -1,19 +1,30 @@
 #pragma once
 
+#include <FalconEngine/Math/Header.h>
+
+// NOTE(Wuxiang): Disable warning C4201: nonstandard extension used : nameless struct/union.
+#pragma warning(disable : 4201)
+
 #include <glm/matrix.hpp>
+
+#pragma warning(default : 4201)
 
 namespace FalconEngine
 {
 
+
 class Vector3f;
 class Matrix4f;
+
+
 // @summary 3x3 matrix in column major format:
 //
 // (0.0, 1.0, 2.0, 3.0,
 //  0.1, 1.1, 2.1, 3.1,
 //  0.2, 1.2, 2.2, 3.2,
 //  0.3, 1.3, 2.3, 3.3)
-class Matrix3f : public glm::mat3
+#pragma warning(disable : 4251)
+class FALCON_ENGINE_ITEM_MATH Matrix3f : public glm::mat3
 {
 public:
     /************************************************************************/
@@ -44,5 +55,6 @@ public:
     Matrix3f(const glm::mat3& m);
     operator glm::mat3();
 };
+#pragma warning(default : 4251)
 
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/CoreInclude.h>
+#include <FalconEngine/Core/Header.h>
 
 #include <list>
 
@@ -13,8 +13,9 @@ template <typename T>
 using EventCallbackList = std::list<EventCallback<T>*>;
 
 // @ref Luis Sempe User Interface Programming for Games, 2014.
+#pragma warning(disable: 4251)
 template <typename T>
-class EventHandler
+class FALCON_ENGINE_ITEM_CORE EventHandler
 {
 public:
     EventHandler();
@@ -46,6 +47,7 @@ public:
 private:
     EventCallbackList<T> mCallbackList;
 };
+#pragma warning(default: 4251)
 
 template <typename T>
 EventHandler<T>::EventHandler()

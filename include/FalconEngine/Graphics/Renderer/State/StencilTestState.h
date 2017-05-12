@@ -1,11 +1,11 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 namespace FalconEngine
 {
 
-enum class StencilCompareFunctoin
+enum class FALCON_ENGINE_ITEM_GRAPHICS StencilCompareFunctoin
 {
     NEVER,
     LESS,
@@ -19,7 +19,7 @@ enum class StencilCompareFunctoin
     Count
 };
 
-enum class StencilFunction
+enum class FALCON_ENGINE_ITEM_GRAPHICS StencilFunction
 {
     NEVER,
     ALWAYS,
@@ -35,7 +35,7 @@ enum class StencilFunction
     Count
 };
 
-enum class StencilOperation
+enum class FALCON_ENGINE_ITEM_GRAPHICS StencilOperation
 {
     KEEP,
     ZERO,
@@ -49,7 +49,7 @@ enum class StencilOperation
     Count,
 };
 
-class StencilTestState final
+class FALCON_ENGINE_ITEM_GRAPHICS StencilTestState final
 {
 public:
     StencilTestState ();

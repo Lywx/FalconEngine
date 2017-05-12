@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
 
 include(${FALCON_ENGINE_ROOT_DIR}/cmake/Compiler.cmake)
 include(${FALCON_ENGINE_ROOT_DIR}/cmake/Platform.cmake)
@@ -14,5 +14,6 @@ add_library(
     ${FALCON_ENGINE_LIBRARY_TYPE} 	    # Type
     ${FALCON_ENGINE_CORE_SOURCE_FILES}) # Source
 
+fe_add_export_definition(Core)
 fe_set_target_folder(FalconEngine.Core "FalconEngine Library Targets")
 fe_set_target_output(FalconEngine.Core)

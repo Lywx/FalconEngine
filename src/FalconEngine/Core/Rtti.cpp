@@ -1,24 +1,26 @@
 #include <FalconEngine/Core/Rtti.h>
 
-namespace FalconEngine {
+namespace FalconEngine
+{
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Rtti::Rtti (const char *name, const Rtti *baseType)
+Rtti::Rtti(const char *name, const Rtti *baseType)
 {
     mTypeName = name;
     mTypeBase = baseType;
 }
 
-Rtti::~Rtti ()
+Rtti::~Rtti()
 {
 }
 
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-bool Rtti::IsDerived (const Rtti& type) const
+bool
+Rtti::IsDerived (const Rtti& type) const
 {
     const auto *search = this;
 

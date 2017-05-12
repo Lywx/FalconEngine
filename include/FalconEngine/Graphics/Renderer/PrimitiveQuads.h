@@ -5,7 +5,7 @@
 namespace FalconEngine
 {
 
-class PrimitiveQuads : public PrimitiveTriangles
+class FALCON_ENGINE_ITEM_GRAPHICS PrimitiveQuads : public PrimitiveTriangles
 {
     FALCON_ENGINE_RTTI_DECLARE;
 

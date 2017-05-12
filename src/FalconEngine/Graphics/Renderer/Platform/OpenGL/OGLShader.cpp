@@ -5,7 +5,7 @@
 
 #include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Context/GameDebug.h>
-#include <FalconEngine/Content/Path.h>
+#include <FalconEngine/Core/Path.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderSource.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
 

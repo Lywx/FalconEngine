@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Spatial.h>
 
 namespace FalconEngine
@@ -23,7 +23,8 @@ using VisualEffectInstanceSharedPtr = std::shared_ptr<VisualEffectInstance>;
 // @remark If you would need to process primitive in different ways, the Visual
 // class is the ideal place to differentiate when drawing -- transparency, etc
 // special treatment information should be stored in this class.
-class Visual : public Spatial
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS Visual : public Spatial
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
@@ -81,5 +82,8 @@ protected:
     size_t                        mEffectInstancingNum;
     PrimitiveSharedPtr            mPrimitive;
 };
+#pragma warning(default: 4251)
+
+FALCON_ENGINE_RTTI_DECLARE_EXPORT(Visual);
 
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/ContentInclude.h>
+#include <FalconEngine/Content/Header.h>
 
 #include <map>
 #include <string>
@@ -15,7 +15,7 @@ using BitmapFontSharedPtr = std::shared_ptr<BitmapFont>;
 class Texture2d;
 using Texture2dSharedPtr = std::shared_ptr<Texture2d>;
 
-class AssetProcessor
+class FALCON_ENGINE_ITEM_CONTENT AssetProcessor
 {
 public:
     /************************************************************************/

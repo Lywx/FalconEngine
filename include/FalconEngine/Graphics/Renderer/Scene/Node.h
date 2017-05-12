@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <vector>
 
@@ -12,7 +12,8 @@ namespace FalconEngine
 
 using SpatialSharedPtr = std::shared_ptr<Spatial>;
 
-class Node : public Spatial
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS Node : public Spatial
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
@@ -127,5 +128,8 @@ public:
 private:
     std::vector<SpatialSharedPtr> mChildrenSlot;
 };
+#pragma warning(default: 4251)
+
+FALCON_ENGINE_RTTI_DECLARE_EXPORT(Node);
 
 }

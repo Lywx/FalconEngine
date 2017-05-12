@@ -1,10 +1,17 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <memory>
 #include <map>
 #include <vector>
+
+#include <FalconEngine/Graphics/Renderer/State/BlendState.h>
+#include <FalconEngine/Graphics/Renderer/State/CullState.h>
+#include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
+#include <FalconEngine/Graphics/Renderer/State/OffsetState.h>
+#include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
+#include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
 
 namespace FalconEngine
 {
@@ -33,7 +40,8 @@ using StencilTestStateUniquePtr = std::unique_ptr<StencilTestState>;
 class WireframeState;
 using WireframeStateUniquePtr = std::unique_ptr<WireframeState>;
 
-class VisualEffectPass final
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS VisualEffectPass final
 {
 public:
     /************************************************************************/
@@ -41,6 +49,12 @@ public:
     /************************************************************************/
     VisualEffectPass();
     ~VisualEffectPass();
+
+    VisualEffectPass(const VisualEffectPass& rhs) = delete;
+    VisualEffectPass& operator=(const VisualEffectPass& rhs) = delete;
+
+    VisualEffectPass(VisualEffectPass&& rhs) noexcept = default;
+    VisualEffectPass& operator=(VisualEffectPass&& rhs) noexcept = default;
 
 public:
     void
@@ -98,5 +112,6 @@ protected:
     StencilTestStateUniquePtr mStencilTestState;
     WireframeStateUniquePtr   mWireframeState;
 };
+#pragma warning(default: 4251)
 
 }

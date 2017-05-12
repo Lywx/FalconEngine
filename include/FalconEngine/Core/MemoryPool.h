@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/CoreInclude.h>
+#include <FalconEngine/Core/Header.h>
 
 namespace FalconEngine
 {
@@ -17,7 +17,7 @@ namespace FalconEngine
 
 // NOTE(Wuxiang): Learned form handmade hero. To use this, you need to allocate
 // memory storage first.
-class MemoryPool final
+class FALCON_ENGINE_ITEM_CORE MemoryPool final
 {
 public:
     MemoryPool(int64_t byte);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <functional>
 #include <queue>
@@ -14,7 +14,8 @@ class Visual;
 class Mesh;
 class Node;
 
-class MeshEffect : public VisualEffect
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS MeshEffect : public VisualEffect
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
@@ -34,7 +35,7 @@ private:
 
     NodeQueue mNodeQueueCurrent;
     NodeQueue mNodeQueueNext;
-
 };
+#pragma warning(default: 4251)
 
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/MathInclude.h>
+#include <FalconEngine/Math/Header.h>
 #include <FalconEngine/Math/Matrix4.h>
 #include <FalconEngine/Math/Vector3.h>
 #include <FalconEngine/Math/Bound/BoundingBox.h>
@@ -8,7 +8,8 @@
 namespace FalconEngine
 {
 
-class AABBBoundingBox final : public BoundingBox
+#pragma warning(disable : 4251)
+class FALCON_ENGINE_ITEM_MATH AABBBoundingBox final : public BoundingBox
 {
 public:
     /************************************************************************/
@@ -61,5 +62,6 @@ private:
     mutable std::vector<Vector3f> mModelPosition;
     mutable bool                  mModelPositionInitialized;
 };
+#pragma warning(default : 4251)
 
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <memory>
 #include <vector>
@@ -13,7 +13,8 @@ namespace FalconEngine
 class Texture2d;
 using Texture2dSharedPtr = std::shared_ptr<Texture2d>;
 
-class Texture2dArray : public Texture
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS Texture2dArray : public Texture
 {
 public:
     /************************************************************************/
@@ -34,5 +35,6 @@ protected:
     // being released.
     std::vector<Texture2dSharedPtr> mTexture2dList;
 };
+#pragma warning(default: 4251)
 
 }

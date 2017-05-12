@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/ContentInclude.h>
+#include <FalconEngine/Content/Header.h>
 
 #include <map>
 
@@ -19,7 +19,8 @@ using Texture2dSharedPtr = std::shared_ptr<Texture2d>;
 class ShaderSource;
 using ShaderSourceSharedPtr = std::shared_ptr<ShaderSource>;
 
-class AssetManager
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_CONTENT AssetManager
 {
 public:
     static AssetManager *
@@ -89,4 +90,6 @@ private:
     std::map<std::string, ShaderSourceSharedPtr>   mShaderSourceTable;          // Index is file path.
     std::map<std::string, Texture2dSharedPtr>      mTextureTable;               // Index is file path.
 };
+#pragma warning(default: 4251)
+
 }

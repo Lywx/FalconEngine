@@ -1,14 +1,22 @@
 #pragma once
 
-#include <glm/vec2.hpp>
+#include <FalconEngine/Math/Header.h>
+
 #include <string>
+
+// NOTE(Wuxiang): Disable warning C4201: nonstandard extension used : nameless struct/union.
+#pragma warning(disable : 4201)
+
+#include <glm/vec2.hpp>
+
+#pragma warning(default : 4201)
 
 namespace FalconEngine
 {
 
 // Assume vector are column vector
 #pragma pack(push, 1)
-class Vector2f : public glm::vec2
+class FALCON_ENGINE_ITEM_MATH Vector2f : public glm::vec2
 {
 public:
     static const Vector2f One;
@@ -30,7 +38,7 @@ to_string(const Vector2f& v);
 
 // @summary Represents a point in 2D space
 #pragma pack(push, 1)
-class Vector2i : public glm::ivec2
+class FALCON_ENGINE_ITEM_MATH Vector2i : public glm::ivec2
 {
 public:
     static const Vector2i Zero;

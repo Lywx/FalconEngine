@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <FalconEngine/Core/Object.h>
 #include <FalconEngine/Math/Matrix4.h>
@@ -11,7 +11,7 @@ namespace FalconEngine
 class Spatial;
 using SpatialSharedPtr = std::shared_ptr<Spatial>;
 
-class Spatial : public Object
+class FALCON_ENGINE_ITEM_GRAPHICS Spatial : public Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
@@ -71,5 +71,7 @@ public:
     // that needs to check parent exists.
     Spatial *mParent;
 };
+
+FALCON_ENGINE_RTTI_DECLARE_EXPORT(Spatial);
 
 }

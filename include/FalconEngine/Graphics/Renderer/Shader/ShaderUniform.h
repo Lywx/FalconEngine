@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <functional>
 #include <map>
@@ -16,7 +16,7 @@
 namespace FalconEngine
 {
 
-enum class ShaderUniformType
+enum class FALCON_ENGINE_ITEM_GRAPHICS ShaderUniformType
 {
     None,
 
@@ -47,7 +47,8 @@ using ShaderUniformUpdatePrototype = T(const Visual *, const Camera *);
 template <typename T>
 using ShaderUniformUpdateFunction = std::function<ShaderUniformUpdatePrototype<T>>;
 
-class ShaderUniform
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS ShaderUniform
 {
 public:
     /************************************************************************/
@@ -66,9 +67,10 @@ public:
     ShaderUniformType mType;
     bool              mUpdated;
 };
+#pragma warning(default: 4251)
 
 template<typename T>
-class ShaderUniformValue : public ShaderUniform
+class FALCON_ENGINE_ITEM_GRAPHICS ShaderUniformValue : public ShaderUniform
 {
 public:
     /************************************************************************/

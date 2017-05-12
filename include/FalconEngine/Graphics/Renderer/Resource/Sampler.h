@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <map>
 #include <vector>
@@ -8,7 +8,7 @@
 namespace FalconEngine
 {
 
-enum class SamplerMinificationFilter
+enum class FALCON_ENGINE_ITEM_GRAPHICS SamplerMinificationFilter
 {
     Nearest,
     Linear,
@@ -21,7 +21,7 @@ enum class SamplerMinificationFilter
     Count,
 };
 
-enum class SamplerMagnificationFilter
+enum class FALCON_ENGINE_ITEM_GRAPHICS SamplerMagnificationFilter
 {
     Nearest,
     Linear,
@@ -29,7 +29,7 @@ enum class SamplerMagnificationFilter
     Count,
 };
 
-enum class SamplerWrapMode
+enum class FALCON_ENGINE_ITEM_GRAPHICS SamplerWrapMode
 {
     ClampToBorder,
     ClampToEdge,
@@ -39,7 +39,7 @@ enum class SamplerWrapMode
     Count,
 };
 
-class Sampler
+class FALCON_ENGINE_ITEM_GRAPHICS Sampler
 {
 public:
     Sampler();

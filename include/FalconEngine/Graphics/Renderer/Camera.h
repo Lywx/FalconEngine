@@ -12,7 +12,7 @@ namespace FalconEngine
 class Camera;
 using CameraSharedPtr = std::shared_ptr<Camera>;
 
-class Camera : public Object
+class FALCON_ENGINE_ITEM_GRAPHICS Camera : public Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
@@ -163,5 +163,7 @@ protected:
 private:
     const Handedness  *mHandedness;
 };
+
+FALCON_ENGINE_RTTI_DECLARE_EXPORT(Camera);
 
 }

@@ -4,6 +4,7 @@ namespace FalconEngine
 {
 
 FALCON_ENGINE_RTTI_IMPLEMENT(Camera, Object);
+FALCON_ENGINE_RTTI_IMPLEMENT_EXPORT(Camera);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <string>
 #include <map>
@@ -9,7 +9,7 @@
 namespace FalconEngine
 {
 
-enum class VertexAttributeType
+enum class FALCON_ENGINE_ITEM_GRAPHICS VertexAttributeType
 {
     None,
 
@@ -57,7 +57,8 @@ const int VertexAttributeSize[int(VertexAttributeType::Count)] =
     16  // IntVec4
 };
 
-class VertexAttribute
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS VertexAttribute
 {
 public:
     /************************************************************************/
@@ -79,5 +80,6 @@ public:
     // NOTE(Wuxiang): Initialized based on mType.
     int                 mChannel;                                             // Vertex attribute dimension.
 };
+#pragma warning(default: 4251)
 
 }

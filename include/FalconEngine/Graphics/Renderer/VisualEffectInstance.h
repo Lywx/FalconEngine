@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <FalconEngine/Core/Object.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstancePass.h>
@@ -16,14 +16,15 @@ using VisualEffectSharedPtr = std::shared_ptr<VisualEffect>;
 
 template <typename T>
 class ShaderUniformValue;
-
 template<typename T>
 using ShaderUniformValueSharedPtr = std::shared_ptr<ShaderUniformValue<T>>;
 
+// NOTE(Wuxiang): Having trouble using unique_ptr with vector in DLL exported library, resort to use shared_ptr instead.
 class VisualEffectInstancePass;
-using VisualEffectInstancePassUniquePtr = std::unique_ptr<VisualEffectInstancePass>;
+using VisualEffectInstancePassUniquePtr = std::shared_ptr<VisualEffectInstancePass>;
 
-class VisualEffectInstance : public Object
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS VisualEffectInstance : public Object
 {
 public:
     /************************************************************************/
@@ -69,6 +70,7 @@ protected:
     VisualEffectSharedPtr                          mEffect;
     std::vector<VisualEffectInstancePassUniquePtr> mPassList; // Passes contained in this effect.
 };
+#pragma warning(default: 4251)
 
 template <typename T>
 ShaderUniformValue<T> *

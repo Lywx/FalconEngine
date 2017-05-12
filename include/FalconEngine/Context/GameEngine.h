@@ -12,7 +12,7 @@ class GameEngineGraphics;
 class GameEngineInput;
 class GameEnginePlatform;
 class GameEngineProfiler;
-class GameEngine
+class FALCON_ENGINE_ITEM_CONTEXT GameEngine
 {
 public:
     /************************************************************************/

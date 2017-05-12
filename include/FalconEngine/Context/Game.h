@@ -1,6 +1,7 @@
 #pragma once
 
-#include <FalconEngine/ContextInclude.h>
+#include <FalconEngine/Context/Header.h>
+
 
 #include <string>
 
@@ -14,7 +15,8 @@ using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
 
 // @summary This is the context that runs the customized code. The GameEngine class
 // would use this class's
-class Game
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_CONTEXT Game
 {
 public:
 
@@ -81,5 +83,6 @@ protected:
     GameEngine                 *mGameEngine;
     GameEngineSettingsSharedPtr mGameEngineSettings;
 };
+#pragma warning(default: 4251)
 
 }

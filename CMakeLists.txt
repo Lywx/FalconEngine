@@ -1,6 +1,7 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
 
 # Set up deployment configuration
+option(FALCON_ENGINE_BUILD_DYNAMIC_LIBRARY "Build dynamic library" ON)
 option(FALCON_ENGINE_PLATFORM_QT "Using Qt window system" OFF)
 option(FALCON_ENGINE_PLATFORM_GLFW "Using GLFW windows system" ON)
 

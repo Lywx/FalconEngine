@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/MathInclude.h>
+#include <FalconEngine/Math/Header.h>
 
 #include <vector>
 
@@ -9,7 +9,7 @@
 namespace FalconEngine
 {
 
-class BoundingBox
+class FALCON_ENGINE_ITEM_MATH BoundingBox
 {
 public:
     /************************************************************************/

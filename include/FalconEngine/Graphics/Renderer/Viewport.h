@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <FalconEngine/Math/Rectangle.h>
 #include <FalconEngine/Math/Vector2.h>
@@ -12,7 +12,7 @@ namespace FalconEngine
 class Matrix4f;
 
 // @summary Describe the clip space region.
-class Viewport
+class FALCON_ENGINE_ITEM_GRAPHICS Viewport
 {
 public:
     /************************************************************************/

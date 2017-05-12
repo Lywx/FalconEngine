@@ -1,62 +1,52 @@
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${FALCON_ENGINE_ARCHIVE_OUTPUT_DIR})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${FALCON_ENGINE_LIBRARY_OUTPUT_DIR})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${FALCON_ENGINE_RUNTIME_OUTPUT_DIR})
+cmake_minimum_required(VERSION 3.1)
 
-function(add_sample sampleProject sampleDir)
-    file(GLOB FALCON_ENGINE_SAMPLE_FILES ${sampleDir}/*.h ${sampleDir}/*.cpp)
+# TODO(Wuxiang)
+include(${FALCON_ENGINE_ROOT_DIR}/cmake/Compiler.cmake)
+include(${FALCON_ENGINE_ROOT_DIR}/cmake/Dependency.cmake)
+include(${FALCON_ENGINE_ROOT_DIR}/cmake/Platform.cmake)
+include(${FALCON_ENGINE_ROOT_DIR}/cmake/Target.cmake)
+
+function(add_sample SAMPLE_PROJECT_NAME SAMPLE_PROJECT_DIR)
 
     include_directories(${FALCON_ENGINE_INCLUDE_DIR})
+    link_directories(
+        ${FALCON_ENGINE_LIBRARY_DIR} 
+        ${FALCON_ENGINE_ARCHIVE_OUTPUT_DIR})
 
-    link_directories(${FALCON_ENGINE_LIBRARY_DIR} ${FALCON_ENGINE_RUNTIME_OUTPUT_DIR})
+    file(GLOB_RECURSE SAMPLE_PROJECT_FILES ${SAMPLE_PROJECT_DIR}/*.h ${SAMPLE_PROJECT_DIR}/*.cpp)
 
-    add_executable(${sampleProject} ${FALCON_ENGINE_SAMPLE_FILES})
+    add_executable(${SAMPLE_PROJECT_NAME} ${SAMPLE_PROJECT_FILES})
+
+    set(SAMPLE_EXTRA_LIBRARY_FILES ${ASSIMP_LIBRARY_FILE})
 
     if (FALCON_ENGINE_PLATFORM_GLFW)
-        if (WIN32)
-            set(FALCON_ENGINE_SAMPLE_EXTRA_LIBRARY_FILES
-                assimp-vc140-mt.lib # Assimp
-                glew32sd.lib        # Glew
-                glfw3.lib           # GLFW
-                opengl32.lib kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
-                )
-        elseif (UNIX)
-            set(FALCON_ENGINE_SAMPLE_EXTRA_LIBRARY_FILES
-                libassimp.a # Assimp
-                libGLEW.a   # Glew
-                libglfw3.a  # GLFW
-                )
-        endif()
+        set(SAMPLE_EXTRA_LIBRARY_FILES ${SAMPLE_EXTRA_LIBRARY_FILES}
+            ${GL_LIBRARY_FILE}
+            ${GLEW_LIBRARY_FILE}
+            ${GLFW_LIBRARY_FILE})
 
+        if (FALCON_ENGINE_PLATFORM_WINDOWS)
+            set(SAMPLE_EXTRA_LIBRARY_FILES ${SAMPLE_EXTRA_LIBRARY_FILES} 
+                kernel32 user32 gdi32 winspool shell32 ole32 oleaut32 uuid comdlg32 advapi32)
+        elseif (FALCON_ENGINE_PLATFORM_LINUX)
+            set(SAMPLE_EXTRA_LIBRARY_FILES ${SAMPLE_EXTRA_LIBRARY_FILES} 
+                dl X11)
+        endif()
     elseif(PLATFORM_QT)
-        if (WIN32)
-            # TODO(Wuxiang):
-            message(WARNING "Windows Qt dependency not configured properly.")
-        elseif (UNIX)
-            set(FALCON_ENGINE_SAMPLE_EXTRA_LIBRARY_FILES
-                # Assimp
-                libassimp.a)
-        endif()
+        # TODO(Wuxiang):
+        message(WARNING "Windows Qt dependency not configured properly.")
     endif()
 
-    target_link_libraries(${sampleProject}
-        FalconEngine.Content.lib
-        FalconEngine.Context.lib
-        FalconEngine.Core.lib
-        FalconEngine.Graphics.lib
-        FalconEngine.Input.lib
-        FalconEngine.Math.lib
-        ${FALCON_ENGINE_SAMPLE_EXTRA_LIBRARY_FILES}
-        )
+    target_link_libraries(${SAMPLE_PROJECT_NAME} ${SAMPLE_EXTRA_LIBRARY_FILES}
+        FalconEngine.Content
+        FalconEngine.Context
+        FalconEngine.Core
+        FalconEngine.Graphics
+        FalconEngine.Input
+        FalconEngine.Math)
 
-    if (WIN32)
-        set_target_properties(${sampleProject} PROPERTIES SUFFIX ".exe")
-
-        set_target_properties(${sampleProject} PROPERTIES COMPILE_FLAGS "/MTd /ZI")
-        set_target_properties(${sampleProject} PROPERTIES LINK_FLAGS "/IMPLIB:")
-        #set_target_properties(${sampleProject} PROPERTIES LINK_FLAGS "/INCREMENTAL /IMPLIB:")
-        set_target_properties(${sampleProject} PROPERTIES FOLDER "FalconEngine Sample Targets")
-    else()
-    endif()
+    fe_set_target_folder(${SAMPLE_PROJECT_NAME} "FalconEngine Sample Targets")
+    fe_set_target_output(${SAMPLE_PROJECT_NAME})
 
 endfunction()
 

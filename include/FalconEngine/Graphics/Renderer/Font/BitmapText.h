@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <FalconEngine/Math/Vector2.h>
 #include <FalconEngine/Math/Vector4.h>
@@ -30,7 +30,8 @@ namespace FalconEngine
 //
 // @note The structure of this class should be able to support different
 // font type.
-class BitmapText
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS BitmapText
 {
 public:
     BitmapText(float fontSize, const std::wstring& textString, Vector2f textPosition,
@@ -43,6 +44,7 @@ public:
     Vector4f     mTextBounds;
     std::wstring mTextString;
 };
+#pragma warning(default: 4251)
 
 }
 

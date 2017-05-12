@@ -6,6 +6,7 @@ namespace FalconEngine
 {
 
 FALCON_ENGINE_RTTI_IMPLEMENT(Node, Spatial);
+FALCON_ENGINE_RTTI_IMPLEMENT_EXPORT(Node);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

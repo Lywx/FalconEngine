@@ -17,6 +17,7 @@ namespace FalconEngine
 {
 
 FALCON_ENGINE_RTTI_IMPLEMENT(VisualEffect, Object);
+FALCON_ENGINE_RTTI_IMPLEMENT_EXPORT(VisualEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

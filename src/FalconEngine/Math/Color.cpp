@@ -160,10 +160,10 @@ const Color ColorPalette::YellowGreen(Color(0xff32cd9a));
 /* Constructors and Destructor                                          */
 /************************************************************************/
 Color::Color(uint32 hex) :
-    R(hex),
-    G(hex >> 8),
-    B(hex >> 16),
-    A(hex >> 24)
+    R(uint8(hex)),
+    G(uint8(hex >> 8)),
+    B(uint8(hex >> 16)),
+    A(uint8(hex >> 24))
 {
 }
 

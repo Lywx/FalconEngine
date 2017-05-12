@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <vector>
 
@@ -11,7 +11,7 @@ class Spatial;
 using SpatialSharedPtr = std::shared_ptr<Spatial>;
 
 class Visual;
-class VisualGroup final
+class FALCON_ENGINE_ITEM_GRAPHICS VisualGroup final
 {
 public:
     /************************************************************************/

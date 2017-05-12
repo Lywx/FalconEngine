@@ -10,7 +10,7 @@
 namespace FalconEngine
 {
 
-class Color
+class FALCON_ENGINE_ITEM_MATH Color
 {
 public:
     /************************************************************************/
@@ -37,7 +37,7 @@ public:
 bool operator==(Color lhs, Color rhs);
 bool operator!=(Color lhs, Color rhs);
 
-class ColorPalette
+class FALCON_ENGINE_ITEM_MATH ColorPalette
 {
 public:
     static const Color TransparentBlack;

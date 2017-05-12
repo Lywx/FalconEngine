@@ -4,6 +4,7 @@ namespace FalconEngine
 {
 
 FALCON_ENGINE_RTTI_IMPLEMENT(CharacterEntity, Entity);
+FALCON_ENGINE_RTTI_IMPLEMENT_EXPORT(CharacterEntity);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

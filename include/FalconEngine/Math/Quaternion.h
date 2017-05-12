@@ -1,6 +1,13 @@
 #pragma once
 
+#include <FalconEngine/Math/Header.h>
+
+// NOTE(Wuxiang): Disable warning C4201: nonstandard extension used : nameless struct/union.
+#pragma warning(disable : 4201)
+
 #include <glm/gtc/quaternion.hpp>
+
+#pragma warning(default : 4201)
 
 #include <FalconEngine/Math/Vector3.h>
 
@@ -9,7 +16,7 @@ namespace FalconEngine
 
 // Forward declaration for circular dependency
 class Matrix4f;
-class Quaternion : public glm::quat
+class FALCON_ENGINE_ITEM_MATH Quaternion : public glm::quat
 {
 public:
     /************************************************************************/

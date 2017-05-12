@@ -1,6 +1,6 @@
 #include <FalconEngine/Context/GameEngineGraphics.h>
 
-#include <FalconEngine/Content/Path.h>
+#include <FalconEngine/Core/Path.h>
 #include <FalconEngine/Context/GameEngineGraphicsSettings.h>
 #include <FalconEngine/Context/GameEngineSettings.h>
 #include <FalconEngine/Graphics/Renderer/Camera.h>

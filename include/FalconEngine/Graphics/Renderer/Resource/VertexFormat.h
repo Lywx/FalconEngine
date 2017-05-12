@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexAttribute.h>
 
 namespace FalconEngine
@@ -9,7 +9,8 @@ namespace FalconEngine
 enum class VertexAttributeType;
 using VertexAttributeVector = std::vector<VertexAttribute>;
 
-class VertexFormat
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS VertexFormat
 {
 public:
     /************************************************************************/
@@ -53,8 +54,8 @@ private:
     // NOTE(Wuxiang): This is used as an enforcement for making vertex attribute
     // list immutable once it is set up correctly.
     bool                  mVertexAttributeFinished = false;
-
 };
+#pragma warning(default: 4251)
 
 using VertexFormatSharedPtr = std::shared_ptr<VertexFormat>;
 

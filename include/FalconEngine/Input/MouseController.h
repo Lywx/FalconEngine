@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/InputInclude.h>
+#include <FalconEngine/Input/Header.h>
 #include <FalconEngine/Math/Vector2.h>
 
 namespace FalconEngine
@@ -9,7 +9,8 @@ namespace FalconEngine
 class MouseControllerData;
 using MouseControllerDataSharedPtr = std::shared_ptr<MouseControllerData>;
 
-class MouseController final
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_INPUT MouseController final
 {
 public:
     MouseController();
@@ -25,5 +26,6 @@ public:
 private:
     MouseControllerDataSharedPtr mData;
 };
+#pragma warning(default: 4251)
 
 }

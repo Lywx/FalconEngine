@@ -1,12 +1,16 @@
 #pragma once
 
+#include <FalconEngine/Graphics/Header.h>
+
 #include <vector>
 
 namespace FalconEngine
 {
 
 class BitmapGlyph;
-class BitmapLine
+
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS BitmapLine
 {
 public:
     BitmapLine(double lineWidth);
@@ -18,5 +22,6 @@ public:
 
     std::vector<BitmapGlyph> mLineGlyphs;
 };
+#pragma warning(default: 4251)
 
 }

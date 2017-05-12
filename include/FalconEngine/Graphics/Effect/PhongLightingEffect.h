@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 #include <FalconEngine/Graphics/Renderer/Scene/MeshEffect.h>
 
 namespace FalconEngine
@@ -18,7 +18,7 @@ using VisualEffectInstanceSharedPtr = std::shared_ptr<VisualEffectInstance>;
 class PhongLightingEffect;
 using PhongLightingEffectSharedPtr = std::shared_ptr<PhongLightingEffect>;
 
-class PhongLightingEffect : public MeshEffect
+class FALCON_ENGINE_ITEM_GRAPHICS PhongLightingEffect : public MeshEffect
 {
     FALCON_ENGINE_RTTI_DECLARE;
 

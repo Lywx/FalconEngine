@@ -4,32 +4,53 @@ namespace FalconEngine
 {
 
 /************************************************************************/
-/* Public Members                                                       */
+/* Static Members                                                       */
 /************************************************************************/
-const Rtti Object::Type("Object", nullptr);
+const Rtti Object::sType("Object", nullptr);
 
+const Rtti&
+Object::GetType() const
+{
+    return sType;
+}
+
+const Rtti&
+ObjectsType()
+{
+    return Object::sType;
+}
+
+/************************************************************************/
+/* Constructors and Destructor                                          */
+/************************************************************************/
 Object::~Object()
 {
 }
 
-bool Object::IsExactly(const Rtti& type) const
+/************************************************************************/
+/* Public Members                                                       */
+/************************************************************************/
+bool
+Object::IsExactly(const Rtti& type) const
 {
     return GetType().IsExactly(type);
 }
 
-bool Object::IsExactlyTypeOf(const Object *object) const
+bool
+Object::IsExactlyTypeOf(const Object *object) const
 {
     return object && GetType().IsExactly(object->GetType());
 }
 
-bool Object::IsDerived(const Rtti& type) const
+bool
+Object::IsDerived(const Rtti& type) const
 {
     return GetType().IsDerived(type);
 }
 
-bool Object::IsDerivedTypeOf(const Object *object) const
+bool
+Object::IsDerivedTypeOf(const Object *object) const
 {
     return object && GetType().IsDerived(object->GetType());
 }
-
 }

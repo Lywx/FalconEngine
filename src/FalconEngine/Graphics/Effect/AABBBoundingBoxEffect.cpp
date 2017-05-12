@@ -18,6 +18,7 @@ namespace FalconEngine
 {
 
 FALCON_ENGINE_RTTI_IMPLEMENT(AABBBoundingBoxEffect, VisualEffect);
+FALCON_ENGINE_RTTI_IMPLEMENT_EXPORT(AABBBoundingBoxEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

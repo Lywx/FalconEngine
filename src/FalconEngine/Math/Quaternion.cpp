@@ -1,6 +1,5 @@
 #include <FalconEngine/Math/Quaternion.h>
 #include <FalconEngine/Math/Matrix4.h>
-#include "FalconEngine/CoreInclude.h"
 
 namespace FalconEngine
 {

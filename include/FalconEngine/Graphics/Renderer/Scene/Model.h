@@ -4,7 +4,7 @@
 
 #include <vector>
 
-#include <FalconEngine/Content/Asset.h>
+#include <FalconEngine/Core/Asset.h>
 #include <FalconEngine/Math/Vector2.h>
 #include <FalconEngine/Math/Vector3.h>
 
@@ -20,7 +20,7 @@ using NodeSharedPtr = std::shared_ptr<Node>;
 using ModelIndex = int;
 
 #pragma pack(push, 1)
-class ModelVertex
+class FALCON_ENGINE_ITEM_GRAPHICS ModelVertex
 {
 public:
     Vector3f mPosition;
@@ -29,7 +29,8 @@ public:
 };
 #pragma pack(pop)
 
-class Model : public Asset
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS Model : public Asset
 {
 public:
     /************************************************************************/
@@ -68,5 +69,6 @@ private:
     NodeSharedPtr    mNode;                                            // Model root node.
     SamplerSharedPtr mSampler;                                         // Model texture sampler.
 };
+#pragma warning(default: 4251)
 
 }

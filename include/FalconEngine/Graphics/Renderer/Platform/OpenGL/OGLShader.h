@@ -11,7 +11,7 @@
 namespace FalconEngine
 {
 
-class PlatformShader
+class FALCON_ENGINE_ITEM_GRAPHICS PlatformShader
 {
 public:
     /************************************************************************/

@@ -1,13 +1,14 @@
 #pragma once
 
-#include <FalconEngine/InputInclude.h>
+#include <FalconEngine/Input/Header.h>
 
 namespace FalconEngine
 {
 
 // @remark The enum value is copied from the GLFW definition to smooth the conversion.
-enum class Key
+enum class FALCON_ENGINE_ITEM_INPUT Key
 {
+    Unknown = -1,
     Space = 32,
     Apostrophe = 39,
     Comma = 44,
@@ -133,9 +134,10 @@ enum class Key
 
 using KeyHash = std::hash<int>;
 
-class KeyState final
+class FALCON_ENGINE_ITEM_INPUT KeyState final
 {
 public:
+    KeyState();
     explicit KeyState(Key key);
     ~KeyState() = default;
 

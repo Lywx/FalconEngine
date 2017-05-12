@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <map>
 #include <vector>
@@ -11,7 +11,8 @@ namespace FalconEngine
 class VertexBuffer;
 using VertexBufferSharedPtr = std::shared_ptr<VertexBuffer>;
 
-class VertexBufferBinding
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS VertexBufferBinding
 {
 public:
     VertexBufferBinding(VertexBufferSharedPtr buffer, int index, int offset, int stride) :
@@ -57,5 +58,6 @@ private:
     int                   mStride;
     VertexBufferSharedPtr mBuffer;
 };
+#pragma warning(default: 4251)
 
 }

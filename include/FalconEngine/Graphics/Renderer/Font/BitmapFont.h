@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <map>
 #include <stdexcept>
@@ -12,7 +12,7 @@
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/split_member.hpp>
 
-#include <FalconEngine/Content/Asset.h>
+#include <FalconEngine/Core/Asset.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapGlyph.h>
 
 namespace FalconEngine
@@ -28,7 +28,8 @@ using Texture2dArraySharedPtr = std::shared_ptr<Texture2dArray>;
 // font. In the rendering phrase, the font size is used with the bitmap glyph
 // size to derive desired glyph size. The size stores imported bmfont size. So as
 // the line base, line height, space width, etc.
-class BitmapFont : public Asset
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS BitmapFont : public Asset
 {
 public:
     /************************************************************************/
@@ -169,5 +170,6 @@ public:
 
     BOOST_SERIALIZATION_SPLIT_MEMBER()
 };
+#pragma warning(default: 4251)
 
 }

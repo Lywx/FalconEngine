@@ -7,7 +7,7 @@
 namespace FalconEngine
 {
 
-class PlatformTexture2d
+class FALCON_ENGINE_ITEM_GRAPHICS PlatformTexture2d
 {
 public:
     PlatformTexture2d(const Texture2d *texture);

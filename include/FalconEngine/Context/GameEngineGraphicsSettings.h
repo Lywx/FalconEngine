@@ -1,11 +1,12 @@
 #pragma once
 
-#include <FalconEngine/ContextInclude.h>
+#include <FalconEngine/Context/Header.h>
 
 namespace FalconEngine
 {
 
-class GameEngineGraphicsSettings final
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_CONTEXT GameEngineGraphicsSettings final
 {
 public:
     GameEngineGraphicsSettings();
@@ -17,6 +18,7 @@ public:
     int         mWidth;
     int         mHeight;
 };
+#pragma warning(default: 4251)
 
 using GameEngineGraphicsSettingsSharedPtr = std::shared_ptr<GameEngineGraphicsSettings>;
 

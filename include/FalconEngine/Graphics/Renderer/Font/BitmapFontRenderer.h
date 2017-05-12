@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <limits>
 #include <map>
@@ -23,11 +23,12 @@ class Renderer;
 
 // @summary The font renderer is the class you would call to draw a string on
 // the screen.
+#pragma warning(disable: 4251)
 #if defined(FALCON_ENGINE_PLATFORM_QT)
 #include <QtGui/QOpenGLFunctions>
-class BitmapFontRenderer final : QOpenGLFunctions
+class FALCON_ENGINE_ITEM_GRAPHICS BitmapFontRenderer final : QOpenGLFunctions
 #else
-class BitmapFontRenderer final
+class FALCON_ENGINE_ITEM_GRAPHICS BitmapFontRenderer final
 #endif
 {
 public:
@@ -89,5 +90,6 @@ private:
     int                   mWidth  = 0; // Viewport width.
     int                   mHeight = 0; // Viewport height.
 };
+#pragma warning(default: 4251)
 
 }

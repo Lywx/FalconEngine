@@ -7,14 +7,14 @@
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/split_member.hpp>
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Core/Asset.h>
+#include <FalconEngine/Graphics/Header.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
-#include <FalconEngine/Content/Asset.h>
 
 namespace FalconEngine
 {
 
-enum class TextureUnit
+enum class FALCON_ENGINE_ITEM_GRAPHICS TextureUnit
 {
     Ambient   = 0,
     Diffuse   = 1,
@@ -33,7 +33,7 @@ GetTextureUnit(TextureUnit textureUnit)
     return int(textureUnit);
 }
 
-enum class TextureType
+enum class FALCON_ENGINE_ITEM_GRAPHICS TextureType
 {
     None,
 
@@ -46,7 +46,7 @@ enum class TextureType
     Count
 };
 
-enum class TextureFormat
+enum class FALCON_ENGINE_ITEM_GRAPHICS TextureFormat
 {
     None,
 
@@ -62,7 +62,7 @@ const int TexelSize[int(TextureFormat::Count)] =
     4, // R8G8B8A8
 };
 
-class Texture : public Asset
+class FALCON_ENGINE_ITEM_GRAPHICS Texture : public Asset
 {
 public:
     /************************************************************************/

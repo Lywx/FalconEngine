@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 namespace FalconEngine
 {
@@ -11,7 +11,8 @@ using VertexBufferSharedPtr = std::shared_ptr<VertexBuffer>;
 class Visual;
 using VisualSharedPtr = std::shared_ptr<Visual>;
 
-class BitmapFontBatch
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS BitmapFontBatch
 {
 public:
     BitmapFontBatch(VertexBufferSharedPtr vertexBuffer, VisualSharedPtr vertexQuads) :
@@ -30,5 +31,6 @@ public:
 
     VisualSharedPtr       mVertexQuads;
 };
+#pragma warning(default: 4251)
 
 }

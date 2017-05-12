@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/ContentInclude.h>
+#include <FalconEngine/Content/Header.h>
 
 namespace FalconEngine
 {
@@ -10,7 +10,7 @@ using MeshSharedPtr = std::shared_ptr<Mesh>;
 
 class Model;
 
-class AssetImporter
+class FALCON_ENGINE_ITEM_CONTENT AssetImporter
 {
 public:
     static void

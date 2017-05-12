@@ -9,7 +9,8 @@ namespace FalconEngine
 class PointLightEntity;
 using PointLightEntitySharedPtr = std::shared_ptr<PointLightEntity>;
 
-class PointLightEntity : public Entity
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS PointLightEntity : public Entity
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
@@ -68,5 +69,6 @@ protected:
 protected:
     LightSharedPtr mLight;
 };
+#pragma warning(default: 4251)
 
 }

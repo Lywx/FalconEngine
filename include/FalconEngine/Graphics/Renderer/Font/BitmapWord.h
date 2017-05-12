@@ -1,11 +1,13 @@
 #pragma once
 
+#include <FalconEngine/Graphics/Header.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapGlyph.h>
 
 namespace FalconEngine
 {
 
-class BitmapWord
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS BitmapWord
 {
 public:
     BitmapWord(double fontScale);
@@ -14,6 +16,7 @@ public:
     std::vector<BitmapGlyph> mWordLetters;                                      // Collection of letters used in the word, allow duplication
     double                   mWordWidth;                                        // Width of the word in pixel. The font type specific scaling is already included.
 };
+#pragma warning(default: 4251)
 
 }
 

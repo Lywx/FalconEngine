@@ -1,12 +1,12 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 #include <FalconEngine/Math/Vector4.h>
 
 namespace FalconEngine
 {
 
-enum class BlendSourceFactor
+enum class FALCON_ENGINE_ITEM_GRAPHICS BlendSourceFactor
 {
     ZERO,
     ONE,
@@ -31,7 +31,7 @@ enum class BlendSourceFactor
     Count
 };
 
-enum class BlendDestinationFactor
+enum class FALCON_ENGINE_ITEM_GRAPHICS BlendDestinationFactor
 {
     ZERO,
     ONE,
@@ -56,7 +56,7 @@ enum class BlendDestinationFactor
     Count
 };
 
-class BlendState final
+class FALCON_ENGINE_ITEM_GRAPHICS BlendState final
 {
 public:
     /************************************************************************/

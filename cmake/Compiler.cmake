@@ -1,11 +1,15 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
+cmake_policy(SET CMP0054 NEW)
 
-# NOTE(Wuxiang): Necessary include.
-if (NOT FALCON_ENGINE_PLATFORM_INITIALIZED)
-    include(${FALCON_ENGINE_ROOT_DIR}/cmake/Platform.cmake)
+# NOTE(Wuxiang): Include guard.
+if (FALCON_ENGINE_COMPILER_INITIALIZED)
+    return()
 endif()
 
 set(FALCON_ENGINE_COMPILER_INITIALIZED TRUE)
+
+# NOTE(Wuxiang): Necessary include.
+include(${FALCON_ENGINE_ROOT_DIR}/cmake/Platform.cmake)
 
 # NOTE(Wuxiang): Necessary for generating Cmake compiler and system information.
 enable_language(CXX)
@@ -14,10 +18,41 @@ enable_language(CXX)
 # Predefined macro
 #
 
+assert_defined(CMAKE_CXX_COMPILER_ID)
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    add_definitions(-DFALCON_ENGINE_COMPILER_MSVC)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    add_definitions(-DFALCON_ENGINE_COMPILER_GCC)
+endif()
+
+function(fe_add_export_definition TARGET_NAME)
+    string(TOUPPER ${TARGET_NAME} TARGET_NAME)
+    assert_defined(FALCON_ENGINE_BUILD_DYNAMIC_LIBRARY)
+    if(FALCON_ENGINE_BUILD_DYNAMIC_LIBRARY)
+        add_definitions(-DFALCON_ENGINE_BUILD_${TARGET_NAME}_DYNAMIC)
+        add_definitions(-DFALCON_ENGINE_SYMBOL_${TARGET_NAME}_EXPORT)
+    endif()
+endfunction()
+
+function(fe_add_import_definition_ TARGET_NAME)
+    string(TOUPPER ${TARGET_NAME} TARGET_NAME)
+    assert_defined(FALCON_ENGINE_BUILD_DYNAMIC_LIBRARY)
+    if(FALCON_ENGINE_BUILD_DYNAMIC_LIBRARY)
+        add_definitions(-DFALCON_ENGINE_BUILD_${TARGET_NAME}_DYNAMIC)
+    endif()
+endfunction()
+
+function(fe_add_import_definition TARGET_NAME_LIST)
+    foreach(TARGET_NAME ${TARGET_NAME_LIST})
+        fe_add_import_definition_(${TARGET_NAME})
+    endforeach()
+endfunction()
+
 assert_defined(FALCON_ENGINE_PLATFORM_QT)
 assert_defined(FALCON_ENGINE_PLATFORM_GLFW)
 
-if (FALCON_ENGINE_PLATFORM_QT)
+if(FALCON_ENGINE_PLATFORM_QT)
     add_definitions(-DFALCON_ENGINE_PLATFORM_QT)
 elseif (FALCON_ENGINE_PLATFORM_GLFW)
     add_definitions(-DFALCON_ENGINE_PLATFORM_GLFW)
@@ -36,23 +71,42 @@ endif()
 assert_defined(CMAKE_CXX_COMPILER_ID)
 
 # Use Visual C++
-if(CMAKE_CXX_COMPILER_ID STREQUAL MSVC)
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(FALCON_ENGINE_COMPILER_NAME "vc")
     set(FALCON_ENGINE_COMPILER_MSVC TRUE)
+
+    if(MSVC_VERSION GREATER 1900)
+        SET(FALCON_ENGINE_COMPILER_VERSION "141")
+    else()
+        SET(FALCON_ENGINE_COMPILER_VERSION "140")
+    endif()
 
     #
     # Set compiler flags
     #
 
-    set(CMAKE_CXX_FLAGS "/W4 /WX /EHsc /MTd /MP /bigobj /std:c++14 /Zc:throwingNew /Zc:strictStrings /Zc:rvalueCast /Gw /Gm")
+    # NOTE(Wuxiang): Short name for each flags:
+    # /Gm (Enable Minimal Rebuild)
+    # /MP (Build with Multiple Processes)
+    # /EH (Exception Handling Model)
+    # /Gw (Optimize Global Data)
+    # /MT (Use Run-Time Library)
+    # /MTd (Use LIBCMTD.lib)
+    # /bigobj (Increase Number of Sections in .Obj file). This would freeze Visual Studio during build.
+    set(CMAKE_CXX_FLAGS "/W4 /EHsc /std:c++14 /Zc:throwingNew /Zc:strictStrings /Zc:rvalueCast")
 
     if(MSVC_VERSION GREATER 1900)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /permissive-")
     endif()
 
-    set(CMAKE_CXX_FLAGS_RELEASE	       "${CMAKE_CXX_FLAGS_RELEASE} /DFALCON_ENGINE_SHIP /fp:fast /Ob2 /GL /Qpar")
-    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /fp:fast /Ob2 /GL /Qpar")
-    set(CMAKE_CXX_FLAGS_MINSIZEREL 	   "${CMAKE_CXX_FLAGS_MINSIZEREL} /fp:fast /Ob1 /Qpar")
+    # /GL (Whole Program Optimization)
+    # /Qpar (Auto-Parallelizer)
+    # /fp (Specify Floating-Point Behavior)
+    # /GS (Buffer Security Check)
+    set(CMAKE_CXX_FLAGS_DEBUG          "${CMAKE_CXX_FLAGS_DEBUG} ${CMAKE_CXX_FLAGS} /MDd")
+    set(CMAKE_CXX_FLAGS_RELEASE	       "${CMAKE_CXX_FLAGS_RELEASE} ${CMAKE_CXX_FLAGS} /MD /fp:fast /MDd /Ob2 /GL /Qpar")
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} ${CMAKE_CXX_FLAGS} /MD /fp:fast /Ob2 /GL /Qpar")
+    set(CMAKE_CXX_FLAGS_MINSIZEREL 	   "${CMAKE_CXX_FLAGS_MINSIZEREL} ${CMAKE_CXX_FLAGS} /MD /fp:fast /Ob1 /Qpar")
 
     assert_defined(FALCON_ENGINE_ARCH_NAME)
 
@@ -72,22 +126,22 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL MSVC)
 
     # NOTE(Wuxiang): Prevent strangely setting the import library
     # /IMPLIB: https://msdn.microsoft.com/en-us/library/67wc07b9.aspx
-    set(CMAKE_EXE_LINKER_FLAGS 	              "/WX /pdbcompress /IMPLIB:")
+    set(CMAKE_EXE_LINKER_FLAGS 	              "/pdbcompress /IMPLIB:")
     set(CMAKE_EXE_LINKER_FLAGS_DEBUG          "/DEBUG:FASTLINK")
     set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "/DEBUG:FASTLINK /INCREMENTAL:NO /LTCG:incremental /OPT:REF /OPT:ICF")
     set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL     "/INCREMENTAL:NO /OPT:REF /OPT:ICF")
     set(CMAKE_EXE_LINKER_FLAGS_RELEASE        "/INCREMENTAL:NO /LTCG /OPT:REF /OPT:ICF")
 
-    set(CMAKE_SHARED_LINKER_FLAGS                "/WX /pdbcompress")
+    set(CMAKE_SHARED_LINKER_FLAGS                "/pdbcompress")
     set(CMAKE_SHARED_LINKER_FLAGS_DEBUG          "/DEBUG:FASTLINK")
     set(CMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO "/DEBUG:FASTLINK /INCREMENTAL:NO /LTCG:incremental /OPT:REF /OPT:ICF")
     set(CMAKE_SHARED_LINKER_FLAGS_MINSIZEREL     "/INCREMENTAL:NO /OPT:REF /OPT:ICF")
     set(CMAKE_SHARED_LINKER_FLAGS_RELEASE        "/INCREMENTAL:NO /LTCG /OPT:REF /OPT:ICF")
 
-    set(CMAKE_MODULE_LINKER_FLAGS         "/WX /pdbcompress")
+    set(CMAKE_MODULE_LINKER_FLAGS         "/pdbcompress")
     set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "/INCREMENTAL:NO /LTCG")
 
-    set(CMAKE_STATIC_LINKER_FLAGS "/WX")
+    set(CMAKE_STATIC_LINKER_FLAGS "")
     set(CMAKE_STATIC_LINKER_FLAGS_RELEASE        "${CMAKE_STATIC_LINKER_FLAGS_RELEASE} /LTCG")
     set(CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO} /LTCG:incremental")
 
@@ -172,4 +226,4 @@ endif()
 assert_defined(FALCON_ENGINE_COMPILER_NAME)
 assert_defined(FALCON_ENGINE_COMPILER_VERSION)
 
-set(FALCON_ENGINE_OUTPUT_SUFFIX _${FALCON_ENGINE_COMPILER_NAME}${FALCON_ENGINE_COMPILER_VERSION})
+set(FALCON_ENGINE_OUTPUT_SUFFIX -${FALCON_ENGINE_COMPILER_NAME}${FALCON_ENGINE_COMPILER_VERSION})

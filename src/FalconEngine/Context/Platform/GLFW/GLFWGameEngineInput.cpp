@@ -12,7 +12,7 @@
 namespace FalconEngine
 {
 
-class GameEngineInputDispatcher final
+class FALCON_ENGINE_ITEM_CONTEXT GameEngineInputDispatcher final
 {
 public:
     explicit GameEngineInputDispatcher(GameEngineInput *input);

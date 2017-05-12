@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/InputInclude.h>
+#include <FalconEngine/Input/Header.h>
 #include <FalconEngine/Input/InputHandler.h>
 
 namespace FalconEngine
@@ -9,7 +9,7 @@ namespace FalconEngine
 class KeyboardState;
 using KeyboardStateSharedPtr = std::shared_ptr<KeyboardState>;
 
-class KeyboardHandler : public InputHandler<KeyboardStateSharedPtr>
+class FALCON_ENGINE_ITEM_INPUT KeyboardHandler : public InputHandler<KeyboardStateSharedPtr>
 {
 public:
     KeyboardHandler();

@@ -5,6 +5,7 @@ namespace FalconEngine
 {
 
 FALCON_ENGINE_RTTI_IMPLEMENT(PointLightEntity, Entity);
+FALCON_ENGINE_RTTI_IMPLEMENT_EXPORT(PointLightEntity);
 
 PointLightEntity::PointLightEntity(const NodeSharedPtr node) :
     Entity(node),

@@ -1,12 +1,12 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 #include <FalconEngine/Core/Object.h>
 
 namespace FalconEngine
 {
 
-enum class PrimitiveType
+enum class FALCON_ENGINE_ITEM_GRAPHICS PrimitiveType
 {
     None,
     Point,
@@ -31,7 +31,8 @@ using VertexFormatSharedPtr = std::shared_ptr<VertexFormat>;
 class VertexGroup;
 using VertexGroupSharedPtr = std::shared_ptr<VertexGroup>;
 
-class Primitive : public Object
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS Primitive : public Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
@@ -95,5 +96,8 @@ protected:
     VertexFormatSharedPtr mVertexFormat;
     IndexBufferSharedPtr  mIndexBuffer;
 };
+#pragma warning(default: 4251)
+
+FALCON_ENGINE_RTTI_DECLARE_EXPORT(Primitive);
 
 }

@@ -1,11 +1,11 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 namespace FalconEngine
 {
 
-enum class DepthFunction
+enum class FALCON_ENGINE_ITEM_GRAPHICS DepthFunction
 {
     NEVER,    // Never passes.
     LESS,     // Passes if the incoming depth value is less than the stored depth value.
@@ -19,7 +19,7 @@ enum class DepthFunction
     Count
 };
 
-class DepthTestState final
+class FALCON_ENGINE_ITEM_GRAPHICS DepthTestState final
 {
 public:
     DepthTestState();

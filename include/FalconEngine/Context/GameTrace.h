@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/ContextInclude.h>
+#include <FalconEngine/Context/Header.h>
 
 #include <iostream>
 #include <iomanip>
@@ -13,7 +13,7 @@ namespace FalconEngine
 {
 
 // @summary Dignositic tracer used for both the engine and the game.
-class GameTrace
+class FALCON_ENGINE_ITEM_CONTEXT GameTrace
 {
 public:
     explicit GameTrace(const char *functionName) :

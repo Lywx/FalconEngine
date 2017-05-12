@@ -5,8 +5,9 @@
 namespace FalconEngine
 {
 
+#pragma warning(disable: 4251)
 template <typename T>
-class ShaderUniformAutomatic : public ShaderUniformValue<T>
+class FALCON_ENGINE_ITEM_GRAPHICS ShaderUniformAutomatic : public ShaderUniformValue<T>
 {
 public:
     /************************************************************************/
@@ -64,6 +65,7 @@ ShaderUniformAutomatic<T>::GetUpdateFunction() const
 {
     return mUpdateFunction;
 }
+#pragma warning(default: 4251)
 
 template <typename T>
 void

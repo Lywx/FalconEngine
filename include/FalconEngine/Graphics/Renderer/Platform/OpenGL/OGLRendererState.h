@@ -14,7 +14,7 @@ class StencilTestState;
 class WireframeState;
 
 // @summary Render state information to avoid redundant state changes.
-class PlatformRendererState
+class FALCON_ENGINE_ITEM_GRAPHICS PlatformRendererState
 {
 public:
     PlatformRendererState();

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <map>
 #include <vector>
@@ -8,17 +8,15 @@
 namespace FalconEngine
 {
 
-class Shader;
-
 class Sampler;
-using SamplerMap = std::map<int, const Sampler *>;
-
+class Shader;
 class ShaderUniform;
 using ShaderUniformSharedPtr = std::shared_ptr<ShaderUniform>;
 
 class Texture;
 
-class VisualEffectInstancePass final
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS VisualEffectInstancePass final
 {
 public:
     /************************************************************************/
@@ -26,6 +24,9 @@ public:
     /************************************************************************/
     explicit VisualEffectInstancePass(Shader *shader);
     ~VisualEffectInstancePass();
+
+    VisualEffectInstancePass(const VisualEffectInstancePass&) = delete;
+    VisualEffectInstancePass& operator=(const VisualEffectInstancePass&) = delete;
 
     /************************************************************************/
     /* Public Members                                                       */
@@ -87,9 +88,10 @@ private:
     std::vector<ShaderUniformSharedPtr> mShaderUniformList;
 
     std::map<int, const Texture *>      mShaderTextureTable;
-    SamplerMap                          mShaderSamplerTable;
+    std::map<int, const Sampler *>      mShaderSamplerTable;
 
     friend class Renderer;
 };
+#pragma warning(default: 4251)
 
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <vector>
 
@@ -9,7 +9,8 @@
 namespace FalconEngine
 {
 
-class VertexGroup
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS VertexGroup
 {
 public:
     VertexGroup();
@@ -37,7 +38,7 @@ public:
 
 public:
     std::map<int, VertexBufferBinding> mVertexBufferTable;
-
 };
+#pragma warning(default: 4251)
 
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/ContextInclude.h>
+#include <FalconEngine/Context/Header.h>
 
 #include <limits>
 
@@ -37,7 +37,9 @@ class GameEngineGraphicsSettings;
 using GameEngineGraphicsSettingsSharedPtr = std::shared_ptr<GameEngineGraphicsSettings>;
 
 class GameEngineData;
-class GameEngineGraphics
+
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_CONTEXT GameEngineGraphics
 {
 public:
     /************************************************************************/
@@ -118,10 +120,12 @@ private:
     Destroy();
 
 protected:
-    EntityRendererSharedPtr            mEntityRenderer;
+    EntityRendererSharedPtr             mEntityRenderer;
     BitmapFontRendererSharedPtr         mFontRenderer;
     RendererSharedPtr                   mMasterRenderer;
+
     GameEngineGraphicsSettingsSharedPtr mSettings;
 };
+#pragma warning(default: 4251)
 
 }

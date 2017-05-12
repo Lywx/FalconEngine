@@ -5,6 +5,17 @@
 namespace FalconEngine
 {
 
+/************************************************************************/
+/* Constructors and Destructor                                          */
+/************************************************************************/
+MouseButtonState::MouseButtonState() :
+    mButton(MouseButton::Unknown),
+    mPressed(false),
+    mDown(false),
+    mUp(false)
+{
+}
+
 MouseButtonState::MouseButtonState(MouseButton button) :
     mButton(button),
     mPressed(false),

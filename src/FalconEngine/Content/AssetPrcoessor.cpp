@@ -11,9 +11,13 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>
 
+#pragma warning(disable : 4244)
+
 #include <stb/stb_image.h>
 
-#include <FalconEngine/Content/Path.h>
+#pragma warning(default : 4244)
+
+#include <FalconEngine/Core/Path.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Model.h>

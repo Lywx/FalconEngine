@@ -20,6 +20,7 @@ namespace FalconEngine
 {
 
 FALCON_ENGINE_RTTI_IMPLEMENT(BitmapFontEffect, VisualEffect);
+FALCON_ENGINE_RTTI_IMPLEMENT_EXPORT(BitmapFontEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

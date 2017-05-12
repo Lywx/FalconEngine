@@ -1,8 +1,11 @@
-#include <FalconEngine/Content/Asset.h>
+#include <FalconEngine/Core/Asset.h>
 
 namespace FalconEngine
 {
 
+/************************************************************************/
+/* Constructors and Destructor                                          */
+/************************************************************************/
 Asset::Asset(const std::string& fileName, const std::string& filePath) :
     mFileName(fileName),
     mFilePath(filePath)

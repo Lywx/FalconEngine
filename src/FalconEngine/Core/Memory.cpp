@@ -10,7 +10,7 @@ const char *__file__ = "Unknown";
 size_t      __line__ = 0;
 
 void
-PushMemoryRecord(void * /* pointer */, const char* /* file */, size_t /* line */)
+PushMemoryRecord(void * /* pointer */, const char * /* file */, size_t /* line */)
 {
     // TODO(Wuxiang): Implement to detect memory leak.
 }
@@ -66,7 +66,7 @@ operator new[](size_t size, MemoryPool *memory)
 }
 
 void
-operator delete[](void *pointer, MemoryPool */* memory */)
+operator delete[](void *pointer, MemoryPool * /* memory */)
 {
     using namespace FalconEngine;
 
@@ -75,7 +75,7 @@ operator delete[](void *pointer, MemoryPool */* memory */)
 }
 
 void
-operator delete(void *pointer, MemoryPool */* memory */)
+operator delete(void *pointer, MemoryPool * /* memory */)
 {
     using namespace FalconEngine;
 

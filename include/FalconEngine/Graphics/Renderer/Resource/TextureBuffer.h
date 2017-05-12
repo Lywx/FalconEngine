@@ -1,12 +1,12 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
 
 namespace FalconEngine
 {
 
-class TextureBuffer : public Texture
+class FALCON_ENGINE_ITEM_GRAPHICS TextureBuffer : public Texture
 {
 public:
     TextureBuffer(const std::string& fileName, const std::string& filePath, int width, int height, int depth, TextureFormat format, TextureType type, BufferUsage usage, int mipmapLevel);

@@ -5,7 +5,7 @@
 namespace FalconEngine
 {
 
-class PrimitiveTriangles : public Primitive
+class FALCON_ENGINE_ITEM_GRAPHICS PrimitiveTriangles : public Primitive
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
@@ -22,5 +22,7 @@ public:
     virtual size_t
     GetTriangleNum() const;
 };
+
+FALCON_ENGINE_RTTI_DECLARE_EXPORT(PrimitiveTriangles);
 
 }

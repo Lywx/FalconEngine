@@ -6,9 +6,9 @@
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/filesystem.hpp>
 
-#include <FalconEngine/Content/Asset.h>
 #include <FalconEngine/Content/AssetImporter.h>
-#include <FalconEngine/Content/Path.h>
+#include <FalconEngine/Core/Asset.h>
+#include <FalconEngine/Core/Path.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>

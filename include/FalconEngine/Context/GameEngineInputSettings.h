@@ -1,11 +1,11 @@
 #pragma once
 
-#include <FalconEngine/ContextInclude.h>
+#include <FalconEngine/Context/Header.h>
 
 namespace FalconEngine
 {
 
-class GameEngineInputSettings final
+class FALCON_ENGINE_ITEM_CONTEXT GameEngineInputSettings final
 {
 public:
 };

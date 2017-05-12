@@ -2,10 +2,12 @@
 
 #include <string>
 
+#include <FalconEngine/Core/Macro.h>
+
 namespace FalconEngine
 {
 
-class Debug
+class FALCON_ENGINE_ITEM_CORE Debug
 {
 public:
     static void

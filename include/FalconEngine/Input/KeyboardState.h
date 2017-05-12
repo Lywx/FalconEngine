@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/InputInclude.h>
+#include <FalconEngine/Input/Header.h>
 
 #include <unordered_map>
 
@@ -9,7 +9,8 @@
 namespace FalconEngine
 {
 
-class KeyboardState final : private std::unordered_map<Key, KeyState>
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_INPUT KeyboardState final : private std::unordered_map<Key, KeyState>
 {
 public:
     KeyboardState();
@@ -30,5 +31,6 @@ public:
     void
     SetKeyInternal(Key key, bool pressed, double time);
 };
+#pragma warning(default: 4251)
 
 }

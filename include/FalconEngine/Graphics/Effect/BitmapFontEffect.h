@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
 #include <FalconEngine/Math/Handedness.h>
@@ -16,7 +16,7 @@ class VertexFormat;
 using VertexFormatSharedPtr = std::shared_ptr<VertexFormat>;
 
 #pragma pack(push, 1)
-class BitmapFontVertex
+class FALCON_ENGINE_ITEM_GRAPHICS BitmapFontVertex
 {
 public:
     Vector2f mPosition;
@@ -28,7 +28,7 @@ public:
 };
 #pragma pack(pop)
 
-class BitmapFontEffect : public VisualEffect
+class FALCON_ENGINE_ITEM_GRAPHICS BitmapFontEffect : public VisualEffect
 {
     FALCON_ENGINE_RTTI_DECLARE;
 

@@ -7,6 +7,7 @@ namespace FalconEngine
 {
 
 FALCON_ENGINE_RTTI_IMPLEMENT(MeshEffect, VisualEffect);
+FALCON_ENGINE_RTTI_IMPLEMENT_EXPORT(MeshEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

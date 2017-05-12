@@ -5,7 +5,7 @@
 namespace FalconEngine
 {
 
-class GameEngineData final
+class FALCON_ENGINE_ITEM_CONTEXT GameEngineData final
 {
 public:
     GameEngineData();

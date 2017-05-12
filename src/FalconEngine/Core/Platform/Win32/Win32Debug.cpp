@@ -1,10 +1,10 @@
 #include <FalconEngine/Core/Debug.h>
-#include <FalconEngine/CoreInclude.h>
 
 #if FALCON_ENGINE_OS_WINDOWS
 
-#include <windows.h>
 #include <string>
+
+#include <windows.h>
 
 namespace FalconEngine
 {

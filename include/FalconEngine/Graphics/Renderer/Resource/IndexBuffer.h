@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <stdexcept>
 #include <memory>
@@ -10,13 +10,13 @@
 namespace FalconEngine
 {
 
-enum class IndexType
+enum class FALCON_ENGINE_ITEM_GRAPHICS IndexType
 {
     UnsignedShort,
     UnsignedInt
 };
 
-class IndexBuffer : public Buffer
+class FALCON_ENGINE_ITEM_GRAPHICS IndexBuffer : public Buffer
 {
 public:
     /************************************************************************/

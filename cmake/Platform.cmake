@@ -1,10 +1,17 @@
-cmake_minimum_required(VERSION 3.0)
+# NOTE(Wuxiang): Modified from https://github.com/gongminmin/KlayGE/blob/develop/cmake/Platform.cmake
+
+cmake_minimum_required(VERSION 3.1)
+cmake_policy(SET CMP0054 NEW)
+
+# NOTE(Wuxiang): Include guard.
+if (FALCON_ENGINE_PLATFORM_INITIALIZED)
+    return()
+endif()
+
+set(FALCON_ENGINE_PLATFORM_INITIALIZED TRUE)
 
 # NOTE(Wuxiang): Necessary include.
 include(${FALCON_ENGINE_ROOT_DIR}/cmake/Utility.cmake)
-
-# NOTE(Wuxiang): Modified from https://github.com/gongminmin/KlayGE/blob/develop/cmake/Platform.cmake
-set(FALCON_ENGINE_PLATFORM_INITIALIZED TRUE)
 
 # NOTE(Wuxiang): Necessary for generating Cmake compiler and system information.
 enable_language(CXX)

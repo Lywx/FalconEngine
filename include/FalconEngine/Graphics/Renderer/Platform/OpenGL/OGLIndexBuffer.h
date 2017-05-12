@@ -6,7 +6,7 @@
 namespace FalconEngine
 {
 
-class PlatformIndexBuffer
+class FALCON_ENGINE_ITEM_GRAPHICS PlatformIndexBuffer
 {
 public:
     /************************************************************************/

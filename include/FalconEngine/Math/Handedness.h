@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/MathInclude.h>
+#include <FalconEngine/Math/Header.h>
 
 #include <FalconEngine/Math/Function.h>
 #include <FalconEngine/Math/Matrix4.h>
@@ -11,7 +11,7 @@ namespace FalconEngine
 
 // @summary Handedness controls how the matrix is interpreted using different
 // handedness representation.
-class Handedness
+class FALCON_ENGINE_ITEM_MATH Handedness
 {
 public:
     Handedness();
@@ -115,7 +115,7 @@ public:
     CreateLookAt(const Vector3f & eyePosition, const Vector3f & targetPosition, const Vector3f & up, Matrix4f & result) const override;
 };
 
-class HandednessRight : public Handedness
+class FALCON_ENGINE_ITEM_MATH HandednessRight : public Handedness
 {
 public:
     // @summary Extract right vector from the view matrix, assuming the view transform matrix is in the form of vector on the right

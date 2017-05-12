@@ -3,13 +3,13 @@
 #include <memory>
 #include <boost/serialization/access.hpp>
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
 
 namespace FalconEngine
 {
 
-class Texture1d : public Texture
+class FALCON_ENGINE_ITEM_GRAPHICS Texture1d : public Texture
 {
 public:
     /************************************************************************/

@@ -1,7 +1,11 @@
 #include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
 
+#pragma warning(disable : 4244)
+
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
+
+#pragma warning(default : 4244)
 
 namespace FalconEngine
 {

@@ -1,23 +1,25 @@
 #pragma once
 
-#include <FalconEngine/InputInclude.h>
-#include <FalconEngine/Input/MouseButton.h>
+#include <FalconEngine/Input/Header.h>
 
 #include <unordered_map>
+
+#include <FalconEngine/Input/MouseButton.h>
 
 namespace FalconEngine
 {
 
-enum class MouseButtonPressState
+enum class FALCON_ENGINE_ITEM_INPUT MouseButtonPressState
 {
     Pressed,
     Released,
 };
 
 enum class MouseButton;
-class MouseButtonState final
+class FALCON_ENGINE_ITEM_INPUT MouseButtonState final
 {
 public:
+    MouseButtonState();
     explicit MouseButtonState(MouseButton button);
     ~MouseButtonState() = default;
 
@@ -29,10 +31,12 @@ public:
     bool        mUp;                  // Transition from being pressed to being released.
 };
 
-class MouseButtonStateMap : public std::unordered_map<MouseButton, MouseButtonState>
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_INPUT MouseButtonStateMap : public std::unordered_map<MouseButton, MouseButtonState>
 {
 public:
     MouseButtonStateMap();
 };
+#pragma warning(default: 4251)
 
 }

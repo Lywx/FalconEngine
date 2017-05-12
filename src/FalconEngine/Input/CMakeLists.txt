@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.1)
 
 include(${FALCON_ENGINE_ROOT_DIR}/cmake/Compiler.cmake)
 include(${FALCON_ENGINE_ROOT_DIR}/cmake/Platform.cmake)
@@ -13,10 +13,6 @@ add_library(
     FalconEngine.Input                   # Name
     ${FALCON_ENGINE_LIBRARY_TYPE} 	     # Type
     ${FALCON_ENGINE_INPUT_SOURCE_FILES}) # Source
-
-# TODO(Wuxiang)
-# target_link_libraries(FalconEngine.Input
-#     glew32sd.lib glfw3.lib)
 
 fe_set_target_folder(FalconEngine.Input "FalconEngine Library Targets")
 fe_set_target_output(FalconEngine.Input)

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/ContextInclude.h>
+#include <FalconEngine/Context/Header.h>
 
 #include <memory>
 #include <vector>
@@ -12,7 +12,7 @@ class GameEngineSettings;
 using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
 
 class GameEngineData;
-class GameEngineProfiler
+class FALCON_ENGINE_ITEM_CONTEXT GameEngineProfiler
 {
     friend class GameEngine;
 

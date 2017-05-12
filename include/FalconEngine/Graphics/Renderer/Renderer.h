@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <map>
 #include <vector>
@@ -76,7 +76,8 @@ class PlatformSampler;
 class PlatformShader;
 class PlatformRendererData;
 
-class Renderer
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS Renderer
 {
 public:
     /************************************************************************/
@@ -450,5 +451,6 @@ private:
 private:
     PlatformRendererData *mData;
 };
+#pragma warning(default: 4251)
 
 }

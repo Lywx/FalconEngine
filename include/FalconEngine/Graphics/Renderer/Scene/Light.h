@@ -7,7 +7,7 @@
 namespace FalconEngine
 {
 
-enum class LightType
+enum class FALCON_ENGINE_ITEM_GRAPHICS LightType
 {
     Directional,
     Point,
@@ -19,7 +19,7 @@ enum class LightType
 class Light;
 using LightSharedPtr = std::shared_ptr<Light>;
 
-class Light : public Object
+class FALCON_ENGINE_ITEM_GRAPHICS Light : public Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
 

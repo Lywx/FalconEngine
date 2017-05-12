@@ -1,10 +1,9 @@
 #include <FalconEngine/Context/GameCounter.h>
-#include <FalconEngine/ContextInclude.h>
 
 #include <stdexcept>
 #include <string>
 
-#if BOOST_OS_WINDOWS
+#if FALCON_ENGINE_OS_WINDOWS
 #include <windows.h>
 
 namespace FalconEngine
@@ -13,7 +12,7 @@ namespace FalconEngine
 /************************************************************************/
 /* Platform Dependent Implementation                                    */
 /************************************************************************/
-class GameCounterImp
+class FALCON_ENGINE_ITEM_CONTEXT GameCounterImp
 {
 public:
     GameCounterImp()

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/ContextInclude.h>
+#include <FalconEngine/Context/Header.h>
 
 #include <memory>
 #include <vector>
@@ -25,7 +25,9 @@ using MouseStateSharedPtr = std::shared_ptr<MouseState>;
 
 class GameEngineData;
 class GameEngineInputDispatcher;
-class GameEngineInput
+
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_CONTEXT GameEngineInput
 {
 public:
     /************************************************************************/
@@ -86,5 +88,6 @@ private:
     MouseControllerSharedPtr         mMouseController;
     MouseStateSharedPtr              mMouseState;
 };
+#pragma warning(default: 4251)
 
 }

@@ -5,7 +5,7 @@
 #include <assimp/scene.h>
 
 #include <FalconEngine/Content/AssetManager.h>
-#include <FalconEngine/Content/Path.h>
+#include <FalconEngine/Core/Path.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/IndexBuffer.h>
@@ -158,24 +158,19 @@ LoadMaterialTexture(
     {
         auto assetManager = AssetManager::GetInstance();
 
-        // Walk through every piece of material and load texture if needed
-
         // NOTE(Wuxiang): Since currently we only support one material per type,
         // we return immediately after get the texture at index 0.
-        for (decltype(textureNum) textureIndex = 0; textureIndex < textureNum; ++textureIndex)
-        {
-            // Read texture file path.
-            aiString textureFilePath;
-            material->GetTexture(materialType, textureIndex, &textureFilePath);
+        // Read texture file path.
+        aiString textureFilePath;
+        material->GetTexture(materialType, 0, &textureFilePath);
 
-            // Get texture from asset manager without duplication using asset
-            // manager's duplication checking mechanics.
+        // NOTE(Wuxiang): Get texture from asset manager without duplication using asset
+        // manager's duplication checking mechanics.
 
-            // NOTE(Wuxiang): Add .bin to file path so that the texture file is
-            // loaded from preprocessed asset file.
-            auto texture = assetManager->LoadTexture(modelDirectoryPath + AddAssetExtension(textureFilePath.C_Str()));
-            return texture.get();
-        }
+        // NOTE(Wuxiang): Add .bin to file path so that the texture file is
+        // loaded from preprocessed asset file.
+        auto texture = assetManager->LoadTexture(modelDirectoryPath + AddAssetExtension(textureFilePath.C_Str()));
+        return texture.get();
     }
 
     return nullptr;

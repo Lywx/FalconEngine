@@ -1,19 +1,19 @@
 #pragma once
 
-#include <FalconEngine/InputInclude.h>
+#include <FalconEngine/Input/Header.h>
 #include <FalconEngine/Core/EventHandler.h>
 
 namespace FalconEngine
 {
 
-enum class InputPriority
+enum class FALCON_ENGINE_ITEM_INPUT InputPriority
 {
     System = 0,
     User   = 1,
 };
 
 template <typename T>
-class InputHandler : public EventHandler<T>
+class FALCON_ENGINE_ITEM_INPUT InputHandler : public EventHandler<T>
 {
 public:
     /************************************************************************/

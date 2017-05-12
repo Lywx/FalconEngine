@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <FalconEngine/Core/EventHandler.h>
 #include <FalconEngine/Core/Object.h>
@@ -22,7 +22,8 @@ using VisualSharedPtr = std::shared_ptr<Visual>;
 
 class Vector3f;
 
-class Entity : public Object
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS Entity : public Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
@@ -77,5 +78,8 @@ protected:
     Vector3f      mLocalScale;
     bool          mLocalTransformIsCurrent;
 };
+#pragma warning(default: 4251)
+
+FALCON_ENGINE_RTTI_DECLARE_EXPORT(Entity);
 
 }

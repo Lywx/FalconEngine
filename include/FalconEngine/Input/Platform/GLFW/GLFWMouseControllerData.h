@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/InputInclude.h>
+#include <FalconEngine/Input/Header.h>
 
 #if FALCON_ENGINE_PLATFORM_GLFW
 #include <FalconEngine/Context/Platform/GLFW/GLFWInclude.h>
@@ -8,7 +8,7 @@
 namespace FalconEngine
 {
 
-class MouseControllerData
+class FALCON_ENGINE_ITEM_INPUT MouseControllerData
 {
 public:
     explicit MouseControllerData(GLFWwindow *window) :

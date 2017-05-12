@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <vector>
 #include <map>
@@ -22,11 +22,12 @@ class Primitive;
 class Renderer;
 class Visual;
 
+#pragma warning(disable: 4251)
 #if defined(FALCON_ENGINE_PLATFORM_QT)
 #include <QtGui/QOpenGLFunctions>
-class EntityRenderer final : QOpenGLFunctions
+class FALCON_ENGINE_ITEM_GRAPHICS EntityRenderer final : QOpenGLFunctions
 #else
-class EntityRenderer final
+class FALCON_ENGINE_ITEM_GRAPHICS EntityRenderer final
 #endif
 {
 public:
@@ -92,5 +93,6 @@ private:
     NodeQueue           mNodeQueueCurrent;
     NodeQueue           mNodeQueueNext;
 };
+#pragma warning(default: 4251)
 
 }

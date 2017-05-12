@@ -1,5 +1,6 @@
 #pragma once
 
+#include <FalconEngine/Math/Header.h>
 #include <FalconEngine/Math/Vector2.h>
 #include <FalconEngine/Math/Vector4.h>
 
@@ -7,7 +8,7 @@ namespace FalconEngine
 {
 
 // @summary axis-aligned rectangle in 2D space
-class Rectangle
+class FALCON_ENGINE_ITEM_MATH Rectangle
 {
 public:
     static const Rectangle Zero;

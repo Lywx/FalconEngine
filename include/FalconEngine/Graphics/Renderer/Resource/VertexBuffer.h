@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <memory>
 #include <vector>
@@ -10,7 +10,7 @@
 namespace FalconEngine
 {
 
-class VertexBuffer : public Buffer
+class FALCON_ENGINE_ITEM_GRAPHICS VertexBuffer : public Buffer
 {
 public:
     /************************************************************************/

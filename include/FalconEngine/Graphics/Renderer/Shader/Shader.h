@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <unordered_map>
 
@@ -9,11 +9,11 @@
 namespace FalconEngine
 {
 
-enum class ShaderUniformType;
+enum class FALCON_ENGINE_ITEM_GRAPHICS ShaderUniformType;
 
 // @remark The integer number is used to index into the shader source table, which
 // is referred as shader type index.
-enum class ShaderType
+enum class FALCON_ENGINE_ITEM_GRAPHICS ShaderType
 {
     VertexShader   = 0,
     GeometryShader = 1,
@@ -41,7 +41,8 @@ using ShaderUniformMap = std::unordered_map<std::string, ShaderUniform>;
 // so that one should think about what is responsible for updating shader uniform
 // variable for each update (which is done by setting shader uniform in visual
 // effect instance).
-class Shader
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS Shader
 {
     friend class PlatformShader;
 
@@ -89,5 +90,6 @@ private:
     ShaderSourceSharedPtrMap mSourceTable;
     ShaderUniformMap         mUniformTable;
 };
+#pragma warning(default: 4251)
 
 }

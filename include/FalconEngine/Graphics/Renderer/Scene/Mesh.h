@@ -24,7 +24,8 @@ using VertexFormatSharedPtr = std::shared_ptr<VertexFormat>;
 class VertexGroup;
 using VertexGroupSharedPtr = std::shared_ptr<VertexGroup>;
 
-class Mesh : public Visual
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS Mesh : public Visual
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
@@ -60,5 +61,6 @@ public:
 protected:
     MaterialSharedPtr mMaterial;
 };
+#pragma warning(default: 4251)
 
 }

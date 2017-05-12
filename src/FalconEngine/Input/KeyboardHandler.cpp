@@ -3,7 +3,7 @@
 namespace FalconEngine
 {
 
-inline KeyboardHandler::KeyboardHandler() :
+KeyboardHandler::KeyboardHandler() :
     InputHandler(InputPriority::System),
     mEnabled(true)
 {

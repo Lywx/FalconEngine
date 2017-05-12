@@ -1,12 +1,12 @@
 #pragma once
 
-#include <FalconEngine/InputInclude.h>
+#include <FalconEngine/Input/Header.h>
 #include <FalconEngine/Input/MouseState.h>
 
 namespace FalconEngine
 {
 
-class Mouse final
+class FALCON_ENGINE_ITEM_INPUT Mouse final
 {
 public:
     /************************************************************************/

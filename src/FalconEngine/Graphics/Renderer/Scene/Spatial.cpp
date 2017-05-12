@@ -3,7 +3,11 @@
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(Spatial, Object);
+const Rtti Spatial::sType("Spatial", &ObjectsType());
+const Rtti& Spatial::GetType() const
+{
+    return sType;
+};
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

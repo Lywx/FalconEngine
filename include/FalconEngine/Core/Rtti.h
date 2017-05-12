@@ -1,17 +1,20 @@
 #pragma once
 
+#include <FalconEngine/Core/Macro.h>
+
 namespace FalconEngine
 {
 
-class Rtti
+class FALCON_ENGINE_ITEM_CORE Rtti
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Rtti (const char *name, const Rtti *baseType);
-    ~Rtti ();
+    Rtti(const char *name, const Rtti *baseType);
+    ~Rtti();
 
+public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
@@ -45,12 +48,23 @@ Rtti::IsExactly(const Rtti& type) const
 
 #define FALCON_ENGINE_RTTI_DECLARE \
 public: \
-    static const Rtti Type; \
+    static const Rtti sType; \
     \
-    virtual const Rtti& GetType() const \
-    { \
-        return Type; \
-    }
+    virtual const Rtti& GetType() const;
+
+#define FALCON_ENGINE_RTTI_DECLARE_EXPORT(klass) \
+    FALCON_ENGINE_ITEM_CORE const Rtti& klass##sType();
 
 #define FALCON_ENGINE_RTTI_IMPLEMENT(klass, baseklass) \
-    const Rtti klass::Type(#klass, &baseklass::Type)
+    const Rtti klass::sType(#klass, &baseklass##sType()); \
+    \
+    const Rtti& klass::GetType() const \
+    { \
+        return sType; \
+    }
+
+#define FALCON_ENGINE_RTTI_IMPLEMENT_EXPORT(klass) \
+    const Rtti& klass##sType() \
+    { \
+        return klass::sType; \
+    }

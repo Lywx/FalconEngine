@@ -6,7 +6,7 @@
 namespace FalconEngine
 {
 
-class PlatformSampler
+class FALCON_ENGINE_ITEM_GRAPHICS PlatformSampler
 {
 public:
     PlatformSampler(const Sampler *sampler);

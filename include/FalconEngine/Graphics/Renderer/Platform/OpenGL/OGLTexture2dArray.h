@@ -10,7 +10,8 @@
 namespace FalconEngine
 {
 
-class PlatformTexture2dArray
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS PlatformTexture2dArray
 {
 public:
     PlatformTexture2dArray(const Texture2dArray *textures);
@@ -41,5 +42,6 @@ private:
     GLuint                mTexture;
     GLuint                mTexturePrevious;
 };
+#pragma warning(default: 4251)
 
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <FalconEngine/Math/Matrix4.h>
 
@@ -15,7 +15,8 @@ using VertexBufferSharedPtr = std::shared_ptr<VertexBuffer>;
 class Visual;
 using VisualSharedPtr = std::shared_ptr<Visual>;
 
-class BoundingBoxBatch
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_GRAPHICS BoundingBoxBatch
 {
 public:
     BoundingBoxBatch(
@@ -47,5 +48,6 @@ public:
 
     VertexBufferSharedPtr mVertexBuffer;
 };
+#pragma warning(default: 4251)
 
 }

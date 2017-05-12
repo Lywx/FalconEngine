@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <FalconEngine/Math/Matrix4.h>
 #include <FalconEngine/Math/Vector3.h>
@@ -9,7 +9,7 @@
 namespace FalconEngine
 {
 
-enum class BufferAccessMode
+enum class FALCON_ENGINE_ITEM_GRAPHICS BufferAccessMode
 {
     None,
 
@@ -20,7 +20,7 @@ enum class BufferAccessMode
     Count
 };
 
-enum class BufferUsage
+enum class FALCON_ENGINE_ITEM_GRAPHICS BufferUsage
 {
     None,
 
@@ -31,7 +31,7 @@ enum class BufferUsage
     Count
 };
 
-class Buffer
+class FALCON_ENGINE_ITEM_GRAPHICS Buffer
 {
 
 protected:

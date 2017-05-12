@@ -1,22 +1,23 @@
 #pragma once
 
+#include <FalconEngine/Core/Header.h>
+
 #include <string>
 
 #include <boost/serialization/access.hpp>
 
-#include <FalconEngine/ContentInclude.h>
-
 namespace FalconEngine
 {
 
-enum class AssetSource
+enum class FALCON_ENGINE_ITEM_CORE AssetSource
 {
     None,
     Normal,
     Stream,
 };
 
-class Asset
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_ITEM_CORE Asset
 {
 public:
     Asset(const std::string& fileName, const std::string& filePath);
@@ -44,6 +45,7 @@ public:
         // changed when loading in different circumstances.
     }
 };
+#pragma warning(default: 4251)
 
 std::string
 AddAssetExtension(const std::string& filePath);

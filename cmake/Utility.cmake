@@ -1,4 +1,10 @@
 cmake_minimum_required(VERSION 3.0)
+cmake_policy(SET CMP0054 NEW)
+
+# NOTE(Wuxiang): Include guard.
+if (FALCON_ENGINE_UTILITY_INITIALIZED)
+    return()
+endif()
 
 set(FALCON_ENGINE_UTILITY_INITIALIZED TRUE)
 

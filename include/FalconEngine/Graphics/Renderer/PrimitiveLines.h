@@ -5,7 +5,7 @@
 namespace FalconEngine
 {
 
-class PrimitiveLines : public Primitive
+class FALCON_ENGINE_ITEM_GRAPHICS PrimitiveLines : public Primitive
 {
     FALCON_ENGINE_RTTI_DECLARE;
 

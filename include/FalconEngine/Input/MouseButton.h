@@ -1,14 +1,15 @@
 #pragma once
 
-#include <FalconEngine/InputInclude.h>
+#include <FalconEngine/Input/Header.h>
 
 #include <functional>
 
 namespace FalconEngine
 {
 
-enum class MouseButton
+enum class FALCON_ENGINE_ITEM_INPUT MouseButton
 {
+    Unknown = -1,
     LeftButton = 0,
     RightButton = 1,
     MiddleButton = 2

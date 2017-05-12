@@ -12,7 +12,7 @@ class Visual;
 using VisualSharedPtr = std::shared_ptr<Visual>;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS BitmapFontBatch
+class BitmapFontBatch
 {
 public:
     BitmapFontBatch(VertexBufferSharedPtr vertexBuffer, VisualSharedPtr vertexQuads) :

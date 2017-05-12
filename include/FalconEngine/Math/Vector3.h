@@ -2,8 +2,6 @@
 
 #include <FalconEngine/Math/Header.h>
 
-#include <stdexcept>
-
 // NOTE(Wuxiang): Disable warning C4201: nonstandard extension used : nameless struct/union.
 #pragma warning(disable : 4201)
 
@@ -15,9 +13,9 @@
 namespace FalconEngine
 {
 
-// Assume vector are column vector
 class Vector3i;
 
+// Assume vector are column vector
 #pragma pack(push, 1)
 class FALCON_ENGINE_ITEM_MATH Vector3f : public glm::vec3
 {
@@ -42,6 +40,7 @@ public:
     static Vector3f
     Normalize(const Vector3f& v);
 
+public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/

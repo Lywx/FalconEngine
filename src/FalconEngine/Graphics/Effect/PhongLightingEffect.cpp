@@ -26,7 +26,6 @@ namespace FalconEngine
 {
 
 FALCON_ENGINE_RTTI_IMPLEMENT(PhongLightingEffect, VisualEffect);
-FALCON_ENGINE_RTTI_IMPLEMENT_EXPORT(PhongLightingEffect);
 
 /************************************************************************/
 /* Static Members                                                       */

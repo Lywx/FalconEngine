@@ -21,4 +21,3 @@ OS Specifics
 
 Commit
 ===
-Reorganized *Include.h headers.

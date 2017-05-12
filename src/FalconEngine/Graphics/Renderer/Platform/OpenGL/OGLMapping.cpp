@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLInclude.h>
+#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLMapping.h>
 
 namespace FalconEngine
 {

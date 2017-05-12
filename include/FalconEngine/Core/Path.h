@@ -7,10 +7,10 @@
 #include <locale>
 #include <string>
 
-#if FALCON_ENGINE_OS_WINDOWS
-#define DIR_SEPARATOR "/"
-#elif FALCON_ENGINE_OS_LINUX
-#define DIR_SEPARATOR "/"
+#if defined(FALCON_ENGINE_OS_WINDOWS)
+#define FALCON_ENGINE_DIR_SEPARATOR "/"
+#elif defined(FALCON_ENGINE_OS_LINUX)
+#define FALCON_ENGINE_DIR_SEPARATOR "/"
 #endif
 
 namespace FalconEngine
@@ -19,38 +19,38 @@ namespace FalconEngine
 // @param str must be in utf-8 format.
 //
 // @return
-std::wstring
+FALCON_ENGINE_ITEM_CORE std::wstring
 GetWString(const std::string& str);
 
-bool
+FALCON_ENGINE_ITEM_CORE bool
 Exist(const std::string& relativePath);
 
-std::string
+FALCON_ENGINE_ITEM_CORE std::string
 GetCurrentPath();
 
-std::string
+FALCON_ENGINE_ITEM_CORE std::string
 GetFileExtension(const std::string& path);
 
-std::string
+FALCON_ENGINE_ITEM_CORE std::string
 GetFileDirectory(const std::string& path);
 
-std::string
+FALCON_ENGINE_ITEM_CORE std::string
 GetFileName(const std::string& path);
 
-std::string
+FALCON_ENGINE_ITEM_CORE std::string
 GetFileStem(const std::string& path);
 
 // @return Byte number of the given file.
-std::ifstream::pos_type
+FALCON_ENGINE_ITEM_CORE std::ifstream::pos_type
 GetFileSize(const std::string& relativePath);
 
-std::string
+FALCON_ENGINE_ITEM_CORE std::string
 ChangeFileExtension(const std::string& path, const std::string& extension);
 
-std::string
+FALCON_ENGINE_ITEM_CORE std::string
 RemoveFileExtension(const std::string& path);
 
-bool
+FALCON_ENGINE_ITEM_CORE bool
 CreateDirectory(const std::string& relativePath);
 
 }

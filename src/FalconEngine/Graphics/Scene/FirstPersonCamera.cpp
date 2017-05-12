@@ -9,7 +9,6 @@ namespace FalconEngine
 {
 
 FALCON_ENGINE_RTTI_IMPLEMENT(FirstPersonCamera, Camera);
-FALCON_ENGINE_RTTI_IMPLEMENT_EXPORT(FirstPersonCamera);
 
 FirstPersonCamera::FirstPersonCamera(const Handedness *handedness) :
     Camera(handedness)

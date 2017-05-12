@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <string>
 
-#if FALCON_ENGINE_OS_WINDOWS
+#if defined(FALCON_ENGINE_OS_WINDOWS)
 #include <windows.h>
 
 namespace FalconEngine

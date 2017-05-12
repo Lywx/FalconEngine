@@ -2,6 +2,7 @@
 
 #include <cstring>
 
+#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLUtility.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
 
 namespace FalconEngine

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <FalconEngine/Graphics/Header.h>
+
 #include <FalconEngine/Core/Object.h>
 #include <FalconEngine/Graphics/Renderer/Viewport.h>
 #include <FalconEngine/Math/Handedness.h>
@@ -163,7 +165,5 @@ protected:
 private:
     const Handedness  *mHandedness;
 };
-
-FALCON_ENGINE_RTTI_DECLARE_EXPORT(Camera);
 
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Context/Platform/GLFW/GLFWInclude.h>
+#include <FalconEngine/Context/Platform/GLFW/GLFWHeader.h>
 
 namespace FalconEngine
 {

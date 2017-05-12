@@ -6,7 +6,6 @@ namespace FalconEngine
 {
 
 FALCON_ENGINE_RTTI_IMPLEMENT(Visual, Object);
-FALCON_ENGINE_RTTI_IMPLEMENT_EXPORT(Visual);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

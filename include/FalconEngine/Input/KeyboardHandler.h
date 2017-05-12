@@ -9,7 +9,7 @@ namespace FalconEngine
 class KeyboardState;
 using KeyboardStateSharedPtr = std::shared_ptr<KeyboardState>;
 
-class FALCON_ENGINE_ITEM_INPUT KeyboardHandler : public InputHandler<KeyboardStateSharedPtr>
+class KeyboardHandler : public InputHandler<KeyboardStateSharedPtr>
 {
 public:
     KeyboardHandler();

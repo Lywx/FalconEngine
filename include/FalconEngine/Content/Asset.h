@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Core/Header.h>
+#include <FalconEngine/Content/Header.h>
 
 #include <string>
 
@@ -47,7 +47,7 @@ public:
 };
 #pragma warning(default: 4251)
 
-std::string
+FALCON_ENGINE_ITEM_CORE std::string
 AddAssetExtension(const std::string& filePath);
 
 }

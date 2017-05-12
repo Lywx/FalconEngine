@@ -8,6 +8,7 @@
 #include <vector>
 
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFontBatch.h>
+
 #include <FalconEngine/Math/Color.h>
 #include <FalconEngine/Math/Handedness.h>
 #include <FalconEngine/Math/Vector2.h>

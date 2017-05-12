@@ -51,16 +51,72 @@ function(fe_set_target_output CURRENT_TARGET_NAME)
     )
 endfunction()
 
-function(fe_set_target_folder CURRENT_TARGET_NAME CURRENT_FOLDER_NAME)
-
-    set_target_properties(${CURRENT_TARGET_NAME} PROPERTIES
-        FOLDER "${CURRENT_FOLDER_NAME}")
-
+function(fe_set_target_folder TARGET_NAME FOLDER_NAME)
+    set_target_properties(${TARGET_NAME} PROPERTIES
+        FOLDER "${FOLDER_NAME}")
 endfunction()
 
-function(fe_set_target_language CURRENT_TARGET_NAME CURRENT_LANGUAGE_NAME)
+function(fe_set_target_language TARGET_NAME LANGUAGE_NAME)
+    set_target_properties(${TARGET_NAME} PROPERTIES
+        LINKER_LANGUAGE ${LANGUAGE_NAME})
+endfunction()
 
-    set_target_properties(${CURRENT_TARGET_NAME} PROPERTIES
-        LINKER_LANGUAGE ${CURRENT_LANGUAGE_NAME})
+function(fe_add_source_group GROUP_NAME TARGET_DIRECTORY TARGET_FILE_LIST)
+    set(SOURCE_GROUP_DELIMITER "/")
+    set(PREVIOUS_FILE_DIRECTORY "")
+    set(CURRENT_FILE_LIST "")
+
+    foreach(FILE ${TARGET_FILE_LIST})
+        # Get the relative path.
+        file(RELATIVE_PATH CURRENT_FILE_RELATIVE_PATH "${TARGET_DIRECTORY}" ${FILE})
+        # Get the top relative folder, assuming file is ordered lexicographically.
+        get_filename_component(CURRENT_FILE_DIRECTORY "${CURRENT_FILE_RELATIVE_PATH}" DIRECTORY)
+        # Test if hit upon a sub-folder. If so, you should push all of previous file 
+        # list into the previous folder before you process new file.
+        if(NOT "${CURRENT_FILE_DIRECTORY}" STREQUAL "${PREVIOUS_FILE_DIRECTORY}")
+            if(CURRENT_FILE_LIST)
+                source_group("${GROUP_NAME}/${PREVIOUS_FILE_DIRECTORY}" FILES ${CURRENT_FILE_LIST})
+            endif()
+            # Reset file list after pushing all of them into a folder
+            set(CURRENT_FILE_LIST "")
+        endif()
+        # Add new file into the file list.
+        set(CURRENT_FILE_LIST ${CURRENT_FILE_LIST} ${FILE})
+        # Update file directory.
+        set(PREVIOUS_FILE_DIRECTORY "${CURRENT_FILE_DIRECTORY}")
+    endforeach()
+    # Push the remaining files into belonging folder.
+    if(CURRENT_FILE_LIST)
+        source_group("${GROUP_NAME}/${PREVIOUS_FILE_DIRECTORY}" FILES ${CURRENT_FILE_LIST})
+    endif()
+endfunction()
+
+function(fe_add_sample SAMPLE_PROJECT_NAME SAMPLE_PROJECT_DIR)
+    include_directories(${FALCON_ENGINE_INCLUDE_DIR})
+    link_directories(${FALCON_ENGINE_ARCHIVE_OUTPUT_DIR}
+        ${FALCON_ENGINE_LIBRARY_DIR})
+
+    file(GLOB_RECURSE SAMPLE_PROJECT_FILES ${SAMPLE_PROJECT_DIR}/*.h ${SAMPLE_PROJECT_DIR}/*.cpp)
+    add_executable(${SAMPLE_PROJECT_NAME} ${SAMPLE_PROJECT_FILES})
+
+    set(SAMPLE_EXTRA_LIBRARY_FILES "")
+    if (FALCON_ENGINE_PLATFORM_GLFW)
+        if (FALCON_ENGINE_PLATFORM_WINDOWS)
+            set(SAMPLE_EXTRA_LIBRARY_FILES ${SAMPLE_EXTRA_LIBRARY_FILES} 
+                kernel32 user32 gdi32 winspool shell32 ole32 oleaut32 uuid comdlg32 advapi32)
+        elseif (FALCON_ENGINE_PLATFORM_LINUX)
+            set(SAMPLE_EXTRA_LIBRARY_FILES ${SAMPLE_EXTRA_LIBRARY_FILES} 
+                dl X11)
+        endif()
+    elseif(PLATFORM_QT)
+        # TODO(Wuxiang):
+        message(WARNING "Windows Qt dependency not configured properly.")
+    endif()
+
+    target_link_libraries(${SAMPLE_PROJECT_NAME} ${SAMPLE_EXTRA_LIBRARY_FILES}
+        FalconEngine)
+
+    fe_set_target_folder(${SAMPLE_PROJECT_NAME} "Falcon Engine Sample Targets")
+    fe_set_target_output(${SAMPLE_PROJECT_NAME})
 
 endfunction()

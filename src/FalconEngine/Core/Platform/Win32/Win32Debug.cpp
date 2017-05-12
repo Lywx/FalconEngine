@@ -1,6 +1,6 @@
 #include <FalconEngine/Core/Debug.h>
 
-#if FALCON_ENGINE_OS_WINDOWS
+#if defined(FALCON_ENGINE_OS_WINDOWS)
 
 #include <string>
 

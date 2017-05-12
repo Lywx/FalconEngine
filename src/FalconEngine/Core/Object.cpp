@@ -14,12 +14,6 @@ Object::GetType() const
     return sType;
 }
 
-const Rtti&
-ObjectsType()
-{
-    return Object::sType;
-}
-
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/

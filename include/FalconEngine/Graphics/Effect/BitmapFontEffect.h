@@ -3,6 +3,7 @@
 #include <FalconEngine/Graphics/Header.h>
 
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
+
 #include <FalconEngine/Math/Handedness.h>
 #include <FalconEngine/Math/Vector2.h>
 #include <FalconEngine/Math/Vector4.h>
@@ -16,7 +17,7 @@ class VertexFormat;
 using VertexFormatSharedPtr = std::shared_ptr<VertexFormat>;
 
 #pragma pack(push, 1)
-class FALCON_ENGINE_ITEM_GRAPHICS BitmapFontVertex
+class BitmapFontVertex
 {
 public:
     Vector2f mPosition;

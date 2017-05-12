@@ -1,16 +1,9 @@
 #pragma once
 
-#include <map>
-
-#include <FalconEngine/Graphics/Header.h>
-
-#if FALCON_ENGINE_PLATFORM_GLFW
-#define GLEW_STATIC
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#endif
+#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLHeader.h>
 
 #include <FalconEngine/Graphics/Renderer/Primitive.h>
+
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
@@ -47,17 +40,5 @@ extern const GLuint OpenGLShaderAttributeType[int(VertexAttributeType::Count)];
 extern const GLenum OpenGLShaderType[int(ShaderType::Count)];
 
 extern const GLenum OpenGLPrimitiveType[int(PrimitiveType::Count)];
-
-// @return previous bound texture
-GLuint
-BindTexture(TextureType textureType, GLuint texture);
-
-// @return previous bound texture
-GLuint
-GetBoundTexture(TextureType textureType);
-
-// @return previous bound sampler
-GLuint
-BindSampler(GLuint textureUnit, GLuint sampler);
 
 }

@@ -7,6 +7,7 @@
 #include <queue>
 
 #include <FalconEngine/Graphics/Renderer/Entity/BoundingBoxBatch.h>
+
 #include <FalconEngine/Math/Color.h>
 
 namespace FalconEngine

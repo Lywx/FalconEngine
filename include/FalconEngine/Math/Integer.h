@@ -1,5 +1,7 @@
 #pragma once
 
+#include <FalconEngine/Math/Header.h>
+
 #include <cstdint>
 #include <limits>
 #include <type_traits>

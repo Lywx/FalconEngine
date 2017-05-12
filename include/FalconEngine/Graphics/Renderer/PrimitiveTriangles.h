@@ -23,6 +23,4 @@ public:
     GetTriangleNum() const;
 };
 
-FALCON_ENGINE_RTTI_DECLARE_EXPORT(PrimitiveTriangles);
-
 }

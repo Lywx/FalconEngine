@@ -1,4 +1,5 @@
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLTextureSampler.h>
+#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLUtility.h>
 
 namespace FalconEngine
 {

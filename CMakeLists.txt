@@ -8,8 +8,11 @@ option(FALCON_ENGINE_PLATFORM_GLFW "Using GLFW windows system" ON)
 # Set up solution root
 set(FALCON_ENGINE_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Falcon Engine root path.")
 
-add_subdirectory(include)
-add_subdirectory(src)
+# Set up include
+include(${FALCON_ENGINE_ROOT_DIR}/cmake/Compiler.cmake)
+include(${FALCON_ENGINE_ROOT_DIR}/cmake/Dependency.cmake)
+include(${FALCON_ENGINE_ROOT_DIR}/cmake/Platform.cmake)
+include(${FALCON_ENGINE_ROOT_DIR}/cmake/Target.cmake)
 
 # Set up IDE solution
 project(FalconEngine CXX)
@@ -17,3 +20,100 @@ project(FalconEngine CXX)
 # Set up IDE project folder
 set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "CMake Targets")
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+# 
+# Set up Falcon Engine library targets
+#
+
+include_directories(${FALCON_ENGINE_INCLUDE_DIR})
+link_directories(${FALCON_ENGINE_LIBRARY_DIR} ${FALCON_ENGINE_ARCHIVE_OUTPUT_DIR})
+
+file(GLOB_RECURSE FALCON_ENGINE_CONTENT_SOURCE_FILES src/FalconEngine/Content/*.cpp)
+file(GLOB_RECURSE FALCON_ENGINE_CONTENT_PIPELINE_SOURCE_FILES src/FalconEngine/Content/Pipeline/*.cpp)
+list(REMOVE_ITEM FALCON_ENGINE_CONTENT_SOURCE_FILES ${FALCON_ENGINE_CONTENT_PIPELINE_SOURCE_FILES})
+file(GLOB_RECURSE FALCON_ENGINE_CONTENT_HEADER_FILES include/FalconEngine/Content/*.h)
+file(GLOB_RECURSE FALCON_ENGINE_CONTEXT_SOURCE_FILES src/FalconEngine/Context/*.cpp)
+file(GLOB_RECURSE FALCON_ENGINE_CONTEXT_HEADER_FILES include/FalconEngine/Context/*.h)
+file(GLOB_RECURSE FALCON_ENGINE_CORE_SOURCE_FILES src/FalconEngine/Core/*.cpp)
+file(GLOB_RECURSE FALCON_ENGINE_CORE_HEADER_FILES include/FalconEngine/Core/*.h)
+file(GLOB_RECURSE FALCON_ENGINE_GRAPHICS_SHADER_FILES src/FalconEngine/Graphics/*.glsl)
+file(GLOB_RECURSE FALCON_ENGINE_GRAPHICS_SOURCE_FILES src/FalconEngine/Graphics/*.cpp)
+file(GLOB_RECURSE FALCON_ENGINE_GRAPHICS_HEADER_FILES include/FalconEngine/Graphics/*.h)
+file(GLOB_RECURSE FALCON_ENGINE_INPUT_SOURCE_FILES src/FalconEngine/Input/*.cpp)
+file(GLOB_RECURSE FALCON_ENGINE_INPUT_HEADER_FILES include/FalconEngine/Input/*.h)
+file(GLOB_RECURSE FALCON_ENGINE_MATH_SOURCE_FILES src/FalconEngine/Math/*.cpp)
+file(GLOB_RECURSE FALCON_ENGINE_MATH_HEADER_FILES include/FalconEngine/Math/*.h)
+
+add_library(FalconEngine                   # Name
+    ${FALCON_ENGINE_LIBRARY_TYPE}          # Type
+    ${FALCON_ENGINE_LIBRARY_TYPE}          # Type
+    ${FALCON_ENGINE_CONTENT_HEADER_FILES}  # Source 
+    ${FALCON_ENGINE_CONTENT_SOURCE_FILES}
+    ${FALCON_ENGINE_CONTEXT_HEADER_FILES}
+    ${FALCON_ENGINE_CONTEXT_SOURCE_FILES}
+    ${FALCON_ENGINE_CORE_HEADER_FILES}
+    ${FALCON_ENGINE_CORE_SOURCE_FILES}
+    ${FALCON_ENGINE_GRAPHICS_HEADER_FILES}
+    ${FALCON_ENGINE_GRAPHICS_SHADER_FILES}
+    ${FALCON_ENGINE_GRAPHICS_SOURCE_FILES}
+    ${FALCON_ENGINE_INPUT_HEADER_FILES}
+    ${FALCON_ENGINE_INPUT_SOURCE_FILES}
+    ${FALCON_ENGINE_MATH_HEADER_FILES}
+    ${FALCON_ENGINE_MATH_SOURCE_FILES})
+
+set(FALCON_ENGINE_EXTRA_LIBRARY_FILES
+    ${ASSIMP_LIBRARY_FILE}
+    ${GL_LIBRARY_FILE}
+    ${GLEW_LIBRARY_FILE}
+    ${GLFW_LIBRARY_FILE})
+target_link_libraries(FalconEngine ${FALCON_ENGINE_EXTRA_LIBRARY_FILES})
+
+set(FALCON_ENGINE_SYMBOL_EXPORT Content Context Core Graphics Input Math)
+fe_add_export_definition("${FALCON_ENGINE_SYMBOL_EXPORT}")
+
+fe_add_source_group("Shader Files" ${CMAKE_CURRENT_SOURCE_DIR}/src/FalconEngine "${FALCON_ENGINE_GRAPHICS_SHADER_FILES}")
+
+fe_add_source_group("Source Files" ${CMAKE_CURRENT_SOURCE_DIR}/src/FalconEngine "${FALCON_ENGINE_CONTENT_SOURCE_FILES}")
+fe_add_source_group("Source Files" ${CMAKE_CURRENT_SOURCE_DIR}/src/FalconEngine "${FALCON_ENGINE_CONTEXT_SOURCE_FILES}")
+fe_add_source_group("Source Files" ${CMAKE_CURRENT_SOURCE_DIR}/src/FalconEngine "${FALCON_ENGINE_CORE_SOURCE_FILES}")
+fe_add_source_group("Source Files" ${CMAKE_CURRENT_SOURCE_DIR}/src/FalconEngine "${FALCON_ENGINE_GRAPHICS_SOURCE_FILES}")
+fe_add_source_group("Source Files" ${CMAKE_CURRENT_SOURCE_DIR}/src/FalconEngine "${FALCON_ENGINE_INPUT_SOURCE_FILES}")
+fe_add_source_group("Source Files" ${CMAKE_CURRENT_SOURCE_DIR}/src/FalconEngine "${FALCON_ENGINE_MATH_SOURCE_FILES}")
+
+fe_add_source_group("Header Files" ${CMAKE_CURRENT_SOURCE_DIR}/include/FalconEngine "${FALCON_ENGINE_CONTENT_HEADER_FILES}")
+fe_add_source_group("Header Files" ${CMAKE_CURRENT_SOURCE_DIR}/include/FalconEngine "${FALCON_ENGINE_CONTEXT_HEADER_FILES}")
+fe_add_source_group("Header Files" ${CMAKE_CURRENT_SOURCE_DIR}/include/FalconEngine "${FALCON_ENGINE_CORE_HEADER_FILES}")
+fe_add_source_group("Header Files" ${CMAKE_CURRENT_SOURCE_DIR}/include/FalconEngine "${FALCON_ENGINE_GRAPHICS_HEADER_FILES}")
+fe_add_source_group("Header Files" ${CMAKE_CURRENT_SOURCE_DIR}/include/FalconEngine "${FALCON_ENGINE_INPUT_HEADER_FILES}")
+fe_add_source_group("Header Files" ${CMAKE_CURRENT_SOURCE_DIR}/include/FalconEngine "${FALCON_ENGINE_MATH_HEADER_FILES}")
+
+fe_set_target_folder(FalconEngine "Falcon Engine Library Targets")
+fe_set_target_output(FalconEngine)
+
+# Update output shader folders
+assert_defined(FALCON_ENGINE_RUNTIME_OUTPUT_DIR)
+
+file(REMOVE_RECURSE "${FALCON_ENGINE_RUNTIME_OUTPUT_DIR}/Debug/Content/Shaders")
+file(REMOVE_RECURSE "${FALCON_ENGINE_RUNTIME_OUTPUT_DIR}/Release/Content/Shaders")
+file(COPY ${FALCON_ENGINE_GRAPHICS_SHADER_FILES} DESTINATION "${FALCON_ENGINE_RUNTIME_OUTPUT_DIR}/Debug/Content/Shaders")
+file(COPY ${FALCON_ENGINE_GRAPHICS_SHADER_FILES} DESTINATION "${FALCON_ENGINE_RUNTIME_OUTPUT_DIR}/Release/Content/Shaders")
+
+#
+# Set up Falcon Engine tool targets
+#
+
+add_executable(FalconEngine.Pipeline 
+    ${FALCON_ENGINE_CONTENT_PIPELINE_SOURCE_FILES})
+
+target_link_libraries(FalconEngine.Pipeline 
+    FalconEngine)
+
+fe_set_target_folder(FalconEngine.Pipeline "Falcon Engine Tool Targets")
+fe_set_target_output(FalconEngine.Pipeline)
+
+#
+# Set up Falcon Engine sample targets
+#
+
+fe_add_sample("FalconEngine.Sample" "src/FalconEngine/Sample")
+

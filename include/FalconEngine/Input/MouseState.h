@@ -1,8 +1,10 @@
 #pragma once
 
 #include <FalconEngine/Input/Header.h>
+
 #include <FalconEngine/Input/MouseButtonState.h>
 #include <FalconEngine/Math/Vector2.h>
+#include "FalconEngine/Math/Vector3.h"
 
 namespace FalconEngine
 {
@@ -17,10 +19,16 @@ enum class FALCON_ENGINE_ITEM_INPUT MouseWheelDirection
 class FALCON_ENGINE_ITEM_INPUT MouseState final
 {
 public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
     MouseState();
     ~MouseState() = default;
 
 public:
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
     bool
     ButtonPressed(MouseButton button) const;
 
@@ -53,6 +61,9 @@ public:
 
 // internal
 public:
+    /************************************************************************/
+    /* Internal Members                                                     */
+    /************************************************************************/
     void
     SetButtonInternal(MouseButton button, bool pressed, double time);
 

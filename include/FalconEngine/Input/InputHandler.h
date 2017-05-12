@@ -13,7 +13,7 @@ enum class FALCON_ENGINE_ITEM_INPUT InputPriority
 };
 
 template <typename T>
-class FALCON_ENGINE_ITEM_INPUT InputHandler : public EventHandler<T>
+class InputHandler : public EventHandler<T>
 {
 public:
     /************************************************************************/

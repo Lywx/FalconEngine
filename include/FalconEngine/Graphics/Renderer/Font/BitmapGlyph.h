@@ -11,7 +11,7 @@ namespace FalconEngine
 {
 // @summary This represents a glyph in bitmap. The information related to the
 // font it's using and the size of that font.
-class FALCON_ENGINE_ITEM_GRAPHICS BitmapGlyph
+class BitmapGlyph
 {
 public:
     /************************************************************************/

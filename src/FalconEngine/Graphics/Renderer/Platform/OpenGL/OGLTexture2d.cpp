@@ -2,6 +2,8 @@
 
 #include <cstring>
 
+#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLUtility.h>
+
 namespace FalconEngine
 {
 

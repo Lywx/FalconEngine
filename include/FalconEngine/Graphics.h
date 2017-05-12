@@ -3,7 +3,7 @@
 #include <FalconEngine/Core.h>
 #include <FalconEngine/Math.h>
 
-#include <FalconEngine/GraphicsInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <FalconEngine/Graphics/Effect/AABBBoundingBoxEffect.h>
 #include <FalconEngine/Graphics/Effect/BitmapFontEffect.h>

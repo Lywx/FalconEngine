@@ -1,10 +1,10 @@
 #pragma once
 
-#include <FalconEngine/Graphics/SceneInclude.h>
+#include <FalconEngine/Graphics/Header.h>
 
 #include <vector>
 
-#include <FalconEngine/Core/Asset.h>
+#include <FalconEngine/Content/Asset.h>
 #include <FalconEngine/Math/Vector2.h>
 #include <FalconEngine/Math/Vector3.h>
 

@@ -98,6 +98,4 @@ protected:
 };
 #pragma warning(default: 4251)
 
-FALCON_ENGINE_RTTI_DECLARE_EXPORT(Primitive);
-
 }

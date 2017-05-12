@@ -10,7 +10,6 @@ namespace FalconEngine
 {
 
 FALCON_ENGINE_RTTI_IMPLEMENT(Mesh, Visual);
-FALCON_ENGINE_RTTI_IMPLEMENT_EXPORT(Mesh);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

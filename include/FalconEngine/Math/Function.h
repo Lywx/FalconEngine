@@ -1,5 +1,7 @@
 #pragma once
 
+#include <FalconEngine/Math/Header.h>
+
 #include <type_traits>
 
 #include <FalconEngine/Math/Constant.h>

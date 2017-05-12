@@ -1,8 +1,8 @@
 #pragma once
 
-#include <string>
-
 #include <FalconEngine/Core/Macro.h>
+
+#include <string>
 
 namespace FalconEngine
 {

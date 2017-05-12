@@ -3,7 +3,7 @@
 #include <FalconEngine/Input/Header.h>
 
 #if FALCON_ENGINE_PLATFORM_GLFW
-#include <FalconEngine/Context/Platform/GLFW/GLFWInclude.h>
+#include <FalconEngine/Context/Platform/GLFW/GLFWHeader.h>
 
 namespace FalconEngine
 {

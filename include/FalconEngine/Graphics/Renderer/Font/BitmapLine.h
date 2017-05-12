@@ -10,7 +10,7 @@ namespace FalconEngine
 class BitmapGlyph;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS BitmapLine
+class BitmapLine
 {
 public:
     BitmapLine(double lineWidth);

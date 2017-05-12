@@ -15,7 +15,7 @@ using EventCallbackList = std::list<EventCallback<T>*>;
 // @ref Luis Sempe User Interface Programming for Games, 2014.
 #pragma warning(disable: 4251)
 template <typename T>
-class FALCON_ENGINE_ITEM_CORE EventHandler
+class EventHandler
 {
 public:
     EventHandler();

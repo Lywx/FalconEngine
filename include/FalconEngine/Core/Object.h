@@ -40,7 +40,4 @@ public:
     IsDerivedTypeOf(const Object *object) const;
 };
 
-FALCON_ENGINE_ITEM_CORE const Rtti&
-ObjectsType();
-
 }

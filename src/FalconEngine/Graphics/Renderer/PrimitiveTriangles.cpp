@@ -6,7 +6,6 @@ namespace FalconEngine
 {
 
 FALCON_ENGINE_RTTI_IMPLEMENT(PrimitiveTriangles, Primitive);
-FALCON_ENGINE_RTTI_IMPLEMENT_EXPORT(PrimitiveTriangles);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

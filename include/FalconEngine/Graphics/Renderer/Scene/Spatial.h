@@ -72,6 +72,4 @@ public:
     Spatial *mParent;
 };
 
-FALCON_ENGINE_RTTI_DECLARE_EXPORT(Spatial);
-
 }

@@ -12,7 +12,7 @@ using EventBinder = std::function<void(void *, T)>;
 
 #pragma warning(disable: 4251)
 template <typename T>
-class FALCON_ENGINE_ITEM_CORE EventCallback
+class EventCallback
 {
 public:
     EventCallback() :

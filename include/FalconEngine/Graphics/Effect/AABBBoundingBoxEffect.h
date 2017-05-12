@@ -3,6 +3,7 @@
 #include <FalconEngine/Graphics/Header.h>
 
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
+
 #include <FalconEngine/Math/Matrix4.h>
 #include <FalconEngine/Math/Vector3.h>
 #include <FalconEngine/Math/Vector4.h>
@@ -11,7 +12,7 @@ namespace FalconEngine
 {
 
 #pragma pack(push, 1)
-class FALCON_ENGINE_ITEM_GRAPHICS BoundingBoxInstance
+class BoundingBoxInstance
 {
 public:
     Vector4f mColor;
@@ -20,7 +21,7 @@ public:
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-class FALCON_ENGINE_ITEM_GRAPHICS BoundingBoxVertex
+class BoundingBoxVertex
 {
 public:
     Vector3f mPosition;

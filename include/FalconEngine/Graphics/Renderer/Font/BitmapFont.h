@@ -12,7 +12,8 @@
 #include <boost/serialization/base_object.hpp>
 #include <boost/serialization/split_member.hpp>
 
-#include <FalconEngine/Core/Asset.h>
+#include <FalconEngine/Content/Asset.h>
+
 #include <FalconEngine/Graphics/Renderer/Font/BitmapGlyph.h>
 
 namespace FalconEngine

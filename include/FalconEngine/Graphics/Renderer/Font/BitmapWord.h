@@ -1,13 +1,14 @@
 #pragma once
 
 #include <FalconEngine/Graphics/Header.h>
+
 #include <FalconEngine/Graphics/Renderer/Font/BitmapGlyph.h>
 
 namespace FalconEngine
 {
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS BitmapWord
+class BitmapWord
 {
 public:
     BitmapWord(double fontScale);

@@ -5,7 +5,9 @@
 #include <assimp/scene.h>
 
 #include <FalconEngine/Content/AssetManager.h>
+
 #include <FalconEngine/Core/Path.h>
+
 #include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/IndexBuffer.h>
@@ -18,6 +20,7 @@
 #include <FalconEngine/Graphics/Renderer/Scene/Mesh.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Model.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Node.h>
+
 #include <FalconEngine/Math/Bound/AABBBoundingBox.h>
 
 using namespace std;

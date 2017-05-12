@@ -1,11 +1,12 @@
 #pragma once
 
+#include <FalconEngine/Core/Macro.h>
+
 #include <memory>
 #include <stdexcept>
 #include <string>
 
 #include <FalconEngine/Core/Debug.h>
-#include <FalconEngine/Core/Macro.h>
 
 namespace FalconEngine
 {

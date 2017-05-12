@@ -5,7 +5,6 @@ namespace FalconEngine
 {
 
 FALCON_ENGINE_RTTI_IMPLEMENT(Primitive, Object);
-FALCON_ENGINE_RTTI_IMPLEMENT_EXPORT(Primitive);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

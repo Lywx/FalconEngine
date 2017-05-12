@@ -7,7 +7,7 @@
 #include <boost/filesystem.hpp>
 
 #include <FalconEngine/Content/AssetImporter.h>
-#include <FalconEngine/Core/Asset.h>
+#include <FalconEngine/Content/Asset.h>
 #include <FalconEngine/Core/Path.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>

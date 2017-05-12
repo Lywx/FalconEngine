@@ -8,7 +8,8 @@ namespace FalconEngine
 /************************************************************************/
 MouseState::MouseState() :
     mPosition(),
-    mWheelValue(0)
+    mWheelValue(0),
+    mWheelValueDiff(0)
 {
 }
 

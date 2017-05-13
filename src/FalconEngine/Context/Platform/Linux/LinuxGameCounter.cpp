@@ -24,10 +24,14 @@ public:
     GetMilliseconds() const
     {
         timespec spec;
-        clock_gettime(CLOCK_REALTIME, &spec);
+        clock_gettime(CLOCK_MONOTONIC_RAW, &spec);
 
-        // Nanoseconds converts to Milliseconds.
-        return round(spec.tv_nsec / 1.0e6 + spec.tv_sec * 1.e6);
+        // Nanoseconds converts to milliseconds.
+        double nsMilliseconds = spec.tv_nsec / 1.0e6;
+
+        // Seconds converts to milliseconds.
+        double sMilliseconds = spec.tv_sec * 1.0e3;
+        return sMilliseconds + nsMilliseconds;
     }
 };
 

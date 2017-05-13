@@ -2,18 +2,21 @@
 
 #if defined(FALCON_ENGINE_OS_LINUX)
 
+#include <csignal>
 #include <iostream>
 #include <string>
 
 namespace FalconEngine
 {
 
+#if defined(FALCON_ENGINE_COMPILER_GCC)
 void
 Debug::Break()
 {
-#if defined(FALCON_ENGINE_COMPILER_GCC)
-#endif
+    // Generate an interrupt
+    std::raise(SIGINT);
 }
+#endif
 
 /* static */ void
 Debug::OutputString(const std::string& str)

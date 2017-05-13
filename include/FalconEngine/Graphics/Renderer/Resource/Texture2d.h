@@ -10,7 +10,7 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_ITEM_GRAPHICS Texture2d : public TextureBuffer
+class FALCON_ENGINE_API Texture2d : public TextureBuffer
 {
 public:
     /************************************************************************/

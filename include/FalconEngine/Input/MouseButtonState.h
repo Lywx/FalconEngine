@@ -9,14 +9,14 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_ITEM_INPUT MouseButtonPressState
+enum class FALCON_ENGINE_API MouseButtonPressState
 {
     Pressed,
     Released,
 };
 
 enum class MouseButton;
-class FALCON_ENGINE_ITEM_INPUT MouseButtonState final
+class FALCON_ENGINE_API MouseButtonState final
 {
 public:
     MouseButtonState();
@@ -32,7 +32,7 @@ public:
 };
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_INPUT MouseButtonStateMap : public std::unordered_map<MouseButton, MouseButtonState>
+class FALCON_ENGINE_API MouseButtonStateMap : public std::unordered_map<MouseButton, MouseButtonState>
 {
 public:
     MouseButtonStateMap();

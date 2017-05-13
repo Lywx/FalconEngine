@@ -9,7 +9,7 @@ namespace FalconEngine
 template <typename T>
 class ShaderUniformValue;
 
-class FALCON_ENGINE_ITEM_GRAPHICS PlatformShaderUniform
+class FALCON_ENGINE_API PlatformShaderUniform
 {
 public:
 

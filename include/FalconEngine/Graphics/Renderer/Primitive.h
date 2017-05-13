@@ -6,7 +6,7 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_ITEM_GRAPHICS PrimitiveType
+enum class FALCON_ENGINE_API PrimitiveType
 {
     None,
     Point,
@@ -32,7 +32,7 @@ class VertexGroup;
 using VertexGroupSharedPtr = std::shared_ptr<VertexGroup>;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS Primitive : public Object
+class FALCON_ENGINE_API Primitive : public Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
 

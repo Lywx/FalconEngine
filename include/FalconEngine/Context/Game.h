@@ -16,7 +16,7 @@ using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
 // @summary This is the context that runs the customized code. The GameEngine class
 // would use this class's
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_CONTEXT Game
+class FALCON_ENGINE_API Game
 {
 public:
 

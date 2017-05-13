@@ -10,7 +10,7 @@ namespace FalconEngine
 {
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_INPUT KeyboardState final : private std::unordered_map<Key, KeyState>
+class FALCON_ENGINE_API KeyboardState final : private std::unordered_map<Key, KeyState>
 {
 public:
     KeyboardState();

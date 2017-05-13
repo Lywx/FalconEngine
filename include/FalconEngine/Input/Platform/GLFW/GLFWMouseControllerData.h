@@ -8,7 +8,7 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_ITEM_INPUT MouseControllerData
+class FALCON_ENGINE_API MouseControllerData
 {
 public:
     explicit MouseControllerData(GLFWwindow *window) :

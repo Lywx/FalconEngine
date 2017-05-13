@@ -6,7 +6,7 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_ITEM_INPUT Mouse final
+class FALCON_ENGINE_API Mouse final
 {
 public:
     /************************************************************************/

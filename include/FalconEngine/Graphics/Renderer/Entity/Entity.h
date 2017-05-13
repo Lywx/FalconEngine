@@ -23,7 +23,7 @@ using VisualSharedPtr = std::shared_ptr<Visual>;
 class Vector3f;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS Entity : public Object
+class FALCON_ENGINE_API Entity : public Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
 

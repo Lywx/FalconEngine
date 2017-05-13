@@ -41,7 +41,7 @@ class WireframeState;
 using WireframeStateUniquePtr = std::unique_ptr<WireframeState>;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS VisualEffectPass final
+class FALCON_ENGINE_API VisualEffectPass final
 {
 public:
     /************************************************************************/

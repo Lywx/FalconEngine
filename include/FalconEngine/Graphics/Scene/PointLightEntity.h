@@ -12,7 +12,7 @@ class PointLightEntity;
 using PointLightEntitySharedPtr = std::shared_ptr<PointLightEntity>;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS PointLightEntity : public Entity
+class FALCON_ENGINE_API PointLightEntity : public Entity
 {
     FALCON_ENGINE_RTTI_DECLARE;
 

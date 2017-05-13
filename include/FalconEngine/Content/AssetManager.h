@@ -20,7 +20,7 @@ class ShaderSource;
 using ShaderSourceSharedPtr = std::shared_ptr<ShaderSource>;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_CONTENT AssetManager
+class FALCON_ENGINE_API AssetManager
 {
 public:
     static AssetManager *

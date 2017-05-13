@@ -6,7 +6,7 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_ITEM_GRAPHICS PlatformRendererData final
+class FALCON_ENGINE_API PlatformRendererData final
 {
 public:
     PlatformRendererData();

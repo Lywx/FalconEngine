@@ -18,8 +18,8 @@ set(FALCON_ENGINE_LIBRARY_OUTPUT_DIR ${FALCON_ENGINE_ROOT_DIR}/bin)
 set(FALCON_ENGINE_RUNTIME_OUTPUT_DIR ${FALCON_ENGINE_ROOT_DIR}/bin)
 
 # Set up library type
-assert_defined(FALCON_ENGINE_BUILD_DYNAMIC_LIBRARY)
-if(FALCON_ENGINE_BUILD_DYNAMIC_LIBRARY)
+assert_defined(FALCON_ENGINE_BUILD_DYNAMIC)
+if(FALCON_ENGINE_BUILD_DYNAMIC)
 set(FALCON_ENGINE_LIBRARY_TYPE "SHARED")
 else()
 set(FALCON_ENGINE_LIBRARY_TYPE "STATIC")
@@ -116,6 +116,7 @@ function(fe_add_sample SAMPLE_PROJECT_NAME SAMPLE_PROJECT_DIR)
     target_link_libraries(${SAMPLE_PROJECT_NAME} ${SAMPLE_EXTRA_LIBRARY_FILES}
         FalconEngine)
 
+    fe_add_import_definition(${SAMPLE_PROJECT_NAME})
     fe_set_target_folder(${SAMPLE_PROJECT_NAME} "Falcon Engine Sample Targets")
     fe_set_target_output(${SAMPLE_PROJECT_NAME})
 

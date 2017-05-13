@@ -10,13 +10,13 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_ITEM_GRAPHICS IndexType
+enum class FALCON_ENGINE_API IndexType
 {
     UnsignedShort,
     UnsignedInt
 };
 
-class FALCON_ENGINE_ITEM_GRAPHICS IndexBuffer : public Buffer
+class FALCON_ENGINE_API IndexBuffer : public Buffer
 {
 public:
     /************************************************************************/

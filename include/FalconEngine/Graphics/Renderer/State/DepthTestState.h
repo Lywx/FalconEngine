@@ -5,7 +5,7 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_ITEM_GRAPHICS DepthFunction
+enum class FALCON_ENGINE_API DepthFunction
 {
     NEVER,    // Never passes.
     LESS,     // Passes if the incoming depth value is less than the stored depth value.
@@ -19,7 +19,7 @@ enum class FALCON_ENGINE_ITEM_GRAPHICS DepthFunction
     Count
 };
 
-class FALCON_ENGINE_ITEM_GRAPHICS DepthTestState final
+class FALCON_ENGINE_API DepthTestState final
 {
 public:
     DepthTestState();

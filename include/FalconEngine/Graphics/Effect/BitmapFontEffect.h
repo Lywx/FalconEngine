@@ -29,7 +29,7 @@ public:
 };
 #pragma pack(pop)
 
-class FALCON_ENGINE_ITEM_GRAPHICS BitmapFontEffect : public VisualEffect
+class FALCON_ENGINE_API BitmapFontEffect : public VisualEffect
 {
     FALCON_ENGINE_RTTI_DECLARE;
 

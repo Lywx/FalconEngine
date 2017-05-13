@@ -9,7 +9,7 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_ITEM_CORE AssetSource
+enum class FALCON_ENGINE_API AssetSource
 {
     None,
     Normal,
@@ -17,7 +17,7 @@ enum class FALCON_ENGINE_ITEM_CORE AssetSource
 };
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_CORE Asset
+class FALCON_ENGINE_API Asset
 {
 public:
     Asset(const std::string& fileName, const std::string& filePath);
@@ -47,7 +47,7 @@ public:
 };
 #pragma warning(default: 4251)
 
-FALCON_ENGINE_ITEM_CORE std::string
+FALCON_ENGINE_API std::string
 AddAssetExtension(const std::string& filePath);
 
 }

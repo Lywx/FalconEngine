@@ -10,7 +10,7 @@ class GameEngineInput;
 class FirstPersonCamera;
 using FirstPersonCameraSharedPtr = std::shared_ptr<FirstPersonCamera>;
 
-class FALCON_ENGINE_ITEM_GRAPHICS FirstPersonCamera : public Camera
+class FALCON_ENGINE_API FirstPersonCamera : public Camera
 {
     FALCON_ENGINE_RTTI_DECLARE;
 

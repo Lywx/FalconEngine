@@ -7,7 +7,7 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_ITEM_INPUT MouseButton
+enum class FALCON_ENGINE_API MouseButton
 {
     Unknown = -1,
     LeftButton = 0,

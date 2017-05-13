@@ -9,7 +9,7 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_ITEM_MATH BoundingBox
+class FALCON_ENGINE_API BoundingBox
 {
 public:
     /************************************************************************/

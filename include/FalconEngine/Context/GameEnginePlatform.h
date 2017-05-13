@@ -11,7 +11,7 @@ class GameEngineSettings;
 using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
 
 class GameEngineData;
-class FALCON_ENGINE_ITEM_CONTEXT GameEnginePlatform
+class FALCON_ENGINE_API GameEnginePlatform
 {
 public:
     /************************************************************************/

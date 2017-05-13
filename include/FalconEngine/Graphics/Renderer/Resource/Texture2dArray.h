@@ -14,7 +14,7 @@ class Texture2d;
 using Texture2dSharedPtr = std::shared_ptr<Texture2d>;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS Texture2dArray : public Texture
+class FALCON_ENGINE_API Texture2dArray : public Texture
 {
 public:
     /************************************************************************/

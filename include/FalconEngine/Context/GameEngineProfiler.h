@@ -12,7 +12,7 @@ class GameEngineSettings;
 using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
 
 class GameEngineData;
-class FALCON_ENGINE_ITEM_CONTEXT GameEngineProfiler
+class FALCON_ENGINE_API GameEngineProfiler
 {
     friend class GameEngine;
 

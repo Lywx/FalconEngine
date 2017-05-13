@@ -9,7 +9,7 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_ITEM_GRAPHICS BufferAccessMode
+enum class FALCON_ENGINE_API BufferAccessMode
 {
     None,
 
@@ -20,7 +20,7 @@ enum class FALCON_ENGINE_ITEM_GRAPHICS BufferAccessMode
     Count
 };
 
-enum class FALCON_ENGINE_ITEM_GRAPHICS BufferUsage
+enum class FALCON_ENGINE_API BufferUsage
 {
     None,
 
@@ -31,7 +31,7 @@ enum class FALCON_ENGINE_ITEM_GRAPHICS BufferUsage
     Count
 };
 
-class FALCON_ENGINE_ITEM_GRAPHICS Buffer
+class FALCON_ENGINE_API Buffer
 {
 
 protected:

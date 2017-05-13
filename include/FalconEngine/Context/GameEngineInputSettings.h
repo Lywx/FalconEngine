@@ -5,7 +5,7 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_ITEM_CONTEXT GameEngineInputSettings final
+class FALCON_ENGINE_API GameEngineInputSettings final
 {
 public:
 };

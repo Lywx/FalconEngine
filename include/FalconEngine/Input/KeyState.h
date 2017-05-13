@@ -6,7 +6,7 @@ namespace FalconEngine
 {
 
 // @remark The enum value is copied from the GLFW definition to smooth the conversion.
-enum class FALCON_ENGINE_ITEM_INPUT Key
+enum class FALCON_ENGINE_API Key
 {
     Unknown = -1,
     Space = 32,
@@ -134,7 +134,7 @@ enum class FALCON_ENGINE_ITEM_INPUT Key
 
 using KeyHash = std::hash<int>;
 
-class FALCON_ENGINE_ITEM_INPUT KeyState final
+class FALCON_ENGINE_API KeyState final
 {
 public:
     KeyState();

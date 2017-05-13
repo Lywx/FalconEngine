@@ -6,7 +6,7 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_ITEM_INPUT InputPriority
+enum class FALCON_ENGINE_API InputPriority
 {
     System = 0,
     User   = 1,

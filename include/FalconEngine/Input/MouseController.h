@@ -10,7 +10,7 @@ class MouseControllerData;
 using MouseControllerDataSharedPtr = std::shared_ptr<MouseControllerData>;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_INPUT MouseController final
+class FALCON_ENGINE_API MouseController final
 {
 public:
     MouseController();

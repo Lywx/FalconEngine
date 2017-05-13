@@ -25,7 +25,7 @@ ArraySize(T(& /* array */)[N])
 /* Exception Handling                                                   */
 /************************************************************************/
 #pragma warning(disable: 4275)
-class FALCON_ENGINE_ITEM_CORE RuntimeException : public std::runtime_error
+class FALCON_ENGINE_API RuntimeException : public std::runtime_error
 {
 public:
     explicit RuntimeException(const std::string& message);

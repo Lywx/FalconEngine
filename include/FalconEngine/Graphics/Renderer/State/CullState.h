@@ -5,7 +5,7 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_ITEM_GRAPHICS CullState final
+class FALCON_ENGINE_API CullState final
 {
 public:
     CullState ();

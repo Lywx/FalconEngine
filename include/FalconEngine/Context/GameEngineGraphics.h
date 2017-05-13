@@ -39,7 +39,7 @@ using GameEngineGraphicsSettingsSharedPtr = std::shared_ptr<GameEngineGraphicsSe
 class GameEngineData;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_CONTEXT GameEngineGraphics
+class FALCON_ENGINE_API GameEngineGraphics
 {
 public:
     /************************************************************************/

@@ -26,9 +26,9 @@ class Visual;
 #pragma warning(disable: 4251)
 #if defined(FALCON_ENGINE_PLATFORM_QT)
 #include <QtGui/QOpenGLFunctions>
-class FALCON_ENGINE_ITEM_GRAPHICS EntityRenderer final : QOpenGLFunctions
+class FALCON_ENGINE_API EntityRenderer final : QOpenGLFunctions
 #else
-class FALCON_ENGINE_ITEM_GRAPHICS EntityRenderer final
+class FALCON_ENGINE_API EntityRenderer final
 #endif
 {
 public:

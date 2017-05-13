@@ -5,7 +5,7 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_ITEM_GRAPHICS WireframeState final
+class FALCON_ENGINE_API WireframeState final
 {
 public:
     WireframeState();

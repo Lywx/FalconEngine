@@ -30,7 +30,7 @@ using Texture2dArraySharedPtr = std::shared_ptr<Texture2dArray>;
 // size to derive desired glyph size. The size stores imported bmfont size. So as
 // the line base, line height, space width, etc.
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS BitmapFont : public Asset
+class FALCON_ENGINE_API BitmapFont : public Asset
 {
 public:
     /************************************************************************/

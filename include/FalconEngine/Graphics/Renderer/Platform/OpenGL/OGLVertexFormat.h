@@ -6,7 +6,7 @@ namespace FalconEngine
 {
 
 class VertexFormat;
-class FALCON_ENGINE_ITEM_GRAPHICS PlatformVertexFormat
+class FALCON_ENGINE_API PlatformVertexFormat
 {
 public:
     /************************************************************************/

@@ -20,7 +20,7 @@ using NodeSharedPtr = std::shared_ptr<Node>;
 using ModelIndex = int;
 
 #pragma pack(push, 1)
-class FALCON_ENGINE_ITEM_GRAPHICS ModelVertex
+class FALCON_ENGINE_API ModelVertex
 {
 public:
     Vector3f mPosition;
@@ -30,7 +30,7 @@ public:
 #pragma pack(pop)
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS Model : public Asset
+class FALCON_ENGINE_API Model : public Asset
 {
 public:
     /************************************************************************/

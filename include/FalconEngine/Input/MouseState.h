@@ -9,14 +9,14 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_ITEM_INPUT MouseWheelDirection
+enum class FALCON_ENGINE_API MouseWheelDirection
 {
     None = 0,
     Down = 1,
     Up = 2
 };
 
-class FALCON_ENGINE_ITEM_INPUT MouseState final
+class FALCON_ENGINE_API MouseState final
 {
 public:
     /************************************************************************/

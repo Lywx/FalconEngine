@@ -7,7 +7,7 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_ITEM_GRAPHICS CharacterEntity : public Entity
+class FALCON_ENGINE_API CharacterEntity : public Entity
 {
     FALCON_ENGINE_RTTI_DECLARE;
 

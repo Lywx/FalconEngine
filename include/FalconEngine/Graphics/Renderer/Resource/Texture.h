@@ -14,7 +14,7 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_ITEM_GRAPHICS TextureUnit
+enum class FALCON_ENGINE_API TextureUnit
 {
     Ambient   = 0,
     Diffuse   = 1,
@@ -33,7 +33,7 @@ GetTextureUnit(TextureUnit textureUnit)
     return int(textureUnit);
 }
 
-enum class FALCON_ENGINE_ITEM_GRAPHICS TextureType
+enum class FALCON_ENGINE_API TextureType
 {
     None,
 
@@ -46,7 +46,7 @@ enum class FALCON_ENGINE_ITEM_GRAPHICS TextureType
     Count
 };
 
-enum class FALCON_ENGINE_ITEM_GRAPHICS TextureFormat
+enum class FALCON_ENGINE_API TextureFormat
 {
     None,
 
@@ -62,7 +62,7 @@ const int TexelSize[int(TextureFormat::Count)] =
     4, // R8G8B8A8
 };
 
-class FALCON_ENGINE_ITEM_GRAPHICS Texture : public Asset
+class FALCON_ENGINE_API Texture : public Asset
 {
 public:
     /************************************************************************/

@@ -10,7 +10,7 @@ namespace FalconEngine
 
 class Texture2d;
 
-class FALCON_ENGINE_ITEM_GRAPHICS Material : public Object
+class FALCON_ENGINE_API Material : public Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
 

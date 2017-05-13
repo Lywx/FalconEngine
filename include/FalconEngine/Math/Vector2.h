@@ -17,7 +17,7 @@ namespace FalconEngine
 
 // Assume vector are column vector
 #pragma pack(push, 1)
-class FALCON_ENGINE_ITEM_MATH Vector2f : public glm::vec2
+class FALCON_ENGINE_API Vector2f : public glm::vec2
 {
 public:
     /************************************************************************/
@@ -40,12 +40,12 @@ public:
 };
 #pragma pack(pop)
 
-FALCON_ENGINE_ITEM_MATH std::string
+FALCON_ENGINE_API std::string
 to_string(const Vector2f& v);
 
 // @summary Represents a point in 2D space
 #pragma pack(push, 1)
-class FALCON_ENGINE_ITEM_MATH Vector2i : public glm::ivec2
+class FALCON_ENGINE_API Vector2i : public glm::ivec2
 {
 public:
     static const Vector2i Zero;
@@ -64,7 +64,7 @@ public:
 };
 #pragma pack(pop)
 
-FALCON_ENGINE_ITEM_MATH std::string
+FALCON_ENGINE_API std::string
 to_string(const Vector2i& v);
 
 }

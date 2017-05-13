@@ -16,7 +16,7 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_ITEM_GRAPHICS ShaderUniformType
+enum class FALCON_ENGINE_API ShaderUniformType
 {
     None,
 
@@ -48,7 +48,7 @@ template <typename T>
 using ShaderUniformUpdateFunction = std::function<ShaderUniformUpdatePrototype<T>>;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS ShaderUniform
+class FALCON_ENGINE_API ShaderUniform
 {
 public:
     /************************************************************************/
@@ -70,7 +70,7 @@ public:
 #pragma warning(default: 4251)
 
 template<typename T>
-class FALCON_ENGINE_ITEM_GRAPHICS ShaderUniformValue : public ShaderUniform
+class ShaderUniformValue : public ShaderUniform
 {
 public:
     /************************************************************************/

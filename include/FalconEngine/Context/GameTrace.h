@@ -13,7 +13,7 @@ namespace FalconEngine
 {
 
 // @summary Dignositic tracer used for both the engine and the game.
-class FALCON_ENGINE_ITEM_CONTEXT GameTrace
+class FALCON_ENGINE_API GameTrace
 {
 public:
     explicit GameTrace(const char *functionName) :

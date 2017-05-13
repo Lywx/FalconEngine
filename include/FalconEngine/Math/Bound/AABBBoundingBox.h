@@ -11,7 +11,7 @@ namespace FalconEngine
 {
 
 #pragma warning(disable : 4251)
-class FALCON_ENGINE_ITEM_MATH AABBBoundingBox final : public BoundingBox
+class FALCON_ENGINE_API AABBBoundingBox final : public BoundingBox
 {
 public:
     /************************************************************************/

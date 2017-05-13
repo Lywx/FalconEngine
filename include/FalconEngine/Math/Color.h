@@ -12,7 +12,7 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_ITEM_MATH Color
+class FALCON_ENGINE_API Color
 {
 public:
     /************************************************************************/
@@ -39,7 +39,7 @@ public:
 bool operator==(Color lhs, Color rhs);
 bool operator!=(Color lhs, Color rhs);
 
-class FALCON_ENGINE_ITEM_MATH ColorPalette
+class FALCON_ENGINE_API ColorPalette
 {
 public:
     static const Color TransparentBlack;
@@ -753,10 +753,10 @@ public:
     static const Color YellowGreen;
 };
 
-Color
+FALCON_ENGINE_API Color
 Transparent(Color color, float a);
 
-Color
+FALCON_ENGINE_API Color
 Transparent(Color color, uint8 a);
 
 }

@@ -17,7 +17,7 @@ class Vector3i;
 
 // Assume vector are column vector
 #pragma pack(push, 1)
-class FALCON_ENGINE_ITEM_MATH Vector3f : public glm::vec3
+class FALCON_ENGINE_API Vector3f : public glm::vec3
 {
 public:
     /************************************************************************/
@@ -57,11 +57,11 @@ public:
 };
 #pragma pack(pop)
 
-std::string
+FALCON_ENGINE_API std::string
 to_string(const Vector3f& v);
 
 #pragma pack(push, 1)
-class FALCON_ENGINE_ITEM_MATH Vector3i : public glm::ivec3
+class FALCON_ENGINE_API Vector3i : public glm::ivec3
 {
 public:
     static const Vector3i Zero;
@@ -79,7 +79,7 @@ public:
 };
 #pragma pack(pop)
 
-std::string
+FALCON_ENGINE_API std::string
 to_string(const Vector3i& v);
 
 }

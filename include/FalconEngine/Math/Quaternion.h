@@ -16,7 +16,7 @@ namespace FalconEngine
 
 // Forward declaration for circular dependency
 class Matrix4f;
-class FALCON_ENGINE_ITEM_MATH Quaternion : public glm::quat
+class FALCON_ENGINE_API Quaternion : public glm::quat
 {
 public:
     /************************************************************************/

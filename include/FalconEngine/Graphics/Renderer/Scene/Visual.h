@@ -24,7 +24,7 @@ using VisualEffectInstanceSharedPtr = std::shared_ptr<VisualEffectInstance>;
 // class is the ideal place to differentiate when drawing -- transparency, etc
 // special treatment information should be stored in this class.
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS Visual : public Spatial
+class FALCON_ENGINE_API Visual : public Spatial
 {
     FALCON_ENGINE_RTTI_DECLARE;
 

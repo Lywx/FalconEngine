@@ -6,7 +6,7 @@ namespace FalconEngine
 {
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_CONTEXT GameEngineGraphicsSettings final
+class FALCON_ENGINE_API GameEngineGraphicsSettings final
 {
 public:
     GameEngineGraphicsSettings();

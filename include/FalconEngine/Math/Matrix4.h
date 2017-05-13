@@ -25,7 +25,7 @@ class Vector3f;
 //  0.3, 1.3, 2.3, 3.3)
 #pragma pack(push, 1)
 #pragma warning(disable : 4251)
-class FALCON_ENGINE_ITEM_MATH Matrix4f final : public glm::mat4
+class FALCON_ENGINE_API Matrix4f final : public glm::mat4
 {
 public:
     /************************************************************************/

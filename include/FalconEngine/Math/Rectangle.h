@@ -9,7 +9,7 @@ namespace FalconEngine
 {
 
 // @summary axis-aligned rectangle in 2D space
-class FALCON_ENGINE_ITEM_MATH Rectangle
+class FALCON_ENGINE_API Rectangle
 {
 public:
     static const Rectangle Zero;

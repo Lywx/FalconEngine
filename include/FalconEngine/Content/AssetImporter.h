@@ -10,7 +10,7 @@ using MeshSharedPtr = std::shared_ptr<Mesh>;
 
 class Model;
 
-class FALCON_ENGINE_ITEM_CONTENT AssetImporter
+class FALCON_ENGINE_API AssetImporter
 {
 public:
     static void

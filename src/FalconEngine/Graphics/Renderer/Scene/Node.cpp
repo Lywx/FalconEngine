@@ -117,10 +117,10 @@ Node::GetChildAt(int slotIndex) const
 {
     if (0 <= slotIndex && slotIndex < GetChildrenSlotNum())
     {
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The slot index out of bound.");
+        return mChildrenSlot.at(slotIndex).get();
     }
 
-    return mChildrenSlot.at(slotIndex).get();
+    FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The slot index out of bound.");
 }
 
 SpatialSharedPtr
@@ -128,10 +128,10 @@ Node::GetChildAt(int slotIndex)
 {
     if (0 <= slotIndex && slotIndex < GetChildrenSlotNum())
     {
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The slot index out of bound.");
+        return mChildrenSlot.at(slotIndex);
     }
 
-    return mChildrenSlot.at(slotIndex);
+    FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The slot index out of bound.");
 }
 
 SpatialSharedPtr

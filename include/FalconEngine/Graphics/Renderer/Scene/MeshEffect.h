@@ -15,7 +15,7 @@ class Mesh;
 class Node;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS MeshEffect : public VisualEffect
+class FALCON_ENGINE_API MeshEffect : public VisualEffect
 {
     FALCON_ENGINE_RTTI_DECLARE;
 

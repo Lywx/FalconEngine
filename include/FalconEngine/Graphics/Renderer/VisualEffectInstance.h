@@ -24,7 +24,7 @@ class VisualEffectInstancePass;
 using VisualEffectInstancePassUniquePtr = std::shared_ptr<VisualEffectInstancePass>;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS VisualEffectInstance : public Object
+class FALCON_ENGINE_API VisualEffectInstance : public Object
 {
 public:
     /************************************************************************/

@@ -11,7 +11,7 @@ namespace FalconEngine
 
 // @summary Handedness controls how the matrix is interpreted using different
 // handedness representation.
-class FALCON_ENGINE_ITEM_MATH Handedness
+class FALCON_ENGINE_API Handedness
 {
 public:
     Handedness();
@@ -115,7 +115,7 @@ public:
     CreateLookAt(const Vector3f & eyePosition, const Vector3f & targetPosition, const Vector3f & up, Matrix4f & result) const override;
 };
 
-class FALCON_ENGINE_ITEM_MATH HandednessRight : public Handedness
+class FALCON_ENGINE_API HandednessRight : public Handedness
 {
 public:
     // @summary Extract right vector from the view matrix, assuming the view transform matrix is in the form of vector on the right

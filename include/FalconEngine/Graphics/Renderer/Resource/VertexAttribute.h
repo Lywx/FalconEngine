@@ -9,7 +9,7 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_ITEM_GRAPHICS VertexAttributeType
+enum class FALCON_ENGINE_API VertexAttributeType
 {
     None,
 
@@ -58,7 +58,7 @@ const int VertexAttributeSize[int(VertexAttributeType::Count)] =
 };
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS VertexAttribute
+class FALCON_ENGINE_API VertexAttribute
 {
 public:
     /************************************************************************/

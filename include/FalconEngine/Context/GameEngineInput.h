@@ -27,7 +27,7 @@ class GameEngineData;
 class GameEngineInputDispatcher;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_CONTEXT GameEngineInput
+class FALCON_ENGINE_API GameEngineInput
 {
 public:
     /************************************************************************/

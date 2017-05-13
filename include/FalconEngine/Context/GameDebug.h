@@ -10,7 +10,7 @@ namespace FalconEngine
 {
 
 // @summary Debug utility used for both the engine and the game.
-class FALCON_ENGINE_ITEM_CONTEXT GameDebug
+class FALCON_ENGINE_API GameDebug
 {
 public:
     static void

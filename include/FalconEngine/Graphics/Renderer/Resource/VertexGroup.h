@@ -10,7 +10,7 @@ namespace FalconEngine
 {
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS VertexGroup
+class FALCON_ENGINE_API VertexGroup
 {
 public:
     VertexGroup();

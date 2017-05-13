@@ -1,13 +1,12 @@
 #pragma once
 
-#include <type_traits>
-
 // NOTE(Wuxiang): Math library use right-handed system in GLM Library.
 #ifdef GLM_FORCE_LEFT_HANDED
 #undef GLM_FORCE_LEFT_HANDED
 #endif
 
 #include <FalconEngine/Math/Header.h>
+
 #include <FalconEngine/Math/Color.h>
 #include <FalconEngine/Math/Constant.h>
 #include <FalconEngine/Math/Function.h>

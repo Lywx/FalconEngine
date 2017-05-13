@@ -15,7 +15,7 @@ using BitmapFontSharedPtr = std::shared_ptr<BitmapFont>;
 class Texture2d;
 using Texture2dSharedPtr = std::shared_ptr<Texture2d>;
 
-class FALCON_ENGINE_ITEM_CONTENT AssetProcessor
+class FALCON_ENGINE_API AssetProcessor
 {
 public:
     /************************************************************************/

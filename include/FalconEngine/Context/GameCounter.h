@@ -12,7 +12,7 @@ namespace FalconEngine
 class GameCounterImp;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_CONTEXT GameCounter final
+class FALCON_ENGINE_API GameCounter final
 {
 public:
     /************************************************************************/

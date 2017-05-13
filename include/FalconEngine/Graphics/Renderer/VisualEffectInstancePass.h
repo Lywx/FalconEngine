@@ -16,7 +16,7 @@ using ShaderUniformSharedPtr = std::shared_ptr<ShaderUniform>;
 class Texture;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS VisualEffectInstancePass final
+class FALCON_ENGINE_API VisualEffectInstancePass final
 {
 public:
     /************************************************************************/

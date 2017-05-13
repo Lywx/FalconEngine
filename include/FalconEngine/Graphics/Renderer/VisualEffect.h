@@ -27,7 +27,7 @@ class StencilTestState;
 class WireframeState;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS VisualEffect : public Object
+class FALCON_ENGINE_API VisualEffect : public Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
 

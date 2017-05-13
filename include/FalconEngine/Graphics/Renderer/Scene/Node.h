@@ -13,7 +13,7 @@ namespace FalconEngine
 using SpatialSharedPtr = std::shared_ptr<Spatial>;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS Node : public Spatial
+class FALCON_ENGINE_API Node : public Spatial
 {
     FALCON_ENGINE_RTTI_DECLARE;
 

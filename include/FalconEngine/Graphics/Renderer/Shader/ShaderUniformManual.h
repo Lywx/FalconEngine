@@ -6,7 +6,7 @@ namespace FalconEngine
 {
 
 template <typename T>
-class FALCON_ENGINE_ITEM_GRAPHICS ShaderUniformManual : public ShaderUniformValue<T>
+class ShaderUniformManual : public ShaderUniformValue<T>
 {
 public:
     /************************************************************************/

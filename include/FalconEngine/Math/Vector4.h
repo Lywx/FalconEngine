@@ -18,7 +18,7 @@ class Vector3f;
 
 // Assume vector are column vector
 #pragma pack(push, 1)
-class FALCON_ENGINE_ITEM_MATH Vector4f : public glm::vec4
+class FALCON_ENGINE_API Vector4f : public glm::vec4
 {
 public:
     const static Vector4f One;
@@ -38,7 +38,7 @@ public:
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-class FALCON_ENGINE_ITEM_MATH Vector4i : public glm::ivec4
+class FALCON_ENGINE_API Vector4i : public glm::ivec4
 {
 public:
     Vector4i();

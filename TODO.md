@@ -15,9 +15,6 @@ OS Specifics
 (1) Fix Unix building cmake script.
 (1) Add Unix dependency: Assimp, Glew, GLFW, boost etc.
 (1) Add Windows dependency: Qt.
-(1) Fix DLL export.
-(1) Fix DLL static problem.
-(1) Fix DLL RTTI and Static RTTI.
 
 Commit
 ===

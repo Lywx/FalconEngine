@@ -5,7 +5,7 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_ITEM_GRAPHICS StencilCompareFunctoin
+enum class FALCON_ENGINE_API StencilCompareFunctoin
 {
     NEVER,
     LESS,
@@ -19,7 +19,7 @@ enum class FALCON_ENGINE_ITEM_GRAPHICS StencilCompareFunctoin
     Count
 };
 
-enum class FALCON_ENGINE_ITEM_GRAPHICS StencilFunction
+enum class FALCON_ENGINE_API StencilFunction
 {
     NEVER,
     ALWAYS,
@@ -35,7 +35,7 @@ enum class FALCON_ENGINE_ITEM_GRAPHICS StencilFunction
     Count
 };
 
-enum class FALCON_ENGINE_ITEM_GRAPHICS StencilOperation
+enum class FALCON_ENGINE_API StencilOperation
 {
     KEEP,
     ZERO,
@@ -49,7 +49,7 @@ enum class FALCON_ENGINE_ITEM_GRAPHICS StencilOperation
     Count,
 };
 
-class FALCON_ENGINE_ITEM_GRAPHICS StencilTestState final
+class FALCON_ENGINE_API StencilTestState final
 {
 public:
     StencilTestState ();

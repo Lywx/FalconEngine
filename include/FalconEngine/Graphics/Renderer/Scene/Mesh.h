@@ -26,7 +26,7 @@ class VertexGroup;
 using VertexGroupSharedPtr = std::shared_ptr<VertexGroup>;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS Mesh : public Visual
+class FALCON_ENGINE_API Mesh : public Visual
 {
     FALCON_ENGINE_RTTI_DECLARE;
 

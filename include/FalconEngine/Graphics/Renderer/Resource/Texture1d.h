@@ -9,7 +9,7 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_ITEM_GRAPHICS Texture1d : public Texture
+class FALCON_ENGINE_API Texture1d : public Texture
 {
 public:
     /************************************************************************/

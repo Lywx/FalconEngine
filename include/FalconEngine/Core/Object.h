@@ -6,7 +6,7 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_ITEM_CORE Object
+class FALCON_ENGINE_API Object
 {
 public:
     /************************************************************************/

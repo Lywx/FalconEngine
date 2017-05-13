@@ -10,7 +10,7 @@ enum class VertexAttributeType;
 using VertexAttributeVector = std::vector<VertexAttribute>;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS VertexFormat
+class FALCON_ENGINE_API VertexFormat
 {
 public:
     /************************************************************************/

@@ -11,7 +11,7 @@ namespace FalconEngine
 class Spatial;
 using SpatialSharedPtr = std::shared_ptr<Spatial>;
 
-class FALCON_ENGINE_ITEM_GRAPHICS Spatial : public Object
+class FALCON_ENGINE_API Spatial : public Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
 

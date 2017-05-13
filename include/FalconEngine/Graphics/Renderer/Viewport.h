@@ -12,7 +12,7 @@ namespace FalconEngine
 class Matrix4f;
 
 // @summary Describe the clip space region.
-class FALCON_ENGINE_ITEM_GRAPHICS Viewport
+class FALCON_ENGINE_API Viewport
 {
 public:
     /************************************************************************/

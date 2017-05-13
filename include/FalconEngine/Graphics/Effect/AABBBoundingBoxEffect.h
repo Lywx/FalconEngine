@@ -34,7 +34,7 @@ class Camera;
 class VertexFormat;
 using VertexFormatSharedPtr = std::shared_ptr<VertexFormat>;
 
-class FALCON_ENGINE_ITEM_GRAPHICS AABBBoundingBoxEffect : public VisualEffect
+class FALCON_ENGINE_API AABBBoundingBoxEffect : public VisualEffect
 {
     FALCON_ENGINE_RTTI_DECLARE;
 

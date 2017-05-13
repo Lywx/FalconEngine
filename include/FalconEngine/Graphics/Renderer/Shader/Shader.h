@@ -9,11 +9,11 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_ITEM_GRAPHICS ShaderUniformType;
+enum class FALCON_ENGINE_API ShaderUniformType;
 
 // @remark The integer number is used to index into the shader source table, which
 // is referred as shader type index.
-enum class FALCON_ENGINE_ITEM_GRAPHICS ShaderType
+enum class FALCON_ENGINE_API ShaderType
 {
     VertexShader   = 0,
     GeometryShader = 1,
@@ -42,7 +42,7 @@ using ShaderUniformMap = std::unordered_map<std::string, ShaderUniform>;
 // variable for each update (which is done by setting shader uniform in visual
 // effect instance).
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS Shader
+class FALCON_ENGINE_API Shader
 {
     friend class PlatformShader;
 

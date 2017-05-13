@@ -6,7 +6,7 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_ITEM_GRAPHICS PlatformVertexBuffer
+class FALCON_ENGINE_API PlatformVertexBuffer
 {
 public:
     /************************************************************************/

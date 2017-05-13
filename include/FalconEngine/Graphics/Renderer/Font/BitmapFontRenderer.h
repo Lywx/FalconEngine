@@ -27,9 +27,9 @@ class Renderer;
 #pragma warning(disable: 4251)
 #if defined(FALCON_ENGINE_PLATFORM_QT)
 #include <QtGui/QOpenGLFunctions>
-class FALCON_ENGINE_ITEM_GRAPHICS BitmapFontRenderer final : QOpenGLFunctions
+class FALCON_ENGINE_API BitmapFontRenderer final : QOpenGLFunctions
 #else
-class FALCON_ENGINE_ITEM_GRAPHICS BitmapFontRenderer final
+class FALCON_ENGINE_API BitmapFontRenderer final
 #endif
 {
 public:

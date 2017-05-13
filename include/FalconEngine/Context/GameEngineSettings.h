@@ -12,7 +12,7 @@ class GameEngineInputSettings;
 using GameEngineInputSettingsSharedPtr = std::shared_ptr<GameEngineInputSettings>;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_CONTEXT GameEngineSettings
+class FALCON_ENGINE_API GameEngineSettings
 {
 public:
     GameEngineSettings();

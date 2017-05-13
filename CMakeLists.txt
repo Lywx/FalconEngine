@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 
 # Set up deployment configuration
-option(FALCON_ENGINE_BUILD_DYNAMIC_LIBRARY "Build dynamic library" ON)
+option(FALCON_ENGINE_BUILD_DYNAMIC "Build dynamic library" ON)
 option(FALCON_ENGINE_PLATFORM_QT "Using Qt window system" OFF)
 option(FALCON_ENGINE_PLATFORM_GLFW "Using GLFW windows system" ON)
 
@@ -68,8 +68,7 @@ set(FALCON_ENGINE_EXTRA_LIBRARY_FILES
     ${GLFW_LIBRARY_FILE})
 target_link_libraries(FalconEngine ${FALCON_ENGINE_EXTRA_LIBRARY_FILES})
 
-set(FALCON_ENGINE_SYMBOL_EXPORT Content Context Core Graphics Input Math)
-fe_add_export_definition("${FALCON_ENGINE_SYMBOL_EXPORT}")
+fe_add_export_definition(FalconEngine)
 
 fe_add_source_group("Shader Files" ${CMAKE_CURRENT_SOURCE_DIR}/src/FalconEngine "${FALCON_ENGINE_GRAPHICS_SHADER_FILES}")
 

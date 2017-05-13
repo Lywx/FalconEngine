@@ -17,7 +17,7 @@ namespace FalconEngine
 
 // NOTE(Wuxiang): Learned form handmade hero. To use this, you need to allocate
 // memory storage first.
-class FALCON_ENGINE_ITEM_CORE MemoryPool final
+class FALCON_ENGINE_API MemoryPool final
 {
 public:
     MemoryPool(int64_t byte);

@@ -7,7 +7,7 @@ namespace FalconEngine
 
 #pragma warning(disable: 4251)
 template <typename T>
-class FALCON_ENGINE_ITEM_GRAPHICS ShaderUniformAutomatic : public ShaderUniformValue<T>
+class ShaderUniformAutomatic : public ShaderUniformValue<T>
 {
 public:
     /************************************************************************/

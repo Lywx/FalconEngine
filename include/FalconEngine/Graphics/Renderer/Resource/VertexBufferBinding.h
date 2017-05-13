@@ -12,7 +12,7 @@ class VertexBuffer;
 using VertexBufferSharedPtr = std::shared_ptr<VertexBuffer>;
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS VertexBufferBinding
+class FALCON_ENGINE_API VertexBufferBinding
 {
 public:
     VertexBufferBinding(VertexBufferSharedPtr buffer, int index, int offset, int stride) :

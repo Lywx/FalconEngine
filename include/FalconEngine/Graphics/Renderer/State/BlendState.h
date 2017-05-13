@@ -6,7 +6,7 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_ITEM_GRAPHICS BlendSourceFactor
+enum class FALCON_ENGINE_API BlendSourceFactor
 {
     ZERO,
     ONE,
@@ -31,7 +31,7 @@ enum class FALCON_ENGINE_ITEM_GRAPHICS BlendSourceFactor
     Count
 };
 
-enum class FALCON_ENGINE_ITEM_GRAPHICS BlendDestinationFactor
+enum class FALCON_ENGINE_API BlendDestinationFactor
 {
     ZERO,
     ONE,
@@ -56,7 +56,7 @@ enum class FALCON_ENGINE_ITEM_GRAPHICS BlendDestinationFactor
     Count
 };
 
-class FALCON_ENGINE_ITEM_GRAPHICS BlendState final
+class FALCON_ENGINE_API BlendState final
 {
 public:
     /************************************************************************/

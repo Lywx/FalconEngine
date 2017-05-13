@@ -11,7 +11,7 @@ class Spatial;
 using SpatialSharedPtr = std::shared_ptr<Spatial>;
 
 class Visual;
-class FALCON_ENGINE_ITEM_GRAPHICS VisualGroup final
+class FALCON_ENGINE_API VisualGroup final
 {
 public:
     /************************************************************************/

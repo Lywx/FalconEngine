@@ -11,7 +11,7 @@ namespace FalconEngine
 {
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_ITEM_GRAPHICS PlatformTexture2dArray
+class FALCON_ENGINE_API PlatformTexture2dArray
 {
 public:
     PlatformTexture2dArray(const Texture2dArray *textures);

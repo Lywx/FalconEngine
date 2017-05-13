@@ -5,7 +5,7 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_ITEM_CORE Rtti
+class FALCON_ENGINE_API Rtti
 {
 public:
     /************************************************************************/

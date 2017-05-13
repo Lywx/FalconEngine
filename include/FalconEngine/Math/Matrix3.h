@@ -24,7 +24,7 @@ class Matrix4f;
 //  0.2, 1.2, 2.2, 3.2,
 //  0.3, 1.3, 2.3, 3.3)
 #pragma warning(disable : 4251)
-class FALCON_ENGINE_ITEM_MATH Matrix3f : public glm::mat3
+class FALCON_ENGINE_API Matrix3f : public glm::mat3
 {
 public:
     /************************************************************************/

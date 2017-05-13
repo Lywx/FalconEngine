@@ -12,7 +12,7 @@ namespace FalconEngine
 /************************************************************************/
 /* Platform Dependent Implementation                                    */
 /************************************************************************/
-class FALCON_ENGINE_ITEM_CONTEXT GameCounterImp
+class FALCON_ENGINE_API GameCounterImp
 {
 public:
     GameCounterImp()

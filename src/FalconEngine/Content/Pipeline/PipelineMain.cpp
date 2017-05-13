@@ -13,7 +13,7 @@ BakeAssets()
     auto assetProcessor = AssetProcessor();
 
     // Fonts
-    //assetProcessor.BakeFont("Content/Fonts/LuciadaConsoleDistanceField.fnt");
+    assetProcessor.BakeFont("Content/Fonts/LuciadaConsoleDistanceField.fnt");
     //assetProcessor.BakeFont("Content/Fonts/NSimSunDistanceField.fnt");
 
     // Models

@@ -30,7 +30,7 @@ using namespace std;
 #include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>
 
 
-#if FALCON_ENGINE_PLATFORM_GLFW
+#if defined(FALCON_ENGINE_PLATFORM_GLFW)
 #include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFontRenderer.h>
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLIndexBuffer.h>

@@ -9,7 +9,7 @@
 #include <FalconEngine/Graphics/Renderer/State/OffsetState.h>
 #include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
 
-#if FALCON_ENGINE_PLATFORM_GLFW
+#if defined(FALCON_ENGINE_PLATFORM_GLFW)
 #include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLRendererData.h>
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLRendererState.h>

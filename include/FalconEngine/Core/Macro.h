@@ -9,9 +9,9 @@
 #define FALCON_ENGINE_API_OPENGL
 
 // OS
-#if defined(BOOST_OS_WINDOWS)
+#if BOOST_OS_WINDOWS
 #define FALCON_ENGINE_OS_WINDOWS
-#elif defined(BOOST_OS_LINUX)
+#elif BOOST_OS_LINUX
 #define FALCON_ENGINE_OS_LINUX
 #endif
 

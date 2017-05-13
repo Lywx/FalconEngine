@@ -9,17 +9,17 @@
 namespace FalconEngine
 {
 
+#if defined(FALCON_ENGINE_COMPILER_MSVC)
 void
 Debug::Break()
 {
-#ifdef _MSC_VER
     // NOTE(Wuxiang): Breakpoints that should ALWAYS trigger (even in release builds)!
     if (IsDebuggerPresent())
     {
         __debugbreak();
     }
-#endif
 }
+#endif
 
 /* static */ void
 Debug::OutputString(const std::string& str)

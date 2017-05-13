@@ -1,7 +1,7 @@
 #include <FalconEngine/Context/GameEnginePlatform.h>
 #include <FalconEngine/Context/GameEngineGraphicsSettings.h>
 
-#if FALCON_ENGINE_PLATFORM_GLFW
+#if defined(FALCON_ENGINE_PLATFORM_GLFW)
 #include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
 
 namespace FalconEngine

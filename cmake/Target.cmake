@@ -100,7 +100,7 @@ function(fe_add_sample SAMPLE_PROJECT_NAME SAMPLE_PROJECT_DIR)
     add_executable(${SAMPLE_PROJECT_NAME} ${SAMPLE_PROJECT_FILES})
 
     set(SAMPLE_EXTRA_LIBRARY_FILES "")
-    if (FALCON_ENGINE_PLATFORM_GLFW)
+    if(FALCON_ENGINE_PLATFORM_GLFW)
         if (FALCON_ENGINE_PLATFORM_WINDOWS)
             set(SAMPLE_EXTRA_LIBRARY_FILES ${SAMPLE_EXTRA_LIBRARY_FILES} 
                 kernel32 user32 gdi32 winspool shell32 ole32 oleaut32 uuid comdlg32 advapi32)

@@ -2,7 +2,7 @@
 
 #include <FalconEngine/Context/GameEnginePlatform.h>
 
-#if FALCON_ENGINE_PLATFORM_GLFW
+#if defined(FALCON_ENGINE_PLATFORM_GLFW)
 #include <FalconEngine/Input/Platform/GLFW/GLFWMouseControllerData.h>
 
 namespace FalconEngine

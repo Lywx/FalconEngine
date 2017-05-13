@@ -170,7 +170,8 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     # Set compiler Flags
     #
 
-    set(CMAKE_CXX_FLAGS "-W -Wall -Werror")
+    # -Werror
+    set(CMAKE_CXX_FLAGS "-W -Wall")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
     set(CMAKE_CXX_FLAGS_DEBUG   	   "-DDEBUG -g -O0")
     set(CMAKE_CXX_FLAGS_RELEASE 	   "-DNDEBUG -O2")
@@ -218,7 +219,7 @@ if(FALCON_ENGINE_PLATFORM_LINUX)
 
     # NOTE(Wuxiang): Necessary for shared library
     # https://en.wikipedia.org/wiki/Position-independent_code
-    set(CMAKE_CXX_FLAGS "-fpic ${CMAKE_CXX_FLAGS}")
+    set(CMAKE_CXX_FLAGS "-fpic --verbose ${CMAKE_CXX_FLAGS}")
 endif()
 
 # Decide output suffix based on compiler and its version

@@ -219,7 +219,7 @@ if(FALCON_ENGINE_PLATFORM_LINUX)
 
     # NOTE(Wuxiang): Necessary for shared library
     # https://en.wikipedia.org/wiki/Position-independent_code
-    set(CMAKE_CXX_FLAGS "-fpic --verbose ${CMAKE_CXX_FLAGS}")
+    set(CMAKE_CXX_FLAGS "-fpic ${CMAKE_CXX_FLAGS}")
 endif()
 
 # Decide output suffix based on compiler and its version

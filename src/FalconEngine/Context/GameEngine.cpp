@@ -5,7 +5,7 @@
 #include <FalconEngine/Context/GameEngineInput.h>
 #include <FalconEngine/Context/GameEngineSettings.h>
 
-#if defined(FALCON_ENGINE_PLATFORM_GLFW)
+#if defined(FALCON_ENGINE_WINDOW_GLFW)
 #include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
 #endif
 

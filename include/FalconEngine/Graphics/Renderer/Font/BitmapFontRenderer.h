@@ -25,10 +25,10 @@ class Renderer;
 // @summary The font renderer is the class you would call to draw a string on
 // the screen.
 #pragma warning(disable: 4251)
-#if defined(FALCON_ENGINE_PLATFORM_QT)
+#if defined(FALCON_ENGINE_WINDOW_QT)
 #include <QtGui/QOpenGLFunctions>
 class FALCON_ENGINE_API BitmapFontRenderer final : QOpenGLFunctions
-#else
+#elif defined(FALCON_ENGINE_WINDOW_GLFW)
 class FALCON_ENGINE_API BitmapFontRenderer final
 #endif
 {

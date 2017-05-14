@@ -24,10 +24,10 @@ class Renderer;
 class Visual;
 
 #pragma warning(disable: 4251)
-#if defined(FALCON_ENGINE_PLATFORM_QT)
+#if defined(FALCON_ENGINE_WINDOW_QT)
 #include <QtGui/QOpenGLFunctions>
 class FALCON_ENGINE_API EntityRenderer final : QOpenGLFunctions
-#else
+#elif defined(FALCON_ENGINE_WINDOW_GLFW)
 class FALCON_ENGINE_API EntityRenderer final
 #endif
 {

@@ -7,11 +7,7 @@
 #include <locale>
 #include <string>
 
-#if defined(FALCON_ENGINE_OS_WINDOWS)
 #define FALCON_ENGINE_DIR_SEPARATOR "/"
-#elif defined(FALCON_ENGINE_OS_LINUX)
-#define FALCON_ENGINE_DIR_SEPARATOR "/"
-#endif
 
 namespace FalconEngine
 {

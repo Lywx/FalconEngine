@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.1)
 
 # Set up deployment configuration
 option(FALCON_ENGINE_BUILD_DYNAMIC "Build dynamic library" ON)
-option(FALCON_ENGINE_PLATFORM_QT "Using Qt window system" OFF)
-option(FALCON_ENGINE_PLATFORM_GLFW "Using GLFW windows system" ON)
+option(FALCON_ENGINE_WINDOW_QT "Using Qt window system" OFF)
+option(FALCON_ENGINE_WINDOW_GLFW "Using GLFW window system" ON)
 
 # Set up solution root
 set(FALCON_ENGINE_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Falcon Engine root path.")

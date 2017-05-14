@@ -1,6 +1,6 @@
 #include <FalconEngine/Context/GameEnginePlatform.h>
 
-#if defined(FALCON_ENGINE_PLATFORM_GLFW)
+#if defined(FALCON_ENGINE_WINDOW_GLFW)
 #include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
 #endif
 

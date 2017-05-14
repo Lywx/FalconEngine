@@ -5,7 +5,7 @@
 #include <FalconEngine/Input/KeyboardState.h>
 #include <FalconEngine/Input/KeyState.h>
 
-#if defined(FALCON_ENGINE_PLATFORM_GLFW)
+#if defined(FALCON_ENGINE_WINDOW_GLFW)
 #include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
 #include <FalconEngine/Input/Platform/GLFW/GLFWMouseControllerData.h>
 

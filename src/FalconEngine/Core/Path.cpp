@@ -8,27 +8,6 @@ using namespace std;
 namespace FalconEngine
 {
 
-wstring
-GetWString(const string& str)
-{
-    // NOTE(Wuxiang): http://stackoverflow.com/questions/402283/stdwstring-vs-stdstring
-    //
-    // Linux string works differently compared to Windows' counterpart.
-    // Because default encoding in Linux is UTF-8, you could natively store UTF-8
-    // encoded string in char in Linux. But the engine API still use wstring for supporting
-    // both Windows and Linux at the same time.
-#if defined(FALCON_ENGINE_OS_WINDOWS)
-    // NOTE(Wuxiang): http://en.cppreference.com/w/cpp/locale/codecvt_utf8_utf16
-    using CodeOutput = wchar_t;
-    using CodeConvert = codecvt_utf8_utf16<CodeOutput>;
-    static wstring_convert<CodeConvert> sConverter;
-    return sConverter.from_bytes(str);
-#elif defined(FALCON_ENGINE_OS_LINUX)
-    return wstring(str.begin(), str.end());
-#endif
-
-}
-
 bool
 Exist(const string& relativePath)
 {

@@ -27,7 +27,7 @@ out Vout
 
 void main(void)
 {
-	gl_Position = ProjectionTransform * vec4(Position, 0.0, 1.0);
+    gl_Position = ProjectionTransform * vec4(Position, 0.0, 1.0);
 
     vout.TexCoord  = TexCoord;
     vout.FontColor = FontColor;

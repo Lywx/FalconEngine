@@ -27,7 +27,7 @@ Debug::OutputString(const std::string& str)
 /* static */ void
 Debug::OutputString(const char *str)
 {
-    std::cout << str << std::endl;
+    std::cout << str << std::flush;
 }
 
 }

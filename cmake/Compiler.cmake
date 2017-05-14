@@ -171,7 +171,7 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     #
 
     # -Werror
-    set(CMAKE_CXX_FLAGS "-W -Wall")
+    set(CMAKE_CXX_FLAGS "-W -Wall -Wno-attributes -Wno-unknown-pragmas")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
     set(CMAKE_CXX_FLAGS_DEBUG   	   "-DDEBUG -g -O0")
     set(CMAKE_CXX_FLAGS_RELEASE 	   "-DNDEBUG -O2")

@@ -20,7 +20,7 @@ enable_language(CXX)
 # Architecture and platform
 #
 
-assert_defined(CMAKE_SYSTEM_NAME)
+fe_assert_defined(CMAKE_SYSTEM_NAME)
 
 if(WIN32)
     set(FALCON_ENGINE_PLATFORM_NAME "win")
@@ -28,7 +28,7 @@ if(WIN32)
 
     # Architecture on Visual Studio
     if(MSVC)
-        assert_defined(CMAKE_GENERATOR)
+        fe_assert_defined(CMAKE_GENERATOR)
 
         if(CMAKE_GENERATOR MATCHES "Win64")
             set(FALCON_ENGINE_ARCH_NAME "x64")
@@ -43,7 +43,7 @@ endif()
 
 # Architecture on non Visual Studio.
 if(NOT DEFINED FALCON_ENGINE_ARCH_NAME)
-    assert_defined(CMAKE_SYSTEM_PROCESSOR)
+    fe_assert_defined(CMAKE_SYSTEM_PROCESSOR)
 
     if((CMAKE_SYSTEM_PROCESSOR MATCHES "AMD64") OR (CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64"))
         set(FALCON_ENGINE_ARCH_NAME "x64")

@@ -97,7 +97,7 @@ fe_set_target_folder(FalconEngine "Falcon Engine Library Targets")
 fe_set_target_output(FalconEngine)
 
 # Update output shader folders
-assert_defined(FALCON_ENGINE_RUNTIME_OUTPUT_DIR)
+fe_assert_defined(FALCON_ENGINE_RUNTIME_OUTPUT_DIR)
 
 file(REMOVE_RECURSE "${FALCON_ENGINE_RUNTIME_OUTPUT_DIR}/Debug/Content/Shaders")
 file(REMOVE_RECURSE "${FALCON_ENGINE_RUNTIME_OUTPUT_DIR}/Release/Content/Shaders")
@@ -121,5 +121,6 @@ fe_set_target_output(FalconEngine.Pipeline)
 # Set up Falcon Engine sample targets
 #
 
-fe_add_sample("FalconEngine.Sample" "src/FalconEngine/Sample")
+fe_add_sample("FalconEngine.Sample.FPS" "src/FalconEngine/Sample/FPS")
+fe_add_sample("FalconEngine.Sample.TPS" "src/FalconEngine/Sample/TPS")
 

@@ -4,17 +4,18 @@ A cross-platform OpenGL 3D Graphics Engine for study and academic use.
 
 Building
 ===
-1. Manually build 3rd-party dependency for static or shared libraries: boost 1.6.1, glew 2.0.0, glfw 3.2.1, stb_image.
-2. Manually copy their include and lib into root/include root/lib
+1. Manually build 3rd-party dependency for static or shared libraries of your choice.
+2. Manually copy their include and lib into root/include and root/lib respectively.
 3. Run cmake for make system of your choice on project root directory.
 4. Build.
 
 Dependency
 ===
-1. boost-serialization, boost-filesystem, boost-regex, boost-system.
-2. glew.
-3. glfw.
-4. stb_image.
+1. assimp 3.3.1.
+2. boost 1.6.1: boost-serialization, boost-filesystem, boost-regex, boost-system.
+3. glew 2.0.0.
+4. glfw 3.2.1.
+5. stb_image.
 
 Showcase
 ===

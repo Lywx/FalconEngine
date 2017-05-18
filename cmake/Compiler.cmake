@@ -18,38 +18,8 @@ enable_language(CXX)
 # Predefined macro
 #
 
-assert_defined(CMAKE_CXX_COMPILER_ID)
-
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    add_definitions(-DFALCON_ENGINE_COMPILER_MSVC)
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    add_definitions(-DFALCON_ENGINE_COMPILER_GCC)
-endif()
-
-function(fe_add_export_definition TARGET_NAME)
-    assert_defined(FALCON_ENGINE_BUILD_DYNAMIC)
-    if(FALCON_ENGINE_BUILD_DYNAMIC)
-        set_target_properties(${TARGET_NAME} PROPERTIES 
-            COMPILE_DEFINITIONS FALCON_ENGINE_SYMBOL_EXPORT)
-    else()
-        set_target_properties(${TARGET_NAME} PROPERTIES 
-            COMPILE_DEFINITIONS FALCON_ENGINE_BUILD_STATIC)
-    endif()
-endfunction()
-
-function(fe_add_import_definition TARGET_NAME)
-    assert_defined(FALCON_ENGINE_BUILD_DYNAMIC)
-    if(FALCON_ENGINE_BUILD_DYNAMIC)
-        set_target_properties(${TARGET_NAME} PROPERTIES 
-            COMPILE_DEFINITIONS FALCON_ENGINE_SYMBOL_IMPORT)
-    else()
-        set_target_properties(${TARGET_NAME} PROPERTIES 
-            COMPILE_DEFINITIONS FALCON_ENGINE_BUILD_STATIC)
-    endif()
-endfunction()
-
-assert_defined(FALCON_ENGINE_WINDOW_QT)
-assert_defined(FALCON_ENGINE_WINDOW_GLFW)
+fe_assert_defined(FALCON_ENGINE_WINDOW_QT)
+fe_assert_defined(FALCON_ENGINE_WINDOW_GLFW)
 
 if(FALCON_ENGINE_WINDOW_QT)
     add_definitions(-DFALCON_ENGINE_WINDOW_QT)
@@ -57,7 +27,7 @@ elseif (FALCON_ENGINE_WINDOW_GLFW)
     add_definitions(-DFALCON_ENGINE_WINDOW_GLFW)
 endif()
 
-assert_defined(CMAKE_CXX_COMPILER_ID)
+fe_assert_defined(CMAKE_CXX_COMPILER_ID)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL MSVC)
     add_definitions(-DWIN32)
@@ -67,7 +37,7 @@ endif()
 # Compiler, Linker Flags
 #
 
-assert_defined(CMAKE_CXX_COMPILER_ID)
+fe_assert_defined(CMAKE_CXX_COMPILER_ID)
 
 # Use Visual C++
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
@@ -107,7 +77,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} ${CMAKE_CXX_FLAGS} /MD /fp:fast /Ob2 /GL /Qpar")
     set(CMAKE_CXX_FLAGS_MINSIZEREL 	   "${CMAKE_CXX_FLAGS_MINSIZEREL} ${CMAKE_CXX_FLAGS} /MD /fp:fast /Ob1 /Qpar")
 
-    assert_defined(FALCON_ENGINE_ARCH_NAME)
+    fe_assert_defined(FALCON_ENGINE_ARCH_NAME)
 
     if(FALCON_ENGINE_ARCH_NAME MATCHES "x86")
         set(CMAKE_CXX_FLAGS_RELEASE        "${CMAKE_CXX_FLAGS_RELEASE} /arch:SSE")
@@ -144,7 +114,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(CMAKE_STATIC_LINKER_FLAGS_RELEASE        "${CMAKE_STATIC_LINKER_FLAGS_RELEASE} /LTCG")
     set(CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO} /LTCG:incremental")
 
-    assert_defined(FALCON_ENGINE_ARCH_NAME)
+    fe_assert_defined(FALCON_ENGINE_ARCH_NAME)
 
     if(FALCON_ENGINE_ARCH_NAME MATCHES "x86")
         set(CMAKE_EXE_LINKER_FLAGS    "${CMAKE_EXE_LINKER_FLAGS} /LARGEADDRESSAWARE")
@@ -188,7 +158,7 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     # Set linker flags
     #
 
-    assert_defined(FALCON_ENGINE_ARCH_NAME)
+    fe_assert_defined(FALCON_ENGINE_ARCH_NAME)
 
     if(FALCON_ENGINE_ARCH_NAME STREQUAL "x86")
         set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -m32")
@@ -223,7 +193,7 @@ if(FALCON_ENGINE_PLATFORM_LINUX)
 endif()
 
 # Decide output suffix based on compiler and its version
-assert_defined(FALCON_ENGINE_COMPILER_NAME)
-assert_defined(FALCON_ENGINE_COMPILER_VERSION)
+fe_assert_defined(FALCON_ENGINE_COMPILER_NAME)
+fe_assert_defined(FALCON_ENGINE_COMPILER_VERSION)
 
 set(FALCON_ENGINE_OUTPUT_SUFFIX -${FALCON_ENGINE_COMPILER_NAME}${FALCON_ENGINE_COMPILER_VERSION})

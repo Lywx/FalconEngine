@@ -41,7 +41,7 @@ endif()
 
 # GLFW
 if(FALCON_ENGINE_PLATFORM_WINDOWS)
-    assert_defined(FALCON_ENGINE_BUILD_DYNAMIC)
+    fe_assert_defined(FALCON_ENGINE_BUILD_DYNAMIC)
     if(FALCON_ENGINE_BUILD_DYNAMIC)
         set(GLFW_LIBRARY_FILE glfw3dll)
     else()

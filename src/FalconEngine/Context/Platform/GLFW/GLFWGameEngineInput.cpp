@@ -123,8 +123,6 @@ GameEngineInput::InitializePlatform()
 {
     mDispatcher = std::unique_ptr<GameEngineInputDispatcher, GameEngineInputDispatcherDeleter>(new GameEngineInputDispatcher(this), GameEngineInputDispatcherDeleter());
 
-    mMouseController->Initialize(std::make_shared<MouseControllerData>(mGameEngineData->mWindow));
-
     glfwSetKeyCallback(mGameEngineData->mWindow, KeyCallbackDispatch);
     glfwSetMouseButtonCallback(mGameEngineData->mWindow, MouseButtonCallbackDispatch);
     glfwSetCursorPosCallback(mGameEngineData->mWindow, MousePositionCallbackDispatch);

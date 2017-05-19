@@ -17,9 +17,6 @@ using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
 class KeyboardState;
 using KeyboardStateSharedPtr = std::shared_ptr<KeyboardState>;
 
-class MouseController;
-using MouseControllerSharedPtr = std::shared_ptr<MouseController>;
-
 class MouseState;
 using MouseStateSharedPtr = std::shared_ptr<MouseState>;
 
@@ -57,9 +54,6 @@ public:
     KeyboardStateSharedPtr
     GetKeyboardState() const;
 
-    MouseControllerSharedPtr
-    GetMouseController() const;
-
     MouseStateSharedPtr
     GetMouseState() const;
 
@@ -87,12 +81,11 @@ private:
 private:
     std::unique_ptr<GameEngineInputDispatcher, GameEngineInputDispatcherDeleter> mDispatcher;
 
-    KeyboardStateSharedPtr                     mKeyboardState;
-    MouseControllerSharedPtr                   mMouseController;
-    MouseStateSharedPtr                        mMouseState;
+    KeyboardStateSharedPtr                                                       mKeyboardState;
+    MouseStateSharedPtr                                                          mMouseState;
 
-    GameEngineDataSharedPtr                    mGameEngineData;
-    GameEngineSettingsSharedPtr                mGameEngineSettings;
+    GameEngineDataSharedPtr                                                      mGameEngineData;
+    GameEngineSettingsSharedPtr                                                  mGameEngineSettings;
 };
 #pragma warning(default: 4251)
 

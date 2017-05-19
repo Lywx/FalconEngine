@@ -13,7 +13,6 @@ namespace FalconEngine
 GameEngineInput::GameEngineInput() :
     mDispatcher(nullptr),
     mKeyboardState(std::make_shared<KeyboardState>()),
-    mMouseController(std::make_shared<MouseController>()),
     mMouseState(std::make_shared<MouseState>())
 {
 }
@@ -30,12 +29,6 @@ KeyboardStateSharedPtr
 GameEngineInput::GetKeyboardState() const
 {
     return mKeyboardState;
-}
-
-MouseControllerSharedPtr
-GameEngineInput::GetMouseController() const
-{
-    return mMouseController;
 }
 
 MouseStateSharedPtr

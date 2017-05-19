@@ -14,19 +14,19 @@ Viewport::Viewport()
       mBottom(0.f),
       mRight(0.f),
       mTop(0.f),
-      mMinDepth(0.f),
-      mMaxDepth(0.f),
+      mNear(0.f),
+      mFar(0.f),
       mTitleSafeRatio(0.f)
 {
 }
 
-Viewport::Viewport(const float& left, const float& bottom, const float& right, const float& top, const float& minDepth, const float& maxDepth, const float& titleSafeRatio /*= 0.8f*/)
+Viewport::Viewport(const float& left, const float& bottom, const float& right, const float& top, const float& near, const float& far, const float& titleSafeRatio /*= 0.8f*/)
     : mLeft(left),
       mBottom(bottom),
       mRight(right),
       mTop(top),
-      mMinDepth(minDepth),
-      mMaxDepth(maxDepth),
+      mNear(near),
+      mFar(far),
       mTitleSafeRatio(titleSafeRatio)
 {
     CalculateTitleSafeArea();
@@ -37,31 +37,31 @@ Viewport::Viewport(const Viewport& rhs)
       mBottom(rhs.mBottom),
       mRight(rhs.mRight),
       mTop(rhs.mTop),
-      mMinDepth(rhs.mMinDepth),
-      mMaxDepth(rhs.mMaxDepth),
+      mNear(rhs.mNear),
+      mFar(rhs.mFar),
       mTitleSafeRatio(rhs.mTitleSafeRatio)
 {
     CalculateTitleSafeArea();
 }
 
 void
-Viewport::Set(const float& left, const float& bottom, const float& right, const float& top, const float& minDepth, const float& maxDepth, const float& titleSafeRatio)
+Viewport::Set(const float& left, const float& bottom, const float& right, const float& top, const float& near, const float& far, const float& titleSafeRatio)
 {
     mLeft = left;
     mBottom = bottom;
     mRight = right;
     mTop = top;
-    mMinDepth = minDepth;
-    mMaxDepth = maxDepth;
+    mNear = near;
+    mFar = far;
     mTitleSafeRatio = titleSafeRatio;
 
     CalculateTitleSafeArea();
 }
 
 Vector3f
-Viewport::Project(const Vector3f& worldPosition, const Matrix4f& projection, const Matrix4f& view, const Matrix4f& world) const
+Viewport::Project(const Vector3f& worldPosition, const Matrix4f& projection, const Matrix4f& view) const
 {
-    Matrix4f transform = projection * view * world;
+    Matrix4f transform = projection * view;
     Vector4f clipPosition = transform * Vector4f(worldPosition, 1);
 
     // NOTE(Wuxiang): OpenGL's NDC uses left-handed coordinate system. The
@@ -86,13 +86,13 @@ Viewport::Project(const Vector3f& worldPosition, const Matrix4f& projection, con
     screenPosition.y = mBottom + GetHeight() * 0.5f * (1.f + ndcPosition.y);
 
     // NOTE(Wuxiang): Linear mapping simulate the glDepthRange.
-    screenPosition.z = 0.5f * (mMaxDepth - mMinDepth) * ndcPosition.z + 0.5f * (mMinDepth + mMaxDepth);
+    screenPosition.z = 0.5f * (mFar - mNear) * ndcPosition.z + 0.5f * (mNear + mFar);
 
     return screenPosition;
 }
 
 Vector3f
-Viewport::Unproject(const Vector3f& screenPosition, const Matrix4f& projection, const Matrix4f& view, const Matrix4f& world) const
+Viewport::Unproject(const Vector3f& screenPosition, const Matrix4f& projection, const Matrix4f& view) const
 {
     Vector4f ndcPosition;
 
@@ -101,10 +101,10 @@ Viewport::Unproject(const Vector3f& screenPosition, const Matrix4f& projection, 
     ndcPosition.y = 2.f * (screenPosition.y - mBottom) / GetHeight() - 1.f;
 
     // Inverse of glDepthRange linear mapping.
-    ndcPosition.z = (2.f * screenPosition.z - mMaxDepth - mMinDepth) / (mMaxDepth - mMinDepth);
+    ndcPosition.z = (2.f * screenPosition.z - mFar - mNear) / (mFar - mNear);
     ndcPosition.w = 1.f;
 
-    Matrix4f inverseTransform = Matrix4f::Inverse(projection * view * world);
+    Matrix4f inverseTransform = Matrix4f::Inverse(projection * view);
     Vector4f worldPosition = inverseTransform * ndcPosition;
 
     // Perspective division, because we need 3-dimension coordinate rather than

@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include <FalconEngine/Math/Vector2.h>
+
 namespace FalconEngine
 {
 
@@ -49,12 +51,17 @@ Vector3f::Vector3f() :
 {
 }
 
-Vector3f::Vector3f(const float& x) :
+Vector3f::Vector3f(float x) :
     glm::vec3(x)
 {
 }
 
-Vector3f::Vector3f(const float& x, const float& y, const float& z) :
+Vector3f::Vector3f(Vector2f v, float z) :
+    glm::vec3(v, z)
+{
+}
+
+Vector3f::Vector3f(float x, float y, float z) :
     glm::vec3(x, y, z)
 {
 }

@@ -6,6 +6,7 @@
 #include <vector>
 
 #include <FalconEngine/Graphics/Renderer/Viewport.h>
+#include <FalconEngine/Graphics/Renderer/Window.h>
 
 namespace FalconEngine
 {
@@ -87,7 +88,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Renderer(const GameEngineData *data, int width, int height);
+    Renderer(const GameEngineData *data, int width, int height, float near, float far);
     virtual ~Renderer();
 
     using PlatformVertexBufferMap   = std::map<const VertexBuffer *, PlatformVertexBuffer *>;
@@ -102,10 +103,34 @@ public:
     using PlatformShaderMap         = std::map<const Shader *, PlatformShader *>;
 
 private:
+    /************************************************************************/
+    /* Initialization and Destroy                                           */
+    /************************************************************************/
     void
-    InitializeExceptPlatform(int width, int height);
+    InitializeExceptPlatform(int width, int height, float near, float far);
 
-// internal
+    void
+    DestroyExceptPlatform();
+
+public:
+    /************************************************************************/
+    /* Viewport Management                                                  */
+    /************************************************************************/
+    const Viewport *
+    GetViewport() const;
+
+    // @note The viewport is specified in right-handed screen
+    // coordinates. The origin is the lower-left corner of the screen, the
+    // y-axis points upward, and the x-axis points rightward.
+    void
+    SetViewportExceptPlatform(float x, float y, float width, float height);
+
+    const Window *
+    GetWindow() const;
+
+    void
+    SetWindowExceptPlatform(int width, int height, float near, float far);
+
 public:
     /************************************************************************/
     /* Vertex Buffer Management                                             */
@@ -184,7 +209,6 @@ public:
     /************************************************************************/
     /* Texture Management                                                   */
     /************************************************************************/
-
     // @summary Provide a uniform interface for all texture.
     void
     Enable(int textureUnit, const Texture *texture);
@@ -329,7 +353,6 @@ public:
     /************************************************************************/
     /* Draw                                                                 */
     /************************************************************************/
-
     // @summary Draw single instance of visual.
     void
     Draw(const Camera *camera, Visual *visual);
@@ -338,24 +361,18 @@ public:
     void
     Draw(const Camera *camera, const Visual *visual, VisualEffectInstance *effectInstance);
 
-public:
-    int                     mWidth;
-    int                     mHeight;
-
-    Viewport                mViewport;
-
 private:
     /************************************************************************/
     /* Platform Hash Table                                                  */
     /************************************************************************/
-    PlatformIndexBufferMap        mIndexBufferTable;
-    PlatformVertexBufferMap       mVertexBufferTable;
-    PlatformVertexFormatMap       mVertexFormatTable;
-    PlatformTexture2dMap          mTexture2dTable;
-    PlatformTexture2dArrayMap     mTexture2dArrayTable;
-    PlatformTextureSamplerMap     mSamplerTable;
+    PlatformIndexBufferMap    mIndexBufferTable;
+    PlatformVertexBufferMap   mVertexBufferTable;
+    PlatformVertexFormatMap   mVertexFormatTable;
+    PlatformTexture2dMap      mTexture2dTable;
+    PlatformTexture2dArrayMap mTexture2dArrayTable;
+    PlatformTextureSamplerMap mSamplerTable;
 
-    PlatformShaderMap             mShaderTable;
+    PlatformShaderMap         mShaderTable;
 
     /************************************************************************/
     /* Renderer State                                                       */
@@ -374,82 +391,85 @@ private:
     const StencilTestState *mStencilTestStateCurrent;
     const WireframeState   *mWireframeStateCurrent;
 
-
-public:
+    Viewport                mViewport;
+    Window                  mWindow;
+    bool                    mWindowInitialized = false;
+private:
     /************************************************************************/
     /* Platform Dependent Members                                           */
     /************************************************************************/
 
     /************************************************************************/
-    /* State Management                                                     */
+    /* Initialization and Destroy                                           */
     /************************************************************************/
-    void
-    SetBlendState(const BlendState *blendState);
-
-    void
-    SetCullState(const CullState *cullState);
-
-    void
-    SetDepthTestState(const DepthTestState *depthTestState);
-
-    void
-    SetOffsetState(const OffsetState *offsetState);
-
-    void
-    SetStencilTestState(const StencilTestState *stencilTestState);
-
-    void
-    SetWireframeState(const WireframeState *wireframeState);
-
-    /************************************************************************/
-    /* Viewport Management                                                  */
-    /************************************************************************/
-
-    // @note The viewport is specified in right-handed screen
-    // coordinates. The origin is the lower-left corner of the screen, the
-    // y-axis points upward, and the x-axis points rightward.
-    void
-    SetViewport(float x, float y, float width, float height, float near, float far);
-
-    void
-    GetViewport(float& x, float& y, float& width, float& height, float& near, float& far) const;
-
-    void
-    SetWindowSize(int width, int height);
-
-    /************************************************************************/
-    /* Default Framebuffer Management                                       */
-    /************************************************************************/
-    void
-    ClearColorBuffer(Vector4f color);
-
-    void
-    ClearDepthBuffer(float depth);
-
-    void
-    ClearStencilBuffer(unsigned int stencil);
-
-    void
-    ClearBuffers(Vector4f color, float depth, unsigned int stencil);
-
-    void
-    SwapBuffers();
-
-private:
     void
     InitializePlatform(const GameEngineData *data);
 
     void
-    DestroyExceptPlatform();
-
-    void
     DestroyPlatform();
 
+    /************************************************************************/
+    /* State Management                                                     */
+    /************************************************************************/
     void
-    DrawPrimitive(const Primitive *primitive, size_t primitiveInstancingNum);
+    SetBlendStatePlatform(const BlendState *blendState);
+
+    void
+    SetCullStatePlatform(const CullState *cullState);
+
+    void
+    SetDepthTestStatePlatform(const DepthTestState *depthTestState);
+
+    void
+    SetOffsetStatePlatform(const OffsetState *offsetState);
+
+    void
+    SetStencilTestStatePlatform(const StencilTestState *stencilTestState);
+
+    void
+    SetWireframeStatePlatform(const WireframeState *wireframeState);
+
+public:
+    /************************************************************************/
+    /* Viewport Management                                                  */
+    /************************************************************************/
+    // @note The viewport is specified in right-handed screen
+    // coordinates. The origin is the lower-left corner of the screen, the
+    // y-axis points upward, and the x-axis points rightward.
+    void
+    SetViewportPlatform(float x, float y, float width, float height);
+
+    void
+    SetWindowPlatform(int width, int height, float near, float far);
+
+public:
+    /************************************************************************/
+    /* Default Framebuffer Management                                       */
+    /************************************************************************/
+    void
+    ClearColorBufferPlatform(Vector4f color);
+
+    void
+    ClearDepthBufferPlatform(float depth);
+
+    void
+    ClearStencilBufferPlatform(unsigned int stencil);
+
+    void
+    ClearFrameBufferPlatform(Vector4f color, float depth, unsigned int stencil);
+
+    void
+    SwapFrameBufferPlatform();
+
+    /************************************************************************/
+    /* Draw                                                                 */
+    /************************************************************************/
+    void
+    DrawPrimitivePlatform(const Primitive *primitive, size_t primitiveInstancingNum);
 
 private:
     PlatformRendererData *mData;
+    bool                  mDataInitialized = false;
 };
 #pragma warning(default: 4251)
 

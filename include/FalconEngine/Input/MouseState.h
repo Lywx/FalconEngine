@@ -41,6 +41,7 @@ public:
     bool
     ButtonUp(MouseButton button) const;
 
+    // @return Mouse position in the window space. Bottom-left of window as (0, 0).
     Vector2f
     GetPosition() const;
 

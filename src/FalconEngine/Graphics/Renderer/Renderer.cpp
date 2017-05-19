@@ -51,28 +51,29 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Renderer::Renderer(const GameEngineData *data, int width, int height)
+Renderer::Renderer(const GameEngineData *data, int width, int height, float near, float far)
 {
-    // NOTE(Wuxiang): Platform independent part initialization.
-    InitializeExceptPlatform(width, height);
-
-    // NOTE(Wuxiang): Platform dependent part initialization.
+    InitializeExceptPlatform(width, height, near, far);
     InitializePlatform(data);
 }
 
 Renderer::~Renderer()
 {
+    DestroyExceptPlatform();
     DestroyPlatform();
 }
 
+/************************************************************************/
+/* Initialization and Destroy                                           */
+/************************************************************************/
 void
-Renderer::InitializeExceptPlatform(int width, int height)
+Renderer::InitializeExceptPlatform(int width, int height, float near, float far)
 {
     assert(width > 0);
     assert(height > 0);
 
-    mWidth = width;
-    mHeight = height;
+    SetWindowExceptPlatform(width, height, near, far);
+    SetViewportExceptPlatform(0.0f, 0.0f, float(mWindow.mWidth), float(mWindow.mHeight));
 
     mBlendStateDefault = new BlendState();
     mCullStateDefault = new CullState();
@@ -101,7 +102,46 @@ Renderer::DestroyExceptPlatform()
 }
 
 /************************************************************************/
-/* Public Members                                                       */
+/* Viewport Management                                                  */
+/************************************************************************/
+const Viewport *
+Renderer::GetViewport() const
+{
+    return &mViewport;
+}
+
+void
+Renderer::SetViewportExceptPlatform(float x, float y, float width, float height)
+{
+    if (mWindowInitialized)
+    {
+        mViewport.Set(x, y, x + width, y + height, mWindow.mNear, mWindow.mFar);
+    }
+    else
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Need to initialize window first.")
+    }
+}
+
+const Window *
+Renderer::GetWindow() const
+{
+    return &mWindow;
+}
+
+void
+Renderer::SetWindowExceptPlatform(int width, int height, float near, float far)
+{
+    mWindow.mWidth = width;
+    mWindow.mHeight = height;
+    mWindow.mNear = near;
+    mWindow.mFar = far;
+
+    mWindowInitialized = true;
+}
+
+/************************************************************************/
+/* Vertex Buffer Management                                             */
 /************************************************************************/
 void
 Renderer::Bind(const VertexBuffer *vertexBuffer)
@@ -219,6 +259,9 @@ Renderer::Update(const VertexBuffer *vertexBuffer)
     }
 }
 
+/************************************************************************/
+/* Vertex Format Management                                             */
+/************************************************************************/
 void
 Renderer::Bind(const VertexFormat *vertexFormat)
 {
@@ -277,6 +320,9 @@ Renderer::Disable(const VertexFormat *vertexFormat)
     }
 }
 
+/************************************************************************/
+/* Vertex Group Management                                              */
+/************************************************************************/
 void
 Renderer::Enable(const VertexGroup *vertexGroup)
 {
@@ -303,6 +349,9 @@ Renderer::Disable(const VertexGroup *vertexGroup)
     }
 }
 
+/************************************************************************/
+/* Index Buffer Management                                              */
+/************************************************************************/
 void
 Renderer::Bind(const IndexBuffer *indexBuffer)
 {
@@ -418,6 +467,9 @@ Renderer::Update(const IndexBuffer *indexBuffer)
     }
 }
 
+/************************************************************************/
+/* Texture Management                                                   */
+/************************************************************************/
 void
 Renderer::Enable(int textureUnit, const Texture *texture)
 {
@@ -752,6 +804,9 @@ Renderer::Update(const Texture3d * /* texture */, int /* mipmapLevel */)
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
+/************************************************************************/
+/* Sampler Management                                                   */
+/************************************************************************/
 void
 Renderer::Bind(const Sampler *sampler)
 {
@@ -810,6 +865,9 @@ Renderer::Disable(int textureUnit, const Sampler *sampler)
     }
 }
 
+/************************************************************************/
+/* Shader Management                                                   */
+/************************************************************************/
 void
 Renderer::Bind(Shader *shader)
 {
@@ -868,16 +926,19 @@ Renderer::Disable(const Shader *shader)
     }
 }
 
+/************************************************************************/
+/* Pass Management                                                      */
+/************************************************************************/
 void
 Renderer::Enable(const VisualEffectPass *pass)
 {
     // Set pass' render states.
-    SetBlendState(pass->GetBlendState());
-    SetCullState(pass->GetCullState());
-    SetDepthTestState(pass->GetDepthTestState());
-    SetOffsetState(pass->GetOffsetState());
-    SetStencilTestState(pass->GetStencilTestState());
-    SetWireframeState(pass->GetWireframeState());
+    SetBlendStatePlatform(pass->GetBlendState());
+    SetCullStatePlatform(pass->GetCullState());
+    SetDepthTestStatePlatform(pass->GetDepthTestState());
+    SetOffsetStatePlatform(pass->GetOffsetState());
+    SetStencilTestStatePlatform(pass->GetStencilTestState());
+    SetWireframeStatePlatform(pass->GetWireframeState());
 }
 
 void
@@ -955,6 +1016,9 @@ Renderer::Update(const VisualEffectInstancePass *pass, ShaderUniform *uniform, c
     }
 }
 
+/************************************************************************/
+/* Draw                                                                 */
+/************************************************************************/
 void
 Renderer::Draw(
     _IN_     const Camera *camera,
@@ -1023,7 +1087,7 @@ Renderer::Draw(
         Enable(effectPass);
 
         // Draw the primitive.
-        DrawPrimitive(primitive, effectInstancingNum);
+        DrawPrimitivePlatform(primitive, effectInstancingNum);
 
         // Disable effect pass.
         Disable(effectPass);

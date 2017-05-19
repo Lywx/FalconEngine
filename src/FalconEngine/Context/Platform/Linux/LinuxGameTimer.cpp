@@ -1,4 +1,4 @@
-#include <FalconEngine/Context/GameCounter.h>
+#include <FalconEngine/Context/GameTimer.h>
 
 #include <stdexcept>
 #include <string>
@@ -13,10 +13,10 @@ namespace FalconEngine
 /************************************************************************/
 /* Platform Dependent Implementation                                    */
 /************************************************************************/
-class FALCON_ENGINE_API GameCounterImp
+class FALCON_ENGINE_API GameTimerImp
 {
 public:
-    GameCounterImp()
+    GameTimerImp()
     {
     }
 
@@ -36,17 +36,17 @@ public:
 };
 
 double
-GameCounter::GetMilliseconds()
+GameTimer::GetMilliseconds()
 {
     if (sImplementation == nullptr)
     {
-        sImplementation = std::make_shared<GameCounterImp>();
+        sImplementation = std::make_shared<GameTimerImp>();
     }
 
     return sImplementation->GetMilliseconds();
 }
 
-std::shared_ptr<GameCounterImp> GameCounter::sImplementation;
+std::shared_ptr<GameTimerImp> GameTimer::sImplementation;
 
 }
 

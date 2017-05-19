@@ -15,11 +15,18 @@ using GameEngineInputSettingsSharedPtr = std::shared_ptr<GameEngineInputSettings
 class FALCON_ENGINE_API GameEngineSettings
 {
 public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
     GameEngineSettings();
     virtual ~GameEngineSettings() = default;
 
 public:
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
     GameEngineGraphicsSettingsSharedPtr mGraphics;
+    double                              mGraphicsMillisecondPerRender = 16.66666666666;
     GameEngineInputSettingsSharedPtr    mInput;
 };
 #pragma warning(default: 4251)

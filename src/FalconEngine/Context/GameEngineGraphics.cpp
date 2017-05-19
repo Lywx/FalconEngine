@@ -33,25 +33,25 @@ GameEngineGraphics::~GameEngineGraphics()
 void
 GameEngineGraphics::ClearColorBuffer(Vector4f color)
 {
-    mMasterRenderer->ClearColorBuffer(color);
+    mMasterRenderer->ClearColorBufferPlatform(color);
 }
 
 void
 GameEngineGraphics::ClearDepthBuffer(float depth)
 {
-    mMasterRenderer->ClearDepthBuffer(depth);
+    mMasterRenderer->ClearDepthBufferPlatform(depth);
+}
+
+void
+GameEngineGraphics::ClearFrameBuffer(Vector4f color, float depth, unsigned stencil)
+{
+    mMasterRenderer->ClearFrameBufferPlatform(color, depth, stencil);
 }
 
 void
 GameEngineGraphics::ClearStencilBuffer(unsigned stencil)
 {
-    mMasterRenderer->ClearStencilBuffer(stencil);
-}
-
-void
-GameEngineGraphics::ClearBuffers(Vector4f color, float depth, unsigned stencil)
-{
-    mMasterRenderer->ClearBuffers(color, depth, stencil);
+    mMasterRenderer->ClearStencilBufferPlatform(stencil);
 }
 
 void
@@ -86,15 +86,43 @@ GameEngineGraphics::DrawString(const BitmapFont *font, float fontSize, Vector2f 
     mFontRenderer->BatchText(font, fontSize, text, textPosition, textColor, textLineWidth);
 }
 
+const Viewport *
+GameEngineGraphics::GetViewport() const
+{
+    return mMasterRenderer->GetViewport();
+}
+
+void
+GameEngineGraphics::SetViewport(float x, float y, float width, float height)
+{
+    mMasterRenderer->SetViewportExceptPlatform(x, y, width, height);
+    mMasterRenderer->SetViewportPlatform(x, y, width, height);
+}
+
+const Window *
+GameEngineGraphics::GetWindow() const
+{
+    return mMasterRenderer->GetWindow();
+}
+
+void
+GameEngineGraphics::SetWindow(int width, int height, float near, float far)
+{
+    mMasterRenderer->SetWindowExceptPlatform(width, height, near, far);
+    mMasterRenderer->SetWindowPlatform(width, height, near, far);
+}
+
 void
 GameEngineGraphics::Initialize(
-    _IN_  const GameEngineData       *data,
-    _OUT_ GameEngineSettingsSharedPtr settings)
+    _IN_ const GameEngineData       *data,
+    _IN_ GameEngineSettingsSharedPtr settings)
 {
     mSettings = settings->mGraphics;
 
-    mMasterRenderer = std::make_shared<Renderer>(data, mSettings->mWidth, mSettings->mHeight);
+    // First initialize primary renderer.
+    mMasterRenderer = std::make_shared<Renderer>(data, mSettings->mWidth, mSettings->mHeight, mSettings->mNear, mSettings->mFar);
 
+    // Later initialize sub-renderer.
     mEntityRenderer = std::make_shared<EntityRenderer>();
     mEntityRenderer->Initialize();
 
@@ -130,7 +158,7 @@ GameEngineGraphics::RenderEnd()
     mFontRenderer->RenderEnd();
 
     // Has to be the last.
-    mMasterRenderer->SwapBuffers();
+    mMasterRenderer->SwapFrameBufferPlatform();
 }
 
 }

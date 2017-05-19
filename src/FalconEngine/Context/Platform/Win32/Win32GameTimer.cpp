@@ -1,4 +1,4 @@
-#include <FalconEngine/Context/GameCounter.h>
+#include <FalconEngine/Context/GameTimer.h>
 
 #if defined(FALCON_ENGINE_OS_WINDOWS)
 
@@ -13,15 +13,15 @@ namespace FalconEngine
 /************************************************************************/
 /* Platform Dependent Implementation                                    */
 /************************************************************************/
-class FALCON_ENGINE_API GameCounterImp
+class FALCON_ENGINE_API GameTimerImp
 {
 public:
-    GameCounterImp()
+    GameTimerImp()
     {
-        if (!sCounterInitialized)
+        if (!sTimerInitialized)
         {
             QueryPerformanceFrequency(&sCounterFrequency);
-            sCounterInitialized = true;
+            sTimerInitialized = true;
         }
     }
 
@@ -37,28 +37,28 @@ public:
     }
 
 private:
-    typedef std::chrono::milliseconds Milliseconds;
-    typedef Milliseconds::period      MillisecondsPeriod;
+    using Milliseconds = std::chrono::milliseconds;
+    using MillisecondsPeriod = Milliseconds::period;
 
-    static bool          sCounterInitialized;
     static LARGE_INTEGER sCounterFrequency;
+    static bool          sTimerInitialized;
 };
 
-bool          GameCounterImp::sCounterInitialized = false;
-LARGE_INTEGER GameCounterImp::sCounterFrequency;
+bool          GameTimerImp::sTimerInitialized = false;
+LARGE_INTEGER GameTimerImp::sCounterFrequency;
 
 double
-GameCounter::GetMilliseconds()
+GameTimer::GetMilliseconds()
 {
     if (sImplementation == nullptr)
     {
-        sImplementation = std::make_shared<GameCounterImp>();
+        sImplementation = std::make_shared<GameTimerImp>();
     }
 
     return sImplementation->GetMilliseconds();
 }
 
-std::shared_ptr<GameCounterImp> GameCounter::sImplementation;
+std::shared_ptr<GameTimerImp> GameTimer::sImplementation;
 
 }
 

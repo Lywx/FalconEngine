@@ -1,15 +1,23 @@
-#include <FalconEngine/Context/GameEngineGraphicsSettings.h>
+#include <FalconEngine/Graphics/Renderer/Window.h>
 
 namespace FalconEngine
 {
-
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-GameEngineGraphicsSettings::GameEngineGraphicsSettings(int width, int height) :
-    mTitle("Falcon Engine Game"),
+Window::Window() :
+    mWidth(),
+    mHeight(),
+    mNear(),
+    mFar()
+{
+}
+
+Window::Window(int width, int height, float near, float far) :
     mWidth(width),
-    mHeight(height)
+    mHeight(height),
+    mNear(near),
+    mFar(far)
 {
 }
 

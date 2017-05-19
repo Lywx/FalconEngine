@@ -10,24 +10,63 @@ namespace FalconEngine
 
 FALCON_ENGINE_RTTI_IMPLEMENT(FirstPersonCamera, Camera);
 
+/************************************************************************/
+/* Constructors and Destructor                                          */
+/************************************************************************/
 FirstPersonCamera::FirstPersonCamera(const Handedness *handedness) :
-    Camera(handedness)
+    PlayerCamera(handedness)
 {
 }
 
 FirstPersonCamera::FirstPersonCamera(const Handedness *handedness, const Viewport& viewport, float nearPlane, float farPlane):
-    Camera(handedness, viewport, nearPlane, farPlane)
+    PlayerCamera(handedness, viewport, nearPlane, farPlane)
 {
 }
 
 FirstPersonCamera::FirstPersonCamera(const Handedness *handedness, float fovy, float aspectRatio, float nearPlane, float farPlane):
-    Camera(handedness, fovy, aspectRatio, nearPlane, farPlane)
+    PlayerCamera(handedness, fovy, aspectRatio, nearPlane, farPlane)
 {
 }
 
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+void
+FirstPersonCamera::MoveForward(float distance)
+{
+    mPosition += GetForward() * distance;
+}
+
+void
+FirstPersonCamera::MoveBackward(float distance)
+{
+    mPosition += GetBackward() * distance;
+}
+
+void
+FirstPersonCamera::MoveLeft(float distance)
+{
+    mPosition += GetLeft() * distance;
+}
+
+void
+FirstPersonCamera::MoveRight(float distance)
+{
+    mPosition += GetRight() * distance;
+}
+
+void
+FirstPersonCamera::MoveUp(float distance)
+{
+    mPosition += GetUp() * distance;
+}
+
+void
+FirstPersonCamera::MoveDown(float distance)
+{
+    mPosition += GetDown() * distance;
+}
+
 void
 FirstPersonCamera::Update(GameEngineInput *input, double elapsed)
 {
@@ -44,19 +83,21 @@ FirstPersonCamera::Update(GameEngineInput *input, double elapsed)
         // static auto yawDegreeRotationPerSecondMax = 360 / 0.8;
         // static auto pitchDegreeRotationPerSecondMax = 360 / 0.8;
 
-        auto pitchDegreeRotation = float(mousePositionDiff.y * mSensitivity * pitchDegreeRotationPerSecond * tSecond);
-        auto yawDegreeRotation = -float(mousePositionDiff.x * mSensitivity * yawDegreeRotationPerSecond * tSecond);
+        auto pitchDegreeRotation = float(mousePositionDiff.y * mMouseSensitivity * pitchDegreeRotationPerSecond * tSecond);
+        auto yawDegreeRotation = -float(mousePositionDiff.x * mMouseSensitivity * yawDegreeRotationPerSecond * tSecond);
 
         // NOTE(Wuxiang): Camera is not allowed to do front / back flip movement.
-        auto pitchDegreePrevious = Degree(mPitch);
+        auto pitchDegreePrevious = Degree(mPitchRadian);
         auto pitchDegree = pitchDegreePrevious + pitchDegreeRotation;
-        mPitch = Radian(Clamp<float>(pitchDegree, -90, 90));
-        auto pitchQuaternion = Quaternion::CreateFromAxisAngle(Vector3f::UnitX, mPitch);
+        pitchDegree = Clamp<float>(pitchDegree, -90, 90);
+        mPitchRadian = Radian(pitchDegree);
+        auto pitchQuaternion = Quaternion::CreateFromAxisAngle(Vector3f::UnitX, mPitchRadian);
 
-        auto yawDegreePrevious = Degree(mYaw);
+        auto yawDegreePrevious = Degree(mYawRadian);
         auto yawDegree = yawDegreePrevious + yawDegreeRotation;
-        mYaw = Radian(DegreeNormalize<float>(yawDegree, -180, 180));
-        auto yawQuaternion = Quaternion::CreateFromAxisAngle(Vector3f::UnitY, mYaw);
+        yawDegree = DegreeNormalize<float>(yawDegree, -180, 180);
+        mYawRadian = Radian(yawDegree);
+        auto yawQuaternion = Quaternion::CreateFromAxisAngle(Vector3f::UnitY, mYawRadian);
 
         auto pitchYawQuaternion = yawQuaternion * pitchQuaternion;
 

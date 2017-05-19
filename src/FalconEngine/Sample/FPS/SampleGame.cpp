@@ -1,7 +1,9 @@
 ﻿#include "SampleGame.h"
 
 using namespace std;
-using namespace FalconEngine;
+
+namespace FalconEngine
+{
 
 SampleGame::SampleGame()
 {
@@ -10,19 +12,6 @@ SampleGame::SampleGame()
 
 SampleGame::~SampleGame()
 {
-}
-
-GameEngineSettingsSharedPtr
-SampleGame::GetEngineSettings()
-{
-    if (!mGameEngineSettings)
-    {
-        mGameEngineSettings = std::make_shared<GameEngineSettings>();
-        mGameEngineSettings->mGraphics->mWidth  = 1600;
-        mGameEngineSettings->mGraphics->mHeight = 900;
-    }
-
-    return mGameEngineSettings;
 }
 
 void
@@ -119,7 +108,7 @@ SampleGame::Initialize()
 void
 SampleGame::Render(GameEngineGraphics *graphics, double percent)
 {
-    graphics->ClearBuffers(ColorPalette::Black, 1.f, 0);
+    graphics->ClearFrameBuffer(ColorPalette::Black, 1.f, 0);
 
     auto engine = GetEngine();
     auto engineGraphicsSettings = GetEngineSettings()->mGraphics;
@@ -159,9 +148,9 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
         graphics->DrawString(mFont_Console, 16.f, Vector2f(50.f, 50.f),
                              "Camera Position: " + to_string(position), ColorPalette::White);
 
-        auto pitch = Degree(mCamera->mPitch);
-        auto yaw = Degree(mCamera->mYaw);
-        auto roll = Degree(mCamera->mRoll);
+        auto pitch = Degree(mCamera->mPitchRadian);
+        auto yaw = Degree(mCamera->mYawRadian);
+        auto roll = Degree(mCamera->mRollRadian);
         graphics->DrawString(mFont_Console, 16.f, Vector2f(50.f, 100.f),
                              "Camera Pitch: " + std::to_string(pitch) + " Yaw: " + std::to_string(yaw) + " Roll: " + std::to_string(roll), ColorPalette::White);
     }
@@ -188,4 +177,6 @@ SampleGame::Update(GameEngineInput *input, double elapsed)
     mSceneNode->Update(elapsed, true);
 
     Game::Update(input, elapsed);
+}
+
 }

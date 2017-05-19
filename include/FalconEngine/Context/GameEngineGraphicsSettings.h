@@ -9,7 +9,7 @@ namespace FalconEngine
 class FALCON_ENGINE_API GameEngineGraphicsSettings final
 {
 public:
-    GameEngineGraphicsSettings();
+    GameEngineGraphicsSettings(int width, int height);
     ~GameEngineGraphicsSettings() = default;
 
 public:
@@ -17,6 +17,8 @@ public:
 
     int         mWidth;
     int         mHeight;
+    float       mNear = 0.0f;
+    float       mFar = 1.0f;
 };
 #pragma warning(default: 4251)
 

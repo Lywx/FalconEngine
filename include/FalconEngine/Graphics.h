@@ -65,6 +65,8 @@
 #include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
 
 #include <FalconEngine/Graphics/Scene/CharacterEntity.h>
-#include <FalconEngine/Graphics/Scene/FirstPersonCamera.h>
-#include <FalconEngine/Graphics/Scene/PointLightEntity.h>
 #include <FalconEngine/Graphics/Scene/SceneEntity.h>
+#include <FalconEngine/Graphics/Scene/PointLightEntity.h>
+
+#include <FalconEngine/Graphics/Scene/FirstPersonCamera.h>
+#include <FalconEngine/Graphics/Scene/ThirdPersonCamera.h>

@@ -145,6 +145,7 @@ HandednessRight::CreateOrthogonal(float left, float right, float bottom, float t
     result = CreateOrthogonal(left, right, bottom, top, dmin, dmax);
 }
 
+// @test Have the same result as glm::lookAt.
 Matrix4f
 HandednessRight::CreateLookAt(const Vector3f & eyePosition, const Vector3f & targetPosition, const Vector3f & up) const
 {

@@ -159,11 +159,11 @@ const Color ColorPalette::YellowGreen(Color(0xff32cd9a));
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Color::Color(uint32 hex) :
-    R(uint8(hex)),
-    G(uint8(hex >> 8)),
-    B(uint8(hex >> 16)),
-    A(uint8(hex >> 24))
+Color::Color(Uint32 hex) :
+    R(Uint8(hex)),
+    G(Uint8(hex >> 8)),
+    B(Uint8(hex >> 16)),
+    A(Uint8(hex >> 24))
 {
 }
 
@@ -174,12 +174,12 @@ Color::Color(int r, int g, int b) :
 
 Color::Color(int r, int g, int b, int a)
 {
-    typedef numeric_limits<uint8> uint8Limit;
+    typedef numeric_limits<Uint8> uint8Limit;
 
-    R = static_cast<uint8>(Clamp<int>(r, uint8Limit::min(), uint8Limit::max()));
-    G = static_cast<uint8>(Clamp<int>(g, uint8Limit::min(), uint8Limit::max()));
-    B = static_cast<uint8>(Clamp<int>(b, uint8Limit::min(), uint8Limit::max()));
-    A = static_cast<uint8>(Clamp<int>(a, uint8Limit::min(), uint8Limit::max()));
+    R = static_cast<Uint8>(Clamp<int>(r, uint8Limit::min(), uint8Limit::max()));
+    G = static_cast<Uint8>(Clamp<int>(g, uint8Limit::min(), uint8Limit::max()));
+    B = static_cast<Uint8>(Clamp<int>(b, uint8Limit::min(), uint8Limit::max()));
+    A = static_cast<Uint8>(Clamp<int>(a, uint8Limit::min(), uint8Limit::max()));
 }
 
 Color::Color(float r, float g, float b) :
@@ -189,12 +189,12 @@ Color::Color(float r, float g, float b) :
 
 Color::Color(float r, float g, float b, float a)
 {
-    typedef numeric_limits<uint8> uint8Limit;
+    typedef numeric_limits<Uint8> uint8Limit;
 
-    R = static_cast<uint8>(Clamp<float>(r * 255, uint8Limit::min(), uint8Limit::max()));
-    G = static_cast<uint8>(Clamp<float>(g * 255, uint8Limit::min(), uint8Limit::max()));
-    B = static_cast<uint8>(Clamp<float>(b * 255, uint8Limit::min(), uint8Limit::max()));
-    A = static_cast<uint8>(Clamp<float>(a * 255, uint8Limit::min(), uint8Limit::max()));
+    R = static_cast<Uint8>(Clamp<float>(r * 255, uint8Limit::min(), uint8Limit::max()));
+    G = static_cast<Uint8>(Clamp<float>(g * 255, uint8Limit::min(), uint8Limit::max()));
+    B = static_cast<Uint8>(Clamp<float>(b * 255, uint8Limit::min(), uint8Limit::max()));
+    A = static_cast<Uint8>(Clamp<float>(a * 255, uint8Limit::min(), uint8Limit::max()));
 }
 
 Color::Color()
@@ -229,7 +229,7 @@ bool operator!=(Color lhs, Color rhs)
 }
 
 Color
-Transparent(Color color, uint8 a)
+Transparent(Color color, Uint8 a)
 {
     color.A = a;
     return color;
@@ -238,9 +238,9 @@ Transparent(Color color, uint8 a)
 Color
 Transparent(Color color, float a)
 {
-    typedef numeric_limits<uint8> uint8Limit;
+    typedef numeric_limits<Uint8> uint8Limit;
 
-    color.A = static_cast<uint8>(Clamp<float>(a * 255, uint8Limit::min(), uint8Limit::max()));
+    color.A = static_cast<Uint8>(Clamp<float>(a * 255, uint8Limit::min(), uint8Limit::max()));
     return color;
 }
 

@@ -20,10 +20,34 @@ namespace FalconEngine
 {
 
 /************************************************************************/
-/* Public Members                                                       */
+/* Initialization and Destroy                                           */
 /************************************************************************/
 void
-Renderer::SetBlendState(const BlendState *blendState)
+Renderer::InitializePlatform(const GameEngineData *data)
+{
+    // Initialize platform renderer data.
+    mData = new PlatformRendererData();
+    mData->mWindow = data->mWindow;
+    mData->mState->Initialize(mBlendStateDefault, mCullStateDefault,
+                              mDepthTestStateDefault, mOffsetStateDefault,
+                              mStencilTestStateDefault, mWireframeStateDefault);
+    mDataInitialized = true;
+
+    SetWindowPlatform(mWindow.mWidth, mWindow.mHeight, mWindow.mNear, mWindow.mFar);
+    SetViewportPlatform(mViewport.mLeft, mViewport.mBottom, mViewport.GetWidth(), mViewport.GetHeight());
+}
+
+void
+Renderer::DestroyPlatform()
+{
+    delete mData;
+}
+
+/************************************************************************/
+/* State Management                                                     */
+/************************************************************************/
+void
+Renderer::SetBlendStatePlatform(const BlendState *blendState)
 {
     FALCON_ENGINE_CHECK_NULLPTR(blendState);
 
@@ -68,7 +92,7 @@ Renderer::SetBlendState(const BlendState *blendState)
 }
 
 void
-Renderer::SetCullState(const CullState *cullState)
+Renderer::SetCullStatePlatform(const CullState *cullState)
 {
     FALCON_ENGINE_CHECK_NULLPTR(cullState);
 
@@ -109,7 +133,7 @@ Renderer::SetCullState(const CullState *cullState)
 }
 
 void
-Renderer::SetDepthTestState(const DepthTestState *depthTestState)
+Renderer::SetDepthTestStatePlatform(const DepthTestState *depthTestState)
 {
     FALCON_ENGINE_CHECK_NULLPTR(depthTestState);
 
@@ -158,7 +182,7 @@ Renderer::SetDepthTestState(const DepthTestState *depthTestState)
 }
 
 void
-Renderer::SetOffsetState(const OffsetState *offsetState)
+Renderer::SetOffsetStatePlatform(const OffsetState *offsetState)
 {
     FALCON_ENGINE_CHECK_NULLPTR(offsetState);
 
@@ -225,7 +249,7 @@ Renderer::SetOffsetState(const OffsetState *offsetState)
 }
 
 void
-Renderer::SetStencilTestState(const StencilTestState *stencilTestState)
+Renderer::SetStencilTestStatePlatform(const StencilTestState *stencilTestState)
 {
     FALCON_ENGINE_CHECK_NULLPTR(stencilTestState);
 
@@ -281,7 +305,7 @@ Renderer::SetStencilTestState(const StencilTestState *stencilTestState)
 }
 
 void
-Renderer::SetWireframeState(const WireframeState *wireframeState)
+Renderer::SetWireframeStatePlatform(const WireframeState *wireframeState)
 {
     FALCON_ENGINE_CHECK_NULLPTR(wireframeState);
 
@@ -305,57 +329,48 @@ Renderer::SetWireframeState(const WireframeState *wireframeState)
     }
 }
 
+/************************************************************************/
+/* Viewport Management                                                  */
+/************************************************************************/
 void
-Renderer::SetViewport(float x, float y, float width, float height, float near, float far)
+Renderer::SetViewportPlatform(float x, float y, float width, float height)
 {
-    mViewport.Set(x, y, x + width, y + height, near, far);
-
-    glDepthRange(GLclampd(near), GLclampd(far));
     glViewport(int(x), int(y), int(width), int(height));
 }
 
 void
-Renderer::GetViewport(float& x, float& y, float& width, float& height, float& near, float& far) const
+Renderer::SetWindowPlatform(int width, int height, float near, float far)
 {
-    x      = mViewport.mLeft;
-    y      = mViewport.mBottom;
-    width  = mViewport.GetWidth();
-    height = mViewport.GetHeight();
-    near   = mViewport.mMinDepth;
-    far    = mViewport.mMaxDepth;
+    if (mDataInitialized)
+    {
+        glfwSetWindowSize(mData->mWindow, width, height);
+        glDepthRange(GLclampd(near), GLclampd(far));
+    }
+    else
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Renderer data is not initialized.")
+    }
 }
 
+/************************************************************************/
+/* Default Framebuffer Management                                       */
+/************************************************************************/
 void
-Renderer::SetWindowSize(int width, int height)
-{
-    mWidth  = width;
-    mHeight = height;
-    glfwSetWindowSize(mData->mWindow, mWidth, mHeight);
-}
-
-void
-Renderer::ClearColorBuffer(Vector4f color)
+Renderer::ClearColorBufferPlatform(Vector4f color)
 {
     glClearColor(color[0], color[1], color[2], color[3]);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void
-Renderer::ClearDepthBuffer(float depth)
+Renderer::ClearDepthBufferPlatform(float depth)
 {
     glClearDepth(static_cast<GLclampd>(depth));
     glClear(GL_DEPTH_BUFFER_BIT);
 }
 
 void
-Renderer::ClearStencilBuffer(unsigned stencil)
-{
-    glClearStencil(static_cast<GLint>(stencil));
-    glClear(GL_STENCIL_BUFFER_BIT);
-}
-
-void
-Renderer::ClearBuffers(Vector4f color, float depth, unsigned stencil)
+Renderer::ClearFrameBufferPlatform(Vector4f color, float depth, unsigned stencil)
 {
     glClearColor(color[0], color[1], color[2], color[3]);
     glClearDepth(static_cast<GLclampd>(depth));
@@ -364,13 +379,23 @@ Renderer::ClearBuffers(Vector4f color, float depth, unsigned stencil)
 }
 
 void
-Renderer::SwapBuffers()
+Renderer::ClearStencilBufferPlatform(unsigned stencil)
+{
+    glClearStencil(static_cast<GLint>(stencil));
+    glClear(GL_STENCIL_BUFFER_BIT);
+}
+
+void
+Renderer::SwapFrameBufferPlatform()
 {
     glfwSwapBuffers(mData->mWindow);
 }
 
+/************************************************************************/
+/* Draw                                                                 */
+/************************************************************************/
 void
-Renderer::DrawPrimitive(const Primitive *primitive, size_t instancingNum)
+Renderer::DrawPrimitivePlatform(const Primitive *primitive, size_t instancingNum)
 {
     FALCON_ENGINE_CHECK_NULLPTR(primitive);
 
@@ -443,27 +468,6 @@ Renderer::DrawPrimitive(const Primitive *primitive, size_t instancingNum)
     }
 }
 
-/************************************************************************/
-/* Private Members                                                      */
-/************************************************************************/
-void
-Renderer::InitializePlatform(const GameEngineData *data)
-{
-    glViewport(0, 0, mWidth, mHeight);
-
-    // Initialize platform renderer data.
-    mData = new PlatformRendererData();
-    mData->mWindow = data->mWindow;
-    mData->mState->Initialize(mBlendStateDefault, mCullStateDefault,
-                              mDepthTestStateDefault, mOffsetStateDefault,
-                              mStencilTestStateDefault, mWireframeStateDefault);
-}
-
-void
-Renderer::DestroyPlatform()
-{
-    delete mData;
-}
 }
 
 #endif

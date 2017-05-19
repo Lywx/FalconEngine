@@ -1,5 +1,7 @@
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 
+#include <glm/gtc/matrix_transform.hpp>
+
 namespace FalconEngine
 {
 
@@ -13,15 +15,15 @@ Camera::Camera(const Handedness *handedness)
 {
 }
 
-Camera::Camera(const Handedness *handedness, const Viewport& viewport, float nearPlane /*=0.1f*/, float farPlane /*=1000.f*/)
-    : Camera(handedness, PiOver4, viewport.GetAspect(), nearPlane, farPlane)
+Camera::Camera(const Handedness *handedness, const Viewport& viewport, float near /*=0.1f*/, float far /*=1000.f*/)
+    : Camera(handedness, PiOver4, viewport.GetAspect(), near, far)
 {
 }
 
-Camera::Camera(const Handedness *handedness, float fovy, float aspectRatio, float nearPlane /*=0.1f*/, float farPlane /*=1000.f*/) :
-    mAspectRatio(aspectRatio),
-    mFarPlane(farPlane),
-    mNearPlane(nearPlane),
+Camera::Camera(const Handedness *handedness, float fovy, float aspect, float near /*=0.1f*/, float far /*=1000.f*/) :
+    mAspect(aspect),
+    mNear(near),
+    mFar(far),
     mFovy(fovy),
     mPosition(Vector3f::Zero),
     mOrientation(Quaternion::Identity),
@@ -29,7 +31,7 @@ Camera::Camera(const Handedness *handedness, float fovy, float aspectRatio, floa
     mWorld(Matrix4f::Identity),
     mHandedness(handedness)
 {
-    mProjection = mHandedness->CreatePerspectiveFieldOfView(mFovy, mAspectRatio, mNearPlane, mFarPlane);
+    mProjection = mHandedness->CreatePerspectiveFieldOfView(mFovy, mAspect, mNear, mFar);
 }
 
 Camera::~Camera()
@@ -83,42 +85,6 @@ Camera::GetDown() const
 }
 
 void
-Camera::MoveForward(float distance)
-{
-    mPosition += GetForward() * distance;
-}
-
-void
-Camera::MoveBackward(float distance)
-{
-    mPosition += GetBackward() * distance;
-}
-
-void
-Camera::MoveLeft(float distance)
-{
-    mPosition += GetLeft() * distance;
-}
-
-void
-Camera::MoveRight(float distance)
-{
-    mPosition += GetRight() * distance;
-}
-
-void
-Camera::MoveUp(float distance)
-{
-    mPosition += GetUp() * distance;
-}
-
-void
-Camera::MoveDown(float distance)
-{
-    mPosition += GetDown() * distance;
-}
-
-void
 Camera::SetRotation(const Matrix4f& rotation)
 {
     mWorld = rotation * mWorld;
@@ -156,13 +122,13 @@ Camera::SetOrientation(const Quaternion& orientation)
 float
 Camera::GetNear() const
 {
-    return mNearPlane;
+    return mNear;
 }
 
 float
 Camera::GetFar() const
 {
-    return mFarPlane;
+    return mFar;
 }
 
 const Matrix4f&
@@ -211,7 +177,7 @@ Camera::GetVerticalFieldOfView() const
 float
 Camera::GetHorizontalFieldOfView() const
 {
-    return 2.f * atan(mAspectRatio * tan(mFovy * 0.5f) );
+    return 2.f * atan(mAspect * tan(mFovy * 0.5f) );
 }
 
 void Camera::SetPosition(const Vector3f& position)
@@ -222,36 +188,41 @@ void Camera::SetPosition(const Vector3f& position)
 }
 
 void
-Camera::SetProjectionPerspectiveFieldOfView(float fovy, float aspectRatio, float nearPlane, float farPlane)
+Camera::SetProjectionPerspectiveFieldOfView(float fovy, float aspect, float near, float far)
 {
-    mNearPlane = nearPlane;
-    mFarPlane = farPlane;
-    mProjection = mHandedness->CreatePerspectiveFieldOfView(fovy, aspectRatio, nearPlane, farPlane);
+    mNear = near;
+    mFar = far;
+    mProjection = mHandedness->CreatePerspectiveFieldOfView(fovy, aspect, near, far);
 }
 
 void
-Camera::SetProjectionPerspective(float width, float height, float nearPlane, float farPlane)
+Camera::SetProjectionPerspective(float width, float height, float near, float far)
 {
-    mNearPlane = nearPlane;
-    mFarPlane = farPlane;
-    mProjection = mHandedness->CreatePerspective(width, height, nearPlane, farPlane);
+    mNear = near;
+    mFar = far;
+    mProjection = mHandedness->CreatePerspective(width, height, near, far);
 }
 
 void
-Camera::SetProjectionOrthogonal(float left, float right, float bottom, float top, float nearPlane, float farPlane)
+Camera::SetProjectionOrthogonal(float left, float right, float bottom, float top, float near, float far)
 {
-    mNearPlane = nearPlane;
-    mFarPlane = farPlane;
-    mProjection = mHandedness->CreateOrthogonal(left, right, bottom, top, nearPlane, farPlane);
+    mNear = near;
+    mFar = far;
+    mProjection = mHandedness->CreateOrthogonal(left, right, bottom, top, near, far);
 }
 
 void
 Camera::LookAt(const Vector3f& from, const Vector3f& to, const Vector3f& up)
 {
-    mPosition = from;
+    // Compute view matrix directly from definition.
     mView = mHandedness->CreateLookAt(from, to, up);
     mWorld = Matrix4f::Inverse(mView);
-    mOrientation = Quaternion::CreateFromRotationMatrix(mWorld);
+
+    // Extract position and orientation from view matrix.
+    mPosition = from;
+    mOrientation = Quaternion::CreateFromRotationMatrix(Matrix4f::CreateTranslation(-mPosition) * mWorld);
+
+    // NOTE(Wuxiang): The extraction is tested to work correctly.
 }
 
 void

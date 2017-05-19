@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <limits>
 
-#include <FalconEngine/Math/Integer.h>
+#include <FalconEngine/Math/Type.h>
 #include <FalconEngine/Math/Vector3.h>
 #include <FalconEngine/Math/Vector4.h>
 
@@ -18,7 +18,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit Color(uint32 hex);
+    explicit Color(Uint32 hex);
     Color(int r, int g, int b);
     Color(int r, int g, int b, int a);
     Color(float r, float g, float b);
@@ -30,10 +30,10 @@ public:
     operator Vector4f() const;
 
 public:
-    uint8 R;
-    uint8 G;
-    uint8 B;
-    uint8 A;
+    Uint8 R;
+    Uint8 G;
+    Uint8 B;
+    Uint8 A;
 };
 
 bool operator==(Color lhs, Color rhs);
@@ -757,6 +757,6 @@ FALCON_ENGINE_API Color
 Transparent(Color color, float a);
 
 FALCON_ENGINE_API Color
-Transparent(Color color, uint8 a);
+Transparent(Color color, Uint8 a);
 
 }

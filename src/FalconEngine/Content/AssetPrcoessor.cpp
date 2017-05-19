@@ -21,7 +21,7 @@
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Model.h>
-#include <FalconEngine/Math/Integer.h>
+#include <FalconEngine/Math/Type.h>
 
 using namespace boost;
 using namespace std;
@@ -246,8 +246,8 @@ LoadFntFile(const std::string& fntFilePath)
     int fontGlyphPR;
     {
         fontSize = lexical_cast<int>(sFontSettingTable.at("size"));
-        font->mLineBase = lexical_cast<uint32>(sFontSettingTable.at("base"));
-        font->mLineHeight = lexical_cast<uint32>(sFontSettingTable.at("lineHeight"));
+        font->mLineBase = lexical_cast<Uint32>(sFontSettingTable.at("base"));
+        font->mLineHeight = lexical_cast<Uint32>(sFontSettingTable.at("lineHeight"));
         font->mTextureWidth = lexical_cast<int>(sFontSettingTable.at("scaleW"));
         font->mTextureHeight = lexical_cast<int>(sFontSettingTable.at("scaleH"));
 

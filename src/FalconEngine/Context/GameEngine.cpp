@@ -5,6 +5,8 @@
 #include <FalconEngine/Context/GameEngineInput.h>
 #include <FalconEngine/Context/GameEngineSettings.h>
 
+#include <mutex>
+
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
 #include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
 #endif
@@ -30,18 +32,6 @@ GameEngine::~GameEngine()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-double
-GameEngine::GetMillisecondPerRender() const
-{
-    return mMillisecondPerRender;
-}
-
-void
-GameEngine::SetMillisecondPerRender(double millisecondPerRender)
-{
-    mMillisecondPerRender = millisecondPerRender;
-}
-
 const GameEngineData *
 GameEngine::GetData() const
 {
@@ -72,34 +62,35 @@ GameEngine::Exit()
 void
 GameEngine::Initialize()
 {
+    std::lock_guard<std::mutex> lock(mMutex);
+
+    // NOTE(Wuxiang): Thread-safe singleton pattern is used in all the game engine
+    // context components.
     mData = new GameEngineData();
+    mSettings = mGame->GetEngineSettings();
 
     mPlatform = GameEnginePlatform::GetInstance();
     if (mPlatform != nullptr)
     {
-        auto settings = mGame->GetEngineSettings();
-        mPlatform->Initialize(mData, settings);
+        mPlatform->Initialize(mData, mSettings);
     }
 
     mProfiler = GameEngineProfiler::GetInstance();
     if (mProfiler != nullptr)
     {
-        auto settings = mGame->GetEngineSettings();
-        mProfiler->Initialize(mData, settings);
+        mProfiler->Initialize(mData, mSettings);
     }
 
     mGraphics = GameEngineGraphics::GetInstance();
     if (mGraphics != nullptr)
     {
-        auto settings = mGame->GetEngineSettings();
-        mGraphics->Initialize(mData, settings);
+        mGraphics->Initialize(mData, mSettings);
     }
 
     mInput = GameEngineInput::GetInstance();
     if (mInput != nullptr)
     {
-        auto settings = mGame->GetEngineSettings();
-        mInput->Initialize(mData, settings);
+        mInput->Initialize(mData, mSettings);
     }
 
     if(mGame != nullptr)
@@ -117,7 +108,7 @@ GameEngine::Loop()
 
     if (mGame != nullptr)
     {
-        double lastFrameBegunMillisecond = GameCounter::GetMilliseconds();
+        double lastFrameBegunMillisecond = GameTimer::GetMilliseconds();
         double lastRenderBegunMillisecond = lastFrameBegunMillisecond;
         int    lastFrameUpdateTotalCount = 0;
 
@@ -126,7 +117,7 @@ GameEngine::Loop()
 
         while (mRunning)
         {
-            double lastFrameEndedMillisecond = GameCounter::GetMilliseconds();
+            double lastFrameEndedMillisecond = GameTimer::GetMilliseconds();
             double lastRenderEndedMillisecond = lastFrameEndedMillisecond;
 
             // Get the time elapsed during the LAST frame.
@@ -141,14 +132,14 @@ GameEngine::Loop()
             // Reset update accumulated time elapsed.
             int    currentFrameUpdateTotalCount = 0;
             double currentUpdateTotalElapsedMillisecond = 0;
-            double lastUpdateBegunMillisecond = GameCounter::GetMilliseconds();
+            double lastUpdateBegunMillisecond = GameTimer::GetMilliseconds();
             double lastUpdateEndedMillisecond = 0;
             do
             {
                 mGame->Update(mInput, currentFrameUpdateTotalCount == 0 ? lastUpdateElapsedMillisecond + lastRenderElapsedMillisecond : lastUpdateElapsedMillisecond);
                 ++currentFrameUpdateTotalCount;
 
-                lastUpdateEndedMillisecond = GameCounter::GetMilliseconds();
+                lastUpdateEndedMillisecond = GameTimer::GetMilliseconds();
 
                 // Get the time elapsed during the LAST update.
                 lastUpdateElapsedMillisecond = lastUpdateEndedMillisecond - lastUpdateBegunMillisecond;
@@ -157,7 +148,7 @@ GameEngine::Loop()
                 // Reset update start point.
                 lastUpdateBegunMillisecond = lastUpdateEndedMillisecond;
             }
-            while (currentUpdateTotalElapsedMillisecond + lastUpdateElapsedMillisecond <= mMillisecondPerRender);
+            while (currentUpdateTotalElapsedMillisecond + lastUpdateElapsedMillisecond <= mSettings->mGraphicsMillisecondPerRender);
 
             // Output performance profile
             double lastFrameFPS = 1000 / lastFrameElapsedMillisecond;

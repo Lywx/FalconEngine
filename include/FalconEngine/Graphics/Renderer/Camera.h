@@ -23,12 +23,12 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
     Camera(const Handedness *handedness);
-    Camera(const Handedness *handedness, const Viewport& viewport, float nearPlane = 0.1f, float farPlane = 1000.f);
-    Camera(const Handedness *handedness, float fovy, float aspectRatio, float nearPlane = 0.1f, float farPlane = 1000.f);
+    Camera(const Handedness *handedness, const Viewport& viewport, float near = 0.1f, float far = 1000.f);
+    Camera(const Handedness *handedness, float fovy, float aspect, float near = 0.1f, float far = 1000.f);
     virtual ~Camera();
 
     /************************************************************************/
-    /* Camera Position and Orientation                                      */
+    /* Camera Position                                                      */
     /************************************************************************/
     const Vector3f&
     GetPosition() const;
@@ -36,6 +36,9 @@ public:
     void
     SetPosition(const Vector3f& position);
 
+    /************************************************************************/
+    /* Camera Orientation                                                   */
+    /************************************************************************/
     Vector3f
     GetForward() const;
 
@@ -55,24 +58,6 @@ public:
     GetDown() const;
 
     void
-    MoveForward(float distance);
-
-    void
-    MoveBackward(float distance);
-
-    void
-    MoveLeft(float distance);
-
-    void
-    MoveRight(float distance);
-
-    void
-    MoveUp(float distance);
-
-    void
-    MoveDown(float distance);
-
-    void
     SetRotation(const Matrix4f& rotation);
 
     void
@@ -81,7 +66,7 @@ public:
     const Quaternion&
     GetOrientation() const;
 
-    // NOTE(Wuxiang): This method intrinsically suffers from Gimbal lock.
+    // NOTE(Wuxiang): This method intrinsically suffers from Gimbal Lock.
     void
     SetOrientation(float pitch, float yaw, float roll);
 
@@ -122,29 +107,36 @@ public:
     SetProjection(const Matrix4f& projection);
 
     void
-    SetProjectionPerspectiveFieldOfView(float fovy, float aspectRatio, float nearPlane, float farPlane);
+    SetProjectionPerspectiveFieldOfView(float fovy, float aspect, float near, float far);
 
     void
-    SetProjectionPerspective(float width, float height, float nearPlane, float farPlane);
+    SetProjectionPerspective(float width, float height, float near, float far);
 
     void
-    SetProjectionOrthogonal(float left, float right, float bottom, float top, float nearPlane, float farPlane);
+    SetProjectionOrthogonal(float left, float right, float bottom, float top, float near, float far);
 
+    // @summary Set up camera position and orientation from the parameters.
+    // @param from - world coordinate of camera position.
+    // @param to - world coordinate of target position.
+    // @param up - world coordinate of up vector.
     virtual void
     LookAt(const Vector3f& from, const Vector3f& to, const Vector3f& up);
 
+    /************************************************************************/
+    /* Camera Operation                                                     */
+    /************************************************************************/
     virtual void
     Update(double elapsed);
 
 protected:
     /************************************************************************/
-    /* Static Data                                                          */
+    /* Constant Data                                                        */
     /************************************************************************/
     // TODO(Wuxiang): No support for updating those data after construction for now.
 
-    float              mAspectRatio;
-    float              mFarPlane;
-    float              mNearPlane;
+    float              mAspect;
+    float              mNear;
+    float              mFar;
     float              mFovy;                                                   // Vertical field of view
 
     /************************************************************************/
@@ -152,8 +144,8 @@ protected:
     /************************************************************************/
     // Each update converts storage data into transform data.
 
-    Vector3f           mPosition;                                               // Storage for position
-    Quaternion         mOrientation;                                            // Storage for rotation
+    Vector3f           mPosition;                                               // Storage for camera world space position
+    Quaternion         mOrientation;                                            // Storage for camera world space rotation
 
     /************************************************************************/
     /* Transform Data                                                       */

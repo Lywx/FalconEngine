@@ -5,7 +5,7 @@
 #include <iostream>
 #include <iomanip>
 
-#include <FalconEngine/Context/GameCounter.h>
+#include <FalconEngine/Context/GameTimer.h>
 
 #define FALCON_ENGINE_DEBUG_TRACE_BLOCK() FalconEngine::GameTrace trace##__LINE__(__FUNCTION__)
 
@@ -20,13 +20,13 @@ public:
         mFunctionName(functionName),
         mFunctionElapsedMillisecond(0)
     {
-        mFunctionBeginMillisecond = GameCounter::GetMilliseconds();
+        mFunctionBeginMillisecond = GameTimer::GetMilliseconds();
     }
 
 
     ~GameTrace()
     {
-        mFunctionElapsedMillisecond = GameCounter::GetMilliseconds() - mFunctionBeginMillisecond;
+        mFunctionElapsedMillisecond = GameTimer::GetMilliseconds() - mFunctionBeginMillisecond;
     }
 
 private:

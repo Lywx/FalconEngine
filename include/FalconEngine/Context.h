@@ -1,10 +1,12 @@
 #pragma once
 
 #include <FalconEngine/Context/Header.h>
-#include <FalconEngine/Context/GameEngine.h>
+
 #include <FalconEngine/Context/Game.h>
 #include <FalconEngine/Context/GameDebug.h>
-#include <FalconEngine/Context/GameCounter.h>
+#include <FalconEngine/Context/GameEngine.h>
+#include <FalconEngine/Context/GameTimer.h>
+
 #include <FalconEngine/Context/GameEngineGraphics.h>
 #include <FalconEngine/Context/GameEngineGraphicsSettings.h>
 #include <FalconEngine/Context/GameEngineInput.h>

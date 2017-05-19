@@ -5,9 +5,12 @@
 namespace FalconEngine
 {
 
+/************************************************************************/
+/* Constructors and Destructor                                          */
+/************************************************************************/
 GameEngineSettings::GameEngineSettings()
 {
-    mGraphics = std::make_shared<GameEngineGraphicsSettings>();
+    mGraphics = std::make_shared<GameEngineGraphicsSettings>(800, 600);
     mInput = std::make_shared<GameEngineInputSettings>();
 }
 

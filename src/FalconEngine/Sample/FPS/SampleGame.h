@@ -17,9 +17,6 @@ public:
     ~SampleGame();
 
 public:
-    virtual GameEngineSettingsSharedPtr
-    GetEngineSettings() override;
-
     virtual void
     Initialize() override;
 

@@ -13,6 +13,7 @@
 namespace FalconEngine
 {
 
+class Vector2f;
 class Vector3i;
 
 // Assume vector are column vector
@@ -45,8 +46,9 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
     Vector3f();
-    explicit Vector3f(const float& x);
-    Vector3f(const float& x, const float& y, const float& z);
+    explicit Vector3f(float x);
+    Vector3f(Vector2f v, float z);
+    Vector3f(float x, float y, float z);
 
     // Implicit Conversion
     Vector3f(const glm::vec3& v);

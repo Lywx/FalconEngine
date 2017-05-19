@@ -2,7 +2,7 @@
 
 #include <FalconEngine/Context/Header.h>
 
-
+#include <mutex>
 #include <string>
 
 namespace FalconEngine
@@ -34,21 +34,16 @@ public:
     /* Engine Operation                                                     */
     /************************************************************************/
     GameEngine *
-    GetEngine() const
-    {
-        return mGameEngine;
-    }
+    GetEngine() const;
 
     void
-    SetEngine(GameEngine *gameEngine)
-    {
-        FALCON_ENGINE_CHECK_NULLPTR(gameEngine);
+    SetEngine(GameEngine *gameEngine);
 
-        mGameEngine = gameEngine;
-    }
-
-    virtual GameEngineSettingsSharedPtr
+    GameEngineSettingsSharedPtr
     GetEngineSettings();
+
+    void
+    SetEngineSettings(GameEngineSettingsSharedPtr gameEngineSettings);
 
     /************************************************************************/
     /* Game Operation                                                       */

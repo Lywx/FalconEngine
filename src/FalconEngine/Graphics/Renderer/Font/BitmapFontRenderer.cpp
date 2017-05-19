@@ -93,7 +93,7 @@ CreateTextLines(
             // higher level code to preprocess this kind of information. This function
             // only deals new line characters.
 
-            uint32 glyphCodepoint = c;
+            Uint32 glyphCodepoint = c;
             auto   glyphIndex = font->mGlyphIndexTable.at(glyphCodepoint);
             auto&  glyph = font->mGlyphTable.at(glyphIndex);
             ++glyphCount;

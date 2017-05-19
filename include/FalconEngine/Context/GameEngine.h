@@ -1,7 +1,7 @@
 #pragma once
 
 #include <FalconEngine/Context/Game.h>
-#include <FalconEngine/Context/GameCounter.h>
+#include <FalconEngine/Context/GameTimer.h>
 #include <FalconEngine/Context/GameDebug.h>
 
 namespace FalconEngine
@@ -12,6 +12,8 @@ class GameEngineGraphics;
 class GameEngineInput;
 class GameEnginePlatform;
 class GameEngineProfiler;
+
+#pragma warning(disable: 4251)
 class FALCON_ENGINE_API GameEngine
 {
 public:
@@ -58,18 +60,29 @@ private:
     Destory();
 
 private:
-    double mMillisecondPerRender = 16.66666666666;
+    /************************************************************************/
+    /* Context Components                                                   */
+    /************************************************************************/
+    GameEngineData             *mData;
+    Game                       *mGame;
+    GameEngineGraphics         *mGraphics;
+    GameEngineInput            *mInput;
+    GameEnginePlatform         *mPlatform;
+    GameEngineProfiler         *mProfiler;
+    GameEngineSettingsSharedPtr mSettings;
 
-    GameEngineData     *mData;
-    Game               *mGame;
-    GameEngineInput    *mInput;
-    GameEnginePlatform *mPlatform;
-    GameEngineProfiler *mProfiler;
-    GameEngineGraphics *mGraphics;
+    /************************************************************************/
+    /* Context States                                                       */
+    /************************************************************************/
+    bool mInitialized = false;
+    bool mPaused      = false;
+    bool mRunning     = true;
 
-    bool                mInitialized = false;
-    bool                mPaused      = false;
-    bool                mRunning     = true;
+    /************************************************************************/
+    /* Context Threading                                                    */
+    /************************************************************************/
+    std::mutex mMutex;
 };
+#pragma warning(default: 4251)
 
 }

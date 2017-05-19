@@ -22,14 +22,19 @@ GameEnginePlatform::~GameEnginePlatform()
 /* Public Members                                                       */
 /************************************************************************/
 void
-GameEnginePlatform::Initialize(GameEngineData *data, GameEngineSettingsSharedPtr settings)
+GameEnginePlatform::Initialize(GameEngineDataSharedPtr gameEngineData, GameEngineSettingsSharedPtr gameEngineSettings)
 {
-    InitializeExceptPlatform();
-    InitializePlatform(data, settings);
+    mGameEngineSettings = gameEngineSettings;
+
+    InitializeData();
+    InitializePlatform(gameEngineData);
 }
 
+/************************************************************************/
+/* Private Members                                                      */
+/************************************************************************/
 void
-GameEnginePlatform::InitializeExceptPlatform()
+GameEnginePlatform::InitializeData()
 {
 }
 

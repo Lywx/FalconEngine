@@ -3,15 +3,14 @@
 namespace FalconEngine
 {
 
-PlatformRendererData::PlatformRendererData() :
-    mState(new PlatformRendererState()),
-    mWindow(nullptr)
+PlatformRendererData::PlatformRendererData(GLFWwindow *window) :
+    mWindow(window)
 {
+    mState = std::make_unique<PlatformRendererState>();
 }
 
 PlatformRendererData::~PlatformRendererData()
 {
-    delete mState;
 }
 
 }

@@ -111,9 +111,9 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
     graphics->ClearFrameBuffer(ColorPalette::Black, 1.f, 0);
 
     auto engine = GetEngine();
-    auto engineGraphicsSettings = GetEngineSettings()->mGraphics;
-    auto width  = engineGraphicsSettings->mWidth;
-    auto height = engineGraphicsSettings->mHeight;
+    auto engineSettings = GetEngineSettings();
+    auto width  = engineSettings->mWindowWidth;
+    auto height = engineSettings->mWindowHeight;
 
     // Draw Profiler
     {

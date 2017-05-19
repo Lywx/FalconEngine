@@ -45,11 +45,12 @@ GameEngineInput::GetMouseState() const
 }
 
 void
-GameEngineInput::Initialize(const GameEngineData *data, GameEngineSettingsSharedPtr settings)
+GameEngineInput::Initialize(GameEngineDataSharedPtr gameEngineData, GameEngineSettingsSharedPtr gameEngineSettings)
 {
-    mSettings = settings->mInput;
+    mGameEngineData = gameEngineData;
+    mGameEngineSettings = gameEngineSettings;
 
-    InitializePlatform(data);
+    InitializePlatform();
 }
 
 void

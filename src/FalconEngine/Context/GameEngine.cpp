@@ -35,7 +35,7 @@ GameEngine::~GameEngine()
 const GameEngineData *
 GameEngine::GetData() const
 {
-    return mData;
+    return mData.get();
 }
 
 void
@@ -66,7 +66,7 @@ GameEngine::Initialize()
 
     // NOTE(Wuxiang): Thread-safe singleton pattern is used in all the game engine
     // context components.
-    mData = new GameEngineData();
+    mData = std::make_shared<GameEngineData>();
     mSettings = mGame->GetEngineSettings();
 
     mPlatform = GameEnginePlatform::GetInstance();
@@ -148,7 +148,7 @@ GameEngine::Loop()
                 // Reset update start point.
                 lastUpdateBegunMillisecond = lastUpdateEndedMillisecond;
             }
-            while (currentUpdateTotalElapsedMillisecond + lastUpdateElapsedMillisecond <= mSettings->mGraphicsMillisecondPerRender);
+            while (currentUpdateTotalElapsedMillisecond + lastUpdateElapsedMillisecond <= mSettings->mFrameElapsedMillisecond - lastRenderElapsedMillisecond);
 
             // Output performance profile
             double lastFrameFPS = 1000 / lastFrameElapsedMillisecond;
@@ -190,8 +190,6 @@ GameEngine::Destory()
     {
         mGame->Destory();
     }
-
-    delete mData;
 }
 
 }

@@ -1,5 +1,4 @@
 #include <FalconEngine/Context/GameEnginePlatform.h>
-#include <FalconEngine/Context/GameEngineGraphicsSettings.h>
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
 #include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
@@ -8,10 +7,9 @@ namespace FalconEngine
 {
 
 void
-GameEnginePlatform::InitializePlatform(GameEngineData *data, GameEngineSettingsSharedPtr settings)
+GameEnginePlatform::InitializePlatform(GameEngineDataSharedPtr gameEngineData)
 {
     GLFWwindow *window = nullptr;
-    auto settingsGraphics = settings->mGraphics;
 
     // Initialize GLFW.
     {
@@ -22,7 +20,7 @@ GameEnginePlatform::InitializePlatform(GameEngineData *data, GameEngineSettingsS
             glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
             glfwWindowHint(GLFW_FOCUSED, GLFW_TRUE);
             glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-            glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
+            glfwWindowHint(GLFW_VISIBLE, mGameEngineSettings->mWindowVisible ? GLFW_TRUE : GLFW_FALSE);
         }
 
         // OpenGL Context Hints
@@ -42,8 +40,25 @@ GameEnginePlatform::InitializePlatform(GameEngineData *data, GameEngineSettingsS
 
         }
 
-        window = glfwCreateWindow(settingsGraphics->mWidth, settingsGraphics->mHeight, settingsGraphics->mTitle.c_str(), nullptr, nullptr);
+        window = glfwCreateWindow(mGameEngineSettings->mWindowWidth, mGameEngineSettings->mWindowHeight, mGameEngineSettings->mWindowTitle.c_str(), nullptr, nullptr);
         glfwMakeContextCurrent(window);
+
+        if (mGameEngineSettings->mMouseVisible)
+        {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
+        else
+        {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+        }
+
+        if (mGameEngineSettings->mMouseLimited)
+        {
+        }
+        else
+        {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
     }
 
     // Initialize GLEW.
@@ -53,7 +68,7 @@ GameEnginePlatform::InitializePlatform(GameEngineData *data, GameEngineSettingsS
         glewInit();
     }
 
-    data->mWindow = window;
+    gameEngineData->mWindow = window;
 }
 
 }

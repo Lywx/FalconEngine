@@ -5,6 +5,7 @@
 
 using namespace std;
 
+#include <FalconEngine/Context/GameEngineSettings.h>
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
@@ -41,6 +42,7 @@ using namespace std;
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLTexture2dArray.h>
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLTexture3d.h>
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLTextureSampler.h>
+#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLRendererData.h>
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLShader.h>
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLShaderUniform.h>
 #endif
@@ -48,18 +50,24 @@ using namespace std;
 namespace FalconEngine
 {
 
+void
+PlatformRendererDataDeleter::operator()(PlatformRendererData *rendererData)
+{
+    delete rendererData;
+}
+
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Renderer::Renderer(const GameEngineData *data, int width, int height, float near, float far)
+Renderer::Renderer(GameEngineDataSharedPtr gameEngineData, GameEngineSettingsSharedPtr gameEngineSettings)
 {
-    InitializeExceptPlatform(width, height, near, far);
-    InitializePlatform(data);
+    InitializeData(gameEngineSettings);
+    InitializePlatform(gameEngineData);
 }
 
 Renderer::~Renderer()
 {
-    DestroyExceptPlatform();
+    DestroyData();
     DestroyPlatform();
 }
 
@@ -67,38 +75,34 @@ Renderer::~Renderer()
 /* Initialization and Destroy                                           */
 /************************************************************************/
 void
-Renderer::InitializeExceptPlatform(int width, int height, float near, float far)
+Renderer::InitializeData(GameEngineSettingsSharedPtr gameEngineSettings)
 {
-    assert(width > 0);
-    assert(height > 0);
+    SetWindowData(gameEngineSettings->mWindowWidth,
+                  gameEngineSettings->mWindowHeight,
+                  gameEngineSettings->mWindowNear,
+                  gameEngineSettings->mWindowFar);
+    SetViewportData(0.0f, 0.0f,
+                    float(gameEngineSettings->mWindowWidth),
+                    float(gameEngineSettings->mWindowHeight));
 
-    SetWindowExceptPlatform(width, height, near, far);
-    SetViewportExceptPlatform(0.0f, 0.0f, float(mWindow.mWidth), float(mWindow.mHeight));
+    mBlendStateDefault = make_unique<BlendState>();
+    mCullStateDefault = make_unique<CullState>();
+    mDepthTestStateDefault = make_unique<DepthTestState>();
+    mOffsetStateDefault = make_unique<OffsetState>();
+    mStencilTestStateDefault = make_unique<StencilTestState>();
+    mWireframeStateDefault = make_unique<WireframeState>();
 
-    mBlendStateDefault = new BlendState();
-    mCullStateDefault = new CullState();
-    mDepthTestStateDefault = new DepthTestState();
-    mOffsetStateDefault = new OffsetState();
-    mStencilTestStateDefault = new StencilTestState();
-    mWireframeStateDefault = new WireframeState();
-
-    mBlendStateCurrent = mBlendStateDefault;
-    mCullStateCurrent = mCullStateDefault;
-    mDepthTestStateCurrent = mDepthTestStateDefault;
-    mOffsetStateCurrent = mOffsetStateDefault;
-    mStencilTestStateCurrent = mStencilTestStateDefault;
-    mWireframeStateCurrent = mWireframeStateDefault;
+    mBlendStateCurrent = mBlendStateDefault.get();
+    mCullStateCurrent = mCullStateDefault.get();
+    mDepthTestStateCurrent = mDepthTestStateDefault.get();
+    mOffsetStateCurrent = mOffsetStateDefault.get();
+    mStencilTestStateCurrent = mStencilTestStateDefault.get();
+    mWireframeStateCurrent = mWireframeStateDefault.get();
 }
 
 void
-Renderer::DestroyExceptPlatform()
+Renderer::DestroyData()
 {
-    delete mBlendStateDefault;
-    delete mCullStateDefault;
-    delete mDepthTestStateDefault;
-    delete mOffsetStateDefault;
-    delete mStencilTestStateDefault;
-    delete mWireframeStateDefault;
 }
 
 /************************************************************************/
@@ -111,7 +115,7 @@ Renderer::GetViewport() const
 }
 
 void
-Renderer::SetViewportExceptPlatform(float x, float y, float width, float height)
+Renderer::SetViewportData(float x, float y, float width, float height)
 {
     if (mWindowInitialized)
     {
@@ -130,7 +134,7 @@ Renderer::GetWindow() const
 }
 
 void
-Renderer::SetWindowExceptPlatform(int width, int height, float near, float far)
+Renderer::SetWindowData(int width, int height, float near, float far)
 {
     mWindow.mWidth = width;
     mWindow.mHeight = height;

@@ -8,11 +8,11 @@
 namespace FalconEngine
 {
 
+class GameEngineData;
+using GameEngineDataSharedPtr = std::shared_ptr<GameEngineData>;
+
 class GameEngineSettings;
 using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
-
-class GameEngineInputSettings;
-using GameEngineInputSettingsSharedPtr = std::shared_ptr<GameEngineInputSettings>;
 
 class KeyboardState;
 using KeyboardStateSharedPtr = std::shared_ptr<KeyboardState>;
@@ -23,8 +23,12 @@ using MouseControllerSharedPtr = std::shared_ptr<MouseController>;
 class MouseState;
 using MouseStateSharedPtr = std::shared_ptr<MouseState>;
 
-class GameEngineData;
 class GameEngineInputDispatcher;
+class GameEngineInputDispatcherDeleter
+{
+public:
+    void operator()(GameEngineInputDispatcher *inputDispatcher);
+};
 
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API GameEngineInput
@@ -59,10 +63,9 @@ public:
     MouseStateSharedPtr
     GetMouseState() const;
 
-// internal
 public:
     void
-    Initialize(const GameEngineData *data, GameEngineSettingsSharedPtr settings);
+    Initialize(GameEngineDataSharedPtr gameEngineData, GameEngineSettingsSharedPtr gameEngineSettings);
 
     // @remark Update gets called every frame by game engine.
     void
@@ -70,7 +73,7 @@ public:
 
 private:
     void
-    InitializePlatform(const GameEngineData *data);
+    InitializePlatform();
 
     void
     DestroyPlatform();
@@ -82,11 +85,14 @@ private:
     UpdateEvent();
 
 private:
-    GameEngineInputDispatcher       *mDispatcher;
-    GameEngineInputSettingsSharedPtr mSettings;
-    KeyboardStateSharedPtr           mKeyboardState;
-    MouseControllerSharedPtr         mMouseController;
-    MouseStateSharedPtr              mMouseState;
+    std::unique_ptr<GameEngineInputDispatcher, GameEngineInputDispatcherDeleter> mDispatcher;
+
+    KeyboardStateSharedPtr                     mKeyboardState;
+    MouseControllerSharedPtr                   mMouseController;
+    MouseStateSharedPtr                        mMouseState;
+
+    GameEngineDataSharedPtr                    mGameEngineData;
+    GameEngineSettingsSharedPtr                mGameEngineSettings;
 };
 #pragma warning(default: 4251)
 

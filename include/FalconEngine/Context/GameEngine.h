@@ -8,6 +8,7 @@ namespace FalconEngine
 {
 
 class GameEngineData;
+using GameEngineDataSharedPtr = std::shared_ptr<GameEngineData>;
 class GameEngineGraphics;
 class GameEngineInput;
 class GameEnginePlatform;
@@ -63,7 +64,7 @@ private:
     /************************************************************************/
     /* Context Components                                                   */
     /************************************************************************/
-    GameEngineData             *mData;
+    GameEngineDataSharedPtr     mData;
     Game                       *mGame;
     GameEngineGraphics         *mGraphics;
     GameEngineInput            *mInput;

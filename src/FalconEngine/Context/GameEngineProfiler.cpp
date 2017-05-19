@@ -4,7 +4,7 @@ namespace FalconEngine
 {
 
 void
-GameEngineProfiler::Initialize(const GameEngineData * /* data */, GameEngineSettingsSharedPtr /* settings */)
+GameEngineProfiler::Initialize(GameEngineDataSharedPtr /* gameEngineData */, GameEngineSettingsSharedPtr /* gameEngineSettings */)
 {
 }
 

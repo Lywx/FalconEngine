@@ -10,6 +10,7 @@ class GameEngineInput;
 class FirstPersonCamera;
 using FirstPersonCameraSharedPtr = std::shared_ptr<FirstPersonCamera>;
 
+// @summary Free-flying First-person camera.
 class FALCON_ENGINE_API FirstPersonCamera : public PlayerCamera
 {
     FALCON_ENGINE_RTTI_DECLARE;
@@ -51,14 +52,21 @@ public:
     virtual void
     Update(GameEngineInput *input, double elapsed);
 
-public:
-    // NOTE(Wuxiang): Camera data.
-    float mPitchRadian = 0;
-    float mYawRadian = 0;
-    float mRollRadian = 0;
+    void
+    Reset();
 
-    // NOTE(Wuxiang): Control data.
-    float mSpeed = 9.0; // Meter per second
+public:
+    /************************************************************************/
+    /* Camera Data                                                          */
+    /************************************************************************/
+    float mPitchRadian;
+    float mYawRadian;
+    float mRollRadian;
+
+    /************************************************************************/
+    /* Control  Data                                                        */
+    /************************************************************************/
+    float mFlySpeed;                                                         // Meter per second
 };
 
 }

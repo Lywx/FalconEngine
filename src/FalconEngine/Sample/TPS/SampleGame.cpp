@@ -120,9 +120,9 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
     graphics->ClearFrameBuffer(ColorPalette::Pink, 1.f, 0);
 
     auto engine = GetEngine();
-    auto engineGraphicsSettings = GetEngineSettings()->mGraphics;
-    auto width  = engineGraphicsSettings->mWidth;
-    auto height = engineGraphicsSettings->mHeight;
+    auto engineSettings = GetEngineSettings();
+    auto width  = engineSettings->mWindowWidth;
+    auto height = engineSettings->mWindowHeight;
 
     // Draw Profiler
     {
@@ -168,11 +168,6 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
     graphics->DrawBoundingBox(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f));
     graphics->DrawBoundingBox(mCamera.get(), mPointLight2.get(), Transparent(ColorPalette::Green, 1.0f));
     graphics->DrawBoundingBox(mCamera.get(), mOrigin.get(), Transparent(ColorPalette::Red, 1.0f));
-
-    auto viewport = graphics->GetViewport();
-
-    graphics->DrawString(mFont_Console, 16.f, Vector2f(mCamera->targetPositionWindow), "X", ColorPalette::Blue);
-
 
     Game::Render(graphics, percent);
 }

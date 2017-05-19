@@ -36,10 +36,8 @@ using RendererSharedPtr = std::shared_ptr<Renderer>;
 class GameEngineSettings;
 using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
 
-class GameEngineGraphicsSettings;
-using GameEngineGraphicsSettingsSharedPtr = std::shared_ptr<GameEngineGraphicsSettings>;
-
 class GameEngineData;
+using GameEngineDataSharedPtr = std::shared_ptr<GameEngineData>;
 
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API GameEngineGraphics
@@ -117,8 +115,8 @@ public:
 public:
     void
     Initialize(
-        _IN_ const GameEngineData       *data,
-        _IN_ GameEngineSettingsSharedPtr settings);
+        _IN_ GameEngineDataSharedPtr     gameEngineData,
+        _IN_ GameEngineSettingsSharedPtr gameEngineSettings);
 
     void
     RenderBegin();
@@ -131,17 +129,14 @@ public:
 
 private:
     void
-    InitializePlatform(const GameEngineData *data);
-
-    void
     Destroy();
 
 protected:
-    EntityRendererSharedPtr             mEntityRenderer;
-    BitmapFontRendererSharedPtr         mFontRenderer;
-    RendererSharedPtr                   mMasterRenderer;
+    EntityRendererSharedPtr     mEntityRenderer;
+    BitmapFontRendererSharedPtr mFontRenderer;
+    RendererSharedPtr           mMasterRenderer;
 
-    GameEngineGraphicsSettingsSharedPtr mSettings;
+    GameEngineSettingsSharedPtr mGameEngineSettings;
 };
 #pragma warning(default: 4251)
 

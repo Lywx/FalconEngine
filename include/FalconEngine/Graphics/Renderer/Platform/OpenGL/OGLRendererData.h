@@ -6,14 +6,17 @@
 namespace FalconEngine
 {
 
+#pragma warning(disable: 4251)
 class FALCON_ENGINE_API PlatformRendererData final
 {
 public:
-    PlatformRendererData();
+    explicit PlatformRendererData(GLFWwindow *window);
     ~PlatformRendererData();
 
 public:
-    PlatformRendererState *mState;
-    GLFWwindow            *mWindow;
+    std::unique_ptr<PlatformRendererState> mState;
+    GLFWwindow                            *mWindow;
 };
+#pragma warning(default: 4251)
+
 }

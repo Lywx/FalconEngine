@@ -1,7 +1,6 @@
 #include <FalconEngine/Context/GameEngineGraphics.h>
 
 #include <FalconEngine/Core/Path.h>
-#include <FalconEngine/Context/GameEngineGraphicsSettings.h>
 #include <FalconEngine/Context/GameEngineSettings.h>
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
@@ -95,7 +94,7 @@ GameEngineGraphics::GetViewport() const
 void
 GameEngineGraphics::SetViewport(float x, float y, float width, float height)
 {
-    mMasterRenderer->SetViewportExceptPlatform(x, y, width, height);
+    mMasterRenderer->SetViewportData(x, y, width, height);
     mMasterRenderer->SetViewportPlatform(x, y, width, height);
 }
 
@@ -108,28 +107,26 @@ GameEngineGraphics::GetWindow() const
 void
 GameEngineGraphics::SetWindow(int width, int height, float near, float far)
 {
-    mMasterRenderer->SetWindowExceptPlatform(width, height, near, far);
+    mMasterRenderer->SetWindowData(width, height, near, far);
     mMasterRenderer->SetWindowPlatform(width, height, near, far);
 }
 
 void
 GameEngineGraphics::Initialize(
-    _IN_ const GameEngineData       *data,
-    _IN_ GameEngineSettingsSharedPtr settings)
+    _IN_ GameEngineDataSharedPtr     gameEngineData,
+    _IN_ GameEngineSettingsSharedPtr gameEngineSettings)
 {
-    mSettings = settings->mGraphics;
+    mGameEngineSettings = gameEngineSettings;
 
     // First initialize primary renderer.
-    mMasterRenderer = std::make_shared<Renderer>(data, mSettings->mWidth, mSettings->mHeight, mSettings->mNear, mSettings->mFar);
+    mMasterRenderer = std::make_shared<Renderer>(gameEngineData, gameEngineSettings);
 
     // Later initialize sub-renderer.
     mEntityRenderer = std::make_shared<EntityRenderer>();
     mEntityRenderer->Initialize();
 
     mFontRenderer = std::make_shared<BitmapFontRenderer>();
-    mFontRenderer->Initialize(mSettings->mWidth, mSettings->mHeight);
-
-    InitializePlatform(data);
+    mFontRenderer->Initialize(mGameEngineSettings->mWindowWidth, mGameEngineSettings->mWindowHeight);
 }
 
 void

@@ -8,9 +8,7 @@
 #include <FalconEngine/Context/GameTimer.h>
 
 #include <FalconEngine/Context/GameEngineGraphics.h>
-#include <FalconEngine/Context/GameEngineGraphicsSettings.h>
 #include <FalconEngine/Context/GameEngineInput.h>
-#include <FalconEngine/Context/GameEngineInputSettings.h>
 #include <FalconEngine/Context/GameEnginePlatform.h>
 #include <FalconEngine/Context/GameEngineProfiler.h>
 #include <FalconEngine/Context/GameEngineSettings.h>

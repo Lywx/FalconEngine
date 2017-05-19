@@ -23,14 +23,18 @@ namespace FalconEngine
 /* Initialization and Destroy                                           */
 /************************************************************************/
 void
-Renderer::InitializePlatform(const GameEngineData *data)
+Renderer::InitializePlatform(GameEngineDataSharedPtr gameEngineData)
 {
     // Initialize platform renderer data.
-    mData = new PlatformRendererData();
-    mData->mWindow = data->mWindow;
-    mData->mState->Initialize(mBlendStateDefault, mCullStateDefault,
-                              mDepthTestStateDefault, mOffsetStateDefault,
-                              mStencilTestStateDefault, mWireframeStateDefault);
+    mData = std::unique_ptr<PlatformRendererData, PlatformRendererDataDeleter>(
+                new PlatformRendererData(gameEngineData->mWindow), PlatformRendererDataDeleter());
+    mData->mState->Initialize(
+        mBlendStateDefault.get(),
+        mCullStateDefault.get(),
+        mDepthTestStateDefault.get(),
+        mOffsetStateDefault.get(),
+        mStencilTestStateDefault.get(),
+        mWireframeStateDefault.get());
     mDataInitialized = true;
 
     SetWindowPlatform(mWindow.mWidth, mWindow.mHeight, mWindow.mNear, mWindow.mFar);
@@ -40,7 +44,6 @@ Renderer::InitializePlatform(const GameEngineData *data)
 void
 Renderer::DestroyPlatform()
 {
-    delete mData;
 }
 
 /************************************************************************/

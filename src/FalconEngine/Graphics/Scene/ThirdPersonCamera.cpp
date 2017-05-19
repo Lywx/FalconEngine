@@ -5,7 +5,6 @@
 #include <FalconEngine/Input/KeyboardState.h>
 #include <FalconEngine/Input/KeyState.h>
 #include <FalconEngine/Input/MouseState.h>
-#include "FalconEngine/Context/GameDebug.h"
 
 namespace FalconEngine
 {
@@ -15,16 +14,19 @@ FALCON_ENGINE_RTTI_IMPLEMENT(ThirdPersonCamera, Camera);
 ThirdPersonCamera::ThirdPersonCamera(const Handedness *handedness) :
     PlayerCamera(handedness)
 {
+    Reset();
 }
 
 ThirdPersonCamera::ThirdPersonCamera(const Handedness *handedness, const Viewport& viewport, float nearPlane, float farPlane) :
     PlayerCamera(handedness, viewport, nearPlane, farPlane)
 {
+    Reset();
 }
 
 ThirdPersonCamera::ThirdPersonCamera(const Handedness *handedness, float fovy, float aspectRatio, float nearPlane, float farPlane) :
     PlayerCamera(handedness, fovy, aspectRatio, nearPlane, farPlane)
 {
+    Reset();
 }
 
 /************************************************************************/
@@ -67,12 +69,10 @@ ThirdPersonCamera::PanDown(float distance)
 void
 ThirdPersonCamera::Update(GameEngineInput *input, double elapsed)
 {
-    // Get second from milliseconds.
     auto tSecond = elapsed / 1000;
 
     auto mouse = input->GetMouseState();
     auto mousePositionDiff = mouse->GetPositionDiff();
-
     auto keyboard = input->GetKeyboardState();
 
     // Update camera control scheme (Blender style control scheme).
@@ -100,7 +100,7 @@ ThirdPersonCamera::Update(GameEngineInput *input, double elapsed)
         }
     }
 
-    // Update camera position and orientation.
+    // Update camera position and orientation based on modes.
     switch (mMode)
     {
     case ThirdPersonCameraMode::None:
@@ -118,12 +118,11 @@ ThirdPersonCamera::Update(GameEngineInput *input, double elapsed)
         auto viewport = graphics->GetViewport();
 
         // Target position in window space.
-        targetPositionWindow = viewport->Project(mOrigin, mProjection, mView);
-        //Vector3f targetPositionWindow = Vector3f(800.0f, 450.0f, 0.90f);
+        Vector3f targetPositionWindow = viewport->Project(mOrigin, mProjection, mView);
 
-        // NOTE(Wuxiang): Because we
-
-        // Target modified position in window space.
+        // Target modified position in window space. Because we don't move the
+        // objects in world space, we need to reverse the transform to move the
+        // camera itself. Hence we use the - sign.
         Vector3f targetPositionFinalWindow = targetPositionWindow - panDistanceWindow;
 
         mOrigin = viewport->Unproject(targetPositionFinalWindow, mProjection, mView);
@@ -139,11 +138,11 @@ ThirdPersonCamera::Update(GameEngineInput *input, double elapsed)
 
     case ThirdPersonCameraMode::Rotate:
     {
-        static auto azimuthalDegreeRotationPerSecond = 36 / 0.8;
-        static auto polarDegreeRotationPerSecond = 36 / 0.8;
+        static auto azimuthalDegreeRotationPerSecondMax = 360 / 0.8;
+        static auto polarDegreeRotationPerSecondMax = 360 / 0.8;
 
-        auto azimuthalDegreeRotation = float(mousePositionDiff.y * mMouseSensitivity * mMouseSensitivityAdjust * azimuthalDegreeRotationPerSecond * tSecond);
-        auto polarDegreeRotation = -float(mousePositionDiff.x * mMouseSensitivity * mMouseSensitivityAdjust * polarDegreeRotationPerSecond * tSecond);
+        auto azimuthalDegreeRotation = float(mousePositionDiff.y * mMouseSensitivity * mMouseSensitivityAdjust * azimuthalDegreeRotationPerSecondMax * tSecond);
+        auto polarDegreeRotation = -float(mousePositionDiff.x * mMouseSensitivity * mMouseSensitivityAdjust * polarDegreeRotationPerSecondMax * tSecond);
 
         auto azimuthalDegreePrevious = Degree(mAzimuthalRadian);
         auto azimuthalDegree = azimuthalDegreePrevious + azimuthalDegreeRotation;
@@ -204,6 +203,20 @@ ThirdPersonCamera::Update(GameEngineInput *input, double elapsed)
     }
 
     Camera::Update(elapsed);
+}
+
+void
+ThirdPersonCamera::Reset()
+{
+    mAzimuthalRadian = 0.0f;
+    mPolarRadian = 0.0f;
+    mRadialDistance = 0.0f;
+
+    mOrigin = Vector3f::Zero;
+
+    mPanSpeed = 500.0f;
+    mRotateSpeed = 1.0f;
+    mZoomSpeed = 100.0f;
 }
 
 }

@@ -16,16 +16,19 @@ FALCON_ENGINE_RTTI_IMPLEMENT(FirstPersonCamera, Camera);
 FirstPersonCamera::FirstPersonCamera(const Handedness *handedness) :
     PlayerCamera(handedness)
 {
+    Reset();
 }
 
 FirstPersonCamera::FirstPersonCamera(const Handedness *handedness, const Viewport& viewport, float nearPlane, float farPlane):
     PlayerCamera(handedness, viewport, nearPlane, farPlane)
 {
+    Reset();
 }
 
-FirstPersonCamera::FirstPersonCamera(const Handedness *handedness, float fovy, float aspectRatio, float nearPlane, float farPlane):
+FirstPersonCamera::FirstPersonCamera(const Handedness *handedness, float fovy, float aspectRatio, float nearPlane, float farPlane) :
     PlayerCamera(handedness, fovy, aspectRatio, nearPlane, farPlane)
 {
+    Reset();
 }
 
 /************************************************************************/
@@ -72,19 +75,18 @@ FirstPersonCamera::Update(GameEngineInput *input, double elapsed)
 {
     auto tSecond = elapsed / 1000;
 
-    // Mouse
+    auto mouse = input->GetMouseState();
+    auto mousePositionDiff = mouse->GetPositionDiff();
+    auto keyboard = input->GetKeyboardState();
+
+    // Update camera orientation.
     {
-        auto mouse = input->GetMouseState();
-        auto mousePositionDiff = mouse->GetPositionDiff();
-
         // NOTE(Wuxiang): 360 degree need 0.8 seconds. I tested it myself.
-        static auto yawDegreeRotationPerSecond = 36 / 0.8;
-        static auto pitchDegreeRotationPerSecond = 36 / 0.8;
-        // static auto yawDegreeRotationPerSecondMax = 360 / 0.8;
-        // static auto pitchDegreeRotationPerSecondMax = 360 / 0.8;
+        static auto yawDegreeRotationPerSecondMax = 360 / 0.8;
+        static auto pitchDegreeRotationPerSecondMax = 360 / 0.8;
 
-        auto pitchDegreeRotation = float(mousePositionDiff.y * mMouseSensitivity * pitchDegreeRotationPerSecond * tSecond);
-        auto yawDegreeRotation = -float(mousePositionDiff.x * mMouseSensitivity * yawDegreeRotationPerSecond * tSecond);
+        auto pitchDegreeRotation = float(mousePositionDiff.y * mMouseSensitivity * mMouseSensitivityAdjust * pitchDegreeRotationPerSecondMax * tSecond);
+        auto yawDegreeRotation = -float(mousePositionDiff.x * mMouseSensitivity * mMouseSensitivityAdjust * yawDegreeRotationPerSecondMax * tSecond);
 
         // NOTE(Wuxiang): Camera is not allowed to do front / back flip movement.
         auto pitchDegreePrevious = Degree(mPitchRadian);
@@ -109,33 +111,43 @@ FirstPersonCamera::Update(GameEngineInput *input, double elapsed)
         SetOrientation(rollQuaternion * pitchYawQuaternion);
     }
 
-    // Keyboard
+    // Update camera position.
     {
-        auto keyboard = input->GetKeyboardState();
-        auto distanceMeter = float(mSpeed * tSecond);
+        // TODO(Wuxiang): 2017-05-19 17:11 Add keyboard mapping support.
+        auto flyDistanceMeter = float(mFlySpeed * tSecond);
 
         if (keyboard->KeyPressed(Key::S))
         {
-            MoveBackward(distanceMeter);
+            MoveBackward(flyDistanceMeter);
         }
 
         if (keyboard->KeyPressed(Key::W))
         {
-            MoveForward(distanceMeter);
+            MoveForward(flyDistanceMeter);
         }
 
         if (keyboard->KeyPressed(Key::A))
         {
-            MoveLeft(distanceMeter);
+            MoveLeft(flyDistanceMeter);
         }
 
         if (keyboard->KeyPressed(Key::D))
         {
-            MoveRight(distanceMeter);
+            MoveRight(flyDistanceMeter);
         }
     }
 
     Camera::Update(elapsed);
+}
+
+void
+FirstPersonCamera::Reset()
+{
+    mPitchRadian = 0.0f;
+    mYawRadian   = 0.0f;
+    mRollRadian  = 0.0f;
+
+    mFlySpeed = 10.0f;
 }
 
 }

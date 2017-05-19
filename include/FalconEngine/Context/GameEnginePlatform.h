@@ -11,6 +11,9 @@ class GameEngineSettings;
 using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
 
 class GameEngineData;
+using GameEngineDataSharedPtr = std::shared_ptr<GameEngineData>;
+
+#pragma warning(disable: 4251)
 class FALCON_ENGINE_API GameEnginePlatform
 {
 public:
@@ -34,14 +37,18 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Initialize(GameEngineData *data, GameEngineSettingsSharedPtr settings);
+    Initialize(GameEngineDataSharedPtr gameEngineData, GameEngineSettingsSharedPtr gameEngineSettings);
 
 private:
     void
-    InitializePlatform(GameEngineData *data, GameEngineSettingsSharedPtr settings);
+    InitializeData();
 
     void
-    InitializeExceptPlatform();
+    InitializePlatform(GameEngineDataSharedPtr gameEngineData);
+
+private:
+    GameEngineSettingsSharedPtr mGameEngineSettings;
 };
+#pragma warning(default: 4251)
 
 }

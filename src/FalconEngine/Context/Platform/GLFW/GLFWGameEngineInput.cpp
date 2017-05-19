@@ -1,4 +1,6 @@
 #include <FalconEngine/Context/GameEngineInput.h>
+
+#include <FalconEngine/Context/GameEngineSettings.h>
 #include <FalconEngine/Input/MouseButton.h>
 #include <FalconEngine/Input/MouseController.h>
 #include <FalconEngine/Input/MouseState.h>
@@ -117,23 +119,29 @@ MousePositionCallbackDispatch(GLFWwindow *window, double x, double y)
 }
 
 void
-GameEngineInput::InitializePlatform(const GameEngineData *data)
+GameEngineInput::InitializePlatform()
 {
-    mDispatcher = new GameEngineInputDispatcher(this);
-    mMouseController->Initialize(std::make_shared<MouseControllerData>(data->mWindow));
+    mDispatcher = std::unique_ptr<GameEngineInputDispatcher, GameEngineInputDispatcherDeleter>(new GameEngineInputDispatcher(this), GameEngineInputDispatcherDeleter());
 
-    glfwSetKeyCallback(data->mWindow, KeyCallbackDispatch);
-    glfwSetMouseButtonCallback(data->mWindow, MouseButtonCallbackDispatch);
-    glfwSetCursorPosCallback(data->mWindow, MousePositionCallbackDispatch);
-    glfwSetScrollCallback(data->mWindow, ScrollCallbackDispatch);
+    mMouseController->Initialize(std::make_shared<MouseControllerData>(mGameEngineData->mWindow));
 
-    glfwSetWindowUserPointer(data->mWindow, mDispatcher);
+    glfwSetKeyCallback(mGameEngineData->mWindow, KeyCallbackDispatch);
+    glfwSetMouseButtonCallback(mGameEngineData->mWindow, MouseButtonCallbackDispatch);
+    glfwSetCursorPosCallback(mGameEngineData->mWindow, MousePositionCallbackDispatch);
+    glfwSetScrollCallback(mGameEngineData->mWindow, ScrollCallbackDispatch);
+
+    glfwSetWindowUserPointer(mGameEngineData->mWindow, mDispatcher.get());
+}
+
+void
+GameEngineInputDispatcherDeleter::operator()(GameEngineInputDispatcher *inputDispatcher)
+{
+    delete inputDispatcher;
 }
 
 void
 GameEngineInput::DestroyPlatform()
 {
-    delete mDispatcher;
 }
 
 void

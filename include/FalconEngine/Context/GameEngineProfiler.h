@@ -12,6 +12,8 @@ class GameEngineSettings;
 using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
 
 class GameEngineData;
+using GameEngineDataSharedPtr = std::shared_ptr<GameEngineData>;
+
 class FALCON_ENGINE_API GameEngineProfiler
 {
     friend class GameEngine;
@@ -39,7 +41,7 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Initialize(const GameEngineData *data, GameEngineSettingsSharedPtr settings);
+    Initialize(GameEngineDataSharedPtr gameEngineData, GameEngineSettingsSharedPtr gameEngineSettings);
 
     double
     GetLastFrameElapsedMillisecond() const

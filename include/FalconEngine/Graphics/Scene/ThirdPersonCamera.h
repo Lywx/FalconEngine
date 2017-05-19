@@ -63,21 +63,27 @@ public:
     virtual void
     Update(GameEngineInput *input, double elapsed);
 
+    void
+    Reset();
+
 public:
-    // NOTE(Wuxiang): Camera data.
-    float                 mAzimuthalRadian = 0; // Theta in spherical coordinate.
-    float                 mPolarRadian = 0;     // Phi in spherical coordinate.
-    float                 mRadialDistance = 0;  // R in spherical coordinate.
+    /************************************************************************/
+    /* Camera Data                                                          */
+    /************************************************************************/
+    float                 mAzimuthalRadian;                                  // Theta in spherical coordinate.
+    float                 mPolarRadian;                                      // Phi in spherical coordinate.
+    float                 mRadialDistance;                                   // R in spherical coordinate.
 
-    Vector3f              mOrigin;              // Origin of third person camera.
+    Vector3f              mOrigin;                                           // Origin of third person camera.
 
-    // NOTE(Wuxiang): Control data.
+    /************************************************************************/
+    /* Control Data                                                         */
+    /************************************************************************/
     ThirdPersonCameraMode mMode = ThirdPersonCameraMode::None;
 
-    float                 mPanSpeed = 500.0;      // Pixel per second
-    float                 mRotateSpeed = 1.0;
-    float                 mZoomSpeed = 100.0;
-    Vector3f targetPositionWindow;
+    float                 mPanSpeed;                                         // Pixel per second
+    float                 mRotateSpeed;
+    float                 mZoomSpeed;                                        // Meter per second
 };
 
 }

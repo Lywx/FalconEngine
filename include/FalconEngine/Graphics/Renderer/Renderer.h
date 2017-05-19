@@ -15,6 +15,10 @@ namespace FalconEngine
 /* Engine Resource                                                      */
 /************************************************************************/
 class GameEngineData;
+using GameEngineDataSharedPtr = std::shared_ptr<GameEngineData>;
+
+class GameEngineSettings;
+using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
 
 /************************************************************************/
 /* Rendering Pipeline                                                   */
@@ -76,9 +80,14 @@ class PlatformSampler;
 /************************************************************************/
 class PlatformShader;
 class PlatformRendererData;
+class PlatformRendererDataDeleter
+{
+public:
+    void operator()(PlatformRendererData *rendererData);
+};
 
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_API Renderer
+class FALCON_ENGINE_API Renderer final
 {
 public:
     /************************************************************************/
@@ -88,8 +97,8 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Renderer(const GameEngineData *data, int width, int height, float near, float far);
-    virtual ~Renderer();
+    Renderer(GameEngineDataSharedPtr gameEngineData, GameEngineSettingsSharedPtr gameEngineSettings);
+    ~Renderer();
 
     using PlatformVertexBufferMap   = std::map<const VertexBuffer *, PlatformVertexBuffer *>;
     using PlatformVertexFormatMap   = std::map<const VertexFormat *, PlatformVertexFormat *>;
@@ -107,10 +116,10 @@ private:
     /* Initialization and Destroy                                           */
     /************************************************************************/
     void
-    InitializeExceptPlatform(int width, int height, float near, float far);
+    InitializeData(GameEngineSettingsSharedPtr gameEngineSettings);
 
     void
-    DestroyExceptPlatform();
+    DestroyData();
 
 public:
     /************************************************************************/
@@ -123,13 +132,13 @@ public:
     // coordinates. The origin is the lower-left corner of the screen, the
     // y-axis points upward, and the x-axis points rightward.
     void
-    SetViewportExceptPlatform(float x, float y, float width, float height);
+    SetViewportData(float x, float y, float width, float height);
 
     const Window *
     GetWindow() const;
 
     void
-    SetWindowExceptPlatform(int width, int height, float near, float far);
+    SetWindowData(int width, int height, float near, float far);
 
 public:
     /************************************************************************/
@@ -377,23 +386,23 @@ private:
     /************************************************************************/
     /* Renderer State                                                       */
     /************************************************************************/
-    BlendState             *mBlendStateDefault;
-    CullState              *mCullStateDefault;
-    DepthTestState         *mDepthTestStateDefault;
-    OffsetState            *mOffsetStateDefault;
-    StencilTestState       *mStencilTestStateDefault;
-    WireframeState         *mWireframeStateDefault;
+    std::unique_ptr<BlendState>       mBlendStateDefault;
+    std::unique_ptr<CullState>        mCullStateDefault;
+    std::unique_ptr<DepthTestState>   mDepthTestStateDefault;
+    std::unique_ptr<OffsetState>      mOffsetStateDefault;
+    std::unique_ptr<StencilTestState> mStencilTestStateDefault;
+    std::unique_ptr<WireframeState>   mWireframeStateDefault;
 
-    const BlendState       *mBlendStateCurrent;
-    const CullState        *mCullStateCurrent;
-    const DepthTestState   *mDepthTestStateCurrent;
-    const OffsetState      *mOffsetStateCurrent;
-    const StencilTestState *mStencilTestStateCurrent;
-    const WireframeState   *mWireframeStateCurrent;
+    const BlendState                 *mBlendStateCurrent;
+    const CullState                  *mCullStateCurrent;
+    const DepthTestState             *mDepthTestStateCurrent;
+    const OffsetState                *mOffsetStateCurrent;
+    const StencilTestState           *mStencilTestStateCurrent;
+    const WireframeState             *mWireframeStateCurrent;
 
-    Viewport                mViewport;
-    Window                  mWindow;
-    bool                    mWindowInitialized = false;
+    Viewport                          mViewport;
+    Window                            mWindow;
+    bool                              mWindowInitialized = false;
 private:
     /************************************************************************/
     /* Platform Dependent Members                                           */
@@ -403,7 +412,7 @@ private:
     /* Initialization and Destroy                                           */
     /************************************************************************/
     void
-    InitializePlatform(const GameEngineData *data);
+    InitializePlatform(GameEngineDataSharedPtr data);
 
     void
     DestroyPlatform();
@@ -468,8 +477,8 @@ public:
     DrawPrimitivePlatform(const Primitive *primitive, size_t primitiveInstancingNum);
 
 private:
-    PlatformRendererData *mData;
-    bool                  mDataInitialized = false;
+    std::unique_ptr<PlatformRendererData, PlatformRendererDataDeleter> mData;
+    bool                                                               mDataInitialized = false;
 };
 #pragma warning(default: 4251)
 

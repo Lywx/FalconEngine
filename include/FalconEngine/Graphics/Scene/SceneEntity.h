@@ -13,8 +13,13 @@ using SceneEntitySharedPtr = std::shared_ptr<SceneEntity>;
 class FALCON_ENGINE_API SceneEntity : public Entity
 {
 public:
+    SceneEntity();
     explicit SceneEntity(NodeSharedPtr node);
     virtual ~SceneEntity() = default;
+
+public:
+    virtual void
+    Update(GameEngineInput *input, double elapsed) override;
 };
 
 }

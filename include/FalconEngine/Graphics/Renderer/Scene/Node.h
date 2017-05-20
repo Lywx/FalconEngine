@@ -130,4 +130,6 @@ private:
 };
 #pragma warning(default: 4251)
 
+FALCON_ENGINE_API std::shared_ptr<Node> ShareClone(std::shared_ptr<Node> node);
+
 }

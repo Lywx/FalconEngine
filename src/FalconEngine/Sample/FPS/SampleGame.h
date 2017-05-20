@@ -37,23 +37,16 @@ private:
     const BitmapFont *mFont_Chinese = nullptr;
 
     // Scene
-    NodeSharedPtr mSceneNode;
-    NodeSharedPtr mRootNode;
-
+    std::shared_ptr<SceneEntity> mScene;
     PhongLightingEffectSharedPtr mSceneLightingEffect;
-    std::shared_ptr<Light> mDirectionalLight;
-
-    std::vector<const Light *> mScenePointLightList;
-    std::vector<const Light *> mSceneSpotLightList;
+    std::shared_ptr<Light>       mSceneDirectionalLight;
+    std::vector<const Light *>   mScenePointLightList;
+    std::vector<const Light *>   mSceneSpotLightList;
 
     // Entities
-    // std::shared_ptrEntity> mCharacter;
-    // std::shared_ptr<LightEntity> mLamp1;
-    // std::shared_ptr<LightEntity> mLamp2;
     std::shared_ptr<PointLightEntity> mPointLight1;
     std::shared_ptr<PointLightEntity> mPointLight2;
     std::shared_ptr<PointLightEntity> mPointLight3;
-    std::shared_ptr<SceneEntity> mRoom;
 };
 
 }

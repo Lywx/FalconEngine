@@ -66,7 +66,7 @@ CreateMeshIndexBuffer(const aiMesh *mesh)
 
     // Memory allocation for index buffer.
     auto indexBuffer = std::make_shared<IndexBuffer>(indexNum, IndexType::UnsignedInt, BufferUsage::Static);
-    auto indexes = reinterpret_cast<ModelIndex *>(indexBuffer->GetData());
+    auto indexData = reinterpret_cast<ModelIndex *>(indexBuffer->GetData());
 
     // Walk through each of the mesh's faces (a face is a mesh its triangle)
     // and retrieve the corresponding vertex indexes.
@@ -77,7 +77,7 @@ CreateMeshIndexBuffer(const aiMesh *mesh)
             auto& face = mesh->mFaces[faceIndex];
             for (unsigned int j = 0; j < face.mNumIndices; j++)
             {
-                indexes[indexNumAdded] = face.mIndices[j];
+                indexData[indexNumAdded] = face.mIndices[j];
                 ++indexNumAdded;
             }
         }
@@ -92,7 +92,7 @@ CreateMeshVertexGroup(const aiMesh *aiMesh)
     // Memory allocation for vertex buffer.
     auto vertexNum = int(aiMesh->mNumVertices);
     auto vertexBuffer = std::make_shared<VertexBuffer>(vertexNum, sizeof(ModelVertex), BufferUsage::Static);
-    auto vertexes = reinterpret_cast<ModelVertex *>(vertexBuffer->GetData());
+    auto vertexData = reinterpret_cast<ModelVertex *>(vertexBuffer->GetData());
 
     if (!aiMesh->mVertices)
     {
@@ -110,27 +110,27 @@ CreateMeshVertexGroup(const aiMesh *aiMesh)
     }
 
     // Walk through vertex data and create vertex buffer content in an interlaced fashion.
-    for (size_t i = 0; i < aiMesh->mNumVertices; ++i)
+    for (size_t vertexIndex = 0; vertexIndex < aiMesh->mNumVertices; ++vertexIndex)
     {
         ModelVertex vertex;
 
         // Position
-        vertex.mPosition = Vector3f(aiMesh->mVertices[i].x,
-                                    aiMesh->mVertices[i].y,
-                                    aiMesh->mVertices[i].z);
+        vertex.mPosition = Vector3f(aiMesh->mVertices[vertexIndex].x,
+                                    aiMesh->mVertices[vertexIndex].y,
+                                    aiMesh->mVertices[vertexIndex].z);
 
         // Normal
-        vertex.mNormal = Vector3f(aiMesh->mNormals[i].x,
-                                  aiMesh->mNormals[i].y,
-                                  aiMesh->mNormals[i].z);
+        vertex.mNormal = Vector3f(aiMesh->mNormals[vertexIndex].x,
+                                  aiMesh->mNormals[vertexIndex].y,
+                                  aiMesh->mNormals[vertexIndex].z);
 
         // Texture coordinate
         if (aiMesh->mTextureCoords[0])
         {
             // NOTE(Wuxiang): A vertex can contain up to 8 different texture
             // coordinates.
-            vertex.mTexCoord = Vector2f(aiMesh->mTextureCoords[0][i].x,
-                                        aiMesh->mTextureCoords[0][i].y);
+            vertex.mTexCoord = Vector2f(aiMesh->mTextureCoords[0][vertexIndex].x,
+                                        aiMesh->mTextureCoords[0][vertexIndex].y);
         }
 
         // NOTE(Wuxiang): It is allowed to have no texture coordinate.
@@ -140,7 +140,7 @@ CreateMeshVertexGroup(const aiMesh *aiMesh)
         }
 
         // NOTE(Wuxiang): The vertex data is interlaced.
-        vertexes[i] = vertex;
+        vertexData[vertexIndex] = vertex;
     }
 
     // TODO(Wuxiang): Should I change the binding index?

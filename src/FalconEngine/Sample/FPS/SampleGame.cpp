@@ -32,24 +32,33 @@ SampleGame::Initialize()
 
         // Entities
         {
-            auto model = assetManager->LoadModel("Content/Models/Bedroom.dae");
-            mRoom = make_shared<SceneEntity>(shared_ptr<Node>(model->GetNode()->GetClone()));
+            mScene = make_shared<SceneEntity>();
 
-            model = assetManager->LoadModel("Content/Models/Engine/Point Light.dae");
-            mPointLight1 = make_shared<PointLightEntity>(shared_ptr<Node>(model->GetNode()->GetClone()));
-            mPointLight2 = make_shared<PointLightEntity>(shared_ptr<Node>(model->GetNode()->GetClone()));
-            mPointLight3 = make_shared<PointLightEntity>(shared_ptr<Node>(model->GetNode()->GetClone()));
+            auto sceneNode = mScene->GetNode();
+            sceneNode->mWorldTransform = Matrix4f::Zero;
+
+            auto roomModel = assetManager->LoadModel("Content/Models/Bedroom.dae");
+            auto roomNode = ShareClone(roomModel->GetNode());
+            sceneNode->AttachChild(roomNode);
+
+            auto lightModel = assetManager->LoadModel("Content/Models/Engine/Point Light.dae");
+            mPointLight1 = make_shared<PointLightEntity>(ShareClone(lightModel->GetNode()));
+            mPointLight2 = make_shared<PointLightEntity>(ShareClone(lightModel->GetNode()));
+            mPointLight3 = make_shared<PointLightEntity>(ShareClone(lightModel->GetNode()));
+            roomNode->AttachChild(mPointLight1->GetNode());
+            roomNode->AttachChild(mPointLight2->GetNode());
+            roomNode->AttachChild(mPointLight3->GetNode());
         }
     }
 
     // Initialize Scene
     {
         {
-            mDirectionalLight = make_shared<Light>(LightType::Directional);
-            mDirectionalLight->mAmbient = Color(055, 055, 055);
-            mDirectionalLight->mDiffuse = Color(055, 055, 055);
-            mDirectionalLight->mSpecular = Color(055, 055, 055);
-            mDirectionalLight->mDirection = Vector3f(1, 1, 1);
+            mSceneDirectionalLight = make_shared<Light>(LightType::Directional);
+            mSceneDirectionalLight->mAmbient = Color(055, 055, 055);
+            mSceneDirectionalLight->mDiffuse = Color(055, 055, 055);
+            mSceneDirectionalLight->mSpecular = Color(055, 055, 055);
+            mSceneDirectionalLight->mDirection = Vector3f(1, 1, 1);
         }
 
         {
@@ -85,18 +94,10 @@ SampleGame::Initialize()
 
         mScenePointLightList = { mPointLight1->GetLight(), mPointLight2->GetLight(), mPointLight3->GetLight() };
 
-        mRootNode = mRoom->GetNode();
-        mRootNode->AttachChild(mPointLight1->GetNode());
-        mRootNode->AttachChild(mPointLight2->GetNode());
-        mRootNode->AttachChild(mPointLight3->GetNode());
-        mSceneNode = make_shared<Node>();
-        mSceneNode->mWorldTransform = Matrix4f::Zero;
-        mSceneNode->AttachChild(mRootNode);
-
         mSceneLightingEffect = make_shared<PhongLightingEffect>();
 
         // Initialize Effect
-        mSceneLightingEffect->CreateInstance(mSceneLightingEffect, mRoom->GetNode().get(), *mDirectionalLight, mScenePointLightList, mSceneSpotLightList);
+        mSceneLightingEffect->CreateInstance(mSceneLightingEffect, mScene->GetNode().get(), *mSceneDirectionalLight, mScenePointLightList, mSceneSpotLightList);
     }
 
     // Initialize Interaction.
@@ -155,7 +156,7 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
                              "Camera Pitch: " + std::to_string(pitch) + " Yaw: " + std::to_string(yaw) + " Roll: " + std::to_string(roll), ColorPalette::White);
     }
 
-    graphics->Draw(mCamera.get(), mRoom.get());
+    graphics->Draw(mCamera.get(), mScene.get());
     graphics->DrawBoundingBox(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f));
     graphics->DrawBoundingBox(mCamera.get(), mPointLight2.get(), Transparent(ColorPalette::Green, 1.0f));
 
@@ -174,7 +175,7 @@ SampleGame::Update(GameEngineInput *input, double elapsed)
     }
 
     mCamera->Update(input, elapsed);
-    mSceneNode->Update(elapsed, true);
+    mScene->Update(input, elapsed);
 
     Game::Update(input, elapsed);
 }

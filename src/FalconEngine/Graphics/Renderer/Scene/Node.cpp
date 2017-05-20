@@ -273,4 +273,10 @@ Node::UpdateWorldTransform(double elapsed)
     Spatial::UpdateWorldTransform(elapsed);
 }
 
+std::shared_ptr<Node>
+ShareClone(std::shared_ptr<Node> node)
+{
+    return std::shared_ptr<Node>(node->GetClone());
+}
+
 }

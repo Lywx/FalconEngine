@@ -184,6 +184,8 @@ ThirdPersonCamera::Update(GameEngineInput *input, double elapsed)
         auto zoomDistance = mousePositionDiff.y * mMouseSensitivity * mMouseSensitivityAdjust
                             * mZoomSpeed * float(tSecond);
         mRadialDistance += zoomDistance;
+
+        // Don't allow distance to go below zero.
         if (mRadialDistance < 0)
         {
             mRadialDistance = 0;

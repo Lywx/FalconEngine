@@ -42,11 +42,11 @@ CreateMeshAABBBoundingBox(const aiMesh *aiMesh)
                        aiMesh->mVertices[0].y,
                        aiMesh->mVertices[0].z));
 
-    for (size_t i = 0; i < aiMesh->mNumVertices; ++i)
+    for (size_t vertexIndex = 1; vertexIndex < aiMesh->mNumVertices; ++vertexIndex)
     {
-        boundingBox->UpdatePosition(Vector3f(aiMesh->mVertices[i].x,
-                                             aiMesh->mVertices[i].y,
-                                             aiMesh->mVertices[i].z));
+        boundingBox->UpdatePosition(Vector3f(aiMesh->mVertices[vertexIndex].x,
+                                             aiMesh->mVertices[vertexIndex].y,
+                                             aiMesh->mVertices[vertexIndex].z));
     }
 
     return boundingBox;

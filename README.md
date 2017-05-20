@@ -12,7 +12,7 @@ Building
 Dependency
 ===
 1. assimp 3.3.1.
-2. boost 1.6.1: boost-serialization, boost-filesystem, boost-regex, boost-system.
+2. boost 1.6.1 for boost-serialization, boost-filesystem, boost-regex, boost-system.
 3. glew 2.0.0.
 4. glfw 3.2.1.
 5. stb_image.
@@ -38,4 +38,4 @@ Geometry Tool into my own renderer. By doing so I actually learned faster, given
 the necessary framework and logics in Geometry Tool.
 
 So I don't claim originality for entirety of this project. But the current code base
-has been diverged from the original framework in Geometry Tool.
+has been greatly diverged from the original framework in Geometry Tool.

@@ -8,5 +8,4 @@
 #include <FalconEngine/Input/Mouse.h>
 #include <FalconEngine/Input/MouseButtonState.h>
 #include <FalconEngine/Input/MouseHandler.h>
-#include <FalconEngine/Input/MouseController.h>
 #include <FalconEngine/Input/MouseState.h>

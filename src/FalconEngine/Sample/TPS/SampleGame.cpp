@@ -39,15 +39,11 @@ SampleGame::Initialize()
             mPointLight1 = make_shared<PointLightEntity>(shared_ptr<Node>(model->GetNode()->GetClone()));
             mPointLight2 = make_shared<PointLightEntity>(shared_ptr<Node>(model->GetNode()->GetClone()));
             mPointLight3 = make_shared<PointLightEntity>(shared_ptr<Node>(model->GetNode()->GetClone()));
-
-            mOrigin = make_shared<Entity>(shared_ptr<Node>(model->GetNode()->GetClone()));
         }
     }
 
     // Initialize Scene
     {
-        mOrigin->SetPosition(Vector3f(0.0f, 0.0f, 0.0f));
-
         {
             mDirectionalLight = make_shared<Light>(LightType::Directional);
             mDirectionalLight->mAmbient = Color(055, 055, 055);
@@ -93,9 +89,9 @@ SampleGame::Initialize()
         mRootNode->AttachChild(mPointLight1->GetNode());
         mRootNode->AttachChild(mPointLight2->GetNode());
         mRootNode->AttachChild(mPointLight3->GetNode());
+
         mSceneNode = make_shared<Node>();
         mSceneNode->mWorldTransform = Matrix4f::Zero;
-        mSceneNode->AttachChild(mOrigin->GetNode());
         mSceneNode->AttachChild(mRootNode);
 
         mSceneLightingEffect = make_shared<PhongLightingEffect>();
@@ -167,7 +163,7 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
     graphics->Draw(mCamera.get(), mRoom.get());
     graphics->DrawBoundingBox(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f));
     graphics->DrawBoundingBox(mCamera.get(), mPointLight2.get(), Transparent(ColorPalette::Green, 1.0f));
-    graphics->DrawBoundingBox(mCamera.get(), mOrigin.get(), Transparent(ColorPalette::Red, 1.0f));
+    graphics->DrawString(mFont_Console, 16, Vector2f(width / 2, height / 2), ".");
 
     Game::Render(graphics, percent);
 }
@@ -184,7 +180,6 @@ SampleGame::Update(GameEngineInput *input, double elapsed)
     }
 
     mCamera->Update(input, elapsed);
-    mOrigin->SetPosition(mCamera->mOrigin);
     mSceneNode->Update(elapsed, true);
 
     Game::Update(input, elapsed);

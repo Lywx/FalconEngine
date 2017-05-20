@@ -23,9 +23,13 @@ using BitmapFontRendererSharedPtr = std::shared_ptr<BitmapFontRenderer>;
 class BitmapText;
 
 class Camera;
+
 class Entity;
 class EntityRenderer;
 using EntityRendererSharedPtr = std::shared_ptr<EntityRenderer>;
+
+class UiRenderer;
+using UiRendererSharedPtr = std::shared_ptr<UiRenderer>;
 
 /************************************************************************/
 /* General Renderer                                                     */
@@ -135,6 +139,7 @@ protected:
     EntityRendererSharedPtr     mEntityRenderer;
     BitmapFontRendererSharedPtr mFontRenderer;
     RendererSharedPtr           mMasterRenderer;
+    UiRendererSharedPtr         mUiRenderer;
 
     GameEngineSettingsSharedPtr mGameEngineSettings;
 };

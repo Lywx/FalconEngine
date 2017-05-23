@@ -13,7 +13,7 @@ SceneEntity::SceneEntity() :
 {
 }
 
-SceneEntity::SceneEntity(NodeSharedPtr node) :
+SceneEntity::SceneEntity(std::shared_ptr<Node> node) :
     Entity(node)
 {
 }

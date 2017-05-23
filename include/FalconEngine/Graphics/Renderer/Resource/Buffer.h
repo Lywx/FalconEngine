@@ -38,7 +38,7 @@ protected:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Buffer(size_t elementNum, size_t elementByteNum, BufferUsage usage);
+    Buffer(int elementNum, size_t elementByteNum, BufferUsage usage);
     Buffer(const Buffer&) = delete;
     Buffer& operator=(const Buffer&) = delete;
 
@@ -53,22 +53,13 @@ public:
     }
 
     unsigned char *
-    GetData()
-    {
-        return mData;
-    }
+    GetData();
 
     const unsigned char *
-    GetData() const
-    {
-        return mData;
-    }
+    GetData() const;
 
     size_t
-    GetDataByteNum() const
-    {
-        return mDataByteNum;
-    }
+    GetDataByteNum() const;
 
     size_t
     GetElementNum() const
@@ -77,27 +68,20 @@ public:
     }
 
     void
-    SetElementNum(size_t elementNum)
-    {
-        mElementNum = elementNum;
-        mDataByteNum = mElementByteNum * mElementNum;
-    }
+    SetElementNum(int elementNum);
 
     BufferUsage
-    GetUsage() const
-    {
-        return mUsage;
-    }
+    GetUsage() const;
 
 private:
     unsigned char *mData;
 
-    size_t         mCapacityByteNum;
-    size_t         mCapacityElementNum;
+    size_t         mCapacityByteNum;     // Maximum capacity size in bytes include space not used.
+    int            mCapacityElementNum;  // Maximum capacity size in term of element number include space not used.
 
-    size_t         mDataByteNum;
-    size_t         mElementNum;
-    size_t         mElementByteNum;
+    size_t         mDataByteNum;         // Actual data size in bytes.
+    int            mElementNum;          // Actual data size in term of element number.
+    size_t         mElementByteNum;      // Each element's data size in bytes.
 
     BufferUsage    mUsage;
 };

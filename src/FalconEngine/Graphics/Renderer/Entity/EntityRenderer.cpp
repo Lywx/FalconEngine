@@ -1,7 +1,8 @@
 #include <FalconEngine/Graphics/Renderer/Entity/EntityRenderer.h>
 
-#include <FalconEngine/Graphics/Effect/AABBBoundingBoxEffect.h>
+#include <FalconEngine/Graphics/Effect/AABBBoundingBoxInstancingEffect.h>
 #include <FalconEngine/Graphics/Renderer/Camera.h>
+#include <FalconEngine/Graphics/Renderer/PrimitiveLines.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
@@ -39,7 +40,7 @@ EntityRenderer::Draw(const Camera *camera, const Entity *entity)
 {
     FALCON_ENGINE_CHECK_NULLPTR(entity);
 
-    mEntityTable[camera].push_back(entity);
+    mEntityListTable[camera].push_back(entity);
 }
 
 void
@@ -75,7 +76,7 @@ EntityRenderer::DrawBoundingBox(const Camera *camera, const Visual *visual, Colo
 {
     FALCON_ENGINE_CHECK_NULLPTR(visual);
 
-    DrawBoundingBox(camera, visual, visual->GetBoundingBox(), boundingBoxColor);
+    DrawBoundingBox(camera, visual, visual->GetMesh()->GetBoundingBox(), boundingBoxColor);
 }
 
 void
@@ -97,14 +98,14 @@ void
 EntityRenderer::RenderBegin()
 {
     // Clean every bucket in the entity table.
-    for (auto& cameraEntityListPair : mEntityTable)
+    for (auto& cameraEntityListPair : mEntityListTable)
     {
         auto& entityList = cameraEntityListPair.second;
         entityList.clear();
     }
 
     // Reset batch in every bounding box batch.
-    for (auto& cameraBoundingBoxBatchPair : mEntityBoundingBoxBatchTable)
+    for (auto& cameraBoundingBoxBatchPair : mBoundingBoxBatchTable)
     {
         auto& batch = cameraBoundingBoxBatchPair.second;
         batch->mCameraViewProjectionComputed = false;
@@ -116,28 +117,32 @@ EntityRenderer::RenderBegin()
 void
 EntityRenderer::Render(Renderer *renderer, double /* percent */)
 {
-    for (auto& cameraEntityListPair : mEntityTable)
+    // Render visuals.
+    for (auto& cameraEntityListPair : mEntityListTable)
     {
+        std::queue<std::pair<Node *, int>> nodeQueueCurrent;
+        std::queue<std::pair<Node *, int>> nodeQueueNext;
+
         auto camera = cameraEntityListPair.first;
         auto& entityList = cameraEntityListPair.second;
 
         // Prepare the level order traversal
         for (auto entity : entityList)
         {
-            mNodeQueueCurrent.push(make_pair(entity->GetNode().get(), 1));
+            nodeQueueCurrent.push(make_pair(entity->GetNode().get(), 1));
         }
 
         // Use level order traversal to render each visual in the hierarchy, which is not totally necessary.
-        while (!mNodeQueueCurrent.empty())
+        while (!nodeQueueCurrent.empty())
         {
             // Complete traversing current level.
-            while (!mNodeQueueCurrent.empty())
+            while (!nodeQueueCurrent.empty())
             {
-                auto renderItemCurrent = mNodeQueueCurrent.front();
+                auto renderItemCurrent = nodeQueueCurrent.front();
                 auto renderNodeCurrent = renderItemCurrent.first;
                 auto &sceneDepthCurrent = renderItemCurrent.second;
 
-                mNodeQueueCurrent.pop();
+                nodeQueueCurrent.pop();
 
                 // Visit the children.
                 auto slotNum = renderNodeCurrent->GetChildrenSlotNum();
@@ -151,24 +156,30 @@ EntityRenderer::Render(Renderer *renderer, double /* percent */)
                     else if (auto childNode = dynamic_pointer_cast<Node>(child))
                     {
                         // Prepare for traversing next level.
-                        mNodeQueueNext.push(make_pair(childNode.get(), sceneDepthCurrent + 1));
+                        nodeQueueNext.push(make_pair(childNode.get(), sceneDepthCurrent + 1));
+                    }
+                    else
+                    {
+                        // Scene graph only consists of two type of spatial objects:
+                        // either Node or Visual.
+                        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
                     }
                 }
             }
 
-            std::swap(mNodeQueueCurrent, mNodeQueueNext);
+            std::swap(nodeQueueCurrent, nodeQueueNext);
         }
     }
 
-    // Render bounding box.
-    for (auto& cameraBoundingBoxBatchPair : mEntityBoundingBoxBatchTable)
+    // Render bounding boxes.
+    for (auto& cameraBoundingBoxBatchPair : mBoundingBoxBatchTable)
     {
         auto *camera = cameraBoundingBoxBatchPair.first;
         auto& batch = cameraBoundingBoxBatchPair.second;
         if (batch->mInstanceNum > 0)
         {
             // Update buffer data before drawing
-            size_t instanceNum = batch->mInstanceNum;
+            int instanceNum = batch->mInstanceNum;
             batch->mInstanceBuffer->SetElementNum(instanceNum);
             renderer->Update(batch->mInstanceBuffer.get());
 
@@ -181,8 +192,8 @@ EntityRenderer::Render(Renderer *renderer, double /* percent */)
             }
 
             // Update instancing data.
-            batch->mVertexTriangles->SetEffectInstancingNum(instanceNum);
-            renderer->Draw(camera, batch->mVertexTriangles.get());
+            batch->mVisualEffectInstance->SetShaderInstancingNum(0, instanceNum);
+            renderer->Draw(camera, batch->mVisual.get());
         }
     }
 }
@@ -194,7 +205,7 @@ EntityRenderer::RenderEnd()
 
 // @summary Fill vertex buffer with one set of cube (length = 2, centered at origin)'s model position.
 void
-FillBufferBoundingBoxVertex(VertexBuffer *vertexBuffer)
+FillBufferBoundingBoxPosition(VertexBuffer *vertexBuffer)
 {
     FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
 
@@ -236,58 +247,66 @@ FillBufferAABBBoundingBoxTransform(
     FillBufferDataAsMatrix4f<float>(transformBufferData, transformBufferDataIndex, modelViewProjectionTransform);
 }
 
-BoundingBoxBatchSharedPtr
-EntityRenderer::PrepareBatch(const Camera *camera)
+shared_ptr<VertexBuffer>
+CreateBoundingBoxVertexBuffer(int aabbBoundingBoxVertexNum)
 {
-    auto iter = mEntityBoundingBoxBatchTable.find(camera);
-    if (iter != mEntityBoundingBoxBatchTable.end())
-    {
-        return iter->second;
-    }
-
-    static const size_t sAABBBoundingBoxInstanceNum = Kilobytes(1);
-    static const size_t sAABBBoundingBoxVertexNum = 36;
-    static shared_ptr<AABBBoundingBoxEffect> sBoungingBoxEffect;
-
-    if (sBoungingBoxEffect == nullptr)
-    {
-        sBoungingBoxEffect = make_shared<AABBBoundingBoxEffect>();
-    }
-
-    // TODO(Wuxiang): Add multiple type of bounding box support.
-    auto boundingBoxVertexFormat = sBoungingBoxEffect->CreateVertexFormat();
-
-    // Hold fixed data about vertex position in model space.
-    auto boundingBoxVertexBuffer = make_shared<VertexBuffer>(sAABBBoundingBoxVertexNum, sizeof(BoundingBoxVertex), BufferUsage::Static);
+    auto boundingBoxVertexBuffer = make_shared<VertexBuffer>(aabbBoundingBoxVertexNum, sizeof(AABBBoundingBoxVertex), BufferUsage::Static);
 
     // Prepare vertex buffer data.
-    FillBufferBoundingBoxVertex(boundingBoxVertexBuffer.get());
 
-    // Hold dynamic data about each instance of bounding box.
-    auto boundingBoxIntanceBuffer = make_shared<VertexBuffer>(sAABBBoundingBoxInstanceNum, sizeof(BoundingBoxInstance), BufferUsage::Dynamic);
+    // TODO(Wuxiang): 2017-05-23 00:46 Update line mesh.
+    FillBufferBoundingBoxPosition(boundingBoxVertexBuffer.get());
 
-    // Setup font specific visual quad.
-    shared_ptr<Visual> boundingBoxTriangles;
+    return boundingBoxVertexBuffer;
+};
+
+std::shared_ptr<AABBBoundingBoxBatch>
+EntityRenderer::PrepareBatch(const Camera *camera)
+{
+    // Find existing batch for that camera.
     {
-        auto vertexGroup = make_shared<VertexGroup>();
-        vertexGroup->SetVertexBuffer(0, boundingBoxVertexBuffer, 0, boundingBoxVertexFormat->GetVertexAttributeStride(0));
-        vertexGroup->SetVertexBuffer(1, boundingBoxIntanceBuffer, 0, boundingBoxVertexFormat->GetVertexAttributeStride(1));
-
-        auto boundingBoxEffectInstance = make_shared<VisualEffectInstance>(sBoungingBoxEffect);
-        sBoungingBoxEffect->CreateInstance(boundingBoxEffectInstance.get(), camera);
-
-        auto boundingBoxPrimitiveTriangles = make_shared<PrimitiveTriangles>(boundingBoxVertexFormat, vertexGroup);
-        boundingBoxTriangles = make_shared<Visual>(boundingBoxPrimitiveTriangles);
-        boundingBoxTriangles->SetEffectInstance(boundingBoxEffectInstance);
+        auto iter = mBoundingBoxBatchTable.find(camera);
+        if (iter != mBoundingBoxBatchTable.end())
+        {
+            return iter->second;
+        }
     }
 
-    auto boundingBoxBatch = make_shared<BoundingBoxBatch>(camera, boundingBoxVertexBuffer, boundingBoxTriangles, boundingBoxIntanceBuffer);
-    mEntityBoundingBoxBatchTable.insert({ camera, boundingBoxBatch });
-    return boundingBoxBatch;
+    // Initialize new batch for given camera.
+    {
+        auto aABBBoundingBoxInstanceNum = int(Kilobytes(1));
+        auto aABBBoundingBoxVertexNum = 36;
+        auto aABBBoungingBoxEffect = make_shared<AABBBoundingBoxInstancingEffect>();
+
+        // TODO(Wuxiang): Add multiple type of bounding box support.
+        auto aABBBoundingBoxVertexFormat = aABBBoungingBoxEffect->GetVertexFormat();
+
+        // Hold fixed data about vertex position in model space.
+        auto aABBBoundingBoxVertexBuffer = CreateBoundingBoxVertexBuffer(aABBBoundingBoxVertexNum);
+
+        // Hold dynamic data about each instance of bounding box.
+        auto aABBBoundingBoxInstanceBuffer = make_shared<VertexBuffer>(aABBBoundingBoxInstanceNum, sizeof(AABBBoundingBoxInstance), BufferUsage::Dynamic);
+
+        auto aABBBoundingBoxVertexGroup = make_shared<VertexGroup>();
+        aABBBoundingBoxVertexGroup->SetVertexBuffer(0, aABBBoundingBoxVertexBuffer, 0, aABBBoundingBoxVertexFormat->GetVertexBufferStride(0));
+        aABBBoundingBoxVertexGroup->SetVertexBuffer(1, aABBBoundingBoxInstanceBuffer, 0, aABBBoundingBoxVertexFormat->GetVertexBufferStride(1));
+
+        // AABB bounding box is bipartite graph, so you could not use line strip.
+        auto aABBBoundingBoxPrimitive = make_shared<PrimitiveTriangles>(aABBBoundingBoxVertexBuffer, nullptr);
+        auto aABBBoundingBoxMesh = make_shared<Mesh>(aABBBoundingBoxPrimitive, nullptr);
+        auto aABBBoundingBoxVisual = make_shared<Visual>(aABBBoundingBoxMesh, aABBBoundingBoxVertexFormat, aABBBoundingBoxVertexGroup);
+        auto AABBBoundingBoxVisualEffectInstance = make_shared<VisualEffectInstance>(aABBBoungingBoxEffect);
+        aABBBoungingBoxEffect->CreateInstance(AABBBoundingBoxVisualEffectInstance.get(), camera);
+        aABBBoundingBoxVisual->SetInstance(AABBBoundingBoxVisualEffectInstance);
+
+        auto aABBBoundingBoxBatch = make_shared<AABBBoundingBoxBatch>(camera, aABBBoundingBoxVertexBuffer, aABBBoundingBoxInstanceBuffer, aABBBoundingBoxVisual, AABBBoundingBoxVisualEffectInstance);
+        mBoundingBoxBatchTable.insert({ camera, aABBBoundingBoxBatch });
+        return aABBBoundingBoxBatch;
+    }
 }
 
 void
-EntityRenderer::PrepareBoundingBox(BoundingBoxBatch& batch, const Camera *camera, const Visual *visual, const BoundingBox *boundingBox, Color boundingBoxColor)
+EntityRenderer::PrepareBoundingBox(AABBBoundingBoxBatch& batch, const Camera *camera, const Visual *visual, const BoundingBox *boundingBox, Color boundingBoxColor)
 {
     ++batch.mInstanceNum;
 
@@ -310,11 +329,11 @@ EntityRenderer::PrepareBoundingBox(BoundingBoxBatch& batch, const Camera *camera
                                    reinterpret_cast<float *>(batch.mInstanceBuffer->GetData()));
 
         // Fill vertex transform.
-        if (auto aabb = dynamic_cast<const AABBBoundingBox *>(boundingBox))
+        if (auto aabbBoundingBox = dynamic_cast<const AABBBoundingBox *>(boundingBox))
         {
             FillBufferAABBBoundingBoxTransform(
                 batch.mCameraViewProjectionTransform,
-                aabb,
+                aabbBoundingBox,
                 visual->mWorldTransform,
                 batch.mInstanceBufferDataIndex,
                 reinterpret_cast<float *>(batch.mInstanceBuffer->GetData()));

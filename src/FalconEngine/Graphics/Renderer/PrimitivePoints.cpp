@@ -8,13 +8,8 @@ FALCON_ENGINE_RTTI_IMPLEMENT(PrimitivePoints, Primitive);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PrimitivePoints::PrimitivePoints(VertexFormatSharedPtr vertexFormat) :
-    Primitive(PrimitiveType::Point, vertexFormat)
-{
-}
-
-PrimitivePoints::PrimitivePoints(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup) :
-    Primitive(PrimitiveType::Point, vertexFormat, vertexGroup, nullptr)
+PrimitivePoints::PrimitivePoints(std::shared_ptr<VertexBuffer> vertexBuffer) :
+    Primitive(PrimitiveType::Point, vertexBuffer, nullptr)
 {
 }
 

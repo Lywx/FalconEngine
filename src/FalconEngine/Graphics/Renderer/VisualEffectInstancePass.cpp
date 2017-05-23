@@ -10,7 +10,8 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 VisualEffectInstancePass::VisualEffectInstancePass(Shader *shader) :
-    mShader(shader)
+    mShader(shader),
+    mShaderInstancingNum(1)
 {
 }
 
@@ -22,7 +23,7 @@ VisualEffectInstancePass::~VisualEffectInstancePass()
 /* Public Members                                                       */
 /************************************************************************/
 void
-VisualEffectInstancePass::SetShaderUniform(ShaderUniformSharedPtr shaderUniform)
+VisualEffectInstancePass::SetShaderUniform(std::shared_ptr<ShaderUniform> shaderUniform)
 {
     FALCON_ENGINE_CHECK_NULLPTR(shaderUniform);
 
@@ -54,6 +55,18 @@ Shader *
 VisualEffectInstancePass::GetShader() const
 {
     return mShader;
+}
+
+int
+VisualEffectInstancePass::GetShaderInstancingNum() const
+{
+    return mShaderInstancingNum;
+}
+
+void
+VisualEffectInstancePass::SetShaderInstancingNum(int instancingNum)
+{
+    mShaderInstancingNum = instancingNum;
 }
 
 int

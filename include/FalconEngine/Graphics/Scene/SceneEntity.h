@@ -14,7 +14,7 @@ class FALCON_ENGINE_API SceneEntity : public Entity
 {
 public:
     SceneEntity();
-    explicit SceneEntity(NodeSharedPtr node);
+    explicit SceneEntity(std::shared_ptr<Node> node);
     virtual ~SceneEntity() = default;
 
 public:

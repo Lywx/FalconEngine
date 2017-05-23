@@ -21,8 +21,8 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PointLightEntity(const NodeSharedPtr node);
-    PointLightEntity(const NodeSharedPtr node, const LightSharedPtr light);
+    explicit PointLightEntity(const std::shared_ptr<Node> node);
+    PointLightEntity(const std::shared_ptr<Node> node, const LightSharedPtr light);
     ~PointLightEntity();
 
 public:

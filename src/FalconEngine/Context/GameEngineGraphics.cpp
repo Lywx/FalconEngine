@@ -113,8 +113,8 @@ GameEngineGraphics::SetWindow(int width, int height, float near, float far)
 
 void
 GameEngineGraphics::Initialize(
-    _IN_ GameEngineDataSharedPtr     gameEngineData,
-    _IN_ GameEngineSettingsSharedPtr gameEngineSettings)
+    _IN_ GameEngineData     *gameEngineData,
+    _IN_ GameEngineSettings *gameEngineSettings)
 {
     mGameEngineSettings = gameEngineSettings;
 

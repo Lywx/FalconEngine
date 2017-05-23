@@ -23,7 +23,7 @@ namespace FalconEngine
 /* Initialization and Destroy                                           */
 /************************************************************************/
 void
-Renderer::InitializePlatform(GameEngineDataSharedPtr gameEngineData)
+Renderer::InitializePlatform(GameEngineData *gameEngineData)
 {
     // Initialize platform renderer data.
     mData = std::unique_ptr<PlatformRendererData, PlatformRendererDataDeleter>(
@@ -398,7 +398,7 @@ Renderer::SwapFrameBufferPlatform()
 /* Draw                                                                 */
 /************************************************************************/
 void
-Renderer::DrawPrimitivePlatform(const Primitive *primitive, size_t instancingNum)
+Renderer::DrawPrimitivePlatform(const Primitive *primitive, int primitiveInstancingNum)
 {
     FALCON_ENGINE_CHECK_NULLPTR(primitive);
 
@@ -409,7 +409,7 @@ Renderer::DrawPrimitivePlatform(const Primitive *primitive, size_t instancingNum
         auto vertexNum = primitive->GetVertexNum();
         if (vertexNum > 0)
         {
-            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(instancingNum));
+            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(primitiveInstancingNum));
         }
     }
     else if (primitiveType == PrimitiveType::Line)
@@ -417,7 +417,7 @@ Renderer::DrawPrimitivePlatform(const Primitive *primitive, size_t instancingNum
         auto vertexNum = primitive->GetVertexNum();
         if (vertexNum > 0)
         {
-            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(instancingNum));
+            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(primitiveInstancingNum));
         }
     }
     else if (primitiveType == PrimitiveType::LineStrip)
@@ -425,7 +425,7 @@ Renderer::DrawPrimitivePlatform(const Primitive *primitive, size_t instancingNum
         auto vertexNum = primitive->GetVertexNum();
         if (vertexNum > 0)
         {
-            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(instancingNum));
+            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(primitiveInstancingNum));
         }
     }
     else if (primitiveType == PrimitiveType::Triangle)
@@ -457,17 +457,17 @@ Renderer::DrawPrimitivePlatform(const Primitive *primitive, size_t instancingNum
                     FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
                 }
 
-                glDrawElementsInstanced(primitiveMode, GLsizei(indexNum), indexType, indexOffset, GLsizei(instancingNum));
+                glDrawElementsInstanced(primitiveMode, GLsizei(indexNum), indexType, indexOffset, GLsizei(primitiveInstancingNum));
             }
         }
         else
         {
-            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(instancingNum));
+            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(primitiveInstancingNum));
         }
     }
     else
     {
-        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
     }
 }
 

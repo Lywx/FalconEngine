@@ -2,6 +2,8 @@
 
 #include <FalconEngine/Graphics/Header.h>
 
+#include <vector>
+
 #include <FalconEngine/Core/Object.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstancePass.h>
 
@@ -11,18 +13,17 @@ namespace FalconEngine
 class Sampler;
 class Texture;
 
-class VisualEffect;
-using VisualEffectSharedPtr = std::shared_ptr<VisualEffect>;
-
 template <typename T>
 class ShaderUniformValue;
-template<typename T>
-using ShaderUniformValueSharedPtr = std::shared_ptr<ShaderUniformValue<T>>;
 
-// NOTE(Wuxiang): Having trouble using unique_ptr with vector in DLL exported library, resort to use shared_ptr instead.
+class VisualEffect;
 class VisualEffectInstancePass;
-using VisualEffectInstancePassUniquePtr = std::shared_ptr<VisualEffectInstancePass>;
 
+// @summary Represents a visual effect instance. This class may contain some
+// asset, like material, texture etc. This class is typically used inside a scene
+// class. Once the scene is loaded then the instance is initialized and disposed when
+// the scene is disposed. So as the asset used in this effect instance, though the
+// asset is disposed by manually calling asset manager.
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API VisualEffectInstance : public Object
 {
@@ -30,8 +31,12 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    VisualEffectInstance(VisualEffectSharedPtr effect);
+    VisualEffectInstance(std::shared_ptr<VisualEffect> effect);
     virtual ~VisualEffectInstance();
+
+    // NOTE(Wuxiang): unique_ptr is not allowed to copy.
+    VisualEffectInstance(const VisualEffectInstance& rhs) = delete;
+    VisualEffectInstance& operator=(const VisualEffectInstance& rhs) = delete;
 
 public:
     /************************************************************************/
@@ -46,13 +51,19 @@ public:
     VisualEffectInstancePass *
     GetPass(int passIndex);
 
+    int
+    GetShaderInstancingNum(int passIndex) const;
+
+    void
+    SetShaderInstancingNum(int passIndex, int instancingNum);
+
     template <typename T>
     ShaderUniformValue<T> *
     GetShaderUniform(int passIndex, int uniformIndex);
 
     template <typename T>
     void
-    SetShaderUniform(int passIndex, ShaderUniformValueSharedPtr<T> uniform);
+    SetShaderUniform(int passIndex, std::shared_ptr<ShaderUniformValue<T>> uniform);
 
     const Texture *
     GetShaderTexture(int passIndex, int textureUnit) const;
@@ -67,8 +78,8 @@ public:
     SetShaderSampler(int passIndex, int textureUnit, const Sampler *sampler);
 
 protected:
-    VisualEffectSharedPtr                          mEffect;
-    std::vector<VisualEffectInstancePassUniquePtr> mPassList; // Passes contained in this effect.
+    std::shared_ptr<VisualEffect>                          mVisualEffect;
+    std::vector<std::unique_ptr<VisualEffectInstancePass>> mVisualEffectInstancePassList; // Passes contained in this effect instance.
 };
 #pragma warning(default: 4251)
 
@@ -76,16 +87,16 @@ template <typename T>
 ShaderUniformValue<T> *
 VisualEffectInstance::GetShaderUniform(int passIndex, int uniformIndex)
 {
-    return mPassList.at(passIndex)->GetShaderUniform(uniformIndex);
+    return mVisualEffectInstancePassList.at(passIndex)->GetShaderUniform(uniformIndex);
 }
 
 template <typename T>
 void
-VisualEffectInstance::SetShaderUniform(int passIndex, ShaderUniformValueSharedPtr<T> uniform)
+VisualEffectInstance::SetShaderUniform(int passIndex, std::shared_ptr<ShaderUniformValue<T>> uniform)
 {
     FALCON_ENGINE_CHECK_NULLPTR(uniform);
 
-    mPassList.at(passIndex)->SetShaderUniform(uniform);
+    mVisualEffectInstancePassList.at(passIndex)->SetShaderUniform(uniform);
 }
 
 }

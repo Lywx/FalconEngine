@@ -1,5 +1,5 @@
 #include <FalconEngine/Graphics/Renderer/PrimitiveLines.h>
-#include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
 
 namespace FalconEngine
 {
@@ -9,10 +9,10 @@ FALCON_ENGINE_RTTI_IMPLEMENT(PrimitiveLines, Primitive);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PrimitiveLines::PrimitiveLines(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, bool vertexStrip) :
+PrimitiveLines::PrimitiveLines(std::shared_ptr<VertexBuffer> vertexBuffer, bool vertexStrip) :
     Primitive(vertexStrip
               ? PrimitiveType::LineStrip
-              : PrimitiveType::Line, vertexFormat, vertexGroup, nullptr),
+              : PrimitiveType::Line, vertexBuffer, nullptr),
     mSegmentStrip(vertexStrip)
 {
 }
@@ -34,8 +34,8 @@ size_t
 PrimitiveLines::GetSegmentNum() const
 {
     return mSegmentStrip
-           ? mVertexGroup->GetVertexNum() - 1
-           : mVertexGroup->GetVertexNum() / 2;
+           ? mVertexBuffer->GetElementNum() - 1
+           : mVertexBuffer->GetElementNum() / 2;
 
 }
 

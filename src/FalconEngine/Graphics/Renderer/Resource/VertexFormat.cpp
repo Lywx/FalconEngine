@@ -29,19 +29,6 @@ VertexFormat::GetVertexAttribute(int attributeIndex)
     return mVertexAttributeList.at(attributeIndex);
 }
 
-int
-VertexFormat::GetVertexAttributeStride(int attributeBindingIndex) const
-{
-    if (mVertexAttributeFinished)
-    {
-        return mVertexAttributeOffsetList.at(attributeBindingIndex);
-    }
-    else
-    {
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Vertex attribute has not finished initialization.");
-    }
-}
-
 void
 VertexFormat::PushVertexAttribute(
     int                 attributeLocation,
@@ -82,6 +69,19 @@ void
 VertexFormat::FinishVertexAttribute()
 {
     mVertexAttributeFinished = true;
+}
+
+int
+VertexFormat::GetVertexBufferStride(int attributeBindingIndex) const
+{
+    if (mVertexAttributeFinished)
+    {
+        return mVertexAttributeOffsetList.at(attributeBindingIndex);
+    }
+    else
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Vertex attribute has not finished initialization.");
+    }
 }
 
 }

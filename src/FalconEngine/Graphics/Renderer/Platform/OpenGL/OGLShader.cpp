@@ -5,6 +5,7 @@
 
 #include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Context/GameDebug.h>
+#include <FalconEngine/Context/GameEngineSettings.h>
 #include <FalconEngine/Core/Path.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderSource.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
@@ -34,7 +35,31 @@ ProcessShaderIncludeStatement(
 
     auto includeFileName = shaderExtensionSymbols.back();
     trim_if(includeFileName, is_any_of("\""));
+
+    // Search in same directory first.
     auto includeFilePath = GetFileDirectory(shaderPath) + includeFileName;
+
+    // NOTE(Wuxiang): I comment out this because the cmake build system filters out
+    // the directory structure during copying shader files into content directory.
+    // So that all shader files are in the same directory. No need to do this anymore.
+    //
+    // Search in shader root directory as last resort.
+    if (!Exist(includeFilePath))
+    {
+        static auto gameEngineSettings = GameEngineSettings::GetInstance();
+        if (gameEngineSettings->mShaderDirectory.empty())
+        {
+            // Do nothing to prevent further exception.
+        }
+        else
+        {
+            auto includeFilePathGlobal = gameEngineSettings->mShaderDirectory + includeFileName;
+            if (Exist(includeFilePathGlobal))
+            {
+                includeFilePath = includeFilePathGlobal;
+            }
+        }
+    }
 
     auto assetManager = AssetManager::GetInstance();
     auto includeSource = assetManager->LoadShaderSource(includeFilePath);

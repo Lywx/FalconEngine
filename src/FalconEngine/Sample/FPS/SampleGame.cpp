@@ -26,8 +26,8 @@ SampleGame::Initialize()
 
         // Fonts
         {
-            mFont_Console = assetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.fnt.bin").get();
-            // mFontDisplay = mAssetManager->LoadFont("Content/Fonts/NSimSunDistanceField.fnt.bin").get();
+            mFont = assetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.fnt.bin").get();
+            // mFont = mAssetManager->LoadFont("Content/Fonts/NSimSunDistanceField.fnt.bin").get();
         }
 
         // Entities
@@ -94,7 +94,7 @@ SampleGame::Initialize()
 
         mScenePointLightList = { mPointLight1->GetLight(), mPointLight2->GetLight(), mPointLight3->GetLight() };
 
-        mSceneLightingEffect = make_shared<PhongLightingEffect>();
+        mSceneLightingEffect = make_shared<PhongShadingEffect>();
 
         // Initialize Effect
         mSceneLightingEffect->CreateInstance(mSceneLightingEffect, mScene->GetNode().get(), *mSceneDirectionalLight, mScenePointLightList, mSceneSpotLightList);
@@ -109,7 +109,7 @@ SampleGame::Initialize()
 void
 SampleGame::Render(GameEngineGraphics *graphics, double percent)
 {
-    graphics->ClearFrameBuffer(ColorPalette::Black, 1.f, 0);
+    graphics->ClearFrameBuffer(ColorPalette::Gray, 1.f, 0);
 
     auto engine = GetEngine();
     auto engineSettings = GetEngineSettings();
@@ -124,7 +124,7 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
         auto lastFrameUpdateCount = int(profiler->GetLastFrameUpdateTotalCount());
         auto lastRenderElapsedMillisecond = int(profiler->GetLastRenderElapsedMillisecond());
 
-        graphics->DrawString(mFont_Console, 16.f, Vector2f(50.f, height - 50.f),
+        graphics->DrawString(mFont, 16.f, Vector2f(50.f, height - 50.f),
                              "U: " + std::to_string(lastUpdateElapsedMillisecond) + "ms Uc: " + std::to_string(lastFrameUpdateCount) +
                              " R: " + std::to_string(lastRenderElapsedMillisecond) + "ms Rc: " + std::to_string(lastFrameFPS),
                              ColorPalette::Gold);
@@ -139,20 +139,20 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
         auto mousePositionDiff = mouse->GetPositionDiff();
         auto mousePosition = mouse->GetPosition();
 
-        graphics->DrawString(mFont_Console, 16.f, Vector2f(50.f, height - 100.f),
+        graphics->DrawString(mFont, 16.f, Vector2f(50.f, height - 100.f),
                              "Mouse Position: " + to_string(mousePosition) + " Diff: " + to_string(mousePositionDiff), ColorPalette::White);
     }
 
     // Draw Camera
     {
         auto position = mCamera->GetPosition();
-        graphics->DrawString(mFont_Console, 16.f, Vector2f(50.f, 50.f),
+        graphics->DrawString(mFont, 16.f, Vector2f(50.f, 50.f),
                              "Camera Position: " + to_string(position), ColorPalette::White);
 
         auto pitch = Degree(mCamera->mPitchRadian);
         auto yaw = Degree(mCamera->mYawRadian);
         auto roll = Degree(mCamera->mRollRadian);
-        graphics->DrawString(mFont_Console, 16.f, Vector2f(50.f, 100.f),
+        graphics->DrawString(mFont, 16.f, Vector2f(50.f, 100.f),
                              "Camera Pitch: " + std::to_string(pitch) + " Yaw: " + std::to_string(yaw) + " Roll: " + std::to_string(roll), ColorPalette::White);
     }
 

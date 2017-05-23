@@ -10,8 +10,6 @@
 namespace FalconEngine
 {
 
-using SpatialSharedPtr = std::shared_ptr<Spatial>;
-
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API Node : public Spatial
 {
@@ -59,18 +57,22 @@ public:
     //     node0->DetachChild(saveChild);
     //     node1->AttachChild(saveChild);
     int
-    AttachChild(SpatialSharedPtr child);
+    AttachChild(std::shared_ptr<Spatial> child);
+
+    // @summary Clear all children.
+    void
+    ClearChildrenSlot();
 
     // @summary Detach a child from this node. If the 'child' is non-null and in the
     // array, the return value is the index in the array that had stored the
     // child. Otherwise, the function returns -1.
     int
-    DetachChild(SpatialSharedPtr child);
+    DetachChild(std::shared_ptr<Spatial> child);
 
     // @summary Detach a child from this node. If 0 <= i < ChildrenNum(), the
     // return value is the child at index i; otherwise, the function returns
     // null.
-    SpatialSharedPtr
+    std::shared_ptr<Spatial>
     DetachChildAt(int slotIndex);
 
     // @summary Get the child at the specified index. If 0 <= i < GetNumChildren(),
@@ -81,7 +83,7 @@ public:
     GetChildAt(int slotIndex) const;
 
     // @return Child at specific index. The return value could be null.
-    SpatialSharedPtr
+    std::shared_ptr<Spatial>
     GetChildAt(int slotIndex);
 
     // The same comments for AttachChild apply here regarding the inability
@@ -89,8 +91,8 @@ public:
     // succeeds and returns i. If i is out of range, the function *still*
     // succeeds, appending the child to the end of the array. The return
     // value is the previous child stored at index i.
-    SpatialSharedPtr
-    SetChildAt(int slotIndex, SpatialSharedPtr child);
+    std::shared_ptr<Spatial>
+    SetChildAt(int slotIndex, std::shared_ptr<Spatial> child);
 
     int
     GetChildrenNum() const;
@@ -114,6 +116,10 @@ public:
     Node *
     GetClone() const override;
 
+    // @summary Use a custom function to copy rhs's content into lhs.
+    Node *
+    GetClone(std::function<void(Node *lhs, Node *rhs)> copyTo);
+
 protected:
     /************************************************************************/
     /* Protected Members                                                    */
@@ -122,14 +128,15 @@ protected:
     UpdateWorldTransform(double elapsed) override;
 
 public:
-    EventHandler<bool>            mUpdateBegun;
-    EventHandler<bool>            mUpdateEnded;
+    EventHandler<bool>                    mUpdateBegun;
+    EventHandler<bool>                    mUpdateEnded;
 
 private:
-    std::vector<SpatialSharedPtr> mChildrenSlot;
+    std::vector<std::shared_ptr<Spatial>> mChildrenSlot;
 };
 #pragma warning(default: 4251)
 
 FALCON_ENGINE_API std::shared_ptr<Node> ShareClone(std::shared_ptr<Node> node);
+FALCON_ENGINE_API std::shared_ptr<Node> ShareClone(std::shared_ptr<Node> node, int);
 
 }

@@ -17,13 +17,13 @@ Exist(const string& relativePath)
 string
 GetCurrentPath()
 {
-    return filesystem::current_path().string() + FALCON_ENGINE_DIR_SEPARATOR;
+    return filesystem::current_path().string() + FALCON_ENGINE_DIRECTORY_SEPARATOR;
 }
 
 string
 GetFileDirectory(const string& path)
 {
-    return filesystem::path(path).parent_path().string() + FALCON_ENGINE_DIR_SEPARATOR;
+    return filesystem::path(path).parent_path().string() + FALCON_ENGINE_DIRECTORY_SEPARATOR;
 }
 
 string

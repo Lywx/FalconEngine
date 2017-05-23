@@ -13,8 +13,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PrimitivePoints(VertexFormatSharedPtr vertexFormat);
-    PrimitivePoints(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup);
+    explicit PrimitivePoints(std::shared_ptr<VertexBuffer> vertexBuffer);
     virtual ~PrimitivePoints();
 
 public:

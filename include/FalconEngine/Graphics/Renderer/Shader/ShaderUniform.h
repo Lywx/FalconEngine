@@ -89,12 +89,9 @@ protected:
     T mValue;
 };
 
-template<typename T>
-using ShaderUniformValueSharedPtr = std::shared_ptr<ShaderUniformValue<T>>;
-
 template <typename T, typename U, typename ... Args>
-ShaderUniformValueSharedPtr<T>
-ShareUniform(Args&& ... args)
+std::shared_ptr<ShaderUniformValue<T>>
+                                    ShareUniform(Args&& ... args)
 {
     return std::static_pointer_cast<ShaderUniformValue<T>>(std::make_shared<U>(args ...));
 }

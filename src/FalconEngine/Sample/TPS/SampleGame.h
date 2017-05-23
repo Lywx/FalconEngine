@@ -33,12 +33,11 @@ private:
     ThirdPersonCameraSharedPtr mCamera;
 
     // Fonts
-    const BitmapFont *mFont_Console = nullptr;
-    const BitmapFont *mFont_Chinese = nullptr;
+    const BitmapFont *mFont = nullptr;
 
     // Scene
     std::shared_ptr<SceneEntity> mScene;
-    PhongLightingEffectSharedPtr mSceneLightingEffect;
+    std::shared_ptr<PhongShadingEffect> mSceneLightingEffect;
     std::shared_ptr<Light>       mSceneDirectionalLight;
     std::vector<const Light *>   mScenePointLightList;
     std::vector<const Light *>   mSceneSpotLightList;
@@ -47,6 +46,10 @@ private:
     std::shared_ptr<PointLightEntity> mPointLight1;
     std::shared_ptr<PointLightEntity> mPointLight2;
     std::shared_ptr<PointLightEntity> mPointLight3;
+
+    // Nodes
+    std::shared_ptr<Node> mAxeNode;
+    std::shared_ptr<Node> mRoomNode;
 };
 
 }

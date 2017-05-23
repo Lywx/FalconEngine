@@ -8,9 +8,8 @@ namespace FalconEngine
 {
 
 class Spatial;
-using SpatialSharedPtr = std::shared_ptr<Spatial>;
 
-class Visual;
+    class Visual;
 class FALCON_ENGINE_API VisualGroup final
 {
 public:
@@ -21,7 +20,7 @@ public:
     ~VisualGroup();
 
 public:
-    std::vector<SpatialSharedPtr> mVisible;
+    std::vector<std::shared_ptr<Spatial>> mVisible;
 };
 
 }

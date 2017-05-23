@@ -7,12 +7,14 @@ namespace FalconEngine
 /************************************************************************/
 // @param elementNum - the element number
 // @param elementByteNum - the element size in total.
-Buffer::Buffer(size_t elementNum, size_t elementByteNum, BufferUsage usage) :
+Buffer::Buffer(int elementNum, size_t elementByteNum, BufferUsage usage) :
     mElementByteNum(elementByteNum),
     mUsage(usage)
 {
+    assert(elementNum >= 0);
+
     // NOTE(Wuxiang): The capacity is fixed currently.
-    mCapacityByteNum = elementNum * elementByteNum;
+    mCapacityByteNum = size_t(elementNum) * elementByteNum;
     mCapacityElementNum = elementNum;
 
     // NOTE(Wuxiang): The capacity is initially determined by allocation at construction.
@@ -27,5 +29,39 @@ Buffer::~Buffer()
     delete [] mData;
 }
 
+/************************************************************************/
+/* Public Members                                                       */
+/************************************************************************/
+unsigned char *
+Buffer::GetData()
+{
+    return mData;
+}
 
+const unsigned char *
+Buffer::GetData() const
+{
+    return mData;
+}
+
+size_t
+Buffer::GetDataByteNum() const
+{
+    return mDataByteNum;
+}
+
+void
+Buffer::SetElementNum(int elementNum)
+{
+    assert(elementNum >= 0);
+
+    mElementNum = elementNum;
+    mDataByteNum = size_t(mElementByteNum) * mElementNum;
+}
+
+BufferUsage
+Buffer::GetUsage() const
+{
+    return mUsage;
+}
 }

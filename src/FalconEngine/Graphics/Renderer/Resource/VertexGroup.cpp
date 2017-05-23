@@ -17,6 +17,22 @@ VertexGroup::~VertexGroup()
 {
 }
 
+/************************************************************************/
+/* Public Members                                                       */
+/************************************************************************/
+void
+VertexGroup::ClearVertexBuffer()
+{
+    mVertexBufferTable.clear();
+}
+
+bool
+VertexGroup::ContainVertexBuffer(int bindingIndex, std::shared_ptr<VertexBuffer> vertexBuffer)
+{
+    return mVertexBufferTable.find(bindingIndex) != mVertexBufferTable.end()
+           && mVertexBufferTable.at(bindingIndex).GetBuffer() == vertexBuffer.get();
+}
+
 size_t
 VertexGroup::GetVertexNum() const
 {
@@ -29,7 +45,7 @@ VertexGroup::GetVertexNum() const
 }
 
 void
-VertexGroup::SetVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer, int offset, int stride)
+VertexGroup::SetVertexBuffer(int bindingIndex, std::shared_ptr<VertexBuffer> vertexBuffer, int offset, int stride)
 {
     FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
 

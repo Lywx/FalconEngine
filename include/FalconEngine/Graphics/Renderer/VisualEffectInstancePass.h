@@ -9,9 +9,9 @@ namespace FalconEngine
 {
 
 class Sampler;
+
 class Shader;
 class ShaderUniform;
-using ShaderUniformSharedPtr = std::shared_ptr<ShaderUniform>;
 
 class Texture;
 
@@ -39,7 +39,7 @@ public:
     // actually drawing so that sharing uniform table might overwrite previously
     // unsynchronized value.
     void
-    SetShaderUniform(ShaderUniformSharedPtr shaderUniform);
+    SetShaderUniform(std::shared_ptr<ShaderUniform> shaderUniform);
 
     void
     SetShaderTexture(int textureUnit, const Texture *texture);
@@ -49,6 +49,12 @@ public:
 
     Shader *
     GetShader() const;
+
+    int
+    GetShaderInstancingNum() const;
+
+    void
+    SetShaderInstancingNum(int instancingNum);
 
     int
     GetShaderUniformNum() const;
@@ -84,11 +90,11 @@ private:
     // VisualEffectInstancePass must be disposed before.
     //
     // So there is no way for dangling pointer to affect this 'mShader' field.
-    Shader                             *mShader;
-    std::vector<ShaderUniformSharedPtr> mShaderUniformList;
-
-    std::map<int, const Texture *>      mShaderTextureTable;
-    std::map<int, const Sampler *>      mShaderSamplerTable;
+    Shader                                     *mShader;
+    int                                         mShaderInstancingNum;
+    std::map<int, const Sampler *>              mShaderSamplerTable;
+    std::map<int, const Texture *>              mShaderTextureTable;
+    std::vector<std::shared_ptr<ShaderUniform>> mShaderUniformList;
 
     friend class Renderer;
 };

@@ -2,31 +2,24 @@
 
 #include <FalconEngine/Graphics/Header.h>
 
-#include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
+#include <FalconEngine/Graphics/Renderer/Primitive.h>
 
 namespace FalconEngine
 {
 
 class IndexBuffer;
-using IndexBufferSharedPtr = std::shared_ptr<IndexBuffer>;
 
 class Material;
-using MaterialSharedPtr = std::shared_ptr<Material>;
 
 class PrimitiveTriangles;
-using PrimitiveTrianglesSharedPtr = std::shared_ptr<PrimitiveTriangles>;
 
 class VertexBuffer;
-using VertexBufferSharedPtr = std::shared_ptr<VertexBuffer>;
-
 class VertexFormat;
-using VertexFormatSharedPtr = std::shared_ptr<VertexFormat>;
-
 class VertexGroup;
-using VertexGroupSharedPtr = std::shared_ptr<VertexGroup>;
 
+// @summary Represents bundle of geometry and all the metadata used in rendering.
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_API Mesh : public Visual
+class FALCON_ENGINE_API Mesh : public Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
@@ -34,7 +27,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit Mesh(PrimitiveTrianglesSharedPtr primitive, MaterialSharedPtr material);
+    explicit Mesh(std::shared_ptr<Primitive> primitive, std::shared_ptr<Material> material);
     virtual ~Mesh();
 
 protected:
@@ -44,11 +37,20 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
+    const BoundingBox *
+    GetBoundingBox() const;
+
     const Material *
     GetMaterial() const;
 
     void
-    SetMaterial(MaterialSharedPtr material);
+    SetMaterial(std::shared_ptr<Material> material);
+
+    const Primitive *
+    GetPrimitive() const;
+
+    std::shared_ptr<Primitive>
+    GetPrimitive();
 
     /************************************************************************/
     /* Deep and Shallow Copy                                                */
@@ -57,10 +59,11 @@ public:
     CopyTo(Mesh *lhs) const;
 
     virtual Mesh *
-    GetClone() const override;
+    GetClone() const;
 
 protected:
-    MaterialSharedPtr mMaterial;
+    std::shared_ptr<Material>  mMaterial;
+    std::shared_ptr<Primitive> mPrimitive;
 };
 #pragma warning(default: 4251)
 

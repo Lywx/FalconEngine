@@ -7,7 +7,7 @@ namespace FalconEngine
 {
 
 void
-GameEnginePlatform::InitializePlatform(GameEngineDataSharedPtr gameEngineData)
+GameEnginePlatform::InitializePlatform(GameEngineData *gameEngineData)
 {
     GLFWwindow *window = nullptr;
 

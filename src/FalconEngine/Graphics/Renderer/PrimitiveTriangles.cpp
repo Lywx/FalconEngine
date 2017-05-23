@@ -1,5 +1,6 @@
 #include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
 #include <FalconEngine/Graphics/Renderer/Resource/IndexBuffer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
 
 namespace FalconEngine
@@ -10,18 +11,19 @@ FALCON_ENGINE_RTTI_IMPLEMENT(PrimitiveTriangles, Primitive);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PrimitiveTriangles::PrimitiveTriangles(VertexFormatSharedPtr vertexFormat) :
-    Primitive(PrimitiveType::Triangle, vertexFormat)
+PrimitiveTriangles::PrimitiveTriangles(PrimitiveType primitiveType, std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer) :
+    Primitive(primitiveType, vertexBuffer, indexBuffer)
 {
+    if (primitiveType == PrimitiveType::Triangle
+            || primitiveType == PrimitiveType::TriangleStrip
+            || primitiveType == PrimitiveType::TriangleFan)
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Primitive type is not triangle type.");
+    }
 }
 
-PrimitiveTriangles::PrimitiveTriangles(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup) :
-    PrimitiveTriangles(vertexFormat, vertexGroup, nullptr)
-{
-}
-
-PrimitiveTriangles::PrimitiveTriangles(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer) :
-    Primitive(PrimitiveType::Triangle, vertexFormat, vertexGroup, indexBuffer)
+PrimitiveTriangles::PrimitiveTriangles(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer) :
+    Primitive(PrimitiveType::Triangle, vertexBuffer, indexBuffer)
 {
 }
 
@@ -35,13 +37,53 @@ PrimitiveTriangles::~PrimitiveTriangles()
 size_t
 PrimitiveTriangles::GetTriangleNum() const
 {
-    if (mIndexBuffer)
+    switch (mPrimitiveType)
     {
-        return mIndexBuffer->GetElementNum() / 3;
+    case PrimitiveType::Triangle:
+    {
+        if (mIndexBuffer)
+        {
+            return mIndexBuffer->GetElementNum() / 3;
+        }
+        else
+        {
+            return mVertexBuffer->GetElementNum() / 3;
+        }
     }
-    else
+
+    break;
+
+    case PrimitiveType::TriangleStrip:
     {
-        return mVertexGroup->GetVertexNum() / 3;
+        if (mIndexBuffer)
+        {
+            return mIndexBuffer->GetElementNum() - 2;
+        }
+        else
+        {
+            return mVertexBuffer->GetElementNum() - 2;
+        }
+    }
+
+    break;
+
+    case PrimitiveType::TriangleFan:
+    {
+        // http://stackoverflow.com/questions/8043923/gl-triangle-fan-explanation
+        if (mIndexBuffer)
+        {
+            return mIndexBuffer->GetElementNum() - 2;
+        }
+        else
+        {
+            return mVertexBuffer->GetElementNum() - 2;
+        }
+    }
+
+    break;
+
+    default:
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("");
     }
 }
 

@@ -12,10 +12,8 @@ namespace FalconEngine
 {
 
 class Sampler;
-using SamplerSharedPtr = std::shared_ptr<Sampler>;
 
 class Node;
-using NodeSharedPtr = std::shared_ptr<Node>;
 
 using ModelIndex = int;
 
@@ -43,14 +41,14 @@ public:
     const Node *
     GetNode() const;
 
-    NodeSharedPtr
+    std::shared_ptr<Node>
     GetNode();
 
     void
-    SetNode(NodeSharedPtr node);
+    SetNode(std::shared_ptr<Node> node);
 
     void
-    SetSampler(SamplerSharedPtr sampler);
+    SetSampler(std::shared_ptr<Sampler> sampler);
 
     const Sampler *
     GetSampler() const;
@@ -66,8 +64,8 @@ public:
     /* Model Runtime Data                                                   */
     /************************************************************************/
 private:
-    NodeSharedPtr    mNode;                                            // Model root node.
-    SamplerSharedPtr mSampler;                                         // Model texture sampler.
+    std::shared_ptr<Node> mNode;                                            // Model root node.
+    std::shared_ptr<Sampler> mSampler;                                         // Model texture sampler.
 };
 #pragma warning(default: 4251)
 

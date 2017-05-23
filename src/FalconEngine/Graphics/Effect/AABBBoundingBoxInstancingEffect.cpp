@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Effect/AABBBoundingBoxEffect.h>
+#include <FalconEngine/Graphics/Effect/AABBBoundingBoxInstancingEffect.h>
 
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
@@ -17,16 +17,16 @@ using namespace std;
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(AABBBoundingBoxEffect, VisualEffect);
+FALCON_ENGINE_RTTI_IMPLEMENT(AABBBoundingBoxInstancingEffect, VisualEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-AABBBoundingBoxEffect::AABBBoundingBoxEffect()
+AABBBoundingBoxInstancingEffect::AABBBoundingBoxInstancingEffect()
 {
     auto shader = std::make_shared<Shader>();
-    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shaders/BoundingBox.vert.glsl");
-    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shaders/BoundingBox.frag.glsl");
+    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/AABBBoundingBoxInstancing.vert.glsl");
+    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shader/AABBBoundingBoxInstancing.frag.glsl");
 
     auto pass = make_unique<VisualEffectPass>();
     pass->SetShader(shader);
@@ -55,7 +55,7 @@ AABBBoundingBoxEffect::AABBBoundingBoxEffect()
     InsertPass(move(pass));
 }
 
-AABBBoundingBoxEffect::~AABBBoundingBoxEffect()
+AABBBoundingBoxInstancingEffect::~AABBBoundingBoxInstancingEffect()
 {
 }
 
@@ -63,36 +63,40 @@ AABBBoundingBoxEffect::~AABBBoundingBoxEffect()
 /* Public Members                                                       */
 /************************************************************************/
 void
-AABBBoundingBoxEffect::CreateInstance(VisualEffectInstance *instance, const Camera * /* camera */) const
+AABBBoundingBoxInstancingEffect::CreateInstance(VisualEffectInstance *instance, const Camera * /* camera */) const
 {
     CheckEffectCompatible(instance);
 }
 
-VertexFormatSharedPtr
-AABBBoundingBoxEffect::CreateVertexFormat()
+std::shared_ptr<VertexFormat>
+AABBBoundingBoxInstancingEffectCreateVertexFormat()
 {
-    static VertexFormatSharedPtr sVertexFormat;
-    if (sVertexFormat == nullptr)
-    {
-        sVertexFormat = std::make_shared<VertexFormat>();
+    auto vertexFormat = std::make_shared<VertexFormat>();
 
-        // NOTE(Wuxiang): Fixed vertex data. No instancing.
-        sVertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
+    // NOTE(Wuxiang): Fixed vertex data. No instancing.
+    vertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
 
-        // NOTE(Wuxiang): Each bounding box has only one color, used with instancing.
-        sVertexFormat->PushVertexAttribute(1, "Color", VertexAttributeType::FloatVec4, false, 1, 1);
+    // NOTE(Wuxiang): Each bounding box has only one color, used with instancing.
+    vertexFormat->PushVertexAttribute(1, "Color", VertexAttributeType::FloatVec4, false, 1, 1);
 
-        // NOTE(Wuxiang): Transform matrix would use instancing. Different transformation
-        // buffer would be used to provide the matrix data.
-        sVertexFormat->PushVertexAttribute(2, "ModelViewProjectionTransform", VertexAttributeType::FloatVec4, false, 1, 1);
+    // NOTE(Wuxiang): Transform matrix would use instancing. Different transformation
+    // buffer would be used to provide the matrix data.
+    vertexFormat->PushVertexAttribute(2, "ModelViewProjectionTransform", VertexAttributeType::FloatVec4, false, 1, 1);
 
-        // NOTE(Wuxiang): The name is not meant to be valid for mat4.
-        sVertexFormat->PushVertexAttribute(3, "", VertexAttributeType::FloatVec4, false, 1, 1);
-        sVertexFormat->PushVertexAttribute(4, "", VertexAttributeType::FloatVec4, false, 1, 1);
-        sVertexFormat->PushVertexAttribute(5, "", VertexAttributeType::FloatVec4, false, 1, 1);
-        sVertexFormat->FinishVertexAttribute();
-    }
+    // NOTE(Wuxiang): The name is not meant to be valid for mat4.
+    vertexFormat->PushVertexAttribute(3, "", VertexAttributeType::FloatVec4, false, 1, 1);
+    vertexFormat->PushVertexAttribute(4, "", VertexAttributeType::FloatVec4, false, 1, 1);
+    vertexFormat->PushVertexAttribute(5, "", VertexAttributeType::FloatVec4, false, 1, 1);
+    vertexFormat->FinishVertexAttribute();
 
+    return vertexFormat;
+}
+
+std::shared_ptr<VertexFormat>
+AABBBoundingBoxInstancingEffect::GetVertexFormat() const
+{
+    static std::shared_ptr<VertexFormat> sVertexFormat = AABBBoundingBoxInstancingEffectCreateVertexFormat();
     return sVertexFormat;
 }
+
 }

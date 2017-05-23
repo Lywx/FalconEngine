@@ -5,9 +5,7 @@
 #include <assimp/scene.h>
 
 #include <FalconEngine/Content/AssetManager.h>
-
 #include <FalconEngine/Core/Path.h>
-
 #include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/IndexBuffer.h>
@@ -20,7 +18,7 @@
 #include <FalconEngine/Graphics/Renderer/Scene/Mesh.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Model.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Node.h>
-
+#include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Math/Bound/AABBBoundingBox.h>
 
 using namespace std;
@@ -28,10 +26,9 @@ using namespace std;
 namespace FalconEngine
 {
 
-using AABBBoundingBoxSharedPtr = shared_ptr<AABBBoundingBox>;
 
-AABBBoundingBoxSharedPtr
-CreateMeshAABBBoundingBox(const aiMesh *aiMesh)
+std::shared_ptr<BoundingBox>
+CreateBoundingBox(const aiMesh *aiMesh)
 {
     if (!aiMesh->mVertices)
     {
@@ -52,8 +49,8 @@ CreateMeshAABBBoundingBox(const aiMesh *aiMesh)
     return boundingBox;
 }
 
-IndexBufferSharedPtr
-CreateMeshIndexBuffer(const aiMesh *mesh)
+std::shared_ptr<IndexBuffer>
+CreateIndexBuffer(const aiMesh *mesh)
 {
     // Sum space for the index buffer memory allocation.
     int indexNum = 0;
@@ -86,8 +83,8 @@ CreateMeshIndexBuffer(const aiMesh *mesh)
     return indexBuffer;
 }
 
-VertexGroupSharedPtr
-CreateMeshVertexGroup(const aiMesh *aiMesh)
+std::shared_ptr<VertexBuffer>
+CreateVertexBuffer(const aiMesh *aiMesh)
 {
     // Memory allocation for vertex buffer.
     auto vertexNum = int(aiMesh->mNumVertices);
@@ -143,10 +140,7 @@ CreateMeshVertexGroup(const aiMesh *aiMesh)
         vertexData[vertexIndex] = vertex;
     }
 
-    // TODO(Wuxiang): Should I change the binding index?
-    auto vertexGroup = make_shared<VertexGroup>();
-    vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, sizeof(ModelVertex));
-    return vertexGroup;
+    return vertexBuffer;
 }
 
 Texture2d *
@@ -205,7 +199,7 @@ LoadMaterialFloat(aiMaterial *aiMaterial, const char *param1, int param2, int pa
 
 }
 
-MaterialSharedPtr
+std::shared_ptr<Material>
 CreateMaterial(
     _IN_ const string&  modelDirectoryPath,
     _IN_ const aiScene *aiScene,
@@ -232,35 +226,18 @@ CreateMaterial(
     return material;
 }
 
-VertexFormatSharedPtr
-CreateMeshVertexFormat()
-{
-    shared_ptr<VertexFormat> static sVertexFormat;
-    if (sVertexFormat == nullptr)
-    {
-        sVertexFormat = make_shared<VertexFormat>();
-        sVertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
-        sVertexFormat->PushVertexAttribute(1, "Normal", VertexAttributeType::FloatVec3, false, 0);
-        sVertexFormat->PushVertexAttribute(2, "TexCoord", VertexAttributeType::FloatVec2, false, 0);
-        sVertexFormat->FinishVertexAttribute();
-    }
-
-    return sVertexFormat;
-}
-
-MeshSharedPtr
+std::shared_ptr<Mesh>
 CreateMesh(
-    _IN_ const string&  modelDirectoryPath,
+    _IN_ const string& modelDirectoryPath,
     _IN_ const aiScene *aiScene,
-    _IN_ const aiMesh  *aiMesh)
+    _IN_ const aiMesh *aiMesh)
 {
     // Load vertex and index data.
-    auto boundingBox  = CreateMeshAABBBoundingBox(aiMesh);
-    auto indexBuffer  = CreateMeshIndexBuffer(aiMesh);
-    auto vertexFormat = CreateMeshVertexFormat();
-    auto vertexGroup  = CreateMeshVertexGroup(aiMesh);
+    auto vertexBuffer = CreateVertexBuffer(aiMesh);
+    auto indexBuffer = CreateIndexBuffer(aiMesh);
+    auto primitive = make_shared<PrimitiveTriangles>(vertexBuffer, indexBuffer);
 
-    auto primitive = make_shared<PrimitiveTriangles>(vertexFormat, vertexGroup, indexBuffer);
+    auto boundingBox = CreateBoundingBox(aiMesh);
     primitive->SetBoundingBox(boundingBox);
 
     // Load texture data in term of material.
@@ -269,11 +246,22 @@ CreateMesh(
     return make_shared<Mesh>(primitive, material);
 }
 
-NodeSharedPtr
-CreateNode(
-    _IN_ const string&  modelDirectoryPath,
+std::shared_ptr<Visual>
+CreateVisual(
+    _IN_ const string& modelDirectoryPath,
     _IN_ const aiScene *aiScene,
-    _IN_ const aiNode  *aiNode)
+    _IN_ const aiMesh *aiMesh)
+{
+    // Create visual without vertex format and vertex group.
+    auto visual = make_shared<Visual>(CreateMesh(modelDirectoryPath, aiScene, aiMesh));
+    return visual;
+}
+
+std::shared_ptr<Node>
+CreateNode(
+    _IN_ const string& modelDirectoryPath,
+    _IN_ const aiScene *aiScene,
+    _IN_ const aiNode *aiNode)
 {
     auto node = make_shared<Node>();
 
@@ -289,7 +277,7 @@ CreateNode(
     {
         // The node object only contains indices to index the actual objects in the scene.
         // The scene contains all the data, node is just to keep stuff organized (like relations between nodes).
-        node->AttachChild(CreateMesh(modelDirectoryPath, aiScene, aiScene->mMeshes[aiNode->mMeshes[i]]));
+        node->AttachChild(CreateVisual(modelDirectoryPath, aiScene, aiScene->mMeshes[aiNode->mMeshes[i]]));
     }
 
     // After we've processed all of the meshes (if any) we then recursively process each of the children nodes

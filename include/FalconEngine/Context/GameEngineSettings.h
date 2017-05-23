@@ -10,12 +10,31 @@ class FALCON_ENGINE_API GameEngineSettings
 {
 public:
     /************************************************************************/
+    /* Static Members                                                       */
+    /************************************************************************/
+    static GameEngineSettings *
+    GetInstance()
+    {
+        static GameEngineSettings sInstance;
+        return &sInstance;
+    }
+
+    /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
     GameEngineSettings();
     virtual ~GameEngineSettings() = default;
 
 public:
+    /************************************************************************/
+    /* Content                                                              */
+    /************************************************************************/
+    std::string mContentDirectory;
+    std::string mShaderDirectory;
+
+    /************************************************************************/
+    /* Display                                                              */
+    /************************************************************************/
     double      mFrameElapsedMillisecond;
 
     bool        mMouseLimited;

@@ -5,6 +5,7 @@
 namespace FalconEngine
 {
 
+// @summary Represents line or line strips.
 class FALCON_ENGINE_API PrimitiveLines : public Primitive
 {
     FALCON_ENGINE_RTTI_DECLARE;
@@ -13,7 +14,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    PrimitiveLines(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, bool vertexStrip = false);
+    PrimitiveLines(std::shared_ptr<VertexBuffer> vertexBuffer, bool vertexStrip);
     virtual ~PrimitiveLines();
 
 public:

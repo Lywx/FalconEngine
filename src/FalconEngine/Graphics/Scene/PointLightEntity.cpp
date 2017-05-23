@@ -6,7 +6,7 @@ namespace FalconEngine
 
 FALCON_ENGINE_RTTI_IMPLEMENT(PointLightEntity, Entity);
 
-PointLightEntity::PointLightEntity(const NodeSharedPtr node) :
+PointLightEntity::PointLightEntity(const std::shared_ptr<Node> node) :
     SceneEntity(node),
     mLight(std::make_shared<Light>(LightType::Point))
 {
@@ -21,7 +21,7 @@ PointLightEntity::PointLightEntity(const NodeSharedPtr node) :
     SetScale(Vector3f(0.25f, 0.25f, 0.25f));
 }
 
-PointLightEntity::PointLightEntity(const NodeSharedPtr node, const LightSharedPtr light) :
+PointLightEntity::PointLightEntity(const std::shared_ptr<Node> node, const LightSharedPtr light) :
     SceneEntity(node),
     mLight(light)
 {

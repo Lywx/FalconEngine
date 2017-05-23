@@ -31,7 +31,7 @@ Node::~Node()
 /* Public Members                                                       */
 /************************************************************************/
 int
-Node::AttachChild(SpatialSharedPtr child)
+Node::AttachChild(std::shared_ptr<Spatial> child)
 {
     FALCON_ENGINE_CHECK_NULLPTR(child);
 
@@ -44,9 +44,9 @@ Node::AttachChild(SpatialSharedPtr child)
 
     // Insert the child in the first available slot (if any).
     auto slotIndex = 0;
-    for (auto iter = mChildrenSlot.begin(); iter != mChildrenSlot.end(); ++iter, ++slotIndex)
+    for (auto slotIter = mChildrenSlot.begin(); slotIter != mChildrenSlot.end(); ++slotIter, ++slotIndex)
     {
-        auto& slot = *iter;
+        auto& slot = *slotIter;
 
         // Find a available slot
         if (slot == nullptr)
@@ -63,14 +63,14 @@ Node::AttachChild(SpatialSharedPtr child)
 }
 
 int
-Node::DetachChild(SpatialSharedPtr child)
+Node::DetachChild(std::shared_ptr<Spatial> child)
 {
     if (child)
     {
         auto slotIndex = 0;
-        for (auto iter = mChildrenSlot.begin(); iter != mChildrenSlot.end(); ++iter, ++slotIndex)
+        for (auto slotIter = mChildrenSlot.begin(); slotIter != mChildrenSlot.end(); ++slotIter, ++slotIndex)
         {
-            auto& slot = *iter;
+            auto& slot = *slotIter;
             if (slot == child)
             {
                 slot->mParent = nullptr;
@@ -92,7 +92,7 @@ Node::DetachChild(SpatialSharedPtr child)
     return -1;
 }
 
-SpatialSharedPtr
+std::shared_ptr<Spatial>
 Node::DetachChildAt(int slotIndex)
 {
     if (0 <= slotIndex && slotIndex < GetChildrenSlotNum())
@@ -112,6 +112,12 @@ Node::DetachChildAt(int slotIndex)
     return nullptr;
 }
 
+void
+Node::ClearChildrenSlot()
+{
+    mChildrenSlot.clear();
+}
+
 const Spatial *
 Node::GetChildAt(int slotIndex) const
 {
@@ -123,7 +129,7 @@ Node::GetChildAt(int slotIndex) const
     FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The slot index out of bound.");
 }
 
-SpatialSharedPtr
+std::shared_ptr<Spatial>
 Node::GetChildAt(int slotIndex)
 {
     if (0 <= slotIndex && slotIndex < GetChildrenSlotNum())
@@ -134,8 +140,8 @@ Node::GetChildAt(int slotIndex)
     FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The slot index out of bound.");
 }
 
-SpatialSharedPtr
-Node::SetChildAt(int slotIndex, SpatialSharedPtr child)
+std::shared_ptr<Spatial>
+Node::SetChildAt(int slotIndex, std::shared_ptr<Spatial> child)
 {
     // NOTE(Wuxiang): The child is allowed to be null so that you would be able
     // to clear the child from the children list.
@@ -222,24 +228,30 @@ Node::CopyTo(Node *lhs) const
     Spatial::CopyTo(lhs);
 
     // Clear existing children.
-    for (auto slot : lhs->mChildrenSlot)
     {
-        if (auto child = slot)
+        int slotNum = lhs->GetChildrenSlotNum();
+        for (int slotIndex = 0; slotIndex < slotNum; ++slotIndex)
         {
-            child->mParent = nullptr;
+            if (auto child = lhs->GetChildAt(slotIndex))
+            {
+                child->SetParent(nullptr);
+            }
         }
+
+        lhs->ClearChildrenSlot();
     }
 
-    lhs->mChildrenSlot.clear();
-
     // Create new children.
-    for (int slotIndex = 0; slotIndex < GetChildrenSlotNum(); ++slotIndex)
     {
-        auto slot = GetChildAt(slotIndex);
-        if (auto child = slot)
+        int slotNum = GetChildrenSlotNum();
+        for (int slotIndex = 0; slotIndex < slotNum; ++slotIndex)
         {
-            auto childClone = child->GetClone();
-            lhs->SetChildAt(slotIndex, shared_ptr<Spatial>(childClone));
+            auto slot = GetChildAt(slotIndex);
+            if (auto child = slot)
+            {
+                auto childClone = child->GetClone();
+                lhs->SetChildAt(slotIndex, shared_ptr<Spatial>(childClone));
+            }
         }
     }
 }
@@ -249,6 +261,14 @@ Node::GetClone() const
 {
     auto clone = new Node();
     CopyTo(clone);
+    return clone;
+}
+
+Node *
+Node::GetClone(std::function<void(Node *lhs, Node *rhs)> copyTo)
+{
+    auto clone = new Node();
+    copyTo(clone, this);
     return clone;
 }
 

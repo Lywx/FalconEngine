@@ -6,8 +6,6 @@ namespace FalconEngine
 {
 
 class Mesh;
-using MeshSharedPtr = std::shared_ptr<Mesh>;
-
 class Model;
 
 class FALCON_ENGINE_API AssetImporter

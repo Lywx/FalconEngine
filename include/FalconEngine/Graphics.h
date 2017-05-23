@@ -5,9 +5,9 @@
 
 #include <FalconEngine/Graphics/Header.h>
 
-#include <FalconEngine/Graphics/Effect/AABBBoundingBoxEffect.h>
-#include <FalconEngine/Graphics/Effect/BitmapFontEffect.h>
-#include <FalconEngine/Graphics/Effect/PhongLightingEffect.h>
+#include <FalconEngine/Graphics/Effect/AABBBoundingBoxInstancingEffect.h>
+#include <FalconEngine/Graphics/Effect/PhongShadingEffect.h>
+#include <FalconEngine/Graphics/Effect/SignedDistancedFieldFontEffect.h>
 
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
@@ -51,7 +51,6 @@
 #include <FalconEngine/Graphics/Renderer/Scene/Light.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Material.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Mesh.h>
-#include <FalconEngine/Graphics/Renderer/Scene/MeshEffect.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Model.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Node.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Spatial.h>

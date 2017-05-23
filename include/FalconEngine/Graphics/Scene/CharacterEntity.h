@@ -13,7 +13,7 @@ class FALCON_ENGINE_API CharacterEntity : public SceneEntity
     FALCON_ENGINE_RTTI_DECLARE;
 
 public:
-    explicit CharacterEntity(const NodeSharedPtr node);
+    explicit CharacterEntity(const std::shared_ptr<Node> node);
     virtual ~CharacterEntity();
 };
 

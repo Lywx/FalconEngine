@@ -15,10 +15,7 @@ namespace FalconEngine
 /* Engine Resource                                                      */
 /************************************************************************/
 class GameEngineData;
-using GameEngineDataSharedPtr = std::shared_ptr<GameEngineData>;
-
 class GameEngineSettings;
-using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
 
 /************************************************************************/
 /* Rendering Pipeline                                                   */
@@ -97,7 +94,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Renderer(GameEngineDataSharedPtr gameEngineData, GameEngineSettingsSharedPtr gameEngineSettings);
+    Renderer(GameEngineData *gameEngineData, GameEngineSettings *gameEngineSettings);
     ~Renderer();
 
     using PlatformVertexBufferMap   = std::map<const VertexBuffer *, PlatformVertexBuffer *>;
@@ -116,7 +113,7 @@ private:
     /* Initialization and Destroy                                           */
     /************************************************************************/
     void
-    InitializeData(GameEngineSettingsSharedPtr gameEngineSettings);
+    InitializeData(GameEngineSettings *gameEngineSettings);
 
     void
     DestroyData();
@@ -368,7 +365,7 @@ public:
 
     // @summary Draw single instance of visual.
     void
-    Draw(const Camera *camera, const Visual *visual, VisualEffectInstance *effectInstance);
+    Draw(const Camera *camera, const Visual *visual, VisualEffectInstance *visualEffectInstance);
 
 private:
     /************************************************************************/
@@ -412,7 +409,7 @@ private:
     /* Initialization and Destroy                                           */
     /************************************************************************/
     void
-    InitializePlatform(GameEngineDataSharedPtr data);
+    InitializePlatform(GameEngineData *data);
 
     void
     DestroyPlatform();
@@ -474,7 +471,7 @@ public:
     /* Draw                                                                 */
     /************************************************************************/
     void
-    DrawPrimitivePlatform(const Primitive *primitive, size_t primitiveInstancingNum);
+    DrawPrimitivePlatform(const Primitive *primitive, int instancingNum);
 
 private:
     std::unique_ptr<PlatformRendererData, PlatformRendererDataDeleter> mData;

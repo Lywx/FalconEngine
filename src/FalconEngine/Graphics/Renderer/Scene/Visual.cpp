@@ -1,26 +1,34 @@
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 
 #include <FalconEngine/Graphics/Renderer/Primitive.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
 
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(Visual, Object);
+FALCON_ENGINE_RTTI_IMPLEMENT(Visual, Spatial);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Visual::Visual(PrimitiveSharedPtr primitive) :
-    mEffectInstance(),
-    mEffectInstancingNum(1),
-    mPrimitive(primitive)
+Visual::Visual(std::shared_ptr<Mesh> mesh) :
+    mMesh(mesh)
 {
 }
 
-Visual::Visual() :
-    mEffectInstance(),
-    mEffectInstancingNum(1),
-    mPrimitive()
+Visual::Visual(std::shared_ptr<Mesh> mesh,
+               std::shared_ptr<VertexFormat> vertexFormat,
+               std::shared_ptr<VertexGroup> vertexGroup) :
+    mMesh(mesh),
+    mInstance(),
+    mVertexFormat(vertexFormat),
+    mVertexGroup(vertexGroup)
+{
+}
+
+Visual::Visual()
 {
 }
 
@@ -31,52 +39,92 @@ Visual::~Visual()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-const BoundingBox *
-Visual::GetBoundingBox() const
+
+/************************************************************************/
+/* Effect Management                                                    */
+/************************************************************************/
+const VisualEffectInstance *
+Visual::GetInstance() const
 {
-    return mPrimitive->GetBoundingBox();
+    return mInstance.get();
 }
 
-VisualEffectInstance *
-Visual::GetEffectInstance() const
+std::shared_ptr<VisualEffectInstance>
+Visual::GetInstance()
 {
-    return mEffectInstance.get();
+    return mInstance;
 }
 
 void
-Visual::SetEffectInstance(VisualEffectInstanceSharedPtr effectInstance)
+Visual::SetInstance(std::shared_ptr<VisualEffectInstance> effectInstance)
 {
     FALCON_ENGINE_CHECK_NULLPTR(effectInstance);
 
-    mEffectInstance = effectInstance;
+    mInstance = effectInstance;
 }
 
-const Primitive *
-Visual::GetPrimitive() const
+const VertexFormat *
+Visual::GetVertexFormat() const
 {
-    return mPrimitive.get();
+    return mVertexFormat.get();
+}
+
+std::shared_ptr<VertexFormat>
+Visual::GetVertexFormat()
+{
+    return mVertexFormat;
 }
 
 void
-Visual::SetPrimitive(PrimitiveSharedPtr primitive)
+Visual::SetVertexFormat(std::shared_ptr<VertexFormat> vertexFormat)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(primitive);
-
-    mPrimitive = primitive;
+    mVertexFormat = vertexFormat;
 }
 
-size_t
-Visual::GetEffectInstancingNum() const
+const VertexGroup *
+Visual::GetVertexGroup() const
 {
-    return mEffectInstancingNum;
+    return mVertexGroup.get();
+}
+
+std::shared_ptr<VertexGroup>
+Visual::GetVertexGroup()
+{
+    return mVertexGroup;
 }
 
 void
-Visual::SetEffectInstancingNum(size_t effectInstancingNum)
+Visual::SetVertexGroup(std::shared_ptr<VertexGroup> vertexGroup)
 {
-    mEffectInstancingNum = effectInstancingNum;
+    mVertexGroup = vertexGroup;
 }
 
+/************************************************************************/
+/* Mesh Management                                                      */
+/************************************************************************/
+const Mesh *
+Visual::GetMesh() const
+{
+    return mMesh.get();
+}
+
+std::shared_ptr<Mesh>
+Visual::GetMesh()
+{
+    return mMesh;
+}
+
+void
+Visual::SetMesh(std::shared_ptr<Mesh> mesh)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(mesh);
+
+    mMesh = mesh;
+}
+
+/************************************************************************/
+/* Spatial Management                                                   */
+/************************************************************************/
 void
 Visual::UpdateWorldTransform(double elapsed)
 {
@@ -91,9 +139,10 @@ Visual::CopyTo(Visual *lhs) const
 {
     Spatial::CopyTo(lhs);
 
-    lhs->mEffectInstance = mEffectInstance;
-    lhs->mEffectInstancingNum = mEffectInstancingNum;
-    lhs->mPrimitive = mPrimitive;
+    lhs->mInstance = mInstance;
+    lhs->mVertexFormat = mVertexFormat;
+    lhs->mVertexGroup = mVertexGroup;
+    lhs->mMesh = mMesh;
 }
 
 Visual *
@@ -101,6 +150,14 @@ Visual::GetClone() const
 {
     auto clone = new Visual();
     CopyTo(clone);
+    return clone;
+}
+
+Visual *
+Visual::GetClone(std::function<void(Visual *lhs, Visual *rhs)> copyTo)
+{
+    auto clone = new Visual();
+    copyTo(clone, this);
     return clone;
 }
 

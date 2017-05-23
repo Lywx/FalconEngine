@@ -8,11 +8,8 @@
 namespace FalconEngine
 {
 
-class GameEngineSettings;
-using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
-
 class GameEngineData;
-using GameEngineDataSharedPtr = std::shared_ptr<GameEngineData>;
+class GameEngineSettings;
 
 class FALCON_ENGINE_API GameEngineProfiler
 {
@@ -41,7 +38,7 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Initialize(GameEngineDataSharedPtr gameEngineData, GameEngineSettingsSharedPtr gameEngineSettings);
+    Initialize(GameEngineData *gameEngineData, GameEngineSettings *gameEngineSettings);
 
     double
     GetLastFrameElapsedMillisecond() const

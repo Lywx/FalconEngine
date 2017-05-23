@@ -7,11 +7,8 @@
 namespace FalconEngine
 {
 
-class GameEngineSettings;
-using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
-
 class GameEngineData;
-using GameEngineDataSharedPtr = std::shared_ptr<GameEngineData>;
+class GameEngineSettings;
 
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API GameEnginePlatform
@@ -37,17 +34,17 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Initialize(GameEngineDataSharedPtr gameEngineData, GameEngineSettingsSharedPtr gameEngineSettings);
+    Initialize(GameEngineData *gameEngineData, GameEngineSettings *gameEngineSettings);
 
 private:
     void
     InitializeData();
 
     void
-    InitializePlatform(GameEngineDataSharedPtr gameEngineData);
+    InitializePlatform(GameEngineData *gameEngineData);
 
 private:
-    GameEngineSettingsSharedPtr mGameEngineSettings;
+    GameEngineSettings *mGameEngineSettings;
 };
 #pragma warning(default: 4251)
 

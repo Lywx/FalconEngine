@@ -9,10 +9,7 @@ namespace FalconEngine
 {
 
 class GameEngineData;
-using GameEngineDataSharedPtr = std::shared_ptr<GameEngineData>;
-
 class GameEngineSettings;
-using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
 
 class KeyboardState;
 using KeyboardStateSharedPtr = std::shared_ptr<KeyboardState>;
@@ -59,7 +56,7 @@ public:
 
 public:
     void
-    Initialize(GameEngineDataSharedPtr gameEngineData, GameEngineSettingsSharedPtr gameEngineSettings);
+    Initialize(GameEngineData *gameEngineData, GameEngineSettings *gameEngineSettings);
 
     // @remark Update gets called every frame by game engine.
     void
@@ -84,8 +81,8 @@ private:
     KeyboardStateSharedPtr                                                       mKeyboardState;
     MouseStateSharedPtr                                                          mMouseState;
 
-    GameEngineDataSharedPtr                                                      mGameEngineData;
-    GameEngineSettingsSharedPtr                                                  mGameEngineSettings;
+    GameEngineData                                                      *mGameEngineData;
+    GameEngineSettings                                                  *mGameEngineSettings;
 };
 #pragma warning(default: 4251)
 

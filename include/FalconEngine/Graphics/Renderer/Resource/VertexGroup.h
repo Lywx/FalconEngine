@@ -9,6 +9,8 @@
 namespace FalconEngine
 {
 
+// @summary Vertex group represents a collection of vertex buffer binding. It
+// has all the information about vertex buffers used in any shaders.
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API VertexGroup
 {
@@ -18,23 +20,16 @@ public:
 
 public:
     void
-    ClearVertexBuffer()
-    {
-        mVertexBufferTable.clear();
-    }
+    ClearVertexBuffer();
 
     bool
-    ContainVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer)
-    {
-        return mVertexBufferTable.find(bindingIndex) != mVertexBufferTable.end()
-               && mVertexBufferTable.at(bindingIndex).GetBuffer() == vertexBuffer.get();
-    }
+    ContainVertexBuffer(int bindingIndex, std::shared_ptr<VertexBuffer> vertexBuffer);
 
     size_t
     GetVertexNum() const;
 
     void
-    SetVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer, int offset, int stride);
+    SetVertexBuffer(int bindingIndex, std::shared_ptr<VertexBuffer> vertexBuffer, int offset, int stride);
 
 public:
     std::map<int, VertexBufferBinding> mVertexBufferTable;

@@ -22,7 +22,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    IndexBuffer(size_t indexNum, IndexType indexType, BufferUsage usage);
+    IndexBuffer(int indexNum, IndexType indexType, BufferUsage usage);
     virtual ~IndexBuffer();
 
 public:
@@ -30,5 +30,4 @@ public:
     IndexType mType;
 };
 
-typedef std::shared_ptr<IndexBuffer> IndexBufferSharedPtr;
 }

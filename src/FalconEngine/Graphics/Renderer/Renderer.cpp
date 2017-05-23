@@ -10,6 +10,7 @@ using namespace std;
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffectInstancePass.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapText.h>
@@ -59,7 +60,7 @@ PlatformRendererDataDeleter::operator()(PlatformRendererData *rendererData)
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Renderer::Renderer(GameEngineDataSharedPtr gameEngineData, GameEngineSettingsSharedPtr gameEngineSettings)
+Renderer::Renderer(GameEngineData *gameEngineData, GameEngineSettings *gameEngineSettings)
 {
     InitializeData(gameEngineSettings);
     InitializePlatform(gameEngineData);
@@ -75,7 +76,7 @@ Renderer::~Renderer()
 /* Initialization and Destroy                                           */
 /************************************************************************/
 void
-Renderer::InitializeData(GameEngineSettingsSharedPtr gameEngineSettings)
+Renderer::InitializeData(GameEngineSettings *gameEngineSettings)
 {
     SetWindowData(gameEngineSettings->mWindowWidth,
                   gameEngineSettings->mWindowHeight,
@@ -1033,39 +1034,50 @@ Renderer::Draw(
 
     FALCON_ENGINE_CHECK_NULLPTR(visual);
 
-    auto effectInstance = visual->GetEffectInstance();
-    Draw(camera, visual, effectInstance);
+    auto visualEffectInstance = visual->GetInstance();
+    if (visualEffectInstance == nullptr)
+    {
+        // NOTE(Wuxiang): When the visual is not set up correctly for any visual
+        // effect.
+        return;
+    }
+
+    Draw(camera, visual, visualEffectInstance.get());
 }
 
 void
 Renderer::Draw(
     _IN_     const Camera         *camera,
     _IN_     const Visual         *visual,
-    _IN_OUT_ VisualEffectInstance *effectInstance)
+    _IN_OUT_ VisualEffectInstance *visualEffectInstance)
 {
     // NOTE(Wuxiang): The non-constness of instance comes from the fact that
     // during the binding of shader, the renderer would look up the shader's
     // location for each vertex attribute and each uniform.
 
     FALCON_ENGINE_CHECK_NULLPTR(visual);
-    auto primitive = visual->GetPrimitive();
+    FALCON_ENGINE_CHECK_NULLPTR(visualEffectInstance);
 
-    FALCON_ENGINE_CHECK_NULLPTR(effectInstance);
-    auto effect = effectInstance->GetEffect();
-    auto effectInstancingNum = visual->GetEffectInstancingNum();
+    // NOTE(Wuxiang): The order of enabling resource depends on the how fast
+    // context would switch those resources.
 
     // NOTE(Wuxiang): Currently this function assume that all passes are using
     // same vertex attribute array, so that we don't switch vertex format between
     // the shader.
 
+    // TODO(Wuxiang): 2017-05-22 14:16. Dirty Flag and Sorting.
+
+    auto visualEffect = visualEffectInstance->GetEffect();
+
     // Enable vertex attribute array.
-    auto vertexFormat = primitive->GetVertexFormat();
+    auto vertexFormat = visual->GetVertexFormat();
     Enable(vertexFormat);
 
-    // Enable vertex buffer.
-    auto vertexGroup = primitive->GetVertexGroup();
+    // Enable vertex group and consequently vertex buffer.
+    auto vertexGroup = visual->GetVertexGroup();
     Enable(vertexGroup);
 
+    auto primitive = visual->GetMesh()->GetPrimitive();
     auto indexBuffer = primitive->GetIndexBuffer();
     if (indexBuffer)
     {
@@ -1073,31 +1085,31 @@ Renderer::Draw(
         Enable(indexBuffer);
     }
 
-    const int passNum = effectInstance->GetPassNum();
+    const int passNum = visualEffectInstance->GetPassNum();
     for (int passIndex = 0; passIndex < passNum; ++passIndex)
     {
-        auto *effectInstancePass = effectInstance->GetPass(passIndex);
-        auto *effectPass = effect->GetPass(passIndex);
+        auto visualEffectInstancePass = visualEffectInstance->GetPass(passIndex);
 
-        auto *shader = effectInstancePass->GetShader();
-
-        // Enable the shader.
+        // Enable shader.
+        auto shader = visualEffectInstancePass->GetShader();
         Enable(shader);
 
         // Enable effect instance pass.
-        Enable(effectInstancePass, camera, visual);
+        Enable(visualEffectInstancePass, camera, visual);
 
         // Enable effect pass.
-        Enable(effectPass);
+        auto visualEffectPass = visualEffect->GetPass(passIndex);
+        Enable(visualEffectPass);
 
-        // Draw the primitive.
-        DrawPrimitivePlatform(primitive, effectInstancingNum);
+        // Draw primitive.
+        auto primitiveInstancingNum = visualEffectInstancePass->GetShaderInstancingNum();
+        DrawPrimitivePlatform(primitive, primitiveInstancingNum);
 
         // Disable effect pass.
-        Disable(effectPass);
+        Disable(visualEffectPass);
 
         // Disable effect instance pass.
-        Disable(effectInstancePass);
+        Disable(visualEffectInstancePass);
 
         // Disable the shader.
         Disable(shader);

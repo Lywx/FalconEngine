@@ -13,8 +13,15 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    PrimitiveQuads(VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup);
+    PrimitiveQuads(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer);
     virtual ~PrimitiveQuads();
+
+public:
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
+    virtual size_t
+    GetQuadNum() const;
 };
 
 }

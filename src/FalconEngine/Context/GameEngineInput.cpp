@@ -38,7 +38,7 @@ GameEngineInput::GetMouseState() const
 }
 
 void
-GameEngineInput::Initialize(GameEngineDataSharedPtr gameEngineData, GameEngineSettingsSharedPtr gameEngineSettings)
+GameEngineInput::Initialize(GameEngineData *gameEngineData, GameEngineSettings *gameEngineSettings)
 {
     mGameEngineData = gameEngineData;
     mGameEngineSettings = gameEngineSettings;

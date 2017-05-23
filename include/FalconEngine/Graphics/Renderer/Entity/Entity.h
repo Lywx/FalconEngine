@@ -15,7 +15,6 @@ using EntitySharedPtr = std::shared_ptr<Entity>;
 class GameEngineInput;
 
 class Node;
-using NodeSharedPtr = std::shared_ptr<Node>;
 
 class Visual;
 using VisualSharedPtr = std::shared_ptr<Visual>;
@@ -31,14 +30,14 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit Entity(NodeSharedPtr node);
+    explicit Entity(std::shared_ptr<Node> node);
     virtual ~Entity();
 
 public:
-    NodeSharedPtr
+    std::shared_ptr<Node>
     GetNode() const;
 
-    NodeSharedPtr
+    std::shared_ptr<Node>
     GetNode();
 
     virtual Vector3f
@@ -69,9 +68,9 @@ public:
     std::string mName;
 
 protected:
-    NodeSharedPtr       mNode;
-    EventCallback<bool> mNodeUpdateBegunHandler;
-    EventCallback<bool> mNodeUpdateEndedHandler;
+    std::shared_ptr<Node> mNode;
+    EventCallback<bool>   mNodeUpdateBegunHandler;
+    EventCallback<bool>   mNodeUpdateEndedHandler;
 
     // NOTE(Wuxiang): Note that all transform data is local to parent node.
     Vector3f      mLocalPosition;

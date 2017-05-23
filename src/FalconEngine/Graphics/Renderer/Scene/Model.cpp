@@ -27,13 +27,14 @@ Model::GetNode() const
     return mNode.get();
 }
 
-NodeSharedPtr
+std::shared_ptr<Node>
 Model::GetNode()
 {
     return mNode;
 }
 
-void Model::SetNode(NodeSharedPtr node)
+void
+Model::SetNode(std::shared_ptr<Node> node)
 {
     FALCON_ENGINE_CHECK_NULLPTR(node);
 
@@ -41,7 +42,7 @@ void Model::SetNode(NodeSharedPtr node)
 }
 
 void
-Model::SetSampler(SamplerSharedPtr sampler)
+Model::SetSampler(std::shared_ptr<Sampler> sampler)
 {
     FALCON_ENGINE_CHECK_NULLPTR(sampler);
 

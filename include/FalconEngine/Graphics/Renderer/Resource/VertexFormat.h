@@ -33,14 +33,17 @@ public:
     VertexAttribute&
     GetVertexAttribute(int attributeIndex);
 
-    int
-    GetVertexAttributeStride(int attributeBindingIndex) const;
-
     void
     PushVertexAttribute(int attributeLocation, std::string attributeName, VertexAttributeType attributeType, bool attributeNormalized, int attributeBindingIndex, int attributeDivision = 0);
 
     void
     FinishVertexAttribute();
+
+    /************************************************************************/
+    /* Vertex Buffer Management                                             */
+    /************************************************************************/
+    int
+    GetVertexBufferStride(int attributeBindingIndex) const;
 
 public:
     // NOTE(Wuxiang): The vertex attribute vector is assumed to be in order of
@@ -56,7 +59,5 @@ private:
     bool                  mVertexAttributeFinished = false;
 };
 #pragma warning(default: 4251)
-
-using VertexFormatSharedPtr = std::shared_ptr<VertexFormat>;
 
 }

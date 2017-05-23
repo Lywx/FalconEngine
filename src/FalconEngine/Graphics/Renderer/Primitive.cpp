@@ -1,4 +1,5 @@
 #include <FalconEngine/Graphics/Renderer/Primitive.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
 
 namespace FalconEngine
@@ -9,20 +10,18 @@ FALCON_ENGINE_RTTI_IMPLEMENT(Primitive, Object);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Primitive::Primitive(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat) :
-    Primitive(primitiveType, vertexFormat, nullptr, nullptr)
+Primitive::Primitive(PrimitiveType primitiveType) :
+    Primitive(primitiveType, nullptr, nullptr)
 {
 }
 
-Primitive::Primitive(PrimitiveType primitiveType, VertexFormatSharedPtr vertexFormat, VertexGroupSharedPtr vertexGroup, IndexBufferSharedPtr indexBuffer) :
+Primitive::Primitive(PrimitiveType primitiveType, std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer) :
     mPrimitiveType(primitiveType),
-    mVertexGroup(vertexGroup),
-    mVertexFormat(vertexFormat),
+    mVertexBuffer(vertexBuffer),
     mIndexBuffer(indexBuffer)
 {
-    // NOTE(Wuxiang): All vertex buffer format, vertex format and index buffer is
-    // allowed to be null here. But they should be initialized in the derived
-    // class's constructor.
+    // NOTE(Wuxiang): All vertex buffer and index buffer is allowed to be null
+    // here. But they should be initialized in the derived class's constructor.
 }
 
 Primitive::~Primitive()
@@ -37,8 +36,8 @@ Primitive::CopyTo(Primitive *lhs)
 {
     lhs->mBoundingBox = mBoundingBox;
     lhs->mPrimitiveType = mPrimitiveType;
-    lhs->mVertexGroup = mVertexGroup;
-    lhs->mVertexFormat = mVertexFormat;
+
+    lhs->mVertexBuffer = mVertexBuffer;
     lhs->mIndexBuffer = mIndexBuffer;
 }
 
@@ -55,31 +54,25 @@ Primitive::GetBoundingBox() const
 }
 
 void
-Primitive::SetBoundingBox(BoundingBoxSharedPtr boundingBox)
+Primitive::SetBoundingBox(std::shared_ptr<BoundingBox> boundingBox)
 {
     FALCON_ENGINE_CHECK_NULLPTR(boundingBox);
 
     mBoundingBox = boundingBox;
 }
 
+void
+Primitive::SetVertexBuffer(std::shared_ptr<VertexBuffer> vertexBuffer)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
+
+    mVertexBuffer = vertexBuffer;
+}
+
 size_t
 Primitive::GetVertexNum() const
 {
-    return mVertexGroup->GetVertexNum();
-}
-
-const VertexFormat *
-Primitive::GetVertexFormat() const
-{
-    return mVertexFormat.get();
-}
-
-void
-Primitive::SetVertexFormat(VertexFormatSharedPtr vertexFormat)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(vertexFormat);
-
-    mVertexFormat = vertexFormat;
+    return mVertexBuffer->GetElementNum();
 }
 
 const IndexBuffer *
@@ -89,33 +82,23 @@ Primitive::GetIndexBuffer() const
 }
 
 void
-Primitive::SetIndexBuffer(IndexBufferSharedPtr indexBuffer)
+Primitive::SetIndexBuffer(std::shared_ptr<IndexBuffer> indexBuffer)
 {
     FALCON_ENGINE_CHECK_NULLPTR(indexBuffer);
 
     mIndexBuffer = indexBuffer;
 }
 
-const VertexGroup *
-Primitive::GetVertexGroup() const
+const VertexBuffer *
+Primitive::GetVertexBuffer() const
 {
-    return mVertexGroup.get();
+    return mVertexBuffer.get();
 }
 
-void
-Primitive::SetVertexBuffer(int bindingIndex, VertexBufferSharedPtr vertexBuffer, int offset, int stride)
+std::shared_ptr<VertexBuffer>
+Primitive::GetVertexBuffer()
 {
-    FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
-
-    if (mVertexGroup->ContainVertexBuffer(bindingIndex, vertexBuffer))
-    {
-        // NOTE(Wuxiang): It is not allowed to reset vertex buffer's offset or stride.
-        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-    }
-    else
-    {
-        mVertexGroup->SetVertexBuffer(bindingIndex, vertexBuffer, offset, stride);
-    }
+    return mVertexBuffer;
 }
 
 }

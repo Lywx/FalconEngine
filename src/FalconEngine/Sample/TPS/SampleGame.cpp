@@ -26,28 +26,40 @@ SampleGame::Initialize()
 
         // Fonts
         {
-            mFont_Console = assetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.fnt.bin").get();
-            // mFontDisplay = mAssetManager->LoadFont("Content/Fonts/NSimSunDistanceField.fnt.bin").get();
+            mFont = assetManager->LoadFont("Content/Font/LuciadaConsoleDistanceField.fnt.bin").get();
+            // mFont = mAssetManager->LoadFont("Content/Font/NSimSunDistanceField.fnt.bin").get();
         }
 
         // Entities
         {
             mScene = make_shared<SceneEntity>();
-
             auto sceneNode = mScene->GetNode();
             sceneNode->mWorldTransform = Matrix4f::Zero;
 
-            auto roomModel = assetManager->LoadModel("Content/Models/Bedroom.dae");
-            auto roomNode = ShareClone(roomModel->GetNode());
-            sceneNode->AttachChild(roomNode);
+            auto axeModel = assetManager->LoadModel("Content/Model/Axe.dae");
+            auto axeNodeX = ShareClone(axeModel->GetNode());
+            auto axeNodeY = ShareClone(axeModel->GetNode());
+            auto axeNodeZ = ShareClone(axeModel->GetNode());
+            mAxeNode = make_shared<Node>();
+            mAxeNode->AttachChild(axeNodeX);
+            mAxeNode->AttachChild(axeNodeY);
+            mAxeNode->AttachChild(axeNodeZ);
+            axeNodeX->mLocalTransform = Matrix4f::CreateRotationZ(-PiOver2);
+            axeNodeY->mLocalTransform = Matrix4f::Identity;
+            axeNodeZ->mLocalTransform = Matrix4f::CreateRotationX(+PiOver2);
+            sceneNode->AttachChild(mAxeNode);
 
-            auto lightModel = assetManager->LoadModel("Content/Models/Engine/Point Light.dae");
+            auto roomModel = assetManager->LoadModel("Content/Model/Bedroom.dae");
+            mRoomNode = ShareClone(roomModel->GetNode());
+            sceneNode->AttachChild(mRoomNode);
+
+            auto lightModel = assetManager->LoadModel("Content/Model/Engine/Point Light.dae");
             mPointLight1 = make_shared<PointLightEntity>(ShareClone(lightModel->GetNode()));
             mPointLight2 = make_shared<PointLightEntity>(ShareClone(lightModel->GetNode()));
             mPointLight3 = make_shared<PointLightEntity>(ShareClone(lightModel->GetNode()));
-            roomNode->AttachChild(mPointLight1->GetNode());
-            roomNode->AttachChild(mPointLight2->GetNode());
-            roomNode->AttachChild(mPointLight3->GetNode());
+            mRoomNode->AttachChild(mPointLight1->GetNode());
+            mRoomNode->AttachChild(mPointLight2->GetNode());
+            mRoomNode->AttachChild(mPointLight3->GetNode());
         }
     }
 
@@ -89,14 +101,16 @@ SampleGame::Initialize()
             mPointLight3->SetLinear(0.015f);
             mPointLight3->SetQuadratic(0.0075f);
             mPointLight3->SetPosition(Vector3f(0.0, 0.0, 9.546284675598145));
-
         }
 
         mScenePointLightList = { mPointLight1->GetLight(), mPointLight2->GetLight(), mPointLight3->GetLight() };
 
         // Initialize Effect
-        mSceneLightingEffect = make_shared<PhongLightingEffect>();
-        mSceneLightingEffect->CreateInstance(mSceneLightingEffect, mScene->GetNode().get(), *mSceneDirectionalLight, mScenePointLightList, mSceneSpotLightList);
+        mSceneLightingEffect = make_shared<PhongShadingEffect>();
+        mSceneLightingEffect->CreateInstance(mSceneLightingEffect, mRoomNode.get(), *mSceneDirectionalLight, mScenePointLightList, mSceneSpotLightList);
+
+        //
+        // mSceneAxeEffect = make_shared<OrthogonalPaintEffect>();
     }
 
     // Initialize Interaction.
@@ -112,12 +126,9 @@ SampleGame::Initialize()
 void
 SampleGame::Render(GameEngineGraphics *graphics, double percent)
 {
-    graphics->ClearFrameBuffer(ColorPalette::Pink, 1.f, 0);
+    graphics->ClearFrameBuffer(ColorPalette::Gray, 1.f, 0);
 
-    auto engine = GetEngine();
-    auto engineSettings = GetEngineSettings();
-    auto width  = engineSettings->mWindowWidth;
-    auto height = engineSettings->mWindowHeight;
+    auto gameEngineSettings = GameEngineSettings::GetInstance();
 
     // Draw Profiler
     {
@@ -127,7 +138,7 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
         auto lastFrameUpdateCount = int(profiler->GetLastFrameUpdateTotalCount());
         auto lastRenderElapsedMillisecond = int(profiler->GetLastRenderElapsedMillisecond());
 
-        graphics->DrawString(mFont_Console, 16.f, Vector2f(50.f, height - 50.f),
+        graphics->DrawString(mFont, 16.f, Vector2f(50.f, gameEngineSettings->mWindowHeight - 50.f),
                              "U: " + std::to_string(lastUpdateElapsedMillisecond) + "ms Uc: " + std::to_string(lastFrameUpdateCount) +
                              " R: " + std::to_string(lastRenderElapsedMillisecond) + "ms Rc: " + std::to_string(lastFrameFPS),
                              ColorPalette::Gold);
@@ -142,27 +153,27 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
         auto mousePositionDiff = mouse->GetPositionDiff();
         auto mousePosition = mouse->GetPosition();
 
-        graphics->DrawString(mFont_Console, 16.f, Vector2f(50.f, height - 100.f),
+        graphics->DrawString(mFont, 16.f, Vector2f(50.f, gameEngineSettings->mWindowHeight - 100.f),
                              "Mouse Position: " + to_string(mousePosition) + " Diff: " + to_string(mousePositionDiff), ColorPalette::White);
     }
 
     // Draw Camera
     {
         auto position = mCamera->GetPosition();
-        graphics->DrawString(mFont_Console, 16.f, Vector2f(50.f, 50.f),
+        graphics->DrawString(mFont, 16.f, Vector2f(50.f, 50.f),
                              "Camera Position: " + to_string(position), ColorPalette::White);
 
         auto theta = Degree(mCamera->mAzimuthalRadian);
         auto phi = Degree(mCamera->mPolarRadian);
         auto distance = Degree(mCamera->mRadialDistance);
-        graphics->DrawString(mFont_Console, 16.f, Vector2f(50.f, 100.f),
+        graphics->DrawString(mFont, 16.f, Vector2f(50.f, 100.f),
                              "Camera Theta: " + std::to_string(theta) + " Phi: " + std::to_string(phi) + " Distance: " + std::to_string(distance), ColorPalette::White);
     }
 
     graphics->Draw(mCamera.get(), mScene.get());
     graphics->DrawBoundingBox(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f));
     graphics->DrawBoundingBox(mCamera.get(), mPointLight2.get(), Transparent(ColorPalette::Green, 1.0f));
-    graphics->DrawString(mFont_Console, 16, Vector2f(width / 2, height / 2), ".");
+    graphics->DrawString(mFont, 16, Vector2f(gameEngineSettings->mWindowWidth / 2, gameEngineSettings->mWindowHeight / 2), ".");
 
     Game::Render(graphics, percent);
 }

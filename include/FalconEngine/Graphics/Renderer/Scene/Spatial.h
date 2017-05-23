@@ -2,6 +2,8 @@
 
 #include <FalconEngine/Graphics/Header.h>
 
+#include <functional>
+
 #include <FalconEngine/Core/Object.h>
 #include <FalconEngine/Math/Matrix4.h>
 
@@ -28,6 +30,12 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
+    const Spatial *
+    GetParent() const;
+
+    void
+    SetParent(Spatial *parent);
+
     // @summary Update everything that need to constantly update themselves.
     // @param initiator - if the caller is the initiator of this round of update. If
     //     so, we need to update the bounding volume in parent because the

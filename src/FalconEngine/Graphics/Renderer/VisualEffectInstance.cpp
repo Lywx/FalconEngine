@@ -10,12 +10,12 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-VisualEffectInstance::VisualEffectInstance(VisualEffectSharedPtr effect) :
-    mEffect(effect)
+VisualEffectInstance::VisualEffectInstance(std::shared_ptr<VisualEffect> effect) :
+    mVisualEffect(effect)
 {
-    for (int i = 0; i < mEffect->GetPassNum(); ++i)
+    for (int i = 0; i < mVisualEffect->GetPassNum(); ++i)
     {
-        mPassList.push_back(std::make_unique<VisualEffectInstancePass>(mEffect->GetShader(i)));
+        mVisualEffectInstancePassList.push_back(std::make_unique<VisualEffectInstancePass>(mVisualEffect->GetShader(i)));
     }
 }
 
@@ -29,25 +29,37 @@ VisualEffectInstance::~VisualEffectInstance()
 const VisualEffect *
 VisualEffectInstance::GetEffect() const
 {
-    return mEffect.get();
+    return mVisualEffect.get();
 }
 
 int
 VisualEffectInstance::GetPassNum() const
 {
-    return mEffect->GetPassNum();
+    return mVisualEffect->GetPassNum();
 }
 
 VisualEffectInstancePass *
 VisualEffectInstance::GetPass(int passIndex)
 {
-    return mPassList.at(passIndex).get();
+    return mVisualEffectInstancePassList.at(passIndex).get();
+}
+
+int
+VisualEffectInstance::GetShaderInstancingNum(int passIndex) const
+{
+    return mVisualEffectInstancePassList.at(passIndex)->GetShaderInstancingNum();
+}
+
+void
+VisualEffectInstance::SetShaderInstancingNum(int passIndex, int instancingNum)
+{
+    mVisualEffectInstancePassList.at(passIndex)->SetShaderInstancingNum(instancingNum);
 }
 
 const Texture *
 VisualEffectInstance::GetShaderTexture(int passIndex, int textureUnit) const
 {
-    return mPassList.at(passIndex)->GetShaderTexture(textureUnit);
+    return mVisualEffectInstancePassList.at(passIndex)->GetShaderTexture(textureUnit);
 }
 
 void
@@ -55,13 +67,13 @@ VisualEffectInstance::SetShaderTexture(int passIndex, int textureUnit, const Tex
 {
     FALCON_ENGINE_CHECK_NULLPTR(texture);
 
-    mPassList.at(passIndex)->SetShaderTexture(textureUnit, texture);
+    mVisualEffectInstancePassList.at(passIndex)->SetShaderTexture(textureUnit, texture);
 }
 
 const Sampler *
 VisualEffectInstance::GetShaderSampler(int passIndex, int textureUnit) const
 {
-    return mPassList.at(passIndex)->GetShaderSampler(textureUnit);
+    return mVisualEffectInstancePassList.at(passIndex)->GetShaderSampler(textureUnit);
 }
 
 void
@@ -69,7 +81,7 @@ VisualEffectInstance::SetShaderSampler(int passIndex, int textureUnit, const Sam
 {
     FALCON_ENGINE_CHECK_NULLPTR(sampler);
 
-    mPassList.at(passIndex)->SetShaderSampler(textureUnit, sampler);
+    mVisualEffectInstancePassList.at(passIndex)->SetShaderSampler(textureUnit, sampler);
 }
 
 }

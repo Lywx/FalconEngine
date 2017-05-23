@@ -19,29 +19,22 @@ namespace FalconEngine
 /************************************************************************/
 class BitmapFont;
 class BitmapFontRenderer;
-using BitmapFontRendererSharedPtr = std::shared_ptr<BitmapFontRenderer>;
 class BitmapText;
 
 class Camera;
 
 class Entity;
 class EntityRenderer;
-using EntityRendererSharedPtr = std::shared_ptr<EntityRenderer>;
 
 class UiRenderer;
-using UiRendererSharedPtr = std::shared_ptr<UiRenderer>;
 
 /************************************************************************/
 /* General Renderer                                                     */
 /************************************************************************/
 class Renderer;
-using RendererSharedPtr = std::shared_ptr<Renderer>;
-
-class GameEngineSettings;
-using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
 
 class GameEngineData;
-using GameEngineDataSharedPtr = std::shared_ptr<GameEngineData>;
+class GameEngineSettings;
 
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API GameEngineGraphics
@@ -119,8 +112,8 @@ public:
 public:
     void
     Initialize(
-        _IN_ GameEngineDataSharedPtr     gameEngineData,
-        _IN_ GameEngineSettingsSharedPtr gameEngineSettings);
+        _IN_ GameEngineData     *gameEngineData,
+        _IN_ GameEngineSettings *gameEngineSettings);
 
     void
     RenderBegin();
@@ -136,12 +129,12 @@ private:
     Destroy();
 
 protected:
-    EntityRendererSharedPtr     mEntityRenderer;
-    BitmapFontRendererSharedPtr mFontRenderer;
-    RendererSharedPtr           mMasterRenderer;
-    UiRendererSharedPtr         mUiRenderer;
+    std::shared_ptr<EntityRenderer>     mEntityRenderer;
+    std::shared_ptr<BitmapFontRenderer> mFontRenderer;
+    std::shared_ptr<Renderer>           mMasterRenderer;
+    std::shared_ptr<UiRenderer>         mUiRenderer;
 
-    GameEngineSettingsSharedPtr mGameEngineSettings;
+    GameEngineSettings                 *mGameEngineSettings;
 };
 #pragma warning(default: 4251)
 

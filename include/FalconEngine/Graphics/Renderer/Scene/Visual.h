@@ -1,6 +1,10 @@
 #pragma once
 
 #include <FalconEngine/Graphics/Header.h>
+
+#include <functional>
+
+#include <FalconEngine/Graphics/Renderer/Scene/Mesh.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Spatial.h>
 
 namespace FalconEngine
@@ -9,10 +13,10 @@ namespace FalconEngine
 class BoundingBox;
 
 class Primitive;
-using PrimitiveSharedPtr = std::shared_ptr<Primitive>;
+
+class VertexFormat;
 
 class VisualEffectInstance;
-using VisualEffectInstanceSharedPtr = std::shared_ptr<VisualEffectInstance>;
 
 // @summary This class governs the all the information the user would like to draw
 // a set of primitives. Visual effect instance in the Visual class represents all
@@ -32,7 +36,11 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit Visual(PrimitiveSharedPtr primitive);
+    explicit Visual(std::shared_ptr<Mesh> mesh);
+    Visual(std::shared_ptr<Mesh> mesh,
+           std::shared_ptr<VertexFormat> vertexFormat,
+           std::shared_ptr<VertexGroup> vertexGroup);
+
     virtual ~Visual();
 
 protected:
@@ -42,27 +50,52 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
-    const BoundingBox *
-    GetBoundingBox() const;
 
-    VisualEffectInstance *
-    GetEffectInstance() const;
+    /************************************************************************/
+    /* Effect Management                                                    */
+    /************************************************************************/
+    const VisualEffectInstance *
+    GetInstance() const;
 
-    void
-    SetEffectInstance(VisualEffectInstanceSharedPtr effectInstance);
-
-    const Primitive *
-    GetPrimitive() const;
+    std::shared_ptr<VisualEffectInstance>
+    GetInstance();
 
     void
-    SetPrimitive(PrimitiveSharedPtr primitives);
+    SetInstance(std::shared_ptr<VisualEffectInstance> effectInstance);
 
-    size_t
-    GetEffectInstancingNum() const;
+    const VertexFormat *
+    GetVertexFormat() const;
+
+    std::shared_ptr<VertexFormat>
+    GetVertexFormat();
 
     void
-    SetEffectInstancingNum(size_t effectInstancingNum);
+    SetVertexFormat(std::shared_ptr<VertexFormat> vertexFormat);
 
+    const VertexGroup *
+    GetVertexGroup() const;
+
+    std::shared_ptr<VertexGroup>
+    GetVertexGroup();
+
+    void
+    SetVertexGroup(std::shared_ptr<VertexGroup> vertexGroup);
+
+    /************************************************************************/
+    /* Mesh Management                                                      */
+    /************************************************************************/
+    const Mesh *
+    GetMesh() const;
+
+    std::shared_ptr<Mesh>
+    GetMesh();
+
+    void
+    SetMesh(std::shared_ptr<Mesh> mesh);
+
+    /************************************************************************/
+    /* Spatial Management                                                   */
+    /************************************************************************/
     void
     UpdateWorldTransform(double elapsed) override;
 
@@ -77,10 +110,23 @@ public:
     virtual Visual *
     GetClone() const override;
 
+    // @summary Use a custom function to copy rhs's content into lhs.
+    virtual Visual *
+    GetClone(std::function<void(Visual *lhs, Visual *rhs)> copyTo);
+
 protected:
-    VisualEffectInstanceSharedPtr mEffectInstance;
-    size_t                        mEffectInstancingNum;
-    PrimitiveSharedPtr            mPrimitive;
+    /************************************************************************/
+    /* Mesh Data                                                            */
+    /************************************************************************/
+    std::shared_ptr<Mesh>                 mMesh;
+
+    /************************************************************************/
+    /* Effect Data                                                          */
+    /************************************************************************/
+    std::shared_ptr<VisualEffectInstance> mInstance;
+    std::shared_ptr<VertexFormat>         mVertexFormat;
+    std::shared_ptr<VertexGroup>          mVertexGroup;
+
 };
 #pragma warning(default: 4251)
 

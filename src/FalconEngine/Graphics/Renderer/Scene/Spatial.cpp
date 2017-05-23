@@ -26,6 +26,18 @@ Spatial::~Spatial()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+const Spatial *
+Spatial::GetParent() const
+{
+    return mParent;
+}
+
+void
+Spatial::SetParent(Spatial *parent)
+{
+    mParent = parent;
+}
+
 void
 Spatial::Update(double elaped, bool initiator)
 {

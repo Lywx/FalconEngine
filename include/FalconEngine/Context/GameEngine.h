@@ -1,14 +1,13 @@
 #pragma once
 
 #include <FalconEngine/Context/Game.h>
-#include <FalconEngine/Context/GameTimer.h>
 #include <FalconEngine/Context/GameDebug.h>
+#include <FalconEngine/Context/GameTimer.h>
 
 namespace FalconEngine
 {
 
 class GameEngineData;
-using GameEngineDataSharedPtr = std::shared_ptr<GameEngineData>;
 class GameEngineGraphics;
 class GameEngineInput;
 class GameEnginePlatform;
@@ -29,15 +28,6 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
-    double
-    GetMillisecondPerRender() const;
-
-    void
-    SetMillisecondPerRender(double millisecondPerRender);
-
-    const GameEngineData *
-    GetData() const;
-
     void
     Run();
 
@@ -64,13 +54,13 @@ private:
     /************************************************************************/
     /* Context Components                                                   */
     /************************************************************************/
-    GameEngineDataSharedPtr     mData;
+    GameEngineData             *mData;
     Game                       *mGame;
     GameEngineGraphics         *mGraphics;
     GameEngineInput            *mInput;
     GameEnginePlatform         *mPlatform;
     GameEngineProfiler         *mProfiler;
-    GameEngineSettingsSharedPtr mSettings;
+    GameEngineSettings         *mSettings;
 
     /************************************************************************/
     /* Context States                                                       */

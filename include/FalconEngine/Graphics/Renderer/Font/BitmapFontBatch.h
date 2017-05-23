@@ -6,16 +6,14 @@ namespace FalconEngine
 {
 
 class VertexBuffer;
-using VertexBufferSharedPtr = std::shared_ptr<VertexBuffer>;
 
 class Visual;
-using VisualSharedPtr = std::shared_ptr<Visual>;
 
 #pragma warning(disable: 4251)
 class BitmapFontBatch
 {
 public:
-    BitmapFontBatch(VertexBufferSharedPtr vertexBuffer, VisualSharedPtr vertexQuads) :
+    BitmapFontBatch(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<Visual> vertexQuads) :
         mVertexBuffer(vertexBuffer),
         mVertexQuads(vertexQuads)
     {
@@ -24,12 +22,12 @@ public:
     ~BitmapFontBatch() = default;
 
 public:
-    size_t                mGlyphNum = 0;
+    int                           mGlyphNum = 0;
 
-    VertexBufferSharedPtr mVertexBuffer;
-    size_t                mVertexBufferDataIndex = 0;
+    std::shared_ptr<VertexBuffer> mVertexBuffer;
+    size_t                        mVertexBufferDataIndex = 0;
 
-    VisualSharedPtr       mVertexQuads;
+    std::shared_ptr<Visual>       mVertexQuads;
 };
 #pragma warning(default: 4251)
 

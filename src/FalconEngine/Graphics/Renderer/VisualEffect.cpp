@@ -1,6 +1,11 @@
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
+
+#include <queue>
+
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Node.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Graphics/Renderer/State/BlendState.h>
 #include <FalconEngine/Graphics/Renderer/State/CullState.h>
@@ -12,6 +17,8 @@
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformAutomatic.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformConstant.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformManual.h>
+
+using namespace std;
 
 namespace FalconEngine
 {
@@ -33,7 +40,7 @@ VisualEffect::~VisualEffect()
 /* Public Members                                                       */
 /************************************************************************/
 void
-VisualEffect::InsertPass(VisualEffectPassUniquePtr pass)
+VisualEffect::InsertPass(std::unique_ptr<VisualEffectPass> pass)
 {
     mPassList.push_back(move(pass));
 }
@@ -98,6 +105,24 @@ VisualEffect::GetWireframeState(int passIndex) const
     return mPassList.at(passIndex)->GetWireframeState();
 }
 
+std::shared_ptr<VertexFormat>
+VisualEffectCreateVertexFormat()
+{
+    shared_ptr<VertexFormat> vertexFormat = make_shared<VertexFormat>();
+    vertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
+    vertexFormat->PushVertexAttribute(1, "Normal", VertexAttributeType::FloatVec3, false, 0);
+    vertexFormat->PushVertexAttribute(2, "TexCoord", VertexAttributeType::FloatVec2, false, 0);
+    vertexFormat->FinishVertexAttribute();
+    return vertexFormat;
+}
+
+std::shared_ptr<VertexFormat>
+VisualEffect::GetVertexFormat() const
+{
+    static shared_ptr<VertexFormat> sVertexFormat = VisualEffectCreateVertexFormat();
+    return sVertexFormat;
+}
+
 void
 VisualEffect::CheckEffectCompatible(VisualEffectInstance *instance) const
 {
@@ -117,9 +142,53 @@ VisualEffect::CheckEffectSame(VisualEffect *effect) const
 }
 
 void
-VisualEffect::SetEffectInstance(Visual *visual, VisualEffectInstanceSharedPtr instance) const
+VisualEffect::TraverseVisualLevelOrder(Node *node, std::function<void(Visual *)> visualOperation)
 {
-    visual->SetEffectInstance(instance);
+    using namespace std;
+
+    queue<pair<Node *, int>> nodeQueueCurrent;
+    queue<pair<Node *, int>> nodeQueueNext;
+
+    // Use level order traversal to complete operation on each mesh.
+    nodeQueueCurrent.push(make_pair(node, 1));
+    while (!nodeQueueCurrent.empty())
+    {
+        // Complete traversing current level.
+        while (!nodeQueueCurrent.empty())
+        {
+            auto renderItemCurrent = nodeQueueCurrent.front();
+            auto renderNodeCurrent = renderItemCurrent.first;
+            auto& sceneDepthCurrent = renderItemCurrent.second;
+
+            nodeQueueCurrent.pop();
+
+            // Visit the children.
+            auto slotNum = renderNodeCurrent->GetChildrenSlotNum();
+            for (auto slotIndex = 0; slotIndex < slotNum; ++slotIndex)
+            {
+                auto child = renderNodeCurrent->GetChildAt(slotIndex);
+                if (auto childVisual = dynamic_pointer_cast<Visual>(child))
+                {
+                    // Perform the given operation only on Mesh child.
+                    visualOperation(childVisual.get());
+                }
+                else if (auto childNode = dynamic_pointer_cast<Node>(child))
+                {
+                    // Prepare for traversing next level.
+                    nodeQueueNext.push(make_pair(childNode.get(), sceneDepthCurrent + 1));
+                }
+                else
+                {
+                    // Scene graph only consists of two type of spatial objects:
+                    // either Node or Visual.
+                    FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+                }
+            }
+        }
+
+        swap(nodeQueueCurrent, nodeQueueNext);
+    }
 }
+
 
 }

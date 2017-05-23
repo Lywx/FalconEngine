@@ -4,37 +4,31 @@
 
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
 
-#include <FalconEngine/Math/Matrix4.h>
-#include <FalconEngine/Math/Vector3.h>
+#include <FalconEngine/Math/Handedness.h>
+#include <FalconEngine/Math/Vector2.h>
 #include <FalconEngine/Math/Vector4.h>
 
 namespace FalconEngine
 {
 
-#pragma pack(push, 1)
-class BoundingBoxInstance
-{
-public:
-    Vector4f mColor;
-    Matrix4f mModelViewPrjectionTransform;
-};
-#pragma pack(pop)
-
-#pragma pack(push, 1)
-class BoundingBoxVertex
-{
-public:
-    Vector3f mPosition;
-};
-#pragma pack(pop)
-
-
-class Camera;
+class BitmapFont;
 
 class VertexFormat;
-using VertexFormatSharedPtr = std::shared_ptr<VertexFormat>;
 
-class FALCON_ENGINE_API AABBBoundingBoxEffect : public VisualEffect
+#pragma pack(push, 1)
+class SignedDistancedFieldFontVertex
+{
+public:
+    Vector2f mPosition;
+    Vector2f mTexCoord;
+    Vector4f mFontColor;
+    float    mFontWidth;
+    float    mFontEdge;
+    float    mFontPage;
+};
+#pragma pack(pop)
+
+class FALCON_ENGINE_API SignedDistancedFieldFontEffect : public VisualEffect
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
@@ -42,8 +36,8 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit AABBBoundingBoxEffect();
-    virtual ~AABBBoundingBoxEffect();
+    explicit SignedDistancedFieldFontEffect(const Handedness *handedness);
+    virtual ~SignedDistancedFieldFontEffect();
 
 public:
     /************************************************************************/
@@ -53,10 +47,14 @@ public:
     void
     CreateInstance(
         _IN_OUT_ VisualEffectInstance *instance,
-        _IN_     const Camera *camera) const;
+        _IN_     const BitmapFont     *font, int width, int height) const;
 
-    VertexFormatSharedPtr
-    CreateVertexFormat();
+    virtual std::shared_ptr<VertexFormat>
+    GetVertexFormat() const override;
+
+private:
+    const Handedness *mCameraHandedness;
+    Matrix4f          mCameraProjection;
 };
 
 }

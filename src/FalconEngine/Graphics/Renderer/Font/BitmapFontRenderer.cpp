@@ -4,7 +4,7 @@
 
 #include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Core/Memory.h>
-#include <FalconEngine/Graphics/Effect/BitmapFontEffect.h>
+#include <FalconEngine/Graphics/Effect/SignedDistancedFieldFontEffect.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
@@ -63,7 +63,7 @@ BitmapFontRenderer::BatchText(
 // lines of words.
 //
 // @return The glyph number inside the text lines.
-size_t
+int
 CreateTextLines(
     _IN_  const BitmapFont    *font,
     _IN_  const BitmapText    *text,
@@ -77,7 +77,7 @@ CreateTextLines(
     // Bounds is formatted as [x, y, width, height]
     const auto lineWidth = text->mTextBounds[2];
 
-    size_t glyphCount = 0;
+    int glyphCount = 0;
     auto lineCurrent = BitmapLine(lineWidth);
     int lineNum = int(sLineStrings.size());
     for (int lineIndex = 0; lineIndex < lineNum; ++lineIndex)
@@ -251,7 +251,7 @@ BitmapFontRenderer::Render(Renderer *renderer, double /* percent */)
         if (batch->mGlyphNum > 0)
         {
             // Update buffer data before drawing
-            size_t vertexNum = batch->mGlyphNum * 6;
+            int vertexNum = batch->mGlyphNum * 6;
             batch->mVertexBuffer->SetElementNum(vertexNum);
             renderer->Update(batch->mVertexBuffer.get());
             renderer->Draw(nullptr, batch->mVertexQuads.get());
@@ -271,40 +271,37 @@ BitmapFontBatchSharedPtr
 BitmapFontRenderer::PrepareBatch(const BitmapFont *font)
 {
     // When the font is prepared before.
-    auto iter = mTextBatchTable.find(font);
-    if (iter != mTextBatchTable.end())
     {
-        return iter->second;
+        auto iter = mTextBatchTable.find(font);
+        if (iter != mTextBatchTable.end())
+        {
+            return iter->second;
+        }
     }
 
-    static const size_t                 sFontBufferSize = Kilobytes(100);
-    static shared_ptr<BitmapFontEffect> sFontEffect;
-
-    if (sFontEffect == nullptr)
+    // Initialize new batch for given font.
     {
-        sFontEffect = make_shared<BitmapFontEffect>(&mTextHandedness);
+        auto fontVisualEffect =  make_shared<SignedDistancedFieldFontEffect>(&mTextHandedness);
+
+        auto fontVertexBufferSize = int(Kilobytes(100));
+        auto fontVertexBuffer = make_shared<VertexBuffer>(fontVertexBufferSize, sizeof(SignedDistancedFieldFontVertex), BufferUsage::Dynamic);
+        auto fontVertexFormat = fontVisualEffect->GetVertexFormat();
+
+        auto fontVertexGroup = make_shared<VertexGroup>();
+        fontVertexGroup->SetVertexBuffer(0, fontVertexBuffer, 0, fontVertexFormat->GetVertexBufferStride(0));
+
+        auto fontPrimitive = make_shared<PrimitiveQuads>(fontVertexBuffer, nullptr);
+        auto fontMesh = make_shared<Mesh>(fontPrimitive, nullptr);
+        auto fontVisual = make_shared<Visual>(fontMesh, fontVertexFormat, fontVertexGroup);
+
+        auto fontVisualEffectInstance = make_shared<VisualEffectInstance>(fontVisualEffect);
+        fontVisualEffect->CreateInstance(fontVisualEffectInstance.get(), font, mWidth, mHeight);
+        fontVisual->SetInstance(fontVisualEffectInstance);
+
+        auto fontBatch = make_shared<BitmapFontBatch>(fontVertexBuffer, fontVisual);
+        mTextBatchTable.insert({ font, fontBatch });
+        return fontBatch;
     }
-
-    auto fontVertexBuffer = make_shared<VertexBuffer>(sFontBufferSize, sizeof(BitmapFontVertex), BufferUsage::Dynamic);
-    auto fontVertexFormat = sFontEffect->CreateVertexFormat();
-
-    // Setup font specific visual quad.
-    shared_ptr<Visual> fontQuads;
-    {
-        auto vertexGroup = make_shared<VertexGroup>();
-        vertexGroup->SetVertexBuffer(0, fontVertexBuffer, 0, fontVertexFormat->GetVertexAttributeStride(0));
-
-        auto fontEffectInstance = make_shared<VisualEffectInstance>(sFontEffect);
-        sFontEffect->CreateInstance(fontEffectInstance.get(), font, mWidth, mHeight);
-
-        auto fontPrimitiveQuads = make_shared<PrimitiveQuads>(fontVertexFormat, vertexGroup);
-        fontQuads = make_shared<Visual>(fontPrimitiveQuads);
-        fontQuads->SetEffectInstance(fontEffectInstance);
-    }
-
-    auto fontBatch = make_shared<BitmapFontBatch>(fontVertexBuffer, fontQuads);
-    mTextBatchTable.insert({ font, fontBatch });
-    return fontBatch;
 }
 
 void

@@ -20,9 +20,8 @@ namespace FalconEngine
 {
 
 class Sampler;
-using SamplerSharedPtr = std::shared_ptr<Sampler>;
 
-class Texture2dArray;
+    class Texture2dArray;
 using Texture2dArraySharedPtr = std::shared_ptr<Texture2dArray>;
 
 // @summary Bitmap font store the unmodified information in the imported bitmap
@@ -77,7 +76,7 @@ public:
     }
 
     void
-    SetSampler(SamplerSharedPtr sampler)
+    SetSampler(std::shared_ptr<Sampler> sampler)
     {
         FALCON_ENGINE_CHECK_NULLPTR(sampler);
 
@@ -116,7 +115,7 @@ private:
     // to manage Texture2D.
 
     Texture2dArraySharedPtr       mTexture;                                    // Font texture.
-    SamplerSharedPtr              mSampler;                                    // Font texture sampler.
+    std::shared_ptr<Sampler> mSampler;                                    // Font texture sampler.
 
     /************************************************************************/
     /* Asset Importing and Exporting                                        */

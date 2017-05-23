@@ -4,32 +4,36 @@
 
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
 
-#include <FalconEngine/Math/Handedness.h>
-#include <FalconEngine/Math/Vector2.h>
+#include <FalconEngine/Math/Matrix4.h>
+#include <FalconEngine/Math/Vector3.h>
 #include <FalconEngine/Math/Vector4.h>
 
 namespace FalconEngine
 {
 
-class BitmapFont;
-
-class VertexFormat;
-using VertexFormatSharedPtr = std::shared_ptr<VertexFormat>;
-
 #pragma pack(push, 1)
-class BitmapFontVertex
+class AABBBoundingBoxInstance
 {
 public:
-    Vector2f mPosition;
-    Vector2f mTexCoord;
-    Vector4f mFontColor;
-    float    mFontWidth;
-    float    mFontEdge;
-    float    mFontPage;
+    Vector4f mColor;
+    Matrix4f mModelViewPrjectionTransform;
 };
 #pragma pack(pop)
 
-class FALCON_ENGINE_API BitmapFontEffect : public VisualEffect
+#pragma pack(push, 1)
+class AABBBoundingBoxVertex
+{
+public:
+    Vector3f mPosition;
+};
+#pragma pack(pop)
+
+
+class Camera;
+
+class VertexFormat;
+
+class FALCON_ENGINE_API AABBBoundingBoxInstancingEffect : public VisualEffect
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
@@ -37,8 +41,8 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit BitmapFontEffect(const Handedness *handedness);
-    virtual ~BitmapFontEffect();
+    explicit AABBBoundingBoxInstancingEffect();
+    virtual ~AABBBoundingBoxInstancingEffect();
 
 public:
     /************************************************************************/
@@ -48,15 +52,10 @@ public:
     void
     CreateInstance(
         _IN_OUT_ VisualEffectInstance *instance,
-        _IN_     const BitmapFont     *font, int width, int height) const;
+        _IN_     const Camera *camera) const;
 
-    VertexFormatSharedPtr
-    CreateVertexFormat();
-
-private:
-    const Handedness *mCameraHandedness;
-    Matrix4f          mCameraProjection;
+    virtual std::shared_ptr<VertexFormat>
+    GetVertexFormat() const override;
 };
 
-using BitmapFontEffectSharedPtr = std::shared_ptr<BitmapFontEffect>;
 }

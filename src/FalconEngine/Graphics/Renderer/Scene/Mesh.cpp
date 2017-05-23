@@ -9,19 +9,20 @@ using namespace std;
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(Mesh, Visual);
+FALCON_ENGINE_RTTI_IMPLEMENT(Mesh, Object);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Mesh::Mesh(PrimitiveTrianglesSharedPtr primitives, MaterialSharedPtr material) :
-    Visual(primitives),
-    mMaterial(material)
+Mesh::Mesh(std::shared_ptr<Primitive> primitives, std::shared_ptr<Material> material) :
+    mMaterial(material),
+    mPrimitive(primitives)
 {
 }
 
 Mesh::Mesh() :
-    mMaterial()
+    mMaterial(),
+    mPrimitive()
 {
 }
 
@@ -32,6 +33,12 @@ Mesh::~Mesh()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+const BoundingBox *
+Mesh::GetBoundingBox() const
+{
+    return mPrimitive->GetBoundingBox();
+}
+
 const Material *
 Mesh::GetMaterial() const
 {
@@ -39,11 +46,23 @@ Mesh::GetMaterial() const
 }
 
 void
-Mesh::SetMaterial(MaterialSharedPtr material)
+Mesh::SetMaterial(std::shared_ptr<Material> material)
 {
     FALCON_ENGINE_CHECK_NULLPTR(material);
 
     mMaterial = material;
+}
+
+const Primitive *
+Mesh::GetPrimitive() const
+{
+    return mPrimitive.get();
+}
+
+std::shared_ptr<Primitive>
+Mesh::GetPrimitive()
+{
+    return mPrimitive;
 }
 
 /************************************************************************/
@@ -52,9 +71,8 @@ Mesh::SetMaterial(MaterialSharedPtr material)
 void
 Mesh::CopyTo(Mesh *lhs) const
 {
-    Visual::CopyTo(lhs);
-
-    lhs->mMaterial = mMaterial;
+    lhs->mMaterial  = mMaterial;
+    lhs->mPrimitive = mPrimitive;
 }
 
 Mesh *

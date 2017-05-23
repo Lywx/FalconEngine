@@ -9,8 +9,7 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 Game::Game() :
-    mGameEngine(nullptr),
-    mGameEngineSettings(nullptr)
+    mGameEngine(nullptr)
 {
 }
 
@@ -33,22 +32,6 @@ Game::SetEngine(GameEngine *gameEngine)
     FALCON_ENGINE_CHECK_NULLPTR(gameEngine);
 
     mGameEngine = gameEngine;
-}
-
-GameEngineSettingsSharedPtr
-Game::GetEngineSettings()
-{
-    FALCON_ENGINE_CHECK_NULLPTR(mGameEngineSettings)
-
-    // NOTE(Wuxiang): You need to set the engine settings before you can access it.
-    return mGameEngineSettings;
-}
-
-void
-Game::SetEngineSettings(GameEngineSettingsSharedPtr gameEngineSettings)
-{
-    // NOTE(Wuxiang): No support for engine settings interactive adjustment.
-    mGameEngineSettings = gameEngineSettings;
 }
 
 void

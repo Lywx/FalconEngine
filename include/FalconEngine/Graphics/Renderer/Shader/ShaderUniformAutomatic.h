@@ -88,10 +88,9 @@ ShaderUniformAutomatic<T>::Update(const Camera *camera, const Visual *visual)
 template<typename T>
 using ShaderUniformAutomaticSharedPtr = std::shared_ptr<ShaderUniformAutomatic<T>>;
 
-
 template <typename T, typename ... Args>
-ShaderUniformValueSharedPtr<T>
-ShareAutomatic(const Args& ... args)
+std::shared_ptr<ShaderUniformValue<T>>
+                                    ShareAutomatic(const Args& ... args)
 {
     return ShareUniform<T, ShaderUniformAutomatic<T>>(args ...);
 }

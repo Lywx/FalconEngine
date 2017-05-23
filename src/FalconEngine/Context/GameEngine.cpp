@@ -32,12 +32,6 @@ GameEngine::~GameEngine()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-const GameEngineData *
-GameEngine::GetData() const
-{
-    return mData.get();
-}
-
 void
 GameEngine::Run()
 {
@@ -66,8 +60,8 @@ GameEngine::Initialize()
 
     // NOTE(Wuxiang): Thread-safe singleton pattern is used in all the game engine
     // context components.
-    mData = std::make_shared<GameEngineData>();
-    mSettings = mGame->GetEngineSettings();
+    mData = GameEngineData::GetInstance();
+    mSettings = GameEngineSettings::GetInstance();
 
     mPlatform = GameEnginePlatform::GetInstance();
     if (mPlatform != nullptr)

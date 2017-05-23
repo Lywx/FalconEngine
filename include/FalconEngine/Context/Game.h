@@ -11,7 +11,6 @@ class GameEngineGraphics;
 class GameEngineInput;
 class GameEngine;
 class GameEngineSettings;
-using GameEngineSettingsSharedPtr = std::shared_ptr<GameEngineSettings>;
 
 // @summary This is the context that runs the customized code. The GameEngine class
 // would use this class's
@@ -39,12 +38,6 @@ public:
     void
     SetEngine(GameEngine *gameEngine);
 
-    GameEngineSettingsSharedPtr
-    GetEngineSettings();
-
-    void
-    SetEngineSettings(GameEngineSettingsSharedPtr gameEngineSettings);
-
     /************************************************************************/
     /* Game Operation                                                       */
     /************************************************************************/
@@ -69,14 +62,12 @@ public:
     /************************************************************************/
     /* Update Operation                                                     */
     /************************************************************************/
-
     // @param elapsed -- Millisecond elapsed during last update / render cycle.
     virtual void
     Update(GameEngineInput *input, double elapsed);
 
 protected:
-    GameEngine                 *mGameEngine;
-    GameEngineSettingsSharedPtr mGameEngineSettings;
+    GameEngine *mGameEngine;
 };
 #pragma warning(default: 4251)
 

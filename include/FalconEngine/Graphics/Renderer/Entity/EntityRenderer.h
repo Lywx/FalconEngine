@@ -6,7 +6,7 @@
 #include <map>
 #include <queue>
 
-#include <FalconEngine/Graphics/Renderer/Entity/BoundingBoxBatch.h>
+#include <FalconEngine/Graphics/Renderer/Entity/AABBBoundingBoxBatch.h>
 
 #include <FalconEngine/Math/Color.h>
 
@@ -14,7 +14,6 @@ namespace FalconEngine
 {
 
 class BoundingBox;
-using BoundingBoxBatchSharedPtr = std::shared_ptr<BoundingBoxBatch>;
 
 class Camera;
 class Entity;
@@ -73,26 +72,18 @@ private:
     void
     DrawBoundingBox(const Camera *camera, const Visual *visual, const BoundingBox *boundingBox, Color boundingBoxColor);
 
-    BoundingBoxBatchSharedPtr
+    std::shared_ptr<AABBBoundingBoxBatch>
     PrepareBatch(const Camera *camera);
 
     void
-    PrepareBoundingBox(_IN_ BoundingBoxBatch&  batch,
+    PrepareBoundingBox(_IN_ AABBBoundingBoxBatch&  batch,
                        _IN_ const Camera      *camera,
                        _IN_ const Visual      *visual,
                        _IN_ const BoundingBox *boundingBox,
                        _IN_ Color              boundingBoxColor = ColorPalette::White);
 private:
-    using EntityVectorMap = std::map<const Camera *, std::vector<const Entity *>>;
-    using NodeQueue = std::queue<std::pair<Node *, int>>;
-
-    using BoundingBoxBatchMap = std::map<const Camera *, BoundingBoxBatchSharedPtr>;
-
-    BoundingBoxBatchMap mEntityBoundingBoxBatchTable;
-    EntityVectorMap     mEntityTable;
-
-    NodeQueue           mNodeQueueCurrent;
-    NodeQueue           mNodeQueueNext;
+    std::map<const Camera *, std::shared_ptr<AABBBoundingBoxBatch>> mBoundingBoxBatchTable;
+    std::map<const Camera *, std::vector<const Entity *>>       mEntityListTable;
 };
 #pragma warning(default: 4251)
 

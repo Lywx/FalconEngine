@@ -19,7 +19,7 @@ template<typename T>
 using ShaderUniformConstantSharedPtr = std::shared_ptr<ShaderUniformConstant<T>>;
 
 template <typename T, typename ... Args>
-ShaderUniformValueSharedPtr<T>
+std::shared_ptr<ShaderUniformValue<T>>
 ShareConstant(Args&& ... args)
 {
     return ShareUniform<T, ShaderUniformConstant<T>>(args ...);

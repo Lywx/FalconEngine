@@ -253,8 +253,6 @@ CreateBoundingBoxVertexBuffer(int aabbBoundingBoxVertexNum)
     auto boundingBoxVertexBuffer = make_shared<VertexBuffer>(aabbBoundingBoxVertexNum, sizeof(AABBBoundingBoxVertex), BufferUsage::Static);
 
     // Prepare vertex buffer data.
-
-    // TODO(Wuxiang): 2017-05-23 00:46 Update line mesh.
     FillBufferBoundingBoxPosition(boundingBoxVertexBuffer.get());
 
     return boundingBoxVertexBuffer;
@@ -275,7 +273,7 @@ EntityRenderer::PrepareBatch(const Camera *camera)
     // Initialize new batch for given camera.
     {
         auto aABBBoundingBoxInstanceNum = int(Kilobytes(1));
-        auto aABBBoundingBoxVertexNum = 36;
+        auto aABBBoundingBoxVertexNum = 24;
         auto aABBBoungingBoxEffect = make_shared<AABBBoundingBoxInstancingEffect>();
 
         // TODO(Wuxiang): Add multiple type of bounding box support.
@@ -292,7 +290,7 @@ EntityRenderer::PrepareBatch(const Camera *camera)
         aABBBoundingBoxVertexGroup->SetVertexBuffer(1, aABBBoundingBoxInstanceBuffer, 0, aABBBoundingBoxVertexFormat->GetVertexBufferStride(1));
 
         // AABB bounding box is bipartite graph, so you could not use line strip.
-        auto aABBBoundingBoxPrimitive = make_shared<PrimitiveTriangles>(aABBBoundingBoxVertexBuffer, nullptr);
+        auto aABBBoundingBoxPrimitive = make_shared<PrimitiveLines>(aABBBoundingBoxVertexBuffer, false);
         auto aABBBoundingBoxMesh = make_shared<Mesh>(aABBBoundingBoxPrimitive, nullptr);
         auto aABBBoundingBoxVisual = make_shared<Visual>(aABBBoundingBoxMesh, aABBBoundingBoxVertexFormat, aABBBoundingBoxVertexGroup);
         auto AABBBoundingBoxVisualEffectInstance = make_shared<VisualEffectInstance>(aABBBoungingBoxEffect);

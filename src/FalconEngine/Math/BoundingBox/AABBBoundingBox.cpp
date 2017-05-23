@@ -7,7 +7,7 @@ namespace FalconEngine
 /* Static Members                                                       */
 /************************************************************************/
 std::vector<Vector3f>
-AABBBoundingBox::GetCubeModelPositionList()
+CreateCubeLineMesh()
 {
     static auto sCubeModelXmax = 1.0f;
     static auto sCubeModelYmax = 1.0f;
@@ -15,50 +15,53 @@ AABBBoundingBox::GetCubeModelPositionList()
     static auto sCubeModelXmin = -1.0f;
     static auto sCubeModelYmin = -1.0f;
     static auto sCubeModelZmax = -1.0f;
-    static std::vector<Vector3f> sCubeModelPositionList;
-    if (sCubeModelPositionList.empty())
-    {
-        sCubeModelPositionList =
-        {
-            Vector3f(sCubeModelXmin, sCubeModelYmin, sCubeModelZmin), // triangle 1 Begin
-            Vector3f(sCubeModelXmin, sCubeModelYmin, sCubeModelZmax),
-            Vector3f(sCubeModelXmin, sCubeModelYmax, sCubeModelZmax), // triangle 1 End
-            Vector3f(sCubeModelXmax, sCubeModelYmax, sCubeModelZmin), // triangle 2 Begin
-            Vector3f(sCubeModelXmin, sCubeModelYmin, sCubeModelZmin),
-            Vector3f(sCubeModelXmin, sCubeModelYmax, sCubeModelZmin), // triangle 2 End
-            Vector3f(sCubeModelXmax, sCubeModelYmin, sCubeModelZmax),
-            Vector3f(sCubeModelXmin, sCubeModelYmin, sCubeModelZmin),
-            Vector3f(sCubeModelXmax, sCubeModelYmin, sCubeModelZmin),
-            Vector3f(sCubeModelXmax, sCubeModelYmax, sCubeModelZmin),
-            Vector3f(sCubeModelXmax, sCubeModelYmin, sCubeModelZmin),
-            Vector3f(sCubeModelXmin, sCubeModelYmin, sCubeModelZmin),
-            Vector3f(sCubeModelXmin, sCubeModelYmin, sCubeModelZmin),
-            Vector3f(sCubeModelXmin, sCubeModelYmax, sCubeModelZmax),
-            Vector3f(sCubeModelXmin, sCubeModelYmax, sCubeModelZmin),
-            Vector3f(sCubeModelXmax, sCubeModelYmin, sCubeModelZmax),
-            Vector3f(sCubeModelXmin, sCubeModelYmin, sCubeModelZmax),
-            Vector3f(sCubeModelXmin, sCubeModelYmin, sCubeModelZmin),
-            Vector3f(sCubeModelXmin, sCubeModelYmax, sCubeModelZmax),
-            Vector3f(sCubeModelXmin, sCubeModelYmin, sCubeModelZmax),
-            Vector3f(sCubeModelXmax, sCubeModelYmin, sCubeModelZmax),
-            Vector3f(sCubeModelXmax, sCubeModelYmax, sCubeModelZmax),
-            Vector3f(sCubeModelXmax, sCubeModelYmin, sCubeModelZmin),
-            Vector3f(sCubeModelXmax, sCubeModelYmax, sCubeModelZmin),
-            Vector3f(sCubeModelXmax, sCubeModelYmin, sCubeModelZmin),
-            Vector3f(sCubeModelXmax, sCubeModelYmax, sCubeModelZmax),
-            Vector3f(sCubeModelXmax, sCubeModelYmin, sCubeModelZmax),
-            Vector3f(sCubeModelXmax, sCubeModelYmax, sCubeModelZmax),
-            Vector3f(sCubeModelXmax, sCubeModelYmax, sCubeModelZmin),
-            Vector3f(sCubeModelXmin, sCubeModelYmax, sCubeModelZmin),
-            Vector3f(sCubeModelXmax, sCubeModelYmax, sCubeModelZmax),
-            Vector3f(sCubeModelXmin, sCubeModelYmax, sCubeModelZmin),
-            Vector3f(sCubeModelXmin, sCubeModelYmax, sCubeModelZmax),
-            Vector3f(sCubeModelXmax, sCubeModelYmax, sCubeModelZmax),
-            Vector3f(sCubeModelXmin, sCubeModelYmax, sCubeModelZmax),
-            Vector3f(sCubeModelXmax, sCubeModelYmin, sCubeModelZmax)
-        };
-    }
 
+    auto cubeLineMeshModelPositionList =
+    {
+        Vector3f(sCubeModelXmin, sCubeModelYmin, sCubeModelZmin), // line 1
+        Vector3f(sCubeModelXmax, sCubeModelYmin, sCubeModelZmin),
+
+        Vector3f(sCubeModelXmin, sCubeModelYmax, sCubeModelZmin), // line 2
+        Vector3f(sCubeModelXmax, sCubeModelYmax, sCubeModelZmin),
+
+        Vector3f(sCubeModelXmin, sCubeModelYmin, sCubeModelZmax), // line 3
+        Vector3f(sCubeModelXmax, sCubeModelYmin, sCubeModelZmax),
+
+        Vector3f(sCubeModelXmin, sCubeModelYmax, sCubeModelZmax), // line 4
+        Vector3f(sCubeModelXmax, sCubeModelYmax, sCubeModelZmax),
+
+        Vector3f(sCubeModelXmin, sCubeModelYmin, sCubeModelZmin), // line 1
+        Vector3f(sCubeModelXmin, sCubeModelYmax, sCubeModelZmin),
+
+        Vector3f(sCubeModelXmax, sCubeModelYmin, sCubeModelZmin), // line 2
+        Vector3f(sCubeModelXmax, sCubeModelYmax, sCubeModelZmin),
+
+        Vector3f(sCubeModelXmin, sCubeModelYmin, sCubeModelZmax), // line 3
+        Vector3f(sCubeModelXmin, sCubeModelYmax, sCubeModelZmax),
+
+        Vector3f(sCubeModelXmax, sCubeModelYmin, sCubeModelZmax), // line 4
+        Vector3f(sCubeModelXmax, sCubeModelYmax, sCubeModelZmax),
+
+        Vector3f(sCubeModelXmin, sCubeModelYmin, sCubeModelZmin), // line 1
+        Vector3f(sCubeModelXmin, sCubeModelYmin, sCubeModelZmax),
+
+        Vector3f(sCubeModelXmin, sCubeModelYmax, sCubeModelZmin), // line 2
+        Vector3f(sCubeModelXmin, sCubeModelYmax, sCubeModelZmax),
+
+        Vector3f(sCubeModelXmax, sCubeModelYmin, sCubeModelZmin), // line 3
+        Vector3f(sCubeModelXmax, sCubeModelYmin, sCubeModelZmax),
+
+        Vector3f(sCubeModelXmax, sCubeModelYmax, sCubeModelZmin), // line 4
+        Vector3f(sCubeModelXmax, sCubeModelYmax, sCubeModelZmax),
+    };
+
+    return cubeLineMeshModelPositionList;
+}
+
+std::vector<Vector3f>
+AABBBoundingBox::GetCubeModelPositionList()
+{
+    static std::vector<Vector3f> sCubeModelPositionList = CreateCubeLineMesh();;
     return sCubeModelPositionList;
 }
 

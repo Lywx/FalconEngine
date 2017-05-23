@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.8)
 cmake_policy(SET CMP0054 NEW)
 
 # NOTE(Wuxiang): Include guard.
@@ -53,6 +53,10 @@ function(fe_set_target_output TARGET_NAME)
         
         OUTPUT_NAME                             "${TARGET_NAME}${FALCON_ENGINE_OUTPUT_SUFFIX}"
     )
+
+    set_target_properties(${TARGET_NAME} PROPERTIES 
+        VS_DEBUGGER_WORKING_DIRECTORY "${FALCON_ENGINE_RUNTIME_OUTPUT_DIR}/Debug")
+
 endfunction()
 
 function(fe_set_target_folder TARGET_NAME FOLDER_NAME)

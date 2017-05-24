@@ -36,8 +36,6 @@ uniform PointLightData[PointLightNumMax] PointLightArray;
 uniform int SpotLightNum;
 uniform SpotLightData[SpotLightNumMax] SpotLightArray;
 
-uniform mat4 ModelViewTransform;
-
 // @status Finished.
 vec3 
 CalcDirectionalLight(DirectionalLightData light, vec3 eyeN, vec3 eyeV)

@@ -17,7 +17,7 @@ BakeAssets()
     // assetProcessor.BakeFont("Content/Font/NSimSunDistanceField.fnt");
 
     // Models
-    assetProcessor.BakeModel("Content/Model/Axe.dae");
+    // assetProcessor.BakeModel("Content/Model/Axe.dae");
     // assetProcessor.BakeModel("Content/Model/Bedroom.dae");
 }
 
@@ -55,10 +55,9 @@ CompileShaders()
 
     // Shader Compiling Test
     auto shader = std::make_shared<Shader>();
-    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shaders/PhongLighting.vert.glsl");
-    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shaders/PhongLighting.frag.glsl");
-    //shader->PushShaderFile(ShaderType::VertexShader, "Content/Shaders/BoundingBox.vert.glsl");
-    //shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shaders/BoundingBox.frag.glsl");
+    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/Mesh.vert.glsl");
+    shader->PushShaderFile(ShaderType::GeometryShader, "Content/Shader/Mesh.geom.glsl");
+    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shader/Mesh.frag.glsl");
     auto platformShader = PlatformShader(shader.get());
     platformShader.CollectUniformActive();
 }

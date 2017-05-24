@@ -1,7 +1,9 @@
 ﻿#include "SampleGame.h"
 
+#include <FalconEngine/Graphics/Effect/BlinnPhongShadingEffect.h>
 #include <FalconEngine/Graphics/Effect/PaintEffect.h>
 #include <FalconEngine/Graphics/Effect/PhongShadingEffect.h>
+#include <FalconEngine/Graphics/Effect/MeshEffect.h>
 
 using namespace std;
 
@@ -74,9 +76,9 @@ SampleGame::Initialize()
             mRoomNode->AttachChild(mPointLight3->GetNode());
 
             mSceneDirectionalLight = make_shared<Light>(LightType::Directional);
-            mSceneDirectionalLight->mAmbient = Color(055, 055, 055);
-            mSceneDirectionalLight->mDiffuse = Color(055, 055, 055);
-            mSceneDirectionalLight->mSpecular = Color(055, 055, 055);
+            mSceneDirectionalLight->mAmbient = Color(255, 255, 255);
+            mSceneDirectionalLight->mDiffuse = Color(255, 255, 255);
+            mSceneDirectionalLight->mSpecular = Color(255, 255, 255);
             mSceneDirectionalLight->mDirection = Vector3f(1, 1, 1);
 
             mPointLight1->SetAmbient(ColorPalette::Gold);
@@ -106,8 +108,9 @@ SampleGame::Initialize()
             mScenePointLightList = { mPointLight1->GetLight(), mPointLight2->GetLight(), mPointLight3->GetLight() };
 
             // Initialize Effect
-            auto sceneLightingEffect = make_shared<PhongShadingEffect>();
-            sceneLightingEffect->CreateInstance(mRoomNode.get(), *mSceneDirectionalLight, mScenePointLightList, mSceneSpotLightList);
+            auto sceneLightingEffect = make_shared<MeshEffect>();
+            // sceneLightingEffect->CreateInstance(mRoomNode.get(), *mSceneDirectionalLight, mScenePointLightList, mSceneSpotLightList);
+            sceneLightingEffect->CreateInstance(mRoomNode.get(), ColorPalette::LightBlue, *mSceneDirectionalLight, ColorPalette::Black, 2.0f);
         }
     }
 

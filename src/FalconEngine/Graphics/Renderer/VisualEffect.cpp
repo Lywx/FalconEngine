@@ -12,6 +12,7 @@
 #include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
 #include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
 #include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
+#include "FalconEngine/Context/GameEngineGraphics.h"
 
 using namespace std;
 
@@ -209,4 +210,34 @@ VisualEffect::SetShaderUniformAutomaticNormalTransform(VisualEffectInstance *vis
         return Matrix3f(normalTransform);
     }, _1, _2)));
 }
+
+void
+VisualEffect::SetShaderUniformAutomaticScreenTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const
+{
+    using namespace std;
+    using namespace std::placeholders;
+
+    visualEffectInstance->SetShaderUniform(passIndex, ShareAutomatic<Matrix4f>(uniformName,
+                                           std::bind([](const Visual *, const Camera *)
+    {
+        auto viewport = GameEngineGraphics::GetInstance()->GetViewport();
+
+        float wOver2 = 0.5f * viewport->GetWidth();
+        float hOver2 = 0.5f * viewport->GetHeight();
+        float l = viewport->mLeft;
+        float b = viewport->mBottom;
+        float nOver2 = 0.5f * viewport->mNear;
+        float fOver2 = 0.5f * viewport->mFar;
+
+        Matrix4f screenTransform = Matrix4f::Identity;
+        screenTransform[0][0] = wOver2;
+        screenTransform[1][1] = hOver2;
+        screenTransform[2][2] = fOver2 - nOver2;
+        screenTransform[3][0] = wOver2 + l;
+        screenTransform[3][1] = hOver2 + b;
+        screenTransform[3][2] = fOver2 + nOver2;
+        return screenTransform;
+    }, _1, _2)));
+}
+
 }

@@ -27,7 +27,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    PhongShadingEffect();
+    explicit PhongShadingEffect(bool initializer = true);
     virtual ~PhongShadingEffect();
 
 public:

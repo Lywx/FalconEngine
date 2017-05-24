@@ -15,8 +15,8 @@ FALCON_ENGINE_EFFECT_IMPLEMENT(BitmapFontEffect);
 BitmapFontEffect::BitmapFontEffect()
 {
     auto shader = std::make_shared<Shader>();
-    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/SignedDistancedFieldFont.vert.glsl");
-    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shader/SignedDistancedFieldFont.frag.glsl");
+    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/BitmapFont.vert.glsl");
+    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shader/BitmapFont.frag.glsl");
 
     auto pass = make_unique<VisualEffectPass>();
     pass->SetShader(shader);

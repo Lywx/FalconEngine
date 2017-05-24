@@ -134,6 +134,9 @@ protected:
     void
     SetShaderUniformAutomaticNormalTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const;
 
+    void
+    SetShaderUniformAutomaticScreenTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const;
+
 protected:
     std::vector<std::unique_ptr<VisualEffectPass>> mEffectPassList; // Passes contained in this effect.
 };
@@ -151,7 +154,7 @@ private: \
 std::shared_ptr<VisualEffectInstance> \
 klass::CreateSetInstance(Visual *visual) const \
 { \
-    auto visualEffectInstance = make_shared<VisualEffectInstance>(GetEffect()); \
+    auto visualEffectInstance = std::make_shared<VisualEffectInstance>(GetEffect()); \
     visual->SetEffectInstance(visualEffectInstance); \
     return visualEffectInstance; \
 }

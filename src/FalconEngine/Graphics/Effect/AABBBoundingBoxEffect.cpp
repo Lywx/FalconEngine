@@ -13,8 +13,8 @@ FALCON_ENGINE_EFFECT_IMPLEMENT(AABBBoundingBoxEffect);
 AABBBoundingBoxEffect::AABBBoundingBoxEffect()
 {
     auto shader = std::make_shared<Shader>();
-    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/AABBBoundingBoxInstancing.vert.glsl");
-    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shader/AABBBoundingBoxInstancing.frag.glsl");
+    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/AABBBoundingBox.vert.glsl");
+    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shader/AABBBoundingBox.frag.glsl");
 
     auto pass = make_unique<VisualEffectPass>();
     pass->SetShader(shader);

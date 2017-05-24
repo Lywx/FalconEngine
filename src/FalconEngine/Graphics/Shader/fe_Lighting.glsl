@@ -145,7 +145,6 @@ CalcPhongLighting(
     }
     else
     {
-        // TODO(Wuxiang)
         mEmissive = MaterialColor.Emissive;
     }
 
@@ -194,3 +193,150 @@ CalcPhongLighting(
         cSpecular);
 }
 
+// @require None.
+void 
+CalcBlinnPhongLighting(
+// @parameter Transform.
+    in vec3 eyeN, 
+    in vec3 eyeV,
+    in vec3 eyeL,
+
+// @parameter Light Source.
+    in vec3 sAmbient, 
+    in vec3 sDiffuse, 
+    in vec3 sSpecular, 
+
+// @parameter Material Color. 
+    in vec3 mAmbient,
+    in vec3 mDiffuse,
+    in vec3 mEmissive,
+    in vec3 mSpecular,
+    in float mShininess,
+
+// @return Standard Phong lighting contribution.
+    out vec3 cAmbient,
+    out vec3 cDiffuse,
+    out vec3 cEmissive,
+    out vec3 cSpecular)
+{
+    vec3 eyeH = normalize(eyeL + eyeV);
+
+    // dot(n, l)
+    float dotNL = max(dot(eyeN, eyeL), 0.0);
+
+    // dot(n, h)
+    float dotNH = max(dot(eyeN, eyeH), 0.0);
+
+    cAmbient  = sAmbient * mAmbient;
+    cDiffuse  = sDiffuse * mDiffuse * dotNL;
+    cEmissive = mEmissive;
+    cSpecular = sSpecular * mSpecular * pow(dotNH, mShininess);
+}
+
+// @require 
+//
+// #include "fe_Material.glsl".
+// #include "fe_Texture.glsl".
+// 
+// uniform bool TextureAmbientExist;
+// uniform bool TextureDiffuseExist;
+// uniform bool TextureEmissiveExist;
+// uniform bool TextureSpecularExist;
+// uniform bool TextureShininessExist;
+// uniform MaterialColorData MaterialColor;
+void
+CalcBlinnPhongLighting(
+
+// @parameter 
+    in vec2 texCoord,
+
+// @parameter Transform.
+    in vec3 eyeN, 
+    in vec3 eyeV,
+    in vec3 eyeL,
+
+// @parameter Light Source.
+    in vec3 sAmbient, 
+    in vec3 sDiffuse, 
+    in vec3 sSpecular, 
+
+// @return Standard Phong lighting contribution.
+    out vec3 cAmbient,
+    out vec3 cDiffuse,
+    out vec3 cEmissive,
+    out vec3 cSpecular)
+{
+    vec3 mAmbient;
+    if (TextureAmbientExist)
+    {
+        mAmbient = vec3(texture(fe_TextureAmbient, texCoord));
+    }
+    else
+    {
+        mAmbient = MaterialColor.Ambient;
+    }
+
+    vec3 mDiffuse;
+    if (TextureDiffuseExist)
+    {
+        mDiffuse = vec3(texture(fe_TextureDiffuse, texCoord));
+    }
+    else
+    {
+        mDiffuse = MaterialColor.Diffuse;
+    }
+
+    vec3 mEmissive;
+    if (TextureEmissiveExist)
+    {
+        mEmissive = vec3(texture(fe_TextureEmissive, texCoord));
+    }
+    else
+    {
+        mEmissive = MaterialColor.Emissive;
+    }
+
+    float mShininess;
+    if (TextureShininessExist)
+    {
+        mShininess = texture(fe_TextureShininess, texCoord).a;
+    }
+    else
+    {
+        mShininess = MaterialColor.Shininess;
+    }
+
+    vec3 mSpecular;
+    if (TextureSpecularExist)
+    {
+        mSpecular = vec3(texture(fe_TextureSpecular, texCoord));
+    }
+    else
+    {
+        mSpecular = MaterialColor.Specular;
+    }
+
+    CalcBlinnPhongLighting(
+        // @parameter Transform.
+        eyeN, 
+        eyeV,
+        eyeL,
+
+        // @parameter Light Source.
+        sAmbient, 
+        sDiffuse, 
+        sSpecular, 
+
+        // @parameter Material Color. 
+        mAmbient,
+        mDiffuse,
+        mEmissive,
+        mSpecular,
+        mShininess,
+
+        // @return Standard Phong lighting contribution.
+        cAmbient,
+        cDiffuse,
+        cEmissive,
+        cSpecular);
+}

@@ -21,36 +21,39 @@ int PhongShadingEffect::SpotLightNumMax = 6;
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PhongShadingEffect::PhongShadingEffect()
+PhongShadingEffect::PhongShadingEffect(bool initializer)
 {
-    auto shader = std::make_shared<Shader>();
-    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/PhongShading.vert.glsl");
-    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shader/PhongShading.frag.glsl");
+    if (initializer)
+    {
+        auto shader = std::make_shared<Shader>();
+        shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/PhongShading.vert.glsl");
+        shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shader/PhongShading.frag.glsl");
 
-    auto pass = make_unique<VisualEffectPass>();
-    pass->SetShader(shader);
+        auto pass = make_unique<VisualEffectPass>();
+        pass->SetShader(shader);
 
-    auto blendState = make_unique<BlendState>();
-    blendState->mEnabled = false;
-    pass->SetBlendState(move(blendState));
+        auto blendState = make_unique<BlendState>();
+        blendState->mEnabled = false;
+        pass->SetBlendState(move(blendState));
 
-    auto cullState = make_unique<CullState>();
-    cullState->mEnabled = false;
-    cullState->mCounterClockwise = false;
-    pass->SetCullState(move(cullState));
+        auto cullState = make_unique<CullState>();
+        cullState->mEnabled = false;
+        cullState->mCounterClockwise = false;
+        pass->SetCullState(move(cullState));
 
-    auto depthTestState = make_unique<DepthTestState>();
-    depthTestState->mTestEnabled = true;
-    pass->SetDepthTestState(move(depthTestState));
+        auto depthTestState = make_unique<DepthTestState>();
+        depthTestState->mTestEnabled = true;
+        pass->SetDepthTestState(move(depthTestState));
 
-    pass->SetOffsetState(make_unique<OffsetState>());
-    pass->SetStencilTestState(make_unique<StencilTestState>());
+        pass->SetOffsetState(make_unique<OffsetState>());
+        pass->SetStencilTestState(make_unique<StencilTestState>());
 
-    auto wireframwState = make_unique<WireframeState>();
-    wireframwState->mEnabled = false;
-    pass->SetWireframeState(move(wireframwState));
+        auto wireframwState = make_unique<WireframeState>();
+        wireframwState->mEnabled = false;
+        pass->SetWireframeState(move(wireframwState));
 
-    InsertPass(move(pass));
+        InsertPass(move(pass));
+    }
 }
 
 PhongShadingEffect::~PhongShadingEffect()
@@ -103,127 +106,6 @@ PhongShadingEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance        *vis
     SetShaderUniformAutomaticModelViewProjectionTransform(visualEffectInstance, 0, "ModelViewProjectionTransform");
     SetShaderUniformAutomaticModelViewTransform(visualEffectInstance, 0, "ModelViewTransform");
     SetShaderUniformAutomaticNormalTransform(visualEffectInstance, 0, "NormalTransform");
-
-    // Directional light
-    visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Ambient",
-                                           std::bind([&directionalLight](const Visual *, const Camera *)
-    {
-        return Vector3f(directionalLight.mAmbient);
-    }, _1, _2)));
-
-    visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Diffuse",
-                                           std::bind([&directionalLight](const Visual *, const Camera *)
-    {
-        return Vector3f(directionalLight.mDiffuse);
-    }, _1, _2)));
-
-    visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Specular",
-                                           std::bind([&directionalLight](const Visual *, const Camera *)
-    {
-        return Vector3f(directionalLight.mSpecular);
-    }, _1, _2)));
-
-    visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.EyeDirection",
-                                           std::bind([&directionalLight](const Visual *, const Camera * camera)
-    {
-        return Vector3f(camera->GetView() * Vector4f(directionalLight.mDirection, 0));
-    }, _1, _2)));
-
-    // Point light
-    {
-        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<int>("PointLightNum",
-                                               std::bind([&pointLightList](const Visual *, const Camera *)
-        {
-            return int(pointLightList.size());
-        }, _1, _2)));
-
-        for (int i = 0; i < PointLightNumMax; ++i)
-        {
-            visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].Ambient",
-                                                   std::bind([i, &pointLightList](const Visual *, const Camera *)
-            {
-                if (i < int(pointLightList.size()))
-                {
-                    auto *pointLight = pointLightList[i];
-                    return Vector3f(pointLight->mAmbient);
-                }
-
-                return Vector3f::Zero;
-            }, _1, _2)));
-
-            visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].Diffuse",
-                                                   std::bind([i, &pointLightList](const Visual *, const Camera *)
-            {
-                if (i < int(pointLightList.size()))
-                {
-                    auto *pointLight = pointLightList[i];
-                    return Vector3f(pointLight->mDiffuse);
-                }
-
-                return Vector3f::Zero;
-            }, _1, _2)));
-
-            visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].Specular",
-                                                   std::bind([i, &pointLightList](const Visual *, const Camera *)
-            {
-                if (i < int(pointLightList.size()))
-                {
-                    auto *pointLight = pointLightList[i];
-                    return Vector3f(pointLight->mSpecular);
-                }
-
-                return Vector3f::Zero;
-            }, _1, _2)));
-
-            visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].EyePosition",
-                                                   std::bind([i, &pointLightList](const Visual *, const Camera * camera)
-            {
-                if (i < int(pointLightList.size()))
-                {
-                    auto *pointLight = pointLightList[i];
-                    return Vector3f(camera->GetView() * Vector4f(pointLight->mPosition, 1));
-                }
-
-                return Vector3f::Zero;
-            }, _1, _2)));
-
-            visualEffectInstance->SetShaderUniform(0, ShareAutomatic<float>("PointLightArray[" + std::to_string(i) + "].Constant",
-                                                   std::bind([i, &pointLightList](const Visual *, const Camera *)
-            {
-                if (i < int(pointLightList.size()))
-                {
-                    auto *pointLight = pointLightList[i];
-                    return pointLight->mConstant;
-                }
-
-                return 0.0f;
-            }, _1, _2)));
-
-            visualEffectInstance->SetShaderUniform(0, ShareAutomatic<float>("PointLightArray[" + std::to_string(i) + "].Linear",
-                                                   std::bind([i, &pointLightList](const Visual *, const Camera *)
-            {
-                if (i < int(pointLightList.size()))
-                {
-                    auto *pointLight = pointLightList[i];
-                    return pointLight->mLinear;
-                }
-
-                return 0.0f;
-            }, _1, _2)));
-
-            visualEffectInstance->SetShaderUniform(0, ShareAutomatic<float>("PointLightArray[" + std::to_string(i) + "].Quadratic",
-                                                   std::bind([i, &pointLightList](const Visual *, const Camera *)
-            {
-                if (i < int(pointLightList.size()))
-                {
-                    auto *pointLight = pointLightList[i];
-                    return pointLight->mQuadratic;
-                }
-
-                return 0.0f;
-            }, _1, _2)));
-        }
-    }
 
     // Material
     {
@@ -362,19 +244,141 @@ PhongShadingEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance        *vis
             }
         }
     }
+
+    // Light
+    {
+        // Directional light
+        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Ambient",
+                                               std::bind([&directionalLight](const Visual *, const Camera *)
+        {
+            return Vector3f(directionalLight.mAmbient);
+        }, _1, _2)));
+
+        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Diffuse",
+                                               std::bind([&directionalLight](const Visual *, const Camera *)
+        {
+            return Vector3f(directionalLight.mDiffuse);
+        }, _1, _2)));
+
+        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Specular",
+                                               std::bind([&directionalLight](const Visual *, const Camera *)
+        {
+            return Vector3f(directionalLight.mSpecular);
+        }, _1, _2)));
+
+        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.EyeDirection",
+                                               std::bind([&directionalLight](const Visual *, const Camera * camera)
+        {
+            return Vector3f(camera->GetView() * Vector4f(directionalLight.mDirection, 0));
+        }, _1, _2)));
+
+        // Point light
+        {
+            visualEffectInstance->SetShaderUniform(0, ShareAutomatic<int>("PointLightNum",
+                                                   std::bind([&pointLightList](const Visual *, const Camera *)
+            {
+                return int(pointLightList.size());
+            }, _1, _2)));
+
+            for (int i = 0; i < PointLightNumMax; ++i)
+            {
+                visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].Ambient",
+                                                       std::bind([i, &pointLightList](const Visual *, const Camera *)
+                {
+                    if (i < int(pointLightList.size()))
+                    {
+                        auto *pointLight = pointLightList[i];
+                        return Vector3f(pointLight->mAmbient);
+                    }
+
+                    return Vector3f::Zero;
+                }, _1, _2)));
+
+                visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].Diffuse",
+                                                       std::bind([i, &pointLightList](const Visual *, const Camera *)
+                {
+                    if (i < int(pointLightList.size()))
+                    {
+                        auto *pointLight = pointLightList[i];
+                        return Vector3f(pointLight->mDiffuse);
+                    }
+
+                    return Vector3f::Zero;
+                }, _1, _2)));
+
+                visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].Specular",
+                                                       std::bind([i, &pointLightList](const Visual *, const Camera *)
+                {
+                    if (i < int(pointLightList.size()))
+                    {
+                        auto *pointLight = pointLightList[i];
+                        return Vector3f(pointLight->mSpecular);
+                    }
+
+                    return Vector3f::Zero;
+                }, _1, _2)));
+
+                visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].EyePosition",
+                                                       std::bind([i, &pointLightList](const Visual *, const Camera * camera)
+                {
+                    if (i < int(pointLightList.size()))
+                    {
+                        auto *pointLight = pointLightList[i];
+                        return Vector3f(camera->GetView() * Vector4f(pointLight->mPosition, 1));
+                    }
+
+                    return Vector3f::Zero;
+                }, _1, _2)));
+
+                visualEffectInstance->SetShaderUniform(0, ShareAutomatic<float>("PointLightArray[" + std::to_string(i) + "].Constant",
+                                                       std::bind([i, &pointLightList](const Visual *, const Camera *)
+                {
+                    if (i < int(pointLightList.size()))
+                    {
+                        auto *pointLight = pointLightList[i];
+                        return pointLight->mConstant;
+                    }
+
+                    return 0.0f;
+                }, _1, _2)));
+
+                visualEffectInstance->SetShaderUniform(0, ShareAutomatic<float>("PointLightArray[" + std::to_string(i) + "].Linear",
+                                                       std::bind([i, &pointLightList](const Visual *, const Camera *)
+                {
+                    if (i < int(pointLightList.size()))
+                    {
+                        auto *pointLight = pointLightList[i];
+                        return pointLight->mLinear;
+                    }
+
+                    return 0.0f;
+                }, _1, _2)));
+
+                visualEffectInstance->SetShaderUniform(0, ShareAutomatic<float>("PointLightArray[" + std::to_string(i) + "].Quadratic",
+                                                       std::bind([i, &pointLightList](const Visual *, const Camera *)
+                {
+                    if (i < int(pointLightList.size()))
+                    {
+                        auto *pointLight = pointLightList[i];
+                        return pointLight->mQuadratic;
+                    }
+
+                    return 0.0f;
+                }, _1, _2)));
+            }
+        }
+
+    }
 }
 
 std::shared_ptr<VertexFormat>
 PhongShadingEffectCreateVertexFormat()
 {
     auto vertexFormat = std::make_shared<VertexFormat>();
-
     vertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
     vertexFormat->PushVertexAttribute(1, "Normal", VertexAttributeType::FloatVec3, false, 0);
     vertexFormat->PushVertexAttribute(2, "TexCoord", VertexAttributeType::FloatVec2, false, 0);
-
     vertexFormat->FinishVertexAttribute();
-
     return vertexFormat;
 }
 

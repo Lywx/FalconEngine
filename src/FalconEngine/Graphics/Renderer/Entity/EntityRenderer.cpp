@@ -1,6 +1,6 @@
 #include <FalconEngine/Graphics/Renderer/Entity/EntityRenderer.h>
 
-#include <FalconEngine/Graphics/Effect/AABBBoundingBoxInstancingEffect.h>
+#include <FalconEngine/Graphics/Effect/AABBBoundingBoxEffect.h>
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveLines.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
@@ -274,10 +274,9 @@ EntityRenderer::PrepareBatch(const Camera *camera)
     {
         auto aABBBoundingBoxInstanceNum = int(Kilobytes(1));
         auto aABBBoundingBoxVertexNum = 24;
-        auto aABBBoungingBoxEffect = make_shared<AABBBoundingBoxInstancingEffect>();
+        auto aABBBoungingBoxEffect = make_shared<AABBBoundingBoxEffect>();
 
         // TODO(Wuxiang): Add multiple type of bounding box support.
-        auto aABBBoundingBoxVertexFormat = aABBBoungingBoxEffect->GetVertexFormat();
 
         // Hold fixed data about vertex position in model space.
         auto aABBBoundingBoxVertexBuffer = CreateBoundingBoxVertexBuffer(aABBBoundingBoxVertexNum);
@@ -285,19 +284,13 @@ EntityRenderer::PrepareBatch(const Camera *camera)
         // Hold dynamic data about each instance of bounding box.
         auto aABBBoundingBoxInstanceBuffer = make_shared<VertexBuffer>(aABBBoundingBoxInstanceNum, sizeof(AABBBoundingBoxInstance), BufferUsage::Dynamic);
 
-        auto aABBBoundingBoxVertexGroup = make_shared<VertexGroup>();
-        aABBBoundingBoxVertexGroup->SetVertexBuffer(0, aABBBoundingBoxVertexBuffer, 0, aABBBoundingBoxVertexFormat->GetVertexBufferStride(0));
-        aABBBoundingBoxVertexGroup->SetVertexBuffer(1, aABBBoundingBoxInstanceBuffer, 0, aABBBoundingBoxVertexFormat->GetVertexBufferStride(1));
-
         // AABB bounding box is bipartite graph, so you could not use line strip.
         auto aABBBoundingBoxPrimitive = make_shared<PrimitiveLines>(aABBBoundingBoxVertexBuffer, false);
         auto aABBBoundingBoxMesh = make_shared<Mesh>(aABBBoundingBoxPrimitive, nullptr);
-        auto aABBBoundingBoxVisual = make_shared<Visual>(aABBBoundingBoxMesh, aABBBoundingBoxVertexFormat, aABBBoundingBoxVertexGroup);
-        auto AABBBoundingBoxVisualEffectInstance = make_shared<VisualEffectInstance>(aABBBoungingBoxEffect);
-        aABBBoungingBoxEffect->CreateInstance(AABBBoundingBoxVisualEffectInstance.get(), camera);
-        aABBBoundingBoxVisual->SetInstance(AABBBoundingBoxVisualEffectInstance);
+        auto aABBBoundingBoxVisual = make_shared<Visual>(aABBBoundingBoxMesh);
+        auto aABBBoundingBoxVisualEffectInstance = aABBBoungingBoxEffect->CreateInstance(aABBBoundingBoxVisual.get(), aABBBoundingBoxInstanceBuffer);
 
-        auto aABBBoundingBoxBatch = make_shared<AABBBoundingBoxBatch>(camera, aABBBoundingBoxVertexBuffer, aABBBoundingBoxInstanceBuffer, aABBBoundingBoxVisual, AABBBoundingBoxVisualEffectInstance);
+        auto aABBBoundingBoxBatch = make_shared<AABBBoundingBoxBatch>(camera, aABBBoundingBoxVertexBuffer, aABBBoundingBoxInstanceBuffer, aABBBoundingBoxVisual, aABBBoundingBoxVisualEffectInstance);
         mBoundingBoxBatchTable.insert({ camera, aABBBoundingBoxBatch });
         return aABBBoundingBoxBatch;
     }

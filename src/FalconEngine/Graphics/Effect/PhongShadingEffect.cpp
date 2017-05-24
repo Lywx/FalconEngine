@@ -1,33 +1,16 @@
 #include <FalconEngine/Graphics/Effect/PhongShadingEffect.h>
 
-#include <FalconEngine/Graphics/Renderer/Camera.h>
-#include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
-#include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
-#include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
-#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformAutomatic.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformConstant.h>
-#include <FalconEngine/Graphics/Renderer/State/BlendState.h>
-#include <FalconEngine/Graphics/Renderer/State/CullState.h>
-#include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
-#include <FalconEngine/Graphics/Renderer/State/OffsetState.h>
-#include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
-#include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Light.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Material.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Mesh.h>
-#include <FalconEngine/Graphics/Renderer/Scene/Node.h>
-#include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
-#include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
-#include "FalconEngine/Graphics/Renderer/Resource/VertexGroup.h"
 
 using namespace std;
 
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(PhongShadingEffect, VisualEffect);
+FALCON_ENGINE_EFFECT_IMPLEMENT(PhongShadingEffect);
 
 /************************************************************************/
 /* Static Members                                                       */
@@ -78,56 +61,48 @@ PhongShadingEffect::~PhongShadingEffect()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PhongShadingEffect::CreateInstance(_IN_     std::shared_ptr<VisualEffect> visualEffect,
-                                   _IN_OUT_ Node                         *node,
-                                   _IN_     const Light&                  directionalLight,
-                                   _IN_     const vector<const Light *>&  pointLightList,
-                                   _IN_     const vector<const Light *>&  spotLightList)
+PhongShadingEffect::CreateInstance(_IN_OUT_ Node                        *node,
+                                   _IN_     const Light&                 directionalLight,
+                                   _IN_     const vector<const Light *>& pointLightList,
+                                   _IN_     const vector<const Light *>& spotLightList) const
 {
     using namespace placeholders;
 
-    CheckEffectSame(visualEffect.get());
-
-    auto visualCreateVisualEffecetInstance = std::bind([visualEffect, &directionalLight, &pointLightList, &spotLightList, this](Visual * visual)
+    VisualEffect::TraverseLevelOrder(node, std::bind([&directionalLight, &pointLightList, &spotLightList, this](Visual * visual)
     {
-        auto visualEffectInstance = make_shared<VisualEffectInstance>(visualEffect);
-        CreateInstance(visualEffectInstance, visual, directionalLight, pointLightList, spotLightList);
-    }, _1);
+        auto visualEffectInstance = CreateSetInstance(visual);
 
-    TraverseVisualLevelOrder(node, visualCreateVisualEffecetInstance);
+        // Set up visual effect instance.
+        auto mesh = visual->GetMesh();
+        auto material = mesh->GetMaterial();
+        FALCON_ENGINE_CHECK_NULLPTR(material);
+        InitializeInstance(visualEffectInstance.get(), *material, directionalLight, pointLightList, spotLightList);
+
+        // Set up visual.
+        auto vertexFormat = GetVertexFormat();
+        visual->SetVertexFormat(vertexFormat);
+        auto vertexBuffer = mesh->GetPrimitive()->GetVertexBuffer();
+        auto vertexGroup = std::make_shared<VertexGroup>();
+        vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, vertexFormat->GetVertexBufferStride(0));
+        visual->SetVertexGroup(vertexGroup);
+    }, _1));
 }
 
 void
-PhongShadingEffect::CreateInstance(_IN_OUT_ VisualEffectInstance        *visualEffectInstance,
-                                   _IN_     const Material&              material,
-                                   _IN_     const Light&                 directionalLight,
-                                   _IN_     const vector<const Light *>& pointLightList,
-                                   _IN_     const vector<const Light *>& /* spotLightList */) const
+PhongShadingEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance        *visualEffectInstance,
+                                       _IN_     const Material&              material,
+                                       _IN_     const Light&                 directionalLight,
+                                       _IN_     const vector<const Light *>& pointLightList,
+                                       _IN_     const vector<const Light *>& /* spotLightList */) const
 {
+    // TODO(Wuxiang): 2017-05-24 12:35 Implement spot lights?
+
     using namespace placeholders;
 
-    CheckEffectCompatible(visualEffectInstance);
-
     // Transform
-    visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Matrix4f>("ModelViewProjectionTransform",
-                                           std::bind([](const Visual * visual, const Camera * camera)
-    {
-        // TODO(Wuxiang): Optimize this by merging projection and view transform into Dirty Flag pattern.
-        return camera->GetProjection() * camera->GetView()  * visual->mWorldTransform;
-    }, _1, _2)));
-
-    visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Matrix4f>("ModelViewTransform",
-                                           std::bind([](const Visual * visual, const Camera * camera)
-    {
-        return camera->GetView() * visual->mWorldTransform;
-    }, _1, _2)));
-
-    visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Matrix3f>("NormalTransform",
-                                           std::bind([](const Visual * visual, const Camera * camera)
-    {
-        auto normalTransform = Matrix4f::Transpose(Matrix4f::Inverse(camera->GetView() * visual->mWorldTransform));
-        return Matrix3f(normalTransform);
-    }, _1, _2)));
+    SetShaderUniformAutomaticModelViewProjectionTransform(visualEffectInstance, 0, "ModelViewProjectionTransform");
+    SetShaderUniformAutomaticModelViewTransform(visualEffectInstance, 0, "ModelViewTransform");
+    SetShaderUniformAutomaticNormalTransform(visualEffectInstance, 0, "NormalTransform");
 
     // Directional light
     visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Ambient",
@@ -252,7 +227,6 @@ PhongShadingEffect::CreateInstance(_IN_OUT_ VisualEffectInstance        *visualE
 
     // Material
     {
-        // TODO(Wuxiang): 2017-03-09 15:30 Add sampler.
         // Ambient
         {
             visualEffectInstance->SetShaderUniform(0, ShareAutomatic<bool>("TextureAmbientExist",
@@ -261,10 +235,14 @@ PhongShadingEffect::CreateInstance(_IN_OUT_ VisualEffectInstance        *visualE
                 return material.mAmbientTexture != nullptr;
             }, _1, _2)));
 
-            // TODO(Wuxiang): Possibly add dynamic material updating?
             if (material.mAmbientTexture != nullptr)
             {
                 visualEffectInstance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Ambient), material.mAmbientTexture);
+
+                if (material.mAmbientSampler != nullptr)
+                {
+                    visualEffectInstance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Ambient), material.mAmbientSampler);
+                }
             }
             else
             {
@@ -287,6 +265,11 @@ PhongShadingEffect::CreateInstance(_IN_OUT_ VisualEffectInstance        *visualE
             if (material.mDiffuseTexture != nullptr)
             {
                 visualEffectInstance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Diffuse), material.mDiffuseTexture);
+
+                if (material.mDiffuseSampler != nullptr)
+                {
+                    visualEffectInstance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Diffuse), material.mDiffuseSampler);
+                }
             }
             else
             {
@@ -309,6 +292,11 @@ PhongShadingEffect::CreateInstance(_IN_OUT_ VisualEffectInstance        *visualE
             if (material.mEmissiveTexture != nullptr)
             {
                 visualEffectInstance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Emissive), material.mEmissiveTexture);
+
+                if (material.mEmissiveSampler != nullptr)
+                {
+                    visualEffectInstance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Emissive), material.mEmissiveSampler);
+                }
             }
             else
             {
@@ -331,6 +319,11 @@ PhongShadingEffect::CreateInstance(_IN_OUT_ VisualEffectInstance        *visualE
             if (material.mShininessTexture != nullptr)
             {
                 visualEffectInstance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Shininess), material.mShininessTexture);
+
+                if (material.mShininessSampler != nullptr)
+                {
+                    visualEffectInstance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Shininess), material.mShininessSampler);
+                }
             }
             else
             {
@@ -353,6 +346,11 @@ PhongShadingEffect::CreateInstance(_IN_OUT_ VisualEffectInstance        *visualE
             if (material.mSpecularTexture != nullptr)
             {
                 visualEffectInstance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Specular), material.mSpecularTexture);
+
+                if (material.mSpecularSampler != nullptr)
+                {
+                    visualEffectInstance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Specular), material.mSpecularSampler);
+                }
             }
             else
             {
@@ -385,33 +383,6 @@ PhongShadingEffect::GetVertexFormat() const
 {
     static auto sVertexFormat = PhongShadingEffectCreateVertexFormat();
     return sVertexFormat;
-}
-
-/************************************************************************/
-/* Private Members                                                      */
-/************************************************************************/
-void
-PhongShadingEffect::CreateInstance(_IN_OUT_ std::shared_ptr<VisualEffectInstance> visualEffectInstance,
-                                   _IN_OUT_ Visual                       *visual,
-                                   _IN_     const Light&                  directionalLight,
-                                   _IN_     const vector<const Light *>&  pointLightList,
-                                   _IN_     const vector<const Light *>&  spotLightList) const
-{
-
-    auto mesh = visual->GetMesh();
-    auto material = mesh->GetMaterial();
-
-    FALCON_ENGINE_CHECK_NULLPTR(material);
-    CreateInstance(visualEffectInstance.get(), *material, directionalLight, pointLightList, spotLightList);
-    visual->SetInstance(visualEffectInstance);
-
-    auto vertexFormat = GetVertexFormat();
-    visual->SetVertexFormat(vertexFormat);
-
-    auto vertexBuffer = mesh->GetPrimitive()->GetVertexBuffer();
-    auto vertexGroup = std::make_shared<VertexGroup>();
-    vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, vertexFormat->GetVertexBufferStride(0));
-    visual->SetVertexGroup(vertexGroup);
 }
 
 }

@@ -37,7 +37,6 @@ private:
 
     // Scene
     std::shared_ptr<SceneEntity> mScene;
-    std::shared_ptr<PhongShadingEffect> mSceneLightingEffect;
     std::shared_ptr<Light>       mSceneDirectionalLight;
     std::vector<const Light *>   mScenePointLightList;
     std::vector<const Light *>   mSceneSpotLightList;

@@ -28,33 +28,44 @@ public:
 };
 #pragma pack(pop)
 
-class FALCON_ENGINE_API SignedDistancedFieldFontEffect : public VisualEffect
+// @summary Implements a signed distanced field based bitmap font rendering effect.
+class FALCON_ENGINE_API BitmapFontEffect : public VisualEffect
 {
-    FALCON_ENGINE_RTTI_DECLARE;
+    FALCON_ENGINE_EFFECT_DECLARE(BitmapFontEffect);
 
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit SignedDistancedFieldFontEffect(const Handedness *handedness);
-    virtual ~SignedDistancedFieldFontEffect();
+    explicit BitmapFontEffect();
+    virtual ~BitmapFontEffect();
 
 public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
+    std::shared_ptr<VisualEffectInstance>
+    CreateInstance(_IN_OUT_ Visual           *visual,
+                   _IN_     const BitmapFont *font,
+                   _IN_     const Handedness *handedness,
+                   _IN_     int               viewportWidth,
+                   _IN_     int               viewportHeight) const;
+
+protected:
+    virtual std::shared_ptr<VisualEffectInstance>
+    CreateSetInstance(Visual *visual) const override;
+
     // @summary Add required parameters to the existing visual effect instance.
     void
-    CreateInstance(
-        _IN_OUT_ VisualEffectInstance *instance,
-        _IN_     const BitmapFont     *font, int width, int height) const;
+    InitializeInstance(
+        _IN_OUT_ VisualEffectInstance *visualEffectInstance,
+        _IN_     const BitmapFont     *font,
+        _IN_     const Handedness     *handedness,
+        _IN_     int                   viewportWidth,
+        _IN_     int                   viewportHeight) const;
 
     virtual std::shared_ptr<VertexFormat>
     GetVertexFormat() const override;
-
-private:
-    const Handedness *mCameraHandedness;
-    Matrix4f          mCameraProjection;
 };
 
 }

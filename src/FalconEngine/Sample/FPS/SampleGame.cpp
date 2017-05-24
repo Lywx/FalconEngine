@@ -97,7 +97,7 @@ SampleGame::Initialize()
         mSceneLightingEffect = make_shared<PhongShadingEffect>();
 
         // Initialize Effect
-        mSceneLightingEffect->CreateInstance(mSceneLightingEffect, mScene->GetNode().get(), *mSceneDirectionalLight, mScenePointLightList, mSceneSpotLightList);
+        mSceneLightingEffect->CreateInstance(mScene->GetNode().get(), *mSceneDirectionalLight, mScenePointLightList, mSceneSpotLightList);
     }
 
     // Initialize Interaction.
@@ -111,10 +111,9 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
 {
     graphics->ClearFrameBuffer(ColorPalette::Gray, 1.f, 0);
 
-    auto engine = GetEngine();
-    auto engineSettings = GetEngineSettings();
-    auto width  = engineSettings->mWindowWidth;
-    auto height = engineSettings->mWindowHeight;
+    auto gameEngineSettings = GameEngineSettings::GetInstance();
+    auto width  = gameEngineSettings->mWindowWidth;
+    auto height = gameEngineSettings->mWindowHeight;
 
     // Draw Profiler
     {

@@ -97,6 +97,9 @@ public:
     const Matrix4f&
     GetView() const;
 
+    const Matrix4f&
+    GetViewProjection() const;
+
     void
     SetView(const Matrix4f& view);
 
@@ -152,6 +155,7 @@ protected:
     /************************************************************************/
     Matrix4f           mProjection;                                             // Projection transform matrix for the camera.
     Matrix4f           mView;                                                   // View transform matrix for the camera.
+    Matrix4f           mViewProjection;                                         // View projection matrix for saving extra computation.
     Matrix4f           mWorld;                                                  // World transform matrix for the camera position.
 
 private:

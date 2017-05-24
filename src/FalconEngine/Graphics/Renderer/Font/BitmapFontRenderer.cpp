@@ -4,7 +4,7 @@
 
 #include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Core/Memory.h>
-#include <FalconEngine/Graphics/Effect/SignedDistancedFieldFontEffect.h>
+#include <FalconEngine/Graphics/Effect/BitmapFontEffect.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
@@ -37,10 +37,10 @@ BitmapFontRenderer::~BitmapFontRenderer()
 /* Public Members                                                       */
 /************************************************************************/
 void
-BitmapFontRenderer::Initialize(int width, int height)
+BitmapFontRenderer::Initialize(int viewportWidth, int viewportHeight)
 {
-    mWidth  = width;
-    mHeight = height;
+    mViewportWidth  = viewportWidth;
+    mViewportHeight = viewportHeight;
 }
 
 void
@@ -281,23 +281,15 @@ BitmapFontRenderer::PrepareBatch(const BitmapFont *font)
 
     // Initialize new batch for given font.
     {
-        auto fontVisualEffect =  make_shared<SignedDistancedFieldFontEffect>(&mTextHandedness);
+        auto fontVisualEffect = make_shared<BitmapFontEffect>();
 
         auto fontVertexBufferSize = int(Kilobytes(100));
         auto fontVertexBuffer = make_shared<VertexBuffer>(fontVertexBufferSize, sizeof(SignedDistancedFieldFontVertex), BufferUsage::Dynamic);
-        auto fontVertexFormat = fontVisualEffect->GetVertexFormat();
-
-        auto fontVertexGroup = make_shared<VertexGroup>();
-        fontVertexGroup->SetVertexBuffer(0, fontVertexBuffer, 0, fontVertexFormat->GetVertexBufferStride(0));
 
         auto fontPrimitive = make_shared<PrimitiveQuads>(fontVertexBuffer, nullptr);
         auto fontMesh = make_shared<Mesh>(fontPrimitive, nullptr);
-        auto fontVisual = make_shared<Visual>(fontMesh, fontVertexFormat, fontVertexGroup);
-
-        auto fontVisualEffectInstance = make_shared<VisualEffectInstance>(fontVisualEffect);
-        fontVisualEffect->CreateInstance(fontVisualEffectInstance.get(), font, mWidth, mHeight);
-        fontVisual->SetInstance(fontVisualEffectInstance);
-
+        auto fontVisual = make_shared<Visual>(fontMesh);
+        auto fontVisualEffectInstance = fontVisualEffect->CreateInstance(fontVisual.get(), font, &mTextHandedness, mViewportWidth, mViewportHeight);
         auto fontBatch = make_shared<BitmapFontBatch>(fontVertexBuffer, fontVisual);
         mTextBatchTable.insert({ font, fontBatch });
         return fontBatch;

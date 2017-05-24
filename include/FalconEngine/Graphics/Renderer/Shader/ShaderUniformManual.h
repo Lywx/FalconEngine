@@ -9,6 +9,9 @@ template <typename T>
 class ShaderUniformManual : public ShaderUniformValue<T>
 {
 public:
+    using ValueType = T;
+
+public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/

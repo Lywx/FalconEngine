@@ -1,7 +1,8 @@
 #version 430 core
 
 layout(location = 0) in vec3 Position;
-layout(location = 1) in vec4 Color;
+layout(location = 0) in vec3 Normal;
+layout(location = 0) in vec3 TexCoord;
 
 out Vout
 {
@@ -9,6 +10,7 @@ out Vout
 } vout;
  
 uniform mat4 ModelViewProjectionTransform;
+uniform vec4 Color;
 
 void 
 main()

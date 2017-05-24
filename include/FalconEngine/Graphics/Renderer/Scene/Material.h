@@ -9,6 +9,7 @@ namespace FalconEngine
 {
 
 class Texture2d;
+class Sampler;
 
 class FALCON_ENGINE_API Material : public Object
 {
@@ -33,6 +34,12 @@ public:
     const Texture2d *mEmissiveTexture = nullptr;
     const Texture2d *mSpecularTexture = nullptr;
     const Texture2d *mShininessTexture = nullptr;
+
+    const Sampler   *mAmbientSampler = nullptr;
+    const Sampler   *mDiffuseSampler = nullptr;
+    const Sampler   *mEmissiveSampler = nullptr;
+    const Sampler   *mSpecularSampler = nullptr;
+    const Sampler   *mShininessSampler = nullptr;
 };
 
 }

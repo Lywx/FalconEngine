@@ -5,10 +5,6 @@
 
 #include <FalconEngine/Graphics/Header.h>
 
-#include <FalconEngine/Graphics/Effect/AABBBoundingBoxInstancingEffect.h>
-#include <FalconEngine/Graphics/Effect/PhongShadingEffect.h>
-#include <FalconEngine/Graphics/Effect/SignedDistancedFieldFontEffect.h>
-
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Primitive.h>

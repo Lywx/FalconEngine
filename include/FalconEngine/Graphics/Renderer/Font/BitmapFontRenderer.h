@@ -55,7 +55,7 @@ public:
     /* Rendering Engine API                                                 */
     /************************************************************************/
     void
-    Initialize(int width, int height);
+    Initialize(int viewportWidth, int viewportHeight);
 
     void
     RenderBegin();
@@ -88,8 +88,8 @@ private:
     TextBatchMap          mTextBatchTable;
     HandednessRight       mTextHandedness;
 
-    int                   mWidth  = 0; // Viewport width.
-    int                   mHeight = 0; // Viewport height.
+    int                   mViewportWidth  = 0;
+    int                   mViewportHeight = 0;
 };
 #pragma warning(default: 4251)
 

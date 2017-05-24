@@ -13,12 +13,12 @@ BakeAssets()
     auto assetProcessor = AssetProcessor();
 
     // Fonts
-    assetProcessor.BakeFont("Content/Font/LuciadaConsoleDistanceField.fnt");
-    assetProcessor.BakeFont("Content/Font/NSimSunDistanceField.fnt");
+    // assetProcessor.BakeFont("Content/Font/LuciadaConsoleDistanceField.fnt");
+    // assetProcessor.BakeFont("Content/Font/NSimSunDistanceField.fnt");
 
     // Models
     assetProcessor.BakeModel("Content/Model/Axe.dae");
-    assetProcessor.BakeModel("Content/Model/Bedroom.dae");
+    // assetProcessor.BakeModel("Content/Model/Bedroom.dae");
 }
 
 void

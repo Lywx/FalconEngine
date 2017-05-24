@@ -1034,7 +1034,7 @@ Renderer::Draw(
 
     FALCON_ENGINE_CHECK_NULLPTR(visual);
 
-    auto visualEffectInstance = visual->GetInstance();
+    auto visualEffectInstance = visual->GetEffectInstance();
     if (visualEffectInstance == nullptr)
     {
         // NOTE(Wuxiang): When the visual is not set up correctly for any visual

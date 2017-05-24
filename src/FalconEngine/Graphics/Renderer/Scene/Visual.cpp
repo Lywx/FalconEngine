@@ -22,7 +22,7 @@ Visual::Visual(std::shared_ptr<Mesh> mesh,
                std::shared_ptr<VertexFormat> vertexFormat,
                std::shared_ptr<VertexGroup> vertexGroup) :
     mMesh(mesh),
-    mInstance(),
+    mEffectInstance(),
     mVertexFormat(vertexFormat),
     mVertexGroup(vertexGroup)
 {
@@ -44,23 +44,23 @@ Visual::~Visual()
 /* Effect Management                                                    */
 /************************************************************************/
 const VisualEffectInstance *
-Visual::GetInstance() const
+Visual::GetEffectInstance() const
 {
-    return mInstance.get();
+    return mEffectInstance.get();
 }
 
 std::shared_ptr<VisualEffectInstance>
-Visual::GetInstance()
+Visual::GetEffectInstance()
 {
-    return mInstance;
+    return mEffectInstance;
 }
 
 void
-Visual::SetInstance(std::shared_ptr<VisualEffectInstance> effectInstance)
+Visual::SetEffectInstance(std::shared_ptr<VisualEffectInstance> effectInstance)
 {
     FALCON_ENGINE_CHECK_NULLPTR(effectInstance);
 
-    mInstance = effectInstance;
+    mEffectInstance = effectInstance;
 }
 
 const VertexFormat *
@@ -139,7 +139,7 @@ Visual::CopyTo(Visual *lhs) const
 {
     Spatial::CopyTo(lhs);
 
-    lhs->mInstance = mInstance;
+    lhs->mEffectInstance = mEffectInstance;
     lhs->mVertexFormat = mVertexFormat;
     lhs->mVertexGroup = mVertexGroup;
     lhs->mMesh = mMesh;

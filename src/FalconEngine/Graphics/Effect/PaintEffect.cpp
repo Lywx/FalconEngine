@@ -19,12 +19,14 @@
 #include <FalconEngine/Graphics/Renderer/Scene/Node.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 
 using namespace std;
 
 namespace FalconEngine
 {
 
+FALCON_ENGINE_EFFECT_IMPLEMENT(PaintEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -65,6 +67,61 @@ PaintEffect::~PaintEffect()
 {
 }
 
+/************************************************************************/
+/* Public Members                                                       */
+/************************************************************************/
+void
+PaintEffect::CreateInstance(Node *node, Color color) const
+{
+    using namespace placeholders;
 
+    TraverseLevelOrder(node, std::bind([this, color](Visual * visual)
+    {
+        auto visualEffectInstance = CreateSetInstance(visual);
+        InitializeInstance(visualEffectInstance.get(), color);
+
+        // Set up visual.
+        auto vertexFormat = GetVertexFormat();
+        visual->SetVertexFormat(vertexFormat);
+        auto vertexBuffer = visual->GetMesh()->GetPrimitive()->GetVertexBuffer();
+        auto vertexGroup = std::make_shared<VertexGroup>();
+        vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, vertexFormat->GetVertexBufferStride(0));
+        visual->SetVertexGroup(vertexGroup);
+    }, _1));
+}
+
+/************************************************************************/
+/* Protected Members                                                    */
+/************************************************************************/
+std::shared_ptr<VertexFormat>
+CreateVertexFormat()
+{
+    auto vertexFormat = make_shared<VertexFormat>();
+    vertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
+    vertexFormat->PushVertexAttribute(1, "Normal", VertexAttributeType::FloatVec3, false, 0);
+    vertexFormat->PushVertexAttribute(2, "TexCoord", VertexAttributeType::FloatVec2, false, 0);
+    vertexFormat->FinishVertexAttribute();
+    return vertexFormat;
+}
+
+std::shared_ptr<VertexFormat>
+PaintEffect::GetVertexFormat() const
+{
+    static auto sVertexFormat = CreateVertexFormat();
+    return sVertexFormat;
+}
+
+void
+PaintEffect::InitializeInstance(
+    _IN_OUT_ VisualEffectInstance *visualEffectInstance,
+    _IN_     Color                 color) const
+{
+    SetShaderUniformAutomaticModelViewProjectionTransform(visualEffectInstance, 0, "ModelViewProjectionTransform");
+
+    visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector4f>("Color", bind([color]
+    {
+        return Vector4f(color);
+    })));
+}
 
 }

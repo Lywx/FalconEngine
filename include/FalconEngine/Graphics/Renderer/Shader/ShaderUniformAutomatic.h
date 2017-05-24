@@ -10,6 +10,9 @@ template <typename T>
 class ShaderUniformAutomatic : public ShaderUniformValue<T>
 {
 public:
+    using ValueType = T;
+
+public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/

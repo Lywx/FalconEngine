@@ -83,6 +83,8 @@ CreateIndexBuffer(const aiMesh *mesh)
     return indexBuffer;
 }
 
+// @remark In any case, the vertex buffer contains interlaced data of vertex
+// position, normal and texture coordinate.
 std::shared_ptr<VertexBuffer>
 CreateVertexBuffer(const aiMesh *aiMesh)
 {
@@ -91,17 +93,17 @@ CreateVertexBuffer(const aiMesh *aiMesh)
     auto vertexBuffer = std::make_shared<VertexBuffer>(vertexNum, sizeof(ModelVertex), BufferUsage::Static);
     auto vertexData = reinterpret_cast<ModelVertex *>(vertexBuffer->GetData());
 
-    if (!aiMesh->mVertices)
+    if (aiMesh->mVertices == nullptr)
     {
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Model doesn't have vertex data.");
     }
 
-    if (!aiMesh->mNormals)
+    if (aiMesh->mNormals == nullptr)
     {
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Model doesn't have normal data.");
     }
 
-    if (!aiMesh->mTextureCoords)
+    if (aiMesh->mTextureCoords == nullptr)
     {
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Model doesn't have uv data.");
     }
@@ -257,6 +259,8 @@ CreateVisual(
     return visual;
 }
 
+// @remark model directory path is necessary for loading texture accompanying
+// the model files.
 std::shared_ptr<Node>
 CreateNode(
     _IN_ const string& modelDirectoryPath,
@@ -300,7 +304,8 @@ AssetImporter::Import(Model *model, const std::string& modelFilePath)
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(string("Error: ") + sAiModelImporter.GetErrorString());
     }
 
-    // NOTE(Wuxiang): The node constructor would recursively load the necessary children nodes and textures.
+    // NOTE(Wuxiang): The node constructor would recursively load the necessary
+    // children nodes and textures.
     model->SetNode(CreateNode(GetFileDirectory(modelFilePath), aiScene, aiScene->mRootNode));
 }
 

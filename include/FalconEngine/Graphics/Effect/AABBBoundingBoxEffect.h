@@ -33,26 +33,29 @@ class Camera;
 
 class VertexFormat;
 
-class FALCON_ENGINE_API AABBBoundingBoxInstancingEffect : public VisualEffect
+// @summary Implements a aabb bounding box effect using hardware instancing so
+// that all bounding box is drawn in one draw call.
+class FALCON_ENGINE_API AABBBoundingBoxEffect : public VisualEffect
 {
-    FALCON_ENGINE_RTTI_DECLARE;
+    FALCON_ENGINE_EFFECT_DECLARE(AABBBoundingBoxEffect);
 
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit AABBBoundingBoxInstancingEffect();
-    virtual ~AABBBoundingBoxInstancingEffect();
+    explicit AABBBoundingBoxEffect();
+    virtual ~AABBBoundingBoxEffect();
 
 public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
-    // @summary Add required parameters to the existing visual effect instance.
-    void
-    CreateInstance(
-        _IN_OUT_ VisualEffectInstance *instance,
-        _IN_     const Camera *camera) const;
+    std::shared_ptr<VisualEffectInstance>
+    CreateInstance(Visual *visual, std::shared_ptr<VertexBuffer> instanceBuffer) const;
+
+protected:
+    virtual std::shared_ptr<VisualEffectInstance>
+    CreateSetInstance(Visual *visual) const override;
 
     virtual std::shared_ptr<VertexFormat>
     GetVertexFormat() const override;

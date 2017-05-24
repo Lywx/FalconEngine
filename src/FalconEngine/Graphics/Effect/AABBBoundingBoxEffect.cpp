@@ -1,28 +1,16 @@
-#include <FalconEngine/Graphics/Effect/AABBBoundingBoxInstancingEffect.h>
-
-#include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
-#include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
-#include <FalconEngine/Graphics/Renderer/Resource/VertexAttribute.h>
-#include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
-#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
-#include <FalconEngine/Graphics/Renderer/State/BlendState.h>
-#include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
-#include <FalconEngine/Graphics/Renderer/State/CullState.h>
-#include <FalconEngine/Graphics/Renderer/State/OffsetState.h>
-#include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
-#include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
+#include <FalconEngine/Graphics/Effect/AABBBoundingBoxEffect.h>
 
 using namespace std;
 
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(AABBBoundingBoxInstancingEffect, VisualEffect);
+FALCON_ENGINE_EFFECT_IMPLEMENT(AABBBoundingBoxEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-AABBBoundingBoxInstancingEffect::AABBBoundingBoxInstancingEffect()
+AABBBoundingBoxEffect::AABBBoundingBoxEffect()
 {
     auto shader = std::make_shared<Shader>();
     shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/AABBBoundingBoxInstancing.vert.glsl");
@@ -55,17 +43,27 @@ AABBBoundingBoxInstancingEffect::AABBBoundingBoxInstancingEffect()
     InsertPass(move(pass));
 }
 
-AABBBoundingBoxInstancingEffect::~AABBBoundingBoxInstancingEffect()
+AABBBoundingBoxEffect::~AABBBoundingBoxEffect()
 {
 }
 
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-void
-AABBBoundingBoxInstancingEffect::CreateInstance(VisualEffectInstance *instance, const Camera * /* camera */) const
+std::shared_ptr<VisualEffectInstance>
+AABBBoundingBoxEffect::CreateInstance(Visual *visual, std::shared_ptr<VertexBuffer> instanceBuffer) const
 {
-    CheckEffectCompatible(instance);
+    auto visualEffectInstance = CreateSetInstance(visual);
+
+    auto vertexFormat = GetVertexFormat();
+    visual->SetVertexFormat(vertexFormat);
+    auto vertexGroup = make_shared<VertexGroup>();
+    auto vertexBuffer = visual->GetMesh()->GetPrimitive()->GetVertexBuffer();
+    vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, vertexFormat->GetVertexBufferStride(0));
+    vertexGroup->SetVertexBuffer(1, instanceBuffer, 0, vertexFormat->GetVertexBufferStride(1));
+    visual->SetVertexGroup(vertexGroup);
+
+    return visualEffectInstance;
 }
 
 std::shared_ptr<VertexFormat>
@@ -93,7 +91,7 @@ AABBBoundingBoxInstancingEffectCreateVertexFormat()
 }
 
 std::shared_ptr<VertexFormat>
-AABBBoundingBoxInstancingEffect::GetVertexFormat() const
+AABBBoundingBoxEffect::GetVertexFormat() const
 {
     static std::shared_ptr<VertexFormat> sVertexFormat = AABBBoundingBoxInstancingEffectCreateVertexFormat();
     return sVertexFormat;

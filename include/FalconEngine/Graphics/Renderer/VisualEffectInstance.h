@@ -78,8 +78,8 @@ public:
     SetShaderSampler(int passIndex, int textureUnit, const Sampler *sampler);
 
 protected:
-    std::shared_ptr<VisualEffect>                          mVisualEffect;
-    std::vector<std::unique_ptr<VisualEffectInstancePass>> mVisualEffectInstancePassList; // Passes contained in this effect instance.
+    std::shared_ptr<VisualEffect>                          mEffect;
+    std::vector<std::unique_ptr<VisualEffectInstancePass>> mEffectInstancePassList; // Passes contained in this effect instance.
 };
 #pragma warning(default: 4251)
 
@@ -87,7 +87,7 @@ template <typename T>
 ShaderUniformValue<T> *
 VisualEffectInstance::GetShaderUniform(int passIndex, int uniformIndex)
 {
-    return mVisualEffectInstancePassList.at(passIndex)->GetShaderUniform(uniformIndex);
+    return mEffectInstancePassList.at(passIndex)->GetShaderUniform(uniformIndex);
 }
 
 template <typename T>
@@ -96,7 +96,7 @@ VisualEffectInstance::SetShaderUniform(int passIndex, std::shared_ptr<ShaderUnif
 {
     FALCON_ENGINE_CHECK_NULLPTR(uniform);
 
-    mVisualEffectInstancePassList.at(passIndex)->SetShaderUniform(uniform);
+    mEffectInstancePassList.at(passIndex)->SetShaderUniform(uniform);
 }
 
 }

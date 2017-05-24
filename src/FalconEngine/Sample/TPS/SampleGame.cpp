@@ -1,5 +1,8 @@
 ﻿#include "SampleGame.h"
 
+#include <FalconEngine/Graphics/Effect/PaintEffect.h>
+#include <FalconEngine/Graphics/Effect/PhongShadingEffect.h>
+
 using namespace std;
 
 namespace FalconEngine
@@ -20,22 +23,23 @@ SampleGame::Initialize()
     // Initialize debug context.
     GameDebug::Initialize();
 
-    // Load all assets.
+    // Load all assets and initialize scene.
+    auto assetManager = AssetManager::GetInstance();
+
+    // Fonts
     {
-        auto assetManager = AssetManager::GetInstance();
+        mFont = assetManager->LoadFont("Content/Font/LuciadaConsoleDistanceField.fnt.bin").get();
+        // mFont = mAssetManager->LoadFont("Content/Font/NSimSunDistanceField.fnt.bin").get();
+    }
 
-        // Fonts
+    // Entities
+    {
+        mScene = make_shared<SceneEntity>();
+        auto sceneNode = mScene->GetNode();
+        sceneNode->mWorldTransform = Matrix4f::Zero;
+
+        // Axis
         {
-            mFont = assetManager->LoadFont("Content/Font/LuciadaConsoleDistanceField.fnt.bin").get();
-            // mFont = mAssetManager->LoadFont("Content/Font/NSimSunDistanceField.fnt.bin").get();
-        }
-
-        // Entities
-        {
-            mScene = make_shared<SceneEntity>();
-            auto sceneNode = mScene->GetNode();
-            sceneNode->mWorldTransform = Matrix4f::Zero;
-
             auto axeModel = assetManager->LoadModel("Content/Model/Axe.dae");
             auto axeNodeX = ShareClone(axeModel->GetNode());
             auto axeNodeY = ShareClone(axeModel->GetNode());
@@ -49,6 +53,14 @@ SampleGame::Initialize()
             axeNodeZ->mLocalTransform = Matrix4f::CreateRotationX(+PiOver2);
             sceneNode->AttachChild(mAxeNode);
 
+            auto sceneAxeEffect = make_shared<PaintEffect>();
+            sceneAxeEffect->CreateInstance(axeNodeX.get(), ColorPalette::Red);
+            sceneAxeEffect->CreateInstance(axeNodeY.get(), ColorPalette::Green);
+            sceneAxeEffect->CreateInstance(axeNodeZ.get(), ColorPalette::Blue);
+        }
+
+        // Room
+        {
             auto roomModel = assetManager->LoadModel("Content/Model/Bedroom.dae");
             mRoomNode = ShareClone(roomModel->GetNode());
             sceneNode->AttachChild(mRoomNode);
@@ -60,20 +72,13 @@ SampleGame::Initialize()
             mRoomNode->AttachChild(mPointLight1->GetNode());
             mRoomNode->AttachChild(mPointLight2->GetNode());
             mRoomNode->AttachChild(mPointLight3->GetNode());
-        }
-    }
 
-    // Initialize Scene
-    {
-        {
             mSceneDirectionalLight = make_shared<Light>(LightType::Directional);
             mSceneDirectionalLight->mAmbient = Color(055, 055, 055);
             mSceneDirectionalLight->mDiffuse = Color(055, 055, 055);
             mSceneDirectionalLight->mSpecular = Color(055, 055, 055);
             mSceneDirectionalLight->mDirection = Vector3f(1, 1, 1);
-        }
 
-        {
             mPointLight1->SetAmbient(ColorPalette::Gold);
             mPointLight1->SetDiffuse(Color(105, 105, 105));
             mPointLight1->SetSpecular(Color(105, 105, 105));
@@ -81,9 +86,7 @@ SampleGame::Initialize()
             mPointLight1->SetLinear(0.015f);
             mPointLight1->SetQuadratic(0.0075f);
             mPointLight1->SetPosition(Vector3f(-4.92804479598999, -6.6115264892578125, 3.654505729675293));
-        }
 
-        {
             mPointLight2->SetAmbient(ColorPalette::Gold);
             mPointLight2->SetDiffuse(Color(105, 105, 105));
             mPointLight2->SetSpecular(Color(105, 105, 105));
@@ -91,9 +94,7 @@ SampleGame::Initialize()
             mPointLight2->SetLinear(0.015f);
             mPointLight2->SetQuadratic(0.0075f);
             mPointLight2->SetPosition(Vector3f(5.09701681137085, -6.6115264892578125, 3.654505729675293));
-        }
 
-        {
             mPointLight3->SetAmbient(ColorPalette::Gold);
             mPointLight3->SetDiffuse(Color(105, 105, 105));
             mPointLight3->SetSpecular(Color(105, 105, 105));
@@ -101,26 +102,20 @@ SampleGame::Initialize()
             mPointLight3->SetLinear(0.015f);
             mPointLight3->SetQuadratic(0.0075f);
             mPointLight3->SetPosition(Vector3f(0.0, 0.0, 9.546284675598145));
+
+            mScenePointLightList = { mPointLight1->GetLight(), mPointLight2->GetLight(), mPointLight3->GetLight() };
+
+            // Initialize Effect
+            auto sceneLightingEffect = make_shared<PhongShadingEffect>();
+            sceneLightingEffect->CreateInstance(mRoomNode.get(), *mSceneDirectionalLight, mScenePointLightList, mSceneSpotLightList);
         }
-
-        mScenePointLightList = { mPointLight1->GetLight(), mPointLight2->GetLight(), mPointLight3->GetLight() };
-
-        // Initialize Effect
-        mSceneLightingEffect = make_shared<PhongShadingEffect>();
-        mSceneLightingEffect->CreateInstance(mSceneLightingEffect, mRoomNode.get(), *mSceneDirectionalLight, mScenePointLightList, mSceneSpotLightList);
-
-        //
-        // mSceneAxeEffect = make_shared<OrthogonalPaintEffect>();
     }
 
     // Initialize Interaction.
-    {
-        // mCamera->LookAt(Vector3f(0, 0, 0), Vector3f(0, 0, -1), Vector3f::UnitY);
-        mCamera->SetTarget(Vector3f(0, 0, 0));
-        mCamera->mAzimuthalRadian = Radian(40.0f);
-        mCamera->mPolarRadian = Radian(40.0f);
-        mCamera->mRadialDistance = 40.0f;
-    }
+    mCamera->SetTarget(Vector3f(0, 0, 0));
+    mCamera->mAzimuthalRadian = Radian(40.0f);
+    mCamera->mPolarRadian = Radian(40.0f);
+    mCamera->mRadialDistance = 40.0f;
 }
 
 void

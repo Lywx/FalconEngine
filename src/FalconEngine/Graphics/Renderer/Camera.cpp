@@ -144,6 +144,12 @@ Camera::GetView() const
 }
 
 const Matrix4f&
+Camera::GetViewProjection() const
+{
+    return mViewProjection;
+}
+
+const Matrix4f&
 Camera::GetProjection() const
 {
     return mProjection;
@@ -230,6 +236,7 @@ Camera::Update(double /* elapsed */)
 {
     mWorld = Matrix4f::CreateTranslation(mPosition) * Matrix4f::CreateRotation(mOrientation);
     mView = Matrix4f::Inverse(mWorld);
+    mViewProjection = mProjection * mView;
 }
 
 }

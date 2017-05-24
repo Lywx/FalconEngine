@@ -1,31 +1,18 @@
-#include <FalconEngine/Graphics/Effect/SignedDistancedFieldFontEffect.h>
+#include <FalconEngine/Graphics/Effect/BitmapFontEffect.h>
 
-#include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
-#include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
-#include <FalconEngine/Graphics/Renderer/Resource/Texture2dArray.h>
-#include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
-#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformConstant.h>
-#include <FalconEngine/Graphics/Renderer/State/BlendState.h>
-#include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
-#include <FalconEngine/Graphics/Renderer/State/CullState.h>
-#include <FalconEngine/Graphics/Renderer/State/OffsetState.h>
-#include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
-#include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
 
 using namespace std;
 
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(SignedDistancedFieldFontEffect, VisualEffect);
+FALCON_ENGINE_EFFECT_IMPLEMENT(BitmapFontEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-SignedDistancedFieldFontEffect::SignedDistancedFieldFontEffect(const Handedness *handedness) :
-    mCameraHandedness(handedness)
+BitmapFontEffect::BitmapFontEffect()
 {
     auto shader = std::make_shared<Shader>();
     shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/SignedDistancedFieldFont.vert.glsl");
@@ -59,26 +46,26 @@ SignedDistancedFieldFontEffect::SignedDistancedFieldFontEffect(const Handedness 
     InsertPass(move(pass));
 }
 
-SignedDistancedFieldFontEffect::~SignedDistancedFieldFontEffect()
+BitmapFontEffect::~BitmapFontEffect()
 {
 }
 
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-void
-SignedDistancedFieldFontEffect::CreateInstance(VisualEffectInstance *instance, const BitmapFont *font, int width, int height) const
+std::shared_ptr<VisualEffectInstance>
+BitmapFontEffect::CreateInstance(Visual *visual, const BitmapFont *font, const Handedness *handedness, int viewportWidth, int viewportHeight) const
 {
-    CheckEffectCompatible(instance);
+    auto visualEffectInstance = CreateSetInstance(visual);
+    InitializeInstance(visualEffectInstance.get(), font, handedness, viewportWidth, viewportHeight);
 
-    auto projection = mCameraHandedness->CreateOrthogonal(0, float(width), 0, float(height), -1.0f, 1.0f);
-    instance->SetShaderUniform(0, ShareConstant<Matrix4f>("ProjectionTransform", projection));
-
-    // NOTE(Wuxiang): You don't need to set the texture sampler uniform because
-    // they are predefined in the fe_Texture.glsl as #include extension.
-
-    instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Font), font->GetTexture());
-    instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Font), font->GetSampler());
+    auto vertexFormat = GetVertexFormat();
+    visual->SetVertexFormat(vertexFormat);
+    auto vertexGroup = make_shared<VertexGroup>();
+    auto vertexBuffer = visual->GetMesh()->GetPrimitive()->GetVertexBuffer();
+    vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, vertexFormat->GetVertexBufferStride(0));
+    visual->SetVertexGroup(vertexGroup);
+    return visualEffectInstance;
 }
 
 std::shared_ptr<VertexFormat>
@@ -95,8 +82,28 @@ SignedDistancedFieldFontEffectCreateVertexFormat()
     return vertexFormat;
 }
 
+/************************************************************************/
+/* Protected Members                                                    */
+/************************************************************************/
+void
+BitmapFontEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance *visualEffectInstance,
+                                     _IN_     const BitmapFont     *font,
+                                     _IN_     const Handedness     *handedness,
+                                     _IN_     int                   viewportWidth,
+                                     _IN_     int                   viewportHeight) const
+{
+    visualEffectInstance->SetShaderUniform(0, ShareConstant<Matrix4f>("ProjectionTransform",
+                                           handedness->CreateOrthogonal(1, float(viewportWidth), 0, float(viewportHeight), -1.0f, 1.0f)));
+
+    // NOTE(Wuxiang): You don't need to set the texture sampler uniform because
+    // they are predefined in the fe_Texture.glsl as #include extension.
+
+    visualEffectInstance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Font), font->GetTexture());
+    visualEffectInstance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Font), font->GetSampler());
+}
+
 std::shared_ptr<VertexFormat>
-SignedDistancedFieldFontEffect::GetVertexFormat() const
+BitmapFontEffect::GetVertexFormat() const
 {
     static std::shared_ptr<VertexFormat> sVertexFormat = SignedDistancedFieldFontEffectCreateVertexFormat();
     return sVertexFormat;

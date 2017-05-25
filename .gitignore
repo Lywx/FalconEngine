@@ -1,9 +1,14 @@
 bin
 build
-CMakeLists.txt.user
 doc
+
 include/*
 !include/FalconEngine
-!include/CMakeLists.txt
+
 lib
 res
+
+src/FalconEngine/Content/Pipeline/*
+
+CMakeLists.txt.user
+

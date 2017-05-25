@@ -6,7 +6,9 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Asset::Asset(const std::string& fileName, const std::string& filePath) :
+Asset::Asset(AssetSource assetSource, AssetType assetType, const std::string& fileName, const std::string& filePath) :
+    mAssetSource(assetSource),
+    mAssetType(assetType),
     mFileName(fileName),
     mFilePath(filePath)
 {

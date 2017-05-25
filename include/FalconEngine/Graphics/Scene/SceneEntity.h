@@ -8,7 +8,6 @@ namespace FalconEngine
 {
 
 class SceneEntity;
-using SceneEntitySharedPtr = std::shared_ptr<SceneEntity>;
 
 class FALCON_ENGINE_API SceneEntity : public Entity
 {

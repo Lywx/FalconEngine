@@ -7,17 +7,12 @@
 namespace FalconEngine
 {
 
-class BitmapFont;
-using BitmapFontSharedPtr = std::shared_ptr<BitmapFont>;
+class AssetImporter;
 
+class Font;
 class Model;
-using ModelSharedPtr = std::shared_ptr<Model>;
-
 class Texture2d;
-using Texture2dSharedPtr = std::shared_ptr<Texture2d>;
-
 class ShaderSource;
-using ShaderSourceSharedPtr = std::shared_ptr<ShaderSource>;
 
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API AssetManager
@@ -45,50 +40,56 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
-    BitmapFontSharedPtr
+    std::shared_ptr<Font>
     GetFontNamed(const std::string& fontName);
 
-    BitmapFontSharedPtr
+    std::shared_ptr<Font>
     GetFont(const std::string& fontFilePath);
 
-    BitmapFontSharedPtr
+    std::shared_ptr<Font>
     LoadFont(const std::string& fontAssetPath);
 
-    ModelSharedPtr
+    std::shared_ptr<Model>
     GetModel(const std::string& modelFilePath);
 
-    ModelSharedPtr
+    std::shared_ptr<Model>
     LoadModel(const std::string& modelFilePath);
 
-    ShaderSourceSharedPtr
+    std::shared_ptr<ShaderSource>
     GetShaderSource(const std::string& shaderFilePath);
 
-    ShaderSourceSharedPtr
+    std::shared_ptr<ShaderSource>
     LoadShaderSource(const std::string& shaderFilePath);
 
-    Texture2dSharedPtr
+    std::shared_ptr<Texture2d>
     GetTexture(const std::string& textureFilePath);
 
-    Texture2dSharedPtr
+    std::shared_ptr<Texture2d>
     LoadTexture(const std::string& textureAssetPath);
 
 private:
-    BitmapFontSharedPtr
+    void
+    CheckFileExists(const std::string& assetPath);
+
+    std::shared_ptr<Font>
     LoadFontInternal(const std::string& fontAssetPath);
 
-    ModelSharedPtr
+    std::shared_ptr<Model>
     LoadModelInternal(const std::string& modelFilePath);
 
-    ShaderSourceSharedPtr
+    std::shared_ptr<ShaderSource>
     LoadShaderSourceInternal(const std::string& shaderFilePath);
 
-    Texture2dSharedPtr
+    std::shared_ptr<Texture2d>
     LoadTextureInternal(const std::string& textureAssetPath);
 
-    std::map<std::string, BitmapFontSharedPtr>     mFontTable;                  // Index is file path.
-    std::map<std::string, ModelSharedPtr>          mModelTable;                 // Index is file path.
-    std::map<std::string, ShaderSourceSharedPtr>   mShaderSourceTable;          // Index is file path.
-    std::map<std::string, Texture2dSharedPtr>      mTextureTable;               // Index is file path.
+private:
+    AssetImporter                                       *mImporter;
+
+    std::map<std::string, std::shared_ptr<Font>>         mFontTable;            // Index is file path.
+    std::map<std::string, std::shared_ptr<Model>>        mModelTable;           // Index is file path.
+    std::map<std::string, std::shared_ptr<ShaderSource>> mShaderSourceTable;    // Index is file path.
+    std::map<std::string, std::shared_ptr<Texture2d>>    mTextureTable;         // Index is file path.
 };
 #pragma warning(default: 4251)
 

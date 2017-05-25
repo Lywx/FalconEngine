@@ -14,21 +14,35 @@ enum class FALCON_ENGINE_API AssetSource
     None,
     Normal,
     Stream,
+    Virtual,
+};
+
+enum class AssetType
+{
+    None    = 0,
+
+    Audio   = 1,
+    Font    = 2,
+    Model   = 3,
+    Shader  = 4,
+    Texture = 5,
 };
 
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API Asset
 {
 public:
-    Asset(const std::string& fileName, const std::string& filePath);
+    Asset(AssetSource assetSource, AssetType assetType, const std::string& fileName, const std::string& filePath);
     Asset(const Asset&) = delete;
     Asset& operator=(const Asset&) = delete;
     virtual ~Asset() noexcept;
 
 public:
+    AssetSource mAssetSource = AssetSource::None;
+
+    AssetType   mAssetType;
     std::string mFileName;
     std::string mFilePath;
-    AssetSource mFileType = AssetSource::None;
 
     /************************************************************************/
     /* Asset Importing and Exporting                                        */
@@ -38,11 +52,12 @@ public:
     template <typename Archive>
     void serialize(Archive & ar, const unsigned int /* version */)
     {
+        // NOTE(Wuxiang): Don't need to serialize mAssetSource, because it is
+        // changed when loading in different circumstances.
+        ar & mAssetType;
+
         ar & mFileName;
         ar & mFilePath;
-
-        // NOTE(Wuxiang): Don't need to serialize mFileType, because it is
-        // changed when loading in different circumstances.
     }
 };
 #pragma warning(default: 4251)

@@ -27,6 +27,8 @@ public:
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API GameEngineInput
 {
+    friend class GameEngineInputDispatcher;
+
 public:
     /************************************************************************/
     /* Static Members                                                       */
@@ -39,8 +41,6 @@ public:
     }
 
 public:
-    friend class GameEngineInputDispatcher;
-
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/

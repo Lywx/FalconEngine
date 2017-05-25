@@ -5,6 +5,7 @@
 #include <assimp/scene.h>
 
 #include <FalconEngine/Content/AssetManager.h>
+#include <FalconEngine/Content/CustomImporter.h>
 #include <FalconEngine/Core/Path.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
@@ -26,7 +27,84 @@ using namespace std;
 namespace FalconEngine
 {
 
+/************************************************************************/
+/* Constructors and Destructor                                          */
+/************************************************************************/
+AssetImporter::AssetImporter()
+{
+}
 
+AssetImporter::~AssetImporter()
+{
+}
+
+/************************************************************************/
+/* Public Members                                                       */
+/************************************************************************/
+void
+AssetImporter::Attach(std::shared_ptr<CustomImporter> customImporter)
+{
+    switch (customImporter->mAssetImportPolicy)
+    {
+    case CustomImporterPolicy::Replacement:
+    {
+        for (AssetType assetType : customImporter->mAssetTypeList)
+        {
+            mCustomImporterReplacementTable[int(assetType)].push_back(customImporter);
+        }
+    }
+    break;
+
+    case CustomImporterPolicy::Supplement:
+    {
+        for (AssetType assetType : customImporter->mAssetTypeList)
+        {
+            mCustomImporterSupplementTable[int(assetType)].push_back(customImporter);
+        }
+    }
+    break;
+
+    default:
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+    }
+}
+
+void
+AssetImporter::Import(Asset *asset, const std::string& assetFilePath)
+{
+    switch (asset->mAssetType)
+    {
+    case AssetType::None:
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Asset type is unknown.");
+
+    case AssetType::Audio:
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+        break;
+
+    case AssetType::Font:
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+        break;
+
+    case AssetType::Shader:
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+        break;
+
+    case AssetType::Model:
+        ImportDispatch<Model>(dynamic_cast<Model *>(asset), assetFilePath);
+        break;
+
+    case AssetType::Texture:
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+        break;
+
+    default:
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+    }
+}
+
+/************************************************************************/
+/* Private Members                                                      */
+/************************************************************************/
 std::shared_ptr<BoundingBox>
 CreateBoundingBox(const aiMesh *aiMesh)
 {
@@ -293,20 +371,98 @@ CreateNode(
     return node;
 }
 
-void
-AssetImporter::Import(Model *model, const std::string& modelFilePath)
+bool
+AssetImporter::ImportInternal(Model *model, const std::string& modelFilePath)
 {
-    // Load model using Assimp.
-    static Assimp::Importer sAiModelImporter;
-    auto aiScene = sAiModelImporter.ReadFile(modelFilePath, aiProcess_Triangulate | aiProcess_FlipUVs);
-    if (!aiScene || aiScene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !aiScene->mRootNode)
+    // http://assimp.sourceforge.net/lib_html/
+    const vector<string> assimpExtensionList =
     {
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(string("Error: ") + sAiModelImporter.GetErrorString());
+        ".dae",      // Collada
+        ".xml",
+        ".blend",    // Blender
+        ".bvh",      // Biovision BVH
+        ".3ds",      // 3D Studio Max 3DS
+        ".ase",      // 3D Studio Max ASE
+        ".obj",      // Wavefront Object
+        ".ply",      // Stanford Polygon Library
+        ".dxf",      // AutoCAD DXF
+        ".ifc",      // IFC - STEP, Industry Foundation Classes
+        ".nff",      // Neutral File Format
+        ".nff",      // Sense8 WorldToolkit
+        ".smd",      // Valve Model
+        ".vta",
+        ".mdl",      // Quake I
+        ".md2",      // Quake II
+        ".md3",      // Quake III
+        ".pk3",      // Quake 3 BSP 1
+        ".mdc",      // RtCW
+        ".md5mesh",  // Doom 3
+        ".md5anim",
+        ".md5camera",
+        ".x",        // DirectX X
+        ".q3o",      // Quick3D
+        ".q3s",
+        ".raw"       // Raw Triangles
+        ".ac",       // AC3D.
+        ".stl",      // Stereolithography.
+        ".dxf",      // Autodesk DXF.
+        ".irrmesh",  // Irrlicht Mesh
+        ".xml",
+        ".irr"       // Irrlicht Scene
+        ".xml",
+        ".off",      // Object File Format.
+        ".ter",      // Terragen Terrain
+        ".mdl",      // 3D GameStudio Model
+        ".hmp",      // 3D GameStudio Terrain
+        ".xml"       // Ogre(*.mesh.xml, *.skeleton.xml, *.material)
+        ".ms3d",     // Milkshape 3D
+        ".lwo",      // LightWave Model
+        ".lws",      // LightWave Scene
+        ".lxo",      // Modo Model
+        ".csm",      // CharacterStudio Motion
+        ".ply",      // Stanford Ply
+        ".cob",      // TrueSpace
+        ".scn",
+        ".xgl",      // XGL
+        ".zgl",
+    };
+
+    if (!ExtensionSupported(modelFilePath, assimpExtensionList))
+    {
+        return false;
+    }
+
+    // Load model using Assimp.
+    static Assimp::Importer sImporter;
+    auto aiScene = sImporter.ReadFile(modelFilePath, aiProcess_Triangulate | aiProcess_FlipUVs);
+    if (aiScene == nullptr
+            || aiScene->mRootNode == nullptr
+            || aiScene->mFlags == AI_SCENE_FLAGS_INCOMPLETE)
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(string("Error: ") + sImporter.GetErrorString());
     }
 
     // NOTE(Wuxiang): The node constructor would recursively load the necessary
     // children nodes and textures.
     model->SetNode(CreateNode(GetFileDirectory(modelFilePath), aiScene, aiScene->mRootNode));
+
+    return true;
+}
+
+bool
+ExtensionSupported(const string& filePath, const vector<string>& fileExtensionSupportedList)
+{
+    auto fileExtension = GetFileExtension(filePath);
+
+    for (auto assimpExtension : fileExtensionSupportedList)
+    {
+        if (fileExtension == assimpExtension)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 }

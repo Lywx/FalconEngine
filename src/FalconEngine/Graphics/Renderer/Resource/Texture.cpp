@@ -13,8 +13,8 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Texture::Texture(const std::string& fileName, const std::string& filePath, int width, int height, int depth, TextureFormat format, TextureType type, BufferUsage usage, int mipmapLevel) :
-    Asset(fileName, filePath),
+Texture::Texture(AssetSource assetSource, const std::string& fileName, const std::string& filePath, int width, int height, int depth, TextureFormat format, TextureType type, BufferUsage usage, int mipmapLevel) :
+    Asset(assetSource, AssetType::Texture, fileName, filePath),
     mFormat(format),
     mMipmapLevel(mipmapLevel),
     mType(type),

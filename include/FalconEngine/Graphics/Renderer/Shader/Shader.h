@@ -30,10 +30,6 @@ enum ShaderIndex
 };
 
 class ShaderSource;
-using ShaderSourceSharedPtr = std::shared_ptr<ShaderSource>;
-using ShaderSourceSharedPtrMap = std::unordered_map<int, ShaderSourceSharedPtr>;
-
-using ShaderUniformMap = std::unordered_map<std::string, ShaderUniform>;
 
 // @remark Shader contains information about input vertex variables, output
 // fragment variables and uniform variables. Sharing shaders for different
@@ -87,8 +83,8 @@ public:
     PushShaderFile(ShaderType shaderType, const std::string& shaderPath);
 
 private:
-    ShaderSourceSharedPtrMap mSourceTable;
-    ShaderUniformMap         mUniformTable;
+    std::unordered_map<int, std::shared_ptr<ShaderSource>> mSourceTable;
+    std::unordered_map<std::string, ShaderUniform>         mUniformTable;
 };
 #pragma warning(default: 4251)
 

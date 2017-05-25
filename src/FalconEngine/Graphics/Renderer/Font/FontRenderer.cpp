@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Renderer/Font/BitmapFontRenderer.h>
+#include <FalconEngine/Graphics/Renderer/Font/FontRenderer.h>
 
 #include <boost/algorithm/string.hpp>
 
@@ -9,9 +9,9 @@
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveQuads.h>
-#include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
-#include <FalconEngine/Graphics/Renderer/Font/BitmapLine.h>
-#include <FalconEngine/Graphics/Renderer/Font/BitmapText.h>
+#include <FalconEngine/Graphics/Renderer/Font/Font.h>
+#include <FalconEngine/Graphics/Renderer/Font/FontLine.h>
+#include <FalconEngine/Graphics/Renderer/Font/FontText.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
@@ -25,11 +25,11 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-BitmapFontRenderer::BitmapFontRenderer()
+FontRenderer::FontRenderer()
 {
 }
 
-BitmapFontRenderer::~BitmapFontRenderer()
+FontRenderer::~FontRenderer()
 {
 }
 
@@ -37,15 +37,15 @@ BitmapFontRenderer::~BitmapFontRenderer()
 /* Public Members                                                       */
 /************************************************************************/
 void
-BitmapFontRenderer::Initialize(int viewportWidth, int viewportHeight)
+FontRenderer::Initialize(int viewportWidth, int viewportHeight)
 {
     mViewportWidth  = viewportWidth;
     mViewportHeight = viewportHeight;
 }
 
 void
-BitmapFontRenderer::BatchText(
-    const BitmapFont *font,
+FontRenderer::BatchText(
+    const Font *font,
     float             fontSize,
     const wstring& textString,
     Vector2f       textPosition,
@@ -54,7 +54,7 @@ BitmapFontRenderer::BatchText(
 {
     FALCON_ENGINE_CHECK_NULLPTR(font);
 
-    auto text = BitmapText(fontSize, textString, textPosition, textLineWidth);
+    auto text = FontText(fontSize, textString, textPosition, textLineWidth);
     auto batch = PrepareBatch(font);
     PrepareText(*batch, font, &text, textColor);
 }
@@ -65,9 +65,9 @@ BitmapFontRenderer::BatchText(
 // @return The glyph number inside the text lines.
 int
 CreateTextLines(
-    _IN_  const BitmapFont    *font,
-    _IN_  const BitmapText    *text,
-    _OUT_ vector<BitmapLine>&  lines)
+    _IN_  const Font    *font,
+    _IN_  const FontText    *text,
+    _OUT_ vector<FontLine>&  lines)
 {
     using namespace boost;
     static auto sLineStrings = vector<wstring>();
@@ -78,7 +78,7 @@ CreateTextLines(
     const auto lineWidth = text->mTextBounds[2];
 
     int glyphCount = 0;
-    auto lineCurrent = BitmapLine(lineWidth);
+    auto lineCurrent = FontLine(lineWidth);
     int lineNum = int(sLineStrings.size());
     for (int lineIndex = 0; lineIndex < lineNum; ++lineIndex)
     {
@@ -104,7 +104,7 @@ CreateTextLines(
             {
                 // Have to start a new line for this glyph
                 lines.push_back(lineCurrent);
-                lineCurrent = BitmapLine(lineWidth);
+                lineCurrent = FontLine(lineWidth);
                 lineCurrent.PushGlyph(glyph, fontSizeScale);
             }
         }
@@ -119,7 +119,7 @@ CreateTextLines(
 void
 FillBufferFontAttribute(float             *textVertexBufferData,
                         size_t&            textVertexBufferDataIndex,
-                        const BitmapGlyph *textGlyph,
+                        const FontGlyph *textGlyph,
                         Vector4f           textColor,
                         double fontSizeScale)
 {
@@ -143,11 +143,11 @@ void
 FillBufferGlyphAttribute(
     _OUT_    float             *textVertexBufferData,
     _IN_OUT_ size_t&            textVertexBufferDataIndex,
-    _IN_     const BitmapGlyph *textGlyph,
+    _IN_     const FontGlyph *textGlyph,
     _IN_     Vector4f           textColor,
     _IN_     float              textGlyphX,
     _IN_     float              textGlyphY,
-    _IN_     const BitmapFont  *font,
+    _IN_     const Font  *font,
     _IN_     double             fontSizeScale)
 {
     // NOTE(Wuxiang): Since x1, y1 represents left-bottom coordinate, we need to
@@ -203,11 +203,11 @@ FillBufferGlyphAttribute(
 // @summary Fill the vertex buffer with the text line information.
 void
 FillBufferTextLines(
-    _IN_  const BitmapFont    *font,
+    _IN_  const Font    *font,
     _IN_  float                fontSize,
     _IN_  Vector2f                  textPosition,
     _IN_  Vector4f                  textColor,
-    _IN_  const vector<BitmapLine>& textLines,
+    _IN_  const vector<FontLine>& textLines,
     _IN_  size_t&                   textVertexBufferDataIndex,
     _OUT_ float                    *textVertexBufferData
 )
@@ -232,7 +232,7 @@ FillBufferTextLines(
 }
 
 void
-BitmapFontRenderer::RenderBegin()
+FontRenderer::RenderBegin()
 {
     for (auto& fontBatchPair : mTextBatchTable)
     {
@@ -243,7 +243,7 @@ BitmapFontRenderer::RenderBegin()
 }
 
 void
-BitmapFontRenderer::Render(Renderer *renderer, double /* percent */)
+FontRenderer::Render(Renderer *renderer, double /* percent */)
 {
     for (auto& fontBatchPair : mTextBatchTable)
     {
@@ -260,15 +260,15 @@ BitmapFontRenderer::Render(Renderer *renderer, double /* percent */)
 }
 
 void
-BitmapFontRenderer::RenderEnd()
+FontRenderer::RenderEnd()
 {
 }
 
 /************************************************************************/
 /* Protected Members                                                    */
 /************************************************************************/
-BitmapFontBatchSharedPtr
-BitmapFontRenderer::PrepareBatch(const BitmapFont *font)
+std::shared_ptr<FontBatch>
+FontRenderer::PrepareBatch(const Font *font)
 {
     // When the font is prepared before.
     {
@@ -290,22 +290,22 @@ BitmapFontRenderer::PrepareBatch(const BitmapFont *font)
         auto fontMesh = make_shared<Mesh>(fontPrimitive, nullptr);
         auto fontVisual = make_shared<Visual>(fontMesh);
         auto fontVisualEffectInstance = fontVisualEffect->CreateInstance(fontVisual.get(), font, &mTextHandedness, mViewportWidth, mViewportHeight);
-        auto fontBatch = make_shared<BitmapFontBatch>(fontVertexBuffer, fontVisual);
+        auto fontBatch = make_shared<FontBatch>(fontVertexBuffer, fontVisual);
         mTextBatchTable.insert({ font, fontBatch });
         return fontBatch;
     }
 }
 
 void
-BitmapFontRenderer::PrepareText(
-    _IN_OUT_ BitmapFontBatch&  batch,
-    _IN_     const BitmapFont *font,
-    _IN_     const BitmapText *text,
+FontRenderer::PrepareText(
+    _IN_OUT_ FontBatch&  batch,
+    _IN_     const Font *font,
+    _IN_     const FontText *text,
     _IN_     Color             textColor)
 {
     FALCON_ENGINE_CHECK_NULLPTR(font);
 
-    static auto sTextLines = vector<BitmapLine>();
+    static auto sTextLines = vector<FontLine>();
     sTextLines.clear();
 
     // Construct lines with glyph information.

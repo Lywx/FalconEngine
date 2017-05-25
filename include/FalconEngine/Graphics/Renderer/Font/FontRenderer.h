@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include <FalconEngine/Graphics/Renderer/Font/BitmapFontBatch.h>
+#include <FalconEngine/Graphics/Renderer/Font/FontBatch.h>
 
 #include <FalconEngine/Math/Color.h>
 #include <FalconEngine/Math/Handedness.h>
@@ -15,10 +15,10 @@
 
 namespace FalconEngine
 {
-class BitmapFont;
-class BitmapFontBatch;
-using BitmapFontBatchSharedPtr = std::shared_ptr<BitmapFontBatch>;
-class BitmapText;
+
+class Font;
+class FontBatch;
+class FontText;
 
 class Renderer;
 
@@ -27,24 +27,24 @@ class Renderer;
 #pragma warning(disable: 4251)
 #if defined(FALCON_ENGINE_WINDOW_QT)
 #include <QtGui/QOpenGLFunctions>
-class FALCON_ENGINE_API BitmapFontRenderer final : QOpenGLFunctions
+class FALCON_ENGINE_API FontRenderer final : QOpenGLFunctions
 #elif defined(FALCON_ENGINE_WINDOW_GLFW)
-class FALCON_ENGINE_API BitmapFontRenderer final
+class FALCON_ENGINE_API FontRenderer final
 #endif
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    BitmapFontRenderer();
-    virtual ~BitmapFontRenderer();
+    FontRenderer();
+    virtual ~FontRenderer();
 
 public:
     /************************************************************************/
     /* Rendering API                                                        */
     /************************************************************************/
     void
-    BatchText(const BitmapFont *font,
+    BatchText(const Font *font,
               float             fontSize,
               const std::wstring& textString,
               Vector2f            textPosition,
@@ -67,13 +67,13 @@ public:
     RenderEnd();
 
 protected:
-    BitmapFontBatchSharedPtr
-    PrepareBatch(_IN_ const BitmapFont *font);
+    std::shared_ptr<FontBatch>
+    PrepareBatch(_IN_ const Font *font);
 
     void
-    PrepareText(_IN_OUT_ BitmapFontBatch&  batch,
-                _IN_     const BitmapFont *font,
-                _IN_     const BitmapText *text,
+    PrepareText(_IN_OUT_ FontBatch&  batch,
+                _IN_     const Font *font,
+                _IN_     const FontText *text,
                 _IN_     Color             textColor = ColorPalette::White);
 
 private:
@@ -83,7 +83,7 @@ private:
     // support.
     // http://stackoverflow.com/questions/21524535/opengl-sampler-array-limit
     // http://stackoverflow.com/questions/12030711/glsl-array-of-textures-of-differing-size/
-    using TextBatchMap = std::map<const BitmapFont *, BitmapFontBatchSharedPtr>;
+    using TextBatchMap = std::map<const Font *, std::shared_ptr<FontBatch>>;
 
     TextBatchMap          mTextBatchTable;
     HandednessRight       mTextHandedness;

@@ -34,7 +34,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Model(const std::string& fileName, const std::string& filePath);
+    Model(AssetSource assetSource, const std::string& fileName, const std::string& filePath);
     virtual ~Model();
 
 public:

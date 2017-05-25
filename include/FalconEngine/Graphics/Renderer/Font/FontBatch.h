@@ -10,16 +10,16 @@ class VertexBuffer;
 class Visual;
 
 #pragma warning(disable: 4251)
-class BitmapFontBatch
+class FontBatch
 {
 public:
-    BitmapFontBatch(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<Visual> vertexQuads) :
+    FontBatch(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<Visual> vertexQuads) :
         mVertexBuffer(vertexBuffer),
         mVertexQuads(vertexQuads)
     {
     }
 
-    ~BitmapFontBatch() = default;
+    ~FontBatch() = default;
 
 public:
     int                           mGlyphNum = 0;

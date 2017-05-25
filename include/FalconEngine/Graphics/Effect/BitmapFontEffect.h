@@ -11,7 +11,7 @@
 namespace FalconEngine
 {
 
-class BitmapFont;
+class Font;
 
 class VertexFormat;
 
@@ -46,7 +46,7 @@ public:
     /************************************************************************/
     std::shared_ptr<VisualEffectInstance>
     CreateInstance(_IN_OUT_ Visual           *visual,
-                   _IN_     const BitmapFont *font,
+                   _IN_     const Font       *font,
                    _IN_     const Handedness *handedness,
                    _IN_     int               viewportWidth,
                    _IN_     int               viewportHeight) const;
@@ -59,7 +59,7 @@ protected:
     void
     InitializeInstance(
         _IN_OUT_ VisualEffectInstance *visualEffectInstance,
-        _IN_     const BitmapFont     *font,
+        _IN_     const Font           *font,
         _IN_     const Handedness     *handedness,
         _IN_     int                   viewportWidth,
         _IN_     int                   viewportHeight) const;

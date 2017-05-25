@@ -17,9 +17,9 @@ namespace FalconEngine
 /************************************************************************/
 /* Specialized Renderer                                                 */
 /************************************************************************/
-class BitmapFont;
-class BitmapFontRenderer;
-class BitmapText;
+class Font;
+class FontRenderer;
+class FontText;
 
 class Camera;
 
@@ -82,7 +82,7 @@ public:
                     Color         color = Transparent(ColorPalette::White, 0.5f));
 
     void
-    DrawString(const BitmapFont   *font,
+    DrawString(const Font   *font,
                float               fontSize,
                Vector2f            textPosition,
                const std::string&  text,
@@ -90,7 +90,7 @@ public:
                float               textLineWidth = std::numeric_limits<float>().max());
 
     void
-    DrawString(const BitmapFont   *font,
+    DrawString(const Font   *font,
                float               fontSize,
                Vector2f            textPosition,
                const std::wstring& text,
@@ -130,7 +130,7 @@ private:
 
 protected:
     std::shared_ptr<EntityRenderer>     mEntityRenderer;
-    std::shared_ptr<BitmapFontRenderer> mFontRenderer;
+    std::shared_ptr<FontRenderer>       mFontRenderer;
     std::shared_ptr<Renderer>           mMasterRenderer;
     std::shared_ptr<UiRenderer>         mUiRenderer;
 

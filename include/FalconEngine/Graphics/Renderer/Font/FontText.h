@@ -31,14 +31,15 @@ namespace FalconEngine
 // @note The structure of this class should be able to support different
 // font type.
 #pragma warning(disable: 4251)
-class BitmapText
+class FontText
 {
 public:
-    BitmapText(float fontSize, const std::wstring& textString, Vector2f textPosition,
-               float textLineWidth);
+    FontText(float fontSize, const std::wstring& textString, Vector2f textPosition,
+             float textLineWidth);
 
-    BitmapText(float fontSize, const std::wstring& textString, Vector4f textBounds);
+    FontText(float fontSize, const std::wstring& textString, Vector4f textBounds);
 
+public:
     float        mFontSize;
 
     Vector4f     mTextBounds;

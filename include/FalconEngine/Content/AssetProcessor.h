@@ -9,11 +9,9 @@
 namespace FalconEngine
 {
 
-class BitmapFont;
-using BitmapFontSharedPtr = std::shared_ptr<BitmapFont>;
+class Font;
 
 class Texture2d;
-using Texture2dSharedPtr = std::shared_ptr<Texture2d>;
 
 class FALCON_ENGINE_API AssetProcessor
 {
@@ -32,16 +30,16 @@ public:
 
 private:
     static void
-    BakeFont(BitmapFont *fontPtr, const std::string& fontOutputPath);
+    BakeFont(Font *fontPtr, const std::string& fontOutputPath);
 
     // @summary Load font without optimization.
-    static BitmapFontSharedPtr
+    static std::shared_ptr<Font>
     LoadRawFont(const std::string& fntFilePath);
 
     static void
     BakeTexture(Texture2d *texturePtr, const std::string& textureOutputPath);
 
-    static Texture2dSharedPtr
+    static std::shared_ptr<Texture2d>
     LoadRawTexture(const std::string& textureFilePath);
 };
 }

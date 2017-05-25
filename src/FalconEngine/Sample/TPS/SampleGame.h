@@ -33,7 +33,7 @@ private:
     ThirdPersonCameraSharedPtr mCamera;
 
     // Fonts
-    const BitmapFont *mFont = nullptr;
+    const Font *mFont = nullptr;
 
     // Scene
     std::shared_ptr<SceneEntity> mScene;

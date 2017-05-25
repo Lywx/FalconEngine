@@ -68,7 +68,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Texture(const std::string& fileName, const std::string& filePath, int width, int height, int depth,
+    Texture(AssetSource assetSource, const std::string& fileName, const std::string& filePath, int width, int height, int depth,
             TextureFormat format, TextureType type, BufferUsage usage, int mipmapLevel);
     virtual ~Texture();
 

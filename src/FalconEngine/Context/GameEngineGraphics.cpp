@@ -5,7 +5,7 @@
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Entity/EntityRenderer.h>
-#include <FalconEngine/Graphics/Renderer/Font/BitmapFontRenderer.h>
+#include <FalconEngine/Graphics/Renderer/Font/FontRenderer.h>
 #include <FalconEngine/Math/Color.h>
 
 namespace FalconEngine
@@ -70,7 +70,7 @@ GameEngineGraphics::DrawBoundingBox(const Camera *camera, const Entity *entity, 
 }
 
 void
-GameEngineGraphics::DrawString(const BitmapFont *font, float fontSize, Vector2f textPosition, const std::string& text, Color textColor, float textLineWidth)
+GameEngineGraphics::DrawString(const Font *font, float fontSize, Vector2f textPosition, const std::string& text, Color textColor, float textLineWidth)
 {
     FALCON_ENGINE_CHECK_NULLPTR(font);
 
@@ -78,7 +78,7 @@ GameEngineGraphics::DrawString(const BitmapFont *font, float fontSize, Vector2f 
 }
 
 void
-GameEngineGraphics::DrawString(const BitmapFont *font, float fontSize, Vector2f textPosition, const std::wstring& text, Color textColor, float textLineWidth)
+GameEngineGraphics::DrawString(const Font *font, float fontSize, Vector2f textPosition, const std::wstring& text, Color textColor, float textLineWidth)
 {
     FALCON_ENGINE_CHECK_NULLPTR(font);
 
@@ -125,7 +125,7 @@ GameEngineGraphics::Initialize(
     mEntityRenderer = std::make_shared<EntityRenderer>();
     mEntityRenderer->Initialize();
 
-    mFontRenderer = std::make_shared<BitmapFontRenderer>();
+    mFontRenderer = std::make_shared<FontRenderer>();
     mFontRenderer->Initialize(mGameEngineSettings->mWindowWidth, mGameEngineSettings->mWindowHeight);
 }
 

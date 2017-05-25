@@ -8,8 +8,8 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-ShaderSource::ShaderSource(std::string fileName, std::string filePath) :
-    Asset(fileName, filePath)
+ShaderSource::ShaderSource(AssetSource assetSource, std::string fileName, std::string filePath) :
+    Asset(assetSource, AssetType::Shader, fileName, filePath)
 {
 }
 

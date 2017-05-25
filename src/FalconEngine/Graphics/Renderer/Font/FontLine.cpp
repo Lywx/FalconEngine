@@ -1,15 +1,15 @@
-#include <FalconEngine/Graphics/Renderer/Font/BitmapLine.h>
-#include <FalconEngine/Graphics/Renderer/Font/BitmapGlyph.h>
+#include <FalconEngine/Graphics/Renderer/Font/FontLine.h>
+#include <FalconEngine/Graphics/Renderer/Font/FontGlyph.h>
 
 namespace FalconEngine
 {
 
-BitmapLine::BitmapLine(double lineWidth) :
+FontLine::FontLine(double lineWidth) :
     mLineWidth(lineWidth)
 {
 }
 
-bool BitmapLine::PushGlyph(const BitmapGlyph& glyph, double fontSizeScale)
+bool FontLine::PushGlyph(const FontGlyph& glyph, double fontSizeScale)
 {
     double additionalWidth = glyph.mAdvance * fontSizeScale;
     if (mLineWidthCurrent + additionalWidth <= mLineWidth)

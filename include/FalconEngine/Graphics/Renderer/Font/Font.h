@@ -14,29 +14,43 @@
 
 #include <FalconEngine/Content/Asset.h>
 
-#include <FalconEngine/Graphics/Renderer/Font/BitmapGlyph.h>
+#include <FalconEngine/Graphics/Renderer/Font/FontGlyph.h>
 
 namespace FalconEngine
 {
 
 class Sampler;
+class Texture2dArray;
 
-    class Texture2dArray;
-using Texture2dArraySharedPtr = std::shared_ptr<Texture2dArray>;
-
-// @summary Bitmap font store the unmodified information in the imported bitmap
-// font. In the rendering phrase, the font size is used with the bitmap glyph
-// size to derive desired glyph size. The size stores imported bmfont size. So as
-// the line base, line height, space width, etc.
+// @summary This class implement Bitmap font, storing the unmodified information
+// in the imported bitmap font. In the rendering phrase, the font size is used
+// with the bitmap glyph size to derive desired glyph size. The size stores
+// imported bmfont size. So as the line base, line height, space width, etc.
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_API BitmapFont : public Asset
+class FALCON_ENGINE_API Font : public Asset
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    BitmapFont(const std::string& fileName, const std::string& filePath);
-    virtual ~BitmapFont();
+    Font(AssetSource assetSource, const std::string& fileName, const std::string& filePath);
+    virtual ~Font();
+
+public:
+    void
+    SetSize(double size);
+
+    void
+    SetSampler(std::shared_ptr<Sampler> sampler);
+
+    const Sampler *
+    GetSampler() const;
+
+    void
+    SetTexture(std::shared_ptr<Texture2dArray> texture);
+
+    const Texture2dArray *
+    GetTexture() const;
 
 public:
     /************************************************************************/
@@ -56,7 +70,7 @@ public:
 
     size_t                        mGlyphCount = 0;                             // Font glyph number the font contains
     std::vector<size_t>           mGlyphIndexTable;                            // Font glyph index table that map glyph Codepoint into glyph's index in glyph table.
-    std::vector<BitmapGlyph>      mGlyphTable;
+    std::vector<FontGlyph>        mGlyphTable;
 
     /************************************************************************/
     /* Font Metadata                                                        */
@@ -65,43 +79,8 @@ public:
     int                           mTextureHeight;
     int                           mTexturePages;                               // Font texture page number
 
-    std::vector<std::string>      mTextureArchiveNameList;                   // Font raw texture filenames, index is the page id
-    std::vector<std::string>      mTextureFileNameList;                      // Font texture archive filenames, index is the page id
-
-    void
-    SetSize(double size)
-    {
-        mSizePt = size / mSizeScale;
-        mSizePx = mSizePt / 72 * 96;
-    }
-
-    void
-    SetSampler(std::shared_ptr<Sampler> sampler)
-    {
-        FALCON_ENGINE_CHECK_NULLPTR(sampler);
-
-        mSampler = sampler;
-    }
-
-    const Sampler *
-    GetSampler() const
-    {
-        return mSampler.get();
-    }
-
-    void
-    SetTexture(Texture2dArraySharedPtr texture)
-    {
-        FALCON_ENGINE_CHECK_NULLPTR(texture);
-
-        mTexture = texture;
-    }
-
-    const Texture2dArray *
-    GetTexture() const
-    {
-        return mTexture.get();
-    }
+    std::vector<std::string>      mTextureArchiveNameList;                     // Font raw texture filenames, index is the page id
+    std::vector<std::string>      mTextureFileNameList;                        // Font texture archive filenames, index is the page id
 
 private:
     /************************************************************************/
@@ -114,8 +93,8 @@ private:
     // textures would not be destroyed because Texture2DArray class use shared_ptr
     // to manage Texture2D.
 
-    Texture2dArraySharedPtr       mTexture;                                    // Font texture.
-    std::shared_ptr<Sampler> mSampler;                                    // Font texture sampler.
+    std::shared_ptr<Texture2dArray> mTexture;                                  // Font texture.
+    std::shared_ptr<Sampler>        mSampler;                                  // Font texture sampler.
 
     /************************************************************************/
     /* Asset Importing and Exporting                                        */

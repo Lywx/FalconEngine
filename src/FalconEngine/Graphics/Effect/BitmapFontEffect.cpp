@@ -1,6 +1,6 @@
 #include <FalconEngine/Graphics/Effect/BitmapFontEffect.h>
 
-#include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
+#include <FalconEngine/Graphics/Renderer/Font/Font.h>
 
 using namespace std;
 
@@ -54,7 +54,7 @@ BitmapFontEffect::~BitmapFontEffect()
 /* Public Members                                                       */
 /************************************************************************/
 std::shared_ptr<VisualEffectInstance>
-BitmapFontEffect::CreateInstance(Visual *visual, const BitmapFont *font, const Handedness *handedness, int viewportWidth, int viewportHeight) const
+BitmapFontEffect::CreateInstance(Visual *visual, const Font *font, const Handedness *handedness, int viewportWidth, int viewportHeight) const
 {
     auto visualEffectInstance = CreateSetInstance(visual);
     InitializeInstance(visualEffectInstance.get(), font, handedness, viewportWidth, viewportHeight);
@@ -87,7 +87,7 @@ SignedDistancedFieldFontEffectCreateVertexFormat()
 /************************************************************************/
 void
 BitmapFontEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance *visualEffectInstance,
-                                     _IN_     const BitmapFont     *font,
+                                     _IN_     const Font     *font,
                                      _IN_     const Handedness     *handedness,
                                      _IN_     int                   viewportWidth,
                                      _IN_     int                   viewportHeight) const

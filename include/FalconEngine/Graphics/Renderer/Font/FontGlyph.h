@@ -11,7 +11,7 @@ namespace FalconEngine
 {
 // @summary This represents a glyph in bitmap. The information related to the
 // font it's using and the size of that font.
-class BitmapGlyph
+class FontGlyph
 {
 public:
     /************************************************************************/
@@ -41,9 +41,9 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    BitmapGlyph(int id, double width, double height, double offsetX,
-                double offsetY, double advance, int page, double s1, double t1,
-                double s2, double t2);
+    FontGlyph(int id, double width, double height, double offsetX,
+              double offsetY, double advance, int page, double s1, double t1,
+              double s2, double t2);
 
     /************************************************************************/
     /* Asset Importing and Exporting                                        */
@@ -67,7 +67,7 @@ namespace serialization
 {
 template<class Archive>
 inline void save_construct_data(
-    Archive & ar, const FalconEngine::BitmapGlyph *t, const unsigned int /* version */)
+    Archive & ar, const FalconEngine::FontGlyph *t, const unsigned int /* version */)
 {
     ar << t->mId;
     ar << t->mPage;
@@ -87,7 +87,7 @@ inline void save_construct_data(
 
 template<class Archive>
 inline void load_construct_data(
-    Archive & ar, FalconEngine::BitmapGlyph *t, const unsigned int /* version */)
+    Archive & ar, FalconEngine::FontGlyph *t, const unsigned int /* version */)
 {
     int id, page;
     ar >> id;
@@ -108,8 +108,8 @@ inline void load_construct_data(
     ar >> s2;
     ar >> t2;
 
-    ::new(t) FalconEngine::BitmapGlyph(id, width, height, offsetX,
-                                       offsetY, advance, page, s1, t1, s2, t2);
+    ::new(t) FalconEngine::FontGlyph(id, width, height, offsetX,
+                                     offsetY, advance, page, s1, t1, s2, t2);
 }
 }
 }

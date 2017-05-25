@@ -11,7 +11,6 @@ namespace FalconEngine
 {
 
 class Texture2d;
-using Texture2dSharedPtr = std::shared_ptr<Texture2d>;
 
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API Texture2dArray : public Texture
@@ -20,7 +19,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Texture2dArray(const std::string& fileName, const std::string& filePath, int width, int height, int depth, TextureFormat format, BufferUsage usage = BufferUsage::Static, int mipmapLevel = 0);
+    Texture2dArray(AssetSource assetSource, const std::string& fileName, const std::string& filePath, int width, int height, int depth, TextureFormat format, BufferUsage usage = BufferUsage::Static, int mipmapLevel = 0);
     virtual ~Texture2dArray();
 
 public:
@@ -28,12 +27,12 @@ public:
     GetTextureSlice(int index) const;
 
     void
-    PushTextureSlice(Texture2dSharedPtr texture);
+    PushTextureSlice(std::shared_ptr<Texture2d> texture);
 
 protected:
     // NOTE(Wuxiang): The Texture2D should not be released before owner of them
     // being released.
-    std::vector<Texture2dSharedPtr> mTexture2dList;
+    std::vector<std::shared_ptr<Texture2d>> mTexture2dList;
 };
 #pragma warning(default: 4251)
 

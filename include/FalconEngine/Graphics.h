@@ -17,12 +17,12 @@
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 
-#include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
-#include <FalconEngine/Graphics/Renderer/Font/BitmapFontRenderer.h>
-#include <FalconEngine/Graphics/Renderer/Font/BitmapGlyph.h>
-#include <FalconEngine/Graphics/Renderer/Font/BitmapLine.h>
-#include <FalconEngine/Graphics/Renderer/Font/BitmapText.h>
-#include <FalconEngine/Graphics/Renderer/Font/BitmapWord.h>
+#include <FalconEngine/Graphics/Renderer/Font/Font.h>
+#include <FalconEngine/Graphics/Renderer/Font/FontRenderer.h>
+#include <FalconEngine/Graphics/Renderer/Font/FontGlyph.h>
+#include <FalconEngine/Graphics/Renderer/Font/FontLine.h>
+#include <FalconEngine/Graphics/Renderer/Font/FontText.h>
+#include <FalconEngine/Graphics/Renderer/Font/FontWord.h>
 
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/IndexBuffer.h>

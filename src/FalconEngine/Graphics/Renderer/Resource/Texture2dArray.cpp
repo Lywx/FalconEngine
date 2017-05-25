@@ -7,8 +7,8 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Texture2dArray::Texture2dArray(const std::string& fileName, const std::string& filePath, int width, int height, int depth, TextureFormat format, BufferUsage usage, int mipmapLevel) :
-    Texture(fileName, filePath, width, height, depth, format, TextureType::Texture2dArray, usage, mipmapLevel)
+Texture2dArray::Texture2dArray(AssetSource assetSource, const std::string& fileName, const std::string& filePath, int width, int height, int depth, TextureFormat format, BufferUsage usage, int mipmapLevel) :
+    Texture(assetSource, fileName, filePath, width, height, depth, format, TextureType::Texture2dArray, usage, mipmapLevel)
 {
 }
 
@@ -26,7 +26,7 @@ Texture2dArray::GetTextureSlice(int index) const
 }
 
 void
-Texture2dArray::PushTextureSlice(Texture2dSharedPtr texture)
+Texture2dArray::PushTextureSlice(std::shared_ptr<Texture2d> texture)
 {
     mTexture2dList.push_back(texture);
 }

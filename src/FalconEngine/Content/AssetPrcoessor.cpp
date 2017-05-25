@@ -18,7 +18,7 @@
 #pragma warning(default : 4244)
 
 #include <FalconEngine/Core/Path.h>
-#include <FalconEngine/Graphics/Renderer/Font/BitmapFont.h>
+#include <FalconEngine/Graphics/Renderer/Font/Font.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Model.h>
 #include <FalconEngine/Math/Type.h>
@@ -53,7 +53,7 @@ AssetProcessor::BakeFont(const std::string& fntFilePath)
 }
 
 void
-AssetProcessor::BakeFont(BitmapFont *font, const std::string& fontOutputPath)
+AssetProcessor::BakeFont(Font *font, const std::string& fontOutputPath)
 {
     // http://stackoverflow.com/questions/24313359/data-dependent-failure-when-serializing-stdvector-to-boost-binary-archive
     ofstream fontAssetStream(fontOutputPath, std::ios::binary);
@@ -89,7 +89,7 @@ PushFntMetaLine(map<string, string>& fontSettingTable, vector<string>& fontSetti
 
 void
 LoadFntGlyphLine(
-    BitmapFont&     font,
+    Font&     font,
     vector<string>& fontGlyphElems,
     size_t          fontGlyphIndex,
     int             fontGlyphPT,
@@ -141,13 +141,13 @@ LoadFntGlyphLine(
     // the glyph index to look up the glyph. This implementation achieve best
     // performance and lowest storage in runtime.
     font.mGlyphIndexTable[id] = fontGlyphIndex;
-    font.mGlyphTable.push_back(BitmapGlyph(id, width, height, offsetX,
-                                           offsetY, advance, page, s1, t1, s2, t2));
+    font.mGlyphTable.push_back(FontGlyph(id, width, height, offsetX,
+                                         offsetY, advance, page, s1, t1, s2, t2));
 }
 
 // @summary Load page content line into font data.
 void
-LoadFntPageLine(BitmapFont& font, vector<string>& fontPageElems)
+LoadFntPageLine(Font& font, vector<string>& fontPageElems)
 {
     // NOTE(Wuxiang): Using preallocated map to improved performance. There is no
     // need to clear the map because all the data is overwritten by new page.
@@ -170,7 +170,7 @@ LoadFntPageLine(BitmapFont& font, vector<string>& fontPageElems)
 
 // @Return: whether should continue reading texture file. If you should, the
 // pointer points to the half loaded font.
-BitmapFontSharedPtr
+std::shared_ptr<Font>
 LoadFntFile(const std::string& fntFilePath)
 {
     static vector<string> sFntElems;
@@ -215,8 +215,7 @@ LoadFntFile(const std::string& fntFilePath)
     }
 
     // Create font
-    auto font = std::make_shared<BitmapFont>(GetFileStem(fntFilePath), fntFilePath);
-    font->mFileType = AssetSource::Normal;
+    auto font = std::make_shared<Font>(AssetSource::Normal, GetFileStem(fntFilePath), fntFilePath);
 
     // Read page number and read page specific filename
     font->mTexturePages = lexical_cast<int>(sFontSettingTable.at("pages"));
@@ -304,7 +303,7 @@ LoadFntFile(const std::string& fntFilePath)
     return font;
 }
 
-BitmapFontSharedPtr
+std::shared_ptr<Font>
 AssetProcessor::LoadRawFont(const std::string& fntFilePath)
 {
     if (Exist(fntFilePath))
@@ -332,7 +331,7 @@ AssetProcessor::BakeTexture(Texture2d *texture, const string& textureOutputPath)
     textureAssetArchive << *texture;
 }
 
-Texture2dSharedPtr
+std::shared_ptr<Texture2d>
 AssetProcessor::LoadRawTexture(const std::string& textureFilePath)
 {
     // NOTE(Wuxiang): Since the stb_image default loading format goes from top-left to bottom-right,
@@ -350,8 +349,7 @@ AssetProcessor::LoadRawTexture(const std::string& textureFilePath)
     }
 
     // NOTE(Wuxiang): Copy the memory allocated from the stb library.
-    auto texture = std::make_shared<Texture2d>(GetFileStem(textureFilePath), textureFilePath, textureDimension[0], textureDimension[1], TextureFormat::R8G8B8A8);
-    texture->mFileType = AssetSource::Stream;
+    auto texture = std::make_shared<Texture2d>(AssetSource::Normal, GetFileStem(textureFilePath), textureFilePath, textureDimension[0], textureDimension[1], TextureFormat::R8G8B8A8);
     memcpy(texture->mData, textureData, texture->mDataByteNum);
     stbi_image_free(textureData);
     return texture;

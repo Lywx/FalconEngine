@@ -20,9 +20,9 @@ class GameEngineSettings;
 /************************************************************************/
 /* Rendering Pipeline                                                   */
 /************************************************************************/
-class BitmapFont;
-class BitmapText;
 class Camera;
+class Font;
+class FontText;
 class Primitive;
 class Shader;
 class ShaderUniform;

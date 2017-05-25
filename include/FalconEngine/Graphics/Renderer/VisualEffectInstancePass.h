@@ -18,6 +18,8 @@ class Texture;
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API VisualEffectInstancePass final
 {
+    friend class Renderer;
+
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -95,8 +97,6 @@ private:
     std::map<int, const Sampler *>              mShaderSamplerTable;
     std::map<int, const Texture *>              mShaderTextureTable;
     std::vector<std::shared_ptr<ShaderUniform>> mShaderUniformList;
-
-    friend class Renderer;
 };
 #pragma warning(default: 4251)
 

@@ -13,14 +13,6 @@ layout(location = 0) out vec4 FragColor;
 #include "fe_Material.glsl"
 #fe_extension : disable
 
-uniform MaterialColorData MaterialColor;
-
-uniform bool TextureAmbientExist;
-uniform bool TextureDiffuseExist;
-uniform bool TextureEmissiveExist;
-uniform bool TextureSpecularExist;
-uniform bool TextureShininessExist;
-
 #fe_extension : enable
 #include "fe_Texture.glsl"
 #include "fe_Lighting.glsl"
@@ -48,7 +40,7 @@ CalcDirectionalLight(DirectionalLightData light, vec3 eyeN, vec3 eyeV)
     vec3 cEmissive;
     vec3 cSpecular; 
 
-    CalcBlinnPhongLighting(
+    CalcPhongLighting(
         fin.TexCoord, 
 
     // @parameter Transform.
@@ -82,7 +74,7 @@ CalcPointLight(PointLightData light, vec3 eyeN, vec3 eyeV, vec3 eyePosition)
     vec3 cEmissive;
     vec3 cSpecular;
 
-    CalcBlinnPhongLighting(
+    CalcPhongLighting(
         fin.TexCoord, 
 
     // @parameter Transform.
@@ -125,7 +117,7 @@ CalcSpotLight(SpotLightData light, vec3 eyeN, vec3 eyeV, vec3 eyePosition)
     vec3 cEmissive;
     vec3 cSpecular;
 
-    CalcBlinnPhongLighting(
+    CalcPhongLighting(
         fin.TexCoord, 
 
         // @parameter Transform.

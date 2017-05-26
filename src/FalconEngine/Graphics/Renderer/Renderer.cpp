@@ -1004,15 +1004,19 @@ Renderer::Disable(const VisualEffectInstancePass *pass)
 void
 Renderer::Update(const VisualEffectInstancePass *pass, ShaderUniform *uniform, const Camera *camera, const Visual *visual)
 {
-    // Update uniform location
+    // Update uniform state and location
     if (uniform->mLocation == 0)
     {
         auto shader = pass->GetShader();
+        uniform->mEnabled = shader->GetUniformEnable(uniform->mName);
         uniform->mLocation = shader->GetUniformLocation(uniform->mName);
     }
 
     // Update uniform value
-    uniform->Update(camera, visual);
+    if (uniform->mEnabled)
+    {
+        uniform->Update(camera, visual);
+    }
 
     // Update uniform value in context.
     if (uniform->mUpdated)

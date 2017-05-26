@@ -2,22 +2,28 @@
 
 #include <FalconEngine/Graphics/Header.h>
 
-#include <FalconEngine/Graphics/Effect/PhongShadingEffect.h>
+#include <FalconEngine/Graphics/Effect/PhongEffect.h>
 
 namespace FalconEngine
 {
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API BlinnPhongShadingEffect : public PhongShadingEffect
+class FALCON_ENGINE_API BlinnEffectParams : public PhongEffectParams
 {
-    FALCON_ENGINE_EFFECT_DECLARE(BlinnPhongShadingEffect);
+public:
+    using PhongEffectParams::PhongEffectParams;
+};
+
+#pragma warning(disable: 4251)
+class FALCON_ENGINE_API BlinnEffect : public PhongEffect
+{
+    FALCON_ENGINE_EFFECT_DECLARE(BlinnEffect);
 
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit BlinnPhongShadingEffect(bool initializer = true);
-    virtual ~BlinnPhongShadingEffect();
+    explicit BlinnEffect(bool initializer = true);
+    virtual ~BlinnEffect();
 
 protected:
     virtual std::shared_ptr<VisualEffectInstance>

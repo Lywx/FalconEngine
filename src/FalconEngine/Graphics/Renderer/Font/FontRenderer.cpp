@@ -4,7 +4,7 @@
 
 #include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Core/Memory.h>
-#include <FalconEngine/Graphics/Effect/BitmapFontEffect.h>
+#include <FalconEngine/Graphics/Effect/FontEffect.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
@@ -281,10 +281,10 @@ FontRenderer::PrepareBatch(const Font *font)
 
     // Initialize new batch for given font.
     {
-        auto fontVisualEffect = make_shared<BitmapFontEffect>();
+        auto fontVisualEffect = make_shared<FontEffect>();
 
         auto fontVertexBufferSize = int(Kilobytes(100));
-        auto fontVertexBuffer = make_shared<VertexBuffer>(fontVertexBufferSize, sizeof(SignedDistancedFieldFontVertex), BufferUsage::Stream);
+        auto fontVertexBuffer = make_shared<VertexBuffer>(fontVertexBufferSize, sizeof(FontVertex), BufferUsage::Stream);
 
         auto fontPrimitive = make_shared<PrimitiveQuads>(fontVertexBuffer, nullptr);
         auto fontMesh = make_shared<Mesh>(fontPrimitive, nullptr);

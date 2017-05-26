@@ -18,9 +18,15 @@ PlatformVertexFormat::PlatformVertexFormat(const VertexFormat *vertexFormat)
 
         glVertexAttribBinding(vertexAttrib.mLocation, vertexAttrib.mBindingIndex);
 
-        glVertexAttribFormat(vertexAttrib.mLocation, vertexAttrib.mChannel,
+        glVertexAttribFormat(vertexAttrib.mLocation,
+                             vertexAttrib.mChannel,
                              OpenGLShaderAttributeType[int(vertexAttrib.mType)],
-                             vertexAttrib.mNormalized, vertexAttrib.mOffset);
+                             vertexAttrib.mNormalized,
+
+                             // The distance between elements within the buffer.
+                             // So that you only need to properly sum up offset
+                             // for this specific binding index.
+                             vertexAttrib.mOffset);
 
         if (vertexAttrib.mDivision != 0)
         {

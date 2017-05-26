@@ -64,6 +64,9 @@ public:
     int
     GetUniformLocation(std::string uniformName) const;
 
+    bool
+    GetUniformEnable(std::string uniformName) const;
+
     void
     PushUniform(std::string uniformName, ShaderUniformType uniformType);
 

@@ -8,6 +8,7 @@ namespace FalconEngine
 /************************************************************************/
 ShaderUniform::ShaderUniform(const std::string name, ShaderUniformType type) :
     mName(name),
+    mEnabled(true),
     mLocation(0),
     mType(type),
     mUpdated(true)

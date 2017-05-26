@@ -68,18 +68,18 @@ SampleGame::Initialize()
             sceneNode->AttachChild(mRoomNode);
 
             auto lightModel = assetManager->LoadModel("Content/Model/Engine/Point Light.dae");
-            mPointLight1 = make_shared<PointLightEntity>(ShareClone(lightModel->GetNode()));
-            mPointLight2 = make_shared<PointLightEntity>(ShareClone(lightModel->GetNode()));
-            mPointLight3 = make_shared<PointLightEntity>(ShareClone(lightModel->GetNode()));
+            mPointLight1 = make_shared<LightEntity>(ShareClone(lightModel->GetNode()));
+            mPointLight2 = make_shared<LightEntity>(ShareClone(lightModel->GetNode()));
+            mPointLight3 = make_shared<LightEntity>(ShareClone(lightModel->GetNode()));
             mRoomNode->AttachChild(mPointLight1->GetNode());
             mRoomNode->AttachChild(mPointLight2->GetNode());
             mRoomNode->AttachChild(mPointLight3->GetNode());
 
-            mSceneDirectionalLight = make_shared<Light>(LightType::Directional);
-            mSceneDirectionalLight->mAmbient = Color(255, 255, 255);
-            mSceneDirectionalLight->mDiffuse = Color(255, 255, 255);
-            mSceneDirectionalLight->mSpecular = Color(255, 255, 255);
-            mSceneDirectionalLight->mDirection = Vector3f(1, 1, 1);
+            mDirectionalLight = make_shared<Light>(LightType::Directional);
+            mDirectionalLight->mAmbient = Color(155, 155, 155);
+            mDirectionalLight->mDiffuse = Color(155, 155, 155);
+            mDirectionalLight->mSpecular = Color(155, 155, 155);
+            mDirectionalLight->mDirection = Vector3f(1, 1, 1);
 
             mPointLight1->SetAmbient(ColorPalette::Gold);
             mPointLight1->SetDiffuse(Color(105, 105, 105));
@@ -105,12 +105,12 @@ SampleGame::Initialize()
             mPointLight3->SetQuadratic(0.0075f);
             mPointLight3->SetPosition(Vector3f(0.0, 0.0, 9.546284675598145));
 
-            mScenePointLightList = { mPointLight1->GetLight(), mPointLight2->GetLight(), mPointLight3->GetLight() };
+            mSceneParam.mPointLightList = { mPointLight1->GetLight(), mPointLight2->GetLight(), mPointLight3->GetLight() };
 
             // Initialize Effect
             auto sceneLightingEffect = make_shared<MeshEffect>();
             // sceneLightingEffect->CreateInstance(mRoomNode.get(), *mSceneDirectionalLight, mScenePointLightList, mSceneSpotLightList);
-            sceneLightingEffect->CreateInstance(mRoomNode.get(), ColorPalette::LightBlue, *mSceneDirectionalLight, ColorPalette::Black, 2.0f);
+            sceneLightingEffect->CreateInstance(mRoomNode.get(), ColorPalette::Black, ColorPalette::Black, 2.0f, false);
         }
     }
 

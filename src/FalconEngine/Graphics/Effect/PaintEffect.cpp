@@ -71,11 +71,20 @@ PaintEffect::~PaintEffect()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PaintEffect::CreateInstance(Node *node, Color color) const
+PaintEffect::CreateInstance(_IN_OUT_ Node              *node,
+                            _IN_     const PaintParams *params) const
+{
+    FALCON_ENGINE_CHECK_NULLPTR(params);
+
+    CreateInstance(node, params->mColor);
+}
+
+void
+PaintEffect::CreateInstance(Node *node, Color& color) const
 {
     using namespace placeholders;
 
-    TraverseLevelOrder(node, std::bind([this, color](Visual * visual)
+    TraverseLevelOrder(node, std::bind([&, this](Visual * visual)
     {
         auto visualEffectInstance = CreateSetInstance(visual);
         InitializeInstance(visualEffectInstance.get(), color);
@@ -114,11 +123,11 @@ PaintEffect::GetVertexFormat() const
 void
 PaintEffect::InitializeInstance(
     _IN_OUT_ VisualEffectInstance *visualEffectInstance,
-    _IN_     Color                 color) const
+    _IN_     Color&                color) const
 {
     SetShaderUniformAutomaticModelViewProjectionTransform(visualEffectInstance, 0, "ModelViewProjectionTransform");
 
-    visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector4f>("Color", bind([color]
+    visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector4f>("Color", bind([&]
     {
         return Vector4f(color);
     })));

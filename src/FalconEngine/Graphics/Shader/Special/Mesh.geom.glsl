@@ -7,13 +7,15 @@ in Vout
 {
     vec3 EyeNormal;
     vec3 EyePosition;
+    vec2 TexCoord;
 } gin[];
 
 out Gout
 {
+    noperspective vec3 Distance;
     vec3 EyePosition;
     vec3 EyeNormal;
-    noperspective vec3 Distance;
+    vec2 TexCoord;
 } gout;
 
 uniform mat4 ScreenTransform;  
@@ -38,21 +40,24 @@ main()
     float hb = abs(c * sin(alpha));
     float hc = abs(b * sin(alpha));
 
+    gout.Distance = vec3(ha, 0, 0);
     gout.EyePosition = gin[0].EyePosition;
     gout.EyeNormal = gin[0].EyeNormal;
-    gout.Distance = vec3(ha, 0, 0);
+    gout.TexCoord = gin[0].TexCoord;
     gl_Position = gl_in[0].gl_Position;
     EmitVertex();
 
+    gout.Distance = vec3(0, hb, 0 );
     gout.EyePosition = gin[1].EyePosition;
     gout.EyeNormal = gin[1].EyeNormal;
-    gout.Distance = vec3(0, hb, 0 );
+    gout.TexCoord = gin[1].TexCoord;
     gl_Position = gl_in[1].gl_Position;
     EmitVertex();
 
+    gout.Distance = vec3(0, 0, hc);
     gout.EyePosition = gin[2].EyePosition;
     gout.EyeNormal = gin[2].EyeNormal;
-    gout.Distance = vec3(0, 0, hc);
+    gout.TexCoord = gin[2].TexCoord;
     gl_Position = gl_in[2].gl_Position;
     EmitVertex();
 

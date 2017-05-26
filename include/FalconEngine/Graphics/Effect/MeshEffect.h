@@ -7,7 +7,6 @@
 
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
 #include <FalconEngine/Math/Color.h>
-#include "BlinnPhongShadingEffect.h"
 
 namespace FalconEngine
 {
@@ -16,6 +15,7 @@ class Visual;
 class Mesh;
 class Node;
 
+// @summary Implements material coloring with mesh visualization.
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API MeshEffect : public VisualEffect
 {
@@ -33,11 +33,11 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    CreateInstance(_IN_ Node        *node,
-                   _IN_     Color    ambient,
-                   _IN_ const Light& directionalLight,
-                   _IN_ Color        lineColor,
-                   _IN_ float        lineWidth) const;
+    CreateInstance(_IN_ Node  *node,
+                   _IN_ Color& ambient,
+                   _IN_ Color& lineColor,
+                   _IN_ float& lineWidth,
+                   _IN_ bool&  texturing) const;
 
 protected:
     /************************************************************************/
@@ -51,11 +51,11 @@ protected:
 
     void
     InitializeInstance(_IN_OUT_ VisualEffectInstance *visualEffectInstance,
-                       _IN_     Color                 ambient,
+                       _IN_     Color&                ambient,
                        _IN_     const Material&       material,
-                       _IN_     const Light&          directionalLight,
-                       _IN_     Color                 color,
-                       _IN_     float                 width) const;
+                       _IN_     Color&                color,
+                       _IN_     float&                width,
+                       _IN_     bool&                 texturing) const;
 };
 #pragma warning(default: 4251)
 

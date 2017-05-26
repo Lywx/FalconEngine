@@ -26,7 +26,7 @@ SampleGame::Initialize()
 
         // Fonts
         {
-            mFont = assetManager->LoadFont("Content/Fonts/LuciadaConsoleDistanceField.fnt.bin").get();
+            mFont = assetManager->LoadFont("Content/Font/LuciadaConsoleDistanceField.fnt.bin").get();
             // mFont = mAssetManager->LoadFont("Content/Fonts/NSimSunDistanceField.fnt.bin").get();
         }
 
@@ -37,14 +37,16 @@ SampleGame::Initialize()
             auto sceneNode = mScene->GetNode();
             sceneNode->mWorldTransform = Matrix4f::Zero;
 
-            auto roomModel = assetManager->LoadModel("Content/Models/Bedroom.dae");
+            auto roomModel = assetManager->LoadModel("Content/Model/Bedroom.dae");
             auto roomNode = ShareClone(roomModel->GetNode());
             sceneNode->AttachChild(roomNode);
 
-            auto lightModel = assetManager->LoadModel("Content/Models/Engine/Point Light.dae");
-            mPointLight1 = make_shared<PointLightEntity>(ShareClone(lightModel->GetNode()));
-            mPointLight2 = make_shared<PointLightEntity>(ShareClone(lightModel->GetNode()));
-            mPointLight3 = make_shared<PointLightEntity>(ShareClone(lightModel->GetNode()));
+            auto boxModel = assetManager->LoadModel("Content/Model/Engine/Box.dae");
+            auto boxNode = boxModel->GetNode();
+            mDirectionalLight = make_shared<LightEntity>(ShareClone(boxNode), LightType::Directional);
+            mPointLight1 = make_shared<LightEntity>(ShareClone(boxNode), LightType::Point);
+            mPointLight2 = make_shared<LightEntity>(ShareClone(boxNode), LightType::Point);
+            mPointLight3 = make_shared<LightEntity>(ShareClone(boxNode), LightType::Point);
             roomNode->AttachChild(mPointLight1->GetNode());
             roomNode->AttachChild(mPointLight2->GetNode());
             roomNode->AttachChild(mPointLight3->GetNode());
@@ -54,11 +56,10 @@ SampleGame::Initialize()
     // Initialize Scene
     {
         {
-            mSceneDirectionalLight = make_shared<Light>(LightType::Directional);
-            mSceneDirectionalLight->mAmbient = Color(055, 055, 055);
-            mSceneDirectionalLight->mDiffuse = Color(055, 055, 055);
-            mSceneDirectionalLight->mSpecular = Color(055, 055, 055);
-            mSceneDirectionalLight->mDirection = Vector3f(1, 1, 1);
+            mDirectionalLight->SetAmbient(Color(055, 055, 055));
+            mDirectionalLight->SetDiffuse(Color(055, 055, 055));
+            mDirectionalLight->SetSpecular(Color(055, 055, 055));
+            mDirectionalLight->SetDirection(Vector3f(1, 1, 1));
         }
 
         {
@@ -89,15 +90,15 @@ SampleGame::Initialize()
             mPointLight3->SetLinear(0.015f);
             mPointLight3->SetQuadratic(0.0075f);
             mPointLight3->SetPosition(Vector3f(0.0, 0.0, 9.546284675598145));
-
         }
 
-        mScenePointLightList = { mPointLight1->GetLight(), mPointLight2->GetLight(), mPointLight3->GetLight() };
-
-        mSceneLightingEffect = make_shared<PhongShadingEffect>();
-
         // Initialize Effect
-        mSceneLightingEffect->CreateInstance(mScene->GetNode().get(), *mSceneDirectionalLight, mScenePointLightList, mSceneSpotLightList);
+        mSceneLightingParams = make_shared<PhongEffectParams>();
+        mSceneLightingParams->mDirectionalLight = mDirectionalLight->GetLight();
+        mSceneLightingParams->mPointLightList = { mPointLight1->GetLight(), mPointLight2->GetLight(), mPointLight3->GetLight() };
+
+        mSceneLightingEffect = make_shared<PhongEffect>();
+        mSceneLightingEffect->CreateInstance(mScene->GetNode().get(), mSceneLightingParams.get());
     }
 
     // Initialize Interaction.

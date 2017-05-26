@@ -35,16 +35,16 @@ class VertexFormat;
 
 // @summary Implements a aabb bounding box effect using hardware instancing so
 // that all bounding box is drawn in one draw call.
-class FALCON_ENGINE_API AABBBoundingBoxEffect : public VisualEffect
+class FALCON_ENGINE_API AABBEffect : public VisualEffect
 {
-    FALCON_ENGINE_EFFECT_DECLARE(AABBBoundingBoxEffect);
+    FALCON_ENGINE_EFFECT_DECLARE(AABBEffect);
 
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit AABBBoundingBoxEffect();
-    virtual ~AABBBoundingBoxEffect();
+    explicit AABBEffect();
+    virtual ~AABBEffect();
 
 public:
     /************************************************************************/

@@ -312,9 +312,13 @@ PlatformShader::CollectUniformLocation(Shader *shader) const
     for (auto& uniformNameValuePair : shader->mUniformTable)
     {
         GLint uniformLocation = glGetUniformLocation(mProgram, uniformNameValuePair.first.c_str());
+
         if (uniformLocation == -1)
         {
-            FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The location could not be found.");
+            // NOTE(Wuxiang): If the uniform is not found, the uniform location
+            // would be -1. If -1 is passed to later pipeline, it will get ignored.
+            // This happens for compiler optimization.
+            uniformNameValuePair.second.mEnabled = false;
         }
 
         uniformNameValuePair.second.mLocation = uniformLocation;

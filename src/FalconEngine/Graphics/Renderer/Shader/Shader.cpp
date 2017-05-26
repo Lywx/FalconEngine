@@ -50,6 +50,12 @@ Shader::GetUniformLocation(std::string uniformName) const
     return mUniformTable.at(uniformName).mLocation;
 }
 
+bool
+Shader::GetUniformEnable(std::string uniformName) const
+{
+    return mUniformTable.at(uniformName).mEnabled;
+}
+
 void
 Shader::PushUniform(std::string uniformName, ShaderUniformType uniformType)
 {

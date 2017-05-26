@@ -89,13 +89,6 @@ CalcPhongLighting(
 //
 // #include "fe_Material.glsl".
 // #include "fe_Texture.glsl".
-// 
-// uniform bool TextureAmbientExist;
-// uniform bool TextureDiffuseExist;
-// uniform bool TextureEmissiveExist;
-// uniform bool TextureSpecularExist;
-// uniform bool TextureShininessExist;
-// uniform MaterialColorData MaterialColor;
 void
 CalcPhongLighting(
 
@@ -119,53 +112,53 @@ CalcPhongLighting(
     out vec3 cSpecular)
 {
     vec3 mAmbient;
-    if (TextureAmbientExist)
+    if (fe_TextureAmbientExist)
     {
         mAmbient = vec3(texture(fe_TextureAmbient, texCoord));
     }
     else
     {
-        mAmbient = MaterialColor.Ambient;
+        mAmbient = fe_Material.Ambient;
     }
 
     vec3 mDiffuse;
-    if (TextureDiffuseExist)
+    if (fe_TextureDiffuseExist)
     {
         mDiffuse = vec3(texture(fe_TextureDiffuse, texCoord));
     }
     else
     {
-        mDiffuse = MaterialColor.Diffuse;
+        mDiffuse = fe_Material.Diffuse;
     }
 
     vec3 mEmissive;
-    if (TextureEmissiveExist)
+    if (fe_TextureEmissiveExist)
     {
         mEmissive = vec3(texture(fe_TextureEmissive, texCoord));
     }
     else
     {
-        mEmissive = MaterialColor.Emissive;
+        mEmissive = fe_Material.Emissive;
     }
 
     float mShininess;
-    if (TextureShininessExist)
+    if (fe_TextureShininessExist)
     {
         mShininess = texture(fe_TextureShininess, texCoord).a;
     }
     else
     {
-        mShininess = MaterialColor.Shininess;
+        mShininess = fe_Material.Shininess;
     }
 
     vec3 mSpecular;
-    if (TextureSpecularExist)
+    if (fe_TextureSpecularExist)
     {
         mSpecular = vec3(texture(fe_TextureSpecular, texCoord));
     }
     else
     {
-        mSpecular = MaterialColor.Specular;
+        mSpecular = fe_Material.Specular;
     }
 
     CalcPhongLighting(
@@ -237,13 +230,6 @@ CalcBlinnPhongLighting(
 //
 // #include "fe_Material.glsl".
 // #include "fe_Texture.glsl".
-// 
-// uniform bool TextureAmbientExist;
-// uniform bool TextureDiffuseExist;
-// uniform bool TextureEmissiveExist;
-// uniform bool TextureSpecularExist;
-// uniform bool TextureShininessExist;
-// uniform MaterialColorData MaterialColor;
 void
 CalcBlinnPhongLighting(
 
@@ -267,53 +253,53 @@ CalcBlinnPhongLighting(
     out vec3 cSpecular)
 {
     vec3 mAmbient;
-    if (TextureAmbientExist)
+    if (fe_TextureAmbientExist)
     {
         mAmbient = vec3(texture(fe_TextureAmbient, texCoord));
     }
     else
     {
-        mAmbient = MaterialColor.Ambient;
+        mAmbient = fe_Material.Ambient;
     }
 
     vec3 mDiffuse;
-    if (TextureDiffuseExist)
+    if (fe_TextureDiffuseExist)
     {
         mDiffuse = vec3(texture(fe_TextureDiffuse, texCoord));
     }
     else
     {
-        mDiffuse = MaterialColor.Diffuse;
+        mDiffuse = fe_Material.Diffuse;
     }
 
     vec3 mEmissive;
-    if (TextureEmissiveExist)
+    if (fe_TextureEmissiveExist)
     {
         mEmissive = vec3(texture(fe_TextureEmissive, texCoord));
     }
     else
     {
-        mEmissive = MaterialColor.Emissive;
+        mEmissive = fe_Material.Emissive;
     }
 
     float mShininess;
-    if (TextureShininessExist)
+    if (fe_TextureShininessExist)
     {
         mShininess = texture(fe_TextureShininess, texCoord).a;
     }
     else
     {
-        mShininess = MaterialColor.Shininess;
+        mShininess = fe_Material.Shininess;
     }
 
     vec3 mSpecular;
-    if (TextureSpecularExist)
+    if (fe_TextureSpecularExist)
     {
         mSpecular = vec3(texture(fe_TextureSpecular, texCoord));
     }
     else
     {
-        mSpecular = MaterialColor.Specular;
+        mSpecular = fe_Material.Specular;
     }
 
     CalcBlinnPhongLighting(

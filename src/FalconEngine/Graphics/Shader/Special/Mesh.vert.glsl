@@ -8,6 +8,7 @@ out Vout
 {
     vec3 EyeNormal;
     vec3 EyePosition;
+    vec2 TexCoord;
 } vout;
 
 uniform mat3 NormalTransform;
@@ -18,6 +19,7 @@ void main()
 {
     vout.EyeNormal = normalize(NormalTransform * Normal);
     vout.EyePosition = vec3(ModelViewTransform * vec4(Position, 1.0));
+    vout.TexCoord = TexCoord;
 
     gl_Position = ModelViewProjectionTransform * vec4(Position, 1.0);
 }

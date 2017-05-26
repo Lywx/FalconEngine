@@ -45,6 +45,12 @@ Mesh::GetMaterial() const
     return mMaterial.get();
 }
 
+std::shared_ptr<Material>
+Mesh::GetMaterial()
+{
+    return mMaterial;
+}
+
 void
 Mesh::SetMaterial(std::shared_ptr<Material> material)
 {

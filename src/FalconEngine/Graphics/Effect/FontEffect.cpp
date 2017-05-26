@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Effect/BitmapFontEffect.h>
+#include <FalconEngine/Graphics/Effect/FontEffect.h>
 
 #include <FalconEngine/Graphics/Renderer/Font/Font.h>
 
@@ -7,16 +7,16 @@ using namespace std;
 namespace FalconEngine
 {
 
-FALCON_ENGINE_EFFECT_IMPLEMENT(BitmapFontEffect);
+FALCON_ENGINE_EFFECT_IMPLEMENT(FontEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-BitmapFontEffect::BitmapFontEffect()
+FontEffect::FontEffect()
 {
     auto shader = std::make_shared<Shader>();
-    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/BitmapFont.vert.glsl");
-    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shader/BitmapFont.frag.glsl");
+    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/Font.vert.glsl");
+    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shader/Font.frag.glsl");
 
     auto pass = make_unique<VisualEffectPass>();
     pass->SetShader(shader);
@@ -46,7 +46,7 @@ BitmapFontEffect::BitmapFontEffect()
     InsertPass(move(pass));
 }
 
-BitmapFontEffect::~BitmapFontEffect()
+FontEffect::~FontEffect()
 {
 }
 
@@ -54,7 +54,7 @@ BitmapFontEffect::~BitmapFontEffect()
 /* Public Members                                                       */
 /************************************************************************/
 std::shared_ptr<VisualEffectInstance>
-BitmapFontEffect::CreateInstance(Visual *visual, const Font *font, const Handedness *handedness, int viewportWidth, int viewportHeight) const
+FontEffect::CreateInstance(Visual *visual, const Font *font, const Handedness *handedness, int viewportWidth, int viewportHeight) const
 {
     auto visualEffectInstance = CreateSetInstance(visual);
     InitializeInstance(visualEffectInstance.get(), font, handedness, viewportWidth, viewportHeight);
@@ -86,11 +86,11 @@ SignedDistancedFieldFontEffectCreateVertexFormat()
 /* Protected Members                                                    */
 /************************************************************************/
 void
-BitmapFontEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance *visualEffectInstance,
-                                     _IN_     const Font     *font,
-                                     _IN_     const Handedness     *handedness,
-                                     _IN_     int                   viewportWidth,
-                                     _IN_     int                   viewportHeight) const
+FontEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance *visualEffectInstance,
+                               _IN_     const Font     *font,
+                               _IN_     const Handedness     *handedness,
+                               _IN_     int                   viewportWidth,
+                               _IN_     int                   viewportHeight) const
 {
     visualEffectInstance->SetShaderUniform(0, ShareConstant<Matrix4f>("ProjectionTransform",
                                            handedness->CreateOrthogonal(1, float(viewportWidth), 0, float(viewportHeight), -1.0f, 1.0f)));
@@ -103,7 +103,7 @@ BitmapFontEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance *visualEffect
 }
 
 std::shared_ptr<VertexFormat>
-BitmapFontEffect::GetVertexFormat() const
+FontEffect::GetVertexFormat() const
 {
     static std::shared_ptr<VertexFormat> sVertexFormat = SignedDistancedFieldFontEffectCreateVertexFormat();
     return sVertexFormat;

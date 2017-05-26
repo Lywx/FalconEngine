@@ -1,23 +1,23 @@
-#include <FalconEngine/Graphics/Effect/BlinnPhongShadingEffect.h>
+#include <FalconEngine/Graphics/Effect/BlinnEffect.h>
 
 using namespace std;
 
 namespace FalconEngine
 {
 
-FALCON_ENGINE_EFFECT_IMPLEMENT(BlinnPhongShadingEffect);
+FALCON_ENGINE_EFFECT_IMPLEMENT(BlinnEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-BlinnPhongShadingEffect::BlinnPhongShadingEffect(bool initializer) :
-    PhongShadingEffect(false)
+BlinnEffect::BlinnEffect(bool initializer) :
+    PhongEffect(false)
 {
     if (initializer)
     {
         auto shader = std::make_shared<Shader>();
-        shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/BlinnPhongShading.vert.glsl");
-        shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shader/BlinnPhongShading.frag.glsl");
+        shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/Blinn.vert.glsl");
+        shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shader/Blinn.frag.glsl");
 
         auto pass = make_unique<VisualEffectPass>();
         pass->SetShader(shader);
@@ -46,7 +46,7 @@ BlinnPhongShadingEffect::BlinnPhongShadingEffect(bool initializer) :
     }
 }
 
-BlinnPhongShadingEffect::~BlinnPhongShadingEffect()
+BlinnEffect::~BlinnEffect()
 {
 }
 

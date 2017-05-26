@@ -13,10 +13,8 @@ namespace FalconEngine
 
 class Font;
 
-class VertexFormat;
-
 #pragma pack(push, 1)
-class SignedDistancedFieldFontVertex
+class FontVertex
 {
 public:
     Vector2f mPosition;
@@ -29,16 +27,16 @@ public:
 #pragma pack(pop)
 
 // @summary Implements a signed distanced field based bitmap font rendering effect.
-class FALCON_ENGINE_API BitmapFontEffect : public VisualEffect
+class FALCON_ENGINE_API FontEffect : public VisualEffect
 {
-    FALCON_ENGINE_EFFECT_DECLARE(BitmapFontEffect);
+    FALCON_ENGINE_EFFECT_DECLARE(FontEffect);
 
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit BitmapFontEffect();
-    virtual ~BitmapFontEffect();
+    explicit FontEffect();
+    virtual ~FontEffect();
 
 public:
     /************************************************************************/

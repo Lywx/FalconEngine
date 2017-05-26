@@ -9,11 +9,8 @@
 namespace FalconEngine
 {
 
-class PointLightEntity;
-using PointLightEntitySharedPtr = std::shared_ptr<PointLightEntity>;
-
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_API PointLightEntity : public SceneEntity
+class FALCON_ENGINE_API LightEntity : public SceneEntity
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
@@ -21,11 +18,14 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PointLightEntity(const std::shared_ptr<Node> node);
-    PointLightEntity(const std::shared_ptr<Node> node, const LightSharedPtr light);
-    ~PointLightEntity();
+    explicit LightEntity(const std::shared_ptr<Node> node, LightType lightType);
+    LightEntity(const std::shared_ptr<Node> node, const std::shared_ptr<Light> light);
+    ~LightEntity();
 
 public:
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
     Color
     GetAmbient() const;
 
@@ -62,15 +62,24 @@ public:
     void
     SetQuadratic(float value);
 
+    Vector3f
+    GetDirection() const;
+
+    void
+    SetDirection(Vector3f direciton);
+
     const Light *
     GetLight() const;
+
+    std::shared_ptr<Light>
+    GetLight();
 
 protected:
     virtual void
     UpdateLocalTransformFeedback(bool initiator) override;
 
 protected:
-    LightSharedPtr mLight;
+    std::shared_ptr<Light> mLight;
 };
 #pragma warning(default: 4251)
 

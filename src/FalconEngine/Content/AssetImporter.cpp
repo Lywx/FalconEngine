@@ -375,7 +375,7 @@ bool
 AssetImporter::ImportInternal(Model *model, const std::string& modelFilePath)
 {
     // http://assimp.sourceforge.net/lib_html/
-    const vector<string> assimpExtensionList =
+    const vector<string> modelExtensionSupportedList =
     {
         ".dae",      // Collada
         ".xml",
@@ -427,7 +427,8 @@ AssetImporter::ImportInternal(Model *model, const std::string& modelFilePath)
         ".zgl",
     };
 
-    if (!ExtensionSupported(modelFilePath, assimpExtensionList))
+    auto modelFileExtension = GetFileExtension(modelFilePath);
+    if (!ExtensionSupported(modelFileExtension, modelExtensionSupportedList))
     {
         return false;
     }
@@ -450,10 +451,8 @@ AssetImporter::ImportInternal(Model *model, const std::string& modelFilePath)
 }
 
 bool
-ExtensionSupported(const string& filePath, const vector<string>& fileExtensionSupportedList)
+ExtensionSupported(const string& fileExtension, const vector<string>& fileExtensionSupportedList)
 {
-    auto fileExtension = GetFileExtension(filePath);
-
     for (auto assimpExtension : fileExtensionSupportedList)
     {
         if (fileExtension == assimpExtension)

@@ -2,9 +2,10 @@
 
 in Gout
 {
+    noperspective vec3 Distance;
     vec3 EyePosition;
     vec3 EyeNormal;
-    noperspective vec3 Distance;
+    vec2 TexCoord;
 } fin;
 
 layout(location = 0) out vec4 FragColor;
@@ -13,152 +14,54 @@ layout(location = 0) out vec4 FragColor;
 #include "fe_Material.glsl"
 #fe_extension : disable
 
-struct DirectionalLightData
+uniform vec3 Ambient;
+uniform bool Texturing;
+
+// @require #include "fe_Material.glsl".
+vec3 
+CalcMaterialColor()
 {
-    // Color
-    vec3 Ambient;
-    vec3 Diffuse;
-    vec3 Specular;
+    vec3 cAmbient  = Ambient + vec3(1.0) * fe_Material.Ambient;
+    vec3 cDiffuse  = vec3(1.0) * fe_Material.Diffuse * 0.5;
+    vec3 cEmissive = vec3(0.0);
+    vec3 cSpecular = vec3(1.0) * fe_Material.Specular * pow(0.5, fe_Material.Shininess);
 
-    // Transform
-    vec3 EyeDirection;
-};
-
-uniform vec3 AmbientOffset;
-uniform DirectionalLightData DirectionalLight;
-uniform MaterialColorData MaterialColor;
-
-// @require None.
-void 
-CalcPhongLighting(
-// @parameter Transform.
-    in vec3 eyeN, 
-    in vec3 eyeV,
-    in vec3 eyeL,
-
-// @parameter Light Source.
-    in vec3 sAmbient, 
-    in vec3 sDiffuse, 
-    in vec3 sSpecular, 
-
-// @parameter Material Color. 
-    in vec3 mAmbient,
-    in vec3 mDiffuse,
-    in vec3 mEmissive,
-    in vec3 mSpecular,
-    in float mShininess,
-
-// @return Standard Phong lighting contribution.
-    out vec3 cAmbient,
-    out vec3 cDiffuse,
-    out vec3 cEmissive,
-    out vec3 cSpecular)
-{
-    vec3 eyeR = reflect(-eyeL, eyeN);
-
-    // dot(n, l)
-    float dotNL = max(dot(eyeN, eyeL), 0.0);
-
-    // dot(v, r)
-    float dotVR = max(dot(eyeV, eyeR), 0.0);
-
-    cAmbient  = AmbientOffset + sAmbient * mAmbient;
-    cDiffuse  = sDiffuse * mDiffuse * dotNL;
-    cEmissive = mEmissive;
-    cSpecular = sSpecular * mSpecular * pow(dotVR, mShininess);
+    return cAmbient + cDiffuse + cEmissive + cSpecular;
 }
 
-// @require 
-// #include "fe_Lighting.glsl".
-// #include "fe_Material.glsl".
-// uniform MaterialColorData MaterialColor;
-void
-CalcPhongLighting(
+#fe_extension : enable
+#include "fe_Texture.glsl"
+#fe_extension : disable
 
-// @parameter Transform.
-    in vec3 eyeN, 
-    in vec3 eyeV,
-    in vec3 eyeL,
-
-// @parameter Light Source.
-    in vec3 sAmbient, 
-    in vec3 sDiffuse, 
-    in vec3 sSpecular, 
-
-// @return Standard Phong lighting contribution.
-    out vec3 cAmbient,
-    out vec3 cDiffuse,
-    out vec3 cEmissive,
-    out vec3 cSpecular)
+// @require #include "fe_Texture.glsl".
+vec3
+CalcTextureColor()
 {
-    vec3 mAmbient;
-    mAmbient = MaterialColor.Ambient;
+    vec3 cAmbient;
+    if (fe_TextureAmbientExist)
+    {
+       cAmbient = Ambient + vec3(1.0) * vec3(texture(fe_TextureAmbient, texCoord));
+    }
 
-    vec3 mDiffuse;
-    mDiffuse = MaterialColor.Diffuse;
+    vec3 cDiffuse;
+    if (fe_TextureDiffuseExist)
+    {
+        cDiffuse = vec3(1.0) * vec3(texture(fe_TextureDiffuse, texCoord)) * 0.5;
+    }
 
-    vec3 mEmissive;
-    mEmissive = MaterialColor.Emissive;
+    vec3 cEmissive = vec3(0.0);
 
     float mShininess;
-    mShininess = MaterialColor.Shininess;
+    if (fe_TextureShininessExist)
+    {
+        mShininess = texture(fe_TextureShininess, texCoord).a;
+    }
 
-    vec3 mSpecular;
-    mSpecular = MaterialColor.Specular;
-
-    CalcPhongLighting(
-        // @parameter Transform.
-        eyeN, 
-        eyeV,
-        eyeL,
-
-        // @parameter Light Source.
-        sAmbient, 
-        sDiffuse, 
-        sSpecular, 
-
-        // @parameter Material Color. 
-        mAmbient,
-        mDiffuse,
-        mEmissive,
-        mSpecular,
-        mShininess,
-
-        // @return Standard Phong lighting contribution.
-        cAmbient,
-        cDiffuse,
-        cEmissive,
-        cSpecular);
-}
-
-// @status Finished.
-vec3 
-CalcDirectionalLight(DirectionalLightData light, vec3 eyeN, vec3 eyeV)
-{
-    // Point to light source.
-    vec3 eyeL = normalize(light.EyeDirection);
-
-    vec3 cAmbient;
-    vec3 cDiffuse;
-    vec3 cEmissive;
-    vec3 cSpecular; 
-
-    CalcPhongLighting(
-    // @parameter Transform.
-        eyeN, 
-        eyeV, 
-        eyeL, 
-
-    // @parameter Light Source.
-        light.Ambient, 
-        light.Diffuse, 
-        light.Specular,
-
-    // @return Standard Phong lighting contribution.
-        cAmbient, 
-        cDiffuse, 
-        cEmissive,
-        cSpecular);
+    vec3 cSpecular;
+    if (fe_TextureSpecularExist)
+    {
+        cSpecular = vec3(1.0) * vec3(texture(fe_TextureSpecular, texCoord) * pow(0.5, mShininess);
+    }
 
     return cAmbient + cDiffuse + cEmissive + cSpecular;
 }
@@ -174,17 +77,21 @@ uniform LineData Line;
 void
 main()
 {
-    vec3 eyeN = normalize(fin.EyeNormal);
-
-    // Point to camera.
-    vec3 eyeV = normalize(-fin.EyePosition); 
-
-    vec4 color = vec4(CalcDirectionalLight(DirectionalLight, eyeN, eyeV), 1.0);
+    vec4 color;
+    
+    if (Texturing)
+    {
+        color = vec4(CalcMaterialColor(), 1.0);
+    }
+    else
+    {
+        color = vec4(CalcTextureColor(), 1.0);
+    }
 
     // Find the smallest distance
-    float d = min(fin.Distance.x, fin.Distance.y);
-    d = min(d, fin.Distance.z);
+    float lineDistance = min(fin.Distance.x, fin.Distance.y);
+    lineDistance = min(lineDistance, fin.Distance.z);
 
-    float mixFactor = smoothstep(Line.Width - 1, Line.Width + 1, d);
+    float mixFactor = smoothstep(Line.Width - 1, Line.Width + 1, lineDistance);
     FragColor = mix(Line.Color, color, mixFactor);
 }

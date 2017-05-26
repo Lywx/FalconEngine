@@ -7,7 +7,7 @@
 #include <FalconEngine/Input.h>
 #include <FalconEngine/Math.h>
 
-#include <FalconEngine/Graphics/Effect/PhongShadingEffect.h>
+#include <FalconEngine/Graphics/Effect/PhongEffect.h>
 
 namespace FalconEngine
 {
@@ -39,15 +39,14 @@ private:
 
     // Scene
     std::shared_ptr<SceneEntity>        mScene;
-    std::shared_ptr<PhongShadingEffect> mSceneLightingEffect;
-    std::shared_ptr<Light>              mSceneDirectionalLight;
-    std::vector<const Light *>          mScenePointLightList;
-    std::vector<const Light *>          mSceneSpotLightList;
+    std::shared_ptr<PhongEffect> mSceneLightingEffect;
+    std::shared_ptr<PhongEffectParams> mSceneLightingParams;
 
     // Entities
-    std::shared_ptr<PointLightEntity> mPointLight1;
-    std::shared_ptr<PointLightEntity> mPointLight2;
-    std::shared_ptr<PointLightEntity> mPointLight3;
+    std::shared_ptr<LightEntity> mDirectionalLight;
+    std::shared_ptr<LightEntity> mPointLight1;
+    std::shared_ptr<LightEntity> mPointLight2;
+    std::shared_ptr<LightEntity> mPointLight3;
 };
 
 }

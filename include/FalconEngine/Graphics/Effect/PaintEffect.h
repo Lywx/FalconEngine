@@ -6,6 +6,7 @@
 #include <queue>
 
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffectParams.h>
 #include <FalconEngine/Math/Color.h>
 
 namespace FalconEngine
@@ -16,6 +17,12 @@ class Mesh;
 class Node;
 
 #pragma warning(disable: 4251)
+class FALCON_ENGINE_API PaintEffectParams : public VisualEffectParams
+{
+public:
+    std::shared_ptr<Color> mColor;
+};
+
 class FALCON_ENGINE_API PaintEffect : public VisualEffect
 {
 public:
@@ -30,8 +37,12 @@ public:
 
 public:
     void
+    CreateInstance(_IN_OUT_ Node                    *node,
+                   _IN_     const PaintEffectParams *params) const;
+
+    void
     CreateInstance(_IN_OUT_ Node *node,
-                   _IN_     Color color) const;
+                   _IN_     Color& color) const;
 
 protected:
     virtual std::shared_ptr<VisualEffectInstance>
@@ -42,7 +53,7 @@ protected:
 
     void
     InitializeInstance(_IN_OUT_ VisualEffectInstance *visualEffectInstance,
-                       _IN_     Color                 color) const;
+                       _IN_     Color&                color) const;
 };
 #pragma warning(default: 4251)
 

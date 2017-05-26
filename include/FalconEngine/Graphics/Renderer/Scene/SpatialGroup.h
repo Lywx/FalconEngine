@@ -8,16 +8,18 @@ namespace FalconEngine
 {
 
 class Spatial;
+class Visual;
 
-    class Visual;
-class FALCON_ENGINE_API VisualGroup final
+// TODO(Wuxiang): Implement frustum culling.
+// @summary Represents hierarchical structure of part of a scene graph for efficient rendering.
+class FALCON_ENGINE_API SpatialGroup final
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    VisualGroup();
-    ~VisualGroup();
+    SpatialGroup();
+    ~SpatialGroup();
 
 public:
     std::vector<std::shared_ptr<Spatial>> mVisible;

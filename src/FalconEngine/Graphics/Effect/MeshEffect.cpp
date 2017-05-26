@@ -55,15 +55,15 @@ MeshEffect::~MeshEffect()
 /* Public Members                                                       */
 /************************************************************************/
 void
-MeshEffect::CreateInstance(_IN_ Node        *node,
-                           _IN_ Color        ambient,
-                           _IN_ const Light& directionalLight,
-                           _IN_ Color        lineColor,
-                           _IN_ float        lineWidth) const
+MeshEffect::CreateInstance(_IN_ Node  *node,
+                           _IN_ Color& ambient,
+                           _IN_ Color& lineColor,
+                           _IN_ float& lineWidth,
+                           _IN_ bool&  texturing) const
 {
     using namespace placeholders;
 
-    VisualEffect::TraverseLevelOrder(node, std::bind([ambient, &directionalLight, lineColor, lineWidth, this](Visual * visual)
+    VisualEffect::TraverseLevelOrder(node, std::bind([&, this](Visual * visual)
     {
         auto visualEffectInstance = CreateSetInstance(visual);
 
@@ -71,7 +71,7 @@ MeshEffect::CreateInstance(_IN_ Node        *node,
         auto mesh = visual->GetMesh();
         auto material = mesh->GetMaterial();
         FALCON_ENGINE_CHECK_NULLPTR(material);
-        InitializeInstance(visualEffectInstance.get(), ambient, *material, directionalLight, lineColor, lineWidth);
+        InitializeInstance(visualEffectInstance.get(), ambient, *material, lineColor, lineWidth, texturing);
 
         // Set up visual.
         auto vertexFormat = GetVertexFormat();
@@ -106,11 +106,11 @@ MeshEffect::GetVertexFormat() const
 
 void
 MeshEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance *visualEffectInstance,
-                               _IN_     Color                 ambient,
+                               _IN_     Color&                ambient,
                                _IN_     const Material&       material,
-                               _IN_     const Light&          directionalLight,
-                               _IN_     Color                 lineColor,
-                               _IN_     float                 lineWidth) const
+                               _IN_     Color&                lineColor,
+                               _IN_     float&                lineWidth,
+                               _IN_     bool&                 texturing) const
 {
     using namespace placeholders;
 
@@ -123,41 +123,35 @@ MeshEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance *visualEffectInstan
     // Material
     {
         // Ambient
-        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("MaterialColor.Ambient",
+        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("fe_Material.Ambient",
                                                std::bind([&material](const Visual *, const Camera *)
         {
             return Vector3f(material.mAmbientColor);
         }, _1, _2)));
 
-        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("AmbientOffset",
-                                               std::bind([ambient](const Visual *, const Camera *)
-        {
-            return Vector3f(ambient);
-        }, _1, _2)));
-
         // Diffuse
-        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("MaterialColor.Diffuse",
+        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("fe_Material.Diffuse",
                                                std::bind([&material](const Visual *, const Camera *)
         {
             return Vector3f(material.mDiffuseColor);
         }, _1, _2)));
 
         // Emissive
-        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("MaterialColor.Emissive",
+        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("fe_Material.Emissive",
                                                std::bind([&material](const Visual *, const Camera *)
         {
             return Vector3f(material.mEmissiveColor);
         }, _1, _2)));
 
         // Shininess
-        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<float>("MaterialColor.Shininess",
+        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<float>("fe_Material.Shininess",
                                                std::bind([&material](const Visual *, const Camera *)
         {
             return material.mShininess;
         }, _1, _2)));
 
         // Specular
-        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("MaterialColor.Specular",
+        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("fe_Material.Specular",
                                                std::bind([&material](const Visual *, const Camera *)
         {
             return Vector3f(material.mSpecularColor);
@@ -166,29 +160,16 @@ MeshEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance *visualEffectInstan
 
     // Light
     {
-        // Directional light
-        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Ambient",
-                                               std::bind([&directionalLight](const Visual *, const Camera *)
+        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("Ambient",
+                                               std::bind([ambient](const Visual *, const Camera *)
         {
-            return Vector3f(directionalLight.mAmbient);
+            return Vector3f(ambient);
         }, _1, _2)));
 
-        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Diffuse",
-                                               std::bind([&directionalLight](const Visual *, const Camera *)
+        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<bool>("Texturing",
+                                               std::bind([&texturing](const Visual *, const Camera *)
         {
-            return Vector3f(directionalLight.mDiffuse);
-        }, _1, _2)));
-
-        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Specular",
-                                               std::bind([&directionalLight](const Visual *, const Camera *)
-        {
-            return Vector3f(directionalLight.mSpecular);
-        }, _1, _2)));
-
-        visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.EyeDirection",
-                                               std::bind([&directionalLight](const Visual *, const Camera * camera)
-        {
-            return Vector3f(camera->GetView() * Vector4f(directionalLight.mDirection, 0));
+            return texturing;
         }, _1, _2)));
     }
 

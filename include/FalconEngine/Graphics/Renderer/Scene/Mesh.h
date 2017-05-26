@@ -43,6 +43,9 @@ public:
     const Material *
     GetMaterial() const;
 
+    std::shared_ptr<Material>
+    GetMaterial();
+
     void
     SetMaterial(std::shared_ptr<Material> material);
 

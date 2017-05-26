@@ -1,20 +1,20 @@
-#include <FalconEngine/Graphics/Effect/AABBBoundingBoxEffect.h>
+#include <FalconEngine/Graphics/Effect/AABBEffect.h>
 
 using namespace std;
 
 namespace FalconEngine
 {
 
-FALCON_ENGINE_EFFECT_IMPLEMENT(AABBBoundingBoxEffect);
+FALCON_ENGINE_EFFECT_IMPLEMENT(AABBEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-AABBBoundingBoxEffect::AABBBoundingBoxEffect()
+AABBEffect::AABBEffect()
 {
     auto shader = std::make_shared<Shader>();
-    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/AABBBoundingBox.vert.glsl");
-    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shader/AABBBoundingBox.frag.glsl");
+    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/AABBB.vert.glsl");
+    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shader/AABB.frag.glsl");
 
     auto pass = make_unique<VisualEffectPass>();
     pass->SetShader(shader);
@@ -43,7 +43,7 @@ AABBBoundingBoxEffect::AABBBoundingBoxEffect()
     InsertPass(move(pass));
 }
 
-AABBBoundingBoxEffect::~AABBBoundingBoxEffect()
+AABBEffect::~AABBEffect()
 {
 }
 
@@ -51,7 +51,7 @@ AABBBoundingBoxEffect::~AABBBoundingBoxEffect()
 /* Public Members                                                       */
 /************************************************************************/
 std::shared_ptr<VisualEffectInstance>
-AABBBoundingBoxEffect::CreateInstance(Visual *visual, std::shared_ptr<VertexBuffer> instanceBuffer) const
+AABBEffect::CreateInstance(Visual *visual, std::shared_ptr<VertexBuffer> instanceBuffer) const
 {
     auto visualEffectInstance = CreateSetInstance(visual);
 
@@ -91,7 +91,7 @@ AABBBoundingBoxInstancingEffectCreateVertexFormat()
 }
 
 std::shared_ptr<VertexFormat>
-AABBBoundingBoxEffect::GetVertexFormat() const
+AABBEffect::GetVertexFormat() const
 {
     static std::shared_ptr<VertexFormat> sVertexFormat = AABBBoundingBoxInstancingEffectCreateVertexFormat();
     return sVertexFormat;

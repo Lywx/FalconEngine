@@ -63,6 +63,7 @@ public:
 
 public:
     std::string       mName;
+    bool              mEnabled;
     int               mLocation;
     ShaderUniformType mType;
     bool              mUpdated;

@@ -1,6 +1,6 @@
 #include <FalconEngine/Graphics/Renderer/Entity/EntityRenderer.h>
 
-#include <FalconEngine/Graphics/Effect/AABBBoundingBoxEffect.h>
+#include <FalconEngine/Graphics/Effect/AABBEffect.h>
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveLines.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
@@ -274,7 +274,7 @@ EntityRenderer::PrepareBatch(const Camera *camera)
     {
         auto aABBBoundingBoxInstanceNum = int(Kilobytes(1));
         auto aABBBoundingBoxVertexNum = 24;
-        auto aABBBoungingBoxEffect = make_shared<AABBBoundingBoxEffect>();
+        auto aABBBoungingBoxEffect = make_shared<AABBEffect>();
 
         // TODO(Wuxiang): Add multiple type of bounding box support.
 

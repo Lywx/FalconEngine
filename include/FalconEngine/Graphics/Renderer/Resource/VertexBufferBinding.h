@@ -44,6 +44,9 @@ public:
     const VertexBuffer *
     GetBuffer() const;
 
+    std::shared_ptr<VertexBuffer>
+    GetBuffer();
+
 private:
     int                           mIndex;
     int                           mOffset;

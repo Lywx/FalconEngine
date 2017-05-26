@@ -44,4 +44,11 @@ VertexBufferBinding::GetBuffer() const
 {
     return mBuffer.get();
 }
+
+std::shared_ptr<VertexBuffer>
+VertexBufferBinding::GetBuffer()
+{
+    return mBuffer;
+}
+
 }

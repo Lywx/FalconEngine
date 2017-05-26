@@ -22,11 +22,11 @@ public:
     void
     ClearVertexBuffer();
 
-    bool
-    ContainVertexBuffer(int bindingIndex, std::shared_ptr<VertexBuffer> vertexBuffer);
+    const VertexBuffer *
+    GetVertexBuffer(int bindingIndex) const;
 
-    size_t
-    GetVertexNum() const;
+    std::shared_ptr<VertexBuffer>
+    GetVertexBuffer(int bindingIndex);
 
     void
     SetVertexBuffer(int bindingIndex, std::shared_ptr<VertexBuffer> vertexBuffer, int offset, int stride);

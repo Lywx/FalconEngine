@@ -284,7 +284,7 @@ FontRenderer::PrepareBatch(const Font *font)
         auto fontVisualEffect = make_shared<BitmapFontEffect>();
 
         auto fontVertexBufferSize = int(Kilobytes(100));
-        auto fontVertexBuffer = make_shared<VertexBuffer>(fontVertexBufferSize, sizeof(SignedDistancedFieldFontVertex), BufferUsage::Dynamic);
+        auto fontVertexBuffer = make_shared<VertexBuffer>(fontVertexBufferSize, sizeof(SignedDistancedFieldFontVertex), BufferUsage::Stream);
 
         auto fontPrimitive = make_shared<PrimitiveQuads>(fontVertexBuffer, nullptr);
         auto fontMesh = make_shared<Mesh>(fontPrimitive, nullptr);

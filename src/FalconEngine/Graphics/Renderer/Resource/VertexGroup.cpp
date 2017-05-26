@@ -26,22 +26,26 @@ VertexGroup::ClearVertexBuffer()
     mVertexBufferTable.clear();
 }
 
-bool
-VertexGroup::ContainVertexBuffer(int bindingIndex, std::shared_ptr<VertexBuffer> vertexBuffer)
+const VertexBuffer *
+VertexGroup::GetVertexBuffer(int bindingIndex) const
 {
-    return mVertexBufferTable.find(bindingIndex) != mVertexBufferTable.end()
-           && mVertexBufferTable.at(bindingIndex).GetBuffer() == vertexBuffer.get();
-}
-
-size_t
-VertexGroup::GetVertexNum() const
-{
-    if (mVertexBufferTable.size() == 0)
+    if (mVertexBufferTable.find(bindingIndex) == mVertexBufferTable.end())
     {
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The vertex group is empty.");
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The binding index is unspecified.");
     }
 
-    return mVertexBufferTable.begin()->second.GetBuffer()->GetElementNum();
+    return mVertexBufferTable.at(bindingIndex).GetBuffer();
+}
+
+std::shared_ptr<VertexBuffer>
+VertexGroup::GetVertexBuffer(int bindingIndex)
+{
+    if (mVertexBufferTable.find(bindingIndex) == mVertexBufferTable.end())
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The binding index is unspecified.");
+    }
+
+    return mVertexBufferTable.at(bindingIndex).GetBuffer();
 }
 
 void

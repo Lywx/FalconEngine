@@ -150,9 +150,9 @@ CreateIndexBuffer(const aiMesh *mesh)
         for (unsigned int faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex)
         {
             auto& face = mesh->mFaces[faceIndex];
-            for (unsigned int j = 0; j < face.mNumIndices; j++)
+            for (unsigned int i = 0; i < face.mNumIndices; ++i)
             {
-                indexData[indexNumAdded] = face.mIndices[j];
+                indexData[indexNumAdded] = face.mIndices[i];
                 ++indexNumAdded;
             }
         }

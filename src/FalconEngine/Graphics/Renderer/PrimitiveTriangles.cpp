@@ -6,13 +6,11 @@
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(PrimitiveTriangles, Primitive);
-
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PrimitiveTriangles::PrimitiveTriangles(PrimitiveType primitiveType, std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer) :
-    Primitive(primitiveType, vertexBuffer, indexBuffer)
+PrimitiveTriangles::PrimitiveTriangles(PrimitiveType primitiveType, std::shared_ptr<VertexFormat> vertexFormat, std::shared_ptr<VertexGroup> vertexGroup, std::shared_ptr<IndexBuffer> indexBuffer) :
+    Primitive(primitiveType, vertexFormat, vertexGroup, indexBuffer)
 {
     if (primitiveType == PrimitiveType::Triangle
             || primitiveType == PrimitiveType::TriangleStrip
@@ -22,8 +20,8 @@ PrimitiveTriangles::PrimitiveTriangles(PrimitiveType primitiveType, std::shared_
     }
 }
 
-PrimitiveTriangles::PrimitiveTriangles(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer) :
-    Primitive(PrimitiveType::Triangle, vertexBuffer, indexBuffer)
+PrimitiveTriangles::PrimitiveTriangles(std::shared_ptr<VertexFormat> vertexFormat, std::shared_ptr<VertexGroup> vertexGroup, std::shared_ptr<IndexBuffer> indexBuffer) :
+    Primitive(PrimitiveType::Triangle, vertexFormat, vertexGroup, indexBuffer)
 {
 }
 
@@ -47,7 +45,7 @@ PrimitiveTriangles::GetTriangleNum() const
         }
         else
         {
-            return mVertexBuffer->GetElementNum() / 3;
+            return mVertexGroup->GetElementNum() / 3;
         }
     }
 
@@ -61,7 +59,7 @@ PrimitiveTriangles::GetTriangleNum() const
         }
         else
         {
-            return mVertexBuffer->GetElementNum() - 2;
+            return mVertexGroup->GetElementNum() - 2;
         }
     }
 
@@ -76,7 +74,7 @@ PrimitiveTriangles::GetTriangleNum() const
         }
         else
         {
-            return mVertexBuffer->GetElementNum() - 2;
+            return mVertexGroup->GetElementNum() - 2;
         }
     }
 

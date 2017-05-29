@@ -26,6 +26,24 @@ public:
 };
 #pragma pack(pop)
 
+class FALCON_ENGINE_API FontEffectParams : public VisualEffectParams
+{
+public:
+    FontEffectParams(const Font *font, const Handedness *handedness, int viewportWidth, int viewportHeight) :
+        mFont(font),
+        mHandedness(handedness),
+        mViewportWidth(viewportWidth),
+        mViewportHeight(viewportHeight)
+    {
+    }
+
+public:
+    const Font       *mFont;
+    const Handedness *mHandedness;
+    int               mViewportWidth;
+    int               mViewportHeight;
+};
+
 // @summary Implements a signed distanced field based bitmap font rendering effect.
 class FALCON_ENGINE_API FontEffect : public VisualEffect
 {
@@ -42,28 +60,21 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
-    std::shared_ptr<VisualEffectInstance>
-    CreateInstance(_IN_OUT_ Visual           *visual,
-                   _IN_     const Font       *font,
-                   _IN_     const Handedness *handedness,
-                   _IN_     int               viewportWidth,
-                   _IN_     int               viewportHeight) const;
-
-protected:
-    virtual std::shared_ptr<VisualEffectInstance>
-    CreateSetInstance(Visual *visual) const override;
-
-    // @summary Add required parameters to the existing visual effect instance.
     void
-    InitializeInstance(
-        _IN_OUT_ VisualEffectInstance *visualEffectInstance,
-        _IN_     const Font           *font,
-        _IN_     const Handedness     *handedness,
-        _IN_     int                   viewportWidth,
-        _IN_     int                   viewportHeight) const;
+    CreateInstance(_IN_OUT_ Visual                           *visual,
+                   _IN_     std::shared_ptr<FontEffectParams> params) const;
 
     virtual std::shared_ptr<VertexFormat>
     GetVertexFormat() const override;
+
+protected:
+    virtual std::shared_ptr<VertexFormat>
+    CreateVertexFormat() const override;
+
+    // @summary Add required parameters to the existing visual effect instance.
+    void
+    InitializeInstance(_IN_OUT_ VisualEffectInstance             *instance,
+                       _IN_     std::shared_ptr<FontEffectParams> params) const;
 };
 
 }

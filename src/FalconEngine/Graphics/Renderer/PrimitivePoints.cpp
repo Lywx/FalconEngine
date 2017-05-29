@@ -3,13 +3,11 @@
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(PrimitivePoints, Primitive);
-
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PrimitivePoints::PrimitivePoints(std::shared_ptr<VertexBuffer> vertexBuffer) :
-    Primitive(PrimitiveType::Point, vertexBuffer, nullptr)
+PrimitivePoints::PrimitivePoints(std::shared_ptr<VertexFormat> vertexFormat, std::shared_ptr<VertexGroup> vertexGroup) :
+    Primitive(PrimitiveType::Point, vertexFormat, vertexGroup, nullptr)
 {
 }
 

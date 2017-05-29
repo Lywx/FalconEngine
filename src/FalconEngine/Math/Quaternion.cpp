@@ -4,7 +4,8 @@
 namespace FalconEngine
 {
 
-Quaternion Quaternion::Identity = Quaternion(1, 0, 0, 0);
+const Quaternion
+Quaternion::Identity = Quaternion(1, 0, 0, 0);
 
 Quaternion
 Quaternion::CreateFromAxisAngle(const Vector3f& axis, float angle)

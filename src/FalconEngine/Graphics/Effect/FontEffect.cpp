@@ -53,23 +53,25 @@ FontEffect::~FontEffect()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-std::shared_ptr<VisualEffectInstance>
-FontEffect::CreateInstance(Visual *visual, const Font *font, const Handedness *handedness, int viewportWidth, int viewportHeight) const
+void
+FontEffect::CreateInstance(Visual *visual, std::shared_ptr<FontEffectParams> params) const
 {
-    auto visualEffectInstance = CreateSetInstance(visual);
-    InitializeInstance(visualEffectInstance.get(), font, handedness, viewportWidth, viewportHeight);
+    FALCON_ENGINE_CHECK_NULLPTR(params);
 
-    auto vertexFormat = GetVertexFormat();
-    visual->SetVertexFormat(vertexFormat);
-    auto vertexGroup = make_shared<VertexGroup>();
-    auto vertexBuffer = visual->GetMesh()->GetPrimitive()->GetVertexBuffer();
-    vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, vertexFormat->GetVertexBufferStride(0));
-    visual->SetVertexGroup(vertexGroup);
-    return visualEffectInstance;
+    CheckVertexFormatCompatible(visual);
+
+    auto instance = CreateInstance();
+    visual->PushEffectInstance(instance);
+    visual->PushEffectParams(params);
+
+    InitializeInstance(instance.get(), params);
 }
 
+/************************************************************************/
+/* Protected Members                                                    */
+/************************************************************************/
 std::shared_ptr<VertexFormat>
-SignedDistancedFieldFontEffectCreateVertexFormat()
+FontEffect::CreateVertexFormat() const
 {
     auto vertexFormat = std::make_shared<VertexFormat>();
     vertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec2, false, 0);
@@ -82,31 +84,30 @@ SignedDistancedFieldFontEffectCreateVertexFormat()
     return vertexFormat;
 }
 
-/************************************************************************/
-/* Protected Members                                                    */
-/************************************************************************/
-void
-FontEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance *visualEffectInstance,
-                               _IN_     const Font     *font,
-                               _IN_     const Handedness     *handedness,
-                               _IN_     int                   viewportWidth,
-                               _IN_     int                   viewportHeight) const
-{
-    visualEffectInstance->SetShaderUniform(0, ShareConstant<Matrix4f>("ProjectionTransform",
-                                           handedness->CreateOrthogonal(1, float(viewportWidth), 0, float(viewportHeight), -1.0f, 1.0f)));
-
-    // NOTE(Wuxiang): You don't need to set the texture sampler uniform because
-    // they are predefined in the fe_Texture.glsl as #include extension.
-
-    visualEffectInstance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Font), font->GetTexture());
-    visualEffectInstance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Font), font->GetSampler());
-}
-
 std::shared_ptr<VertexFormat>
 FontEffect::GetVertexFormat() const
 {
-    static std::shared_ptr<VertexFormat> sVertexFormat = SignedDistancedFieldFontEffectCreateVertexFormat();
+    static shared_ptr<VertexFormat> sVertexFormat = CreateVertexFormat();
     return sVertexFormat;
+}
+
+void
+FontEffect::InitializeInstance(
+    _IN_OUT_ VisualEffectInstance             *instance,
+    _IN_     std::shared_ptr<FontEffectParams> params) const
+{
+    FALCON_ENGINE_CHECK_NULLPTR(params->mFont);
+    FALCON_ENGINE_CHECK_NULLPTR(params->mHandedness);
+
+    instance->SetShaderUniform(0, ShareConstant<Matrix4f>("ProjectionTransform",
+                               params->mHandedness->CreateOrthogonal(
+                                   0, float(params->mViewportWidth),
+                                   0, float(params->mViewportHeight), -1.0f, 1.0f)));
+
+    // NOTE(Wuxiang): You don't need to set the texture sampler uniform because
+    // they are predefined in the fe_Texture.glsl as #include extension.
+    instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Font), params->mFont->GetTexture());
+    instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Font), params->mFont->GetSampler());
 }
 
 }

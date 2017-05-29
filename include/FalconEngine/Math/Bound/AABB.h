@@ -11,27 +11,29 @@ namespace FalconEngine
 {
 
 #pragma warning(disable : 4251)
-class FALCON_ENGINE_API AABBBoundingBox final : public BoundingBox
+class FALCON_ENGINE_API AABB final : public BoundingBox
 {
 public:
     /************************************************************************/
     /* Static Members                                                       */
     /************************************************************************/
     static std::vector<Vector3f>
-    GetCubeModelPositionList();
+    GetUnitPositionList();
 
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit AABBBoundingBox(Vector3f position);
-    virtual ~AABBBoundingBox() = default;
+    explicit AABB(Vector3f position);
+    virtual ~AABB() = default;
 
 public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
+    // @summary Get the transform matrix that could transform normalized bounding
+    // box position (unit cube) into model space position of bounding box.
     Matrix4f
-    GetCubeModelPositionTransform() const;
+    GetModelPositionTransform() const;
 
     virtual int
     GetModelPositionNum() const override;

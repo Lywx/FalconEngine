@@ -2,8 +2,11 @@
 
 #include <FalconEngine/Graphics/Header.h>
 
+#include <algorithm>
 #include <functional>
+#include <list>
 
+#include <FalconEngine/Graphics/Renderer/VisualEffectParams.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Mesh.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Spatial.h>
 
@@ -11,11 +14,9 @@ namespace FalconEngine
 {
 
 class BoundingBox;
-
 class Primitive;
-
+class Renderer;
 class VertexFormat;
-
 class VisualEffectInstance;
 
 // @summary This class governs the all the information the user would like to draw
@@ -37,9 +38,6 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
     explicit Visual(std::shared_ptr<Mesh> mesh);
-    Visual(std::shared_ptr<Mesh> mesh,
-           std::shared_ptr<VertexFormat> vertexFormat,
-           std::shared_ptr<VertexGroup> vertexGroup);
 
     virtual ~Visual();
 
@@ -54,14 +52,29 @@ public:
     /************************************************************************/
     /* Effect Management                                                    */
     /************************************************************************/
-    const VisualEffectInstance *
-    GetEffectInstance() const;
+    template <class T>
+    void ForEffectInstance(T func) const
+    {
+        std::for_each(mEffectInstances.begin(), mEffectInstances.end(), func);
+    }
 
-    std::shared_ptr<VisualEffectInstance>
-    GetEffectInstance();
+    int
+    GetEffectInstanceNum() const;
 
     void
-    SetEffectInstance(std::shared_ptr<VisualEffectInstance> effectInstance);
+    PushEffectInstance(std::shared_ptr<VisualEffectInstance> effectInstance);
+
+    void
+    RemoveEffectInstance(std::shared_ptr<VisualEffectInstance> effectInstance);
+
+    int
+    GetEffectParamsNum() const;
+
+    void
+    PushEffectParams(std::shared_ptr<VisualEffectParams> effectParmas);
+
+    void
+    RemoveEffectParams(std::shared_ptr<VisualEffectParams> effectParmas);
 
     const VertexFormat *
     GetVertexFormat() const;
@@ -118,12 +131,13 @@ protected:
     /************************************************************************/
     /* Mesh Data                                                            */
     /************************************************************************/
-    std::shared_ptr<Mesh>                 mMesh;
+    std::shared_ptr<Mesh>                            mMesh;
 
     /************************************************************************/
     /* Effect Data                                                          */
     /************************************************************************/
-    std::shared_ptr<VisualEffectInstance> mEffectInstance;
+    std::list<std::shared_ptr<VisualEffectInstance>> mEffectInstances;
+    std::list<std::shared_ptr<VisualEffectParams>>   mEffectParamses;
 
     // NOTE(Wuxiang): The reason the visual is designed to contains vertex format
     // and vertex group is that if you store them in effect instance you have to
@@ -136,8 +150,8 @@ protected:
     // By storing them here you could easily reuse mesh and its vertex buffer,
     // vertex format etc. You don't need to worry about coping effect instance
     // also, because you are not allowed to do that.
-    std::shared_ptr<VertexFormat>         mVertexFormat;
-    std::shared_ptr<VertexGroup>          mVertexGroup;
+    std::shared_ptr<VertexFormat>                    mVertexFormat;
+    std::shared_ptr<VertexGroup>                     mVertexGroup;
 
 };
 #pragma warning(default: 4251)

@@ -12,8 +12,10 @@ namespace FalconEngine
 class Asset;
 
 class Font;
+
 class Mesh;
 class Model;
+class ModelImportOption;
 
 enum class FALCON_ENGINE_API CustomImporterPolicy
 {
@@ -41,12 +43,9 @@ public:
     /************************************************************************/
 public:
     virtual bool
-    Import(_IN_OUT_ Model             *model,
-           _IN_     const std::string& modelFilePath);
-
-    virtual bool
-    Import(_IN_OUT_ Font              *font,
-           _IN_     const std::string& fontFilePath);
+    Import(_IN_OUT_ Model                   *model,
+           _IN_     const std::string&       modelFilePath,
+           _IN_     const ModelImportOption& modelImportOption);
 
 public:
     CustomImporterPolicy mAssetImportPolicy;

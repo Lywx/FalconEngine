@@ -4,7 +4,11 @@
 namespace FalconEngine
 {
 
-const Rectangle Rectangle::Zero(0.f, 0.f, 0.f, 0.f);
+/************************************************************************/
+/* Static Members                                                       */
+/************************************************************************/
+const Rectangle
+Rectangle::Zero(0.f, 0.f, 0.f, 0.f);
 
 Rectangle
 Rectangle::CreateBounds(float left, float top, float right, float bottom)
@@ -13,6 +17,9 @@ Rectangle::CreateBounds(float left, float top, float right, float bottom)
     return r;
 }
 
+/************************************************************************/
+/* Constructors and Destructor                                          */
+/************************************************************************/
 Rectangle::Rectangle() :
     mLeft(0.f),
     mTop(0.f),
@@ -37,6 +44,9 @@ Rectangle::Rectangle(float left, float top, float width, float height) :
 {
 }
 
+/************************************************************************/
+/* Public Members                                                       */
+/************************************************************************/
 bool
 Rectangle::Empty() const
 {

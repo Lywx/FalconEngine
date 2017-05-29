@@ -11,8 +11,9 @@
 namespace FalconEngine
 {
 
+// @summary Instancing buffer content unit.
 #pragma pack(push, 1)
-class AABBBoundingBoxInstance
+class AABBInstance
 {
 public:
     Vector4f mColor;
@@ -20,18 +21,19 @@ public:
 };
 #pragma pack(pop)
 
+// @summary Vertex buffer content unit.
 #pragma pack(push, 1)
-class AABBBoundingBoxVertex
+class AABBVertex
 {
 public:
     Vector3f mPosition;
 };
 #pragma pack(pop)
 
+class FALCON_ENGINE_API AABBEffectParams : public VisualEffectParams
+{
 
-class Camera;
-
-class VertexFormat;
+};
 
 // @summary Implements a aabb bounding box effect using hardware instancing so
 // that all bounding box is drawn in one draw call.
@@ -51,14 +53,18 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     std::shared_ptr<VisualEffectInstance>
-    CreateInstance(Visual *visual, std::shared_ptr<VertexBuffer> instanceBuffer) const;
-
-protected:
-    virtual std::shared_ptr<VisualEffectInstance>
-    CreateSetInstance(Visual *visual) const override;
+    CreateInstance(_IN_OUT_ Visual                           *visual,
+                   _IN_     std::shared_ptr<AABBEffectParams> params) const;
 
     virtual std::shared_ptr<VertexFormat>
     GetVertexFormat() const override;
+
+protected:
+    /************************************************************************/
+    /* Protected Members                                                    */
+    /************************************************************************/
+    virtual std::shared_ptr<VertexFormat>
+    CreateVertexFormat() const override;
 };
 
 }

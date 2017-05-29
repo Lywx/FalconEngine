@@ -103,7 +103,7 @@ VisualEffect::GetWireframeState(int passIndex) const
 /* Effect Instancing Helper                                             */
 /************************************************************************/
 std::shared_ptr<VertexFormat>
-VisualEffectCreateVertexFormat()
+VisualEffect::CreateVertexFormat() const
 {
     shared_ptr<VertexFormat> vertexFormat = make_shared<VertexFormat>();
     vertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
@@ -116,8 +116,42 @@ VisualEffectCreateVertexFormat()
 std::shared_ptr<VertexFormat>
 VisualEffect::GetVertexFormat() const
 {
-    static shared_ptr<VertexFormat> sVertexFormat = VisualEffectCreateVertexFormat();
+    // NOTE(Wuxiang): Because the static qualifier here would only evaluate the
+    // first time using dynamic typing to get the correct vertex format you could
+    // expect that it only return the initialized value called for the first time.
+    // So it is necessary to re-implement this class in derived classes so that
+    // you could get a static variable for each derived class.
+    static shared_ptr<VertexFormat> sVertexFormat = CreateVertexFormat();
     return sVertexFormat;
+}
+
+void
+VisualEffect::CheckVertexFormatCompatible(Visual *visual) const
+{
+    auto vertexFormat = visual->GetVertexFormat();
+    if (vertexFormat)
+    {
+        // NOTE(Wuxiang): Allow users to provide their own vertex format as
+        // long as the vertex format is compatible with effect's requirement.
+        // Because the user should know the requirement of specific shader before
+        // they provide visual to use that shader effect. The user should be able
+        // to customize the binding index of vertex format and use much more
+        // flexible buffer arrangement if they need that benefit.
+        if (vertexFormat->IsVertexAttributeCompatible(GetVertexFormat()))
+        {
+            return;
+        }
+
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Vertex format is not compatible.");
+    }
+    else
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Visual is not correctly initialized.");
+    }
+
+    // NOTE(Wuxiang): Assume the user would correctly set up vertex group
+    // because there is no reliable to test vertex group is compatible
+    // with vertex format.
 }
 
 void

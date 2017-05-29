@@ -1,4 +1,4 @@
-#include <FalconEngine/Math/Bound/AABBBoundingBox.h>
+#include <FalconEngine/Math/Bound/AABB.h>
 
 namespace FalconEngine
 {
@@ -7,7 +7,7 @@ namespace FalconEngine
 /* Static Members                                                       */
 /************************************************************************/
 std::vector<Vector3f>
-CreateCubeLineMesh()
+CreateLineMesh()
 {
     static auto sCubeModelXmax = 1.0f;
     static auto sCubeModelYmax = 1.0f;
@@ -59,16 +59,16 @@ CreateCubeLineMesh()
 }
 
 std::vector<Vector3f>
-AABBBoundingBox::GetCubeModelPositionList()
+AABB::GetUnitPositionList()
 {
-    static std::vector<Vector3f> sCubeModelPositionList = CreateCubeLineMesh();;
-    return sCubeModelPositionList;
+    static std::vector<Vector3f> sUnitModelPositionList = CreateLineMesh();;
+    return sUnitModelPositionList;
 }
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-AABBBoundingBox::AABBBoundingBox(Vector3f position)
+AABB::AABB(Vector3f position)
 {
     InitializePosition(position);
 }
@@ -77,13 +77,13 @@ AABBBoundingBox::AABBBoundingBox(Vector3f position)
 /* Public Members                                                       */
 /************************************************************************/
 Matrix4f
-AABBBoundingBox::GetCubeModelPositionTransform() const
+CreateModelPositionTransform(int xmax, int ymax, int zmax, int xmin, int ymin, int zmin)
 {
-    auto maxCorner = Vector3f(mXmax, mYmax, mZmax);
-    auto minCorner = Vector3f(mXmin, mYmin, mZmin);
+    auto maxCorner = Vector3f(xmax, ymax, zmax);
+    auto minCorner = Vector3f(xmin, ymin, zmin);
     auto halfSize = (maxCorner - minCorner) / 2.0f;
 
-    auto scaling = Matrix4f::CreateScale(halfSize.x, halfSize.y, halfSize.z);
+    auto scaling     = Matrix4f::CreateScale(halfSize.x, halfSize.y, halfSize.z);
     auto translation = Matrix4f::CreateTranslation(minCorner + halfSize);
 
     // NOTE(Wuxiang): Scale (-1, -1, -1), (1, 1, 1) cube first, then translate
@@ -91,14 +91,21 @@ AABBBoundingBox::GetCubeModelPositionTransform() const
     return translation * scaling;
 }
 
-int
-AABBBoundingBox::GetModelPositionNum() const
+Matrix4f
+AABB::GetModelPositionTransform() const
 {
-    return 36;
+    const static Matrix4f sModelTransform = CreateModelPositionTransform(mXmax, mYmax, mZmax, mXmin, mYmin, mZmin);
+    return sModelTransform;
+}
+
+int
+AABB::GetModelPositionNum() const
+{
+    return 24;
 }
 
 std::vector<Vector3f>
-AABBBoundingBox::GetModelPositionList() const
+AABB::GetModelPositionList() const
 {
     if (!mInitialized)
     {
@@ -154,7 +161,7 @@ AABBBoundingBox::GetModelPositionList() const
 }
 
 void
-AABBBoundingBox::InitializePosition(Vector3f position)
+AABB::InitializePosition(Vector3f position)
 {
     mXmin = position.x;
     mXmax = position.x;
@@ -167,7 +174,7 @@ AABBBoundingBox::InitializePosition(Vector3f position)
 }
 
 void
-AABBBoundingBox::UpdatePosition(Vector3f position)
+AABB::UpdatePosition(Vector3f position)
 {
     if (position.x > mXmax)
     {

@@ -20,6 +20,12 @@ enum class FALCON_ENGINE_API BufferAccessMode
     Count
 };
 
+enum class FALCON_ENGINE_API BufferStorage
+{
+    Interleaved,
+    Separated,
+};
+
 enum class FALCON_ENGINE_API BufferUsage
 {
     None,

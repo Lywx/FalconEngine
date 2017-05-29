@@ -11,12 +11,20 @@ namespace FalconEngine
 /************************************************************************/
 /* Static Members                                                       */
 /************************************************************************/
-const Vector3f Vector3f::Zero  = glm::vec3(0.f, 0.f, 0.f);
-const Vector3f Vector3f::One   = glm::vec3(1.f, 1.f, 1.f);
+const Vector3f
+Vector3f::Zero = glm::vec3(0.f, 0.f, 0.f);
 
-const Vector3f Vector3f::UnitX = glm::vec3(1.f, 0.f, 0.f);
-const Vector3f Vector3f::UnitY = glm::vec3(0.f, 1.f, 0.f);
-const Vector3f Vector3f::UnitZ = glm::vec3(0.f, 0.f, 1.f);
+const Vector3f
+Vector3f::One = glm::vec3(1.f, 1.f, 1.f);
+
+const Vector3f
+Vector3f::UnitX = glm::vec3(1.f, 0.f, 0.f);
+
+const Vector3f
+Vector3f::UnitY = glm::vec3(0.f, 1.f, 0.f);
+
+const Vector3f
+Vector3f::UnitZ = glm::vec3(0.f, 0.f, 1.f);
 
 /* static */ Vector3f
 Vector3f::Cross(const Vector3f& v1, const Vector3f& v2)
@@ -91,7 +99,8 @@ to_string(const Vector3f& v)
 /************************************************************************/
 /* Static Members                                                       */
 /************************************************************************/
-static const Vector3i Zero = glm::ivec3(0, 0, 0);
+const Vector3i
+Zero = glm::ivec3(0, 0, 0);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

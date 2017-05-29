@@ -13,7 +13,7 @@ FALCON_ENGINE_EFFECT_IMPLEMENT(AABBEffect);
 AABBEffect::AABBEffect()
 {
     auto shader = std::make_shared<Shader>();
-    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/AABBB.vert.glsl");
+    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/AABB.vert.glsl");
     shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shader/AABB.frag.glsl");
 
     auto pass = make_unique<VisualEffectPass>();
@@ -51,23 +51,25 @@ AABBEffect::~AABBEffect()
 /* Public Members                                                       */
 /************************************************************************/
 std::shared_ptr<VisualEffectInstance>
-AABBEffect::CreateInstance(Visual *visual, std::shared_ptr<VertexBuffer> instanceBuffer) const
+AABBEffect::CreateInstance(Visual *visual, std::shared_ptr<AABBEffectParams> params) const
 {
-    auto visualEffectInstance = CreateSetInstance(visual);
+    CheckVertexFormatCompatible(visual);
 
-    auto vertexFormat = GetVertexFormat();
-    visual->SetVertexFormat(vertexFormat);
-    auto vertexGroup = make_shared<VertexGroup>();
-    auto vertexBuffer = visual->GetMesh()->GetPrimitive()->GetVertexBuffer();
-    vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, vertexFormat->GetVertexBufferStride(0));
-    vertexGroup->SetVertexBuffer(1, instanceBuffer, 0, vertexFormat->GetVertexBufferStride(1));
-    visual->SetVertexGroup(vertexGroup);
+    auto instance = CreateInstance();
+    visual->PushEffectInstance(instance);
+    visual->PushEffectParams(params);
 
-    return visualEffectInstance;
+    // NOTE(Wuxiang): Don't need to initialize any instance because all the
+    // parameters are in the vertex buffer.
+
+    return instance;
 }
 
+/************************************************************************/
+/* Protected Members                                                    */
+/************************************************************************/
 std::shared_ptr<VertexFormat>
-AABBBoundingBoxInstancingEffectCreateVertexFormat()
+AABBEffect::CreateVertexFormat() const
 {
     auto vertexFormat = std::make_shared<VertexFormat>();
 
@@ -93,7 +95,7 @@ AABBBoundingBoxInstancingEffectCreateVertexFormat()
 std::shared_ptr<VertexFormat>
 AABBEffect::GetVertexFormat() const
 {
-    static std::shared_ptr<VertexFormat> sVertexFormat = AABBBoundingBoxInstancingEffectCreateVertexFormat();
+    static shared_ptr<VertexFormat> sVertexFormat = CreateVertexFormat();
     return sVertexFormat;
 }
 

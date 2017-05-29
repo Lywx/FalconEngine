@@ -281,27 +281,31 @@ FontRenderer::PrepareBatch(const Font *font)
 
     // Initialize new batch for given font.
     {
-        auto fontVisualEffect = make_shared<FontEffect>();
+        auto characterMaxNum = int(Kilobytes(10));
 
-        auto fontVertexBufferSize = int(Kilobytes(100));
-        auto fontVertexBuffer = make_shared<VertexBuffer>(fontVertexBufferSize, sizeof(FontVertex), BufferUsage::Stream);
+        auto vertexBuffer = make_shared<VertexBuffer>(characterMaxNum * 6, sizeof(FontVertex), BufferUsage::Stream);
+        auto visualEffect = make_shared<FontEffect>();
+        auto vertexFormat = visualEffect->GetVertexFormat();
+        auto vertexGroup = make_shared<VertexGroup>();
+        vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, vertexFormat->GetVertexBufferStride(0));
 
-        auto fontPrimitive = make_shared<PrimitiveQuads>(fontVertexBuffer, nullptr);
-        auto fontMesh = make_shared<Mesh>(fontPrimitive, nullptr);
-        auto fontVisual = make_shared<Visual>(fontMesh);
-        auto fontVisualEffectInstance = fontVisualEffect->CreateInstance(fontVisual.get(), font, &mTextHandedness, mViewportWidth, mViewportHeight);
-        auto fontBatch = make_shared<FontBatch>(fontVertexBuffer, fontVisual);
-        mTextBatchTable.insert({ font, fontBatch });
-        return fontBatch;
+        auto primitive = make_shared<PrimitiveQuads>(vertexFormat, vertexGroup, nullptr);
+        auto visual = make_shared<Visual>(make_shared<Mesh>(primitive, nullptr));
+        auto visualEffectParams = make_shared<FontEffectParams>(font, &mTextHandedness, mViewportWidth, mViewportHeight);
+        visualEffect->CreateInstance(visual.get(), visualEffectParams);
+
+        auto batch = make_shared<FontBatch>(vertexBuffer, visual);
+        mTextBatchTable.insert({ font, batch });
+        return batch;
     }
 }
 
 void
 FontRenderer::PrepareText(
-    _IN_OUT_ FontBatch&  batch,
-    _IN_     const Font *font,
+    _IN_OUT_ FontBatch&      batch,
+    _IN_     const Font     *font,
     _IN_     const FontText *text,
-    _IN_     Color             textColor)
+    _IN_     Color           textColor)
 {
     FALCON_ENGINE_CHECK_NULLPTR(font);
 

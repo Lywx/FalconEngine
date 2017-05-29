@@ -38,8 +38,8 @@ private:
     const Font *mFont = nullptr;
 
     // Scene
-    std::shared_ptr<SceneEntity>        mScene;
-    std::shared_ptr<PhongEffect> mSceneLightingEffect;
+    std::shared_ptr<SceneEntity>       mScene;
+    std::shared_ptr<PhongEffect>       mSceneLightingEffect;
     std::shared_ptr<PhongEffectParams> mSceneLightingParams;
 
     // Entities

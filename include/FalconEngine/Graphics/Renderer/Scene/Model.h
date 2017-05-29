@@ -15,18 +15,6 @@ class Sampler;
 
 class Node;
 
-using ModelIndex = int;
-
-#pragma pack(push, 1)
-class FALCON_ENGINE_API ModelVertex
-{
-public:
-    Vector3f mPosition;
-    Vector3f mNormal;
-    Vector2f mTexCoord;
-};
-#pragma pack(pop)
-
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API Model : public Asset
 {
@@ -64,8 +52,8 @@ public:
     /* Model Runtime Data                                                   */
     /************************************************************************/
 private:
-    std::shared_ptr<Node> mNode;                                            // Model root node.
-    std::shared_ptr<Sampler> mSampler;                                         // Model texture sampler.
+    std::shared_ptr<Node>    mNode;                                          // Model root node.
+    std::shared_ptr<Sampler> mSampler;                                       // Model texture sampler.
 };
 #pragma warning(default: 4251)
 

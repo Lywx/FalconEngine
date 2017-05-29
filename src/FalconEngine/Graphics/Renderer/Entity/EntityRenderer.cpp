@@ -13,7 +13,7 @@
 #include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Node.h>
-#include <FalconEngine/Math/Bound/AABBBoundingBox.h>
+#include <FalconEngine/Math/Bound/AABB.h>
 #include <FalconEngine/Core/Memory.h>
 
 using namespace std;
@@ -108,7 +108,6 @@ EntityRenderer::RenderBegin()
     for (auto& cameraBoundingBoxBatchPair : mBoundingBoxBatchTable)
     {
         auto& batch = cameraBoundingBoxBatchPair.second;
-        batch->mCameraViewProjectionComputed = false;
         batch->mInstanceBufferDataIndex = 0;
         batch->mInstanceNum = 0;
     }
@@ -178,18 +177,21 @@ EntityRenderer::Render(Renderer *renderer, double /* percent */)
         auto& batch = cameraBoundingBoxBatchPair.second;
         if (batch->mInstanceNum > 0)
         {
-            // Update buffer data before drawing
-            int instanceNum = batch->mInstanceNum;
-            batch->mInstanceBuffer->SetElementNum(instanceNum);
-            renderer->Update(batch->mInstanceBuffer.get());
-
-            // NOTE(Wuxiang): Don't need to update buffer that stores fixed vertex data.
+            // Update vertex buffer.
             static auto sVerterBufferUpdated = false;
+
+            // NOTE(Wuxiang): Don't need to update buffer that stores fixed
+            // vertex data once it was done before.
             if (!sVerterBufferUpdated)
             {
                 renderer->Update(batch->mVertexBuffer.get());
                 sVerterBufferUpdated = true;
             }
+
+            // Update buffer data before drawing
+            int instanceNum = batch->mInstanceNum;
+            batch->mInstanceBuffer->SetElementNum(instanceNum);
+            renderer->Update(batch->mInstanceBuffer.get());
 
             // Update instancing data.
             batch->mVisualEffectInstance->SetShaderInstancingNum(0, instanceNum);
@@ -215,8 +217,8 @@ FillBufferBoundingBoxPosition(VertexBuffer *vertexBuffer)
     // NOTE(Wuxiang): The idea is to use cube position and each bounding box
     // specific transform matrix to generate AABB bounding box's coordinates
     // so that you can use single instancing draw call to draw all the AABB bounding box.
-    static auto cubeModelPositionList = AABBBoundingBox::GetCubeModelPositionList();
-    for (auto position : cubeModelPositionList)
+    static auto unitModelPositionList = AABB::GetUnitPositionList();
+    for (auto position : unitModelPositionList)
     {
         FillBufferDataAsVector3f<float>(reinterpret_cast<float *>(bufferData), bufferDataIndex, position);
     }
@@ -232,25 +234,33 @@ FillBufferBoundingBoxColor(
 }
 
 void
-FillBufferAABBBoundingBoxTransform(
-    _IN_     const Matrix4f&        viewProjectionTransform,
-    _IN_     const AABBBoundingBox *boundingBox,
-    _IN_     const Matrix4f&        modelTransform,
-    _IN_OUT_ size_t&                transformBufferDataIndex,
-    _IN_OUT_ float                 *transformBufferData)
+FillBufferAABBBTransform(
+    _IN_     const AABB      *aabb,
+    _IN_     const Matrix4f&  viewProjectionTransform,
+    _IN_     const Matrix4f&  modelTransform,
+    _IN_OUT_ size_t&          transformBufferDataIndex,
+    _IN_OUT_ float           *transformBufferData)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(boundingBox);
+    FALCON_ENGINE_CHECK_NULLPTR(aabb);
 
-    Matrix4f modelViewProjectionTransform = viewProjectionTransform
-                                            * modelTransform
-                                            * boundingBox->GetCubeModelPositionTransform();
+    Matrix4f modelViewProjectionTransform =
+
+        // Projection space aabb position.
+        viewProjectionTransform
+
+        // World space aabb position.
+        * modelTransform
+
+        // Model space aabb position.
+        * aabb->GetModelPositionTransform();
+
     FillBufferDataAsMatrix4f<float>(transformBufferData, transformBufferDataIndex, modelViewProjectionTransform);
 }
 
 shared_ptr<VertexBuffer>
 CreateBoundingBoxVertexBuffer(int aabbBoundingBoxVertexNum)
 {
-    auto boundingBoxVertexBuffer = make_shared<VertexBuffer>(aabbBoundingBoxVertexNum, sizeof(AABBBoundingBoxVertex), BufferUsage::Static);
+    auto boundingBoxVertexBuffer = make_shared<VertexBuffer>(aabbBoundingBoxVertexNum, sizeof(AABBVertex), BufferUsage::Static);
 
     // Prepare vertex buffer data.
     FillBufferBoundingBoxPosition(boundingBoxVertexBuffer.get());
@@ -272,27 +282,29 @@ EntityRenderer::PrepareBatch(const Camera *camera)
 
     // Initialize new batch for given camera.
     {
-        auto aABBBoundingBoxInstanceNum = int(Kilobytes(1));
-        auto aABBBoundingBoxVertexNum = 24;
-        auto aABBBoungingBoxEffect = make_shared<AABBEffect>();
+        auto boundingBoxMaxNum = int(Kilobytes(1));
 
-        // TODO(Wuxiang): Add multiple type of bounding box support.
+        auto visualEffect = make_shared<AABBEffect>();
 
         // Hold fixed data about vertex position in model space.
-        auto aABBBoundingBoxVertexBuffer = CreateBoundingBoxVertexBuffer(aABBBoundingBoxVertexNum);
+        auto vertexBuffer = CreateBoundingBoxVertexBuffer(24);
+        auto vertexFormat = visualEffect->GetVertexFormat();
+        auto vertexGroup = make_shared<VertexGroup>();
 
         // Hold dynamic data about each instance of bounding box.
-        auto aABBBoundingBoxInstanceBuffer = make_shared<VertexBuffer>(aABBBoundingBoxInstanceNum, sizeof(AABBBoundingBoxInstance), BufferUsage::Dynamic);
+        auto instanceBuffer = make_shared<VertexBuffer>(boundingBoxMaxNum, sizeof(AABBInstance), BufferUsage::Dynamic);
+        vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, vertexFormat->GetVertexBufferStride(0));
+        vertexGroup->SetVertexBuffer(1, instanceBuffer, 0, vertexFormat->GetVertexBufferStride(1));
 
         // AABB bounding box is bipartite graph, so you could not use line strip.
-        auto aABBBoundingBoxPrimitive = make_shared<PrimitiveLines>(aABBBoundingBoxVertexBuffer, false);
-        auto aABBBoundingBoxMesh = make_shared<Mesh>(aABBBoundingBoxPrimitive, nullptr);
-        auto aABBBoundingBoxVisual = make_shared<Visual>(aABBBoundingBoxMesh);
-        auto aABBBoundingBoxVisualEffectInstance = aABBBoungingBoxEffect->CreateInstance(aABBBoundingBoxVisual.get(), aABBBoundingBoxInstanceBuffer);
+        auto primitive = make_shared<PrimitiveLines>(vertexFormat, vertexGroup, nullptr, false);
+        auto visual = make_shared<Visual>(make_shared<Mesh>(primitive, nullptr));
+        auto visualEffectParams = make_shared<AABBEffectParams>();
+        auto visualEffectInstance = visualEffect->CreateInstance(visual.get(), visualEffectParams);
 
-        auto aABBBoundingBoxBatch = make_shared<AABBBoundingBoxBatch>(camera, aABBBoundingBoxVertexBuffer, aABBBoundingBoxInstanceBuffer, aABBBoundingBoxVisual, aABBBoundingBoxVisualEffectInstance);
-        mBoundingBoxBatchTable.insert({ camera, aABBBoundingBoxBatch });
-        return aABBBoundingBoxBatch;
+        auto batch = make_shared<AABBBoundingBoxBatch>(camera, vertexBuffer, instanceBuffer, visual, visualEffectInstance);
+        mBoundingBoxBatchTable.insert({ camera, batch });
+        return batch;
     }
 }
 
@@ -305,34 +317,24 @@ EntityRenderer::PrepareBoundingBox(AABBBoundingBoxBatch& batch, const Camera *ca
     // during rendering so that the camera transform stops updating and is
     // guaranteed to be fixed.
 
-    // Compute view projection transform for the camera.
-    if (!batch.mCameraViewProjectionComputed)
+    // Fill vertex color.
+    FillBufferBoundingBoxColor(Vector4f(boundingBoxColor),
+                               batch.mInstanceBufferDataIndex,
+                               reinterpret_cast<float *>(batch.mInstanceBuffer->GetData()));
+
+    // Fill vertex transform.
+    if (auto aabb = dynamic_cast<const AABB *>(boundingBox))
     {
-        batch.mCameraViewProjectionTransform = camera->GetProjection() * camera->GetView();
-        batch.mCameraViewProjectionComputed = true;
+        FillBufferAABBBTransform(
+            aabb,
+            camera->GetViewProjection(),
+            visual->mWorldTransform,
+            batch.mInstanceBufferDataIndex,
+            reinterpret_cast<float *>(batch.mInstanceBuffer->GetData()));
     }
-
-    // Fill the vertex attribute into the buffer.
+    else
     {
-        // Fill vertex color.
-        FillBufferBoundingBoxColor(Vector4f(boundingBoxColor),
-                                   batch.mInstanceBufferDataIndex,
-                                   reinterpret_cast<float *>(batch.mInstanceBuffer->GetData()));
-
-        // Fill vertex transform.
-        if (auto aabbBoundingBox = dynamic_cast<const AABBBoundingBox *>(boundingBox))
-        {
-            FillBufferAABBBoundingBoxTransform(
-                batch.mCameraViewProjectionTransform,
-                aabbBoundingBox,
-                visual->mWorldTransform,
-                batch.mInstanceBufferDataIndex,
-                reinterpret_cast<float *>(batch.mInstanceBuffer->GetData()));
-        }
-        else
-        {
-            FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-        }
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
     }
 }
 

@@ -23,10 +23,9 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
-
-    // @summary Whether
+    // @summary Whether the uniform is enabled.
     bool
-    GetUpdateEnable() const;
+    IsUpdateEnabled() const;
 
     ShaderUniformUpdateFunction<T>
     GetUpdateFunction() const;
@@ -57,7 +56,7 @@ ShaderUniformAutomatic<T>::ShaderUniformAutomatic(const std::string& name, const
 
 template <typename T>
 bool
-ShaderUniformAutomatic<T>::GetUpdateEnable() const
+ShaderUniformAutomatic<T>::IsUpdateEnabled() const
 {
     return mUpdateFunction != nullptr;
 }

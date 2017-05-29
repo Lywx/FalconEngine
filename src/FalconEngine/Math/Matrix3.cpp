@@ -8,13 +8,15 @@ namespace FalconEngine
 /************************************************************************/
 /* Static Members                                                       */
 /************************************************************************/
-Matrix3f Matrix3f::Zero = glm::mat3(0.0, 0.0, 0.0,
-                                    0.0, 0.0, 0.0,
-                                    0.0, 0.0, 0.0);
+Matrix3f
+Matrix3f::Zero = glm::mat3(0.0, 0.0, 0.0,
+                           0.0, 0.0, 0.0,
+                           0.0, 0.0, 0.0);
 
-Matrix3f Matrix3f::Identity = glm::mat3(1.0, 0.0, 0.0,
-                                        0.0, 1.0, 0.0,
-                                        0.0, 0.0, 1.0);
+Matrix3f
+Matrix3f::Identity = glm::mat3(1.0, 0.0, 0.0,
+                               0.0, 1.0, 0.0,
+                               0.0, 0.0, 1.0);
 
 Matrix3f
 Matrix3f::Inverse(const Matrix3f& mat)

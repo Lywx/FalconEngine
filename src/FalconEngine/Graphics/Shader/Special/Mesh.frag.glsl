@@ -14,14 +14,14 @@ layout(location = 0) out vec4 FragColor;
 #include "fe_Material.glsl"
 #fe_extension : disable
 
-uniform vec3 Ambient;
-uniform bool Texturing;
+uniform vec3 AmbientColor;
+uniform bool TextureEnabled;
 
 // @require #include "fe_Material.glsl".
 vec3 
 CalcMaterialColor()
 {
-    vec3 cAmbient  = Ambient + vec3(1.0) * fe_Material.Ambient;
+    vec3 cAmbient  = AmbientColor + vec3(1.0) * fe_Material.Ambient;
     vec3 cDiffuse  = vec3(1.0) * fe_Material.Diffuse * 0.5;
     vec3 cEmissive = vec3(0.0);
     vec3 cSpecular = vec3(1.0) * fe_Material.Specular * pow(0.5, fe_Material.Shininess);
@@ -40,7 +40,7 @@ CalcTextureColor()
     vec3 cAmbient;
     if (fe_TextureAmbientExist)
     {
-       cAmbient = Ambient + vec3(1.0) * vec3(texture(fe_TextureAmbient, texCoord));
+       cAmbient = AmbientColor + vec3(1.0) * vec3(texture(fe_TextureAmbient, texCoord));
     }
 
     vec3 cDiffuse;
@@ -79,7 +79,7 @@ main()
 {
     vec4 color;
     
-    if (Texturing)
+    if (TextureEnabled)
     {
         color = vec4(CalcMaterialColor(), 1.0);
     }

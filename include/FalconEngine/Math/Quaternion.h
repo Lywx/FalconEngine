@@ -22,7 +22,7 @@ public:
     /************************************************************************/
     /* Static Members                                                       */
     /************************************************************************/
-    static Quaternion Identity;
+    static const Quaternion Identity;
 
     static Quaternion
     CreateFromAxisAngle(const Vector3f& axis, float angle);;

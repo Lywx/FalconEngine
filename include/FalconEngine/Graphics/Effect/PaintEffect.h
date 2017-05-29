@@ -20,7 +20,7 @@ class Node;
 class FALCON_ENGINE_API PaintEffectParams : public VisualEffectParams
 {
 public:
-    std::shared_ptr<Color> mColor;
+    Color mColor;
 };
 
 class FALCON_ENGINE_API PaintEffect : public VisualEffect
@@ -37,23 +37,21 @@ public:
 
 public:
     void
-    CreateInstance(_IN_OUT_ Node                    *node,
-                   _IN_     const PaintEffectParams *params) const;
-
-    void
-    CreateInstance(_IN_OUT_ Node *node,
-                   _IN_     Color& color) const;
+    CreateInstance(
+        _IN_OUT_ Node                              *node,
+        _IN_     std::shared_ptr<PaintEffectParams> params) const;
 
 protected:
-    virtual std::shared_ptr<VisualEffectInstance>
-    CreateSetInstance(Visual *visual) const override;
+    virtual std::shared_ptr<VertexFormat>
+    CreateVertexFormat() const override;
 
-    std::shared_ptr<VertexFormat>
+    virtual std::shared_ptr<VertexFormat>
     GetVertexFormat() const override;
 
     void
-    InitializeInstance(_IN_OUT_ VisualEffectInstance *visualEffectInstance,
-                       _IN_     Color&                color) const;
+    InitializeInstance(
+        _IN_OUT_ VisualEffectInstance              *instance,
+        _IN_     std::shared_ptr<PaintEffectParams> params) const;
 };
 #pragma warning(default: 4251)
 

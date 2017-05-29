@@ -71,31 +71,22 @@ PaintEffect::~PaintEffect()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PaintEffect::CreateInstance(_IN_OUT_ Node              *node,
-                            _IN_     const PaintParams *params) const
+PaintEffect::CreateInstance(_IN_OUT_ Node                              *node,
+                            _IN_     std::shared_ptr<PaintEffectParams> params) const
 {
     FALCON_ENGINE_CHECK_NULLPTR(params);
 
-    CreateInstance(node, params->mColor);
-}
-
-void
-PaintEffect::CreateInstance(Node *node, Color& color) const
-{
     using namespace placeholders;
 
     TraverseLevelOrder(node, std::bind([&, this](Visual * visual)
     {
-        auto visualEffectInstance = CreateSetInstance(visual);
-        InitializeInstance(visualEffectInstance.get(), color);
+        CheckVertexFormatCompatible(visual);
 
-        // Set up visual.
-        auto vertexFormat = GetVertexFormat();
-        visual->SetVertexFormat(vertexFormat);
-        auto vertexBuffer = visual->GetMesh()->GetPrimitive()->GetVertexBuffer();
-        auto vertexGroup = std::make_shared<VertexGroup>();
-        vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, vertexFormat->GetVertexBufferStride(0));
-        visual->SetVertexGroup(vertexGroup);
+        auto instance = CreateInstance();
+        visual->PushEffectInstance(instance);
+        visual->PushEffectParams(params);
+
+        InitializeInstance(instance.get(), params);
     }, _1));
 }
 
@@ -103,7 +94,7 @@ PaintEffect::CreateInstance(Node *node, Color& color) const
 /* Protected Members                                                    */
 /************************************************************************/
 std::shared_ptr<VertexFormat>
-CreateVertexFormat()
+PaintEffect::CreateVertexFormat() const
 {
     auto vertexFormat = make_shared<VertexFormat>();
     vertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
@@ -116,20 +107,22 @@ CreateVertexFormat()
 std::shared_ptr<VertexFormat>
 PaintEffect::GetVertexFormat() const
 {
-    static auto sVertexFormat = CreateVertexFormat();
+    static shared_ptr<VertexFormat> sVertexFormat = CreateVertexFormat();
     return sVertexFormat;
 }
 
 void
 PaintEffect::InitializeInstance(
-    _IN_OUT_ VisualEffectInstance *visualEffectInstance,
-    _IN_     Color&                color) const
+    _IN_OUT_ VisualEffectInstance              *instance,
+    _IN_     std::shared_ptr<PaintEffectParams> params) const
 {
-    SetShaderUniformAutomaticModelViewProjectionTransform(visualEffectInstance, 0, "ModelViewProjectionTransform");
+    // Transform
+    SetShaderUniformAutomaticModelViewProjectionTransform(instance, 0, "ModelViewProjectionTransform");
 
-    visualEffectInstance->SetShaderUniform(0, ShareAutomatic<Vector4f>("Color", bind([&]
+    // Color
+    instance->SetShaderUniform(0, ShareAutomatic<Vector4f>("Color", bind([ = ]
     {
-        return Vector4f(color);
+        return Vector4f(params->mColor);
     })));
 }
 

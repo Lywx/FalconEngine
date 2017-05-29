@@ -17,6 +17,33 @@ VertexFormat::~VertexFormat()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+bool
+VertexFormat::IsVertexAttributeCompatible(std::shared_ptr<VertexFormat> rhs) const
+{
+    return IsVertexAttributeCompatible(rhs.get());
+}
+
+bool
+VertexFormat::IsVertexAttributeCompatible(const VertexFormat *rhs) const
+{
+    FALCON_ENGINE_CHECK_NULLPTR(rhs);
+
+    if (mVertexAttributeList.size() != rhs->mVertexAttributeList.size())
+    {
+        return false;
+    }
+
+    for (size_t attributeIndex = 0; attributeIndex < mVertexAttributeList.size(); ++attributeIndex)
+    {
+        if (!mVertexAttributeList[attributeIndex].IsCompatible(mVertexAttributeList[attributeIndex]))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 int
 VertexFormat::GetVertexAttributeNum() const
 {

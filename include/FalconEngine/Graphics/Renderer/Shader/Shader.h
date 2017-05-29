@@ -2,6 +2,7 @@
 
 #include <FalconEngine/Graphics/Header.h>
 
+#include <algorithm>
 #include <unordered_map>
 
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
@@ -40,8 +41,6 @@ class ShaderSource;
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API Shader
 {
-    friend class PlatformShader;
-
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -61,11 +60,31 @@ public:
     ShaderUniform&
     GetUniform(std::string uniformName);
 
+    auto GetUniformBegin()
+    {
+        return mUniformTable.begin();
+    }
+
+    auto GetUniformEnd()
+    {
+        return mUniformTable.end();
+    }
+
+    auto GetUniformBegin() const
+    {
+        return mUniformTable.cbegin();
+    }
+
+    auto GetUniformEnd() const
+    {
+        return mUniformTable.cend();
+    }
+
     int
     GetUniformLocation(std::string uniformName) const;
 
     bool
-    GetUniformEnable(std::string uniformName) const;
+    IsUniformEnabled(std::string uniformName) const;
 
     void
     PushUniform(std::string uniformName, ShaderUniformType uniformType);
@@ -78,6 +97,26 @@ public:
 
     ShaderSource *
     GetShaderSource(int shaderIndex) const;
+
+    auto GetShaderSourceBegin() const
+    {
+        return mSourceTable.cbegin();
+    }
+
+    auto GetShaderSourceEnd() const
+    {
+        return mSourceTable.cend();
+    }
+
+    auto GetShaderSourceBegin()
+    {
+        return mSourceTable.begin();
+    }
+
+    auto GetShaderSourceEnd()
+    {
+        return mSourceTable.end();
+    }
 
     ShaderType
     GetShaderType(int shaderIndex) const;

@@ -37,8 +37,6 @@ public:
 
 public:
     const Camera                         *mCamera;
-    bool                                  mCameraViewProjectionComputed = false;
-    Matrix4f                              mCameraViewProjectionTransform = Matrix4f::Identity;
 
     std::shared_ptr<VertexBuffer>         mInstanceBuffer;
     size_t                                mInstanceBufferDataIndex = 0;

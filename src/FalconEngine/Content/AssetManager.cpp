@@ -90,15 +90,16 @@ AssetManager::GetModel(const std::string& modelFilePath)
 }
 
 std::shared_ptr<Model>
-AssetManager::LoadModel(const std::string& modelFilePath)
+AssetManager::LoadModel(const std::string& modelFilePath, const ModelImportOption& modelImportOption)
 {
+    // TODO(Wuxiang): 2017-05-29 18:51 Make import option a part of look up table?
     auto model = GetModel(modelFilePath);
     if (model)
     {
         return model;
     }
 
-    model = LoadModelInternal(modelFilePath);
+    model = LoadModelInternal(modelFilePath, modelImportOption);
     mModelTable[model->mFilePath] = model;
     return model;
 }
@@ -222,7 +223,7 @@ AssetManager::LoadFontInternal(const std::string & fontAssetPath)
 }
 
 std::shared_ptr<Model>
-AssetManager::LoadModelInternal(const std::string & modelFilePath)
+AssetManager::LoadModelInternal(const std::string & modelFilePath, const ModelImportOption& modelImportOption)
 {
     CheckFileExists(modelFilePath);
 
@@ -230,7 +231,7 @@ AssetManager::LoadModelInternal(const std::string & modelFilePath)
     // asset process would only preprocess model's texture in a way that is
     // beneficial for model texture loading.
     auto model = make_shared<Model>(AssetSource::Normal, GetFileStem(modelFilePath), modelFilePath);
-    mImporter->Import(model.get(), modelFilePath);
+    mImporter->Import(model.get(), modelFilePath, modelImportOption);
     return model;
 }
 

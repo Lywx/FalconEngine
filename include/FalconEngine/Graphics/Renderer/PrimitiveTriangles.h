@@ -9,16 +9,19 @@ namespace FalconEngine
 // strips, triangle fans.
 class FALCON_ENGINE_API PrimitiveTriangles : public Primitive
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    PrimitiveTriangles(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer);
+    PrimitiveTriangles(std::shared_ptr<VertexFormat> vertexFormat,
+                       std::shared_ptr<VertexGroup>  vertexGroup,
+                       std::shared_ptr<IndexBuffer>  indexBuffer);
 
     // @remark Allow derived class to pass primitive type themselves.
-    PrimitiveTriangles(PrimitiveType primitiveType, std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer);
+    PrimitiveTriangles(PrimitiveType                 primitiveType,
+                       std::shared_ptr<VertexFormat> vertexFormat,
+                       std::shared_ptr<VertexGroup>  vertexGroup,
+                       std::shared_ptr<IndexBuffer>  indexBuffer);
     virtual ~PrimitiveTriangles();
 
 public:

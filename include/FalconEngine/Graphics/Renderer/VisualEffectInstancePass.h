@@ -2,6 +2,7 @@
 
 #include <FalconEngine/Graphics/Header.h>
 
+#include <algorithm>
 #include <map>
 #include <vector>
 
@@ -9,17 +10,13 @@ namespace FalconEngine
 {
 
 class Sampler;
-
 class Shader;
 class ShaderUniform;
-
 class Texture;
 
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API VisualEffectInstancePass final
 {
-    friend class Renderer;
-
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -64,11 +61,51 @@ public:
     ShaderUniform *
     GetShaderUniform(int uniformIndex) const;
 
+    auto GetShaderTextureBegin() const
+    {
+        return mShaderTextureTable.cbegin();
+    }
+
+    auto GetShaderTextureEnd() const
+    {
+        return mShaderTextureTable.cend();
+    }
+
+    auto GetShaderTextureBegin()
+    {
+        return mShaderTextureTable.begin();
+    }
+
+    auto GetShaderTextureEnd()
+    {
+        return mShaderTextureTable.end();
+    }
+
     int
     GetShaderTextureNum() const;
 
     const Texture *
     GetShaderTexture(int textureUnit) const;
+
+    auto GetShaderSamplerBegin() const
+    {
+        return mShaderSamplerTable.cbegin();
+    }
+
+    auto GetShaderSamplerEnd() const
+    {
+        return mShaderSamplerTable.cend();
+    }
+
+    auto GetShaderSamplerBegin()
+    {
+        return mShaderSamplerTable.begin();
+    }
+
+    auto GetShaderSamplerEnd()
+    {
+        return mShaderSamplerTable.end();
+    }
 
     int
     GetShaderSamplerNum() const;

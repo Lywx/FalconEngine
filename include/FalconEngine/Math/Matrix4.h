@@ -34,32 +34,49 @@ public:
     static Matrix4f Zero;
     static Matrix4f Identity;
 
-    static Matrix4f Inverse(const Matrix4f& mat);
-    static Matrix4f Transpose(const Matrix4f& mat);
+    static Matrix4f
+    Inverse(const Matrix4f& mat);
+
+    static Matrix4f
+    Transpose(const Matrix4f& mat);
 
     // @summary Convert axis angle to rotation matrix
     // @note Column vector convention
-    static Matrix4f CreateRotationX(const float& radians);
-    static void     CreateRotationX(const float& radians, Matrix4f& transform);
+    static Matrix4f
+    CreateRotationX(const float& radians);
+
+    static void
+    CreateRotationX(const float& radians, Matrix4f& transform);
 
     // @summary Convert axis angle to rotation matrix
     // @note Column vector convention
-    static Matrix4f CreateRotationY(const float& radians);
-    static void     CreateRotationY(const float& radians, Matrix4f& transform);
+    static Matrix4f
+    CreateRotationY(const float& radians);
+
+    static void
+    CreateRotationY(const float& radians, Matrix4f& transform);
 
     // @summary Convert axis angle to rotation matrix
     // @note Column vector convention
-    static Matrix4f CreateRotationZ(const float& radians);
-    static void     CreateRotationZ(const float& radians, Matrix4f& transform);
+    static Matrix4f
+    CreateRotationZ(const float& radians);
+
+    static void
+    CreateRotationZ(const float& radians, Matrix4f& transform);
 
     // @summary Convert quaternion to rotation matrix
     // @note Column vector convention
-    static Matrix4f CreateRotation(const Quaternion& q);
+    static Matrix4f
+    CreateRotation(const Quaternion& q);
 
-    static Matrix4f CreateScaleIsomorphic(const float& scale);
-    static Matrix4f CreateScale(const float& scaleX, const float& scaleY, const float& scaleZ);
+    static Matrix4f
+    CreateScaleIsomorphic(const float& scale);
 
-    static Matrix4f CreateTranslation(const float& x, const float& y, const float& z);
+    static Matrix4f
+    CreateScale(const float& scaleX, const float& scaleY, const float& scaleZ);
+
+    static Matrix4f
+    CreateTranslation(const float& x, const float& y, const float& z);
 
     // @summary Create 4x4 Translation Transform Matrix. Column vector is assumed for use of
     // the transform. Transform matrix is as the following form:
@@ -68,7 +85,8 @@ public:
     //  0.0, 1.0, 0.0, v.y,
     //  0.0, 0.0, 1.0, v.z,
     //  0.0, 0.0, 0.0, 1.0)
-    static Matrix4f CreateTranslation(const Vector3f& v);
+    static Matrix4f
+    CreateTranslation(const Vector3f& v);
 
     /************************************************************************/
     /* Constructors and Destructor                                          */

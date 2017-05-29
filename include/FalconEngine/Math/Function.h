@@ -14,13 +14,15 @@ namespace FalconEngine
 /* Integer Function                                                     */
 /************************************************************************/
 template <typename T>
-typename std::enable_if<std::is_integral<T>::value, bool>::type Odd(const T x)
+typename std::enable_if<std::is_integral<T>::value, bool>::type
+IsOdd(const T x)
 {
     return x & 0x1;
 }
 
 template <typename T>
-typename std::enable_if<std::is_integral<T>::value, bool>::type Even(const T x)
+typename std::enable_if<std::is_integral<T>::value, bool>::type
+IsEven(const T x)
 {
     return (x % 2 == 0);
 }

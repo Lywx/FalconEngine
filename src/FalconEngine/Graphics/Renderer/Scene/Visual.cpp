@@ -14,17 +14,9 @@ FALCON_ENGINE_RTTI_IMPLEMENT(Visual, Spatial);
 /* Constructors and Destructor                                          */
 /************************************************************************/
 Visual::Visual(std::shared_ptr<Mesh> mesh) :
-    mMesh(mesh)
-{
-}
-
-Visual::Visual(std::shared_ptr<Mesh> mesh,
-               std::shared_ptr<VertexFormat> vertexFormat,
-               std::shared_ptr<VertexGroup> vertexGroup) :
     mMesh(mesh),
-    mEffectInstance(),
-    mVertexFormat(vertexFormat),
-    mVertexGroup(vertexGroup)
+    mVertexFormat(mesh->GetPrimitive()->GetVertexFormat()),
+    mVertexGroup(mesh->GetPrimitive()->GetVertexGroup())
 {
 }
 
@@ -43,24 +35,57 @@ Visual::~Visual()
 /************************************************************************/
 /* Effect Management                                                    */
 /************************************************************************/
-const VisualEffectInstance *
-Visual::GetEffectInstance() const
+int
+Visual::GetEffectInstanceNum() const
 {
-    return mEffectInstance.get();
-}
-
-std::shared_ptr<VisualEffectInstance>
-Visual::GetEffectInstance()
-{
-    return mEffectInstance;
+    return int(mEffectInstances.size());
 }
 
 void
-Visual::SetEffectInstance(std::shared_ptr<VisualEffectInstance> effectInstance)
+Visual::PushEffectInstance(std::shared_ptr<VisualEffectInstance> effectInstance)
+{
+    // NOTE(Wuxiang): Don't allow
+    FALCON_ENGINE_CHECK_NULLPTR(effectInstance);
+
+    mEffectInstances.push_back(effectInstance);
+}
+
+void
+Visual::RemoveEffectInstance(std::shared_ptr<VisualEffectInstance> effectInstance)
 {
     FALCON_ENGINE_CHECK_NULLPTR(effectInstance);
 
-    mEffectInstance = effectInstance;
+    auto iter = find(mEffectInstances.begin(), mEffectInstances.end(), effectInstance);
+    if (iter != mEffectInstances.end())
+    {
+        mEffectInstances.erase(iter);
+    }
+}
+
+int
+Visual::GetEffectParamsNum() const
+{
+    return int(mEffectParamses.size());
+}
+
+void
+Visual::PushEffectParams(std::shared_ptr<VisualEffectParams> effectParmas)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(effectParmas);
+
+    mEffectParamses.push_back(effectParmas);
+}
+
+void
+Visual::RemoveEffectParams(std::shared_ptr<VisualEffectParams> effectParmas)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(effectParmas);
+
+    auto iter = find(mEffectParamses.begin(), mEffectParamses.end(), effectParmas);
+    if (iter != mEffectParamses.end())
+    {
+        mEffectParamses.erase(iter);
+    }
 }
 
 const VertexFormat *
@@ -139,7 +164,7 @@ Visual::CopyTo(Visual *lhs) const
 {
     Spatial::CopyTo(lhs);
 
-    lhs->mEffectInstance = mEffectInstance;
+    lhs->mEffectInstances = mEffectInstances;
     lhs->mVertexFormat = mVertexFormat;
     lhs->mVertexGroup = mVertexGroup;
     lhs->mMesh = mMesh;

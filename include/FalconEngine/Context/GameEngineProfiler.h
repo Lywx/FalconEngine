@@ -41,34 +41,19 @@ public:
     Initialize(GameEngineData *gameEngineData, GameEngineSettings *gameEngineSettings);
 
     double
-    GetLastFrameElapsedMillisecond() const
-    {
-        return mLastFrameElapsedMillisecond;
-    }
+    GetLastFrameElapsedMillisecond() const;
 
     double
-    GetLastFrameFPS() const
-    {
-        return mLastFrameFPS;
-    }
+    GetLastFrameFPS() const;
 
     double
-    GetLastFrameUpdateTotalCount() const
-    {
-        return mLastFrameUpdateTotalCount;
-    }
+    GetLastFrameUpdateTotalCount() const;
 
     double
-    GetLastUpdateElapsedMillisecond() const
-    {
-        return mLastUpdateElapsedMillisecond;
-    }
+    GetLastUpdateElapsedMillisecond() const;
 
     double
-    GetLastRenderElapsedMillisecond() const
-    {
-        return mLastRenderElapsedMillisecond;
-    }
+    GetLastRenderElapsedMillisecond() const;
 
 private:
     double mLastFrameElapsedMillisecond;

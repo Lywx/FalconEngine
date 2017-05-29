@@ -24,10 +24,6 @@ public:
     /************************************************************************/
     explicit BlinnEffect(bool initializer = true);
     virtual ~BlinnEffect();
-
-protected:
-    virtual std::shared_ptr<VisualEffectInstance>
-    CreateSetInstance(Visual *visual) const override;
 };
 #pragma warning(default: 4251)
 

@@ -71,10 +71,10 @@ protected:
     PrepareBatch(_IN_ const Font *font);
 
     void
-    PrepareText(_IN_OUT_ FontBatch&  batch,
-                _IN_     const Font *font,
+    PrepareText(_IN_OUT_ FontBatch&      batch,
+                _IN_     const Font     *font,
                 _IN_     const FontText *text,
-                _IN_     Color             textColor = ColorPalette::White);
+                _IN_     Color           textColor = ColorPalette::White);
 
 private:
     // NOTE(Wuxiang): Since the shader sampler could not be indexed using vertex

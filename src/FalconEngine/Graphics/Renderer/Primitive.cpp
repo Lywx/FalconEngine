@@ -5,22 +5,21 @@
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(Primitive, Object);
-
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
 Primitive::Primitive(PrimitiveType primitiveType) :
-    Primitive(primitiveType, nullptr, nullptr)
+    Primitive(primitiveType, nullptr, nullptr, nullptr)
 {
 }
 
-Primitive::Primitive(PrimitiveType primitiveType, std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer) :
+Primitive::Primitive(PrimitiveType primitiveType, std::shared_ptr<VertexFormat> vertexFormat, std::shared_ptr<VertexGroup> vertexGroup, std::shared_ptr<IndexBuffer> indexBuffer) :
     mPrimitiveType(primitiveType),
-    mVertexBuffer(vertexBuffer),
+    mVertexFormat(vertexFormat),
+    mVertexGroup(vertexGroup),
     mIndexBuffer(indexBuffer)
 {
-    // NOTE(Wuxiang): All vertex buffer and index buffer is allowed to be null
+    // NOTE(Wuxiang): All vertex format, vertex group and index buffer is allowed to be null
     // here. But they should be initialized in the derived class's constructor.
 }
 
@@ -31,22 +30,15 @@ Primitive::~Primitive()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-void
-Primitive::CopyTo(Primitive *lhs)
-{
-    lhs->mBoundingBox = mBoundingBox;
-    lhs->mPrimitiveType = mPrimitiveType;
-
-    lhs->mVertexBuffer = mVertexBuffer;
-    lhs->mIndexBuffer = mIndexBuffer;
-}
-
 PrimitiveType
 Primitive::GetPrimitiveType() const
 {
     return mPrimitiveType;
 }
 
+/************************************************************************/
+/* Bounding Box Management                                              */
+/************************************************************************/
 const BoundingBox *
 Primitive::GetBoundingBox() const
 {
@@ -61,44 +53,65 @@ Primitive::SetBoundingBox(std::shared_ptr<BoundingBox> boundingBox)
     mBoundingBox = boundingBox;
 }
 
-void
-Primitive::SetVertexBuffer(std::shared_ptr<VertexBuffer> vertexBuffer)
+/************************************************************************/
+/* Vertex Buffer Management                                             */
+/************************************************************************/
+const VertexFormat *
+Primitive::GetVertexFormat() const
 {
-    FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
+    return mVertexFormat.get();
+}
 
-    mVertexBuffer = vertexBuffer;
+std::shared_ptr<VertexFormat>
+Primitive::GetVertexFormat()
+{
+    return mVertexFormat;
+}
+
+const VertexGroup *
+Primitive::GetVertexGroup() const
+{
+    return mVertexGroup.get();
+}
+
+std::shared_ptr<VertexGroup>
+Primitive::GetVertexGroup()
+{
+    return mVertexGroup;
 }
 
 size_t
 Primitive::GetVertexNum() const
 {
-    return mVertexBuffer->GetElementNum();
+    return mVertexGroup->GetElementNum();
 }
 
+/************************************************************************/
+/* Index Buffer Management                                              */
+/************************************************************************/
 const IndexBuffer *
 Primitive::GetIndexBuffer() const
 {
     return mIndexBuffer.get();
 }
 
+std::shared_ptr<IndexBuffer>
+Primitive::GetIndexBuffer()
+{
+    return mIndexBuffer;
+}
+
+/************************************************************************/
+/* Deep and Shallow Copy                                                */
+/************************************************************************/
 void
-Primitive::SetIndexBuffer(std::shared_ptr<IndexBuffer> indexBuffer)
+Primitive::CopyTo(Primitive *lhs)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(indexBuffer);
-
-    mIndexBuffer = indexBuffer;
-}
-
-const VertexBuffer *
-Primitive::GetVertexBuffer() const
-{
-    return mVertexBuffer.get();
-}
-
-std::shared_ptr<VertexBuffer>
-Primitive::GetVertexBuffer()
-{
-    return mVertexBuffer;
+    lhs->mPrimitiveType = mPrimitiveType;
+    lhs->mBoundingBox = mBoundingBox;
+    lhs->mVertexFormat = mVertexFormat;
+    lhs->mVertexGroup = mVertexGroup;
+    lhs->mIndexBuffer = mIndexBuffer;
 }
 
 }

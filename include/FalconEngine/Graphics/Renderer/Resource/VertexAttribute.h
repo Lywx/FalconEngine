@@ -68,8 +68,15 @@ public:
     virtual ~VertexAttribute();
 
 public:
+    bool
+    IsCompatible(const VertexAttribute& rhs) const;
+
+public:
     // NOTE(Wuxiang): Initialized on construction.
     int                 mBindingIndex;                                        // Vertex attribute buffer binding index.
+
+    // NOTE(Wuxiang) If divisor is non-zero, the attribute advances once per
+    // divisor instances of the set(s) of vertices being rendered.
     int                 mDivision;                                            // Vertex attribute update division when instancing.
     int                 mLocation;                                            // Vertex attribute layout location.
     std::string         mName;                                                // Vertex attribute name.

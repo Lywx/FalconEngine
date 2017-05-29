@@ -4,6 +4,8 @@
 
 #include <map>
 
+#include <FalconEngine/Content/AssetImportOption.h>
+
 namespace FalconEngine
 {
 
@@ -53,7 +55,7 @@ public:
     GetModel(const std::string& modelFilePath);
 
     std::shared_ptr<Model>
-    LoadModel(const std::string& modelFilePath);
+    LoadModel(const std::string& modelFilePath, const ModelImportOption& modelImportOption = AssetImportOption::mModelOption);
 
     std::shared_ptr<ShaderSource>
     GetShaderSource(const std::string& shaderFilePath);
@@ -75,7 +77,7 @@ private:
     LoadFontInternal(const std::string& fontAssetPath);
 
     std::shared_ptr<Model>
-    LoadModelInternal(const std::string& modelFilePath);
+    LoadModelInternal(const std::string& modelFilePath, const ModelImportOption& modelImportOption);
 
     std::shared_ptr<ShaderSource>
     LoadShaderSourceInternal(const std::string& shaderFilePath);

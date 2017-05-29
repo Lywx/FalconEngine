@@ -7,13 +7,12 @@ namespace FalconEngine
 
 class FALCON_ENGINE_API PrimitivePoints : public Primitive
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PrimitivePoints(std::shared_ptr<VertexBuffer> vertexBuffer);
+    PrimitivePoints(std::shared_ptr<VertexFormat> vertexFormat,
+                    std::shared_ptr<VertexGroup>  vertexGroup);
     virtual ~PrimitivePoints();
 
 public:

@@ -20,6 +20,20 @@ VertexGroup::~VertexGroup()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+int
+VertexGroup::GetElementNum() const
+{
+    if (mVertexBufferTable.size() == 0)
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The vertex group is empty.");
+    }
+
+    // Use first vertex binding to determine the element number of entire vertex
+    // group.
+    auto vertexBinding = mVertexBufferTable.begin()->second;
+    return vertexBinding.GetBuffer()->GetElementNum();
+}
+
 void
 VertexGroup::ClearVertexBuffer()
 {

@@ -14,7 +14,8 @@ class FALCON_ENGINE_API Rectangle
 public:
     static const Rectangle Zero;
 
-    static Rectangle CreateBounds(float left, float top, float right, float bottom);
+    static Rectangle
+    CreateBounds(float left, float top, float right, float bottom);
 
     /************************************************************************/
     /* Constructors and Destructor                                          */

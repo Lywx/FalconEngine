@@ -1,17 +1,15 @@
 #include <FalconEngine/Graphics/Renderer/PrimitiveQuads.h>
 #include <FalconEngine/Graphics/Renderer/Resource/IndexBuffer.h>
-#include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
 
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(PrimitiveQuads, PrimitiveTriangles);
-
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PrimitiveQuads::PrimitiveQuads(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer) :
-    PrimitiveTriangles(vertexBuffer, indexBuffer)
+PrimitiveQuads::PrimitiveQuads(std::shared_ptr<VertexFormat> vertexFormat, std::shared_ptr<VertexGroup> vertexGroup, std::shared_ptr<IndexBuffer> indexBuffer) :
+    PrimitiveTriangles(vertexFormat, vertexGroup, indexBuffer)
 {
 }
 
@@ -31,7 +29,7 @@ PrimitiveQuads::GetQuadNum() const
     }
     else
     {
-        return mVertexBuffer->GetElementNum() / 3;
+        return mVertexGroup->GetElementNum() / 3;
     }
 }
 

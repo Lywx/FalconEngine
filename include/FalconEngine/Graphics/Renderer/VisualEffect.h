@@ -54,6 +54,13 @@ class WireframeState;
 // @summary Represents a factory of generating visual effect instance. This class
 // would not contain any asset. All it has is renderer state metadata used in the
 // renderer.
+//
+// @remark It is encourage to write visual effect by introducing an accompanying
+// visual effect params class. That class is used to store parameters of visual
+// effect so that in editor you could inspect all of effect the visual is binded
+// with. This way you could also avoid some mess for effect memory management,
+// because you could guarantee the effect params is kept safely when it is binded
+// to the visual by using std::shared_ptr.
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API VisualEffect : public Object
 {
@@ -114,10 +121,16 @@ protected:
     // Derived classes could use FALCON_ENGINE_EFFECT_IMPLEMENT macro to implement
     // this method.
     virtual std::shared_ptr<VisualEffectInstance>
-    CreateSetInstance(Visual *visual) const = 0;
+    CreateInstance() const = 0;
 
     virtual std::shared_ptr<VertexFormat>
-    GetVertexFormat() const;
+    CreateVertexFormat() const = 0;
+
+    virtual std::shared_ptr<VertexFormat>
+    GetVertexFormat() const = 0;
+
+    void
+    CheckVertexFormatCompatible(Visual *visual) const;
 
     void
     TraverseLevelOrder(Node *node, std::function<void(Visual *visual)> visit) const;
@@ -148,14 +161,16 @@ private: \
 { \
     static auto sVisualEffect = std::make_shared<klass>(); \
     return sVisualEffect; \
-}
+} \
+protected: \
+    virtual std::shared_ptr<VisualEffectInstance> \
+    CreateInstance() const override;
 
 #define FALCON_ENGINE_EFFECT_IMPLEMENT(klass) \
 std::shared_ptr<VisualEffectInstance> \
-klass::CreateSetInstance(Visual *visual) const \
+klass::CreateInstance() const \
 { \
     auto visualEffectInstance = std::make_shared<VisualEffectInstance>(GetEffect()); \
-    visual->SetEffectInstance(visualEffectInstance); \
     return visualEffectInstance; \
 }
 

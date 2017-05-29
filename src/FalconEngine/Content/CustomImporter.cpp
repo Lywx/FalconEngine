@@ -20,13 +20,10 @@ CustomImporter::~CustomImporter()
 /* Public Members                                                       */
 /************************************************************************/
 bool
-CustomImporter::Import(Model * /* model */, const std::string& /* modelFilePath */)
-{
-    return false;
-}
-
-bool
-CustomImporter::Import(Font * /* font */, const std::string& /* fontFilePath */)
+CustomImporter::Import(
+    _IN_OUT_ Model *                  /* model */,
+    _IN_     const std::string&       /* modelFilePath */,
+    _IN_     const ModelImportOption& /* modelImportOption */)
 {
     return false;
 }

@@ -957,15 +957,15 @@ Renderer::Enable(const VisualEffectInstancePass *pass, const Camera *camera, con
     FALCON_ENGINE_CHECK_NULLPTR(pass);
 
     // Enable required shader textures.
-    for (auto &textureUnit : pass->mShaderTextureTable)
+    for (auto textureIter = pass->GetShaderTextureBegin(); textureIter != pass->GetShaderTextureEnd(); ++textureIter)
     {
-        Enable(textureUnit.first, textureUnit.second);
+        Enable(textureIter->first, textureIter->second);
     }
 
     // Enable required shader samplers.
-    for (auto &textureUnit : pass->mShaderSamplerTable)
+    for (auto samplerIter = pass->GetShaderSamplerBegin(); samplerIter != pass->GetShaderSamplerEnd(); ++samplerIter)
     {
-        Enable(textureUnit.first, textureUnit.second);
+        Enable(samplerIter->first, samplerIter->second);
     }
 
     // Update required shader uniforms.
@@ -989,15 +989,15 @@ Renderer::Disable(const VisualEffectInstancePass *pass)
     FALCON_ENGINE_CHECK_NULLPTR(pass);
 
     // Disable required shader textures.
-    for (auto &textureUnit : pass->mShaderTextureTable)
+    for (auto textureIter = pass->GetShaderTextureBegin(); textureIter != pass->GetShaderTextureEnd(); ++textureIter)
     {
-        Disable(textureUnit.first, textureUnit.second);
+        Disable(textureIter->first, textureIter->second);
     }
 
     // Disable required shader samplers.
-    for (auto &textureUnit : pass->mShaderSamplerTable)
+    for (auto samplerIter = pass->GetShaderSamplerBegin(); samplerIter != pass->GetShaderSamplerEnd(); ++samplerIter)
     {
-        Disable(textureUnit.first, textureUnit.second);
+        Disable(samplerIter->first, samplerIter->second);
     }
 }
 
@@ -1008,7 +1008,7 @@ Renderer::Update(const VisualEffectInstancePass *pass, ShaderUniform *uniform, c
     if (uniform->mLocation == 0)
     {
         auto shader = pass->GetShader();
-        uniform->mEnabled = shader->GetUniformEnable(uniform->mName);
+        uniform->mEnabled = shader->IsUniformEnabled(uniform->mName);
         uniform->mLocation = shader->GetUniformLocation(uniform->mName);
     }
 
@@ -1038,15 +1038,13 @@ Renderer::Draw(
 
     FALCON_ENGINE_CHECK_NULLPTR(visual);
 
-    auto visualEffectInstance = visual->GetEffectInstance();
-    if (visualEffectInstance == nullptr)
+    visual->ForEffectInstance([ = ](std::shared_ptr<VisualEffectInstance> visualEffectInstance)
     {
-        // NOTE(Wuxiang): When the visual is not set up correctly for any visual
-        // effect.
-        return;
-    }
+        // NOTE(Wuxiang): The visual instance is guaranteed to not be null.
+        FALCON_ENGINE_CHECK_NULLPTR(visualEffectInstance);
 
-    Draw(camera, visual, visualEffectInstance.get());
+        Draw(camera, visual, visualEffectInstance.get());
+    });
 }
 
 void

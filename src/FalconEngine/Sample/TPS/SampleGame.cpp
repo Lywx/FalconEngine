@@ -42,7 +42,7 @@ SampleGame::Initialize()
 
         // Axis
         {
-            auto axeModel = assetManager->LoadModel("Content/Model/Axe.dae");
+            auto axeModel = assetManager->LoadModel("Content/Model/Axe.dae",);
             auto axeNodeX = ShareClone(axeModel->GetNode());
             auto axeNodeY = ShareClone(axeModel->GetNode());
             auto axeNodeZ = ShareClone(axeModel->GetNode());
@@ -63,11 +63,11 @@ SampleGame::Initialize()
 
         // Room
         {
-            auto roomModel = assetManager->LoadModel("Content/Model/Bedroom.dae");
+            auto roomModel = assetManager->LoadModel("Content/Model/Bedroom.dae",);
             mRoomNode = ShareClone(roomModel->GetNode());
             sceneNode->AttachChild(mRoomNode);
 
-            auto lightModel = assetManager->LoadModel("Content/Model/Engine/Point Light.dae");
+            auto lightModel = assetManager->LoadModel("Content/Model/Engine/Point Light.dae",);
             mPointLight1 = make_shared<LightEntity>(ShareClone(lightModel->GetNode()));
             mPointLight2 = make_shared<LightEntity>(ShareClone(lightModel->GetNode()));
             mPointLight3 = make_shared<LightEntity>(ShareClone(lightModel->GetNode()));

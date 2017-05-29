@@ -147,11 +147,11 @@ PlatformShader::PlatformShader(Shader *shader) :
     std::fill_n(mShaders, int(ShaderType::Count), 0);
 
     // Compile all shader source.
-    for (auto& shaderIndexSourcePair : shader->mSourceTable)
+    for (auto shaderIter = shader->GetShaderSourceBegin(); shaderIter != shader->GetShaderSourceEnd(); ++shaderIter)
     {
-        auto shaderIndex = shaderIndexSourcePair.first;
+        auto shaderIndex = shaderIter->first;
         auto shaderType = shader->GetShaderType(shaderIndex);
-        auto shaderSource = shaderIndexSourcePair.second.get();
+        auto shaderSource = shaderIter->second.get();
         ProcessShaderExtension(shaderSource);
 
         // Compile for each part of shader
@@ -309,19 +309,19 @@ PlatformShader::CollectUniformActive()
 void
 PlatformShader::CollectUniformLocation(Shader *shader) const
 {
-    for (auto& uniformNameValuePair : shader->mUniformTable)
+    for (auto uniformIter = shader->GetUniformBegin(); uniformIter != shader->GetUniformEnd(); ++uniformIter)
     {
-        GLint uniformLocation = glGetUniformLocation(mProgram, uniformNameValuePair.first.c_str());
+        GLint uniformLocation = glGetUniformLocation(mProgram, uniformIter->first.c_str());
 
         if (uniformLocation == -1)
         {
             // NOTE(Wuxiang): If the uniform is not found, the uniform location
             // would be -1. If -1 is passed to later pipeline, it will get ignored.
             // This happens for compiler optimization.
-            uniformNameValuePair.second.mEnabled = false;
+            uniformIter->second.mEnabled = false;
         }
 
-        uniformNameValuePair.second.mLocation = uniformLocation;
+        uniformIter->second.mLocation = uniformLocation;
     }
 }
 

@@ -98,7 +98,7 @@ SampleGame::Initialize()
         mSceneLightingParams->mPointLightList = { mPointLight1->GetLight(), mPointLight2->GetLight(), mPointLight3->GetLight() };
 
         mSceneLightingEffect = make_shared<PhongEffect>();
-        mSceneLightingEffect->CreateInstance(mScene->GetNode().get(), mSceneLightingParams.get());
+        mSceneLightingEffect->CreateInstance(mScene->GetNode().get(), mSceneLightingParams);
     }
 
     // Initialize Interaction.

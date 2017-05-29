@@ -6,6 +6,7 @@
 #include <fstream>
 #include <locale>
 #include <string>
+#include <vector>
 
 #define FALCON_ENGINE_DIRECTORY_SEPARATOR "/"
 
@@ -45,6 +46,9 @@ ChangeFileExtension(const std::string& path, const std::string& extension);
 
 FALCON_ENGINE_API std::string
 RemoveFileExtension(const std::string& path);
+
+FALCON_ENGINE_API bool
+IsFileExtensionSupported(const std::string& extension, const std::vector<std::string>& extensionSupportedList);
 
 FALCON_ENGINE_API bool
 CreateDirectory(const std::string& relativePath);

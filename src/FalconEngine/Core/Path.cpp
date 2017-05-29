@@ -71,6 +71,12 @@ RemoveFileExtension(const std::string& path)
     return filesystem::path(path).replace_extension("").string();
 }
 
+bool
+IsFileExtensionSupported(const string& extension, const vector<string>& extensionSupportedList)
+{
+    return find(extensionSupportedList.begin(), extensionSupportedList.end(), extension) != extensionSupportedList.end();
+}
+
 // Return true if successful.
 // Return false if there is already a directory named as given or other IO errors happen.
 bool

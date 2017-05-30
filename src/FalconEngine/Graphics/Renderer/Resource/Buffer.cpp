@@ -11,8 +11,6 @@ Buffer::Buffer(int elementNum, size_t elementByteNum, BufferUsage usage) :
     mElementByteNum(elementByteNum),
     mUsage(usage)
 {
-    assert(elementNum >= 0);
-
     // NOTE(Wuxiang): The capacity is fixed currently.
     mCapacityByteNum = size_t(elementNum) * elementByteNum;
     mCapacityElementNum = elementNum;
@@ -20,6 +18,8 @@ Buffer::Buffer(int elementNum, size_t elementByteNum, BufferUsage usage) :
     // NOTE(Wuxiang): The capacity is initially determined by allocation at construction.
     mDataByteNum = mCapacityByteNum;
     mElementNum = mCapacityElementNum;
+
+    assert(mDataByteNum >= 0);
 
     mData = new unsigned char[mDataByteNum];
 }
@@ -32,6 +32,12 @@ Buffer::~Buffer()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+size_t
+Buffer::GetCapacityByteNum() const
+{
+    return mCapacityByteNum;
+}
+
 unsigned char *
 Buffer::GetData()
 {
@@ -48,6 +54,12 @@ size_t
 Buffer::GetDataByteNum() const
 {
     return mDataByteNum;
+}
+
+int
+Buffer::GetElementNum() const
+{
+    return mElementNum;
 }
 
 void

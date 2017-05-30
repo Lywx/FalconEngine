@@ -18,6 +18,18 @@ class Node;
 class FALCON_ENGINE_API MeshEffectParams : public VisualEffectParams
 {
 public:
+    MeshEffectParams(Color ambientColor,
+                     Color lineColor,
+                     float lineWidth,
+                     bool  textureEnabled) :
+        mAmbientColor(ambientColor),
+        mLineColor(lineColor),
+        mLineWidth(lineWidth),
+        mTextureEnabled(textureEnabled)
+    {
+    }
+
+public:
     Color mAmbientColor;
     Color mLineColor;
     float mLineWidth;

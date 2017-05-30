@@ -13,10 +13,20 @@ namespace FalconEngine
 class FALCON_ENGINE_API Texture2d : public TextureBuffer
 {
 public:
+    FALCON_ENGINE_TEXTURE_DECLARE();
+
+public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Texture2d(AssetSource assetSource, const std::string& fileName, const std::string& filePath, int width, int height, TextureFormat format, BufferUsage usage = BufferUsage::Static, int mipmapLevel = 0);
+    Texture2d(AssetSource        assetSource,
+              const std::string& fileName,
+              const std::string& filePath,
+              int                width,
+              int                height,
+              TextureFormat      format,
+              BufferUsage        usage = BufferUsage::Static,
+              int                mipmapLevel = 0);
     virtual ~Texture2d();
 
 public:

@@ -46,6 +46,17 @@ enum class FALCON_ENGINE_API TextureType
     Count
 };
 
+class Texture;
+
+template <typename T>
+TextureType
+GetTextureType()
+{
+    static_assert(std::is_base_of<Texture, T>::value, "Invalid texture type parameter.");
+
+    return T::sTextureType;
+}
+
 enum class FALCON_ENGINE_API TextureFormat
 {
     None,
@@ -62,14 +73,25 @@ const int TexelSize[int(TextureFormat::Count)] =
     4, // R8G8B8A8
 };
 
+// @summary Thin layer describing what the most basic texture consists of. A texture
+// doesn't necessarily have data storage because the a texture could simply made of
+// array of existing textures.
 class FALCON_ENGINE_API Texture : public Asset
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Texture(AssetSource assetSource, const std::string& fileName, const std::string& filePath, int width, int height, int depth,
-            TextureFormat format, TextureType type, BufferUsage usage, int mipmapLevel);
+    Texture(AssetSource        assetSource,
+            const std::string& fileName,
+            const std::string& filePath,
+            int                width,
+            int                height,
+            int                depth,
+            TextureFormat      format,
+            TextureType        type,
+            BufferUsage        usage,
+            int                mipmapLevel);
     virtual ~Texture();
 
 public:
@@ -119,4 +141,10 @@ public:
 
 }
 
+#define FALCON_ENGINE_TEXTURE_DECLARE() \
+public: \
+    static const FalconEngine::TextureType sTextureType;
+
+#define FALCON_ENGINE_TEXTURE_IMPLEMENT(textureKlass, textureType) \
+const FalconEngine::TextureType textureKlass::sTextureType = textureType;
 

@@ -163,14 +163,14 @@ private: \
     return sVisualEffect; \
 } \
 protected: \
-    virtual std::shared_ptr<VisualEffectInstance> \
+    virtual std::shared_ptr<FalconEngine::VisualEffectInstance> \
     CreateInstance() const override;
 
 #define FALCON_ENGINE_EFFECT_IMPLEMENT(klass) \
-std::shared_ptr<VisualEffectInstance> \
+std::shared_ptr<FalconEngine::VisualEffectInstance> \
 klass::CreateInstance() const \
 { \
-    auto visualEffectInstance = std::make_shared<VisualEffectInstance>(GetEffect()); \
+    auto visualEffectInstance = std::make_shared<FalconEngine::VisualEffectInstance>(GetEffect()); \
     return visualEffectInstance; \
 }
 

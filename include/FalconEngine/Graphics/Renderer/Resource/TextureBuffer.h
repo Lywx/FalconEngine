@@ -6,10 +6,20 @@
 namespace FalconEngine
 {
 
+// @summary Texture that actually has data storage.
 class FALCON_ENGINE_API TextureBuffer : public Texture
 {
 public:
-    TextureBuffer(AssetSource assetSource, const std::string& fileName, const std::string& filePath, int width, int height, int depth, TextureFormat format, TextureType type, BufferUsage usage, int mipmapLevel);
+    TextureBuffer(AssetSource        assetSource,
+                  const std::string& fileName,
+                  const std::string& filePath,
+                  int                width,
+                  int                height,
+                  int                depth,
+                  TextureFormat      format,
+                  TextureType        type,
+                  BufferUsage        usage,
+                  int                mipmapLevel);
     virtual ~TextureBuffer();
 
 public:

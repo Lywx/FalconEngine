@@ -4,15 +4,25 @@
 
 #include <map>
 
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/filesystem.hpp>
+
 #include <FalconEngine/Content/AssetImportOption.h>
+#include <FalconEngine/Core/Path.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture1d.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
 
 namespace FalconEngine
 {
+class TextureImportOption;
 
 class AssetImporter;
 
 class Font;
 class Model;
+class Texture;
+class Texture1d;
 class Texture2d;
 class ShaderSource;
 
@@ -55,7 +65,9 @@ public:
     GetModel(const std::string& modelFilePath);
 
     std::shared_ptr<Model>
-    LoadModel(const std::string& modelFilePath, const ModelImportOption& modelImportOption = AssetImportOption::mModelOption);
+    LoadModel(
+        const std::string&       modelFilePath,
+        const ModelImportOption& modelImportOption = AssetImportOption::mModelOption);
 
     std::shared_ptr<ShaderSource>
     GetShaderSource(const std::string& shaderFilePath);
@@ -63,11 +75,50 @@ public:
     std::shared_ptr<ShaderSource>
     LoadShaderSource(const std::string& shaderFilePath);
 
-    std::shared_ptr<Texture2d>
-    GetTexture(const std::string& textureFilePath);
+    template <typename T>
+    std::shared_ptr<T>
+    GetTexture(const std::string& textureFilePath)
+    {
+        static_assert(std::is_base_of<Texture, T>::value, "Invalid texture type parameter.");
 
-    std::shared_ptr<Texture2d>
-    LoadTexture(const std::string& textureAssetPath);
+        auto iter = mTextureTable.find(textureFilePath);
+        if (iter != mTextureTable.end())
+        {
+            auto texture = iter->second;
+            if (texture->mType == GetTextureType<T>())
+            {
+                return dynamic_pointer_cast<T>(iter->second);
+            }
+            else
+            {
+                FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(
+                    std::string("Texture found but it had different texture type: \'")
+                    + textureFilePath + "\'.")
+            }
+        }
+
+        return nullptr;
+    }
+
+    template <typename T>
+    std::shared_ptr<T>
+    LoadTexture(
+        const std::string&         textureAssetPath,
+        const TextureImportOption& textureImportOption = AssetImportOption::mTextureOption)
+    {
+        static_assert(std::is_base_of<Texture, T>::value, "Invalid texture type parameter.");
+
+        std::shared_ptr<T> texture = GetTexture<T>(RemoveFileExtension(textureAssetPath));
+        if (texture)
+        {
+            return texture;
+        }
+
+        std::shared_ptr<Texture> t = LoadTextureInternal(textureAssetPath, textureImportOption, GetTextureType<T>());
+        texture = dynamic_pointer_cast<T>(t);
+        mTextureTable[texture->mFilePath] = texture;
+        return texture;
+    }
 
 private:
     void
@@ -82,8 +133,68 @@ private:
     std::shared_ptr<ShaderSource>
     LoadShaderSourceInternal(const std::string& shaderFilePath);
 
+    std::shared_ptr<Texture>
+    LoadTextureInternal(const std::string& textureAssetPath, const TextureImportOption& textureImportOption, TextureType textureType)
+    {
+        if (Exist(textureAssetPath))
+        {
+            // http://stackoverflow.com/questions/24313359/data-dependent-failure-when-serializing-stdvector-to-boost-binary-archive
+            std::ifstream textureAssetStream(textureAssetPath, std::ios::binary);
+            boost::archive::binary_iarchive textureAssetArchive(textureAssetStream);
+
+            switch (textureType)
+            {
+            case TextureType::None:
+            {
+                FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+            }
+            break;
+
+            case TextureType::Texture1d:
+            {
+                return LoadTexture1dInternal(textureImportOption, textureAssetArchive);
+            }
+            break;
+
+            case TextureType::Texture2d:
+            {
+                return LoadTexture2dInternal(textureImportOption, textureAssetArchive);
+            }
+            break;
+
+            case TextureType::Texture2dArray:
+            {
+                FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+            }
+            break;
+
+            case TextureType::Texture3d:
+            {
+                FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+            }
+            break;
+
+            case TextureType::TextureCube:
+            {
+                FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+            }
+            break;
+
+            default:
+                FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+            }
+        }
+        else
+        {
+            FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Failed to find the file.");
+        }
+    }
+
+    std::shared_ptr<Texture1d>
+    LoadTexture1dInternal(const TextureImportOption& textureImportOption, boost::archive::binary_iarchive& textureAssetArchive) const;
+
     std::shared_ptr<Texture2d>
-    LoadTextureInternal(const std::string& textureAssetPath);
+    LoadTexture2dInternal(const TextureImportOption& textureImportOption, boost::archive::binary_iarchive& textureAssetArchive) const;
 
 private:
     AssetImporter                                       *mImporter;
@@ -91,7 +202,7 @@ private:
     std::map<std::string, std::shared_ptr<Font>>         mFontTable;            // Index is file path.
     std::map<std::string, std::shared_ptr<Model>>        mModelTable;           // Index is file path.
     std::map<std::string, std::shared_ptr<ShaderSource>> mShaderSourceTable;    // Index is file path.
-    std::map<std::string, std::shared_ptr<Texture2d>>    mTextureTable;         // Index is file path.
+    std::map<std::string, std::shared_ptr<Texture>>      mTextureTable;         // Index is file path.
 };
 #pragma warning(default: 4251)
 

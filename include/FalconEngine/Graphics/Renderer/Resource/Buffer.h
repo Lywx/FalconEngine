@@ -53,10 +53,7 @@ public:
 
 public:
     size_t
-    GetCapacityByteNum() const
-    {
-        return mCapacityByteNum;
-    }
+    GetCapacityByteNum() const;
 
     unsigned char *
     GetData();
@@ -67,11 +64,8 @@ public:
     size_t
     GetDataByteNum() const;
 
-    size_t
-    GetElementNum() const
-    {
-        return mElementNum;
-    }
+    int
+    GetElementNum() const;
 
     void
     SetElementNum(int elementNum);

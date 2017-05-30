@@ -10,4 +10,7 @@ AssetImportOption::mModelOption = ModelImportOption(
                                       BufferUsage::Static,
                                       IndexType::UnsignedInt);
 
+const TextureImportOption
+AssetImportOption::mTextureOption = TextureImportOption();
+
 }

@@ -3,15 +3,13 @@
 #include <fstream>
 #include <stdexcept>
 
-#include <boost/archive/binary_iarchive.hpp>
-#include <boost/filesystem.hpp>
-
 #include <FalconEngine/Content/AssetImporter.h>
 #include <FalconEngine/Content/Asset.h>
 #include <FalconEngine/Core/Path.h>
 #include <FalconEngine/Graphics/Renderer/Font/Font.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture1d.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2dArray.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderSource.h>
@@ -92,7 +90,6 @@ AssetManager::GetModel(const std::string& modelFilePath)
 std::shared_ptr<Model>
 AssetManager::LoadModel(const std::string& modelFilePath, const ModelImportOption& modelImportOption)
 {
-    // TODO(Wuxiang): 2017-05-29 18:51 Make import option a part of look up table?
     auto model = GetModel(modelFilePath);
     if (model)
     {
@@ -128,33 +125,6 @@ AssetManager::LoadShaderSource(const std::string& shaderFilePath)
     shaderSource = LoadShaderSourceInternal(shaderFilePath);
     mShaderSourceTable[shaderSource->mFilePath] = shaderSource;
     return shaderSource;
-}
-
-std::shared_ptr<Texture2d>
-AssetManager::GetTexture(const std::string& textureFilePath)
-{
-    auto iter = mTextureTable.find(textureFilePath);
-    if (iter != mTextureTable.end())
-    {
-        return iter->second;
-    }
-
-    return nullptr;
-}
-
-std::shared_ptr<Texture2d>
-AssetManager::LoadTexture(const std::string& textureAssetPath)
-{
-    auto texture = GetTexture(RemoveFileExtension(textureAssetPath));
-    if (texture)
-    {
-        return texture;
-    }
-
-    texture = LoadTextureInternal(textureAssetPath);
-    mTextureTable[texture->mFilePath] = texture;
-
-    return texture;
 }
 
 /************************************************************************/
@@ -193,7 +163,7 @@ AssetManager::LoadFontInternal(const std::string & fontAssetPath)
         {
             auto fontPage0TextureAssetName = font->mTextureArchiveNameList[0];
             auto fontPage0TextureAssetPath = fontAssetDirPath + fontPage0TextureAssetName;
-            auto fontPage0Texture = LoadTexture(fontPage0TextureAssetPath);
+            auto fontPage0Texture = LoadTexture<Texture2d>(fontPage0TextureAssetPath);
 
             // TODO(Wuxiang): Add mipmap support.
             fontPageTextureArray = std::make_shared<Texture2dArray>(AssetSource::Virtual, "None", "None", fontPage0Texture->mDimension[0],
@@ -207,7 +177,7 @@ AssetManager::LoadFontInternal(const std::string & fontAssetPath)
             auto textureAssetName = font->mTextureArchiveNameList[fontPageId];
             auto textureAssetPath = fontAssetDirPath + textureAssetName;
 
-            auto fontPageTexture = LoadTexture(textureAssetPath);
+            auto fontPageTexture = LoadTexture<Texture2d>(textureAssetPath);
             fontPageTextureArray->PushTextureSlice(fontPageTexture);
         }
         font->SetTexture(fontPageTextureArray);
@@ -260,30 +230,38 @@ AssetManager::LoadShaderSourceInternal(const std::string & shaderFilePath)
     }
 }
 
-std::shared_ptr<Texture2d>
-AssetManager::LoadTextureInternal(const std::string & textureAssetPath)
+std::shared_ptr<Texture1d>
+AssetManager::LoadTexture1dInternal(const TextureImportOption& textureImportOption, boost::archive::binary_iarchive& textureAssetArchive) const
 {
     using namespace boost;
 
-    if (Exist(textureAssetPath))
+    std::shared_ptr<Texture1d> texture = std::make_shared<Texture1d>(AssetSource::Stream,
+                                         "None", "None", 0, TextureFormat::None,
+                                         textureImportOption.mTextureUsage);
+    textureAssetArchive >> *texture;
+    if (texture->mData == nullptr)
     {
-        // http://stackoverflow.com/questions/24313359/data-dependent-failure-when-serializing-stdvector-to-boost-binary-archive
-        ifstream textureAssetStream(textureAssetPath, ios::binary);
-        archive::binary_iarchive textureAssetArchive(textureAssetStream);
-
-        auto texture = std::make_shared<Texture2d>(AssetSource::Stream, "None", "None", 0, 0, TextureFormat::None);
-        textureAssetArchive >> *texture;
-        if (texture->mData == nullptr)
-        {
-            FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Failed to load texture asset.");
-        }
-
-        return texture;
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Failed to load texture asset.");
     }
-    else
+
+    return texture;
+}
+
+std::shared_ptr<Texture2d>
+AssetManager::LoadTexture2dInternal(const TextureImportOption& textureImportOption, boost::archive::binary_iarchive& textureAssetArchive) const
+{
+    using namespace boost;
+
+    std::shared_ptr<Texture2d> texture = std::make_shared<Texture2d>(AssetSource::Stream,
+                                         "None", "None", 0, 0, TextureFormat::None,
+                                         textureImportOption.mTextureUsage);
+    textureAssetArchive >> *texture;
+    if (texture->mData == nullptr)
     {
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Failed to find the file.");
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Failed to load texture asset.");
     }
+
+    return texture;
 }
 
 }

@@ -171,17 +171,13 @@ ModelImporter::CreateIndexBuffer(IndexType indexType, BufferUsage indexBufferUsa
     {
     case IndexType::UnsignedShort:
         return CreateIndexBufferInternal<unsigned short>(indexType, indexBufferUsage, aiMesh);
-        break;
 
     case IndexType::UnsignedInt:
         return CreateIndexBufferInternal<unsigned int>(indexType, indexBufferUsage, aiMesh);
-        break;
 
     default:
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
-
-    return nullptr;
 }
 
 std::shared_ptr<VertexFormat>
@@ -354,7 +350,7 @@ ModelImporter::LoadMaterialTexture(const string& modelDirectoryPath, const aiMat
 
         // NOTE(Wuxiang): Add .bin to file path so that the texture file is
         // loaded from preprocessed asset file.
-        auto texture = assetManager->LoadTexture(modelDirectoryPath + AddAssetExtension(textureFilePath.C_Str()));
+        auto texture = assetManager->LoadTexture<Texture2d>(modelDirectoryPath + AddAssetExtension(textureFilePath.C_Str()));
         return texture.get();
     }
 

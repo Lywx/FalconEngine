@@ -77,7 +77,7 @@ AABB::AABB(Vector3f position)
 /* Public Members                                                       */
 /************************************************************************/
 Matrix4f
-CreateModelPositionTransform(int xmax, int ymax, int zmax, int xmin, int ymin, int zmin)
+CreateModelPositionTransform(float xmax, float ymax, float zmax, float xmin, float ymin, float zmin)
 {
     auto maxCorner = Vector3f(xmax, ymax, zmax);
     auto minCorner = Vector3f(xmin, ymin, zmin);

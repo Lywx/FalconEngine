@@ -87,7 +87,7 @@ public:
             auto texture = iter->second;
             if (texture->mType == GetTextureType<T>())
             {
-                return dynamic_pointer_cast<T>(iter->second);
+                return std::dynamic_pointer_cast<T>(iter->second);
             }
             else
             {
@@ -115,7 +115,7 @@ public:
         }
 
         std::shared_ptr<Texture> t = LoadTextureInternal(textureAssetPath, textureImportOption, GetTextureType<T>());
-        texture = dynamic_pointer_cast<T>(t);
+        texture = std::dynamic_pointer_cast<T>(t);
         mTextureTable[texture->mFilePath] = texture;
         return texture;
     }

@@ -30,7 +30,12 @@ link_directories(${FALCON_ENGINE_LIBRARY_DIR} ${FALCON_ENGINE_ARCHIVE_OUTPUT_DIR
 
 file(GLOB_RECURSE FALCON_ENGINE_CONTENT_SOURCE_FILES src/FalconEngine/Content/*.cpp)
 file(GLOB_RECURSE FALCON_ENGINE_CONTENT_PIPELINE_SOURCE_FILES src/FalconEngine/Content/Pipeline/*.cpp)
-list(REMOVE_ITEM FALCON_ENGINE_CONTENT_SOURCE_FILES ${FALCON_ENGINE_CONTENT_PIPELINE_SOURCE_FILES})
+
+# Remove pipeline source from content source.
+if (NOT "${FALCON_ENGINE_CONTENT_PIPELINE_SOURCE_FILES}" STREQUAL "")
+    list(REMOVE_ITEM FALCON_ENGINE_CONTENT_SOURCE_FILES ${FALCON_ENGINE_CONTENT_PIPELINE_SOURCE_FILES})
+endif()
+
 file(GLOB_RECURSE FALCON_ENGINE_CONTENT_HEADER_FILES include/FalconEngine/Content/*.h)
 file(GLOB_RECURSE FALCON_ENGINE_CONTEXT_SOURCE_FILES src/FalconEngine/Context/*.cpp)
 file(GLOB_RECURSE FALCON_ENGINE_CONTEXT_HEADER_FILES include/FalconEngine/Context/*.h)
@@ -108,14 +113,16 @@ file(COPY ${FALCON_ENGINE_GRAPHICS_SHADER_FILES} DESTINATION "${FALCON_ENGINE_RU
 # Set up Falcon Engine tool targets
 #
 
-add_executable(FalconEngine.Pipeline 
-    ${FALCON_ENGINE_CONTENT_PIPELINE_SOURCE_FILES})
+if (NOT "${FALCON_ENGINE_CONTENT_PIPELINE_SOURCE_FILES}" STREQUAL "")
+    add_executable(FalconEngine.Pipeline
+        ${FALCON_ENGINE_CONTENT_PIPELINE_SOURCE_FILES})
 
-target_link_libraries(FalconEngine.Pipeline 
-    FalconEngine)
+    target_link_libraries(FalconEngine.Pipeline
+        FalconEngine)
 
-fe_set_target_folder(FalconEngine.Pipeline "Falcon Engine Tool Targets")
-fe_set_target_output(FalconEngine.Pipeline)
+    fe_set_target_folder(FalconEngine.Pipeline "Falcon Engine Tool Targets")
+    fe_set_target_output(FalconEngine.Pipeline)
+endif()
 
 #
 # Set up Falcon Engine sample targets

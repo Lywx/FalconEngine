@@ -16,12 +16,8 @@ namespace FalconEngine
 class FALCON_ENGINE_API GameTimerImp
 {
 public:
-    GameTimerImp()
-    {
-    }
-
-    double
-    GetMilliseconds() const
+    static double
+    GetMilliseconds()
     {
         timespec spec;
         clock_gettime(CLOCK_MONOTONIC_RAW, &spec);
@@ -33,20 +29,33 @@ public:
         double sMilliseconds = spec.tv_sec * 1.0e3;
         return sMilliseconds + nsMilliseconds;
     }
+
+    static double
+    GetSeconds()
+    {
+        timespec spec;
+        clock_gettime(CLOCK_MONOTONIC_RAW, &spec);
+
+        // Nanoseconds converts to milliseconds.
+        double nsSeconds = spec.tv_nsec / 1.0e9;
+
+        // Seconds converts to milliseconds.
+        double sSeconds = spec.tv_sec * 1.0e3;
+        return sSeconds + nsSeconds;
+    }
 };
 
 double
 GameTimer::GetMilliseconds()
 {
-    if (sImplementation == nullptr)
-    {
-        sImplementation = std::make_shared<GameTimerImp>();
-    }
-
-    return sImplementation->GetMilliseconds();
+    return GameTimerImp::GetMilliseconds();
 }
 
-std::shared_ptr<GameTimerImp> GameTimer::sImplementation;
+double
+GameTimer::GetSeconds()
+{
+    return GameTimerImp::GetSeconds();
+}
 
 }
 

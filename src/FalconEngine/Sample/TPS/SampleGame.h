@@ -6,7 +6,7 @@
 #include <FalconEngine/Graphics.h>
 #include <FalconEngine/Input.h>
 #include <FalconEngine/Math.h>
-#include "FalconEngine/Graphics/Effect/PhongShadingEffect.h"
+#include <FalconEngine/Graphics/Effect/PhongEffect.h>
 
 namespace FalconEngine
 {

@@ -19,8 +19,6 @@ Buffer::Buffer(int elementNum, size_t elementByteNum, BufferUsage usage) :
     mDataByteNum = mCapacityByteNum;
     mElementNum = mCapacityElementNum;
 
-    assert(mDataByteNum >= 0);
-
     mData = new unsigned char[mDataByteNum];
 }
 

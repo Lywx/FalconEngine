@@ -21,8 +21,8 @@ public:
     static double
     GetMilliseconds();
 
-private:
-    static std::shared_ptr<GameTimerImp> sImplementation;
+    static double
+    GetSeconds();
 };
 #pragma warning(default: 4251)
 

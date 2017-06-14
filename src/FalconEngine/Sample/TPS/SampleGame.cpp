@@ -1,8 +1,8 @@
 ﻿#include "SampleGame.h"
 
-#include <FalconEngine/Graphics/Effect/BlinnPhongShadingEffect.h>
+#include <FalconEngine/Graphics/Effect/BlinnEffect.h>
 #include <FalconEngine/Graphics/Effect/PaintEffect.h>
-#include <FalconEngine/Graphics/Effect/PhongShadingEffect.h>
+#include <FalconEngine/Graphics/Effect/PhongEffect.h>
 #include <FalconEngine/Graphics/Effect/MeshEffect.h>
 
 using namespace std;

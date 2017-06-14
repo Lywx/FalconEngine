@@ -14,13 +14,13 @@ class FALCON_ENGINE_API GameDebug
 {
 public:
     static void
+    Initialize();
+
+    static void
     Break()
     {
         Debug::Break();
     }
-
-    static void
-    Initialize();
 
     static void
     OutputString(const char *str)
@@ -32,6 +32,13 @@ public:
     OutputString(const std::string& str)
     {
         Debug::OutputString(str);
+    }
+
+    template<class ... Args>
+    static void
+    OutputStringFormat(const char *format, Args&& ... args)
+    {
+        Debug::OutputStringFormat(format, std::forward<Args>(args)...);
     }
 };
 

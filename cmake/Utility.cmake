@@ -121,6 +121,110 @@ function(fe_add_source_group GROUP_NAME TARGET_DIRECTORY TARGET_FILE_LIST)
     endif()
 endfunction()
 
+function(fe_add_external_object TARGET_NAME
+                                SOURCE_FILES
+                                SOURCE_EXTENSION
+                                SOURCE_ROOT_DIR
+                                OBJECT_FILES      # Output
+                                OBJECT_EXTENSION
+                                OBJECT_ROOT_DIR
+                                OBJECT_HIERARCHY
+                                COMPILER_EXE
+                                COMPILER_ARGS)
+
+    fe_assert(TARGET_NAME)
+
+    fe_assert(SOURCE_FILES)
+    fe_assert(SOURCE_EXTENSION)
+    fe_assert(SOURCE_ROOT_DIR)
+
+    fe_assert_defined(OBJECT_FILES)
+
+    # Clean output variable
+    set(${OBJECT_FILES} "" PARENT_SCOPE)
+    set(OBJECT_FILES_LOCAL "")
+
+    fe_assert(OBJECT_EXTENSION)
+    fe_assert(OBJECT_ROOT_DIR)
+    fe_assert_defined(OBJECT_HIERARCHY)
+
+    fe_assert(COMPILER_EXE)
+    fe_assert(COMPILER_ARGS)
+
+    foreach(SOURCE_FILE ${SOURCE_FILES})
+
+        #
+        # Produce output object file path and object target name.
+        #
+
+        # Replace extension to get object file path.
+        string(REPLACE
+            "${SOURCE_EXTENSION}" # Match
+            "${OBJECT_EXTENSION}" # Replace
+            OBJECT_FILE           # Output
+            "${SOURCE_FILE}"      # Input
+        )
+
+        get_filename_component(
+            OBJECT_TARGET
+            "${OBJECT_FILE}" NAME)
+
+        if(${OBJECT_HIERARCHY})
+
+            # Replace source directory path to with object directory to get object file path.
+            string(REPLACE
+                "${SOURCE_ROOT_DIR}" # Match
+                "${OBJECT_ROOT_DIR}" # Replace
+                OBJECT_FILE          # Output
+                "${OBJECT_FILE}")    # Input
+        else()
+
+            # Replace source directory path to with object directory to get object file path.
+            get_filename_component(
+                OBJECT_FILE
+                "${OBJECT_FILE}" NAME)
+
+            string(CONCAT OBJECT_FILE
+                "${OBJECT_ROOT_DIR}"
+                "${OBJECT_FILE}")
+        endif()
+
+        # Get object output directory.
+        if(${OBJECT_HIERARCHY})
+            get_filename_component(OBJECT_DIR
+                ${OBJECT_FILE} DIRECTORY)
+
+            # Create folder hierarchy.
+            execute_process(
+                COMMAND mkdir ${OBJECT_DIR} --parents)
+        else()
+            execute_process(
+                COMMAND mkdir ${OBJECT_ROOT_DIR} --parents)
+        endif()
+
+        # Add object to link target list.
+        if(NOT "${OBJECT_FILES_LOCAL}" STREQUAL "")
+            set(OBJECT_FILES_LOCAL ${OBJECT_FILES_LOCAL} ${OBJECT_FILE})
+        else()
+            # Special case for first target.
+            set(OBJECT_FILES_LOCAL ${OBJECT_FILE})
+        endif()
+
+        # Add custom target to the project.
+        add_custom_command(
+            OUTPUT            ${OBJECT_FILE}
+
+            # Call compiler to compile.
+            COMMAND           ${COMPILER_EXE} ${COMPILER_ARGS} ${SOURCE_FILE} -o=${OBJECT_FILE}
+            VERBATIM)
+        add_custom_target(${OBJECT_TARGET} DEPENDS ${OBJECT_FILE})
+        add_dependencies(${TARGET_NAME} ${OBJECT_TARGET})
+    endforeach()
+
+    # Return computed variable.
+    set(${OBJECT_FILES} ${OBJECT_FILES_LOCAL} PARENT_SCOPE)
+endfunction()
+
 function(fe_add_sample SAMPLE_PROJECT_NAME SAMPLE_PROJECT_DIR)
     include_directories(${FALCON_ENGINE_INCLUDE_DIR})
     link_directories(${FALCON_ENGINE_ARCHIVE_OUTPUT_DIR}

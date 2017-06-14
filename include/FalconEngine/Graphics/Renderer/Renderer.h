@@ -374,6 +374,7 @@ private:
     PlatformIndexBufferMap    mIndexBufferTable;
     PlatformVertexBufferMap   mVertexBufferTable;
     PlatformVertexFormatMap   mVertexFormatTable;
+    PlatformTexture1dMap      mTexture1dTable;
     PlatformTexture2dMap      mTexture2dTable;
     PlatformTexture2dArrayMap mTexture2dArrayTable;
     PlatformTextureSamplerMap mSamplerTable;

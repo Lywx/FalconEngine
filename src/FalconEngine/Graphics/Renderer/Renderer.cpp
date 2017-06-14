@@ -548,33 +548,92 @@ Renderer::Unbind(const Texture1d * /* texture */)
 }
 
 void
-Renderer::Enable(int /* textureUnit */, const Texture1d * /* texture */)
+Renderer::Enable(int textureUnit, const Texture1d *texture)
 {
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    FALCON_ENGINE_CHECK_NULLPTR(texture);
+
+    auto iter = mTexture1dTable.find(texture);
+    PlatformTexture1d *texturePlatform;
+    if (iter != mTexture1dTable.end())
+    {
+        texturePlatform = iter->second;
+    }
+    else
+    {
+        texturePlatform = new PlatformTexture1d(texture);
+        mTexture1dTable[texture] = texturePlatform;
+    }
+
+    texturePlatform->Enable(textureUnit);
 }
 
 void
-Renderer::Disable(int /* textureUnit */, const Texture1d * /* texture */)
+Renderer::Disable(int textureUnit, const Texture1d *texture)
 {
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    FALCON_ENGINE_CHECK_NULLPTR(texture);
+
+    auto iter = mTexture1dTable.find(texture);
+    if (iter != mTexture1dTable.end())
+    {
+        auto texturePlatform = iter->second;
+        texturePlatform->Disable(textureUnit);
+    }
 }
 
 void *
-Renderer::Map(const Texture1d * /* texture */, int /* mipmapLevel */, BufferAccessMode /* mode */)
+Renderer::Map(const Texture1d *texture, int mipmapLevel, BufferAccessMode mode)
 {
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    FALCON_ENGINE_CHECK_NULLPTR(texture);
+
+    auto iter = mTexture1dTable.find(texture);
+    PlatformTexture1d *texturePlatform;
+    if (iter != mTexture1dTable.end())
+    {
+        texturePlatform = iter->second;
+    }
+    else
+    {
+        texturePlatform = new PlatformTexture1d(texture);
+        mTexture1dTable[texture] = texturePlatform;
+    }
+
+    return texturePlatform->Map(mipmapLevel, mode);
 }
 
 void
-Renderer::Unmap(const Texture1d * /* texture */, int /* mipmapLevel */)
+Renderer::Unmap(const Texture1d *texture, int mipmapLevel)
 {
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    FALCON_ENGINE_CHECK_NULLPTR(texture);
+
+    auto iter = mTexture1dTable.find(texture);
+    if (iter != mTexture1dTable.end())
+    {
+        auto texturePlatform = iter->second;
+        texturePlatform->Unmap(mipmapLevel);
+    }
 }
 
 void
-Renderer::Update(const Texture1d * /* texture */, int /* mipmapLevel */)
+Renderer::Update(const Texture1d *texture, int mipmapLevel)
 {
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    FALCON_ENGINE_CHECK_NULLPTR(texture);
+
+    // TODO(Wuxiang): Add mipmap support.
+    auto iter = mTexture1dTable.find(texture);
+    if (iter != mTexture1dTable.end())
+    {
+        auto texturePlatform = iter->second;
+
+        unsigned char *sourceData = texture->mData;
+        void *targetData = texturePlatform->Map(mipmapLevel, BufferAccessMode::Write);
+        memcpy(targetData, sourceData, texture->mDataByteNum);
+        texturePlatform->Unmap(mipmapLevel);
+    }
+    else
+    {
+        auto texturePlatform = new PlatformTexture1d(texture);
+        mTexture1dTable[texture] = texturePlatform;
+    }
 }
 
 void

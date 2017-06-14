@@ -19,6 +19,7 @@
 
 #include <FalconEngine/Core/Path.h>
 #include <FalconEngine/Graphics/Renderer/Font/Font.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture1d.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Model.h>
 #include <FalconEngine/Math/Type.h>
@@ -46,7 +47,7 @@ AssetProcessor::BakeFont(const std::string& fntFilePath)
         for (int fontPageId = 0; fontPageId < fontHandle->mTexturePages; ++fontPageId)
         {
             auto textureFilePath = fntDirPath + fontHandle->mTextureFileNameList[fontPageId];
-            auto texture = LoadRawTexture(textureFilePath);
+            auto texture = LoadRawTexture2d(textureFilePath);
             BakeTexture(texture.get(), AddAssetExtension(textureFilePath));
         }
     }
@@ -316,43 +317,79 @@ AssetProcessor::LoadRawFont(const std::string& fntFilePath)
 }
 
 void
-AssetProcessor::BakeTexture(const std::string& textureFilePath)
+AssetProcessor::BakeTexture1d(const std::string& textureFilePath)
 {
-    auto textureHandle = LoadRawTexture(textureFilePath);
+    auto textureHandle = LoadRawTexture1d(textureFilePath);
     BakeTexture(textureHandle.get(), AddAssetExtension(textureFilePath));
 }
 
 void
-AssetProcessor::BakeTexture(Texture2d *texture, const string& textureOutputPath)
+AssetProcessor::BakeTexture2d(const std::string& textureFilePath)
 {
-    // http://stackoverflow.com/questions/24313359/data-dependent-failure-when-serializing-stdvector-to-boost-binary-archive
-    ofstream textureAssetStream(textureOutputPath, ios::binary);
-    archive::binary_oarchive textureAssetArchive(textureAssetStream);
-    textureAssetArchive << *texture;
+    auto textureHandle = LoadRawTexture2d(textureFilePath);
+    BakeTexture(textureHandle.get(), AddAssetExtension(textureFilePath));
+}
+
+std::shared_ptr<Texture1d>
+AssetProcessor::LoadRawTexture1d(const std::string& textureFilePath)
+{
+    if (Exist(textureFilePath))
+    {
+        // NOTE(Wuxiang): Since the stb_image default loading format goes from top-left to bottom-right,
+        // it is necessary to flip to make it compatible for OpenGL.
+        stbi_set_flip_vertically_on_load(1);
+
+        int  textureDimension[3];
+        int  textureChannel;
+        auto textureData = stbi_load(textureFilePath.c_str(), &textureDimension[0],
+                                     &textureDimension[1], &textureChannel,
+                                     STBI_rgb_alpha);
+        if (textureData == nullptr)
+        {
+            FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Failed to load texture file.");
+        }
+
+        // NOTE(Wuxiang): Copy the memory allocated from the stb library.
+        auto texture = std::make_shared<Texture1d>(AssetSource::Normal, GetFileStem(textureFilePath), textureFilePath, textureDimension[0], TextureFormat::R8G8B8A8);
+        memcpy(texture->mData, textureData, texture->mDataByteNum);
+        stbi_image_free(textureData);
+        return texture;
+    }
+    else
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("File does not exist.")
+    }
 }
 
 std::shared_ptr<Texture2d>
-AssetProcessor::LoadRawTexture(const std::string& textureFilePath)
+AssetProcessor::LoadRawTexture2d(const std::string& textureFilePath)
 {
-    // NOTE(Wuxiang): Since the stb_image default loading format goes from top-left to bottom-right,
-    // it is necessary to flip to make it compatible for OpenGL.
-    stbi_set_flip_vertically_on_load(1);
-
-    int  textureDimension[3];
-    int  textureChannel;
-    auto textureData = stbi_load(textureFilePath.c_str(), &textureDimension[0],
-                                 &textureDimension[1], &textureChannel,
-                                 STBI_rgb_alpha);
-    if (textureData == nullptr)
+    if (Exist(textureFilePath))
     {
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Failed to load texture file.");
-    }
+        // NOTE(Wuxiang): Since the stb_image default loading format goes from top-left to bottom-right,
+        // it is necessary to flip to make it compatible for OpenGL.
+        stbi_set_flip_vertically_on_load(1);
 
-    // NOTE(Wuxiang): Copy the memory allocated from the stb library.
-    auto texture = std::make_shared<Texture2d>(AssetSource::Normal, GetFileStem(textureFilePath), textureFilePath, textureDimension[0], textureDimension[1], TextureFormat::R8G8B8A8);
-    memcpy(texture->mData, textureData, texture->mDataByteNum);
-    stbi_image_free(textureData);
-    return texture;
+        int  textureDimension[3];
+        int  textureChannel;
+        auto textureData = stbi_load(textureFilePath.c_str(), &textureDimension[0],
+                                     &textureDimension[1], &textureChannel,
+                                     STBI_rgb_alpha);
+        if (textureData == nullptr)
+        {
+            FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Failed to load texture file.");
+        }
+
+        // NOTE(Wuxiang): Copy the memory allocated from the stb library.
+        auto texture = std::make_shared<Texture2d>(AssetSource::Normal, GetFileStem(textureFilePath), textureFilePath, textureDimension[0], textureDimension[1], TextureFormat::R8G8B8A8);
+        memcpy(texture->mData, textureData, texture->mDataByteNum);
+        stbi_image_free(textureData);
+        return texture;
+    }
+    else
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("File does not exist.")
+    }
 }
 
 void
@@ -376,7 +413,7 @@ BakeMaterial(
         }
         else
         {
-            AssetProcessor::BakeTexture(modelDirectoryPath + textureFilePathString);
+            AssetProcessor::BakeTexture2d(modelDirectoryPath + textureFilePathString);
             texturePathsBaked.push_back(textureFilePathString);
         }
     }

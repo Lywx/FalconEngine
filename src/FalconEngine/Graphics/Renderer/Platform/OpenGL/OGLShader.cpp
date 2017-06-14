@@ -178,8 +178,8 @@ PlatformShader::CreateFromString(int shaderIndex, GLenum shaderType, const strin
 {
     GLuint shader = glCreateShader(shaderType);
 
-    const char *sourcePtr = shaderSource.c_str();
-    glShaderSource(shader, 1, &sourcePtr, nullptr);
+    const char *source = shaderSource.c_str();
+    glShaderSource(shader, 1, &source, nullptr);
 
     // Check whether the shader loads fine
     glCompileShader(shader);

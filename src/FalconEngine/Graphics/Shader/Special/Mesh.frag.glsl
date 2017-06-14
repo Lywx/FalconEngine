@@ -35,7 +35,7 @@ CalcMaterialColor()
 
 // @require #include "fe_Texture.glsl".
 vec3
-CalcTextureColor()
+CalcTextureColor(vec2 texCoord)
 {
     vec3 cAmbient;
     if (fe_TextureAmbientExist)
@@ -60,7 +60,7 @@ CalcTextureColor()
     vec3 cSpecular;
     if (fe_TextureSpecularExist)
     {
-        cSpecular = vec3(1.0) * vec3(texture(fe_TextureSpecular, texCoord) * pow(0.5, mShininess);
+        cSpecular = vec3(1.0) * vec3(texture(fe_TextureSpecular, texCoord)) * pow(0.5, mShininess);
     }
 
     return cAmbient + cDiffuse + cEmissive + cSpecular;
@@ -85,7 +85,7 @@ main()
     }
     else
     {
-        color = vec4(CalcTextureColor(), 1.0);
+        color = vec4(CalcTextureColor(fin.TexCoord), 1.0);
     }
 
     // Find the smallest distance

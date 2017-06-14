@@ -98,8 +98,6 @@ GameEngine::Initialize()
 void
 GameEngine::Loop()
 {
-    char lastFramePerformanceString[256];
-
     if (mGame != nullptr)
     {
         double lastFrameBegunMillisecond = GameTimer::GetMilliseconds();
@@ -145,24 +143,13 @@ GameEngine::Loop()
             while (currentUpdateTotalElapsedMillisecond + lastUpdateElapsedMillisecond <= mSettings->mFrameElapsedMillisecond - lastRenderElapsedMillisecond);
 
             // Output performance profile
-            double lastFrameFPS = 1000 / lastFrameElapsedMillisecond;
+            double lastFrameFps = 1000 / lastFrameElapsedMillisecond;
 
             mProfiler->mLastFrameElapsedMillisecond  = lastFrameElapsedMillisecond;
             mProfiler->mLastFrameUpdateTotalCount    = lastFrameUpdateTotalCount;
-            mProfiler->mLastFrameFPS                 = lastFrameFPS;
+            mProfiler->mLastFrameFps                 = lastFrameFps;
             mProfiler->mLastUpdateElapsedMillisecond = lastUpdateElapsedMillisecond;
             mProfiler->mLastRenderElapsedMillisecond = lastRenderElapsedMillisecond;
-
-            const int lastFramePerformanceStringLength = 100;
-            snprintf(lastFramePerformanceString,
-                     lastFramePerformanceStringLength,
-                     "f%.02fms, u%.02fms, r%.02fms, %du/f, %0.2ff/s\n",
-                     lastFrameElapsedMillisecond,
-                     lastUpdateElapsedMillisecond,
-                     lastRenderElapsedMillisecond,
-                     lastFrameUpdateTotalCount,
-                     lastFrameFPS);
-            GameDebug::OutputString(lastFramePerformanceString);
 
             // Store last update count
             lastFrameUpdateTotalCount = currentFrameUpdateTotalCount;
@@ -171,6 +158,8 @@ GameEngine::Loop()
             lastRenderBegunMillisecond = lastUpdateEndedMillisecond;
 
             mGame->RenderBegin(mGraphics);
+
+            // TODO(Wuxiang): Add interpolation support.
             mGame->Render(mGraphics, 1.0f);
             mGame->RenderEnd(mGraphics);
         }

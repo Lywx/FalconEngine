@@ -44,7 +44,7 @@ public:
     GetLastFrameElapsedMillisecond() const;
 
     double
-    GetLastFrameFPS() const;
+    GetLastFrameFps() const;
 
     double
     GetLastFrameUpdateTotalCount() const;
@@ -57,7 +57,7 @@ public:
 
 private:
     double mLastFrameElapsedMillisecond;
-    double mLastFrameFPS;
+    double mLastFrameFps;
     int    mLastFrameUpdateTotalCount;
 
     double mLastUpdateElapsedMillisecond;

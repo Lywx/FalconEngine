@@ -23,12 +23,11 @@ public:
     static void
     OutputStringFormat(const char *format, Args && ... args)
     {
-        char buffer[128];
+        char buffer[256];
         snprintf(buffer, sizeof(buffer), format, std::forward<Args>(args)...);
 
         OutputString(buffer);
     }
-
 };
 
 }

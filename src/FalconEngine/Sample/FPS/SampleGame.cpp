@@ -119,7 +119,7 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
     // Draw Profiler
     {
         auto profiler = GameEngineProfiler::GetInstance();
-        auto lastFrameFPS = int(profiler->GetLastFrameFPS());
+        auto lastFrameFPS = int(profiler->GetLastFrameFps());
         auto lastUpdateElapsedMillisecond = int(profiler->GetLastUpdateElapsedMillisecond());
         auto lastFrameUpdateCount = int(profiler->GetLastFrameUpdateTotalCount());
         auto lastRenderElapsedMillisecond = int(profiler->GetLastRenderElapsedMillisecond());

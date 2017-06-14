@@ -18,9 +18,9 @@ GameEngineProfiler::GetLastFrameElapsedMillisecond() const
 }
 
 double
-GameEngineProfiler::GetLastFrameFPS() const
+GameEngineProfiler::GetLastFrameFps() const
 {
-    return mLastFrameFPS;
+    return mLastFrameFps;
 }
 
 double

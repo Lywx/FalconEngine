@@ -139,6 +139,9 @@ protected:
     /* Shader Uniform Utility                                               */
     /************************************************************************/
     void
+    SetShaderUniformAutomaticModelTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const;
+
+    void
     SetShaderUniformAutomaticModelViewTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const;
 
     void

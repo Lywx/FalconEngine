@@ -207,6 +207,19 @@ VisualEffect::TraverseLevelOrder(Node *node, std::function<void(Visual *visual)>
 /* Shader Uniform Utility                                               */
 /************************************************************************/
 void
+VisualEffect::SetShaderUniformAutomaticModelTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const
+{
+    using namespace std;
+    using namespace std::placeholders;
+
+    visualEffectInstance->SetShaderUniform(passIndex, ShareAutomatic<Matrix4f>(uniformName,
+                                           std::bind([](const Visual * visual, const Camera * /* camera */)
+    {
+        return visual->mWorldTransform;
+    }, _1, _2)));
+}
+
+void
 VisualEffect::SetShaderUniformAutomaticModelViewTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const
 {
     using namespace std;

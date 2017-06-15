@@ -42,7 +42,7 @@ SampleGame::Initialize()
 
         // Axis
         {
-            auto axeModel = assetManager->LoadModel("Content/Model/Axe.dae",);
+            auto axeModel = assetManager->LoadModel("Content/Model/Axe.dae");
             auto axeNodeX = ShareClone(axeModel->GetNode());
             auto axeNodeY = ShareClone(axeModel->GetNode());
             auto axeNodeZ = ShareClone(axeModel->GetNode());

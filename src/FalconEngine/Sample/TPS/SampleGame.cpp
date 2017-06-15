@@ -188,7 +188,7 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
     graphics->Draw(mCamera.get(), mScene.get());
     graphics->DrawBoundingBox(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f));
     graphics->DrawBoundingBox(mCamera.get(), mPointLight2.get(), Transparent(ColorPalette::Green, 1.0f));
-    graphics->DrawString(mFont, 16, Vector2f(gameEngineSettings->mWindowWidth / 2, gameEngineSettings->mWindowHeight / 2), ".");
+    graphics->DrawString(mFont, 16.0f, Vector2f(gameEngineSettings->mWindowWidth / 2.0f, gameEngineSettings->mWindowHeight / 2.0f), ".");
 
     Game::Render(graphics, percent);
 }

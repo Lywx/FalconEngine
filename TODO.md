@@ -10,3 +10,5 @@ Rendering Pipeline Specifics
 (0) Model sampler.
 (0) Add UI renderer.
 (0) Add crosshair rendering.
+
+(0) Linux TPS Camera issue.

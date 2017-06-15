@@ -67,6 +67,34 @@ ThirdPersonCamera::PanDown(float distance)
 }
 
 void
+ThirdPersonCamera::Update(double elapsed)
+{
+    // NOTE(Wuxiang): The spherical coordinate computation here won't be affected by
+    // the sign of azimuthal angle and polar angle. Regardless of the sign of angles,
+    // the computation yield correct r vector pointed from origin to target.
+    auto z = mRadialDistance * glm::sin(mAzimuthalRadian) * glm::cos(mPolarRadian);
+    auto x = mRadialDistance * glm::sin(mAzimuthalRadian) * glm::sin(mPolarRadian);
+    auto y = mRadialDistance * glm::cos(mAzimuthalRadian);
+    auto r = Vector3f(x, y, z);
+    mPosition = mOrigin + r;
+
+    auto pitchRadian = abs(mAzimuthalRadian) - PiOver2;
+    auto pitchQuaternion = Quaternion::CreateFromAxisAngle(Vector3f::UnitX, pitchRadian);
+    auto yawRadian = mPolarRadian;
+    auto yawQuaternion = Quaternion::CreateFromAxisAngle(Vector3f::UnitY, yawRadian);
+    auto pitchYawQuaternion = yawQuaternion * pitchQuaternion;
+
+    // NOTE(Wuxiang): Inspired by NumberXaero's answer
+    // https://www.gamedev.net/topic/653628-quaternion-camera-performs-unwanted-roll/
+    auto forward = GetForward() * pitchYawQuaternion;
+    auto rollQuaternion = Quaternion::CreateFromAxisAngle(forward, 0);
+
+    SetOrientation(rollQuaternion * pitchYawQuaternion);
+
+    Camera::Update(elapsed);
+}
+
+void
 ThirdPersonCamera::Update(GameEngineInput *input, double elapsed)
 {
     auto tSecond = elapsed / 1000;
@@ -127,12 +155,6 @@ ThirdPersonCamera::Update(GameEngineInput *input, double elapsed)
 
         mOrigin = viewport->Unproject(targetPositionFinalWindow, mProjection, mView);
 
-        auto z = mRadialDistance * glm::sin(mAzimuthalRadian) * glm::cos(mPolarRadian);
-        auto x = mRadialDistance * glm::sin(mAzimuthalRadian) * glm::sin(mPolarRadian);
-        auto y = mRadialDistance * glm::cos(mAzimuthalRadian);
-        auto r = Vector3f(x, y, z);
-        mPosition = mOrigin + r;
-
         break;
     }
 
@@ -154,28 +176,6 @@ ThirdPersonCamera::Update(GameEngineInput *input, double elapsed)
         polarDegree = DegreeNormalize<float>(polarDegree, -180, 180);
         mPolarRadian = Radian(polarDegree);
 
-        // NOTE(Wuxiang): The spherical coordinate computation here won't be affected by
-        // the sign of azimuthal angle and polar angle. Regardless of the sign of angles,
-        // the computation yield correct r vector pointed from origin to target.
-        auto z = mRadialDistance * glm::sin(mAzimuthalRadian) * glm::cos(mPolarRadian);
-        auto x = mRadialDistance * glm::sin(mAzimuthalRadian) * glm::sin(mPolarRadian);
-        auto y = mRadialDistance * glm::cos(mAzimuthalRadian);
-        auto r = Vector3f(x, y, z);
-        mPosition = mOrigin + r;
-
-        auto pitchRadian = abs(mAzimuthalRadian) - PiOver2;
-        auto pitchQuaternion = Quaternion::CreateFromAxisAngle(Vector3f::UnitX, pitchRadian);
-        auto yawRadian = mPolarRadian;
-        auto yawQuaternion = Quaternion::CreateFromAxisAngle(Vector3f::UnitY, yawRadian);
-        auto pitchYawQuaternion = yawQuaternion * pitchQuaternion;
-
-        // NOTE(Wuxiang): Inspired by NumberXaero's answer
-        // https://www.gamedev.net/topic/653628-quaternion-camera-performs-unwanted-roll/
-        auto forward = GetForward() * pitchYawQuaternion;
-        auto rollQuaternion = Quaternion::CreateFromAxisAngle(forward, 0);
-
-        SetOrientation(rollQuaternion * pitchYawQuaternion);
-
         break;
     }
 
@@ -191,12 +191,6 @@ ThirdPersonCamera::Update(GameEngineInput *input, double elapsed)
             mRadialDistance = 0;
         }
 
-        auto z = mRadialDistance * glm::sin(mAzimuthalRadian) * glm::cos(mPolarRadian);
-        auto x = mRadialDistance * glm::sin(mAzimuthalRadian) * glm::sin(mPolarRadian);
-        auto y = mRadialDistance * glm::cos(mAzimuthalRadian);
-        auto r = Vector3f(x, y, z);
-        mPosition = mOrigin + r;
-
         break;
     }
 
@@ -204,7 +198,7 @@ ThirdPersonCamera::Update(GameEngineInput *input, double elapsed)
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
 
-    Camera::Update(elapsed);
+    Update(elapsed);
 }
 
 void

@@ -61,6 +61,9 @@ public:
     PanDown(float distance);
 
     virtual void
+    Update(double elapsed) override;
+
+    virtual void
     Update(GameEngineInput *input, double elapsed);
 
     void

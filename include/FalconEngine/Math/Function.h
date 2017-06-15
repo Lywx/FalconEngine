@@ -6,6 +6,9 @@
 #include <type_traits>
 
 #include <FalconEngine/Math/Constant.h>
+#include <FalconEngine/Math/Vector2.h>
+#include <FalconEngine/Math/Vector3.h>
+#include <FalconEngine/Math/Vector4.h>
 
 namespace FalconEngine
 {
@@ -42,6 +45,25 @@ constexpr typename std::enable_if<std::is_unsigned<T>::value, T>::type
 Abs(const T a)
 {
     return a;
+}
+
+template <typename T>
+typename std::enable_if < std::is_base_of<Vector2f, T>::value
+|| std::is_base_of<Vector2i, T>::value
+|| std::is_base_of<Vector3f, T>::value
+|| std::is_base_of<Vector3i, T>::value
+|| std::is_base_of<Vector4f, T>::value
+|| std::is_base_of<Vector4i, T>::value, float >::type
+Abs(const T& v)
+{
+    static_assert(std::is_base_of<Vector2f, T>::value
+                  || std::is_base_of<Vector2i, T>::value
+                  || std::is_base_of<Vector3f, T>::value
+                  || std::is_base_of<Vector3i, T>::value
+                  || std::is_base_of<Vector4f, T>::value
+                  || std::is_base_of<Vector4i, T>::value, "Invalid type parameter.");
+
+    return glm::distance<float, glm::highp>(v, T::Zero);
 }
 
 template <typename T>

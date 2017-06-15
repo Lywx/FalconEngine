@@ -43,8 +43,8 @@ SampleGame::Initialize()
 
             // Room
             auto roomModel = assetManager->LoadModel("Content/Model/Bedroom.dae");
-            auto roomNode = ShareClone(roomModel->GetNode());
-            sceneNode->AttachChild(roomNode);
+            mRoomNode = ShareClone(roomModel->GetNode());
+            sceneNode->AttachChild(mRoomNode);
 
             // Light
             auto boxModel = assetManager->LoadModel("Content/Model/Engine/Box.dae");
@@ -53,9 +53,9 @@ SampleGame::Initialize()
             mPointLight1 = make_shared<LightEntity>(ShareClone(boxNode), LightType::Point);
             mPointLight2 = make_shared<LightEntity>(ShareClone(boxNode), LightType::Point);
             mPointLight3 = make_shared<LightEntity>(ShareClone(boxNode), LightType::Point);
-            roomNode->AttachChild(mPointLight1->GetNode());
-            roomNode->AttachChild(mPointLight2->GetNode());
-            roomNode->AttachChild(mPointLight3->GetNode());
+            mRoomNode->AttachChild(mPointLight1->GetNode());
+            mRoomNode->AttachChild(mPointLight2->GetNode());
+            mRoomNode->AttachChild(mPointLight3->GetNode());
 
             // Axis
             auto axeModel = assetManager->LoadModel("Content/Model/Engine/Axe.dae");
@@ -75,7 +75,6 @@ SampleGame::Initialize()
             auto sceneAxeEffectParamX = make_shared<PaintEffectParams>(ColorPalette::Red);
             auto sceneAxeEffectParamY = make_shared<PaintEffectParams>(ColorPalette::Green);
             auto sceneAxeEffectParamZ = make_shared<PaintEffectParams>(ColorPalette::Blue);
-
             sceneAxeEffect->CreateInstance(axeNodeX.get(), sceneAxeEffectParamX);
             sceneAxeEffect->CreateInstance(axeNodeY.get(), sceneAxeEffectParamY);
             sceneAxeEffect->CreateInstance(axeNodeZ.get(), sceneAxeEffectParamZ);
@@ -127,7 +126,7 @@ SampleGame::Initialize()
         mSceneLightingParams->mPointLightList = { mPointLight1->GetLight(), mPointLight2->GetLight(), mPointLight3->GetLight() };
 
         mSceneLightingEffect = make_shared<PhongEffect>();
-        mSceneLightingEffect->CreateInstance(mScene->GetNode().get(), mSceneLightingParams);
+        mSceneLightingEffect->CreateInstance(mRoomNode.get(), mSceneLightingParams);
     }
 
     // Initialize Interaction.

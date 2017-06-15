@@ -37,11 +37,12 @@ private:
     const Font *mFont = nullptr;
 
     // Scene
-    std::shared_ptr<SceneEntity> mScene;
-    PhongEffectParams      mSceneParam;
+    std::shared_ptr<SceneEntity>       mScene;
+    std::shared_ptr<PhongEffect>       mSceneLightingEffect;
+    std::shared_ptr<PhongEffectParams> mSceneLightingParams;
 
     // Entities
-    std::shared_ptr<Light>            mDirectionalLight;
+    std::shared_ptr<LightEntity> mDirectionalLight;
     std::shared_ptr<LightEntity> mPointLight1;
     std::shared_ptr<LightEntity> mPointLight2;
     std::shared_ptr<LightEntity> mPointLight3;

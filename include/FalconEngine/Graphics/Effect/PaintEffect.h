@@ -20,6 +20,15 @@ class Node;
 class FALCON_ENGINE_API PaintEffectParams : public VisualEffectParams
 {
 public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
+    PaintEffectParams(Color color) :
+        mColor(color)
+    {
+    }
+
+public:
     Color mColor;
 };
 

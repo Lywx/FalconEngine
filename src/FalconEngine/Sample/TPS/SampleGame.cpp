@@ -25,24 +25,40 @@ SampleGame::Initialize()
     // Initialize debug context.
     GameDebug::Initialize();
 
-    // Load all assets and initialize scene.
-    auto assetManager = AssetManager::GetInstance();
-
-    // Fonts
+    // Load all assets.
     {
-        mFont = assetManager->LoadFont("Content/Font/LuciadaConsoleDistanceField.fnt.bin").get();
-        // mFont = mAssetManager->LoadFont("Content/Font/NSimSunDistanceField.fnt.bin").get();
-    }
+        auto assetManager = AssetManager::GetInstance();
 
-    // Entities
-    {
-        mScene = make_shared<SceneEntity>();
-        auto sceneNode = mScene->GetNode();
-        sceneNode->mWorldTransform = Matrix4f::Zero;
-
-        // Axis
+        // Fonts
         {
-            auto axeModel = assetManager->LoadModel("Content/Model/Axe.dae");
+            mFont = assetManager->LoadFont("Content/Font/LuciadaConsoleDistanceField.fnt.bin").get();
+            // mFont = mAssetManager->LoadFont("Content/Fonts/NSimSunDistanceField.fnt.bin").get();
+        }
+
+        // Entities
+        {
+            mScene = make_shared<SceneEntity>();
+            auto sceneNode = mScene->GetNode();
+            sceneNode->mWorldTransform = Matrix4f::Zero;
+
+            // Room
+            auto roomModel = assetManager->LoadModel("Content/Model/Bedroom.dae");
+            auto roomNode = ShareClone(roomModel->GetNode());
+            sceneNode->AttachChild(roomNode);
+
+            // Light
+            auto boxModel = assetManager->LoadModel("Content/Model/Engine/Box.dae");
+            auto boxNode = boxModel->GetNode();
+            mDirectionalLight = make_shared<LightEntity>(ShareClone(boxNode), LightType::Directional);
+            mPointLight1 = make_shared<LightEntity>(ShareClone(boxNode), LightType::Point);
+            mPointLight2 = make_shared<LightEntity>(ShareClone(boxNode), LightType::Point);
+            mPointLight3 = make_shared<LightEntity>(ShareClone(boxNode), LightType::Point);
+            roomNode->AttachChild(mPointLight1->GetNode());
+            roomNode->AttachChild(mPointLight2->GetNode());
+            roomNode->AttachChild(mPointLight3->GetNode());
+
+            // Axis
+            auto axeModel = assetManager->LoadModel("Content/Model/Engine/Axe.dae");
             auto axeNodeX = ShareClone(axeModel->GetNode());
             auto axeNodeY = ShareClone(axeModel->GetNode());
             auto axeNodeZ = ShareClone(axeModel->GetNode());
@@ -56,31 +72,26 @@ SampleGame::Initialize()
             sceneNode->AttachChild(mAxeNode);
 
             auto sceneAxeEffect = make_shared<PaintEffect>();
-            sceneAxeEffect->CreateInstance(axeNodeX.get(), ColorPalette::Red);
-            sceneAxeEffect->CreateInstance(axeNodeY.get(), ColorPalette::Green);
-            sceneAxeEffect->CreateInstance(axeNodeZ.get(), ColorPalette::Blue);
+            auto sceneAxeEffectParamX = make_shared<PaintEffectParams>(ColorPalette::Red);
+            auto sceneAxeEffectParamY = make_shared<PaintEffectParams>(ColorPalette::Green);
+            auto sceneAxeEffectParamZ = make_shared<PaintEffectParams>(ColorPalette::Blue);
+
+            sceneAxeEffect->CreateInstance(axeNodeX.get(), sceneAxeEffectParamX);
+            sceneAxeEffect->CreateInstance(axeNodeY.get(), sceneAxeEffectParamY);
+            sceneAxeEffect->CreateInstance(axeNodeZ.get(), sceneAxeEffectParamZ);
+        }
+    }
+
+    // Initialize Scene
+    {
+        {
+            mDirectionalLight->SetAmbient(Color(055, 055, 055));
+            mDirectionalLight->SetDiffuse(Color(055, 055, 055));
+            mDirectionalLight->SetSpecular(Color(055, 055, 055));
+            mDirectionalLight->SetDirection(Vector3f(1, 1, 1));
         }
 
-        // Room
         {
-            auto roomModel = assetManager->LoadModel("Content/Model/Bedroom.dae",);
-            mRoomNode = ShareClone(roomModel->GetNode());
-            sceneNode->AttachChild(mRoomNode);
-
-            auto lightModel = assetManager->LoadModel("Content/Model/Engine/Point Light.dae",);
-            mPointLight1 = make_shared<LightEntity>(ShareClone(lightModel->GetNode()));
-            mPointLight2 = make_shared<LightEntity>(ShareClone(lightModel->GetNode()));
-            mPointLight3 = make_shared<LightEntity>(ShareClone(lightModel->GetNode()));
-            mRoomNode->AttachChild(mPointLight1->GetNode());
-            mRoomNode->AttachChild(mPointLight2->GetNode());
-            mRoomNode->AttachChild(mPointLight3->GetNode());
-
-            mDirectionalLight = make_shared<Light>(LightType::Directional);
-            mDirectionalLight->mAmbient = Color(155, 155, 155);
-            mDirectionalLight->mDiffuse = Color(155, 155, 155);
-            mDirectionalLight->mSpecular = Color(155, 155, 155);
-            mDirectionalLight->mDirection = Vector3f(1, 1, 1);
-
             mPointLight1->SetAmbient(ColorPalette::Gold);
             mPointLight1->SetDiffuse(Color(105, 105, 105));
             mPointLight1->SetSpecular(Color(105, 105, 105));
@@ -88,7 +99,9 @@ SampleGame::Initialize()
             mPointLight1->SetLinear(0.015f);
             mPointLight1->SetQuadratic(0.0075f);
             mPointLight1->SetPosition(Vector3f(-4.92804479598999, -6.6115264892578125, 3.654505729675293));
+        }
 
+        {
             mPointLight2->SetAmbient(ColorPalette::Gold);
             mPointLight2->SetDiffuse(Color(105, 105, 105));
             mPointLight2->SetSpecular(Color(105, 105, 105));
@@ -96,7 +109,9 @@ SampleGame::Initialize()
             mPointLight2->SetLinear(0.015f);
             mPointLight2->SetQuadratic(0.0075f);
             mPointLight2->SetPosition(Vector3f(5.09701681137085, -6.6115264892578125, 3.654505729675293));
+        }
 
+        {
             mPointLight3->SetAmbient(ColorPalette::Gold);
             mPointLight3->SetDiffuse(Color(105, 105, 105));
             mPointLight3->SetSpecular(Color(105, 105, 105));
@@ -104,21 +119,24 @@ SampleGame::Initialize()
             mPointLight3->SetLinear(0.015f);
             mPointLight3->SetQuadratic(0.0075f);
             mPointLight3->SetPosition(Vector3f(0.0, 0.0, 9.546284675598145));
-
-            mSceneParam.mPointLightList = { mPointLight1->GetLight(), mPointLight2->GetLight(), mPointLight3->GetLight() };
-
-            // Initialize Effect
-            auto sceneLightingEffect = make_shared<MeshEffect>();
-            // sceneLightingEffect->CreateInstance(mRoomNode.get(), *mSceneDirectionalLight, mScenePointLightList, mSceneSpotLightList);
-            sceneLightingEffect->CreateInstance(mRoomNode.get(), ColorPalette::Black, ColorPalette::Black, 2.0f, false);
         }
+
+        // Initialize Effect
+        mSceneLightingParams = make_shared<PhongEffectParams>();
+        mSceneLightingParams->mDirectionalLight = mDirectionalLight->GetLight();
+        mSceneLightingParams->mPointLightList = { mPointLight1->GetLight(), mPointLight2->GetLight(), mPointLight3->GetLight() };
+
+        mSceneLightingEffect = make_shared<PhongEffect>();
+        mSceneLightingEffect->CreateInstance(mScene->GetNode().get(), mSceneLightingParams);
     }
 
     // Initialize Interaction.
-    mCamera->SetTarget(Vector3f(0, 0, 0));
-    mCamera->mAzimuthalRadian = Radian(40.0f);
-    mCamera->mPolarRadian = Radian(40.0f);
-    mCamera->mRadialDistance = 40.0f;
+    {
+        mCamera->SetTarget(Vector3f(0, 0, 0));
+        mCamera->mAzimuthalRadian = Radian(40.0f);
+        mCamera->mPolarRadian = Radian(40.0f);
+        mCamera->mRadialDistance = 40.0f;
+    }
 }
 
 void

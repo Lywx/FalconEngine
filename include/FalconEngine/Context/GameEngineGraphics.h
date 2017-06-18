@@ -17,6 +17,8 @@ namespace FalconEngine
 /************************************************************************/
 /* Specialized Renderer                                                 */
 /************************************************************************/
+class DebugRenderer;
+
 class Font;
 class FontRenderer;
 class FontText;
@@ -124,11 +126,15 @@ public:
     void
     RenderEnd();
 
+    void
+    Update(double elapsed);
+
 private:
     void
     Destroy();
 
 protected:
+    std::shared_ptr<DebugRenderer>      mDebugRenderer;
     std::shared_ptr<EntityRenderer>     mEntityRenderer;
     std::shared_ptr<FontRenderer>       mFontRenderer;
     std::shared_ptr<Renderer>           mMasterRenderer;

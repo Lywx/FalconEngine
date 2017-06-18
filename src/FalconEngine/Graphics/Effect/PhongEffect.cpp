@@ -74,12 +74,7 @@ PhongEffect::CreateInstance(
 
     VisualEffect::TraverseLevelOrder(node, std::bind([&, this](Visual * visual)
     {
-        CheckVertexFormatCompatible(visual);
-
-        auto instance = CreateInstance();
-        visual->PushEffectInstance(instance);
-        visual->PushEffectParams(params);
-
+        auto instance = InstallInstance(visual, params);
         InitializeInstance(instance.get(), visual->GetMesh()->GetMaterial(), params);
     }, _1));
 }

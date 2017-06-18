@@ -80,12 +80,7 @@ PaintEffect::CreateInstance(_IN_OUT_ Node                              *node,
 
     TraverseLevelOrder(node, std::bind([&, this](Visual * visual)
     {
-        CheckVertexFormatCompatible(visual);
-
-        auto instance = CreateInstance();
-        visual->PushEffectInstance(instance);
-        visual->PushEffectParams(params);
-
+        auto instance = InstallInstance(visual, params);
         InitializeInstance(instance.get(), params);
     }, _1));
 }

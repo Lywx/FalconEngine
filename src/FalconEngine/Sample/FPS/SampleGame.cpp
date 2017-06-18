@@ -164,7 +164,7 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
 }
 
 void
-SampleGame::Update(GameEngineInput *input, double elapsed)
+SampleGame::Update(GameEngineGraphics *graphics, GameEngineInput *input, double elapsed)
 {
     auto keyboard = input->GetKeyboardState();
     auto mouse = input->GetMouseState();
@@ -177,7 +177,7 @@ SampleGame::Update(GameEngineInput *input, double elapsed)
     mCamera->Update(input, elapsed);
     mScene->Update(input, elapsed);
 
-    Game::Update(input, elapsed);
+    Game::Update(graphics, input, elapsed);
 }
 
 }

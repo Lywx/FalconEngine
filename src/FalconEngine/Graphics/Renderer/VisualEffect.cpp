@@ -102,29 +102,6 @@ VisualEffect::GetWireframeState(int passIndex) const
 /************************************************************************/
 /* Effect Instancing Helper                                             */
 /************************************************************************/
-std::shared_ptr<VertexFormat>
-VisualEffect::CreateVertexFormat() const
-{
-    shared_ptr<VertexFormat> vertexFormat = make_shared<VertexFormat>();
-    vertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
-    vertexFormat->PushVertexAttribute(1, "Normal", VertexAttributeType::FloatVec3, false, 0);
-    vertexFormat->PushVertexAttribute(2, "TexCoord", VertexAttributeType::FloatVec2, false, 0);
-    vertexFormat->FinishVertexAttribute();
-    return vertexFormat;
-}
-
-std::shared_ptr<VertexFormat>
-VisualEffect::GetVertexFormat() const
-{
-    // NOTE(Wuxiang): Because the static qualifier here would only evaluate the
-    // first time using dynamic typing to get the correct vertex format you could
-    // expect that it only return the initialized value called for the first time.
-    // So it is necessary to re-implement this class in derived classes so that
-    // you could get a static variable for each derived class.
-    static shared_ptr<VertexFormat> sVertexFormat = CreateVertexFormat();
-    return sVertexFormat;
-}
-
 void
 VisualEffect::CheckVertexFormatCompatible(Visual *visual) const
 {
@@ -152,6 +129,29 @@ VisualEffect::CheckVertexFormatCompatible(Visual *visual) const
     // NOTE(Wuxiang): Assume the user would correctly set up vertex group
     // because there is no reliable to test vertex group is compatible
     // with vertex format.
+}
+
+std::shared_ptr<VertexFormat>
+VisualEffect::CreateVertexFormat() const
+{
+    shared_ptr<VertexFormat> vertexFormat = make_shared<VertexFormat>();
+    vertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
+    vertexFormat->PushVertexAttribute(1, "Normal", VertexAttributeType::FloatVec3, false, 0);
+    vertexFormat->PushVertexAttribute(2, "TexCoord", VertexAttributeType::FloatVec2, false, 0);
+    vertexFormat->FinishVertexAttribute();
+    return vertexFormat;
+}
+
+std::shared_ptr<VertexFormat>
+VisualEffect::GetVertexFormat() const
+{
+    // NOTE(Wuxiang): Because the static qualifier here would only evaluate the
+    // first time using dynamic typing to get the correct vertex format you could
+    // expect that it only return the initialized value called for the first time.
+    // So it is necessary to re-implement this class in derived classes so that
+    // you could get a static variable for each derived class.
+    static shared_ptr<VertexFormat> sVertexFormat = CreateVertexFormat();
+    return sVertexFormat;
 }
 
 void
@@ -241,6 +241,18 @@ VisualEffect::SetShaderUniformAutomaticModelViewProjectionTransform(VisualEffect
     visualEffectInstance->SetShaderUniform(passIndex, ShareAutomatic<Matrix4f>(uniformName, std::bind([](const Visual * visual, const Camera * camera)
     {
         return camera->GetViewProjection() * visual->mWorldTransform;
+    }, _1, _2)));
+}
+
+void
+VisualEffect::SetShaderUniformAutomaticViewProjectionTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const
+{
+    using namespace std;
+    using namespace std::placeholders;
+
+    visualEffectInstance->SetShaderUniform(passIndex, ShareAutomatic<Matrix4f>(uniformName, std::bind([](const Visual * visual, const Camera * camera)
+    {
+        return camera->GetViewProjection();
     }, _1, _2)));
 }
 

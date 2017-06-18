@@ -254,7 +254,7 @@ FontRenderer::Render(Renderer *renderer, double /* percent */)
             int vertexNum = batch->mGlyphNum * 6;
             batch->mVertexBuffer->SetElementNum(vertexNum);
             renderer->Update(batch->mVertexBuffer.get());
-            renderer->Draw(nullptr, batch->mVertexQuads.get());
+            renderer->Draw(nullptr, batch->mGlyphQuads.get());
         }
     }
 }
@@ -267,7 +267,7 @@ FontRenderer::RenderEnd()
 /************************************************************************/
 /* Protected Members                                                    */
 /************************************************************************/
-std::shared_ptr<FontBatch>
+std::shared_ptr<FontRenderBatch>
 FontRenderer::PrepareBatch(const Font *font)
 {
     // When the font is prepared before.
@@ -294,7 +294,7 @@ FontRenderer::PrepareBatch(const Font *font)
         auto visualEffectParams = make_shared<FontEffectParams>(font, &mTextHandedness, mViewportWidth, mViewportHeight);
         visualEffect->CreateInstance(visual.get(), visualEffectParams);
 
-        auto batch = make_shared<FontBatch>(vertexBuffer, visual);
+        auto batch = make_shared<FontRenderBatch>(vertexBuffer, visual);
         mTextBatchTable.insert({ font, batch });
         return batch;
     }
@@ -302,10 +302,10 @@ FontRenderer::PrepareBatch(const Font *font)
 
 void
 FontRenderer::PrepareText(
-    _IN_OUT_ FontBatch&      batch,
-    _IN_     const Font     *font,
-    _IN_     const FontText *text,
-    _IN_     Color           textColor)
+    _IN_OUT_ FontRenderBatch& batch,
+    _IN_     const Font      *font,
+    _IN_     const FontText  *text,
+    _IN_     Color            textColor)
 {
     FALCON_ENGINE_CHECK_NULLPTR(font);
 

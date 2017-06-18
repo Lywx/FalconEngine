@@ -16,7 +16,6 @@ class Visual;
 class Mesh;
 class Node;
 
-#pragma warning(disable: 4251)
 class FALCON_ENGINE_API PaintEffectParams : public VisualEffectParams
 {
 public:
@@ -62,6 +61,5 @@ protected:
         _IN_OUT_ VisualEffectInstance              *instance,
         _IN_     std::shared_ptr<PaintEffectParams> params) const;
 };
-#pragma warning(default: 4251)
 
 }

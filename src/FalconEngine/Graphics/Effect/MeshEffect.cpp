@@ -61,16 +61,7 @@ MeshEffect::CreateInstance(Node *node, std::shared_ptr<MeshEffectParams> params)
 
     VisualEffect::TraverseLevelOrder(node, std::bind([&, this](Visual * visual)
     {
-        CheckVertexFormatCompatible(visual);
-
-        // NOTE(Wuxiang): Assume the user would correctly set up vertex group
-        // because there is no reliable to test vertex group is compatible
-        // with vertex format.
-
-        auto instance = CreateInstance();
-        visual->PushEffectInstance(instance);
-        visual->PushEffectParams(params);
-
+        auto instance = InstallInstance(visual, params);
         InitializeInstance(instance.get(), visual->GetMesh()->GetMaterial(), params);
     }, _1));
 }

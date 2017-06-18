@@ -55,9 +55,7 @@ AABBEffect::CreateInstance(Visual *visual, std::shared_ptr<AABBEffectParams> par
 {
     CheckVertexFormatCompatible(visual);
 
-    auto instance = CreateInstance();
-    visual->PushEffectInstance(instance);
-    visual->PushEffectParams(params);
+    auto instance = InstallInstance(visual, params);
 
     // NOTE(Wuxiang): Don't need to initialize any instance because all the
     // parameters are in the vertex buffer.

@@ -123,14 +123,39 @@ protected:
     virtual std::shared_ptr<VisualEffectInstance>
     CreateInstance() const = 0;
 
+    void
+    CheckVertexFormatCompatible(Visual *visual) const;
+
     virtual std::shared_ptr<VertexFormat>
     CreateVertexFormat() const = 0;
 
     virtual std::shared_ptr<VertexFormat>
     GetVertexFormat() const = 0;
 
-    void
-    CheckVertexFormatCompatible(Visual *visual) const;
+    // @remark You don't need to worry about the lifetime of returned visual effect
+    // instance. It is managed by the Visual class using shared_ptr.
+    template <typename T>
+    std::shared_ptr<VisualEffectInstance>
+    InstallInstance(Visual *visual, std::shared_ptr<T> params) const
+    {
+        static_assert(std::is_base_of<VisualEffectParams, T>::value, "Params must derive from VisualEffectParams");
+
+        FALCON_ENGINE_CHECK_NULLPTR(params);
+
+        // NOTE(Wuxiang): Must check the vertex format is compatible or the vertex
+        // data might be passed unexpectedly.
+        CheckVertexFormatCompatible(visual);
+
+        // NOTE(Wuxiang): Assume the user would correctly set up vertex group
+        // because there is no reliable to test vertex group is compatible
+        // with vertex format.
+
+        auto instance = CreateInstance();
+        visual->PushEffectInstance(instance);
+        visual->PushEffectParams(params);
+
+        return instance;
+    }
 
     void
     TraverseLevelOrder(Node *node, std::function<void(Visual *visual)> visit) const;
@@ -146,6 +171,9 @@ protected:
 
     void
     SetShaderUniformAutomaticModelViewProjectionTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const;
+
+    void
+    SetShaderUniformAutomaticViewProjectionTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const;
 
     void
     SetShaderUniformAutomaticNormalTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const;

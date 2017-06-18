@@ -26,7 +26,7 @@ public:
     Render(GameEngineGraphics *graphics, double percent) override;
 
     virtual void
-    Update(GameEngineInput *input, double elapsed) override;
+    Update(GameEngineGraphics *graphics, GameEngineInput *input, double elapsed) override;
 
 private:
     HandednessRight mHandedness;

@@ -128,7 +128,7 @@ GameEngine::Loop()
             double lastUpdateEndedMillisecond = 0;
             do
             {
-                mGame->Update(mInput, currentFrameUpdateTotalCount == 0 ? lastUpdateElapsedMillisecond + lastRenderElapsedMillisecond : lastUpdateElapsedMillisecond);
+                mGame->Update(mGraphics, mInput, currentFrameUpdateTotalCount == 0 ? lastUpdateElapsedMillisecond + lastRenderElapsedMillisecond : lastUpdateElapsedMillisecond);
                 ++currentFrameUpdateTotalCount;
 
                 lastUpdateEndedMillisecond = GameTimer::GetMilliseconds();

@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include <FalconEngine/Graphics/Renderer/Font/FontBatch.h>
+#include <FalconEngine/Graphics/Renderer/Font/FontRenderBatch.h>
 
 #include <FalconEngine/Math/Color.h>
 #include <FalconEngine/Math/Handedness.h>
@@ -17,7 +17,7 @@ namespace FalconEngine
 {
 
 class Font;
-class FontBatch;
+class FontRenderBatch;
 class FontText;
 
 class Renderer;
@@ -25,19 +25,14 @@ class Renderer;
 // @summary The font renderer is the class you would call to draw a string on
 // the screen.
 #pragma warning(disable: 4251)
-#if defined(FALCON_ENGINE_WINDOW_QT)
-#include <QtGui/QOpenGLFunctions>
-class FALCON_ENGINE_API FontRenderer final : QOpenGLFunctions
-#elif defined(FALCON_ENGINE_WINDOW_GLFW)
 class FALCON_ENGINE_API FontRenderer final
-#endif
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
     FontRenderer();
-    virtual ~FontRenderer();
+    ~FontRenderer();
 
 public:
     /************************************************************************/
@@ -67,14 +62,14 @@ public:
     RenderEnd();
 
 protected:
-    std::shared_ptr<FontBatch>
+    std::shared_ptr<FontRenderBatch>
     PrepareBatch(_IN_ const Font *font);
 
     void
-    PrepareText(_IN_OUT_ FontBatch&      batch,
-                _IN_     const Font     *font,
-                _IN_     const FontText *text,
-                _IN_     Color           textColor = ColorPalette::White);
+    PrepareText(_IN_OUT_ FontRenderBatch& batch,
+                _IN_     const Font      *font,
+                _IN_     const FontText  *text,
+                _IN_     Color            textColor = ColorPalette::White);
 
 private:
     // NOTE(Wuxiang): Since the shader sampler could not be indexed using vertex
@@ -83,9 +78,9 @@ private:
     // support.
     // http://stackoverflow.com/questions/21524535/opengl-sampler-array-limit
     // http://stackoverflow.com/questions/12030711/glsl-array-of-textures-of-differing-size/
-    using TextBatchMap = std::map<const Font *, std::shared_ptr<FontBatch>>;
+    using FontRenderBatchMap = std::map<const Font *, std::shared_ptr<FontRenderBatch>>;
 
-    TextBatchMap          mTextBatchTable;
+    FontRenderBatchMap    mTextBatchTable;
     HandednessRight       mTextHandedness;
 
     int                   mViewportWidth  = 0;

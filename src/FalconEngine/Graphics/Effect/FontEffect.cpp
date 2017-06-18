@@ -56,14 +56,7 @@ FontEffect::~FontEffect()
 void
 FontEffect::CreateInstance(Visual *visual, std::shared_ptr<FontEffectParams> params) const
 {
-    FALCON_ENGINE_CHECK_NULLPTR(params);
-
-    CheckVertexFormatCompatible(visual);
-
-    auto instance = CreateInstance();
-    visual->PushEffectInstance(instance);
-    visual->PushEffectParams(params);
-
+    auto instance = InstallInstance(visual, params);
     InitializeInstance(instance.get(), params);
 }
 

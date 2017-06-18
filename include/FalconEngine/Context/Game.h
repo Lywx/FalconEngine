@@ -64,7 +64,7 @@ public:
     /************************************************************************/
     // @param elapsed -- Millisecond elapsed during last update / render cycle.
     virtual void
-    Update(GameEngineInput *input, double elapsed);
+    Update(GameEngineGraphics *graphics, GameEngineInput *input, double elapsed);
 
 protected:
     GameEngine *mGameEngine;

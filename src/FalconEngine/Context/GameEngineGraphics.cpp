@@ -4,6 +4,7 @@
 #include <FalconEngine/Context/GameEngineSettings.h>
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
+#include <FalconEngine/Graphics/Renderer/Debug/DebugRenderer.h>
 #include <FalconEngine/Graphics/Renderer/Entity/EntityRenderer.h>
 #include <FalconEngine/Graphics/Renderer/Font/FontRenderer.h>
 #include <FalconEngine/Math/Color.h>
@@ -15,9 +16,7 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 GameEngineGraphics::GameEngineGraphics() :
-    mEntityRenderer(nullptr),
-    mFontRenderer(nullptr),
-    mMasterRenderer(nullptr)
+    mGameEngineSettings(nullptr)
 {
 }
 
@@ -156,6 +155,12 @@ GameEngineGraphics::RenderEnd()
 
     // Has to be the last.
     mMasterRenderer->SwapFrameBufferPlatform();
+}
+
+void
+GameEngineGraphics::Update(double elapsed)
+{
+    mDebugRenderer->Update(elapsed);
 }
 
 }

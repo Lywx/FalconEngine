@@ -5,6 +5,8 @@ using namespace std;
 namespace FalconEngine
 {
 
+FALCON_ENGINE_EFFECT_IMPLEMENT(DebugEffect);
+
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/

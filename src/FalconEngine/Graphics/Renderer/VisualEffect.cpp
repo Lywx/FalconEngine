@@ -250,7 +250,7 @@ VisualEffect::SetShaderUniformAutomaticViewProjectionTransform(VisualEffectInsta
     using namespace std;
     using namespace std::placeholders;
 
-    visualEffectInstance->SetShaderUniform(passIndex, ShareAutomatic<Matrix4f>(uniformName, std::bind([](const Visual * visual, const Camera * camera)
+    visualEffectInstance->SetShaderUniform(passIndex, ShareAutomatic<Matrix4f>(uniformName, std::bind([](const Visual * /* visual */, const Camera * camera)
     {
         return camera->GetViewProjection();
     }, _1, _2)));

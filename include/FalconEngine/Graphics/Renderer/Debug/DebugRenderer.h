@@ -14,6 +14,7 @@ class Vector3f;
 
 class Renderer;
 
+#pragma warning(disable: 4251)
 class FALCON_ENGINE_API DebugRenderer final
 {
 public:
@@ -102,5 +103,6 @@ private:
     std::shared_ptr<DebugRenderBatch> mDebugBatch;
     DebugMessageManager               mDebugMessageManager;
 };
+#pragma warning(default: 4251)
 
 }

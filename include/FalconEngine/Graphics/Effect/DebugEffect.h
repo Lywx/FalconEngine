@@ -17,7 +17,7 @@ class Mesh;
 class Node;
 
 #pragma pack(push, 1)
-class DebugVertex
+class FALCON_ENGINE_API DebugVertex
 {
 public:
     Vector2f mPosition;

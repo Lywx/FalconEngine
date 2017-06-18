@@ -12,3 +12,4 @@ Rendering Pipeline Specifics
 (0) Add crosshair rendering.
 
 (0) Linux TPS Camera issue.
+(0) Replace boost serialization with cereal serialization.

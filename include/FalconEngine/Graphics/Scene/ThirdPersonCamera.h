@@ -15,9 +15,6 @@ enum class ThirdPersonCameraMode
     Zoom,
 };
 
-class ThirdPersonCamera;
-using ThirdPersonCameraSharedPtr = std::shared_ptr<ThirdPersonCamera>;
-
 class FALCON_ENGINE_API ThirdPersonCamera : public PlayerCamera
 {
     FALCON_ENGINE_RTTI_DECLARE;

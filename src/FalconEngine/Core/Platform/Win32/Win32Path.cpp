@@ -1,6 +1,7 @@
 #include <FalconEngine/Core/Path.h>
 
 #if defined(FALCON_ENGINE_OS_WINDOWS)
+#include <codecvt>
 
 using namespace std;
 

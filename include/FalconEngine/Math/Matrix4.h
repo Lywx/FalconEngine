@@ -93,6 +93,9 @@ public:
     /************************************************************************/
     Matrix4f();
     Matrix4f(const glm::vec4& v0, const glm::vec4& v1, const glm::vec4& v2, const glm::vec4& v3);
+
+    // @remark Be careful that the (x0, y0, z0, w0) is the first column,
+    // (x1, y1, z1, w1) is the second column and so on.
     Matrix4f(
         const float& x0, const float& y0, const float& z0, const float& w0,
         const float& x1, const float& y1, const float& z1, const float& w1,

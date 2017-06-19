@@ -42,10 +42,11 @@ Matrix4f::CreateRotationX(const float& radians)
     const float sine = sin(radians);
 
     // ref Fletcher Dunn, Ian Parberry 3D Math Primer for Graphics and Game Development, 2nd, 2011, P277
-    return Matrix4f(1.0, 0.0, 0.0, 0.0,
-                    0.0, cosine, -sine, 0.0,
-                    0.0, sine, cosine, 0.0,
-                    0.0, 0.0, 0.0, 1.0);
+
+    return Matrix4f(1.0, 0.0, 0.0, 0.0,      // Col 0
+                    0.0, cosine, sine, 0.0,  // Col 1
+                    0.0, -sine, cosine, 0.0, // Col 2
+                    0.0, 0.0, 0.0, 1.0);     // Col 3
 }
 
 void
@@ -61,10 +62,11 @@ Matrix4f::CreateRotationY(const float& radians)
     const float sine = sin(radians);
 
     // @ref Fletcher Dunn, Ian Parberry 3D Math Primer for Graphics and Game Development, 2nd, 2011, P277
-    return Matrix4f(cosine, 0.0, -sine, 0.0,
-                    0.0, 1.0, 0.0, 0.0,
-                    sine, 0.0, cosine, 0.0,
-                    0.0, 0.0, 0.0, 1.0);
+
+    return Matrix4f(cosine, 0.0, sine, 0.0,  // Col 0
+                    0.0, 1.0, 0.0, 0.0,      // Col 1
+                    -sine, 0.0, cosine, 0.0, // Col 2
+                    0.0, 0.0, 0.0, 1.0);     // Col 3
 
 }
 
@@ -80,11 +82,12 @@ Matrix4f::CreateRotationZ(const float& radians)
     const float cosine = cos(radians);
     const float sine = sin(radians);
 
-    // @ref Fletcher Dunn, Ian Parberry 3D Math Primer for Graphics and Game Development, 2nd, 2011, P277
-    return Matrix4f(cosine, -sine, 0.0, 0.0,
-                    sine, cosine, 0.0, 0.0,
-                    0.0, 0.0, 1.0, 0.0,
-                    0.0, 0.0, 0.0, 1.0);
+    // @ref Fletcher Dunn, Ian Parberry 3D Math Primer for Graphics and Game Development, 2nd, 2011, P138, P277
+
+    return Matrix4f(cosine, sine, 0.0, 0.0,  // Col 0
+                    -sine, cosine, 0.0, 0.0, // Col 1
+                    0.0, 0.0, 1.0, 0.0,      // Col 2
+                    0.0, 0.0, 0.0, 1.0);     // Col 3
 
 }
 

@@ -53,22 +53,25 @@ private:
     // @remark model directory path is necessary for loading texture accompanying
     // the model files.
     static std::shared_ptr<Node>
-    CreateNode(_IN_ const string&            modelFilePath,
-               _IN_ const ModelImportOption& modelImportOption,
-               _IN_ const aiScene           *aiScene,
-               _IN_ const aiNode            *aiNode);
+    CreateNode(_IN_OUT_ Model                   *model,
+               _IN_     const string&            modelFilePath,
+               _IN_     const ModelImportOption& modelImportOption,
+               _IN_     const aiScene           *aiScene,
+               _IN_     const aiNode            *aiNode);
 
     static std::shared_ptr<Mesh>
-    CreateMesh(_IN_ const string&            modelFilePath,
-               _IN_ const ModelImportOption& modelImportOption,
-               _IN_ const aiScene           *aiScene,
-               _IN_ const aiMesh            *aiMesh);
+    CreateMesh(_IN_OUT_ Model                   *model,
+               _IN_     const string&            modelFilePath,
+               _IN_     const ModelImportOption& modelImportOption,
+               _IN_     const aiScene           *aiScene,
+               _IN_     const aiMesh            *aiMesh);
 
     static std::shared_ptr<Visual>
-    CreateVisual(_IN_ const string&            modelFilePath,
-                 _IN_ const ModelImportOption& modelImportOption,
-                 _IN_ const aiScene           *aiScene,
-                 _IN_ const aiMesh            *aiMesh);
+    CreateVisual(_IN_OUT_ Model                   *model,
+                 _IN_     const string&            modelFilePath,
+                 _IN_     const ModelImportOption& modelImportOption,
+                 _IN_     const aiScene           *aiScene,
+                 _IN_     const aiMesh            *aiMesh);
 
     // TODO(Wuxiang): Bounding box loading has a lot of space for optimization.
     // You could precomputed the bounding box in the asset processor.
@@ -76,15 +79,17 @@ private:
     CreateBoundingBox(const aiMesh *aiMesh);
 
     static std::shared_ptr<IndexBuffer>
-    CreateIndexBuffer(_IN_ IndexType     indexType,
-                      _IN_ BufferUsage   indexBufferUsage,
-                      _IN_ const aiMesh *aiMesh);
+    CreateIndexBuffer(_IN_OUT_ Model        *model,
+                      _IN_     IndexType     indexType,
+                      _IN_     BufferUsage   indexBufferUsage,
+                      _IN_     const aiMesh *aiMesh);
 
     template <typename T>
     static std::shared_ptr<IndexBuffer>
-    CreateIndexBufferInternal(_IN_ IndexType     indexType,
-                              _IN_ BufferUsage   indexBufferUsage,
-                              _IN_ const aiMesh *aiMesh)
+    CreateIndexBufferInternal(_IN_OUT_ Model        *model,
+                              _IN_     IndexType     indexType,
+                              _IN_     BufferUsage   indexBufferUsage,
+                              _IN_     const aiMesh *aiMesh)
     {
         // Sum space for the index buffer memory allocation.
         int indexNum = 0;
@@ -114,6 +119,9 @@ private:
             }
         }
 
+        // Update model metadata.
+        model->mIndexNum += indexNum;
+
         return indexBuffer;
     }
 
@@ -126,9 +134,10 @@ private:
     // @remark In any case, the vertex buffer contains interlaced data of vertex
     // position, normal and texture coordinate.
     static std::shared_ptr<VertexGroup>
-    CreateVertexGroup(_IN_ const ModelAccessOption& vertexBufferUsage,
-                      _IN_ const ModelMemoryOption& /* vertexBufferStorage */,
-                      _IN_ const aiMesh            *aiMesh);
+    CreateVertexGroup(_IN_OUT_ Model                   *model,
+                      _IN_     const ModelAccessOption& vertexBufferUsage,
+                      _IN_     const ModelMemoryOption& vertexBufferStorage,
+                      _IN_     const aiMesh            *aiMesh);
 
     static std::shared_ptr<Material>
     CreateMaterial(

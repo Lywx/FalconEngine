@@ -41,17 +41,17 @@ public:
     const Sampler *
     GetSampler() const;
 
-    /************************************************************************/
-    /* Model Loadtime Data                                                  */
-    /************************************************************************/
 public:
-    std::vector<std::string> mTextureArchivePathList;                        // Model texture archive paths
-    std::vector<std::string> mTextureFilePathList;                           // Model raw texture paths
+    /************************************************************************/
+    /* Model Metadata                                                       */
+    /************************************************************************/
+    int                      mIndexNum;
+    int                      mVertexNum;
 
+private:
     /************************************************************************/
     /* Model Runtime Data                                                   */
     /************************************************************************/
-private:
     std::shared_ptr<Node>    mNode;                                          // Model root node.
     std::shared_ptr<Sampler> mSampler;                                       // Model texture sampler.
 };

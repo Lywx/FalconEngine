@@ -10,7 +10,9 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 Model::Model(AssetSource assetSource, const std::string& fileName, const std::string& filePath) :
-    Asset(assetSource, AssetType::Model, fileName, filePath)
+    Asset(assetSource, AssetType::Model, fileName, filePath),
+    mVertexNum(),
+    mIndexNum()
 {
 }
 

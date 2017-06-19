@@ -77,7 +77,7 @@ ModelImporter::Import(Model *model, const string& modelFilePath, const ModelImpo
 
     // NOTE(Wuxiang): The node constructor would recursively load the necessary
     // children nodes and textures.
-    model->SetNode(CreateNode(modelFilePath, modelImportOption, scene, scene->mRootNode));
+    model->SetNode(CreateNode(model, modelFilePath, modelImportOption, scene, scene->mRootNode));
 
     return true;
 }
@@ -86,41 +86,43 @@ ModelImporter::Import(Model *model, const string& modelFilePath, const ModelImpo
 /* Private Members                                                      */
 /************************************************************************/
 std::shared_ptr<Node>
-ModelImporter::CreateNode(const string& modelFilePath, const ModelImportOption& modelImportOption, const aiScene *aiScene, const aiNode *aiNode)
+ModelImporter::CreateNode(Model *model, const string& modelFilePath, const ModelImportOption& modelImportOption, const aiScene *aiScene, const aiNode *aiNode)
 {
     auto node = make_shared<Node>();
 
     // Load node transform.
     node->mLocalTransform = Matrix4f(
-                                aiNode->mTransformation[0][0], aiNode->mTransformation[1][0], aiNode->mTransformation[2][0], aiNode->mTransformation[3][0],
-                                aiNode->mTransformation[0][1], aiNode->mTransformation[1][1], aiNode->mTransformation[2][1], aiNode->mTransformation[3][1],
-                                aiNode->mTransformation[0][2], aiNode->mTransformation[1][2], aiNode->mTransformation[2][2], aiNode->mTransformation[3][2],
-                                aiNode->mTransformation[0][3], aiNode->mTransformation[1][3], aiNode->mTransformation[2][3], aiNode->mTransformation[3][3]);
+                                aiNode->mTransformation[0][0], aiNode->mTransformation[1][0], aiNode->mTransformation[2][0], aiNode->mTransformation[3][0],  // Col 0
+                                aiNode->mTransformation[0][1], aiNode->mTransformation[1][1], aiNode->mTransformation[2][1], aiNode->mTransformation[3][1],  // Col 1
+                                aiNode->mTransformation[0][2], aiNode->mTransformation[1][2], aiNode->mTransformation[2][2], aiNode->mTransformation[3][2],  // Col 2
+                                aiNode->mTransformation[0][3], aiNode->mTransformation[1][3], aiNode->mTransformation[2][3], aiNode->mTransformation[3][3]); // Col 3
 
     // Process each mesh located at the current node
     for (unsigned int i = 0; i < aiNode->mNumMeshes; ++i)
     {
         // The node object only contains indices to index the actual objects in the scene.
         // The scene contains all the data, node is just to keep stuff organized (like relations between nodes).
-        node->AttachChild(CreateVisual(modelFilePath, modelImportOption, aiScene, aiScene->mMeshes[aiNode->mMeshes[i]]));
+        node->AttachChild(CreateVisual(model, modelFilePath, modelImportOption, aiScene, aiScene->mMeshes[aiNode->mMeshes[i]]));
     }
 
     // After we've processed all of the meshes (if any) we then recursively process each of the children nodes
     for (size_t i = 0; i < aiNode->mNumChildren; ++i)
     {
-        node->AttachChild(CreateNode(modelFilePath, modelImportOption, aiScene, aiNode->mChildren[i]));
+        node->AttachChild(CreateNode(model, modelFilePath, modelImportOption, aiScene, aiNode->mChildren[i]));
     }
 
     return node;
 }
 
 std::shared_ptr<Mesh>
-ModelImporter::CreateMesh(const string& modelFilePath, const ModelImportOption& modelImportOption, const aiScene *aiScene, const aiMesh *aiMesh)
+ModelImporter::CreateMesh(Model *model, const string& modelFilePath, const ModelImportOption& modelImportOption, const aiScene *aiScene, const aiMesh *aiMesh)
 {
     // Load vertex and index data.
-    auto vertexGroup = CreateVertexGroup(modelImportOption.mVertexBufferUsage,
+    auto vertexGroup = CreateVertexGroup(model,
+                                         modelImportOption.mVertexBufferUsage,
                                          modelImportOption.mVertexBufferStorage, aiMesh);
-    auto indexBuffer = CreateIndexBuffer(modelImportOption.mIndexType,
+    auto indexBuffer = CreateIndexBuffer(model,
+                                         modelImportOption.mIndexType,
                                          modelImportOption.mIndexBufferUsage, aiMesh);
 
     auto primitive = make_shared<PrimitiveTriangles>(GetVertexFormat(), vertexGroup, indexBuffer);
@@ -136,10 +138,10 @@ ModelImporter::CreateMesh(const string& modelFilePath, const ModelImportOption& 
 }
 
 std::shared_ptr<Visual>
-ModelImporter::CreateVisual(const string& modelFilePath, const ModelImportOption& modelImportOption, const aiScene *aiScene, const aiMesh *aiMesh)
+ModelImporter::CreateVisual(Model *model, const string& modelFilePath, const ModelImportOption& modelImportOption, const aiScene *aiScene, const aiMesh *aiMesh)
 {
     // Create visual without vertex format and vertex group.
-    return make_shared<Visual>(CreateMesh(modelFilePath, modelImportOption, aiScene, aiMesh));
+    return make_shared<Visual>(CreateMesh(model, modelFilePath, modelImportOption, aiScene, aiMesh));
 }
 
 std::shared_ptr<BoundingBox>
@@ -165,15 +167,15 @@ ModelImporter::CreateBoundingBox(const aiMesh *aiMesh)
 }
 
 std::shared_ptr<IndexBuffer>
-ModelImporter::CreateIndexBuffer(IndexType indexType, BufferUsage indexBufferUsage, const aiMesh *aiMesh)
+ModelImporter::CreateIndexBuffer(Model *model, IndexType indexType, BufferUsage indexBufferUsage, const aiMesh *aiMesh)
 {
     switch (indexType)
     {
     case IndexType::UnsignedShort:
-        return CreateIndexBufferInternal<unsigned short>(indexType, indexBufferUsage, aiMesh);
+        return CreateIndexBufferInternal<unsigned short>(model, indexType, indexBufferUsage, aiMesh);
 
     case IndexType::UnsignedInt:
-        return CreateIndexBufferInternal<unsigned int>(indexType, indexBufferUsage, aiMesh);
+        return CreateIndexBufferInternal<unsigned int>(model, indexType, indexBufferUsage, aiMesh);
 
     default:
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
@@ -200,9 +202,10 @@ ModelImporter::GetVertexFormat()
 
 std::shared_ptr<VertexGroup>
 ModelImporter::CreateVertexGroup(
-    _IN_ const ModelAccessOption& vertexBufferUsage,
-    _IN_ const ModelMemoryOption& /* vertexBufferStorage */,
-    _IN_ const aiMesh            *aiMesh)
+    _IN_OUT_ Model                      *model,
+    _IN_     const ModelAccessOption&    vertexBufferUsage,
+    _IN_     const ModelMemoryOption& /* vertexBufferStorage */,
+    _IN_     const aiMesh               *aiMesh)
 {
     // NOTE(Wuxiang): I think interleaving is not ideal for model loading. Because
     // the interleaving combines with indexed rendering doesn't get all the benefit
@@ -272,6 +275,8 @@ ModelImporter::CreateVertexGroup(
             }
         }
     }
+
+    model->mVertexNum += vertexNum;
 
     auto vertexFormat = GetVertexFormat();
     auto vertexGroup = make_shared<VertexGroup>();

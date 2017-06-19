@@ -11,9 +11,6 @@
 namespace FalconEngine
 {
 
-class Camera;
-using CameraSharedPtr = std::shared_ptr<Camera>;
-
 class FALCON_ENGINE_API Camera : public Object
 {
     FALCON_ENGINE_RTTI_DECLARE;

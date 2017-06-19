@@ -33,16 +33,19 @@ public:
 class FALCON_ENGINE_API ModelImportOption
 {
 public:
+    /************************************************************************/
+    /* Static Members                                                       */
+    /************************************************************************/
+    static const ModelImportOption Default;
+
+public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
     ModelImportOption(ModelAccessOption vertexBufferUsage,
                       ModelMemoryOption vertexBufferStorage,
                       BufferUsage indexBufferUsage,
-                      IndexType indexType) :
-        mVertexBufferUsage(vertexBufferUsage),
-        mVertexBufferStorage(vertexBufferStorage),
-        mIndexBufferUsage(indexBufferUsage),
-        mIndexType(indexType)
-    {
-    }
+                      IndexType indexType);
 
 public:
     ModelAccessOption mVertexBufferUsage;

@@ -7,7 +7,8 @@
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/filesystem.hpp>
 
-#include <FalconEngine/Content/AssetImportOption.h>
+#include <FalconEngine/Content/ModelImportOption.h>
+#include <FalconEngine/Content/TextureImportOption.h>
 #include <FalconEngine/Core/Path.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture1d.h>
@@ -67,7 +68,7 @@ public:
     std::shared_ptr<Model>
     LoadModel(
         const std::string&       modelFilePath,
-        const ModelImportOption& modelImportOption = AssetImportOption::mModelOption);
+        const ModelImportOption& modelImportOption = ModelImportOption::Default);
 
     std::shared_ptr<ShaderSource>
     GetShaderSource(const std::string& shaderFilePath);
@@ -104,7 +105,7 @@ public:
     std::shared_ptr<T>
     LoadTexture(
         const std::string&         textureAssetPath,
-        const TextureImportOption& textureImportOption = AssetImportOption::mTextureOption)
+        const TextureImportOption& textureImportOption = TextureImportOption::Default)
     {
         static_assert(std::is_base_of<Texture, T>::value, "Invalid texture type parameter.");
 

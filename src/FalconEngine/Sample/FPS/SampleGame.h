@@ -32,7 +32,7 @@ private:
     HandednessRight mHandedness;
 
     // Camera
-    FirstPersonCameraSharedPtr mCamera;
+    std::shared_ptr<FirstPersonCamera> mCamera;
 
     // Fonts
     const Font *mFont = nullptr;

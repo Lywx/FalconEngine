@@ -1,28 +1,34 @@
 #pragma once
 
-#include <FalconEngine/Content/Header.h>
+#include <FalconEngine/Graphics/Header.h>
 
-#include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
+#include <FalconEngine/Math/Vector3.h>
 
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_API TextureImportOption
+// @summary Represents a coordinate system.
+class FALCON_ENGINE_API Coordinate
 {
 public:
     /************************************************************************/
     /* Static Members                                                       */
     /************************************************************************/
-    static const TextureImportOption Default;
+    static const Coordinate Game;
+    static const Coordinate Math;
 
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    TextureImportOption() = default;
+    Coordinate(Vector3f xAxis,
+               Vector3f yAxis,
+               Vector3f zAxis);
 
 public:
-    BufferUsage mTextureUsage = BufferUsage::Static;
+    Vector3f mXAxis;
+    Vector3f mYAxis;
+    Vector3f mZAxis;
 };
 
 }

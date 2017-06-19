@@ -4,7 +4,6 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
-#include <FalconEngine/Content/AssetImportOption.h>
 #include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Core/Path.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>

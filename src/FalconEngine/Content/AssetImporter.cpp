@@ -1,6 +1,5 @@
 #include <FalconEngine/Content/AssetImporter.h>
 
-#include <FalconEngine/Content/AssetImportOption.h>
 #include <FalconEngine/Content/CustomImporter.h>
 #include <FalconEngine/Content/ModelImporter.h>
 

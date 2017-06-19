@@ -7,9 +7,6 @@ namespace FalconEngine
 
 class GameEngineInput;
 
-class FirstPersonCamera;
-using FirstPersonCameraSharedPtr = std::shared_ptr<FirstPersonCamera>;
-
 // @summary Free-flying First-person camera.
 class FALCON_ENGINE_API FirstPersonCamera : public PlayerCamera
 {

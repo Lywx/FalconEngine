@@ -13,7 +13,11 @@ public:
     /************************************************************************/
     /* Static Members                                                       */
     /************************************************************************/
-    static const TextureImportOption Default;
+    static TextureImportOption GetDefault()
+    {
+        static const TextureImportOption sDefault = TextureImportOption();
+        return sDefault;
+    }
 
 public:
     /************************************************************************/

@@ -11,20 +11,20 @@ namespace FalconEngine
 
 FALCON_ENGINE_RTTI_IMPLEMENT(ThirdPersonCamera, Camera);
 
-ThirdPersonCamera::ThirdPersonCamera(const Handedness *handedness) :
-    PlayerCamera(handedness)
+ThirdPersonCamera::ThirdPersonCamera(const Coordinate coordinate, const Handedness *handedness) :
+    PlayerCamera(coordinate, handedness)
 {
     Reset();
 }
 
-ThirdPersonCamera::ThirdPersonCamera(const Handedness *handedness, const Viewport& viewport, float nearPlane, float farPlane) :
-    PlayerCamera(handedness, viewport, nearPlane, farPlane)
+ThirdPersonCamera::ThirdPersonCamera(const Coordinate coordinate, const Handedness *handedness, const Viewport& viewport, float nearPlane, float farPlane) :
+    PlayerCamera(coordinate, handedness, viewport, nearPlane, farPlane)
 {
     Reset();
 }
 
-ThirdPersonCamera::ThirdPersonCamera(const Handedness *handedness, float fovy, float aspectRatio, float nearPlane, float farPlane) :
-    PlayerCamera(handedness, fovy, aspectRatio, nearPlane, farPlane)
+ThirdPersonCamera::ThirdPersonCamera(const Coordinate coordinate, const Handedness *handedness, float fovy, float aspectRatio, float nearPlane, float farPlane) :
+    PlayerCamera(coordinate, handedness, fovy, aspectRatio, nearPlane, farPlane)
 {
     Reset();
 }
@@ -72,16 +72,20 @@ ThirdPersonCamera::Update(double elapsed)
     // NOTE(Wuxiang): The spherical coordinate computation here won't be affected by
     // the sign of azimuthal angle and polar angle. Regardless of the sign of angles,
     // the computation yield correct r vector pointed from origin to target.
+
     auto z = mRadialDistance * glm::sin(mAzimuthalRadian) * glm::cos(mPolarRadian);
     auto x = mRadialDistance * glm::sin(mAzimuthalRadian) * glm::sin(mPolarRadian);
     auto y = mRadialDistance * glm::cos(mAzimuthalRadian);
-    auto r = Vector3f(x, y, z);
+    auto r = mCoordinate.GetAxisX() * x +
+             mCoordinate.GetAxisY() * y +
+             mCoordinate.GetAxisZ() * z;
+
     mPosition = mOrigin + r;
 
     auto pitchRadian = abs(mAzimuthalRadian) - PiOver2;
-    auto pitchQuaternion = Quaternion::CreateFromAxisAngle(Vector3f::UnitX, pitchRadian);
+    auto pitchQuaternion = Quaternion::CreateFromAxisAngle(mCoordinate.GetAxisX(), pitchRadian);
     auto yawRadian = mPolarRadian;
-    auto yawQuaternion = Quaternion::CreateFromAxisAngle(Vector3f::UnitY, yawRadian);
+    auto yawQuaternion = Quaternion::CreateFromAxisAngle(mCoordinate.GetAxisY(), yawRadian);
     auto pitchYawQuaternion = yawQuaternion * pitchQuaternion;
 
     // NOTE(Wuxiang): Inspired by NumberXaero's answer

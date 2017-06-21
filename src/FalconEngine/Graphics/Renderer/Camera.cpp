@@ -10,17 +10,17 @@ FALCON_ENGINE_RTTI_IMPLEMENT(Camera, Object);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Camera::Camera(const Handedness *handedness)
-    : Camera(handedness, PiOver4, 1.77777f)
+Camera::Camera(const Coordinate coordinate, const Handedness *handedness)
+    : Camera(coordinate, handedness, PiOver4, 1.77777f)
 {
 }
 
-Camera::Camera(const Handedness *handedness, const Viewport& viewport, float near /*=0.1f*/, float far /*=1000.f*/)
-    : Camera(handedness, PiOver4, viewport.GetAspect(), near, far)
+Camera::Camera(const Coordinate coordinate, const Handedness *handedness, const Viewport& viewport, float near /*=0.1f*/, float far /*=1000.f*/)
+    : Camera(coordinate, handedness, PiOver4, viewport.GetAspect(), near, far)
 {
 }
 
-Camera::Camera(const Handedness *handedness, float fovy, float aspect, float near /*=0.1f*/, float far /*=1000.f*/) :
+Camera::Camera(const Coordinate coordinate, const Handedness *handedness, float fovy, float aspect, float near /*=0.1f*/, float far /*=1000.f*/) :
     mAspect(aspect),
     mNear(near),
     mFar(far),
@@ -29,6 +29,7 @@ Camera::Camera(const Handedness *handedness, float fovy, float aspect, float nea
     mOrientation(Quaternion::Identity),
     mView(Matrix4f::Identity),
     mWorld(Matrix4f::Identity),
+    mCoordinate(coordinate),
     mHandedness(handedness)
 {
     mProjection = mHandedness->CreatePerspectiveFieldOfView(mFovy, mAspect, mNear, mFar);
@@ -106,9 +107,9 @@ Camera::GetOrientation() const
 void
 Camera::SetOrientation(float pitch, float yaw, float roll)
 {
-    Quaternion rotationPitch = Quaternion::CreateFromAxisAngle(Vector3f::UnitX, pitch);
-    Quaternion rotationYaw   = Quaternion::CreateFromAxisAngle(Vector3f::UnitY, yaw);
-    Quaternion rotationRoll  = Quaternion::CreateFromAxisAngle(Vector3f::UnitZ, roll);
+    Quaternion rotationPitch = Quaternion::CreateFromAxisAngle(mCoordinate.GetAxisX(), pitch);
+    Quaternion rotationYaw   = Quaternion::CreateFromAxisAngle(mCoordinate.GetAxisY(), yaw);
+    Quaternion rotationRoll  = Quaternion::CreateFromAxisAngle(mCoordinate.GetAxisZ(), roll);
 
     mOrientation = rotationPitch * rotationYaw * rotationRoll;
 }
@@ -234,7 +235,7 @@ Camera::LookAt(const Vector3f& from, const Vector3f& to, const Vector3f& up)
 void
 Camera::Update(double /* elapsed */)
 {
-    mWorld = Matrix4f::CreateTranslation(mPosition) * Matrix4f::CreateRotation(mOrientation);
+    mWorld = Matrix4f::CreateTranslation(mPosition) * Matrix4f::CreateRotation(mOrientation) * mCoordinate.GetTransform();
     mView = Matrix4f::Inverse(mWorld);
     mViewProjection = mProjection * mView;
 }

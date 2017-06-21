@@ -68,7 +68,7 @@ public:
     std::shared_ptr<Model>
     LoadModel(
         const std::string&       modelFilePath,
-        const ModelImportOption& modelImportOption = ModelImportOption::Default);
+        const ModelImportOption& modelImportOption = ModelImportOption::GetDefault());
 
     std::shared_ptr<ShaderSource>
     GetShaderSource(const std::string& shaderFilePath);
@@ -105,7 +105,7 @@ public:
     std::shared_ptr<T>
     LoadTexture(
         const std::string&         textureAssetPath,
-        const TextureImportOption& textureImportOption = TextureImportOption::Default)
+        const TextureImportOption& textureImportOption = TextureImportOption::GetDefault())
     {
         static_assert(std::is_base_of<Texture, T>::value, "Invalid texture type parameter.");
 

@@ -14,9 +14,16 @@ namespace FalconEngine
 class FALCON_ENGINE_API Handedness
 {
 public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
     Handedness();
     virtual ~Handedness();
 
+public:
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
     // @param View transform matrix. If you use world transform here you would get wrong result. If you use world view conpound matrix you would get the world
     virtual Vector3f
     Right(const Matrix4f& view) const = 0;
@@ -72,6 +79,9 @@ public:
 class HandednessLeft : public Handedness
 {
 public:
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
     // @summary Extract right vector from the view matrix, assuming the view transform matrix is in the form of vector on the right
     Vector3f
     Right(const Matrix4f & view) const override;
@@ -118,6 +128,19 @@ public:
 class FALCON_ENGINE_API HandednessRight : public Handedness
 {
 public:
+    /************************************************************************/
+    /* Static Members                                                       */
+    /************************************************************************/
+    static Handedness *GetInstance()
+    {
+        static HandednessRight sHandedness;
+        return &sHandedness;
+    }
+
+public:
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
     // @summary Extract right vector from the view matrix, assuming the view transform matrix is in the form of vector on the right
     Vector3f
     Right(const Matrix4f & view) const override;

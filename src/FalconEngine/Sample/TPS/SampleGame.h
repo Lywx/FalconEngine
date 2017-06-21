@@ -28,8 +28,6 @@ public:
     Update(GameEngineGraphics *graphics, GameEngineInput *input, double elapsed) override;
 
 private:
-    HandednessRight mHandedness;
-
     // Camera
     std::shared_ptr<ThirdPersonCamera> mCamera;
 

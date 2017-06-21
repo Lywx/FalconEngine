@@ -29,8 +29,6 @@ public:
     Update(GameEngineGraphics *graphics, GameEngineInput *input, double elapsed) override;
 
 private:
-    HandednessRight mHandedness;
-
     // Camera
     std::shared_ptr<FirstPersonCamera> mCamera;
 
@@ -41,6 +39,7 @@ private:
     std::shared_ptr<SceneEntity>       mScene;
     std::shared_ptr<PhongEffect>       mSceneLightingEffect;
     std::shared_ptr<PhongEffectParams> mSceneLightingParams;
+    std::shared_ptr<Node>              mRoomNode;
 
     // Entities
     std::shared_ptr<LightEntity> mDirectionalLight;

@@ -6,16 +6,6 @@ namespace FalconEngine
 {
 
 /************************************************************************/
-/* Static Members                                                       */
-/************************************************************************/
-const ModelImportOption
-ModelImportOption::Default = ModelImportOption(
-                                 ModelAccessOption(),
-                                 ModelMemoryOption(),
-                                 BufferUsage::Static,
-                                 IndexType::UnsignedInt);
-
-/************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
 ModelImportOption::ModelImportOption(ModelAccessOption vertexBufferUsage, ModelMemoryOption vertexBufferStorage, BufferUsage indexBufferUsage, IndexType indexType):

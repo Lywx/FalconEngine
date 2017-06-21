@@ -12,7 +12,7 @@ namespace FalconEngine
 
 SampleGame::SampleGame()
 {
-    mCamera = make_shared<ThirdPersonCamera>(&mHandedness);
+    mCamera = make_shared<ThirdPersonCamera>(Coordinate::GetStandard(), HandednessRight::GetInstance());
 }
 
 SampleGame::~SampleGame()

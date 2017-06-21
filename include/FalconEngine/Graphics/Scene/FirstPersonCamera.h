@@ -16,9 +16,9 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit FirstPersonCamera(const Handedness *handedness);
-    FirstPersonCamera(const Handedness *handedness, const Viewport& viewport, float nearPlane, float farPlane);
-    FirstPersonCamera(const Handedness *handedness, float fovy, float aspectRatio, float nearPlane, float farPlane);
+    explicit FirstPersonCamera(const Coordinate coordinate, const Handedness *handedness);
+    FirstPersonCamera(const Coordinate coordinate, const Handedness *handedness, const Viewport& viewport, float nearPlane, float farPlane);
+    FirstPersonCamera(const Coordinate coordinate, const Handedness *handedness, float fovy, float aspectRatio, float nearPlane, float farPlane);
 
 public:
     /************************************************************************/

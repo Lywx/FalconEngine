@@ -1,5 +1,7 @@
 ﻿#include "SampleGame.h"
 
+#include <FalconEngine/Graphics/Effect/PaintEffect.h>
+
 using namespace std;
 
 namespace FalconEngine
@@ -7,7 +9,7 @@ namespace FalconEngine
 
 SampleGame::SampleGame()
 {
-    mCamera = make_shared<FirstPersonCamera>(&mHandedness);
+    mCamera = make_shared<FirstPersonCamera>(Coordinate::GetStandard(), HandednessRight::GetInstance());
 }
 
 SampleGame::~SampleGame()
@@ -38,8 +40,8 @@ SampleGame::Initialize()
             sceneNode->mWorldTransform = Matrix4f::Zero;
 
             auto roomModel = assetManager->LoadModel("Content/Model/Bedroom.dae");
-            auto roomNode = ShareClone(roomModel->GetNode());
-            sceneNode->AttachChild(roomNode);
+            mRoomNode = ShareClone(roomModel->GetNode());
+            sceneNode->AttachChild(mRoomNode);
 
             auto boxModel = assetManager->LoadModel("Content/Model/Engine/Box.dae");
             auto boxNode = boxModel->GetNode();
@@ -47,9 +49,31 @@ SampleGame::Initialize()
             mPointLight1 = make_shared<LightEntity>(ShareClone(boxNode), LightType::Point);
             mPointLight2 = make_shared<LightEntity>(ShareClone(boxNode), LightType::Point);
             mPointLight3 = make_shared<LightEntity>(ShareClone(boxNode), LightType::Point);
-            roomNode->AttachChild(mPointLight1->GetNode());
-            roomNode->AttachChild(mPointLight2->GetNode());
-            roomNode->AttachChild(mPointLight3->GetNode());
+            mRoomNode->AttachChild(mPointLight1->GetNode());
+            mRoomNode->AttachChild(mPointLight2->GetNode());
+            mRoomNode->AttachChild(mPointLight3->GetNode());
+
+            // Axis
+            auto axeModel = assetManager->LoadModel("Content/Model/Engine/Axe.dae");
+            auto axeNodeX = ShareClone(axeModel->GetNode());
+            auto axeNodeY = ShareClone(axeModel->GetNode());
+            auto axeNodeZ = ShareClone(axeModel->GetNode());
+            auto axeNode = make_shared<Node>();
+            axeNode->AttachChild(axeNodeX);
+            axeNode->AttachChild(axeNodeY);
+            axeNode->AttachChild(axeNodeZ);
+            axeNodeX->mLocalTransform = Matrix4f::CreateRotationZ(-PiOver2);
+            axeNodeY->mLocalTransform = Matrix4f::Identity;
+            axeNodeZ->mLocalTransform = Matrix4f::CreateRotationX(+PiOver2);
+            sceneNode->AttachChild(axeNode);
+
+            auto sceneAxeEffect = make_shared<PaintEffect>();
+            auto sceneAxeEffectParamX = make_shared<PaintEffectParams>(ColorPalette::Red);
+            auto sceneAxeEffectParamY = make_shared<PaintEffectParams>(ColorPalette::Green);
+            auto sceneAxeEffectParamZ = make_shared<PaintEffectParams>(ColorPalette::Blue);
+            sceneAxeEffect->CreateInstance(axeNodeX.get(), sceneAxeEffectParamX);
+            sceneAxeEffect->CreateInstance(axeNodeY.get(), sceneAxeEffectParamY);
+            sceneAxeEffect->CreateInstance(axeNodeZ.get(), sceneAxeEffectParamZ);
         }
     }
 
@@ -98,7 +122,7 @@ SampleGame::Initialize()
         mSceneLightingParams->mPointLightList = { mPointLight1->GetLight(), mPointLight2->GetLight(), mPointLight3->GetLight() };
 
         mSceneLightingEffect = make_shared<PhongEffect>();
-        mSceneLightingEffect->CreateInstance(mScene->GetNode().get(), mSceneLightingParams);
+        mSceneLightingEffect->CreateInstance(mRoomNode.get(), mSceneLightingParams);
     }
 
     // Initialize Interaction.

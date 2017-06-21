@@ -36,7 +36,15 @@ public:
     /************************************************************************/
     /* Static Members                                                       */
     /************************************************************************/
-    static const ModelImportOption Default;
+    static ModelImportOption GetDefault()
+    {
+        static const ModelImportOption sDefault = ModelImportOption(
+                    ModelAccessOption(),
+                    ModelMemoryOption(),
+                    BufferUsage::Static,
+                    IndexType::UnsignedInt);
+        return sDefault;
+    }
 
 public:
     /************************************************************************/

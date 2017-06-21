@@ -13,20 +13,20 @@ FALCON_ENGINE_RTTI_IMPLEMENT(FirstPersonCamera, Camera);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-FirstPersonCamera::FirstPersonCamera(const Handedness *handedness) :
-    PlayerCamera(handedness)
+FirstPersonCamera::FirstPersonCamera(const Coordinate coordinate, const Handedness *handedness) :
+    PlayerCamera(coordinate, handedness)
 {
     Reset();
 }
 
-FirstPersonCamera::FirstPersonCamera(const Handedness *handedness, const Viewport& viewport, float nearPlane, float farPlane):
-    PlayerCamera(handedness, viewport, nearPlane, farPlane)
+FirstPersonCamera::FirstPersonCamera(const Coordinate coordinate, const Handedness *handedness, const Viewport& viewport, float nearPlane, float farPlane):
+    PlayerCamera(coordinate, handedness, viewport, nearPlane, farPlane)
 {
     Reset();
 }
 
-FirstPersonCamera::FirstPersonCamera(const Handedness *handedness, float fovy, float aspectRatio, float nearPlane, float farPlane) :
-    PlayerCamera(handedness, fovy, aspectRatio, nearPlane, farPlane)
+FirstPersonCamera::FirstPersonCamera(const Coordinate coordinate, const Handedness *handedness, float fovy, float aspectRatio, float nearPlane, float farPlane) :
+    PlayerCamera(coordinate, handedness, fovy, aspectRatio, nearPlane, farPlane)
 {
     Reset();
 }
@@ -93,13 +93,13 @@ FirstPersonCamera::Update(GameEngineInput *input, double elapsed)
         auto pitchDegree = pitchDegreePrevious + pitchDegreeRotation;
         pitchDegree = Clamp<float>(pitchDegree, -90, 90);
         mPitchRadian = Radian(pitchDegree);
-        auto pitchQuaternion = Quaternion::CreateFromAxisAngle(Vector3f::UnitX, mPitchRadian);
+        auto pitchQuaternion = Quaternion::CreateFromAxisAngle(mCoordinate.GetAxisX(), mPitchRadian);
 
         auto yawDegreePrevious = Degree(mYawRadian);
         auto yawDegree = yawDegreePrevious + yawDegreeRotation;
         yawDegree = DegreeNormalize<float>(yawDegree, -180, 180);
         mYawRadian = Radian(yawDegree);
-        auto yawQuaternion = Quaternion::CreateFromAxisAngle(Vector3f::UnitY, mYawRadian);
+        auto yawQuaternion = Quaternion::CreateFromAxisAngle(mCoordinate.GetAxisY(), mYawRadian);
 
         auto pitchYawQuaternion = yawQuaternion * pitchQuaternion;
 

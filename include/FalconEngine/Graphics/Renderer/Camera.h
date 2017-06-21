@@ -4,6 +4,7 @@
 
 #include <FalconEngine/Core/Object.h>
 #include <FalconEngine/Graphics/Renderer/Viewport.h>
+#include <FalconEngine/Math/Coordinate.h>
 #include <FalconEngine/Math/Handedness.h>
 #include <FalconEngine/Math/Quaternion.h>
 #include <FalconEngine/Math/Vector3.h>
@@ -19,9 +20,9 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Camera(const Handedness *handedness);
-    Camera(const Handedness *handedness, const Viewport& viewport, float near = 0.1f, float far = 1000.f);
-    Camera(const Handedness *handedness, float fovy, float aspect, float near = 0.1f, float far = 1000.f);
+    Camera(const Coordinate coordinate, const Handedness *handedness);
+    Camera(const Coordinate coordinate, const Handedness *handedness, const Viewport& viewport, float near = 0.1f, float far = 1000.f);
+    Camera(const Coordinate coordinate, const Handedness *handedness, float fovy, float aspect, float near = 0.1f, float far = 1000.f);
     virtual ~Camera();
 
     /************************************************************************/
@@ -155,7 +156,8 @@ protected:
     Matrix4f           mViewProjection;                                         // View projection matrix for saving extra computation.
     Matrix4f           mWorld;                                                  // World transform matrix for the camera position.
 
-private:
+protected:
+    const Coordinate   mCoordinate;
     const Handedness  *mHandedness;
 };
 

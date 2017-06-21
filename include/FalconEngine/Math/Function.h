@@ -35,14 +35,14 @@ IsEven(const T x)
 /************************************************************************/
 template <typename T>
 constexpr typename std::enable_if<std::is_signed<T>::value, T>::type
-Abs(const T a)
+Abs(T a)
 {
     return (a < 0) ? -a : a;
 }
 
 template <typename T>
 constexpr typename std::enable_if<std::is_unsigned<T>::value, T>::type
-Abs(const T a)
+Abs(T a)
 {
     return a;
 }
@@ -68,7 +68,7 @@ Abs(const T& v)
 
 template <typename T>
 T
-Clamp(T value, const T lower, const T higher)
+Clamp(T value, T lower, T higher)
 {
     value = value > higher ? higher : value;
     return value < lower ? lower : value;
@@ -89,15 +89,15 @@ DegreeNormalize(T degree, T begin, T /* end */)
 }
 
 template <typename T>
-constexpr T
-Degree(const T radian)
+constexpr typename std::enable_if<std::is_floating_point<T>::value, T>::type
+Degree(T radian)
 {
     return T(180.0 * radian / Pi);
 }
 
 template <typename T>
 constexpr bool
-Equal(const T x, const T y, float epsilon = Epsilon)
+Equal(T x, T y, float epsilon = Epsilon)
 {
     return Abs(x - y) <= epsilon;
 }
@@ -111,7 +111,7 @@ EqualAlmost(const T x, const T y, float epsilon = Epsilon)
 
 template <typename T>
 constexpr T
-Lerp(const T a, const T b, const T t)
+Lerp(T a, T b, T t)
 {
     return a + t * (b - a);
 }
@@ -131,22 +131,22 @@ Min(T a, T b)
 }
 
 template <typename T>
-constexpr T
-Radian(const T degree)
+constexpr typename std::enable_if<std::is_floating_point<T>::value, T>::type
+Radian(T degree)
 {
     return T(Pi * degree / 180.0);
 }
 
 template <typename T>
 constexpr T
-Square(const T x)
+Square(T x)
 {
     return x * x;
 }
 
 template <typename T>
 constexpr T
-Smooth(const T x)
+Smooth(T x)
 {
     return x * x * (3 - 2 * x);
 }

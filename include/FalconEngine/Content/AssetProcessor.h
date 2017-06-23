@@ -2,11 +2,12 @@
 
 #include <FalconEngine/Content/Header.h>
 
+#include <fstream>
 #include <map>
 #include <string>
 #include <vector>
 
-#include <boost/archive/binary_oarchive.hpp>
+#include <cereal/archives/portable_binary.hpp>
 
 namespace FalconEngine
 {
@@ -36,7 +37,7 @@ public:
 
 private:
     static void
-    BakeFont(Font *font, const std::string& fontOutputPath);
+    BakeFont(std::shared_ptr<Font> font, const std::string& fontOutputPath);
 
     // @summary Load font without optimization.
     static std::shared_ptr<Font>
@@ -44,16 +45,14 @@ private:
 
     template <typename T>
     static void
-    BakeTexture(T *texture, const std::string& textureOutputPath)
+    BakeTexture(std::shared_ptr<T> texture, const std::string& textureOutputPath)
     {
         static_assert(std::is_base_of<Texture, T>::value, "Invalid texture type parameter.");
 
-        using namespace boost;
-
         // http://stackoverflow.com/questions/24313359/data-dependent-failure-when-serializing-stdvector-to-boost-binary-archive
         std::ofstream textureAssetStream(textureOutputPath, std::ios::binary);
-        archive::binary_oarchive textureAssetArchive(textureAssetStream);
-        textureAssetArchive << *texture;
+        cereal::PortableBinaryOutputArchive textureAssetArchive(textureAssetStream);
+        textureAssetArchive(texture);
     }
 
     static std::shared_ptr<Texture1d>

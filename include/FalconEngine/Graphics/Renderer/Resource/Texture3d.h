@@ -3,7 +3,6 @@
 #include <FalconEngine/Graphics/Header.h>
 
 #include <memory>
-#include <boost/serialization/access.hpp>
 
 #include <FalconEngine/Graphics/Renderer/Resource/TextureBuffer.h>
 

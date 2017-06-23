@@ -4,8 +4,9 @@
 
 #include <map>
 
-#include <boost/archive/binary_iarchive.hpp>
 #include <boost/filesystem.hpp>
+
+#include <cereal/archives/portable_binary.hpp>
 
 #include <FalconEngine/Content/ModelImportOption.h>
 #include <FalconEngine/Content/TextureImportOption.h>
@@ -139,9 +140,8 @@ private:
     {
         if (Exist(textureAssetPath))
         {
-            // http://stackoverflow.com/questions/24313359/data-dependent-failure-when-serializing-stdvector-to-boost-binary-archive
             std::ifstream textureAssetStream(textureAssetPath, std::ios::binary);
-            boost::archive::binary_iarchive textureAssetArchive(textureAssetStream);
+            cereal::PortableBinaryInputArchive textureAssetArchive(textureAssetStream);
 
             switch (textureType)
             {
@@ -192,10 +192,10 @@ private:
     }
 
     std::shared_ptr<Texture1d>
-    LoadTexture1dInternal(const TextureImportOption& textureImportOption, boost::archive::binary_iarchive& textureAssetArchive) const;
+    LoadTexture1dInternal(const TextureImportOption& textureImportOption, cereal::PortableBinaryInputArchive& textureAssetArchive) const;
 
     std::shared_ptr<Texture2d>
-    LoadTexture2dInternal(const TextureImportOption& textureImportOption, boost::archive::binary_iarchive& textureAssetArchive) const;
+    LoadTexture2dInternal(const TextureImportOption& textureImportOption, cereal::PortableBinaryInputArchive& textureAssetArchive) const;
 
 private:
     AssetImporter                                       *mImporter;

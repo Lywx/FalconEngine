@@ -3,6 +3,24 @@
 namespace FalconEngine
 {
 
+/************************************************************************/
+/* Constructors and Destructor                                          */
+/************************************************************************/
+FontGlyph::FontGlyph():
+    mId(0),
+    mPage(0),
+    mWidth(0),
+    mHeight(0),
+    mOffsetX(0),
+    mOffsetY(0),
+    mAdvance(0),
+    mS1(0),
+    mT1(0),
+    mS2(0),
+    mT2(0)
+{
+}
+
 FontGlyph::FontGlyph(int id, double width, double height, double offsetX,
                      double offsetY, double advance, int page, double s1, double t1,
                      double s2, double t2) :

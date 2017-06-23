@@ -8,6 +8,11 @@ FALCON_ENGINE_TEXTURE_IMPLEMENT(Texture1d, TextureType::Texture1d);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
+Texture1d::Texture1d():
+    TextureBuffer()
+{
+}
+
 Texture1d::Texture1d(AssetSource        assetSource,
                      const std::string& fileName,
                      const std::string& filePath,

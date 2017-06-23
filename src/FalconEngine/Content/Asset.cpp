@@ -2,10 +2,15 @@
 
 namespace FalconEngine
 {
-
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
+Asset::Asset() :
+    mAssetSource(AssetSource::None),
+    mAssetType(AssetType::None)
+{
+}
+
 Asset::Asset(AssetSource assetSource, AssetType assetType, const std::string& fileName, const std::string& filePath) :
     mAssetSource(assetSource),
     mAssetType(assetType),

@@ -6,6 +6,12 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
+TextureBuffer::TextureBuffer() :
+    mData(nullptr),
+    mDataByteNum(0)
+{
+}
+
 TextureBuffer::TextureBuffer(AssetSource        assetSource,
                              const std::string& fileName,
                              const std::string& filePath,

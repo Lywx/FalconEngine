@@ -6,10 +6,11 @@
 #include <assimp/scene.h>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/archive/binary_oarchive.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>
+
+#include <cereal/archives/portable_binary.hpp>
 
 #pragma warning(disable : 4244)
 
@@ -36,30 +37,30 @@ namespace FalconEngine
 void
 AssetProcessor::BakeFont(const std::string& fntFilePath)
 {
-    auto fontHandle = LoadRawFont(fntFilePath);
-    if (fontHandle)
+    auto font = LoadRawFont(fntFilePath);
+    if (font)
     {
         auto fontOuptutPath = AddAssetExtension(fntFilePath);
-        BakeFont(fontHandle.get(), fontOuptutPath);
+        BakeFont(font, fontOuptutPath);
 
         // Bake font's textures
         auto fntDirPath = GetFileDirectory(fntFilePath);
-        for (int fontPageId = 0; fontPageId < fontHandle->mTexturePages; ++fontPageId)
+        for (int fontPageId = 0; fontPageId < font->mTexturePages; ++fontPageId)
         {
-            auto textureFilePath = fntDirPath + fontHandle->mTextureFileNameList[fontPageId];
+            auto textureFilePath = fntDirPath + font->mTextureFileNameList[fontPageId];
             auto texture = LoadRawTexture2d(textureFilePath);
-            BakeTexture(texture.get(), AddAssetExtension(textureFilePath));
+            BakeTexture(texture, AddAssetExtension(textureFilePath));
         }
     }
 }
 
 void
-AssetProcessor::BakeFont(Font *font, const std::string& fontOutputPath)
+AssetProcessor::BakeFont(std::shared_ptr<Font> font, const std::string& fontOutputPath)
 {
     // http://stackoverflow.com/questions/24313359/data-dependent-failure-when-serializing-stdvector-to-boost-binary-archive
     ofstream fontAssetStream(fontOutputPath, std::ios::binary);
-    archive::binary_oarchive fontAssetArchive(fontAssetStream);
-    fontAssetArchive << *font;
+    cereal::PortableBinaryOutputArchive fontAssetArchive(fontAssetStream);
+    fontAssetArchive(font);
 }
 
 pair<string, string>
@@ -312,22 +313,24 @@ AssetProcessor::LoadRawFont(const std::string& fntFilePath)
         auto font = LoadFntFile(fntFilePath);
         return font;
     }
-
-    return nullptr;
+    else
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("File doesn't exist.");
+    }
 }
 
 void
 AssetProcessor::BakeTexture1d(const std::string& textureFilePath)
 {
-    auto textureHandle = LoadRawTexture1d(textureFilePath);
-    BakeTexture(textureHandle.get(), AddAssetExtension(textureFilePath));
+    auto texture = LoadRawTexture1d(textureFilePath);
+    BakeTexture(texture, AddAssetExtension(textureFilePath));
 }
 
 void
 AssetProcessor::BakeTexture2d(const std::string& textureFilePath)
 {
-    auto textureHandle = LoadRawTexture2d(textureFilePath);
-    BakeTexture(textureHandle.get(), AddAssetExtension(textureFilePath));
+    auto texture = LoadRawTexture2d(textureFilePath);
+    BakeTexture(texture, AddAssetExtension(textureFilePath));
 }
 
 std::shared_ptr<Texture1d>
@@ -422,30 +425,37 @@ BakeMaterial(
 void
 AssetProcessor::BakeModel(const std::string& modelFilePath)
 {
-    // Load model using Assimp
-    static Assimp::Importer modelImporter;
-    const aiScene *scene = modelImporter.ReadFile(modelFilePath, aiProcess_Triangulate | aiProcess_FlipUVs);
-    if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+    if (Exist(modelFilePath))
     {
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(modelImporter.GetErrorString());
-    }
+        // Load model using Assimp
+        static Assimp::Importer modelImporter;
+        const aiScene *scene = modelImporter.ReadFile(modelFilePath, aiProcess_Triangulate | aiProcess_FlipUVs);
+        if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+        {
+            FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(modelImporter.GetErrorString());
+        }
 
-    // Bake texture in model
-    auto modelDirectoryPath = GetFileDirectory(modelFilePath);
-    vector<string> texturePathsBaked;
-    for (unsigned int materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex)
+        // Bake texture in model
+        auto modelDirectoryPath = GetFileDirectory(modelFilePath);
+        vector<string> texturePathsBaked;
+        for (unsigned int materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex)
+        {
+            auto material = scene->mMaterials[materialIndex];
+
+            BakeMaterial(modelDirectoryPath, material, aiTextureType_AMBIENT, texturePathsBaked);
+            BakeMaterial(modelDirectoryPath, material, aiTextureType_DIFFUSE, texturePathsBaked);
+            BakeMaterial(modelDirectoryPath, material, aiTextureType_EMISSIVE, texturePathsBaked);
+            BakeMaterial(modelDirectoryPath, material, aiTextureType_SHININESS, texturePathsBaked);
+            BakeMaterial(modelDirectoryPath, material, aiTextureType_SPECULAR, texturePathsBaked);
+        }
+
+        // We don't need to get the fully initialized model at processor. The model
+        // is only half loaded.
+    }
+    else
     {
-        auto material = scene->mMaterials[materialIndex];
-
-        BakeMaterial(modelDirectoryPath, material, aiTextureType_AMBIENT, texturePathsBaked);
-        BakeMaterial(modelDirectoryPath, material, aiTextureType_DIFFUSE, texturePathsBaked);
-        BakeMaterial(modelDirectoryPath, material, aiTextureType_EMISSIVE, texturePathsBaked);
-        BakeMaterial(modelDirectoryPath, material, aiTextureType_SHININESS, texturePathsBaked);
-        BakeMaterial(modelDirectoryPath, material, aiTextureType_SPECULAR, texturePathsBaked);
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("File does not exist.")
     }
-
-    // We don't need to get the fully initialized model at processor. The model
-    // is only half loaded.
 }
 
 }

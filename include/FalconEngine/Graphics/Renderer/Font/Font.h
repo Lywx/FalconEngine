@@ -7,13 +7,12 @@
 #include <string>
 #include <vector>
 
-#include <boost/serialization/access.hpp>
-#include <boost/serialization/vector.hpp>
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/split_member.hpp>
+#include <cereal/access.hpp>
+#include <cereal/types/base_class.hpp>
+#include <cereal/types/string.hpp>
+#include <cereal/types/vector.hpp>
 
 #include <FalconEngine/Content/Asset.h>
-
 #include <FalconEngine/Graphics/Renderer/Font/FontGlyph.h>
 
 namespace FalconEngine
@@ -33,6 +32,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
+    Font();
     Font(AssetSource assetSource, const std::string& fileName, const std::string& filePath);
     virtual ~Font();
 
@@ -75,9 +75,9 @@ public:
     /************************************************************************/
     /* Font Metadata                                                        */
     /************************************************************************/
-    int                           mTextureWidth;
-    int                           mTextureHeight;
-    int                           mTexturePages;                               // Font texture page number
+    int                           mTextureWidth = 0;
+    int                           mTextureHeight = 0;
+    int                           mTexturePages = 0;                           // Font texture page number
 
     std::vector<std::string>      mTextureArchiveNameList;                     // Font raw texture filenames, index is the page id
     std::vector<std::string>      mTextureFileNameList;                        // Font texture archive filenames, index is the page id
@@ -100,55 +100,31 @@ private:
     /* Asset Importing and Exporting                                        */
     /************************************************************************/
 public:
-    friend class boost::serialization::access;
+    friend class cereal::access;
     template<class Archive>
-    void save(Archive & ar, const unsigned int /* version */) const
+    void serialize(Archive & ar)
     {
-        ar << boost::serialization::base_object<const Asset>(*this);
+        ar & cereal::base_class<Asset>(this);
 
-        ar << mSizePt;
-        ar << mSizePx;
+        ar & mSizePt;
+        ar & mSizePx;
 
-        ar << mLineBase;
-        ar << mLineHeight;
+        ar & mLineBase;
+        ar & mLineHeight;
 
-        ar << mGlyphCount;
-        ar << mGlyphIndexTable;
-        ar << mGlyphTable;
+        ar & mGlyphCount;
+        ar & mGlyphIndexTable;
+        ar & mGlyphTable;
 
-        ar << mTextureWidth;
-        ar << mTextureHeight;
-        ar << mTexturePages;
+        ar & mTextureWidth;
+        ar & mTextureHeight;
+        ar & mTexturePages;
 
-        ar << mTextureArchiveNameList;
-        ar << mTextureFileNameList;
+        ar & mTextureArchiveNameList;
+        ar & mTextureFileNameList;
     }
-
-    template<class Archive>
-    void load(Archive & ar, const unsigned int /* version */)
-    {
-        ar >> boost::serialization::base_object<Asset>(*this);
-
-        ar >> mSizePt;
-        ar >> mSizePx;
-
-        ar >> mLineBase;
-        ar >> mLineHeight;
-
-        ar >> mGlyphCount;
-        ar >> mGlyphIndexTable;
-        ar >> mGlyphTable;
-
-        ar >> mTextureWidth;
-        ar >> mTextureHeight;
-        ar >> mTexturePages;
-
-        ar >> mTextureArchiveNameList;
-        ar >> mTextureFileNameList;
-    }
-
-    BOOST_SERIALIZATION_SPLIT_MEMBER()
 };
 #pragma warning(default: 4251)
 
 }
+

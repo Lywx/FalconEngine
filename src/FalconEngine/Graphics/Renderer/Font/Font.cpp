@@ -11,11 +11,12 @@ const double Font::mSizeScale = 1.32;
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
+Font::Font()
+{
+}
+
 Font::Font(AssetSource assetSource, const std::string& fileName, const std::string& filePath) :
-    Asset(assetSource, AssetType::Font, fileName, filePath),
-    mTextureWidth(0),
-    mTextureHeight(0),
-    mTexturePages(0)
+    Asset(assetSource, AssetType::Font, fileName, filePath)
 {
 }
 

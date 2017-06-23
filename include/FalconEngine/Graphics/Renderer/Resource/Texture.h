@@ -3,9 +3,8 @@
 #include <map>
 #include <vector>
 
-#include <boost/serialization/access.hpp>
-#include <boost/serialization/base_object.hpp>
-#include <boost/serialization/split_member.hpp>
+#include <cereal/access.hpp>
+#include <cereal/types/base_class.hpp>
 
 #include <FalconEngine/Content/Asset.h>
 #include <FalconEngine/Graphics/Header.h>
@@ -82,6 +81,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
+    Texture();
     Texture(AssetSource        assetSource,
             const std::string& fileName,
             const std::string& filePath,
@@ -109,34 +109,20 @@ public:
     /* Asset Importing and Exporting                                        */
     /************************************************************************/
 public:
-    friend class boost::serialization::access;
+    friend class cereal::access;
     template<class Archive>
-    void save(Archive & ar, const unsigned int /* version */) const
+    void serialize(Archive & ar)
     {
-        ar << boost::serialization::base_object<const Asset>(*this);
-        ar << mChannel;
-        ar << mDimension;
+        ar & cereal::base_class<Asset>(this);
 
-        ar << mFormat;
-        ar << mMipmapLevel;
-        ar << mType;
-        ar << mUsage;
+        ar & mChannel;
+        ar & mDimension;
+
+        ar & mFormat;
+        ar & mMipmapLevel;
+        ar & mType;
+        ar & mUsage;
     }
-
-    template<class Archive>
-    void load(Archive & ar, const unsigned int /* version */)
-    {
-        ar >> boost::serialization::base_object<Asset>(*this);
-        ar >> mChannel;
-        ar >> mDimension;
-
-        ar >> mFormat;
-        ar >> mMipmapLevel;
-        ar >> mType;
-        ar >> mUsage;
-    }
-
-    BOOST_SERIALIZATION_SPLIT_MEMBER()
 };
 
 }

@@ -10,6 +10,7 @@ namespace FalconEngine
 class FALCON_ENGINE_API TextureBuffer : public Texture
 {
 public:
+    TextureBuffer();
     TextureBuffer(AssetSource        assetSource,
                   const std::string& fileName,
                   const std::string& filePath,
@@ -30,22 +31,14 @@ public:
     /************************************************************************/
     /* Asset Importing and Exporting                                        */
     /************************************************************************/
-    friend class boost::serialization::access;
+    friend class cereal::access;
     template<class Archive>
-    void save(Archive & ar, const unsigned int /* version */) const
+    void serialize(Archive & ar)
     {
-        ar << boost::serialization::base_object<const Texture>(*this);
-        ar << mDataByteNum;
-    }
+        ar & cereal::base_class<Texture>(this);
 
-    template<class Archive>
-    void load(Archive & ar, const unsigned int /* version */)
-    {
-        ar >> boost::serialization::base_object<Texture>(*this);
-        ar >> mDataByteNum;
+        ar & mDataByteNum;
     }
-
-    BOOST_SERIALIZATION_SPLIT_MEMBER()
 };
 
 }

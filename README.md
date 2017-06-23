@@ -12,10 +12,11 @@ Building
 Dependency
 ===
 1. assimp 3.3.1.
-2. boost 1.6.1 for boost-serialization, boost-filesystem, boost-regex, boost-system.
-3. glew 2.0.0.
-4. glfw 3.2.1.
-5. stb_image.
+2. boost 1.6.1 for boost-filesystem, boost-regex, boost-system.
+3. [cereal](https://github.com/USCiLab/cereal) 1.2.2.
+4. glew 2.0.0.
+5. glfw 3.2.1.
+6. stb_image.
 
 Showcase
 ===

@@ -147,12 +147,14 @@ AssetManager::LoadFontInternal(const std::string & fontAssetPath)
     using namespace boost;
 
     // Load font.
-    auto font = std::make_shared<Font>(AssetSource::Stream, "None", "None");
+    std::shared_ptr<Font> font;
     {
         // http://stackoverflow.com/questions/24313359/data-dependent-failure-when-serializing-stdvector-to-boost-binary-archive
         ifstream fontAssetStream(fontAssetPath, std::ios::binary);
-        archive::binary_iarchive fontAssetArchive(fontAssetStream);
-        fontAssetArchive >> *font;
+        cereal::PortableBinaryInputArchive fontAssetArchive(fontAssetStream);
+        fontAssetArchive(font);
+
+        font->mAssetSource = AssetSource::Stream;
     }
 
     // Load font texture array.
@@ -231,35 +233,39 @@ AssetManager::LoadShaderSourceInternal(const std::string & shaderFilePath)
 }
 
 std::shared_ptr<Texture1d>
-AssetManager::LoadTexture1dInternal(const TextureImportOption& textureImportOption, boost::archive::binary_iarchive& textureAssetArchive) const
+AssetManager::LoadTexture1dInternal(const TextureImportOption& textureImportOption, cereal::PortableBinaryInputArchive& textureAssetArchive) const
 {
     using namespace boost;
 
-    std::shared_ptr<Texture1d> texture = std::make_shared<Texture1d>(AssetSource::Stream,
-                                         "None", "None", 0, TextureFormat::None,
-                                         textureImportOption.mTextureUsage);
-    textureAssetArchive >> *texture;
+    std::shared_ptr<Texture1d> texture;
+    textureAssetArchive(texture);
+
     if (texture->mData == nullptr)
     {
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Failed to load texture asset.");
     }
+
+    texture->mAssetSource = AssetSource::Stream;
+    texture->mUsage = textureImportOption.mTextureUsage;
 
     return texture;
 }
 
 std::shared_ptr<Texture2d>
-AssetManager::LoadTexture2dInternal(const TextureImportOption& textureImportOption, boost::archive::binary_iarchive& textureAssetArchive) const
+AssetManager::LoadTexture2dInternal(const TextureImportOption& textureImportOption, cereal::PortableBinaryInputArchive& textureAssetArchive) const
 {
     using namespace boost;
 
-    std::shared_ptr<Texture2d> texture = std::make_shared<Texture2d>(AssetSource::Stream,
-                                         "None", "None", 0, 0, TextureFormat::None,
-                                         textureImportOption.mTextureUsage);
-    textureAssetArchive >> *texture;
+    std::shared_ptr<Texture2d> texture;
+    textureAssetArchive(texture);
+
     if (texture->mData == nullptr)
     {
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Failed to load texture asset.");
     }
+
+    texture->mAssetSource = AssetSource::Stream;
+    texture->mUsage = textureImportOption.mTextureUsage;
 
     return texture;
 }

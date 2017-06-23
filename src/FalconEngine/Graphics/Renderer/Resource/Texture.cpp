@@ -13,6 +13,14 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
+Texture::Texture() :
+    mFormat(TextureFormat::None),
+    mMipmapLevel(0),
+    mType(TextureType::None),
+    mUsage(BufferUsage::None)
+{
+}
+
 Texture::Texture(AssetSource        assetSource,
                  const std::string& fileName,
                  const std::string& filePath,

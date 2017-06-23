@@ -4,7 +4,8 @@
 
 #include <string>
 
-#include <boost/serialization/access.hpp>
+#include <cereal/access.hpp>
+#include <cereal/types/string.hpp>
 
 namespace FalconEngine
 {
@@ -32,13 +33,14 @@ enum class AssetType
 class FALCON_ENGINE_API Asset
 {
 public:
+    Asset();
     Asset(AssetSource assetSource, AssetType assetType, const std::string& fileName, const std::string& filePath);
     Asset(const Asset&) = delete;
     Asset& operator=(const Asset&) = delete;
     virtual ~Asset() noexcept;
 
 public:
-    AssetSource mAssetSource = AssetSource::None;
+    AssetSource mAssetSource;
 
     AssetType   mAssetType;
     std::string mFileName;
@@ -48,9 +50,9 @@ public:
     /* Asset Importing and Exporting                                        */
     /************************************************************************/
 public:
-    friend class boost::serialization::access;
+    friend class cereal::access;
     template <typename Archive>
-    void serialize(Archive & ar, const unsigned int /* version */)
+    void serialize(Archive & ar)
     {
         // NOTE(Wuxiang): Don't need to serialize mAssetSource, because it is
         // changed when loading in different circumstances.

@@ -11,6 +11,11 @@ Buffer::Buffer(int elementNum, size_t elementByteNum, BufferUsage usage) :
     mElementByteNum(elementByteNum),
     mUsage(usage)
 {
+    if (elementNum < 1)
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Invalid element number.");
+    }
+
     // NOTE(Wuxiang): The capacity is fixed currently.
     mCapacityByteNum = size_t(elementNum) * elementByteNum;
     mCapacityElementNum = elementNum;

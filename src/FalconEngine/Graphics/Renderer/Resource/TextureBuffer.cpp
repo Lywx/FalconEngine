@@ -18,10 +18,12 @@ TextureBuffer::TextureBuffer(AssetSource        assetSource,
                              int                mipmapLevel) :
     Texture(assetSource, fileName, filePath, width, height, depth, format, type, usage, mipmapLevel)
 {
-    mDataByteNum = mDimension[0] * mDimension[1] * mDimension[2] * TexelSize[int(mFormat)];
+    if (width < 1 || height < 1 || depth < 1)
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Invalid texture dimension.");
+    }
 
-    assert(mDataByteNum >= 0);
-
+    mDataByteNum = size_t(mDimension[0]) * size_t(mDimension[1]) * size_t(mDimension[2]) * TexelSize[int(mFormat)];
     mData = new unsigned char[mDataByteNum];
 }
 

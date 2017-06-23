@@ -24,7 +24,7 @@ public:
 
 public:
     unsigned char *mData;
-    int            mDataByteNum;
+    size_t         mDataByteNum;
 
 public:
     /************************************************************************/

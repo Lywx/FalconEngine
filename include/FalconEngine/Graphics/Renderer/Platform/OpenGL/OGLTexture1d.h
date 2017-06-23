@@ -10,9 +10,15 @@ namespace FalconEngine
 class FALCON_ENGINE_API PlatformTexture1d
 {
 public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
     PlatformTexture1d(const Texture1d *texture);
     ~PlatformTexture1d();
 
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
     void
     Enable(int textureUnit);
 

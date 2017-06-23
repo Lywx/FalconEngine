@@ -66,7 +66,7 @@ enum class FALCON_ENGINE_API TextureFormat
     Count
 };
 
-const int TexelSize[int(TextureFormat::Count)] =
+const size_t TexelSize[int(TextureFormat::Count)] =
 {
     0, // None
 

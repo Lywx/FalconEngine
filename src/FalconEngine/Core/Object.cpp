@@ -6,7 +6,8 @@ namespace FalconEngine
 /************************************************************************/
 /* Static Members                                                       */
 /************************************************************************/
-const Rtti Object::sType("Object", nullptr);
+const Rtti
+Object::sType("Object", nullptr);
 
 const Rtti&
 Object::GetType() const

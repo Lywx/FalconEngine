@@ -120,7 +120,7 @@ ModelImporter::CreateMesh(Model *model, const string& modelFilePath, const Model
     // Load vertex and index data.
     auto vertexGroup = CreateVertexGroup(model,
                                          modelImportOption.mVertexBufferUsage,
-                                         modelImportOption.mVertexBufferStorage, aiMesh);
+                                         modelImportOption.mVertexBufferLayout, aiMesh);
     auto indexBuffer = CreateIndexBuffer(model,
                                          modelImportOption.mIndexType,
                                          modelImportOption.mIndexBufferUsage, aiMesh);
@@ -203,8 +203,8 @@ ModelImporter::GetVertexFormat()
 std::shared_ptr<VertexGroup>
 ModelImporter::CreateVertexGroup(
     _IN_OUT_ Model                      *model,
-    _IN_     const ModelAccessOption&    vertexBufferUsage,
-    _IN_     const ModelMemoryOption& /* vertexBufferStorage */,
+    _IN_     const ModelUsageOption&     vertexBufferUsage,
+    _IN_     const ModelLayoutOption& /* vertexBufferLayout */,
     _IN_     const aiMesh               *aiMesh)
 {
     // NOTE(Wuxiang): I think interleaving is not ideal for model loading. Because

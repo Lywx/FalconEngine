@@ -15,6 +15,8 @@ class Texture2d;
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API Texture2dArray : public Texture
 {
+    FALCON_ENGINE_TEXTURE_DECLARE();
+
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */

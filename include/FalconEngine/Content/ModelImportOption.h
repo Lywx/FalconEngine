@@ -8,26 +8,26 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_API ModelAccessOption
+class FALCON_ENGINE_API ModelLayoutOption
 {
 public:
-    ModelAccessOption() = default;
+    ModelLayoutOption() = default;
+
+public:
+    const BufferLayout mPosition = BufferLayout::Separated;
+    const BufferLayout mNormal = BufferLayout::Separated;
+    const BufferLayout mTexCoord = BufferLayout::Separated;
+};
+
+class FALCON_ENGINE_API ModelUsageOption
+{
+public:
+    ModelUsageOption() = default;
 
 public:
     BufferUsage mPosition = BufferUsage::Static;
     BufferUsage mNormal = BufferUsage::Static;
     BufferUsage mTexCoord = BufferUsage::Static;
-};
-
-class FALCON_ENGINE_API ModelMemoryOption
-{
-public:
-    ModelMemoryOption() = default;
-
-public:
-    const BufferStorage mPosition = BufferStorage::Separated;
-    const BufferStorage mNormal = BufferStorage::Separated;
-    const BufferStorage mTexCoord = BufferStorage::Separated;
 };
 
 class FALCON_ENGINE_API ModelImportOption
@@ -39,8 +39,8 @@ public:
     static ModelImportOption GetDefault()
     {
         static const ModelImportOption sDefault = ModelImportOption(
-                    ModelAccessOption(),
-                    ModelMemoryOption(),
+                    ModelLayoutOption(),
+                    ModelUsageOption(),
                     BufferUsage::Static,
                     IndexType::UnsignedInt);
         return sDefault;
@@ -50,14 +50,14 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    ModelImportOption(ModelAccessOption vertexBufferUsage,
-                      ModelMemoryOption vertexBufferStorage,
-                      BufferUsage indexBufferUsage,
-                      IndexType indexType);
+    ModelImportOption(ModelLayoutOption vertexBufferLayout,
+                      ModelUsageOption  vertexBufferUsage,
+                      BufferUsage       indexBufferUsage,
+                      IndexType         indexType);
 
 public:
-    ModelAccessOption mVertexBufferUsage;
-    ModelMemoryOption mVertexBufferStorage;
+    ModelLayoutOption mVertexBufferLayout;
+    ModelUsageOption  mVertexBufferUsage;
     BufferUsage       mIndexBufferUsage;
     IndexType         mIndexType;
 };

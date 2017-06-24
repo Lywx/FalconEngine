@@ -9,7 +9,7 @@ FALCON_ENGINE_TEXTURE_IMPLEMENT(Texture1d, TextureType::Texture1d);
 /* Constructors and Destructor                                          */
 /************************************************************************/
 Texture1d::Texture1d():
-    TextureBuffer()
+    TextureStorage()
 {
 }
 
@@ -20,7 +20,7 @@ Texture1d::Texture1d(AssetSource        assetSource,
                      TextureFormat      format,
                      BufferUsage        usage,
                      int                mipmapLevel) :
-    TextureBuffer(assetSource, fileName, filePath, width, 1, 1, format, TextureType::Texture1d, usage, mipmapLevel)
+    TextureStorage(assetSource, fileName, filePath, width, 1, 1, format, TextureType::Texture1d, usage, mipmapLevel)
 {
 }
 

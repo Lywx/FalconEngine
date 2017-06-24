@@ -9,9 +9,16 @@ namespace FalconEngine
 class FALCON_ENGINE_API PlatformSampler
 {
 public:
-    PlatformSampler(const Sampler *sampler);
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
+    explicit PlatformSampler(const Sampler *sampler);
     virtual ~PlatformSampler();
 
+public:
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
     void
     Enable(int textureUnit);
 

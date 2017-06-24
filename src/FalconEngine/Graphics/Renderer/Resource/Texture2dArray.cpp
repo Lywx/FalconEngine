@@ -4,6 +4,8 @@
 namespace FalconEngine
 {
 
+FALCON_ENGINE_TEXTURE_IMPLEMENT(Texture2dArray, TextureType::Texture2dArray);
+
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/

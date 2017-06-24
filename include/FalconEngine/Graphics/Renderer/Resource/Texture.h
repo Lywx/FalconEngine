@@ -51,9 +51,10 @@ template <typename T>
 TextureType
 GetTextureType()
 {
+    // Don't get mixed up with RTTI classes which use RTTI klass::sType static member also.
     static_assert(std::is_base_of<Texture, T>::value, "Invalid texture type parameter.");
 
-    return T::sTextureType;
+    return T::sType;
 }
 
 enum class FALCON_ENGINE_API TextureFormat
@@ -129,8 +130,8 @@ public:
 
 #define FALCON_ENGINE_TEXTURE_DECLARE() \
 public: \
-    static const FalconEngine::TextureType sTextureType;
+    static const FalconEngine::TextureType sType;
 
 #define FALCON_ENGINE_TEXTURE_IMPLEMENT(textureKlass, textureType) \
-const FalconEngine::TextureType textureKlass::sTextureType = textureType;
+const FalconEngine::TextureType textureKlass::sType = textureType;
 

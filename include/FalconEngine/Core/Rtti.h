@@ -50,7 +50,7 @@ Rtti::IsExactly(const Rtti& type) const
 public: \
     static const Rtti sType; \
     \
-    virtual const Rtti& GetType() const;
+    virtual const Rtti& GetType() const override;
 
 #define FALCON_ENGINE_RTTI_IMPLEMENT(klass, baseklass) \
     const Rtti klass::sType(#klass, &baseklass::sType); \

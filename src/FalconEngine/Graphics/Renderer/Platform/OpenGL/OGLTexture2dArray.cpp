@@ -27,18 +27,18 @@ PlatformTexture2dArray::PlatformTexture2dArray(const Texture2dArray *textureArra
         mBuffer.assign(mTextureArraySize, 0);
         mDimension.assign(mTextureArraySize, { 0, 0 });
 
-        for (int textureArrayIndex = 0; textureArrayIndex < mTextureArraySize; ++textureArrayIndex)
+        for (int textureIndex = 0; textureIndex < mTextureArraySize; ++textureIndex)
         {
-            auto texture = textureArray->GetTextureSlice(textureArrayIndex);
-            mDimension[textureArrayIndex][0] = texture->mDimension[0];
-            mDimension[textureArrayIndex][1] = texture->mDimension[1];
+            auto texture = textureArray->GetTextureSlice(textureIndex);
+            mDimension[textureIndex][0] = texture->mDimension[0];
+            mDimension[textureIndex][1] = texture->mDimension[1];
         }
 
-        for (int textureArrayIndex = 0; textureArrayIndex < mTextureArraySize; ++textureArrayIndex)
+        for (int textureIndex = 0; textureIndex < mTextureArraySize; ++textureIndex)
         {
-            glGenBuffers(1, &mBuffer[textureArrayIndex]);
-            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBuffer[textureArrayIndex]);
-            glBufferData(GL_PIXEL_UNPACK_BUFFER, textureArray->GetTextureSlice(textureArrayIndex)->mDataByteNum, nullptr, mUsage);
+            glGenBuffers(1, &mBuffer[textureIndex]);
+            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBuffer[textureIndex]);
+            glBufferData(GL_PIXEL_UNPACK_BUFFER, textureArray->GetTextureSlice(textureIndex)->mDataByteNum, nullptr, mUsage);
             glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
         }
 
@@ -49,12 +49,12 @@ PlatformTexture2dArray::PlatformTexture2dArray(const Texture2dArray *textureArra
     }
 
     // Fill in the texture data
-    for (int textureArrayIndex = 0; textureArrayIndex < mTextureArraySize; ++textureArrayIndex)
+    for (int textureIndex = 0; textureIndex < mTextureArraySize; ++textureIndex)
     {
-        auto texture = textureArray->GetTextureSlice(textureArrayIndex);
-        void *textureData = Map(textureArrayIndex, 0, BufferAccessMode::Write);
+        auto texture = textureArray->GetTextureSlice(textureIndex);
+        void *textureData = Map(textureIndex, 0, BufferAccessMode::Write);
         memcpy(textureData, texture->mData, texture->mDataByteNum);
-        Unmap(textureArrayIndex, 0);
+        Unmap(textureIndex, 0);
     }
 
     // Allocate current texture memory
@@ -64,12 +64,12 @@ PlatformTexture2dArray::PlatformTexture2dArray(const Texture2dArray *textureArra
         glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, mFormatInternal, textureArray->mDimension[0], textureArray->mDimension[1], textureArray->mDimension[2]);
 
         // Bind newly created texture
-        for (int textureArrayIndex = 0; textureArrayIndex < mTextureArraySize; ++textureArrayIndex)
+        for (int textureIndex = 0; textureIndex < mTextureArraySize; ++textureIndex)
         {
             // Bind PBO to provide asynchronous copy of texture data.
-            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBuffer[textureArrayIndex]);
-            glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, textureArrayIndex,
-                            mDimension[textureArrayIndex][0], mDimension[textureArrayIndex][1], 1,
+            glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBuffer[textureIndex]);
+            glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, textureIndex,
+                            mDimension[textureIndex][0], mDimension[textureIndex][1], 1,
                             mFormat, mType, nullptr);
         }
 

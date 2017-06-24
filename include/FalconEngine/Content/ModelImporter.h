@@ -134,8 +134,8 @@ private:
     // position, normal and texture coordinate.
     static std::shared_ptr<VertexGroup>
     CreateVertexGroup(_IN_OUT_ Model                   *model,
-                      _IN_     const ModelAccessOption& vertexBufferUsage,
-                      _IN_     const ModelMemoryOption& vertexBufferStorage,
+                      _IN_     const ModelUsageOption&  vertexBufferUsage,
+                      _IN_     const ModelLayoutOption& vertexBufferLayout,
                       _IN_     const aiMesh            *aiMesh);
 
     static std::shared_ptr<Material>

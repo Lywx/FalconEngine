@@ -190,8 +190,8 @@ protected:
 private: \
     static std::shared_ptr<klass> GetEffect() \
 { \
-    static auto sVisualEffect = std::make_shared<klass>(); \
-    return sVisualEffect; \
+    static auto sEffect = std::make_shared<klass>(); \
+    return sEffect; \
 } \
 protected: \
     virtual std::shared_ptr<FalconEngine::VisualEffectInstance> \

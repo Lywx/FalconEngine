@@ -10,9 +10,16 @@ namespace FalconEngine
 class FALCON_ENGINE_API PlatformTexture2d
 {
 public:
-    PlatformTexture2d(const Texture2d *texture);
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
+    explicit PlatformTexture2d(const Texture2d *texture);
     ~PlatformTexture2d();
 
+public:
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
     void
     Enable(int textureUnit);
 

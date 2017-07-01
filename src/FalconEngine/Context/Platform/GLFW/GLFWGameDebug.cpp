@@ -3,7 +3,7 @@
 #include <algorithm>
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
-#include <FalconEngine/Context/Platform/GLFW/GLFWHeader.h>
+#include <FalconEngine/Context/Platform/GLFW/Common.h>
 
 using namespace std;
 

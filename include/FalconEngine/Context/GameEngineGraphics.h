@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Context/Header.h>
+#include <FalconEngine/Context/Common.h>
 
 #include <limits>
 
@@ -52,11 +52,13 @@ public:
         return &sInstance;
     }
 
-public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
+private:
     GameEngineGraphics();
+
+public:
     ~GameEngineGraphics();
 
 public:
@@ -113,9 +115,7 @@ public:
 
 public:
     void
-    Initialize(
-        _IN_ GameEngineData     *gameEngineData,
-        _IN_ GameEngineSettings *gameEngineSettings);
+    Initialize();
 
     void
     RenderBegin();
@@ -133,14 +133,12 @@ private:
     void
     Destroy();
 
-protected:
-    std::shared_ptr<DebugRenderer>      mDebugRenderer;
-    std::shared_ptr<EntityRenderer>     mEntityRenderer;
-    std::shared_ptr<FontRenderer>       mFontRenderer;
-    std::shared_ptr<Renderer>           mMasterRenderer;
-    std::shared_ptr<UiRenderer>         mUiRenderer;
-
-    GameEngineSettings                 *mGameEngineSettings;
+private:
+    DebugRenderer      *mDebugRenderer;
+    EntityRenderer     *mEntityRenderer;
+    FontRenderer       *mFontRenderer;
+    Renderer           *mMasterRenderer;
+    UiRenderer         *mUiRenderer;
 };
 #pragma warning(default: 4251)
 

@@ -3,13 +3,31 @@
 namespace FalconEngine
 {
 
-const GLuint OpenGLBufferAccessMode[int(BufferAccessMode::Count)] =
+const GLuint OpenGLBufferAccessModeMark[int(BufferAccessMode::Count)] =
 {
-    GL_INVALID_ENUM,
+    GL_MAP_WRITE_BIT,
+    GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT,
+    GL_MAP_WRITE_BIT,
+    GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT,
+    GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT,
 
-    GL_READ_ONLY,
-    GL_READ_WRITE,
-    GL_WRITE_ONLY,
+    GL_MAP_READ_BIT | GL_MAP_WRITE_BIT,
+    GL_MAP_READ_BIT | GL_MAP_WRITE_BIT,
+
+    GL_MAP_READ_BIT,
+    GL_MAP_READ_BIT,
+};
+
+const GLuint OpenGLBufferFlushModeMark[int(BufferFlushMode::Count)] =
+{
+    0,
+    GL_MAP_FLUSH_EXPLICIT_BIT,
+};
+
+const GLuint OpenGLBufferSynchronizationModeMark[int(BufferSynchronizationMode::Count)] =
+{
+    0,
+    GL_MAP_UNSYNCHRONIZED_BIT,
 };
 
 const GLuint OpenGLBufferUsage[int(BufferUsage::Count)] =
@@ -23,25 +41,25 @@ const GLuint OpenGLBufferUsage[int(BufferUsage::Count)] =
 
 const GLuint OpenGLTextureType[int(TextureFormat::Count)] =
 {
-    0,                // None
+    GL_INVALID_ENUM,  // None
     GL_UNSIGNED_BYTE, // R8G8B8A8
 };
 
 const GLuint OpenGLTextureFormat[int(TextureFormat::Count)] =
 {
-    0,       // None
-    GL_RGBA, // R8G8B8A8
+    GL_INVALID_ENUM, // None
+    GL_RGBA,         // R8G8B8A8
 };
 
 const GLuint OpenGLTextureInternalFormat[int(TextureFormat::Count)] =
 {
-    0,        // None
-    GL_RGBA8, // R8G8B8A8
+    GL_INVALID_ENUM, // None
+    GL_RGBA8,        // R8G8B8A8
 };
 
 const GLuint OpenGLTextureTarget[int(TextureType::Count)] =
 {
-    0,                   // None
+    GL_INVALID_ENUM,     // None
 
     GL_TEXTURE_1D,       // 1d
     GL_TEXTURE_2D,       // 2d
@@ -52,7 +70,7 @@ const GLuint OpenGLTextureTarget[int(TextureType::Count)] =
 
 const GLuint OpenGLTextureTargetBinding[int(TextureType::Count)] =
 {
-    0,                           // None
+    GL_INVALID_ENUM,             // None
 
     GL_TEXTURE_BINDING_1D,       // 1d
     GL_TEXTURE_BINDING_2D,       // 2d

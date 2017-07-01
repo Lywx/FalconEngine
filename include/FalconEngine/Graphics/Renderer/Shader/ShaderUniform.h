@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Header.h>
+#include <FalconEngine/Graphics/Common.h>
 
 #include <functional>
 #include <map>
@@ -64,7 +64,7 @@ public:
 public:
     std::string       mName;
     bool              mEnabled;
-    int               mLocation;
+    unsigned int      mLocation;
     ShaderUniformType mType;
     bool              mUpdated;
 };

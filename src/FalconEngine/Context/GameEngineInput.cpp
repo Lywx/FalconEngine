@@ -4,6 +4,10 @@
 #include <FalconEngine/Input/MouseState.h>
 #include <FalconEngine/Input/KeyboardState.h>
 
+#if defined(FALCON_ENGINE_WINDOW_GLFW)
+#include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
+#endif
+
 namespace FalconEngine
 {
 
@@ -25,24 +29,21 @@ GameEngineInput::~GameEngineInput()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-KeyboardStateSharedPtr
+KeyboardState *
 GameEngineInput::GetKeyboardState() const
 {
-    return mKeyboardState;
+    return mKeyboardState.get();
 }
 
-MouseStateSharedPtr
+MouseState *
 GameEngineInput::GetMouseState() const
 {
-    return mMouseState;
+    return mMouseState.get();
 }
 
 void
-GameEngineInput::Initialize(GameEngineData *gameEngineData, GameEngineSettings *gameEngineSettings)
+GameEngineInput::Initialize()
 {
-    mGameEngineData = gameEngineData;
-    mGameEngineSettings = gameEngineSettings;
-
     InitializePlatform();
 }
 

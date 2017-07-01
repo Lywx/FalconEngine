@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Header.h>
+#include <FalconEngine/Graphics/Common.h>
 
 #include <FalconEngine/Core/EventHandler.h>
 #include <FalconEngine/Core/Object.h>
@@ -34,7 +34,7 @@ public:
     virtual ~Entity();
 
 public:
-    std::shared_ptr<Node>
+    const Node *
     GetNode() const;
 
     std::shared_ptr<Node>

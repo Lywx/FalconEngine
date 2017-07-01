@@ -1,6 +1,7 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLMapping.h>
+#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/Common.h>
+
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLRendererState.h>
 
 namespace FalconEngine

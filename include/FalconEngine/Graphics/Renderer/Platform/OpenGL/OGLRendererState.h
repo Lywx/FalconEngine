@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLHeader.h>
+#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/Common.h>
 
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLMapping.h>
 #include <FalconEngine/Math/Vector4.h>

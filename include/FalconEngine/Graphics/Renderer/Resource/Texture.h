@@ -7,7 +7,7 @@
 #include <cereal/types/base_class.hpp>
 
 #include <FalconEngine/Content/Asset.h>
-#include <FalconEngine/Graphics/Header.h>
+#include <FalconEngine/Graphics/Common.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 
 namespace FalconEngine
@@ -99,6 +99,9 @@ public:
     int            mChannel = 0;                                               // Texture RGBA color channel number.
     int            mDimension[3];                                              // Texture dimension (width, height, depth).
 
+    unsigned char *mData;
+    size_t         mDataByteNum;
+
     // NOTE(Wuxiang): Initialization in constructor requires the following data members.
 
     TextureFormat  mFormat;                                                    // Texture binary format, needed during construction.
@@ -117,6 +120,7 @@ public:
         ar & cereal::base_class<Asset>(this);
 
         ar & mChannel;
+        ar & mDataByteNum;
         ar & mDimension;
 
         ar & mFormat;

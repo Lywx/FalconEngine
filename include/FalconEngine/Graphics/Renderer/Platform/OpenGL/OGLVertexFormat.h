@@ -12,7 +12,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    PlatformVertexFormat(const VertexFormat *vertexFormat);
+    explicit PlatformVertexFormat(const VertexFormat *vertexFormat);
     ~PlatformVertexFormat();
 
 public:
@@ -25,7 +25,15 @@ public:
     void
     Disable();
 
+    /************************************************************************/
+    /* Private Members                                                      */
+    /************************************************************************/
 private:
-    GLuint mVertexArray;
+    void
+    Create();
+
+private:
+    GLuint              mVertexArrayObj;
+    const VertexFormat *mVertexFormatPtr;
 };
 }

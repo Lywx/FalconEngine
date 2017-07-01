@@ -1,8 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Context/Header.h>
-
-#include <FalconEngine/Context/GameEngineSettings.h>
+#include <FalconEngine/Context/Common.h>
 
 namespace FalconEngine
 {
@@ -27,24 +25,24 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
+private:
     GameEnginePlatform();
+
+public:
     virtual ~GameEnginePlatform();
 
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Initialize(GameEngineData *gameEngineData, GameEngineSettings *gameEngineSettings);
+    Initialize();
 
 private:
     void
     InitializeData();
 
     void
-    InitializePlatform(GameEngineData *gameEngineData);
-
-private:
-    GameEngineSettings *mGameEngineSettings;
+    InitializePlatform();
 };
 #pragma warning(default: 4251)
 

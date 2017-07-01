@@ -7,7 +7,7 @@ namespace FalconEngine
 /* Public Members                                                       */
 /************************************************************************/
 void
-GameEngineProfiler::Initialize(GameEngineData * /* gameEngineData */, GameEngineSettings * /* gameEngineSettings */)
+GameEngineProfiler::Initialize()
 {
 }
 

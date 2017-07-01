@@ -21,7 +21,7 @@ VertexGroup::~VertexGroup()
 /* Public Members                                                       */
 /************************************************************************/
 int
-VertexGroup::GetElementNum() const
+VertexGroup::GetVertexNum() const
 {
     if (mVertexBufferTable.size() == 0)
     {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Content/Header.h>
+#include <FalconEngine/Content/Common.h>
 
 #include <FalconEngine/Content/Asset.h>
 #include <FalconEngine/Content/AssetImporter.h>

@@ -21,16 +21,22 @@ VertexBufferBinding::~VertexBufferBinding()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-int
+unsigned int
 VertexBufferBinding::GetIndex() const
 {
     return mIndex;
 }
 
-int
+int64_t
 VertexBufferBinding::GetOffset() const
 {
     return mOffset;
+}
+
+void
+VertexBufferBinding::SetOffset(int64_t offset)
+{
+    mOffset = offset;
 }
 
 int

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Header.h>
+#include <FalconEngine/Graphics/Common.h>
 
 #include <vector>
 
@@ -19,12 +19,18 @@ namespace FalconEngine
 class FALCON_ENGINE_API VertexGroup
 {
 public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
     VertexGroup();
     virtual ~VertexGroup();
 
 public:
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
     int
-    GetElementNum() const;
+    GetVertexNum() const;
 
     void
     ClearVertexBuffer();

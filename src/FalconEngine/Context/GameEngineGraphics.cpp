@@ -9,6 +9,10 @@
 #include <FalconEngine/Graphics/Renderer/Font/FontRenderer.h>
 #include <FalconEngine/Math/Color.h>
 
+#if defined(FALCON_ENGINE_WINDOW_GLFW)
+#include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
+#endif
+
 namespace FalconEngine
 {
 
@@ -16,7 +20,11 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 GameEngineGraphics::GameEngineGraphics() :
-    mGameEngineSettings(nullptr)
+    mDebugRenderer(nullptr),
+    mEntityRenderer(nullptr),
+    mFontRenderer(nullptr),
+    mMasterRenderer(nullptr),
+    mUiRenderer(nullptr)
 {
 }
 
@@ -111,21 +119,18 @@ GameEngineGraphics::SetWindow(int width, int height, float near, float far)
 }
 
 void
-GameEngineGraphics::Initialize(
-    _IN_ GameEngineData     *gameEngineData,
-    _IN_ GameEngineSettings *gameEngineSettings)
+GameEngineGraphics::Initialize()
 {
-    mGameEngineSettings = gameEngineSettings;
-
     // First initialize primary renderer.
-    mMasterRenderer = std::make_shared<Renderer>(gameEngineData, gameEngineSettings);
+    mMasterRenderer = Renderer::GetInstance();
+    mMasterRenderer->Initialize();
 
     // Later initialize sub-renderer.
-    mEntityRenderer = std::make_shared<EntityRenderer>();
+    mEntityRenderer = EntityRenderer::GetInstance();
     mEntityRenderer->Initialize();
 
-    mFontRenderer = std::make_shared<FontRenderer>();
-    mFontRenderer->Initialize(mGameEngineSettings->mWindowWidth, mGameEngineSettings->mWindowHeight);
+    mFontRenderer = FontRenderer::GetInstance();
+    mFontRenderer->Initialize();
 }
 
 void
@@ -143,8 +148,8 @@ GameEngineGraphics::RenderBegin()
 void
 GameEngineGraphics::Render(double percent)
 {
-    mEntityRenderer->Render(mMasterRenderer.get(), percent);
-    mFontRenderer->Render(mMasterRenderer.get(), percent);
+    mEntityRenderer->Render(percent);
+    mFontRenderer->Render(percent);
 }
 
 void

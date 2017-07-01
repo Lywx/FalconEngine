@@ -1,7 +1,10 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Header.h>
+#include <FalconEngine/Graphics/Common.h>
 
+#include <functional>
+
+#include <FalconEngine/Math/Color.h>
 #include <FalconEngine/Math/Matrix4.h>
 #include <FalconEngine/Math/Vector3.h>
 #include <FalconEngine/Math/Vector4.h>
@@ -11,16 +14,55 @@ namespace FalconEngine
 
 enum class FALCON_ENGINE_API BufferAccessMode
 {
-    None,
+    WriteBuffer,
+    WriteBufferInvalidateBuffer, // Enable buffer orphaning to avoid implicit synchronization.
+    WriteRange,
+    WriteRangeInvalidateBuffer,  // Enable buffer orphaning to avoid implicit synchronization.
+    WriteRangeInvalidateRange,
 
-    Read,
-    ReadWrite,
-    Write,
+    ReadWriteBuffer,
+    ReadWriteRange,
+
+    ReadBuffer,
+    ReadRange,
 
     Count
 };
 
-enum class FALCON_ENGINE_API BufferStorage
+enum class FALCON_ENGINE_API BufferFlushMode
+{
+    Automatic,
+    Explicit,
+
+    Count,
+};
+
+enum class FALCON_ENGINE_API BufferSynchronizationMode
+{
+    Synchronized,
+    Unsynchronized,
+
+    Count,
+};
+
+// @summary Indicate buffer storage resides on 1) RAM and VRAM or 2) VRAM only.
+enum class FALCON_ENGINE_API BufferStorageMode
+{
+    Device, // Buffer resides on VRAM only, accessible by CPU only in pinned memory.
+    Host,   // Buffer resides on RAM, explicitly copied to VRAM.
+};
+
+enum class FALCON_ENGINE_API BufferType
+{
+    None,
+
+    VertexBuffer,
+    IndexBuffer,
+    ShaderBuffer,
+    UniformBuffer,
+};
+
+enum class FALCON_ENGINE_API BufferLayout
 {
     Interleaved,
     Separated,
@@ -39,12 +81,11 @@ enum class FALCON_ENGINE_API BufferUsage
 
 class FALCON_ENGINE_API Buffer
 {
-
 protected:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Buffer(int elementNum, size_t elementByteNum, BufferUsage usage);
+    Buffer(int elementNum, size_t elementByteNum, BufferStorageMode storageMode, BufferType type, BufferUsage usage);
     Buffer(const Buffer&) = delete;
     Buffer& operator=(const Buffer&) = delete;
 
@@ -52,8 +93,11 @@ public:
     virtual ~Buffer();
 
 public:
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
     size_t
-    GetCapacityByteNum() const;
+    GetCapacitySize() const;
 
     unsigned char *
     GetData();
@@ -62,7 +106,13 @@ public:
     GetData() const;
 
     size_t
-    GetDataByteNum() const;
+    GetDataSize() const;
+
+    size_t
+    GetDataOffset() const;
+
+    void
+    SetDataOffset(size_t dataOffset);
 
     int
     GetElementNum() const;
@@ -70,79 +120,71 @@ public:
     void
     SetElementNum(int elementNum);
 
+    int
+    GetElementSize() const;
+
+    // @summary Get the offset in terms of size of element.
+    int
+    GetElementOffset() const;
+
+    BufferStorageMode
+    GetStorageMode() const;
+
+    BufferType
+    GetType() const;
+
     BufferUsage
     GetUsage() const;
 
 private:
-    unsigned char *mData;
+    unsigned char    *mData;
+    size_t            mDataSize;            // Actual data size in bytes.
+    size_t            mDataOffset;
 
-    size_t         mCapacityByteNum;     // Maximum capacity size in bytes include space not used.
-    int            mCapacityElementNum;  // Maximum capacity size in term of element number include space not used.
+    size_t            mCapacitySize;        // Maximum capacity size in bytes include space not used.
+    int               mCapacityElementNum;  // Maximum capacity size in term of element number include space not used.
 
-    size_t         mDataByteNum;         // Actual data size in bytes.
-    int            mElementNum;          // Actual data size in term of element number.
-    size_t         mElementByteNum;      // Each element's data size in bytes.
+    int               mElementNum;          // Actual data size in term of element number.
+    size_t            mElementSize;         // Each element's data size in bytes.
 
-    BufferUsage    mUsage;
+    BufferStorageMode mStorageMode;
+    BufferType        mType;
+    BufferUsage       mUsage;
 };
 
 // @summary Prevent template parameter deduction because the buffer data filling
 // is often where mistakes are made, you better be careful.
 //
 // @ref http://stackoverflow.com/questions/41634538/prevent-implicit-template-instantiation
+namespace
+{
 template <typename T>
 struct Nondeductible
 {
     using Type = T;
 };
-
-template<typename T>
-inline void
-FillBufferData(T *data, size_t& dataIndex, T value)
-{
-    // NOTE(Wuxiang): Notice that the data indexing is based on the T. So if
-    // you use int or float at the same time, the indexing would work differently.
-    // That usually won't cause problems, if you use reinterpret_cast properly.
-    data[dataIndex] = value;
-    ++dataIndex;
 }
 
-// @param T is the data pointer type you need to fill in.
-// @param V is the data type you provide to fill with.
-template<typename T, typename V>
-inline void
-FillBufferDataAs(typename Nondeductible<T>::Type *data, size_t& dataIndex, V value)
+class BufferData
 {
-    FillBufferData<T>(data, dataIndex, T(value));
-}
-
-template<typename T>
-inline void
-FillBufferDataAsVector3f(typename Nondeductible<T>::Type *data, size_t& dataIndex, Vector3f value)
-{
-    FillBufferDataAs<T, float>(data, dataIndex, value.x);
-    FillBufferDataAs<T, float>(data, dataIndex, value.y);
-    FillBufferDataAs<T, float>(data, dataIndex, value.z);
-}
-
-template<typename T>
-inline void
-FillBufferDataAsVector4f(typename Nondeductible<T>::Type *data, size_t& dataIndex, Vector4f value)
-{
-    FillBufferDataAs<T, float>(data, dataIndex, value.x);
-    FillBufferDataAs<T, float>(data, dataIndex, value.y);
-    FillBufferDataAs<T, float>(data, dataIndex, value.z);
-    FillBufferDataAs<T, float>(data, dataIndex, value.w);
-}
-
-template<typename T>
-inline void
-FillBufferDataAsMatrix4f(typename Nondeductible<T>::Type *data, size_t& dataIndex, Matrix4f value)
-{
-    for (auto i = 0; i < 4; ++i)
+public:
+    template<typename T>
+    static void
+    Fill(unsigned char *data, size_t& offset, const typename Nondeductible<T>::Type& value)
     {
-        FillBufferDataAsVector4f<T>(data, dataIndex, value[i]);
+        // NOTE(Wuxiang): You should not worry about the performance overhead here.
+        // https://stackoverflow.com/questions/674982/performance-hit-from-c-style-casts
+        auto address = reinterpret_cast<T *>(data + offset);
+        address[0] = value;
+        offset += sizeof(T);
     }
-}
+
+    template<typename T, typename S>
+    static void
+    FillAs(unsigned char *data, size_t& offset, const T& value)
+    {
+        Fill<S>(data, offset, S(value));
+    }
+};
 
 }

@@ -1,4 +1,5 @@
 #include <FalconEngine/Graphics/Renderer/Primitive.h>
+#include <FalconEngine/Graphics/Renderer/Resource/IndexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
 
@@ -17,7 +18,9 @@ Primitive::Primitive(PrimitiveType primitiveType, std::shared_ptr<VertexFormat> 
     mPrimitiveType(primitiveType),
     mVertexFormat(vertexFormat),
     mVertexGroup(vertexGroup),
-    mIndexBuffer(indexBuffer)
+    mVertexOffset(0),
+    mIndexBuffer(indexBuffer),
+    mIndexOffset(0)
 {
     // NOTE(Wuxiang): All vertex format, vertex group and index buffer is allowed to be null
     // here. But they should be initialized in the derived class's constructor.
@@ -62,7 +65,7 @@ Primitive::GetVertexFormat() const
     return mVertexFormat.get();
 }
 
-std::shared_ptr<VertexFormat>
+std::shared_ptr<const VertexFormat>
 Primitive::GetVertexFormat()
 {
     return mVertexFormat;
@@ -74,16 +77,28 @@ Primitive::GetVertexGroup() const
     return mVertexGroup.get();
 }
 
-std::shared_ptr<VertexGroup>
+std::shared_ptr<const VertexGroup>
 Primitive::GetVertexGroup()
 {
     return mVertexGroup;
 }
 
-size_t
+int
 Primitive::GetVertexNum() const
 {
-    return mVertexGroup->GetElementNum();
+    return mVertexGroup->GetVertexNum();
+}
+
+int
+Primitive::GetVertexOffset() const
+{
+    return mVertexOffset;
+}
+
+void
+Primitive::SetVertexOffset(int vertexOffset)
+{
+    mVertexOffset = vertexOffset;
 }
 
 /************************************************************************/
@@ -101,6 +116,18 @@ Primitive::GetIndexBuffer()
     return mIndexBuffer;
 }
 
+int
+Primitive::GetIndexOffset() const
+{
+    return mIndexOffset;
+}
+
+void
+Primitive::SetIndexOffset(int indexOffset)
+{
+    mIndexOffset = indexOffset;
+}
+
 /************************************************************************/
 /* Deep and Shallow Copy                                                */
 /************************************************************************/
@@ -109,9 +136,13 @@ Primitive::CopyTo(Primitive *lhs)
 {
     lhs->mPrimitiveType = mPrimitiveType;
     lhs->mBoundingBox = mBoundingBox;
+
     lhs->mVertexFormat = mVertexFormat;
     lhs->mVertexGroup = mVertexGroup;
+    lhs->mVertexOffset = mVertexOffset;
+
     lhs->mIndexBuffer = mIndexBuffer;
+    lhs->mIndexOffset = mIndexOffset;
 }
 
 }

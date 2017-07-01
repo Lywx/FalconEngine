@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Header.h>
+#include <FalconEngine/Graphics/Common.h>
 
 #include <map>
 #include <vector>
@@ -36,6 +36,8 @@ class VisualEffectPass;
 /************************************************************************/
 class Buffer;
 enum class BufferAccessMode;
+enum class BufferFlushMode;
+enum class BufferSynchronizationMode;
 class VertexBuffer;
 class VertexFormat;
 class VertexGroup;
@@ -90,30 +92,32 @@ public:
     /************************************************************************/
     /* Platform Independent Members                                         */
     /************************************************************************/
+    static Renderer *
+    GetInstance()
+    {
+        static Renderer sInstance;
+        return &sInstance;
+    }
 
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Renderer(GameEngineData *gameEngineData, GameEngineSettings *gameEngineSettings);
+private:
+    Renderer();
+
+public:
     ~Renderer();
 
-    using PlatformVertexBufferMap   = std::map<const VertexBuffer *, PlatformVertexBuffer *>;
-    using PlatformVertexFormatMap   = std::map<const VertexFormat *, PlatformVertexFormat *>;
-    using PlatformIndexBufferMap    = std::map<const IndexBuffer *,  PlatformIndexBuffer *>;
-    using PlatformTexture1dMap      = std::map<const Texture1d *, PlatformTexture1d *>;
-    using PlatformTexture2dMap      = std::map<const Texture2d *, PlatformTexture2d *>;
-    using PlatformTexture2dArrayMap = std::map<const Texture2dArray *, PlatformTexture2dArray *>;
-    using PlatformTexture3dMap      = std::map<const Texture3d *, PlatformTexture3d *>;
-    using PlatformTextureSamplerMap = std::map<const Sampler *, PlatformSampler *>;
-
-    using PlatformShaderMap         = std::map<const Shader *, PlatformShader *>;
-
-private:
     /************************************************************************/
     /* Initialization and Destroy                                           */
     /************************************************************************/
+public:
     void
-    InitializeData(GameEngineSettings *gameEngineSettings);
+    Initialize();
+
+private:
+    void
+    InitializeData();
 
     void
     DestroyData();
@@ -139,6 +143,26 @@ public:
 
 public:
     /************************************************************************/
+    /* Universal Buffer Management                                          */
+    /************************************************************************/
+    void *
+    Map(const Buffer             *buffer,
+        BufferAccessMode          access,
+        BufferFlushMode           flush,
+        BufferSynchronizationMode synchronization,
+        int64_t                   offset,
+        int64_t                   size);
+
+    void
+    Unmap(const Buffer *buffer);
+
+    void
+    Update(const Buffer             *buffer,
+           BufferAccessMode          access,
+           BufferFlushMode           flush,
+           BufferSynchronizationMode synchronization);
+
+    /************************************************************************/
     /* Vertex Buffer Management                                             */
     /************************************************************************/
     void
@@ -150,19 +174,26 @@ public:
     // @param offset - offset into the first data in byte.
     // @param stride - stride between contiguous data in byte.
     void
-    Enable(const VertexBuffer *vertexBuffer, int bindingIndex, int offset, int stride);
+    Enable(const VertexBuffer *vertexBuffer, int bindingIndex, int64_t offset, int stride);
 
     void
     Disable(const VertexBuffer *vertexBuffer, int bindingIndex);
 
     void *
-    Map(const VertexBuffer *vertexBuffer, BufferAccessMode mode);
+    Map(const VertexBuffer       *vertexBuffer,
+        BufferAccessMode          access,
+        BufferFlushMode           flush,
+        BufferSynchronizationMode synchronization,
+        int64_t                   offset,
+        int64_t                   size);
 
     void
     Unmap(const VertexBuffer *vertexBuffer);
 
     void
-    Update(const VertexBuffer *vertexBuffer);
+    Flush(VertexBuffer *vertexBuffer,
+          int64_t       offset,
+          int64_t       size);
 
     /************************************************************************/
     /* Vertex Format Management                                             */
@@ -204,16 +235,18 @@ public:
     Disable(const IndexBuffer *indexBuffer);
 
     void *
-    Map(const IndexBuffer *indexBuffer, BufferAccessMode mode);
+    Map(const IndexBuffer        *indexBuffer,
+        BufferAccessMode          access,
+        BufferFlushMode           flush,
+        BufferSynchronizationMode synchronization,
+        int64_t                   offset,
+        int64_t                   size);
 
     void
     Unmap(const IndexBuffer *indexBuffer);
 
-    void
-    Update(const IndexBuffer *indexBuffer);
-
     /************************************************************************/
-    /* Texture Management                                                   */
+    /* Universal Texture Management                                         */
     /************************************************************************/
     // @summary Provide a uniform interface for all texture.
     void
@@ -223,6 +256,9 @@ public:
     void
     Disable(int textureUnit, const Texture *texture);
 
+    /************************************************************************/
+    /* Texture 1D Management                                                */
+    /************************************************************************/
     void
     Bind(const Texture1d *texture);
 
@@ -244,6 +280,9 @@ public:
     void
     Update(const Texture1d *texture, int mipmapLevel);
 
+    /************************************************************************/
+    /* Texture 2D Management                                                */
+    /************************************************************************/
     void
     Bind(const Texture2d *texture);
 
@@ -265,6 +304,9 @@ public:
     void
     Update(const Texture2d *texture, int mipmapLevel);
 
+    /************************************************************************/
+    /* Texture 2D Array Management                                          */
+    /************************************************************************/
     void
     Bind(const Texture2dArray *textureArray);
 
@@ -286,6 +328,9 @@ public:
     void
     Update(const Texture2dArray *textureArray, int mipmapLevel);
 
+    /************************************************************************/
+    /* Texture 3D Management                                                */
+    /************************************************************************/
     void
     Bind(const Texture3d *texture);
 
@@ -344,13 +389,7 @@ public:
     Enable(const VisualEffectPass *pass);
 
     void
-    Disable(const VisualEffectPass *pass);
-
-    void
     Enable(const VisualEffectInstancePass *pass, const Camera *camera, const Visual *visual);
-
-    void
-    Disable(const VisualEffectInstancePass *pass);
 
     // @summary Update effect instance's uniform.
     void
@@ -361,7 +400,7 @@ public:
     /************************************************************************/
     // @summary Draw single instance of visual.
     void
-    Draw(const Camera *camera, Visual *visual);
+    Draw(const Camera *camera, const Visual *visual);
 
     // @summary Draw single instance of visual.
     void
@@ -371,15 +410,28 @@ private:
     /************************************************************************/
     /* Platform Hash Table                                                  */
     /************************************************************************/
-    PlatformIndexBufferMap    mIndexBufferTable;
-    PlatformVertexBufferMap   mVertexBufferTable;
-    PlatformVertexFormatMap   mVertexFormatTable;
-    PlatformTexture1dMap      mTexture1dTable;
-    PlatformTexture2dMap      mTexture2dTable;
-    PlatformTexture2dArrayMap mTexture2dArrayTable;
-    PlatformTextureSamplerMap mSamplerTable;
+    std::map<const IndexBuffer *, PlatformIndexBuffer *>       mIndexBufferTable;
+    std::map<const VertexBuffer *, PlatformVertexBuffer *>     mVertexBufferTable;
+    std::map<const VertexFormat *, PlatformVertexFormat *>     mVertexFormatTable;
 
-    PlatformShaderMap         mShaderTable;
+    std::map<const Shader *, PlatformShader *>                 mShaderTable;
+    std::map<const Sampler *, PlatformSampler *>               mSamplerTable;
+    std::map<const Texture1d *, PlatformTexture1d *>           mTexture1dTable;
+    std::map<const Texture2d *, PlatformTexture2d *>           mTexture2dTable;
+    std::map<const Texture2dArray *, PlatformTexture2dArray *> mTexture2dArrayTable;
+
+    /************************************************************************/
+    /* Dirty Flags                                                          */
+    /************************************************************************/
+    const IndexBuffer             *mIndexBufferPrevious;
+    const VertexGroup             *mVertexGroupPrevious;
+    const VertexFormat            *mVertexFormatPrevious;
+
+    const VisualEffectPass        *mPassPrevious;
+
+    Shader                        *mShaderPrevious;
+    std::map<int, const Sampler *> mSamplerPrevious;
+    std::map<int, const Texture *> mTexturePrevious;
 
     /************************************************************************/
     /* Renderer State                                                       */
@@ -410,7 +462,7 @@ private:
     /* Initialization and Destroy                                           */
     /************************************************************************/
     void
-    InitializePlatform(GameEngineData *data);
+    InitializePlatform();
 
     void
     DestroyPlatform();

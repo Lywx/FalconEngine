@@ -37,10 +37,10 @@ Entity::~Entity()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-std::shared_ptr<Node>
+const Node *
 Entity::GetNode() const
 {
-    return mNode;
+    return mNode.get();
 }
 
 std::shared_ptr<Node>

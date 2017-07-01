@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Header.h>
+#include <FalconEngine/Graphics/Common.h>
 
 #include <FalconEngine/Math/Matrix4.h>
 #include <FalconEngine/Math/Vector3.h>

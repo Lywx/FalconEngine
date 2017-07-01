@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Context/Header.h>
+#include <FalconEngine/Context/Common.h>
 
 #include <mutex>
 #include <string>
@@ -17,11 +17,10 @@ class GameEngineSettings;
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API Game
 {
-public:
-
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
+public:
     Game();
     virtual ~Game();
 

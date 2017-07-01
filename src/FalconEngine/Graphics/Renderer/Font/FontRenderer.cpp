@@ -1,26 +1,26 @@
 #include <FalconEngine/Graphics/Renderer/Font/FontRenderer.h>
 
-#include <boost/algorithm/string.hpp>
-
 #include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Core/Memory.h>
 #include <FalconEngine/Graphics/Effect/FontEffect.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
-#include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
-#include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveQuads.h>
 #include <FalconEngine/Graphics/Renderer/Font/Font.h>
+#include <FalconEngine/Graphics/Renderer/Font/FontData.h>
 #include <FalconEngine/Graphics/Renderer/Font/FontLine.h>
 #include <FalconEngine/Graphics/Renderer/Font/FontText.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/BufferAdaptor.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 
 using namespace std;
 using namespace FalconEngine;
 
 namespace FalconEngine
 {
+
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -37,16 +37,15 @@ FontRenderer::~FontRenderer()
 /* Public Members                                                       */
 /************************************************************************/
 void
-FontRenderer::Initialize(int viewportWidth, int viewportHeight)
+FontRenderer::Initialize()
 {
-    mViewportWidth  = viewportWidth;
-    mViewportHeight = viewportHeight;
 }
 
 void
 FontRenderer::BatchText(
-    const Font *font,
-    float             fontSize,
+    const Font    *font,
+    float          fontSize,
+
     const wstring& textString,
     Vector2f       textPosition,
     Color          textColor,
@@ -55,179 +54,18 @@ FontRenderer::BatchText(
     FALCON_ENGINE_CHECK_NULLPTR(font);
 
     auto text = FontText(fontSize, textString, textPosition, textLineWidth);
-    auto batch = PrepareBatch(font);
-    PrepareText(*batch, font, &text, textColor);
-}
+    auto batch = FindBatch(font);
 
-// @summary Construct all the necessary lexical separation of given text into
-// lines of words.
-//
-// @return The glyph number inside the text lines.
-int
-CreateTextLines(
-    _IN_  const Font    *font,
-    _IN_  const FontText    *text,
-    _OUT_ vector<FontLine>&  lines)
-{
-    using namespace boost;
-    static auto sLineStrings = vector<wstring>();
-    sLineStrings.clear();
-    split(sLineStrings, text->mTextString, is_any_of(L"\n"));
+    auto const TextItemMaxNum = 1024;
 
-    // Bounds is formatted as [x, y, width, height]
-    const auto lineWidth = text->mTextBounds[2];
+    // Add the text into the batch
+    batch->mBatchedItemList.emplace_back(text, textColor);
+    batch->mPendingGlyphNumPredict += int(text.mTextString.size());
 
-    int glyphCount = 0;
-    auto lineCurrent = FontLine(lineWidth);
-    int lineNum = int(sLineStrings.size());
-    for (int lineIndex = 0; lineIndex < lineNum; ++lineIndex)
+    // Fill the text VRAM buffer when the batch item number reach the item limit.
+    if (batch->mBatchedItemList.size() >= TextItemMaxNum)
     {
-        for (const wchar_t& c : sLineStrings[lineIndex])
-        {
-            // NOTE(Wuxiang): When processing English, a word is defined as space
-            // separated letters. But this concept would not work
-            // on Chinese, when You still need to crop the word when the maximum line
-            // width is exceeded. The arbitrariness exists here for English or
-            // Chinese. If you don't have the pre-knowledge you won't be able to
-            // decide which way is correct. My decision here is to leave this to
-            // higher level code to preprocess this kind of information. This function
-            // only deals new line characters.
-
-            Uint32 glyphCodepoint = c;
-            auto   glyphIndex = font->mGlyphIndexTable.at(glyphCodepoint);
-            auto&  glyph = font->mGlyphTable.at(glyphIndex);
-            ++glyphCount;
-
-            double fontSizeScale = text->mFontSize / font->mSizePt;
-            bool success = lineCurrent.PushGlyph(glyph, fontSizeScale);
-            if (!success)
-            {
-                // Have to start a new line for this glyph
-                lines.push_back(lineCurrent);
-                lineCurrent = FontLine(lineWidth);
-                lineCurrent.PushGlyph(glyph, fontSizeScale);
-            }
-        }
-
-        // NOTE(Wuxiang): There will be at least one line even the string is empty.
-        lines.push_back(lineCurrent);
-    }
-
-    return glyphCount;
-}
-
-void
-FillBufferFontAttribute(float             *textVertexBufferData,
-                        size_t&            textVertexBufferDataIndex,
-                        const FontGlyph *textGlyph,
-                        Vector4f           textColor,
-                        double fontSizeScale)
-{
-    // Font color
-    FillBufferDataAsVector4f<float>(textVertexBufferData, textVertexBufferDataIndex, textColor);
-
-    // NOTE(Wuxiang): 1.32 is value the when imported font size is 33. 1.32 is
-    // used as origin for scaling.
-
-    // Font width
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, 0.50 * (1 + 0.15 * (fontSizeScale - 1.32)));
-
-    // Font edge
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, 0.03 / (1 + 1.05 * (fontSizeScale - 1.32)));
-
-    // Font page
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mPage);
-}
-
-void
-FillBufferGlyphAttribute(
-    _OUT_    float             *textVertexBufferData,
-    _IN_OUT_ size_t&            textVertexBufferDataIndex,
-    _IN_     const FontGlyph *textGlyph,
-    _IN_     Vector4f           textColor,
-    _IN_     float              textGlyphX,
-    _IN_     float              textGlyphY,
-    _IN_     const Font  *font,
-    _IN_     double             fontSizeScale)
-{
-    // NOTE(Wuxiang): Since x1, y1 represents left-bottom coordinate, we need to
-    // process base and yoffset differently. Notably, x1 is amended to center the
-    // glyph for different width, 'x + advance / 2 - width / 2' is the x1
-    // considering no x offset. I don't think this cause the glyph to draw as
-    // monospaced, since the advance would be different for different character
-    // set, which means English would have different advance than Chinese.
-    // However, the influence of width indeed is compensated using this method in
-    // spacing of the glyph.
-    double x1 = textGlyphX + (textGlyph->mAdvance / 2 - textGlyph->mWidth / 2 + textGlyph->mOffsetX) * fontSizeScale;
-    double y2 = textGlyphY + (font->mLineBase - textGlyph->mOffsetY) * fontSizeScale;
-    double y1 = y2 - textGlyph->mHeight * fontSizeScale;
-    double x2 = x1 + textGlyph->mWidth * fontSizeScale;
-
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, x1);
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, y1);
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mS1);
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mT1);
-    FillBufferFontAttribute(textVertexBufferData, textVertexBufferDataIndex, textGlyph, textColor, fontSizeScale);
-
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, x2);
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, y2);
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mS2);
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mT2);
-    FillBufferFontAttribute(textVertexBufferData, textVertexBufferDataIndex, textGlyph, textColor, fontSizeScale);
-
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, x1);
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, y2);
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mS1);
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mT2);
-    FillBufferFontAttribute(textVertexBufferData, textVertexBufferDataIndex, textGlyph, textColor, fontSizeScale);
-
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, x2);
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, y1);
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mS2);
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mT1);
-    FillBufferFontAttribute(textVertexBufferData, textVertexBufferDataIndex, textGlyph, textColor, fontSizeScale);
-
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, x2);
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, y2);
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mS2);
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mT2);
-    FillBufferFontAttribute(textVertexBufferData, textVertexBufferDataIndex, textGlyph, textColor, fontSizeScale);
-
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, x1);
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, y1);
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mS1);
-    FillBufferDataAs<float, double>(textVertexBufferData, textVertexBufferDataIndex, textGlyph->mT1);
-    FillBufferFontAttribute(textVertexBufferData, textVertexBufferDataIndex, textGlyph, textColor, fontSizeScale);
-}
-
-// @summary Fill the vertex buffer with the text line information.
-void
-FillBufferTextLines(
-    _IN_  const Font    *font,
-    _IN_  float                fontSize,
-    _IN_  Vector2f                  textPosition,
-    _IN_  Vector4f                  textColor,
-    _IN_  const vector<FontLine>& textLines,
-    _IN_  size_t&                   textVertexBufferDataIndex,
-    _OUT_ float                    *textVertexBufferData
-)
-{
-    float x = textPosition.x;
-    float y = textPosition.y;
-
-    double fontSizeScale = fontSize / font->mSizePt;
-
-    for(auto& line : textLines)
-    {
-        for (auto& glyph : line.mLineGlyphs)
-        {
-            FillBufferGlyphAttribute(textVertexBufferData, textVertexBufferDataIndex, &glyph, textColor, x, y, font, fontSizeScale);
-
-            x += float(glyph.mAdvance * fontSizeScale);
-        }
-
-        x = textPosition.x;
-        y -= float(font->mLineHeight * fontSizeScale);
+        FillText(font, batch.get());
     }
 }
 
@@ -237,24 +75,35 @@ FontRenderer::RenderBegin()
     for (auto& fontBatchPair : mTextBatchTable)
     {
         auto& batch = fontBatchPair.second;
-        batch->mVertexBufferDataIndex = 0;
-        batch->mGlyphNum = 0;
+
+        batch->mBatchedItemList.clear();
+        batch->mPendingGlyphNum = 0;
+        batch->mPendingGlyphNumPredict = 0;
+        batch->mFrameGlyphNum = 0;
     }
 }
 
 void
-FontRenderer::Render(Renderer *renderer, double /* percent */)
+FontRenderer::Render(double /* percent */)
 {
     for (auto& fontBatchPair : mTextBatchTable)
     {
-        auto& batch = fontBatchPair.second;
-        if (batch->mGlyphNum > 0)
+        auto batch = fontBatchPair.second;
+
+        if (batch->mPendingGlyphNum > 0)
         {
-            // Update buffer data before drawing
-            int vertexNum = batch->mGlyphNum * 6;
-            batch->mVertexBuffer->SetElementNum(vertexNum);
-            renderer->Update(batch->mVertexBuffer.get());
-            renderer->Draw(nullptr, batch->mGlyphQuads.get());
+            auto font = fontBatchPair.first;
+            FillText(font, batch.get());
+        }
+
+        if (batch->mFrameGlyphNum > 0)
+        {
+            // Update buffer data to reflect buffer data accumulated during entire frame.
+            batch->mGlyphQuadPrimitive->SetVertexOffset(batch->mGlyphVertexBuffer->GetElementOffset());
+            batch->mGlyphVertexBuffer->SetElementNum(batch->mFrameGlyphNum * 6);
+
+            static auto sRenderer = Renderer::GetInstance();
+            sRenderer->Draw(nullptr, batch->mGlyphQuadVisual.get());
         }
     }
 }
@@ -268,7 +117,7 @@ FontRenderer::RenderEnd()
 /* Protected Members                                                    */
 /************************************************************************/
 std::shared_ptr<FontRenderBatch>
-FontRenderer::PrepareBatch(const Font *font)
+FontRenderer::FindBatch(const Font *font)
 {
     // When the font is prepared before.
     {
@@ -281,46 +130,87 @@ FontRenderer::PrepareBatch(const Font *font)
 
     // Initialize new batch for given font.
     {
-        auto characterMaxNum = int(Kilobytes(10));
+        const int GlyphMaxNum = int(Kilobytes(10));
 
-        auto vertexBuffer = make_shared<VertexBuffer>(characterMaxNum * 6, sizeof(FontVertex), BufferUsage::Stream);
         auto visualEffect = make_shared<FontEffect>();
+
+        auto vertexBuffer = make_shared<VertexBuffer>(GlyphMaxNum * 6, sizeof(FontVertex),
+                            BufferStorageMode::Device, BufferUsage::Stream);
+
         auto vertexFormat = visualEffect->GetVertexFormat();
         auto vertexGroup = make_shared<VertexGroup>();
         vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, vertexFormat->GetVertexBufferStride(0));
 
-        auto primitive = make_shared<PrimitiveQuads>(vertexFormat, vertexGroup, nullptr);
-        auto visual = make_shared<Visual>(make_shared<Mesh>(primitive, nullptr));
-        auto visualEffectParams = make_shared<FontEffectParams>(font, &mTextHandedness, mViewportWidth, mViewportHeight);
-        visualEffect->CreateInstance(visual.get(), visualEffectParams);
+        auto primitiveQuads = make_shared<PrimitiveQuads>(vertexFormat, vertexGroup, nullptr);
 
-        auto batch = make_shared<FontRenderBatch>(vertexBuffer, visual);
+        auto visualQuads = make_shared<Visual>(make_shared<Mesh>(primitiveQuads, nullptr));
+        auto visualEffectParams = make_shared<FontEffectParams>(font, HandednessRight::GetInstance());
+        visualEffect->CreateInstance(visualQuads.get(), visualEffectParams);
+
+        auto batch = make_shared<FontRenderBatch>(vertexBuffer, primitiveQuads, visualQuads);
         mTextBatchTable.insert({ font, batch });
         return batch;
     }
 }
 
 void
-FontRenderer::PrepareText(
-    _IN_OUT_ FontRenderBatch& batch,
+FontRenderer::FillText(
     _IN_     const Font      *font,
-    _IN_     const FontText  *text,
-    _IN_     Color            textColor)
+    _IN_OUT_ FontRenderBatch *batch)
 {
     FALCON_ENGINE_CHECK_NULLPTR(font);
 
-    static auto sTextLines = vector<FontLine>();
-    sTextLines.clear();
+    auto buffer = batch->mGlyphVertexBuffer.get();
+    auto bufferAdaptor = batch->mGlyphVertexBufferAdaptor;
 
-    // Construct lines with glyph information.
-    auto textGlyphCount = CreateTextLines(font, text, sTextLines);
-    batch.mGlyphNum += textGlyphCount;
+    bufferAdaptor->FillBegin();
 
-    // Fill the vertex attribute into the buffer
-    FillBufferTextLines(font, text->mFontSize, Vector2f(text->mTextBounds.x, text->mTextBounds.y),
-                        Vector4f(textColor), sTextLines, batch.mVertexBufferDataIndex,
-                        reinterpret_cast<float *>(batch.mVertexBuffer->GetData()));
+    {
+        static auto sRenderer = Renderer::GetInstance();
+        auto bufferData = static_cast<unsigned char *>(
+                              sRenderer->Map(buffer,
+                                             BufferAccessMode::WriteRange,
+                                             BufferFlushMode::Explicit,
+                                             BufferSynchronizationMode::Unsynchronized,
+                                             buffer->GetDataOffset(),
+                                             batch->mPendingGlyphNumPredict * 6 * buffer->GetElementSize()));
+
+        static auto sTextLines = vector<FontLine>();
+        for (auto& textItem : batch->mBatchedItemList)
+        {
+            sTextLines.clear();
+
+            auto  text = &textItem.mText;
+            auto& textColor = textItem.mTextColor;
+
+            // Construct lines with glyph information.
+            auto textGlyphCount = FontData::CreateTextLines(font, text, sTextLines);
+            batch->mPendingGlyphNum += textGlyphCount;
+
+            // Fill the vertex attribute into the buffer
+            FontData::FillTextLines(
+                bufferData,
+                bufferAdaptor,
+                font,
+                text->mFontSize,
+                Vector2f(text->mTextBounds.x, text->mTextBounds.y),
+                Vector4f(textColor),
+                sTextLines);
+        }
+
+        // Only after processing all the glyph we can get the accurate number of valid glyph.
+        buffer->SetElementNum(batch->mPendingGlyphNum * 6);
+
+        sRenderer->Flush(buffer, buffer->GetDataOffset(), buffer->GetDataSize());
+        sRenderer->Unmap(buffer);
+    }
+
+    batch->mGlyphVertexBufferAdaptor->FillEnd();
+
+    batch->mBatchedItemList.clear();
+    batch->mFrameGlyphNum += batch->mPendingGlyphNum;
+    batch->mPendingGlyphNum = 0;
+    batch->mPendingGlyphNumPredict = 0;
 }
-
 
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Header.h>
+#include <FalconEngine/Graphics/Common.h>
 
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
 
@@ -29,19 +29,15 @@ public:
 class FALCON_ENGINE_API FontEffectParams : public VisualEffectParams
 {
 public:
-    FontEffectParams(const Font *font, const Handedness *handedness, int viewportWidth, int viewportHeight) :
+    FontEffectParams(const Font *font, const Handedness *handedness) :
         mFont(font),
-        mHandedness(handedness),
-        mViewportWidth(viewportWidth),
-        mViewportHeight(viewportHeight)
+        mHandedness(handedness)
     {
     }
 
 public:
     const Font       *mFont;
     const Handedness *mHandedness;
-    int               mViewportWidth;
-    int               mViewportHeight;
 };
 
 // @summary Implements a signed distanced field based bitmap font rendering effect.

@@ -17,19 +17,13 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    PlatformTexture2dArray(const Texture2dArray *textures);
+    explicit PlatformTexture2dArray(const Texture2dArray *textures);
     ~PlatformTexture2dArray();
 
 public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
-    void
-    Enable(int textureUnit);
-
-    void
-    Disable(int textureUnit);
-
     void *
     Map(int arrayIndex, int mipmapLevel, BufferAccessMode mode);
 
@@ -37,17 +31,16 @@ public:
     Unmap(int arrayIndex, int mipmapLevel);
 
 private:
-    std::vector<GLuint>   mBuffer;          // The buffer object for each slice of texture
+    std::vector<GLuint>   mBufferObjList;      // The buffer object for each slice of texture
+    int                   mTextureArraySize;
+    GLuint                mTextureObj;
+    GLuint                mTextureObjPrevious;
 
-    std::vector<Vector2i> mDimension;       // The dimension array for each slice of texture
+    std::vector<Vector2i> mDimension;          // The dimension array for each slice of texture
     GLuint                mFormatInternal;
     GLuint                mFormat;
     GLuint                mType;
     GLuint                mUsage;
-
-    int                   mTextureArraySize;
-    GLuint                mTexture;
-    GLuint                mTexturePrevious;
 };
 #pragma warning(default: 4251)
 

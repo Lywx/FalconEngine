@@ -15,6 +15,10 @@ FALCON_ENGINE_RTTI_IMPLEMENT(Visual, Spatial);
 /************************************************************************/
 Visual::Visual(std::shared_ptr<Mesh> mesh) :
     mMesh(mesh),
+
+    // NOTE(Wuxiang): By default Visual "inherit" from Primitives' vertex
+    // information.  You could override those vertex information by using the
+    // setter in Visual API.
     mVertexFormat(mesh->GetPrimitive()->GetVertexFormat()),
     mVertexGroup(mesh->GetPrimitive()->GetVertexGroup())
 {
@@ -94,7 +98,7 @@ Visual::GetVertexFormat() const
     return mVertexFormat.get();
 }
 
-std::shared_ptr<VertexFormat>
+std::shared_ptr<const VertexFormat>
 Visual::GetVertexFormat()
 {
     return mVertexFormat;
@@ -112,7 +116,7 @@ Visual::GetVertexGroup() const
     return mVertexGroup.get();
 }
 
-std::shared_ptr<VertexGroup>
+std::shared_ptr<const VertexGroup>
 Visual::GetVertexGroup()
 {
     return mVertexGroup;
@@ -165,6 +169,7 @@ Visual::CopyTo(Visual *lhs) const
     Spatial::CopyTo(lhs);
 
     lhs->mEffectInstances = mEffectInstances;
+    lhs->mEffectParamses = mEffectParamses;
     lhs->mVertexFormat = mVertexFormat;
     lhs->mVertexGroup = mVertexGroup;
     lhs->mMesh = mMesh;

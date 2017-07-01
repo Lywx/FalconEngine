@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Header.h>
+#include <FalconEngine/Graphics/Common.h>
 
 #include <memory>
 #include <vector>
@@ -16,10 +16,8 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    VertexBuffer(int vertexNum, size_t vertexByteNum, BufferUsage usage);
+    VertexBuffer(int vertexNum, size_t vertexByteNum, BufferStorageMode storageMode, BufferUsage usage);
     virtual ~VertexBuffer();
 };
-
-typedef std::shared_ptr<VertexBuffer> VertexBufferSharedPtr;
 
 }

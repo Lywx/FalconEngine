@@ -32,8 +32,8 @@ size_t
 PrimitiveLines::GetSegmentNum() const
 {
     return mSegmentStrip
-           ? mVertexGroup->GetElementNum() - 1
-           : mVertexGroup->GetElementNum() / 2;
+           ? mVertexGroup->GetVertexNum() - 1
+           : mVertexGroup->GetVertexNum() / 2;
 
 }
 

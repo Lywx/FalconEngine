@@ -1,13 +1,15 @@
 #pragma once
 
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLMapping.h>
+#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLTexture.h>
+
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
 
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_API PlatformTexture2d
+class FALCON_ENGINE_API PlatformTexture2d : public PlatformTexture
 {
 public:
     /************************************************************************/
@@ -20,12 +22,6 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
-    void
-    Enable(int textureUnit);
-
-    void
-    Disable(int textureUnit);
-
     void *
     Map(int mipmapLevel, BufferAccessMode mode);
 
@@ -33,15 +29,13 @@ public:
     Unmap(int mipmapLevel);
 
 private:
-    GLuint mBuffer;
+    GLuint mBufferObj;
+    GLuint mTextureObj;
+    GLuint mTextureObjPrevious;
 
-    GLuint mTexture;
-    GLuint mTexturePrevious;
     GLint  mDimension[2];
-
     GLuint mFormatInternal;
     GLuint mFormat;
-
     GLuint mType;
     GLuint mUsage;
 };

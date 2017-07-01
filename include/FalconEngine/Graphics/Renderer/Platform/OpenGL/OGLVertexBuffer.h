@@ -1,45 +1,32 @@
 #pragma once
 
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLMapping.h>
+#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
 
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_API PlatformVertexBuffer
+class FALCON_ENGINE_API PlatformVertexBuffer : public PlatformBuffer
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    PlatformVertexBuffer(const VertexBuffer *vertexBuffer);
+    explicit PlatformVertexBuffer(const VertexBuffer *vertexBuffer);
     ~PlatformVertexBuffer();
 
+public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
-
     // @Summar: Enable buffer in the renderer.
     void
-    Enable(int bindingIndex, int offset, int stride);
+    Enable(unsigned int bindingIndex, int64_t offset, int stride);
 
     // @Summar: Disable buffer in the renderer.
     void
-    Disable(int bindingIndex);
-
-    // @summary Map buffer data in the memory, so you could copy data into
-    // the buffer by yourself.
-    //
-    // @Return: buffer memory pointer
-    void *
-    Map(BufferAccessMode mode);
-
-    // @summary Unmap buffer.
-    void
-    Unmap();
-
-private:
-    GLuint mBuffer;
+    Disable(unsigned int bindingIndex);
 };
 
 }

@@ -1,6 +1,7 @@
 #include <FalconEngine/Graphics/Effect/FontEffect.h>
 
 #include <FalconEngine/Graphics/Renderer/Font/Font.h>
+#include "FalconEngine/Context/GameEngineSettings.h"
 
 using namespace std;
 
@@ -89,13 +90,21 @@ FontEffect::InitializeInstance(
     _IN_OUT_ VisualEffectInstance             *instance,
     _IN_     std::shared_ptr<FontEffectParams> params) const
 {
+    using namespace std;
+    using namespace std::placeholders;
+
     FALCON_ENGINE_CHECK_NULLPTR(params->mFont);
     FALCON_ENGINE_CHECK_NULLPTR(params->mHandedness);
 
-    instance->SetShaderUniform(0, ShareConstant<Matrix4f>("ProjectionTransform",
-                               params->mHandedness->CreateOrthogonal(
-                                   0, float(params->mViewportWidth),
-                                   0, float(params->mViewportHeight), -1.0f, 1.0f)));
+    instance->SetShaderUniform(0, ShareAutomatic<Matrix4f>("ProjectionTransform",
+                               std::bind([ = ](const Visual * /* visual */, const Camera * /* camera */)
+    {
+        auto gameEngineSettings = GameEngineSettings::GetInstance();
+        return params->mHandedness->CreateOrthogonal(
+                   0, float(gameEngineSettings->mWindowWidth),
+                   0, float(gameEngineSettings->mWindowHeight),
+                   -1.0f, 1.0f);
+    }, _1, _2)));
 
     // NOTE(Wuxiang): You don't need to set the texture sampler uniform because
     // they are predefined in the fe_Texture.glsl as #include extension.

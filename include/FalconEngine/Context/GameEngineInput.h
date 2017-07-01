@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Context/Header.h>
+#include <FalconEngine/Context/Common.h>
 
 #include <memory>
 #include <vector>
@@ -40,23 +40,25 @@ public:
         return &sInstance;
     }
 
-public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
+private:
     GameEngineInput();
+
+public:
     ~GameEngineInput();
 
 public:
-    KeyboardStateSharedPtr
+    KeyboardState *
     GetKeyboardState() const;
 
-    MouseStateSharedPtr
+    MouseState *
     GetMouseState() const;
 
 public:
     void
-    Initialize(GameEngineData *gameEngineData, GameEngineSettings *gameEngineSettings);
+    Initialize();
 
     // @remark Update gets called every frame by game engine.
     void
@@ -80,9 +82,6 @@ private:
 
     KeyboardStateSharedPtr                                                       mKeyboardState;
     MouseStateSharedPtr                                                          mMouseState;
-
-    GameEngineData                                                      *mGameEngineData;
-    GameEngineSettings                                                  *mGameEngineSettings;
 };
 #pragma warning(default: 4251)
 

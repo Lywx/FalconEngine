@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Header.h>
+#include <FalconEngine/Graphics/Common.h>
 
 #include <map>
 #include <vector>
@@ -25,16 +25,20 @@ public:
     VertexBufferBinding(const VertexBufferBinding& rhs) = default;
     ~VertexBufferBinding();
 
+public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
     // @summary Vertex buffer binding index.
-    int
+    unsigned int
     GetIndex() const;
 
     // @summary Vertex buffer offset.
-    int
+    int64_t
     GetOffset() const;
+
+    void
+    SetOffset(int64_t offset);
 
     // @summary Vertex buffer stride.
     int
@@ -48,8 +52,8 @@ public:
     GetBuffer();
 
 private:
-    int                           mIndex;
-    int                           mOffset;
+    unsigned int                  mIndex;
+    int64_t                       mOffset;
     int                           mStride;
     std::shared_ptr<VertexBuffer> mBuffer;
 };

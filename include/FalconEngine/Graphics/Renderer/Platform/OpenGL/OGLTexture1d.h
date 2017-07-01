@@ -33,15 +33,14 @@ public:
     Unmap(int mipmapLevel);
 
 private:
-    GLuint mBuffer;
+    GLuint mBufferObj;
 
-    GLuint mTexture;
-    GLuint mTexturePrevious;
+    GLuint mTextureObj;
+    GLuint mTextureObjPrevious;
+
     GLint  mDimension;
-
     GLuint mFormatInternal;
     GLuint mFormat;
-
     GLuint mType;
     GLuint mUsage;
 };

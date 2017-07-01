@@ -66,25 +66,25 @@ GameEngine::Initialize()
     mPlatform = GameEnginePlatform::GetInstance();
     if (mPlatform != nullptr)
     {
-        mPlatform->Initialize(mData, mSettings);
+        mPlatform->Initialize();
     }
 
     mProfiler = GameEngineProfiler::GetInstance();
     if (mProfiler != nullptr)
     {
-        mProfiler->Initialize(mData, mSettings);
+        mProfiler->Initialize();
     }
 
     mGraphics = GameEngineGraphics::GetInstance();
     if (mGraphics != nullptr)
     {
-        mGraphics->Initialize(mData, mSettings);
+        mGraphics->Initialize();
     }
 
     mInput = GameEngineInput::GetInstance();
     if (mInput != nullptr)
     {
-        mInput->Initialize(mData, mSettings);
+        mInput->Initialize();
     }
 
     if(mGame != nullptr)

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Header.h>
+#include <FalconEngine/Graphics/Common.h>
 #include <FalconEngine/Core/Object.h>
 
 namespace FalconEngine
@@ -33,8 +33,11 @@ class FALCON_ENGINE_API Primitive
     /* Constructors and Destructor                                          */
     /************************************************************************/
 protected:
-    Primitive(PrimitiveType primitiveType);
-    Primitive(PrimitiveType primitiveType, std::shared_ptr<VertexFormat> vertexFormat, std::shared_ptr<VertexGroup> vertexGroup, std::shared_ptr<IndexBuffer> indexBuffer);
+    explicit Primitive(PrimitiveType primitiveType);
+    Primitive(PrimitiveType                 primitiveType,
+              std::shared_ptr<VertexFormat> vertexFormat,
+              std::shared_ptr<VertexGroup>  vertexGroup,
+              std::shared_ptr<IndexBuffer>  indexBuffer);
 
 public:
     virtual ~Primitive();
@@ -58,22 +61,43 @@ public:
     SetBoundingBox(std::shared_ptr<BoundingBox> boundingBox);
 
     /************************************************************************/
-    /* Vertex Buffer Management                                             */
+    /* Vertex Format Management                                             */
     /************************************************************************/
+    // NOTE(Wuxiang): Usually you should never try to access primitive's vertex
+    // format because Visual's vertex format might be different from the
+    // primitives'. So user might customize the vertex format in the Visual and
+    // that stands for the final vertex format.
     const VertexFormat *
     GetVertexFormat() const;
 
-    std::shared_ptr<VertexFormat>
+    // NOTE(Wuxiang): You are not allowed to change the vertex format
+    // in primitive once it is created.
+    std::shared_ptr<const VertexFormat>
     GetVertexFormat();
 
+    /************************************************************************/
+    /* Vertex Buffer Management                                             */
+    /************************************************************************/
+    // NOTE(Wuxiang): Usually you should never try to access primitive's vertex
+    // group because Visual's vertex group might be different from the
+    // primitives'. So user might customize the vertex group in the Visual and
+    // that stands for the final vertex group.
     const VertexGroup *
     GetVertexGroup() const;
 
-    std::shared_ptr<VertexGroup>
+    // NOTE(Wuxiang): You are not allowed to change the vertex group
+    // in primitive once it is created.
+    std::shared_ptr<const VertexGroup>
     GetVertexGroup();
 
-    size_t
+    int
     GetVertexNum() const;
+
+    int
+    GetVertexOffset() const;
+
+    void
+    SetVertexOffset(int vertexOffset);
 
     /************************************************************************/
     /* Index Buffer Management                                              */
@@ -83,6 +107,12 @@ public:
 
     std::shared_ptr<IndexBuffer>
     GetIndexBuffer();
+
+    int
+    GetIndexOffset() const;
+
+    void
+    SetIndexOffset(int indexOffset);
 
     /************************************************************************/
     /* Deep and Shallow Copy                                                */
@@ -103,9 +133,13 @@ protected:
     // in Visual class so that you retain the vertex information in the Primitive
     // class, which is necessary when creating special use vertex format.
     std::shared_ptr<BoundingBox>  mBoundingBox;
+
     std::shared_ptr<VertexFormat> mVertexFormat;
     std::shared_ptr<VertexGroup>  mVertexGroup;
+    int                           mVertexOffset;
+
     std::shared_ptr<IndexBuffer>  mIndexBuffer;
+    int                           mIndexOffset;
 };
 #pragma warning(default: 4251)
 

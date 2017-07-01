@@ -14,6 +14,8 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 Texture::Texture() :
+    mData(nullptr),
+    mDataByteNum(0),
     mFormat(TextureFormat::None),
     mMipmapLevel(0),
     mType(TextureType::None),
@@ -37,13 +39,33 @@ Texture::Texture(AssetSource        assetSource,
     mType(type),
     mUsage(usage)
 {
+    if (width < 1 || height < 1 || depth < 1)
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Invalid texture dimension.");
+    }
+
     mDimension[0] = width;
     mDimension[1] = height;
     mDimension[2] = depth;
+
+    if ()
+    {
+        mDataByteNum = size_t(mDimension[0]) * size_t(mDimension[1]) * size_t(mDimension[2]) * TexelSize[int(mFormat)];
+        mData = new unsigned char[mDataByteNum];
+    }
+    else
+    {
+        mData = nullptr;
+        mDataByteNum = 0;
+    }
 }
 
 Texture::~Texture()
 {
+    if ()
+    {
+        delete[] mData;
+    }
 }
 
 }

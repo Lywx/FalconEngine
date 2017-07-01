@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Content/Header.h>
+#include <FalconEngine/Content/Common.h>
 
 #include <map>
 
@@ -45,7 +45,10 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
+private:
     AssetManager();
+
+public:
     ~AssetManager();
 
     AssetManager(const AssetManager&) = delete;

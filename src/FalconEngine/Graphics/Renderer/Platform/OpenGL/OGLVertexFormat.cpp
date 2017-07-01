@@ -7,12 +7,42 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PlatformVertexFormat::PlatformVertexFormat(const VertexFormat *vertexFormat)
+PlatformVertexFormat::PlatformVertexFormat(const VertexFormat *vertexFormat) :
+    mVertexFormatPtr(vertexFormat)
 {
-    glCreateVertexArrays(1, &mVertexArray);
-    glBindVertexArray(mVertexArray);
+    Create();
+}
 
-    for (auto& vertexAttrib : vertexFormat->mVertexAttributeList)
+PlatformVertexFormat::~PlatformVertexFormat()
+{
+    glDeleteVertexArrays(1, &mVertexArrayObj);
+}
+
+/************************************************************************/
+/* Public Members                                                       */
+/************************************************************************/
+void
+PlatformVertexFormat::Enable()
+{
+    glBindVertexArray(mVertexArrayObj);
+}
+
+void
+PlatformVertexFormat::Disable()
+{
+    glBindVertexArray(0);
+}
+
+/************************************************************************/
+/* Private Members                                                      */
+/************************************************************************/
+void
+PlatformVertexFormat::Create()
+{
+    glCreateVertexArrays(1, &mVertexArrayObj);
+    glBindVertexArray(mVertexArrayObj);
+
+    for (auto& vertexAttrib : mVertexFormatPtr->mVertexAttributeList)
     {
         glEnableVertexAttribArray(vertexAttrib.mLocation);
 
@@ -34,26 +64,6 @@ PlatformVertexFormat::PlatformVertexFormat(const VertexFormat *vertexFormat)
         }
     }
 
-    glBindVertexArray(0);
-}
-
-PlatformVertexFormat::~PlatformVertexFormat()
-{
-    glDeleteVertexArrays(1, &mVertexArray);
-}
-
-/************************************************************************/
-/* Public Members                                                       */
-/************************************************************************/
-void
-PlatformVertexFormat::Enable()
-{
-    glBindVertexArray(mVertexArray);
-}
-
-void
-PlatformVertexFormat::Disable()
-{
     glBindVertexArray(0);
 }
 

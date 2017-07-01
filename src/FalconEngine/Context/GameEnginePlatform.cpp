@@ -10,8 +10,7 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-GameEnginePlatform::GameEnginePlatform():
-    mGameEngineSettings(nullptr)
+GameEnginePlatform::GameEnginePlatform()
 {
 }
 
@@ -23,12 +22,10 @@ GameEnginePlatform::~GameEnginePlatform()
 /* Public Members                                                       */
 /************************************************************************/
 void
-GameEnginePlatform::Initialize(GameEngineData *gameEngineData, GameEngineSettings *gameEngineSettings)
+GameEnginePlatform::Initialize()
 {
-    mGameEngineSettings = gameEngineSettings;
-
     InitializeData();
-    InitializePlatform(gameEngineData);
+    InitializePlatform();
 }
 
 /************************************************************************/

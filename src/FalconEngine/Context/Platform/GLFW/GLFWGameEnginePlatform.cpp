@@ -1,4 +1,5 @@
 #include <FalconEngine/Context/GameEnginePlatform.h>
+#include <FalconEngine/Context/GameEngineSettings.h>
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
 #include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
@@ -7,9 +8,10 @@ namespace FalconEngine
 {
 
 void
-GameEnginePlatform::InitializePlatform(GameEngineData *gameEngineData)
+GameEnginePlatform::InitializePlatform()
 {
-    GLFWwindow *window = nullptr;
+    auto gameEngineSettings = GameEngineSettings::GetInstance();
+    auto gameEngineData = GameEngineData::GetInstance();
 
     // Initialize GLFW.
     {
@@ -20,7 +22,7 @@ GameEnginePlatform::InitializePlatform(GameEngineData *gameEngineData)
             glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
             glfwWindowHint(GLFW_FOCUSED, GLFW_TRUE);
             glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-            glfwWindowHint(GLFW_VISIBLE, mGameEngineSettings->mWindowVisible ? GLFW_TRUE : GLFW_FALSE);
+            glfwWindowHint(GLFW_VISIBLE, gameEngineSettings->mWindowVisible ? GLFW_TRUE : GLFW_FALSE);
         }
 
         // OpenGL Context Hints
@@ -40,10 +42,10 @@ GameEnginePlatform::InitializePlatform(GameEngineData *gameEngineData)
 
         }
 
-        window = glfwCreateWindow(mGameEngineSettings->mWindowWidth, mGameEngineSettings->mWindowHeight, mGameEngineSettings->mWindowTitle.c_str(), nullptr, nullptr);
+        auto window = glfwCreateWindow(gameEngineSettings->mWindowWidth, gameEngineSettings->mWindowHeight, gameEngineSettings->mWindowTitle.c_str(), nullptr, nullptr);
         glfwMakeContextCurrent(window);
 
-        if (mGameEngineSettings->mMouseVisible)
+        if (gameEngineSettings->mMouseVisible)
         {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         }
@@ -52,13 +54,15 @@ GameEnginePlatform::InitializePlatform(GameEngineData *gameEngineData)
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
         }
 
-        if (mGameEngineSettings->mMouseLimited)
+        if (gameEngineSettings->mMouseLimited)
         {
         }
         else
         {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
+
+        gameEngineData->mWindow = window;
     }
 
     // Initialize GLEW.
@@ -68,7 +72,6 @@ GameEnginePlatform::InitializePlatform(GameEngineData *gameEngineData)
         glewInit();
     }
 
-    gameEngineData->mWindow = window;
 }
 
 }

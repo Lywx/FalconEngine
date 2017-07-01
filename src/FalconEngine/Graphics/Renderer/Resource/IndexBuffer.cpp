@@ -6,19 +6,29 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-IndexBuffer::IndexBuffer(int indexNum, IndexType indexType, BufferUsage usage) :
+IndexBuffer::IndexBuffer(int indexNum, IndexType indexType, BufferStorageMode storageMode, BufferUsage usage) :
     // The index buffer doesn't need the vertex array information about index
     // channel dimension. So we pass 1 here.
-    Buffer(indexNum, indexType == IndexType::UnsignedShort
+    Buffer(indexNum,
+           indexType == IndexType::UnsignedShort
            ? sizeof(unsigned short)
-           : sizeof(unsigned int), usage),
-    mOffset(0),
+           : sizeof(unsigned int),
+           storageMode, BufferType::IndexBuffer, usage),
     mType(indexType)
 {
 }
 
 IndexBuffer::~IndexBuffer()
 {
+}
+
+/************************************************************************/
+/* Public Members                                                       */
+/************************************************************************/
+IndexType
+IndexBuffer::GetIndexType() const
+{
+    return mType;
 }
 
 }

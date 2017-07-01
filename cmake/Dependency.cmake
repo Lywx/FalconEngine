@@ -20,9 +20,9 @@ endif()
 # Boost
 if(FALCON_ENGINE_PLATFORM_WINDOWS)
     # TODO(Wuxiang): .
-    set(BOOST_LIBRARY_FILE boost_filesystem boost_regex boost_serialization boost_system)
+    set(BOOST_LIBRARY_FILE boost_filesystem boost_regex boost_system)
 elseif(FALCON_ENGINE_PLATFORM_LINUX)
-    set(BOOST_LIBRARY_FILE boost_filesystem boost_regex boost_serialization boost_system)
+    set(BOOST_LIBRARY_FILE boost_filesystem boost_regex boost_system)
 endif()
 
 # GL

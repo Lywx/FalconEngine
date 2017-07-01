@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Header.h>
+#include <FalconEngine/Graphics/Common.h>
 
 #include <algorithm>
 #include <functional>
@@ -38,7 +38,6 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
     explicit Visual(std::shared_ptr<Mesh> mesh);
-
     virtual ~Visual();
 
 protected:
@@ -79,7 +78,7 @@ public:
     const VertexFormat *
     GetVertexFormat() const;
 
-    std::shared_ptr<VertexFormat>
+    std::shared_ptr<const VertexFormat>
     GetVertexFormat();
 
     void
@@ -88,7 +87,7 @@ public:
     const VertexGroup *
     GetVertexGroup() const;
 
-    std::shared_ptr<VertexGroup>
+    std::shared_ptr<const VertexGroup>
     GetVertexGroup();
 
     void
@@ -139,9 +138,9 @@ protected:
     std::list<std::shared_ptr<VisualEffectInstance>> mEffectInstances;
     std::list<std::shared_ptr<VisualEffectParams>>   mEffectParamses;
 
-    // NOTE(Wuxiang): The reason the visual is designed to contains vertex format
-    // and vertex group is that if you store them in effect instance you have to
-    // deal with the problem of copying effect instance. Because the effect
+    // NOTE(Wuxiang): The reason the visual is designed to contains vertex
+    // format and vertex group is that if you store them in effect instance you have
+    // to deal with the problem of copying effect instance. Because the effect
     // instance is about not sharing passes. Hence you would not be able to copy
     // passes easily. Eventually, you would have problems copying effect instance.
     // This leads to problem that if you make effect instance store vertex format
@@ -150,8 +149,8 @@ protected:
     // By storing them here you could easily reuse mesh and its vertex buffer,
     // vertex format etc. You don't need to worry about coping effect instance
     // also, because you are not allowed to do that.
-    std::shared_ptr<VertexFormat>                    mVertexFormat;
-    std::shared_ptr<VertexGroup>                     mVertexGroup;
+    std::shared_ptr<const VertexFormat>              mVertexFormat;
+    std::shared_ptr<const VertexGroup>               mVertexGroup;
 
 };
 #pragma warning(default: 4251)

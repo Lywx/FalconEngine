@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Header.h>
+#include <FalconEngine/Context/Common.h>
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
 // NOTE(Wuxiang): Necessary for GLEW static library.

@@ -1,11 +1,12 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Header.h>
+#include <FalconEngine/Graphics/Common.h>
 
 #include <stdexcept>
 #include <memory>
 
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
+#include "FalconEngine/Math/Rectangle.h"
 
 namespace FalconEngine
 {
@@ -22,11 +23,14 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    IndexBuffer(int indexNum, IndexType indexType, BufferUsage usage);
+    IndexBuffer(int indexNum, IndexType indexType, BufferStorageMode storageMode, BufferUsage usage);
     virtual ~IndexBuffer();
 
 public:
-    int       mOffset;
+    IndexType
+    GetIndexType() const;
+
+private:
     IndexType mType;
 };
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Header.h>
+#include <FalconEngine/Graphics/Common.h>
 
 #include <limits>
 #include <map>
@@ -27,11 +27,24 @@ class Renderer;
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API FontRenderer final
 {
+    /************************************************************************/
+    /* Static Members                                                       */
+    /************************************************************************/
 public:
+    static FontRenderer *
+    GetInstance()
+    {
+        static FontRenderer sInstance;
+        return &sInstance;
+    }
+
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
+private:
     FontRenderer();
+
+public:
     ~FontRenderer();
 
 public:
@@ -40,7 +53,8 @@ public:
     /************************************************************************/
     void
     BatchText(const Font *font,
-              float             fontSize,
+              float       fontSize,
+
               const std::wstring& textString,
               Vector2f            textPosition,
               Color               textColor = ColorPalette::White,
@@ -50,26 +64,24 @@ public:
     /* Rendering Engine API                                                 */
     /************************************************************************/
     void
-    Initialize(int viewportWidth, int viewportHeight);
+    Initialize();
 
     void
     RenderBegin();
 
     void
-    Render(Renderer *renderer, double percent);
+    Render(double percent);
 
     void
     RenderEnd();
 
 protected:
     std::shared_ptr<FontRenderBatch>
-    PrepareBatch(_IN_ const Font *font);
+    FindBatch(const Font *font);
 
     void
-    PrepareText(_IN_OUT_ FontRenderBatch& batch,
-                _IN_     const Font      *font,
-                _IN_     const FontText  *text,
-                _IN_     Color            textColor = ColorPalette::White);
+    FillText(_IN_     const Font      *font,
+             _IN_OUT_ FontRenderBatch *batch);
 
 private:
     // NOTE(Wuxiang): Since the shader sampler could not be indexed using vertex
@@ -80,11 +92,7 @@ private:
     // http://stackoverflow.com/questions/12030711/glsl-array-of-textures-of-differing-size/
     using FontRenderBatchMap = std::map<const Font *, std::shared_ptr<FontRenderBatch>>;
 
-    FontRenderBatchMap    mTextBatchTable;
-    HandednessRight       mTextHandedness;
-
-    int                   mViewportWidth  = 0;
-    int                   mViewportHeight = 0;
+    FontRenderBatchMap mTextBatchTable;
 };
 #pragma warning(default: 4251)
 

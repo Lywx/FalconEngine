@@ -17,7 +17,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    PlatformShader(Shader *shader);
+    explicit PlatformShader(Shader *shader);
     ~PlatformShader();
 
 public:

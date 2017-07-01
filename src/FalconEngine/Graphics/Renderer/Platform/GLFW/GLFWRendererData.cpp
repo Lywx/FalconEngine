@@ -1,4 +1,6 @@
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLRendererData.h>
+#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/GLFW/GLFWRendererData.h>
+
+#if defined(FALCON_ENGINE_WINDOW_GLFW)
 
 namespace FalconEngine
 {
@@ -14,3 +16,5 @@ PlatformRendererData::~PlatformRendererData()
 }
 
 }
+
+#endif

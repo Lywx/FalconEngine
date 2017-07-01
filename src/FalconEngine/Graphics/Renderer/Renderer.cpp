@@ -32,9 +32,7 @@ using namespace std;
 #include <FalconEngine/Graphics/Renderer/Resource/Texture3d.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>
 
-
-#if defined(FALCON_ENGINE_WINDOW_GLFW)
-#include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
+#if defined(FALCON_ENGINE_API_OPENGL)
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLIndexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLVertexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLVertexFormat.h>
@@ -43,9 +41,13 @@ using namespace std;
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLTexture2dArray.h>
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLTexture3d.h>
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLTextureSampler.h>
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLRendererData.h>
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLShader.h>
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLShaderUniform.h>
+#endif
+
+#if defined(FALCON_ENGINE_WINDOW_GLFW)
+#include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
+#include <FalconEngine/Graphics/Renderer/Platform/GLFW/GLFWRendererData.h>
 #endif
 
 namespace FalconEngine
@@ -60,10 +62,19 @@ PlatformRendererDataDeleter::operator()(PlatformRendererData *rendererData)
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Renderer::Renderer(GameEngineData *gameEngineData, GameEngineSettings *gameEngineSettings)
+Renderer::Renderer() :
+    mIndexBufferPrevious(nullptr),
+    mVertexGroupPrevious(nullptr),
+    mVertexFormatPrevious(nullptr),
+    mPassPrevious(nullptr),
+    mShaderPrevious(nullptr),
+    mBlendStateCurrent(nullptr),
+    mCullStateCurrent(nullptr),
+    mDepthTestStateCurrent(nullptr),
+    mOffsetStateCurrent(nullptr),
+    mStencilTestStateCurrent(nullptr),
+    mWireframeStateCurrent(nullptr)
 {
-    InitializeData(gameEngineSettings);
-    InitializePlatform(gameEngineData);
 }
 
 Renderer::~Renderer()
@@ -76,12 +87,22 @@ Renderer::~Renderer()
 /* Initialization and Destroy                                           */
 /************************************************************************/
 void
-Renderer::InitializeData(GameEngineSettings *gameEngineSettings)
+Renderer::Initialize()
 {
+    InitializeData();
+    InitializePlatform();
+}
+
+void
+Renderer::InitializeData()
+{
+    auto gameEngineSettings = GameEngineSettings::GetInstance();
+
     SetWindowData(gameEngineSettings->mWindowWidth,
                   gameEngineSettings->mWindowHeight,
                   gameEngineSettings->mWindowNear,
                   gameEngineSettings->mWindowFar);
+
     SetViewportData(0.0f, 0.0f,
                     float(gameEngineSettings->mWindowWidth),
                     float(gameEngineSettings->mWindowHeight));
@@ -146,6 +167,106 @@ Renderer::SetWindowData(int width, int height, float near, float far)
 }
 
 /************************************************************************/
+/* Universal Buffer Management                                          */
+/************************************************************************/
+void *
+Renderer::Map(const Buffer *buffer, BufferAccessMode access, BufferFlushMode flush, BufferSynchronizationMode synchronization, int64_t offset, int64_t size)
+{
+    switch (buffer->GetType())
+    {
+    case BufferType::None:
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.")
+    }
+    break;
+
+    case BufferType::VertexBuffer:
+    {
+        return Map(reinterpret_cast<const VertexBuffer *>(buffer), access, flush, synchronization, offset, size);
+    }
+    break;
+
+    case BufferType::IndexBuffer:
+    {
+        return Map(reinterpret_cast<const IndexBuffer *>(buffer), access, flush, synchronization, offset, size);
+    }
+    break;
+
+    case BufferType::ShaderBuffer:
+    {
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    }
+    break;
+
+    case BufferType::UniformBuffer:
+    {
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    }
+    break;
+
+    default:
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+    }
+}
+
+void
+Renderer::Unmap(const Buffer *buffer)
+{
+    switch (buffer->GetType())
+    {
+    case BufferType::None:
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.")
+    }
+    break;
+
+    case BufferType::VertexBuffer:
+    {
+        return Unmap(reinterpret_cast<const VertexBuffer *>(buffer));
+    }
+    break;
+
+    case BufferType::IndexBuffer:
+    {
+        return Unmap(reinterpret_cast<const IndexBuffer *>(buffer));
+    }
+    break;
+
+    case BufferType::ShaderBuffer:
+    {
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    }
+    break;
+
+    case BufferType::UniformBuffer:
+    {
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    }
+    break;
+
+    default:
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+    }
+}
+
+void
+Renderer::Update(const Buffer             *buffer,
+                 BufferAccessMode          access,
+                 BufferFlushMode           flush,
+                 BufferSynchronizationMode synchronization)
+{
+    auto sourceData = buffer->GetData() + buffer->GetDataOffset();
+
+    auto destinationData = Map(buffer, access, flush, synchronization,
+                               buffer->GetDataOffset(), buffer->GetDataSize());
+
+    memcpy(destinationData, sourceData, buffer->GetDataSize());
+
+    Unmap(buffer);
+}
+
+
+/************************************************************************/
 /* Vertex Buffer Management                                             */
 /************************************************************************/
 void
@@ -175,7 +296,7 @@ Renderer::Unbind(const VertexBuffer *vertexBuffer)
 }
 
 void
-Renderer::Enable(const VertexBuffer *vertexBuffer, int bindingIndex, int offset, int stride)
+Renderer::Enable(const VertexBuffer *vertexBuffer, int bindingIndex, int64_t offset, int stride)
 {
     FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
 
@@ -208,7 +329,12 @@ Renderer::Disable(const VertexBuffer *vertexBuffer, int bindingIndex)
 }
 
 void *
-Renderer::Map(const VertexBuffer *vertexBuffer, BufferAccessMode mode)
+Renderer::Map(const VertexBuffer       *vertexBuffer,
+              BufferAccessMode          access,
+              BufferFlushMode           flush,
+              BufferSynchronizationMode synchronization,
+              int64_t                   offset,
+              int64_t                   size)
 {
     FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
 
@@ -224,7 +350,7 @@ Renderer::Map(const VertexBuffer *vertexBuffer, BufferAccessMode mode)
         mVertexBufferTable[vertexBuffer] = vertexBufferPlatform;
     }
 
-    return vertexBufferPlatform->Map(mode);
+    return vertexBufferPlatform->Map(access, flush, synchronization, offset, size);
 }
 
 void
@@ -241,7 +367,9 @@ Renderer::Unmap(const VertexBuffer *vertexBuffer)
 }
 
 void
-Renderer::Update(const VertexBuffer *vertexBuffer)
+Renderer::Flush(VertexBuffer *vertexBuffer,
+                int64_t       offset,
+                int64_t       size)
 {
     FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
 
@@ -249,18 +377,11 @@ Renderer::Update(const VertexBuffer *vertexBuffer)
     if (iter != mVertexBufferTable.end())
     {
         auto vertexBufferPlatform = iter->second;
-
-        auto sourceDataByteNum = vertexBuffer->GetDataByteNum();
-        auto sourceData = vertexBuffer->GetData();
-        auto destinationData = vertexBufferPlatform->Map(BufferAccessMode::Write);
-        memcpy(destinationData, sourceData, sourceDataByteNum);
-
-        vertexBufferPlatform->Unmap();
+        vertexBufferPlatform->Flush(offset, size);
     }
     else
     {
-        auto vertexBufferPlatform = new PlatformVertexBuffer(vertexBuffer);
-        mVertexBufferTable[vertexBuffer] = vertexBufferPlatform;
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Vertex format is not mapped before.");
     }
 }
 
@@ -297,6 +418,17 @@ Renderer::Enable(const VertexFormat *vertexFormat)
 {
     FALCON_ENGINE_CHECK_NULLPTR(vertexFormat);
 
+    if (vertexFormat == mVertexFormatPrevious)
+    {
+        return;
+    }
+    else
+    {
+        Disable(mVertexFormatPrevious);
+
+        mVertexFormatPrevious = vertexFormat;
+    }
+
     auto iter = mVertexFormatTable.find(vertexFormat);
     PlatformVertexFormat *vertexFormatPlatform;
     if (iter != mVertexFormatTable.end())
@@ -331,6 +463,17 @@ Renderer::Disable(const VertexFormat *vertexFormat)
 void
 Renderer::Enable(const VertexGroup *vertexGroup)
 {
+    if (vertexGroup == mVertexGroupPrevious)
+    {
+        return;
+    }
+    else
+    {
+        Disable(mVertexGroupPrevious);
+
+        mVertexGroupPrevious = vertexGroup;
+    }
+
     for (const auto& vertexBindingBufferPair : vertexGroup->mVertexBufferTable)
     {
         auto const & vertexBufferBinding = vertexBindingBufferPair.second;
@@ -387,6 +530,17 @@ Renderer::Enable(const IndexBuffer *indexBuffer)
 {
     FALCON_ENGINE_CHECK_NULLPTR(indexBuffer);
 
+    if (indexBuffer == mIndexBufferPrevious)
+    {
+        return;
+    }
+    else
+    {
+        Disable(mIndexBufferPrevious);
+
+        mIndexBufferPrevious = indexBuffer;
+    }
+
     auto iter = mIndexBufferTable.find(indexBuffer);
     PlatformIndexBuffer *indexBufferPlatform;
     if (iter != mIndexBufferTable.end())
@@ -416,7 +570,12 @@ Renderer::Disable(const IndexBuffer *indexBuffer)
 }
 
 void *
-Renderer::Map(const IndexBuffer *indexBuffer, BufferAccessMode mode)
+Renderer::Map(const IndexBuffer        *indexBuffer,
+              BufferAccessMode          access,
+              BufferFlushMode           flush,
+              BufferSynchronizationMode synchronization,
+              int64_t                   offset,
+              int64_t                   size)
 {
     FALCON_ENGINE_CHECK_NULLPTR(indexBuffer);
 
@@ -432,7 +591,7 @@ Renderer::Map(const IndexBuffer *indexBuffer, BufferAccessMode mode)
         mIndexBufferTable[indexBuffer] = indexBufferPlatform;
     }
 
-    return indexBufferPlatform->Map(mode);
+    return indexBufferPlatform->Map(access, flush, synchronization, offset, size);
 }
 
 void
@@ -458,7 +617,7 @@ Renderer::Update(const IndexBuffer *indexBuffer)
     {
         auto indexBufferPlatform = iter->second;
 
-        auto sourceDataByteNum = indexBuffer->GetDataByteNum();
+        auto sourceDataByteNum = indexBuffer->GetDataSize();
         auto *sourceData = indexBuffer->GetData();
         void *destinationData = indexBufferPlatform->Map(BufferAccessMode::Write);
         memcpy(destinationData, sourceData, sourceDataByteNum);
@@ -478,6 +637,17 @@ Renderer::Update(const IndexBuffer *indexBuffer)
 void
 Renderer::Enable(int textureUnit, const Texture *texture)
 {
+    if (mTexturePrevious[textureUnit] == texture)
+    {
+        return;
+    }
+    else
+    {
+        Disable(textureUnit, texture);
+
+        mTexturePrevious[textureUnit] = texture;
+    }
+
     FALCON_ENGINE_CHECK_NULLPTR(texture);
 
     switch (texture->mType)
@@ -901,6 +1071,17 @@ Renderer::Enable(int textureUnit, const Sampler *sampler)
 {
     FALCON_ENGINE_CHECK_NULLPTR(sampler);
 
+    if (mSamplerPrevious[textureUnit] == sampler)
+    {
+        return;
+    }
+    else
+    {
+        Disable(textureUnit, sampler);
+
+        mSamplerPrevious[textureUnit] = sampler;
+    }
+
     auto iter = mSamplerTable.find(sampler);
     PlatformSampler *samplerPlatform;
     if (iter != mSamplerTable.end())
@@ -962,6 +1143,17 @@ Renderer::Enable(Shader *shader)
 {
     FALCON_ENGINE_CHECK_NULLPTR(shader);
 
+    if (shader == mShaderPrevious)
+    {
+        return;
+    }
+    else
+    {
+        Disable(mShaderPrevious);
+
+        mShaderPrevious = shader;
+    }
+
     auto iter = mShaderTable.find(shader);
     PlatformShader *platformShader;
     if (iter != mShaderTable.end())
@@ -996,6 +1188,15 @@ Renderer::Disable(const Shader *shader)
 void
 Renderer::Enable(const VisualEffectPass *pass)
 {
+    if (pass == mPassPrevious)
+    {
+        return;
+    }
+    else
+    {
+        mPassPrevious = pass;
+    }
+
     // Set pass' render states.
     SetBlendStatePlatform(pass->GetBlendState());
     SetCullStatePlatform(pass->GetCullState());
@@ -1006,14 +1207,12 @@ Renderer::Enable(const VisualEffectPass *pass)
 }
 
 void
-Renderer::Disable(const VisualEffectPass * /* pass */)
-{
-}
-
-void
 Renderer::Enable(const VisualEffectInstancePass *pass, const Camera *camera, const Visual *visual)
 {
     FALCON_ENGINE_CHECK_NULLPTR(pass);
+
+    // Enable required shader.
+    Enable(pass->GetShader());
 
     // Enable required shader textures.
     for (auto textureIter = pass->GetShaderTextureBegin(); textureIter != pass->GetShaderTextureEnd(); ++textureIter)
@@ -1039,24 +1238,6 @@ Renderer::Enable(const VisualEffectInstancePass *pass, const Camera *camera, con
         // shader's uniform table after the binding of the shader.
         auto uniform = pass->GetShaderUniform(uniformIndex);
         Update(pass, uniform, camera, visual);
-    }
-}
-
-void
-Renderer::Disable(const VisualEffectInstancePass *pass)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(pass);
-
-    // Disable required shader textures.
-    for (auto textureIter = pass->GetShaderTextureBegin(); textureIter != pass->GetShaderTextureEnd(); ++textureIter)
-    {
-        Disable(textureIter->first, textureIter->second);
-    }
-
-    // Disable required shader samplers.
-    for (auto samplerIter = pass->GetShaderSamplerBegin(); samplerIter != pass->GetShaderSamplerEnd(); ++samplerIter)
-    {
-        Disable(samplerIter->first, samplerIter->second);
     }
 }
 
@@ -1088,9 +1269,8 @@ Renderer::Update(const VisualEffectInstancePass *pass, ShaderUniform *uniform, c
 /* Draw                                                                 */
 /************************************************************************/
 void
-Renderer::Draw(
-    _IN_     const Camera *camera,
-    _IN_OUT_ Visual       *visual)
+Renderer::Draw(const Camera *camera,
+               const Visual *visual)
 {
     // NOTE(Wuxiang): We don't need to check the camera is not null here, because
     // certain rendering task won't need camera information.
@@ -1112,6 +1292,8 @@ Renderer::Draw(
     _IN_     const Visual         *visual,
     _IN_OUT_ VisualEffectInstance *visualEffectInstance)
 {
+    // TODO(Wuxiang): Add render command sorting.
+
     // NOTE(Wuxiang): The non-constness of instance comes from the fact that
     // during the binding of shader, the renderer would look up the shader's
     // location for each vertex attribute and each uniform.
@@ -1124,9 +1306,7 @@ Renderer::Draw(
 
     // NOTE(Wuxiang): Currently this function assume that all passes are using
     // same vertex attribute array, so that we don't switch vertex format between
-    // the shader.
-
-    // TODO(Wuxiang): 2017-05-22 14:16. Dirty Flag and Sorting.
+    // different shader.
 
     auto visualEffect = visualEffectInstance->GetEffect();
 
@@ -1138,7 +1318,9 @@ Renderer::Draw(
     auto vertexGroup = visual->GetVertexGroup();
     Enable(vertexGroup);
 
+    // Fetch primitive in Visual.
     auto primitive = visual->GetMesh()->GetPrimitive();
+
     auto indexBuffer = primitive->GetIndexBuffer();
     if (indexBuffer)
     {
@@ -1151,42 +1333,17 @@ Renderer::Draw(
     {
         auto visualEffectInstancePass = visualEffectInstance->GetPass(passIndex);
 
-        // Enable shader.
-        auto shader = visualEffectInstancePass->GetShader();
-        Enable(shader);
-
-        // Enable effect instance pass.
-        Enable(visualEffectInstancePass, camera, visual);
-
         // Enable effect pass.
         auto visualEffectPass = visualEffect->GetPass(passIndex);
         Enable(visualEffectPass);
 
+        // Enable effect instance pass.
+        Enable(visualEffectInstancePass, camera, visual);
+
         // Draw primitive.
         auto primitiveInstancingNum = visualEffectInstancePass->GetShaderInstancingNum();
         DrawPrimitivePlatform(primitive, primitiveInstancingNum);
-
-        // Disable effect pass.
-        Disable(visualEffectPass);
-
-        // Disable effect instance pass.
-        Disable(visualEffectInstancePass);
-
-        // Disable the shader.
-        Disable(shader);
     }
-
-    // Disable index buffer.
-    if (indexBuffer)
-    {
-        Disable(indexBuffer);
-    }
-
-    // Disable vertex buffer.
-    Disable(vertexGroup);
-
-    // Disable vertex attribute array.
-    Disable(vertexFormat);
 }
 
 }

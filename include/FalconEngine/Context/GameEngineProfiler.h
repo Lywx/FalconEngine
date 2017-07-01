@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Context/Header.h>
+#include <FalconEngine/Context/Common.h>
 
 #include <memory>
 #include <vector>
@@ -26,11 +26,13 @@ public:
         return &sInstance;
     }
 
-public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
+private:
     GameEngineProfiler() = default;
+
+public:
     ~GameEngineProfiler() = default;
 
 public:
@@ -38,7 +40,7 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Initialize(GameEngineData *gameEngineData, GameEngineSettings *gameEngineSettings);
+    Initialize();
 
     double
     GetLastFrameElapsedMillisecond() const;

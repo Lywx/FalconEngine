@@ -8,6 +8,7 @@ namespace FalconEngine
 /************************************************************************/
 BufferCircular::BufferCircular(std::shared_ptr<Buffer> buffer, size_t bufferZoneByteNum) :
     BufferAdaptor(buffer),
+    mBufferDataOffsetNext(0),
     mBufferZoneByteNum(bufferZoneByteNum)
 {
 }
@@ -40,13 +41,13 @@ BufferCircular::FillEnd()
     // NOTE(Wuxiang): Since the offset end is moved after filling data into next
     // write position. Suppose the last valid byte is just written, the offset is
     // moved to "byte count" or "byte number" position, which is one past valid offset.
-    if (GetCapacityByteNum() + 1 < mBufferDataOffsetEnd)
+    if (mBuffer->GetCapacitySize() + 1 < mBufferDataOffsetEnd)
     {
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Buffer is overflowed.")
     }
 
     // When offset is in safe zone.
-    else if (mBufferDataOffsetEnd < GetCapacityByteNum() - mBufferZoneByteNum)
+    else if (mBufferDataOffsetEnd < mBuffer->GetCapacitySize() - mBufferZoneByteNum)
     {
         // Start next offset in where it ends.
         mBufferDataOffsetNext = mBufferDataOffsetEnd;

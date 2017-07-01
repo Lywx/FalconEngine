@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Context/Header.h>
+#include <FalconEngine/Context/Common.h>
 
 namespace FalconEngine
 {
@@ -22,7 +22,10 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
+private:
     GameEngineSettings();
+
+public:
     virtual ~GameEngineSettings() = default;
 
 public:

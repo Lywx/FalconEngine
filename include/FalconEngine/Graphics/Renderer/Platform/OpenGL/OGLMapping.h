@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLHeader.h>
+#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/Common.h>
 
 #include <FalconEngine/Graphics/Renderer/Primitive.h>
 
@@ -16,7 +16,10 @@
 namespace FalconEngine
 {
 
-extern const GLuint OpenGLBufferAccessMode[int(BufferAccessMode::Count)];
+extern const GLuint OpenGLBufferAccessModeMark[int(BufferAccessMode::Count)];
+extern const GLuint OpenGLBufferFlushModeMark[int(BufferFlushMode::Count)];
+extern const GLuint OpenGLBufferSynchronizationModeMark[int(BufferSynchronizationMode::Count)];
+
 extern const GLuint OpenGLBufferUsage[int(BufferUsage::Count)];
 
 extern const GLuint OpenGLTextureType[int(TextureFormat::Count)];               // Texture element type

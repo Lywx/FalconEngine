@@ -9,10 +9,12 @@
 #include <FalconEngine/Graphics/Renderer/State/OffsetState.h>
 #include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
 
+#if defined(FALCON_ENGINE_API_OPENGL)
+#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLRendererState.h>
+#endif
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
 #include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLRendererData.h>
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLRendererState.h>
+#include <FalconEngine/Graphics/Renderer/Platform/GLFW/GLFWRendererData.h>
 
 using namespace std;
 
@@ -23,11 +25,15 @@ namespace FalconEngine
 /* Initialization and Destroy                                           */
 /************************************************************************/
 void
-Renderer::InitializePlatform(GameEngineData *gameEngineData)
+Renderer::InitializePlatform()
 {
+    auto window = GameEngineData::GetInstance()->mWindow;
+
     // Initialize platform renderer data.
     mData = std::unique_ptr<PlatformRendererData, PlatformRendererDataDeleter>(
-                new PlatformRendererData(gameEngineData->mWindow), PlatformRendererDataDeleter());
+                new PlatformRendererData(window),
+                PlatformRendererDataDeleter());
+
     mData->mState->Initialize(
         mBlendStateDefault.get(),
         mCullStateDefault.get(),
@@ -35,6 +41,7 @@ Renderer::InitializePlatform(GameEngineData *gameEngineData)
         mOffsetStateDefault.get(),
         mStencilTestStateDefault.get(),
         mWireframeStateDefault.get());
+
     mDataInitialized = true;
 
     SetWindowPlatform(mWindow.mWidth, mWindow.mHeight, mWindow.mNear, mWindow.mFar);
@@ -404,65 +411,61 @@ Renderer::DrawPrimitivePlatform(const Primitive *primitive, int primitiveInstanc
 
     PrimitiveType primitiveType = primitive->GetPrimitiveType();
     const GLenum  primitiveMode = OpenGLPrimitiveType[int(primitiveType)];
+    auto vertexNum = primitive->GetVertexNum();
+    auto vertexOffset = primitive->GetVertexOffset();
+
+    if (vertexNum < 1)
+    {
+        return;
+    }
+
     if (primitiveType == PrimitiveType::Point)
     {
-        auto vertexNum = primitive->GetVertexNum();
-        if (vertexNum > 0)
-        {
-            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(primitiveInstancingNum));
-        }
+        glDrawArraysInstanced(primitiveMode, vertexOffset, vertexNum, primitiveInstancingNum);
     }
     else if (primitiveType == PrimitiveType::Line)
     {
-        auto vertexNum = primitive->GetVertexNum();
-        if (vertexNum > 0)
-        {
-            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(primitiveInstancingNum));
-        }
+        glDrawArraysInstanced(primitiveMode, vertexOffset, vertexNum, primitiveInstancingNum);
     }
     else if (primitiveType == PrimitiveType::LineStrip)
     {
-        auto vertexNum = primitive->GetVertexNum();
-        if (vertexNum > 0)
-        {
-            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(primitiveInstancingNum));
-        }
+        glDrawArraysInstanced(primitiveMode, vertexOffset, vertexNum, primitiveInstancingNum);
     }
     else if (primitiveType == PrimitiveType::Triangle)
     {
-        auto vertexNum = primitive->GetVertexNum();
-
         // When use index buffer
         auto indexBuffer = primitive->GetIndexBuffer();
         if (indexBuffer)
         {
             auto indexNum = indexBuffer->GetElementNum();
-            if (vertexNum > 0 && indexNum > 0)
+            if (indexNum < 1)
             {
-                GLenum indexType = 0;
-                const GLvoid *indexOffset = nullptr;
-
-                if (indexBuffer->mType == IndexType::UnsignedShort)
-                {
-                    indexType = GL_UNSIGNED_SHORT;
-                    indexOffset = static_cast<unsigned short *>(nullptr) + indexBuffer->mOffset;
-                }
-                else if (indexBuffer->mType == IndexType::UnsignedInt)
-                {
-                    indexType = GL_UNSIGNED_INT;
-                    indexOffset = static_cast<unsigned int *>(nullptr) + indexBuffer->mOffset;
-                }
-                else
-                {
-                    FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
-                }
-
-                glDrawElementsInstanced(primitiveMode, GLsizei(indexNum), indexType, indexOffset, GLsizei(primitiveInstancingNum));
+                return;
             }
+
+            GLenum indexType = 0;
+            const GLvoid *indexOffset = nullptr;
+
+            if (indexBuffer->GetIndexType() == IndexType::UnsignedShort)
+            {
+                indexType = GL_UNSIGNED_SHORT;
+                indexOffset = static_cast<unsigned short *>(nullptr) + primitive->GetIndexOffset();
+            }
+            else if (indexBuffer->GetIndexType() == IndexType::UnsignedInt)
+            {
+                indexType = GL_UNSIGNED_INT;
+                indexOffset = static_cast<unsigned int *>(nullptr) + primitive->GetIndexOffset();
+            }
+            else
+            {
+                FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+            }
+
+            glDrawElementsInstanced(primitiveMode, indexNum, indexType, indexOffset, primitiveInstancingNum);
         }
         else
         {
-            glDrawArraysInstanced(primitiveMode, 0, GLuint(vertexNum), GLsizei(primitiveInstancingNum));
+            glDrawArraysInstanced(primitiveMode, vertexOffset, vertexNum, primitiveInstancingNum);
         }
     }
     else

@@ -29,7 +29,7 @@ PrimitiveQuads::GetQuadNum() const
     }
     else
     {
-        return mVertexGroup->GetElementNum() / 3;
+        return mVertexGroup->GetVertexNum() / 3;
     }
 }
 

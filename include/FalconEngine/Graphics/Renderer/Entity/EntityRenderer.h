@@ -1,12 +1,12 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Header.h>
+#include <FalconEngine/Graphics/Common.h>
 
 #include <vector>
 #include <map>
 #include <queue>
 
-#include <FalconEngine/Graphics/Renderer/Entity/AABBBoundingBoxBatch.h>
+#include <FalconEngine/Graphics/Renderer/Entity/EntityAABBBatch.h>
 
 #include <FalconEngine/Math/Color.h>
 
@@ -25,11 +25,24 @@ class Visual;
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API EntityRenderer final
 {
+    /************************************************************************/
+    /* Static Members                                                       */
+    /************************************************************************/
 public:
+    static EntityRenderer *
+    GetInstance()
+    {
+        static EntityRenderer sInstance;
+        return &sInstance;
+    }
+
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
+private:
     EntityRenderer();
+
+public:
     ~EntityRenderer();
 
 public:
@@ -39,8 +52,13 @@ public:
     void
     Draw(const Camera *camera, const Entity *entity);
 
+    // @summary Recursively draw bounding box for the entity.
     void
-    DrawBoundingBox(const Camera *camera, const Entity *entity, Color boundingBoxColor);
+    DrawBoundingBox(const Camera *camera, const Entity *entity, const Color& color);
+
+    // @summary Recursively draw bounding box for the node.
+    void
+    DrawBoundingBox(const Camera *camera, const Node *node, const Color& color);
 
     /************************************************************************/
     /* Rendering Engine API                                                 */
@@ -52,33 +70,27 @@ public:
     RenderBegin();
 
     void
-    Render(Renderer *renderer, double percent);
+    Render(double percent);
 
     void
     RenderEnd();
 
 private:
     void
-    DrawBoundingBox(const Camera *camera, const Node *node, Color boundingBoxColor);
+    DrawBoundingBox(const Camera *camera, const Visual *visual, const Color& color);
+
+    std::shared_ptr<EntityAABBBatch>
+    FindBoundingBoxBatch(const Camera *camera);
 
     void
-    DrawBoundingBox(const Camera *camera, const Visual *visual, Color boundingBoxColor);
-
-    void
-    DrawBoundingBox(const Camera *camera, const Visual *visual, const BoundingBox *boundingBox, Color boundingBoxColor);
-
-    std::shared_ptr<AABBBoundingBoxBatch>
-    PrepareBatch(const Camera *camera);
-
-    void
-    PrepareBoundingBox(_IN_ AABBBoundingBoxBatch&  batch,
-                       _IN_ const Camera      *camera,
-                       _IN_ const Visual      *visual,
-                       _IN_ const BoundingBox *boundingBox,
-                       _IN_ Color              boundingBoxColor = ColorPalette::White);
+    FillBoundingBox(_IN_ EntityAABBBatch& batch,
+                    _IN_ const Camera    *camera,
+                    _IN_ const Visual    *visual,
+                    _IN_ Color            color = ColorPalette::White);
 private:
-    std::map<const Camera *, std::shared_ptr<AABBBoundingBoxBatch>> mBoundingBoxBatchTable;
-    std::map<const Camera *, std::vector<const Entity *>>       mEntityListTable;
+    std::map<const Camera *, std::vector<const Entity *>>      mEntityListTable;
+    std::map<const Camera *, std::shared_ptr<EntityAABBBatch>> mEntityAABBBatchTable;
+
 };
 #pragma warning(default: 4251)
 

@@ -45,7 +45,7 @@ PrimitiveTriangles::GetTriangleNum() const
         }
         else
         {
-            return mVertexGroup->GetElementNum() / 3;
+            return mVertexGroup->GetVertexNum() / 3;
         }
     }
 
@@ -59,7 +59,7 @@ PrimitiveTriangles::GetTriangleNum() const
         }
         else
         {
-            return mVertexGroup->GetElementNum() - 2;
+            return mVertexGroup->GetVertexNum() - 2;
         }
     }
 
@@ -74,7 +74,7 @@ PrimitiveTriangles::GetTriangleNum() const
         }
         else
         {
-            return mVertexGroup->GetElementNum() - 2;
+            return mVertexGroup->GetVertexNum() - 2;
         }
     }
 

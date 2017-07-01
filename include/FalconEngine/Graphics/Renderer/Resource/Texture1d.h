@@ -4,7 +4,7 @@
 
 #include <cereal/access.hpp>
 
-#include <FalconEngine/Graphics/Header.h>
+#include <FalconEngine/Graphics/Common.h>
 #include <FalconEngine/Graphics/Renderer/Resource/TextureStorage.h>
 
 namespace FalconEngine

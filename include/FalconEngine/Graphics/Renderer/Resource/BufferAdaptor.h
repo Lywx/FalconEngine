@@ -6,6 +6,7 @@ namespace FalconEngine
 {
 
 // @summary A wrapper around buffer that provide various convenient function.
+#pragma warning(disable: 4251)
 class FALCON_ENGINE_API BufferAdaptor
 {
 public:
@@ -23,7 +24,7 @@ public:
     void
     Fill(const T& value)
     {
-        Fill(GetData(), mBufferDataOffsetEnd, value);
+        Fill(mBuffer->GetData(), mBufferDataOffsetEnd, value);
     }
 
     // @remark Can be used to fill mapped buffer data in pinned memory and keep
@@ -32,14 +33,14 @@ public:
     void
     Fill(unsigned char *data, const T& value)
     {
-        BufferData::Fill(data, mBufferDataOffsetEnd, value);
+        BufferData::Fill<T>(data, mBufferDataOffsetEnd, value);
     }
 
     template<typename T, typename S>
     void
     FillAs(const T& value)
     {
-        FillAs<T, S>(GetData(), mBufferDataOffsetEnd, value);
+        FillAs<T, S>(mBuffer->GetData(), mBufferDataOffsetEnd, value);
     }
 
     // @remark Can be used to fill mapped buffer data in pinned memory and keep
@@ -57,22 +58,10 @@ public:
     virtual void
     FillEnd() = 0;
 
-    size_t
-    GetCapacityByteNum() const;
-
-    const unsigned char *
-    GetData() const;
-
-    unsigned char *
-    GetData();
-
-    size_t
-    GetDataByteNum() const;
-
 protected:
     std::shared_ptr<Buffer> mBuffer;
-    size_t                  mBufferDataOffsetNext;
-    size_t                  mBufferDataOffsetEnd;
+    size_t                  mBufferDataOffsetEnd; // A offset marker indicates where the lately filled data is current at in the buffer.
 };
+#pragma warning(default: 4251)
 
 }

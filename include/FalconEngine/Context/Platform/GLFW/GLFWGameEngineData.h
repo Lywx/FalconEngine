@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Context/Platform/GLFW/GLFWHeader.h>
+#include <FalconEngine/Context/Platform/GLFW/Common.h>
 
 namespace FalconEngine
 {
@@ -18,8 +18,13 @@ public:
         return &sInstance;
     }
 
-public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
+private:
     GameEngineData();
+
+public:
     ~GameEngineData() = default;
 
 public:

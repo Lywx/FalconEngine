@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Content/Header.h>
+#include <FalconEngine/Content/Common.h>
 
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 

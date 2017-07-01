@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Input/Header.h>
+#include <FalconEngine/Input/Common.h>
 
 #include <FalconEngine/Input/MouseButtonState.h>
 #include <FalconEngine/Math/Vector2.h>

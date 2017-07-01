@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Header.h>
+#include <FalconEngine/Graphics/Common.h>
 
 #include <string>
 #include <map>
@@ -64,7 +64,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    VertexAttribute(int location, std::string name, VertexAttributeType type, bool normalized, int offset, int bindingIndex, int division);
+    VertexAttribute(unsigned int location, const std::string& name, VertexAttributeType type, bool normalized, unsigned int offset, unsigned int bindingIndex, unsigned int division);
     virtual ~VertexAttribute();
 
 public:
@@ -73,16 +73,16 @@ public:
 
 public:
     // NOTE(Wuxiang): Initialized on construction.
-    int                 mBindingIndex;                                        // Vertex attribute buffer binding index.
+    unsigned int        mBindingIndex;                                        // Vertex attribute buffer binding index.
 
     // NOTE(Wuxiang) If divisor is non-zero, the attribute advances once per
     // divisor instances of the set(s) of vertices being rendered.
-    int                 mDivision;                                            // Vertex attribute update division when instancing.
-    int                 mLocation;                                            // Vertex attribute layout location.
+    unsigned int        mDivision;                                            // Vertex attribute update division when instancing.
+    unsigned int        mLocation;                                            // Vertex attribute layout location.
     std::string         mName;                                                // Vertex attribute name.
     bool                mNormalized;                                          // Vertex attribute should be normalized or not.
     VertexAttributeType mType;                                                // Vertex attribute type.
-    int                 mOffset;                                              // Vertex attribute's offset into first valid value in the whole vertex buffer.
+    unsigned int        mOffset;                                              // Vertex attribute's offset into first valid value in the whole vertex buffer.
 
     // NOTE(Wuxiang): Initialized based on mType.
     int                 mChannel;                                             // Vertex attribute dimension.

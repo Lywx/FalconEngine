@@ -14,11 +14,12 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 Texture::Texture() :
-    mData(nullptr),
-    mDataByteNum(0),
     mFormat(TextureFormat::None),
     mMipmapLevel(0),
     mType(TextureType::None),
+    mData(nullptr),
+    mDataSize(0),
+    mStorageMode(BufferStorageMode::Host),
     mUsage(BufferUsage::None)
 {
 }
@@ -37,6 +38,7 @@ Texture::Texture(AssetSource        assetSource,
     mFormat(format),
     mMipmapLevel(mipmapLevel),
     mType(type),
+    mStorageMode(BufferStorageMode::Host),
     mUsage(usage)
 {
     if (width < 1 || height < 1 || depth < 1)
@@ -48,21 +50,21 @@ Texture::Texture(AssetSource        assetSource,
     mDimension[1] = height;
     mDimension[2] = depth;
 
-    if ()
+    if (mStorageMode == BufferStorageMode::Host)
     {
-        mDataByteNum = size_t(mDimension[0]) * size_t(mDimension[1]) * size_t(mDimension[2]) * TexelSize[int(mFormat)];
-        mData = new unsigned char[mDataByteNum];
+        mDataSize = size_t(mDimension[0]) * size_t(mDimension[1]) * size_t(mDimension[2]) * TexelSize[int(mFormat)];
+        mData = new unsigned char[mDataSize];
     }
     else
     {
         mData = nullptr;
-        mDataByteNum = 0;
+        mDataSize = 0;
     }
 }
 
 Texture::~Texture()
 {
-    if ()
+    if (mStorageMode == BufferStorageMode::Host)
     {
         delete[] mData;
     }

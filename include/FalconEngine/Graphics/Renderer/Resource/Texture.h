@@ -96,18 +96,18 @@ public:
     virtual ~Texture();
 
 public:
-    int            mChannel = 0;                                               // Texture RGBA color channel number.
-    int            mDimension[3];                                              // Texture dimension (width, height, depth).
+    int               mChannel = 0;                                               // Texture RGBA color channel number.
+    int               mDimension[3];                                              // Texture dimension (width, height, depth).
+    TextureFormat     mFormat;                                                    // Texture binary format, needed during construction.
+    int               mMipmapLevel;                                               // Texture mipmap level, needed during construction.
+    TextureType       mType;                                                      // Texture type, needed during construction.
 
-    unsigned char *mData;
-    size_t         mDataByteNum;
+    // NOTE(Wuxiang): Buffer specific data.
+    unsigned char    *mData;
+    size_t            mDataSize;
 
-    // NOTE(Wuxiang): Initialization in constructor requires the following data members.
-
-    TextureFormat  mFormat;                                                    // Texture binary format, needed during construction.
-    int            mMipmapLevel;                                               // Texture mipmap level, needed during construction.
-    TextureType    mType;                                                      // Texture type, needed during construction.
-    BufferUsage    mUsage;                                                     // Texture buffer usage, needed during construction.
+    BufferStorageMode mStorageMode;                                               // Texture buffer storage mode, currently only in Host mode.
+    BufferUsage       mUsage;                                                     // Texture buffer usage, needed during construction.
 
     /************************************************************************/
     /* Asset Importing and Exporting                                        */
@@ -120,13 +120,15 @@ public:
         ar & cereal::base_class<Asset>(this);
 
         ar & mChannel;
-        ar & mDataByteNum;
         ar & mDimension;
 
         ar & mFormat;
         ar & mMipmapLevel;
         ar & mType;
+
         ar & mUsage;
+
+        ar & mDataSize;
     }
 };
 

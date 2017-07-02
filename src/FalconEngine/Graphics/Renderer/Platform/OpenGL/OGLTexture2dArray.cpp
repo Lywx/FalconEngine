@@ -37,7 +37,7 @@ PlatformTexture2dArray::PlatformTexture2dArray(const Texture2dArray *textureArra
         {
             glGenBuffers(1, &mBufferObjList[textureIndex]);
             glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBufferObjList[textureIndex]);
-            glBufferData(GL_PIXEL_UNPACK_BUFFER, textureArray->GetTextureSlice(textureIndex)->mDataByteNum, nullptr, mUsage);
+            glBufferData(GL_PIXEL_UNPACK_BUFFER, textureArray->GetTextureSlice(textureIndex)->mDataSize, nullptr, mUsage);
             glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
         }
 
@@ -52,7 +52,7 @@ PlatformTexture2dArray::PlatformTexture2dArray(const Texture2dArray *textureArra
     {
         auto texture = textureArray->GetTextureSlice(textureIndex);
         void *textureData = Map(textureIndex, 0, BufferAccessMode::Write);
-        memcpy(textureData, texture->mData, texture->mDataByteNum);
+        memcpy(textureData, texture->mData, texture->mDataSize);
         Unmap(textureIndex, 0);
     }
 

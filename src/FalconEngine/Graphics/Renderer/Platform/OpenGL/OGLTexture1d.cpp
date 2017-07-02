@@ -27,12 +27,12 @@ PlatformTexture1d::PlatformTexture1d(const Texture1d *texture) :
     // Allocate current texture buffer
     glGenBuffers(1, &mBufferObj);
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBufferObj);
-    glBufferData(GL_PIXEL_UNPACK_BUFFER, texture->mDataByteNum, nullptr, mUsage);
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, texture->mDataSize, nullptr, mUsage);
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
     // Fill in the texture data
     void *textureData = Map(0, BufferAccessMode::Write);
-    memcpy(textureData, texture->mData, texture->mDataByteNum);
+    memcpy(textureData, texture->mData, texture->mDataSize);
     Unmap(0);
 
     // Allocate current texture memory

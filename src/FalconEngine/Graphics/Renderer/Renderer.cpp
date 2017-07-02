@@ -796,7 +796,7 @@ Renderer::Update(const Texture1d *texture, int mipmapLevel)
 
         unsigned char *sourceData = texture->mData;
         void *targetData = texturePlatform->Map(mipmapLevel, BufferAccessMode::Write);
-        memcpy(targetData, sourceData, texture->mDataByteNum);
+        memcpy(targetData, sourceData, texture->mDataSize);
         texturePlatform->Unmap(mipmapLevel);
     }
     else
@@ -910,7 +910,7 @@ Renderer::Update(const Texture2d *texture, int mipmapLevel)
 
         unsigned char *sourceData = texture->mData;
         void *targetData = texturePlatform->Map(mipmapLevel, BufferAccessMode::Write);
-        memcpy(targetData, sourceData, texture->mDataByteNum);
+        memcpy(targetData, sourceData, texture->mDataSize);
         texturePlatform->Unmap(mipmapLevel);
     }
     else

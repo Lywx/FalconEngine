@@ -120,7 +120,7 @@ public:
     void
     SetElementNum(int elementNum);
 
-    int
+    size_t
     GetElementSize() const;
 
     // @summary Get the offset in terms of size of element.

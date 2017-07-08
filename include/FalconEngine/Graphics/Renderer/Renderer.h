@@ -256,6 +256,9 @@ public:
     void
     Disable(int textureUnit, const Texture *texture);
 
+    // NEW(Wuxiang): Add the ability of reading back texture.
+    // NOTE(Wuxiang): But I don't know why I need any function to update texture.
+
     /************************************************************************/
     /* Texture 1D Management                                                */
     /************************************************************************/

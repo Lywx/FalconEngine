@@ -3,6 +3,8 @@
 #include <fstream>
 #include <stdexcept>
 
+#include <cereal/archives/portable_binary.hpp>
+
 #include <FalconEngine/Content/AssetImporter.h>
 #include <FalconEngine/Content/Asset.h>
 #include <FalconEngine/Core/Path.h>
@@ -140,7 +142,7 @@ AssetManager::CheckFileExists(const std::string& assetPath)
 }
 
 std::shared_ptr<Font>
-AssetManager::LoadFontInternal(const std::string & fontAssetPath)
+AssetManager::LoadFontInternal(const std::string& fontAssetPath)
 {
     CheckFileExists(fontAssetPath);
 

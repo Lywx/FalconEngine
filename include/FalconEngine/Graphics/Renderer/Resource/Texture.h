@@ -5,7 +5,10 @@
 #include <vector>
 
 #include <cereal/access.hpp>
+#include <cereal/types/array.hpp>
 #include <cereal/types/base_class.hpp>
+// https://github.com/USCiLab/cereal/issues/286
+#include <cereal/types/memory.hpp>
 
 #include <FalconEngine/Content/Asset.h>
 #include <FalconEngine/Graphics/Common.h>
@@ -113,7 +116,7 @@ public:
     // Texture type, needed during construction.
     TextureType        mType;
 
-    // NOTE(Wuxiang): Buffer specific data.
+    // Texture buffer specific data.
     unsigned char     *mData;
     size_t             mDataSize;
 

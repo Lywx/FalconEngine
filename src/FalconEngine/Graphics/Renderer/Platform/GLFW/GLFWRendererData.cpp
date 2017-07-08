@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/GLFW/GLFWRendererData.h>
+#include <FalconEngine/Graphics/Renderer/Platform/GLFW/GLFWRendererData.h>
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
 

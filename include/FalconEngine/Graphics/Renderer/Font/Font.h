@@ -9,6 +9,8 @@
 
 #include <cereal/access.hpp>
 #include <cereal/types/base_class.hpp>
+// https://github.com/USCiLab/cereal/issues/286
+#include <cereal/types/memory.hpp>
 #include <cereal/types/string.hpp>
 #include <cereal/types/vector.hpp>
 

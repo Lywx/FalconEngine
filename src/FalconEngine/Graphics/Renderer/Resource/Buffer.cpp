@@ -99,10 +99,10 @@ Buffer::SetElementNum(int elementNum)
     assert(elementNum >= 0);
 
     mElementNum = elementNum;
-    mDataSize = size_t(mElementSize) * mElementNum;
+    mDataSize = mElementSize * size_t(mElementNum);
 }
 
-int
+size_t
 Buffer::GetElementSize() const
 {
     return mElementSize;
@@ -111,7 +111,9 @@ Buffer::GetElementSize() const
 int
 Buffer::GetElementOffset() const
 {
-    return mDataOffset / mElementSize;
+    // NOTE(Wuxiang): The division would not exceed the range of int. The
+    // number is smaller than the total number of element.
+    return int(mDataOffset / mElementSize);
 }
 
 BufferStorageMode

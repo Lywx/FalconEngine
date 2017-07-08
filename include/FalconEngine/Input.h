@@ -1,6 +1,7 @@
 #pragma once
 
-#include <FalconEngine/Input/Header.h>
+#include <FalconEngine/Input/Common.h>
+
 #include <FalconEngine/Input/InputHandler.h>
 #include <FalconEngine/Input/KeyboardHandler.h>
 #include <FalconEngine/Input/KeyboardState.h>

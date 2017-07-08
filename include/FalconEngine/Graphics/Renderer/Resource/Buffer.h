@@ -85,7 +85,7 @@ protected:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Buffer(int elementNum, size_t elementByteNum, BufferStorageMode storageMode, BufferType type, BufferUsage usage);
+    Buffer(int elementNum, size_t elementSize, BufferStorageMode storageMode, BufferType type, BufferUsage usage);
     Buffer(const Buffer&) = delete;
     Buffer& operator=(const Buffer&) = delete;
 

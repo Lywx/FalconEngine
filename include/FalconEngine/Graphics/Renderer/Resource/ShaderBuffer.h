@@ -2,9 +2,6 @@
 
 #include <FalconEngine/Graphics/Common.h>
 
-#include <stdexcept>
-#include <memory>
-
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 
 namespace FalconEngine
@@ -16,7 +13,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit ShaderBuffer(BufferUsage usage);
+    ShaderBuffer(size_t storageSize, BufferStorageMode storageMode, BufferUsage usage);
     virtual ~ShaderBuffer();
 };
 

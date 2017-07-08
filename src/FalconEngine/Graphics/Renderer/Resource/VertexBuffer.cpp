@@ -6,8 +6,8 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-VertexBuffer::VertexBuffer(int vertexNum, size_t vertexByteNum, BufferStorageMode storageMode, BufferUsage usage) :
-    Buffer(vertexNum, vertexByteNum, storageMode, BufferType::VertexBuffer, usage)
+VertexBuffer::VertexBuffer(int vertexNum, size_t vertexSize, BufferStorageMode storageMode, BufferUsage usage) :
+    Buffer(vertexNum, vertexSize, storageMode, BufferType::VertexBuffer, usage)
 {
 }
 

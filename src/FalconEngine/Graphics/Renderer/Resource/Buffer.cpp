@@ -6,14 +6,14 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 // @param elementNum - the element number
-// @param elementByteNum - the element size in total.
+// @param elementSize - the element size in total.
 Buffer::Buffer(int elementNum,
-               size_t elementByteNum,
+               size_t elementSize,
                BufferStorageMode storageMode,
                BufferType type,
                BufferUsage usage) :
     mDataOffset(0),
-    mElementSize(elementByteNum),
+    mElementSize(elementSize),
     mStorageMode(storageMode),
     mType(type),
     mUsage(usage)
@@ -27,7 +27,7 @@ Buffer::Buffer(int elementNum,
     mCapacityElementNum = elementNum;
 
     // NOTE(Wuxiang): The capacity is fixed currently.
-    mCapacitySize = size_t(elementNum) * elementByteNum;
+    mCapacitySize = size_t(elementNum) * elementSize;
     mDataSize = mCapacitySize;
 
     mElementNum = elementNum;

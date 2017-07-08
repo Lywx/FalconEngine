@@ -2,9 +2,6 @@
 
 #include <FalconEngine/Graphics/Common.h>
 
-#include <memory>
-#include <vector>
-
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 
 namespace FalconEngine
@@ -16,7 +13,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    VertexBuffer(int vertexNum, size_t vertexByteNum, BufferStorageMode storageMode, BufferUsage usage);
+    VertexBuffer(int vertexNum, size_t vertexSize, BufferStorageMode storageMode, BufferUsage usage);
     virtual ~VertexBuffer();
 };
 

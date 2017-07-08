@@ -271,17 +271,17 @@ public:
     void
     Disable(int textureUnit, const Texture1d *texture);
 
-    // TODO(Wuxiang): Fix this.
     void *
-    Map(const Texture1d *texture,
-        int              mipmapLevel,
-        BufferAccessMode mode);
+    Map(const Texture1d          *texture,
+        int                       mipmapLevel,
+        BufferAccessMode          access,
+        BufferFlushMode           flush,
+        BufferSynchronizationMode synchronization,
+        int64_t                   offset,
+        int64_t                   size);
 
     void
     Unmap(const Texture1d *texture, int mipmapLevel);
-
-    void
-    Update(const Texture1d *texture, int mipmapLevel);
 
     /************************************************************************/
     /* Texture 2D Management                                                */
@@ -299,13 +299,16 @@ public:
     Disable(int textureUnit, const Texture2d *texture);
 
     void *
-    Map(const Texture2d *texture, int mipmapLevel, BufferAccessMode mode);
+    Map(const Texture2d          *texture,
+        int                       mipmapLevel,
+        BufferAccessMode          access,
+        BufferFlushMode           flush,
+        BufferSynchronizationMode synchronization,
+        int64_t                   offset,
+        int64_t                   size);
 
     void
     Unmap(const Texture2d *texture, int mipmapLevel);
-
-    void
-    Update(const Texture2d *texture, int mipmapLevel);
 
     /************************************************************************/
     /* Texture 2D Array Management                                          */
@@ -317,19 +320,27 @@ public:
     Unbind(const Texture2dArray *textureArray);
 
     void
-    Enable(int textureUnit, const Texture2dArray *textureArray);
+    Enable(int                   textureUnit,
+           const Texture2dArray *textureArray);
 
     void
-    Disable(int textureUnit, const Texture2dArray *textureArray);
+    Disable(int                   textureUnit,
+            const Texture2dArray *textureArray);
 
     void *
-    Map(const Texture2dArray *textureArray, int mipmapLevel, BufferAccessMode mode);
+    Map(const Texture2dArray     *textureArray,
+        int                       textureIndex,
+        int                       mipmapLevel,
+        BufferAccessMode          access,
+        BufferFlushMode           flush,
+        BufferSynchronizationMode synchronization,
+        int64_t                   offset,
+        int64_t                   size);
 
     void
-    Unmap(const Texture2dArray *textureArray, int mipmapLevel);
-
-    void
-    Update(const Texture2dArray *textureArray, int mipmapLevel);
+    Unmap(const Texture2dArray *textureArray,
+          int                   textureIndex,
+          int                   mipmapLevel);
 
     /************************************************************************/
     /* Texture 3D Management                                                */

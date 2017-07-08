@@ -608,7 +608,7 @@ Renderer::Unmap(const IndexBuffer *indexBuffer)
 }
 
 /************************************************************************/
-/* Texture Management                                                   */
+/* Universal Texture Management                                         */
 /************************************************************************/
 void
 Renderer::Enable(int textureUnit, const Texture *texture)
@@ -681,6 +681,9 @@ Renderer::Disable(int textureUnit, const Texture *texture)
     }
 }
 
+/************************************************************************/
+/* Texture 1D Management                                                */
+/************************************************************************/
 void
 Renderer::Bind(const Texture1d * /* texture */)
 {
@@ -727,7 +730,13 @@ Renderer::Disable(int textureUnit, const Texture1d *texture)
 }
 
 void *
-Renderer::Map(const Texture1d *texture, int /* mipmapLevel */, BufferAccessMode mode)
+Renderer::Map(const Texture1d          *texture,
+              int                    /* mipmapLevel */,
+              BufferAccessMode          access,
+              BufferFlushMode           flush,
+              BufferSynchronizationMode synchronization,
+              int64_t                   offset,
+              int64_t                   size)
 {
     FALCON_ENGINE_CHECK_NULLPTR(texture);
 
@@ -743,11 +752,11 @@ Renderer::Map(const Texture1d *texture, int /* mipmapLevel */, BufferAccessMode 
         mTexture1dTable[texture] = texturePlatform;
     }
 
-    return texturePlatform->Map(mode);
+    return texturePlatform->Map(access, flush, synchronization, offset, size);
 }
 
 void
-Renderer::Unmap(const Texture1d *texture, int mipmapLevel)
+Renderer::Unmap(const Texture1d *texture, int /* mipmapLevel */)
 {
     FALCON_ENGINE_CHECK_NULLPTR(texture);
 
@@ -755,33 +764,13 @@ Renderer::Unmap(const Texture1d *texture, int mipmapLevel)
     if (iter != mTexture1dTable.end())
     {
         auto texturePlatform = iter->second;
-        texturePlatform->Unmap(mipmapLevel);
+        texturePlatform->Unmap();
     }
 }
 
-void
-Renderer::Update(const Texture1d *texture, int mipmapLevel)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(texture);
-
-    // NEW(Wuxiang): Add mipmap support.
-    auto iter = mTexture1dTable.find(texture);
-    if (iter != mTexture1dTable.end())
-    {
-        auto texturePlatform = iter->second;
-
-        unsigned char *sourceData = texture->mData;
-        void *targetData = texturePlatform->Map(mipmapLevel, BufferAccessMode::Write);
-        memcpy(targetData, sourceData, texture->mDataSize);
-        texturePlatform->Unmap(mipmapLevel);
-    }
-    else
-    {
-        auto texturePlatform = new PlatformTexture1d(texture);
-        mTexture1dTable[texture] = texturePlatform;
-    }
-}
-
+/************************************************************************/
+/* Texture 2D Management                                                */
+/************************************************************************/
 void
 Renderer::Bind(const Texture2d *texture)
 {
@@ -841,7 +830,13 @@ Renderer::Disable(int textureUnit, const Texture2d *texture)
 }
 
 void *
-Renderer::Map(const Texture2d *texture, int mipmapLevel, BufferAccessMode mode)
+Renderer::Map(const Texture2d          *texture,
+              int                    /* mipmapLevel */,
+              BufferAccessMode          access,
+              BufferFlushMode           flush,
+              BufferSynchronizationMode synchronization,
+              int64_t                   offset,
+              int64_t                   size)
 {
     FALCON_ENGINE_CHECK_NULLPTR(texture);
 
@@ -857,11 +852,11 @@ Renderer::Map(const Texture2d *texture, int mipmapLevel, BufferAccessMode mode)
         mTexture2dTable[texture] = texturePlatform;
     }
 
-    return texturePlatform->Map(mipmapLevel, mode);
+    return texturePlatform->Map(access, flush, synchronization, offset, size);
 }
 
 void
-Renderer::Unmap(const Texture2d *texture, int mipmapLevel)
+Renderer::Unmap(const Texture2d *texture, int /* mipmapLevel */)
 {
     FALCON_ENGINE_CHECK_NULLPTR(texture);
 
@@ -869,33 +864,13 @@ Renderer::Unmap(const Texture2d *texture, int mipmapLevel)
     if (iter != mTexture2dTable.end())
     {
         auto texturePlatform = iter->second;
-        texturePlatform->Unmap(mipmapLevel);
+        texturePlatform->Unmap();
     }
 }
 
-void
-Renderer::Update(const Texture2d *texture, int mipmapLevel)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(texture);
-
-    // NEW(Wuxiang): Add mipmap support.
-    auto iter = mTexture2dTable.find(texture);
-    if (iter != mTexture2dTable.end())
-    {
-        auto texturePlatform = iter->second;
-
-        unsigned char *sourceData = texture->mData;
-        void *targetData = texturePlatform->Map(mipmapLevel, BufferAccessMode::Write);
-        memcpy(targetData, sourceData, texture->mDataSize);
-        texturePlatform->Unmap(mipmapLevel);
-    }
-    else
-    {
-        auto texturePlatform = new PlatformTexture2d(texture);
-        mTexture2dTable[texture] = texturePlatform;
-    }
-}
-
+/************************************************************************/
+/* Texture 2D Array Management                                          */
+/************************************************************************/
 void
 Renderer::Bind(const Texture2dArray *textureArray)
 {
@@ -955,23 +930,50 @@ Renderer::Disable(int textureUnit, const Texture2dArray *textureArray)
 }
 
 void *
-Renderer::Map(const Texture2dArray * /* textureArray */, int /* mipmapLevel */, BufferAccessMode /* mode */)
+Renderer::Map(const Texture2dArray     *textureArray,
+              int                       textureIndex,
+              int                    /* mipmapLevel */,
+              BufferAccessMode          access,
+              BufferFlushMode           flush,
+              BufferSynchronizationMode synchronization,
+              int64_t                   offset,
+              int64_t                   size)
 {
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    FALCON_ENGINE_CHECK_NULLPTR(textureArray);
+
+    auto iter = mTexture2dArrayTable.find(textureArray);
+    PlatformTexture2dArray *texturePlatform;
+    if (iter != mTexture2dArrayTable.end())
+    {
+        texturePlatform = iter->second;
+    }
+    else
+    {
+        texturePlatform = new PlatformTexture2dArray(textureArray);
+        mTexture2dArrayTable[textureArray] = texturePlatform;
+    }
+
+    return texturePlatform->Map(textureIndex, access, flush, synchronization, offset, size);
 }
 
 void
-Renderer::Unmap(const Texture2dArray * /* textureArray */, int /* mipmapLevel */)
+Renderer::Unmap(const Texture2dArray *textureArray,
+                int                   textureIndex,
+                int                /* mipmapLevel */)
 {
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    FALCON_ENGINE_CHECK_NULLPTR(textureArray);
+
+    auto iter = mTexture2dArrayTable.find(textureArray);
+    if (iter != mTexture2dArrayTable.end())
+    {
+        auto texturePlatform = iter->second;
+        texturePlatform->Unmap(textureIndex);
+    }
 }
 
-void
-Renderer::Update(const Texture2dArray * /* textureArray */, int /* mipmapLevel */)
-{
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-}
-
+/************************************************************************/
+/* Texture 3D Management                                                */
+/************************************************************************/
 void
 Renderer::Bind(const Texture3d * /* texture */)
 {

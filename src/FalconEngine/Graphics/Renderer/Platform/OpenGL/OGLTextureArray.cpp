@@ -23,20 +23,14 @@ PlatformTextureArray::PlatformTextureArray(const TextureArray *textureArray) :
     mUsage = OpenGLBufferUsage[int(mTextureArrayPtr->mUsage)];
 
     // Initialize dimension list.
-    auto textureArraySize = int(mTextureArrayPtr->mDimension[2]);
-
-    mDimensionList.reserve(textureArraySize);
-    for (int textureIndex = 0; textureIndex < textureArraySize; ++textureIndex)
-    {
-        mDimensionList.push_back(mTextureArrayPtr->mDimensionList[textureIndex]);
-    }
+    mDimension = mTextureArrayPtr->mDimension;
 
     // Initialize buffer object list.
-    mBufferObjList.reserve(textureArraySize);
+    mBufferObjList.reserve(mDimension[2]);
 
     // Allocate and setup buffer and dimension.
-    glGenBuffers(textureArraySize, mBufferObjList.data());
-    for (int textureIndex = 0; textureIndex < textureArraySize; ++textureIndex)
+    glGenBuffers(mDimension[2], mBufferObjList.data());
+    for (int textureIndex = 0; textureIndex < mDimension[2]; ++textureIndex)
     {
         auto texture = mTextureArrayPtr->GetTextureSlice(textureIndex);
 
@@ -46,7 +40,7 @@ PlatformTextureArray::PlatformTextureArray(const TextureArray *textureArray) :
     }
 
     // Fill in the texture data
-    for (int textureIndex = 0; textureIndex < textureArraySize; ++textureIndex)
+    for (int textureIndex = 0; textureIndex < mDimension[2]; ++textureIndex)
     {
         auto texture = mTextureArrayPtr->GetTextureSlice(textureIndex);
         auto textureData = Map(textureIndex,
@@ -69,9 +63,7 @@ PlatformTextureArray::PlatformTextureArray(const TextureArray *textureArray) :
 
 PlatformTextureArray::~PlatformTextureArray()
 {
-    auto textureArraySize = int(mDimensionList.size());
-    glDeleteBuffers(textureArraySize, mBufferObjList.data());
-
+    glDeleteBuffers(mDimension[2], mBufferObjList.data());
     glDeleteTextures(1, &mTextureArrayObj);
 }
 

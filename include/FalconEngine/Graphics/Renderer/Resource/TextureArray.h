@@ -27,9 +27,6 @@ public:
 public:
     virtual const Texture *
     GetTextureSlice(int textureIndex) const = 0;
-
-public:
-    std::vector<std::array<int, 3>> mDimensionList; // The dimension array for each slice of texture
 };
 #pragma warning(default: 4251)
 

@@ -47,7 +47,7 @@ protected:
     const TextureArray             *mTextureArrayPtr;
 
     // The dimension array for each slice of texture
-    std::vector<std::array<int, 3>> mDimensionList;
+    std::array<int, 3>              mDimension;
     GLuint                          mFormatInternal;
     GLuint                          mFormat;
     GLuint                          mType;

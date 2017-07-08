@@ -22,7 +22,6 @@ TextureArray::TextureArray(AssetSource        assetSource,
             width, height, depth, format, type, BufferStorageMode::Device,
             usage, mipmapLevel)
 {
-    mDimensionList.reserve(depth);
 }
 
 TextureArray::~TextureArray()

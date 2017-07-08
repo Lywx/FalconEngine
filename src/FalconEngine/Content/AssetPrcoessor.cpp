@@ -342,7 +342,7 @@ AssetProcessor::LoadRawTexture1d(const std::string& textureFilePath)
         // it is necessary to flip to make it compatible for OpenGL.
         stbi_set_flip_vertically_on_load(1);
 
-        int  textureDimension[3];
+        int  textureDimension[2];
         int  textureChannel;
         auto textureData = stbi_load(textureFilePath.c_str(), &textureDimension[0],
                                      &textureDimension[1], &textureChannel,
@@ -373,7 +373,7 @@ AssetProcessor::LoadRawTexture2d(const std::string& textureFilePath)
         // it is necessary to flip to make it compatible for OpenGL.
         stbi_set_flip_vertically_on_load(1);
 
-        int  textureDimension[3];
+        int  textureDimension[2];
         int  textureChannel;
         auto textureData = stbi_load(textureFilePath.c_str(), &textureDimension[0],
                                      &textureDimension[1], &textureChannel,

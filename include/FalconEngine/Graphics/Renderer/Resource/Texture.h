@@ -101,8 +101,7 @@ public:
     // Texture RGBA color channel number.
     int                mChannel = 0;
 
-    // Texture dimension (width, height, depth). For texture array, the
-    // dimension's first and second element is -1. That is ok because the .
+    // Texture dimension (width, height, depth).
     std::array<int, 3> mDimension;
 
     // Texture binary format, needed during construction.

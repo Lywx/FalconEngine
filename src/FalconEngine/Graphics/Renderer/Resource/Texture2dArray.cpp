@@ -39,7 +39,6 @@ Texture2dArray::GetTextureSlice(int index) const
 void
 Texture2dArray::PushTextureSlice(std::shared_ptr<Texture2d> texture)
 {
-    mDimensionList.push_back(texture->mDimension);
     mTextureList.push_back(texture);
 }
 

@@ -607,30 +607,6 @@ Renderer::Unmap(const IndexBuffer *indexBuffer)
     }
 }
 
-void
-Renderer::Update(const IndexBuffer *indexBuffer)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(indexBuffer);
-
-    auto iter = mIndexBufferTable.find(indexBuffer);
-    if (iter != mIndexBufferTable.end())
-    {
-        auto indexBufferPlatform = iter->second;
-
-        auto sourceDataByteNum = indexBuffer->GetDataSize();
-        auto *sourceData = indexBuffer->GetData();
-        void *destinationData = indexBufferPlatform->Map(BufferAccessMode::Write);
-        memcpy(destinationData, sourceData, sourceDataByteNum);
-
-        indexBufferPlatform->Unmap();
-    }
-    else
-    {
-        auto indexBufferPlatform = new PlatformIndexBuffer(indexBuffer);
-        mIndexBufferTable[indexBuffer] = indexBufferPlatform;
-    }
-}
-
 /************************************************************************/
 /* Texture Management                                                   */
 /************************************************************************/
@@ -751,7 +727,7 @@ Renderer::Disable(int textureUnit, const Texture1d *texture)
 }
 
 void *
-Renderer::Map(const Texture1d *texture, int mipmapLevel, BufferAccessMode mode)
+Renderer::Map(const Texture1d *texture, int /* mipmapLevel */, BufferAccessMode mode)
 {
     FALCON_ENGINE_CHECK_NULLPTR(texture);
 
@@ -767,7 +743,7 @@ Renderer::Map(const Texture1d *texture, int mipmapLevel, BufferAccessMode mode)
         mTexture1dTable[texture] = texturePlatform;
     }
 
-    return texturePlatform->Map(mipmapLevel, mode);
+    return texturePlatform->Map(mode);
 }
 
 void
@@ -788,7 +764,7 @@ Renderer::Update(const Texture1d *texture, int mipmapLevel)
 {
     FALCON_ENGINE_CHECK_NULLPTR(texture);
 
-    // TODO(Wuxiang): Add mipmap support.
+    // NEW(Wuxiang): Add mipmap support.
     auto iter = mTexture1dTable.find(texture);
     if (iter != mTexture1dTable.end())
     {
@@ -902,7 +878,7 @@ Renderer::Update(const Texture2d *texture, int mipmapLevel)
 {
     FALCON_ENGINE_CHECK_NULLPTR(texture);
 
-    // TODO(Wuxiang): Add mipmap support.
+    // NEW(Wuxiang): Add mipmap support.
     auto iter = mTexture2dTable.find(texture);
     if (iter != mTexture2dTable.end())
     {
@@ -1292,7 +1268,7 @@ Renderer::Draw(
     _IN_     const Visual         *visual,
     _IN_OUT_ VisualEffectInstance *visualEffectInstance)
 {
-    // TODO(Wuxiang): Add render command sorting.
+    // NEW(Wuxiang): Add render command sorting.
 
     // NOTE(Wuxiang): The non-constness of instance comes from the fact that
     // during the binding of shader, the renderer would look up the shader's

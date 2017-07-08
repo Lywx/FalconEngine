@@ -109,7 +109,7 @@ ThirdPersonCamera::Update(GameEngineInput *input, double elapsed)
 
     // Update camera control scheme (Blender style control scheme).
     {
-        // TODO(Wuxiang): 2017-05-16 15:35 Add keyboard mapping support.
+        // NEW(Wuxiang): 2017-05-16 15:35 Add keyboard mapping support.
         auto keyCtrlPressed = keyboard->KeyPressed(Key::LeftControl) || keyboard->KeyPressed(Key::RightControl);
         auto keyShiftPressed = keyboard->KeyPressed(Key::LeftShift) || keyboard->KeyPressed(Key::RightShift);
         auto middleButtonPressed = mouse->ButtonPressed(MouseButton::MiddleButton);

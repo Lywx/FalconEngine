@@ -12,13 +12,13 @@ size_t      __line__ = 0;
 void
 PushMemoryRecord(void * /* pointer */, const char * /* file */, size_t /* line */)
 {
-    // TODO(Wuxiang): Implement to detect memory leak.
+    // NEW(Wuxiang): Implement to detect memory leak.
 }
 
 void
 PopMemoryRecord(void * /* pointer */)
 {
-    // TODO(Wuxiang): Implement to detect memory leak.
+    // NEW(Wuxiang): Implement to detect memory leak.
 }
 
 }

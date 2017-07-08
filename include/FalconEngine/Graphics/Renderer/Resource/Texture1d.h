@@ -5,12 +5,12 @@
 #include <cereal/access.hpp>
 
 #include <FalconEngine/Graphics/Common.h>
-#include <FalconEngine/Graphics/Renderer/Resource/TextureStorage.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
 
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_API Texture1d : public TextureStorage
+class FALCON_ENGINE_API Texture1d : public Texture
 {
     FALCON_ENGINE_TEXTURE_DECLARE();
 
@@ -36,9 +36,9 @@ public:
     template<class Archive>
     void save(Archive & ar) const
     {
-        ar & cereal::base_class<TextureStorage>(this);
+        ar & cereal::base_class<Texture>(this);
 
-        ar & cereal::binary_data(mData, mDataByteNum);
+        ar & cereal::binary_data(mData, mDataSize);
     }
 
     template<class Archive>
@@ -46,14 +46,14 @@ public:
     {
         delete[] mData;
 
-        ar & cereal::base_class<TextureStorage>(this);
+        ar & cereal::base_class<Texture>(this);
 
         // NOTE(Wuxiang): mDataByteNum is serialized in TextureBuffer. It may
         // be changed by serialization result so that it needs a new memory
         // location.
-        mData = new unsigned char[mDataByteNum];
+        mData = new unsigned char[mDataSize];
 
-        ar & cereal::binary_data(mData, mDataByteNum);
+        ar & cereal::binary_data(mData, mDataSize);
     }
 };
 

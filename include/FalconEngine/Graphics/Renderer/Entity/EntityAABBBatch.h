@@ -4,7 +4,6 @@
 
 #include <FalconEngine/Graphics/Renderer/Resource/BufferCircular.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
-#include <FalconEngine/Math/Matrix4.h>
 
 namespace FalconEngine
 {
@@ -37,10 +36,9 @@ public:
         using namespace std;
 
         mInstanceBufferCirculer = make_shared<BufferCircular>(
-                                      dynamic_pointer_cast<Buffer>(instanceBuffer),
+                                      instanceBuffer,
                                       instanceBuffer->GetCapacitySize() / 4);
     }
-
     ~EntityAABBBatch() = default;
 
 public:

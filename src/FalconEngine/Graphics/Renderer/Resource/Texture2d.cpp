@@ -22,7 +22,7 @@ Texture2d::Texture2d(AssetSource        assetSource,
                      TextureFormat      format,
                      BufferUsage        usage,
                      int                mipmapLevel) :
-    TextureStorage(assetSource, fileName, filePath, width, height, 1, format, TextureType::Texture2d, usage, mipmapLevel)
+    Texture(assetSource, fileName, filePath, width, height, 1, format, TextureType::Texture2d, BufferStorageMode::Host, usage, mipmapLevel)
 {
 }
 

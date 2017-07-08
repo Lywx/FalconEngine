@@ -5,7 +5,7 @@
 #undef GLM_FORCE_LEFT_HANDED
 #endif
 
-#include <FalconEngine/Math/Header.h>
+#include <FalconEngine/Math/Common.h>
 
 #include <FalconEngine/Math/Color.h>
 #include <FalconEngine/Math/Constant.h>

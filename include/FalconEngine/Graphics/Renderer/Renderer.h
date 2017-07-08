@@ -271,8 +271,11 @@ public:
     void
     Disable(int textureUnit, const Texture1d *texture);
 
+    // TODO(Wuxiang): Fix this.
     void *
-    Map(const Texture1d *texture, int mipmapLevel, BufferAccessMode mode);
+    Map(const Texture1d *texture,
+        int              mipmapLevel,
+        BufferAccessMode mode);
 
     void
     Unmap(const Texture1d *texture, int mipmapLevel);

@@ -1,0 +1,32 @@
+#include <FalconEngine/Graphics/Renderer/Resource/TextureArray.h>
+
+namespace FalconEngine
+{
+
+/************************************************************************/
+/* Constructors and Destructor                                          */
+/************************************************************************/
+TextureArray::TextureArray(AssetSource        assetSource,
+                           const std::string& fileName,
+                           const std::string& filePath,
+                           int                width,
+                           int                height,
+                           int                depth,
+                           TextureFormat      format,
+                           TextureType        type,
+                           BufferUsage        usage,
+                           int                mipmapLevel) :
+    Texture(assetSource, fileName, filePath,
+            // https://www.khronos.org/opengl/wiki/Array_Texture
+            // An array texture is a Texture where each mipmap level contains an array of images of the same size.
+            width, height, depth, format, type, BufferStorageMode::Device,
+            usage, mipmapLevel)
+{
+    mDimensionList.reserve(depth);
+}
+
+TextureArray::~TextureArray()
+{
+}
+
+}

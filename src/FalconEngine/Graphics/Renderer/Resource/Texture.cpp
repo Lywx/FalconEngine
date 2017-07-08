@@ -14,6 +14,7 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 Texture::Texture() :
+    mDimension(),
     mFormat(TextureFormat::None),
     mMipmapLevel(0),
     mType(TextureType::None),
@@ -32,15 +33,17 @@ Texture::Texture(AssetSource        assetSource,
                  int                depth,
                  TextureFormat      format,
                  TextureType        type,
+                 BufferStorageMode  storageMode,
                  BufferUsage        usage,
                  int                mipmapLevel) :
     Asset(assetSource, AssetType::Texture, fileName, filePath),
     mFormat(format),
     mMipmapLevel(mipmapLevel),
     mType(type),
-    mStorageMode(BufferStorageMode::Host),
+    mStorageMode(storageMode),
     mUsage(usage)
 {
+    // Test validity of dimension.
     if (width < 1 || height < 1 || depth < 1)
     {
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Invalid texture dimension.");
@@ -50,6 +53,7 @@ Texture::Texture(AssetSource        assetSource,
     mDimension[1] = height;
     mDimension[2] = depth;
 
+    // Allocate texture storage.
     if (mStorageMode == BufferStorageMode::Host)
     {
         mDataSize = size_t(mDimension[0]) * size_t(mDimension[1]) * size_t(mDimension[2]) * TexelSize[int(mFormat)];

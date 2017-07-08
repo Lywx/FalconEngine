@@ -7,9 +7,10 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PlatformSampler::PlatformSampler(const Sampler *sampler)
+PlatformSampler::PlatformSampler(const Sampler *sampler) :
+    mSamplerPrevious(0)
 {
-    // TODO(Wuxiang): Add support for GL_TEXTURE_BORDER_COLOR, GL_TEXTURE_MIN_LOD, GL_TEXTURE_MAX_LOD, GL_TEXTURE_LOD_BIAS, GL_TEXTURE_COMPARE_MODE, GL_TEXTURE_COMPARE_FUNC
+    // NEW(Wuxiang): Add support for GL_TEXTURE_BORDER_COLOR, GL_TEXTURE_MIN_LOD, GL_TEXTURE_MAX_LOD, GL_TEXTURE_LOD_BIAS, GL_TEXTURE_COMPARE_MODE, GL_TEXTURE_COMPARE_FUNC
     glGenSamplers(1, &mSampler);
     glSamplerParameteri(mSampler, GL_TEXTURE_MIN_FILTER,
                         OpenGLSamplerFilterMode[int(sampler->mMinificationFilter)]);

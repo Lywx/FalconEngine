@@ -105,7 +105,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance              *inst
                                 _IN_     std::shared_ptr<Material>          material,
                                 _IN_     std::shared_ptr<PhongEffectParams> params) const
 {
-    // TODO(Wuxiang): 2017-05-24 12:35 Implement spot lights?
+    // NEW(Wuxiang): 2017-05-24 12:35 Implement spot lights?
 
     using namespace placeholders;
 

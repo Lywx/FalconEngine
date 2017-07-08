@@ -4,12 +4,12 @@
 
 #include <memory>
 
-#include <FalconEngine/Graphics/Renderer/Resource/TextureStorage.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
 
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_API Texture3d : public TextureStorage
+class FALCON_ENGINE_API Texture3d : public Texture
 {
     FALCON_ENGINE_TEXTURE_DECLARE();
 

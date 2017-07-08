@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <map>
 #include <vector>
 
@@ -91,23 +92,37 @@ public:
             int                depth,
             TextureFormat      format,
             TextureType        type,
+            BufferStorageMode  storageMode,
             BufferUsage        usage,
             int                mipmapLevel);
     virtual ~Texture();
 
 public:
-    int               mChannel = 0;                                               // Texture RGBA color channel number.
-    int               mDimension[3];                                              // Texture dimension (width, height, depth).
-    TextureFormat     mFormat;                                                    // Texture binary format, needed during construction.
-    int               mMipmapLevel;                                               // Texture mipmap level, needed during construction.
-    TextureType       mType;                                                      // Texture type, needed during construction.
+    // Texture RGBA color channel number.
+    int                mChannel = 0;
+
+    // Texture dimension (width, height, depth). For texture array, the
+    // dimension's first and second element is -1. That is ok because the .
+    std::array<int, 3> mDimension;
+
+    // Texture binary format, needed during construction.
+    TextureFormat      mFormat;
+
+    // Texture mipmap level, needed during construction.
+    int                mMipmapLevel;
+
+    // Texture type, needed during construction.
+    TextureType        mType;
 
     // NOTE(Wuxiang): Buffer specific data.
-    unsigned char    *mData;
-    size_t            mDataSize;
+    unsigned char     *mData;
+    size_t             mDataSize;
 
-    BufferStorageMode mStorageMode;                                               // Texture buffer storage mode, currently only in Host mode.
-    BufferUsage       mUsage;                                                     // Texture buffer usage, needed during construction.
+    // Texture buffer storage mode, currently only in Host mode.
+    BufferStorageMode  mStorageMode;
+
+    // Texture buffer usage, needed during construction.
+    BufferUsage        mUsage;
 
     /************************************************************************/
     /* Asset Importing and Exporting                                        */
@@ -121,14 +136,15 @@ public:
 
         ar & mChannel;
         ar & mDimension;
-
         ar & mFormat;
         ar & mMipmapLevel;
         ar & mType;
 
-        ar & mUsage;
-
+        // NOTE(Wuxiang): mData should be serialized in derived class.
         ar & mDataSize;
+
+        ar & mStorageMode;
+        ar & mUsage;
     }
 };
 

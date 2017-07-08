@@ -354,7 +354,7 @@ AssetProcessor::LoadRawTexture1d(const std::string& textureFilePath)
 
         // NOTE(Wuxiang): Copy the memory allocated from the stb library.
         auto texture = std::make_shared<Texture1d>(AssetSource::Normal, GetFileStem(textureFilePath), textureFilePath, textureDimension[0], TextureFormat::R8G8B8A8);
-        memcpy(texture->mData, textureData, texture->mDataByteNum);
+        memcpy(texture->mData, textureData, texture->mDataSize);
         stbi_image_free(textureData);
         return texture;
     }
@@ -385,7 +385,7 @@ AssetProcessor::LoadRawTexture2d(const std::string& textureFilePath)
 
         // NOTE(Wuxiang): Copy the memory allocated from the stb library.
         auto texture = std::make_shared<Texture2d>(AssetSource::Normal, GetFileStem(textureFilePath), textureFilePath, textureDimension[0], textureDimension[1], TextureFormat::R8G8B8A8);
-        memcpy(texture->mData, textureData, texture->mDataByteNum);
+        memcpy(texture->mData, textureData, texture->mDataSize);
         stbi_image_free(textureData);
         return texture;
     }

@@ -133,7 +133,7 @@ protected:
     /************************************************************************/
     /* Constant Data                                                        */
     /************************************************************************/
-    // TODO(Wuxiang): No support for updating those data after construction for now.
+    // NEW(Wuxiang): No support for updating those data after construction for now.
 
     float              mAspect;
     float              mNear;

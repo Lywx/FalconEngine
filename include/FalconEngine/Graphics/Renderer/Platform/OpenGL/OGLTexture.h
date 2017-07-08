@@ -2,11 +2,6 @@
 
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLMapping.h>
 
-#include <vector>
-
-#include <FalconEngine/Graphics/Renderer/Resource/Texture2dArray.h>
-#include <FalconEngine/Math/Vector2.h>
-
 namespace FalconEngine
 {
 
@@ -17,7 +12,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformTexture(GLuint textureTarget, const Texture *texture);
+    explicit PlatformTexture(const Texture *texture);
     virtual ~PlatformTexture();
 
 public:
@@ -31,20 +26,22 @@ public:
     Disable(int textureUnit);
 
     void *
-    Map(int arrayIndex, int mipmapLevel, BufferAccessMode mode);
+    Map(BufferAccessMode          access,
+        BufferFlushMode           flush,
+        BufferSynchronizationMode synchronization,
+        int64_t                   offset,
+        int64_t                   size);
 
     void
-    Unmap(int arrayIndex, int mipmapLevel);
+    Unmap();
 
 protected:
     GLuint         mBufferObj;
 
-    GLuint         mTextureTarget;
-    const Texture *mTexturePtr;
     GLuint         mTextureObj;
     GLuint         mTextureObjPrevious;
+    const Texture *mTexturePtr;
 
-private:
     GLuint         mDimension[3];
     GLuint         mFormat;
     GLuint         mFormatInternal;

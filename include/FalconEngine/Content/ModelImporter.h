@@ -72,7 +72,7 @@ private:
                  _IN_     const aiScene           *aiScene,
                  _IN_     const aiMesh            *aiMesh);
 
-    // TODO(Wuxiang): Bounding box loading has a lot of space for optimization.
+    // NEW(Wuxiang): Bounding box loading has a lot of space for optimization.
     // You could precomputed the bounding box in the asset processor.
     static std::shared_ptr<BoundingBox>
     CreateBoundingBox(const aiMesh *aiMesh);
@@ -100,7 +100,8 @@ private:
         }
 
         // Memory allocation for index buffer.
-        auto indexBuffer = std::make_shared<IndexBuffer>(indexNum, indexType, indexBufferUsage);
+        auto indexBuffer = std::make_shared<IndexBuffer>(indexNum, indexType,
+                           BufferStorageMode::Device, indexBufferUsage);
         auto indexData = reinterpret_cast<T *>(indexBuffer->GetData());
 
         // Walk through each of the mesh's faces (a face is a mesh its triangle)

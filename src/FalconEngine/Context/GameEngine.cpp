@@ -159,7 +159,7 @@ GameEngine::Loop()
 
             mGame->RenderBegin(mGraphics);
 
-            // TODO(Wuxiang): Add interpolation support.
+            // NEW(Wuxiang): Add interpolation support.
             mGame->Render(mGraphics, 1.0f);
             mGame->RenderEnd(mGraphics);
         }

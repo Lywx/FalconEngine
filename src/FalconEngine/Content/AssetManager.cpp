@@ -167,8 +167,9 @@ AssetManager::LoadFontInternal(const std::string & fontAssetPath)
             auto fontPage0TextureAssetPath = fontAssetDirPath + fontPage0TextureAssetName;
             auto fontPage0Texture = LoadTexture<Texture2d>(fontPage0TextureAssetPath);
 
-            // TODO(Wuxiang): Add mipmap support.
-            fontPageTextureArray = std::make_shared<Texture2dArray>(AssetSource::Virtual, "None", "None", fontPage0Texture->mDimension[0],
+            // NEW(Wuxiang): Add mipmap support.
+            fontPageTextureArray = std::make_shared<Texture2dArray>(AssetSource::Virtual,
+                                   "None", "None", fontPage0Texture->mDimension[0],
                                    fontPage0Texture->mDimension[1], font->mTexturePages,
                                    TextureFormat::R8G8B8A8, BufferUsage::Static, 0);
         }

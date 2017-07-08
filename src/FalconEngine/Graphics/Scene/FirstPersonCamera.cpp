@@ -113,7 +113,7 @@ FirstPersonCamera::Update(GameEngineInput *input, double elapsed)
 
     // Update camera position.
     {
-        // TODO(Wuxiang): 2017-05-19 17:11 Add keyboard mapping support.
+        // NEW(Wuxiang): 2017-05-19 17:11 Add keyboard mapping support.
         auto flyDistanceMeter = float(mFlySpeed * tSecond);
 
         if (keyboard->KeyPressed(Key::S))

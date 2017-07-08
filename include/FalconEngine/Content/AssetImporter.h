@@ -20,7 +20,7 @@ class Mesh;
 class ModelImportOption;
 
 #pragma warning(disable: 4251)
-// TODO(Wuxiang): Support multi-threading asset importing.
+// NEW(Wuxiang): Support multi-threading asset importing.
 // @remark Represents a thread-safe asset importer.
 class FALCON_ENGINE_API AssetImporter final
 {

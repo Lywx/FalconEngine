@@ -63,7 +63,7 @@ protected:
     UpdateLocalTransformFeedback(bool initiator);
 
 public:
-    // TODO(Wuxiang): Id is not implemented.
+    // NEW(Wuxiang): Id is not implemented.
     int         mId;
     std::string mName;
 

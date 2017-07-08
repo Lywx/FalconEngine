@@ -50,8 +50,9 @@ public:
     {
         using namespace std;
 
-        mGlyphVertexBufferAdaptor = make_shared<BufferCircular>(mGlyphVertexBuffer,
-                                    mGlyphVertexBuffer->GetCapacitySize() / 4);
+        mGlyphVertexBufferAdaptor = make_shared<BufferCircular>(
+                                        mGlyphVertexBuffer,
+                                        mGlyphVertexBuffer->GetCapacitySize() / 4);
     }
 
     ~FontRenderBatch() = default;

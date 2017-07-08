@@ -24,7 +24,7 @@ public:
     void
     Fill(const T& value)
     {
-        Fill(mBuffer->GetData(), mBufferDataOffsetEnd, value);
+        Fill(mBuffer->GetData(), value);
     }
 
     // @remark Can be used to fill mapped buffer data in pinned memory and keep
@@ -40,7 +40,7 @@ public:
     void
     FillAs(const T& value)
     {
-        FillAs<T, S>(mBuffer->GetData(), mBufferDataOffsetEnd, value);
+        FillAs<T, S>(mBuffer->GetData(), value);
     }
 
     // @remark Can be used to fill mapped buffer data in pinned memory and keep

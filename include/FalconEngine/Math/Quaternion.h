@@ -27,7 +27,7 @@ public:
     static Quaternion
     CreateFromAxisAngle(const Vector3f& axis, float angle);;
 
-    // TODO(Wuxiang): Implement conversion from euler angle.
+    // NEW(Wuxiang): Implement conversion from euler angle.
     // static Quaternion
     // CreateFromEulerAngle(const Vector3& axis, float angle);;
 

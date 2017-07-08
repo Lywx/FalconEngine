@@ -3,7 +3,7 @@
 #include <FalconEngine/Core.h>
 #include <FalconEngine/Math.h>
 
-#include <FalconEngine/Graphics/Header.h>
+#include <FalconEngine/Graphics/Common.h>
 
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>

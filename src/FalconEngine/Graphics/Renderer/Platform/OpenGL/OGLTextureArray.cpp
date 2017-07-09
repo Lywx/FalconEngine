@@ -26,7 +26,7 @@ PlatformTextureArray::PlatformTextureArray(const TextureArray *textureArray) :
     mDimension = mTextureArrayPtr->mDimension;
 
     // Initialize buffer object list.
-    mBufferObjList.reserve(mDimension[2]);
+    mBufferObjList.assign(mDimension[2], 0);
 
     // Allocate and setup buffer and dimension.
     glGenBuffers(mDimension[2], mBufferObjList.data());

@@ -77,7 +77,6 @@ FontRenderer::RenderBegin()
         auto& batch = fontBatchPair.second;
 
         batch->mBatchedItemList.clear();
-        batch->mPendingGlyphNum = 0;
         batch->mPendingGlyphNumPredict = 0;
         batch->mFrameGlyphNum = 0;
     }
@@ -90,7 +89,7 @@ FontRenderer::Render(double /* percent */)
     {
         auto batch = fontBatchPair.second;
 
-        if (batch->mPendingGlyphNum > 0)
+        if (batch->mPendingGlyphNumPredict > 0)
         {
             auto font = fontBatchPair.first;
             FillText(font, batch.get());
@@ -160,6 +159,8 @@ FontRenderer::FillText(
 {
     FALCON_ENGINE_CHECK_NULLPTR(font);
 
+    auto pendingGlyphNumExact = 0;
+
     auto buffer = batch->mGlyphVertexBuffer.get();
     auto bufferAdaptor = batch->mGlyphVertexBufferAdaptor;
 
@@ -184,8 +185,7 @@ FontRenderer::FillText(
             auto& textColor = textItem.mTextColor;
 
             // Construct lines with glyph information.
-            auto textGlyphCount = FontData::CreateTextLines(font, text, sTextLines);
-            batch->mPendingGlyphNum += textGlyphCount;
+            pendingGlyphNumExact += FontData::CreateTextLines(font, text, sTextLines);
 
             // Fill the vertex attribute into the buffer
             FontData::FillTextLines(
@@ -198,18 +198,19 @@ FontRenderer::FillText(
                 sTextLines);
         }
 
+        // NOTE(Wuxiang): This set statement is only used to flush the buffer.
+        // The final buffer element number is set later.
         // Only after processing all the glyph we can get the accurate number of valid glyph.
-        buffer->SetElementNum(batch->mPendingGlyphNum * 6);
+        buffer->SetElementNum(pendingGlyphNumExact * 6);
 
-        sRenderer->Flush(buffer, buffer->GetDataOffset(), buffer->GetDataSize());
+        sRenderer->Flush(buffer, 0, buffer->GetDataSize());
         sRenderer->Unmap(buffer);
     }
 
-    batch->mGlyphVertexBufferAdaptor->FillEnd();
+    bufferAdaptor->FillEnd();
 
     batch->mBatchedItemList.clear();
-    batch->mFrameGlyphNum += batch->mPendingGlyphNum;
-    batch->mPendingGlyphNum = 0;
+    batch->mFrameGlyphNum += pendingGlyphNumExact;
     batch->mPendingGlyphNumPredict = 0;
 }
 

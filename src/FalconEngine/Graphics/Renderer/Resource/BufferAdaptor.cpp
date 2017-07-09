@@ -8,11 +8,25 @@ namespace FalconEngine
 /************************************************************************/
 BufferAdaptor::BufferAdaptor(std::shared_ptr<Buffer> buffer) :
     mBuffer(buffer),
-    mBufferDataOffsetEnd(0)
+    mBufferDataRelativeOffsetEnd(0)
 {
 }
 
 BufferAdaptor::~BufferAdaptor()
+{
+}
+
+/************************************************************************/
+/* Public Members                                                       */
+/************************************************************************/
+void
+BufferAdaptor::FillBegin()
+{
+    mBufferDataRelativeOffsetEnd = 0;
+}
+
+void
+BufferAdaptor::FillEnd()
 {
 }
 

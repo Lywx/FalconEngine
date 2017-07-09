@@ -33,7 +33,7 @@ public:
     void
     Fill(unsigned char *data, const T& value)
     {
-        BufferData::Fill<T>(data, mBufferDataOffsetEnd, value);
+        BufferData::Fill<T>(data, mBufferDataRelativeOffsetEnd, value);
     }
 
     template<typename T, typename S>
@@ -49,18 +49,22 @@ public:
     void
     FillAs(unsigned char *data, const T& value)
     {
-        BufferData::FillAs<T, S>(data, mBufferDataOffsetEnd, value);
+        BufferData::FillAs<T, S>(data, mBufferDataRelativeOffsetEnd, value);
     }
 
     virtual void
-    FillBegin() = 0;
+    FillBegin();
 
     virtual void
-    FillEnd() = 0;
+    FillEnd();
 
 protected:
     std::shared_ptr<Buffer> mBuffer;
-    size_t                  mBufferDataOffsetEnd; // A offset marker indicates where the lately filled data is current at in the buffer.
+
+    // A offset marker related to the offset position (so that 'offset' + 'relative
+    // offset end' = 'offset end') indicates where the lately filled data is
+    // current at in the buffer.
+    size_t                  mBufferDataRelativeOffsetEnd;
 };
 #pragma warning(default: 4251)
 

@@ -41,9 +41,8 @@ public:
     FontRenderBatch(std::shared_ptr<VertexBuffer>   glyphVertexBuffer,
                     std::shared_ptr<PrimitiveQuads> glyphQuadPrimitive,
                     std::shared_ptr<Visual>         glyphQuadVisual) :
-        mPendingGlyphNum(0),
-        mPendingGlyphNumPredict(0),
         mFrameGlyphNum(0),
+        mPendingGlyphNumPredict(0),
         mGlyphQuadPrimitive(glyphQuadPrimitive),
         mGlyphQuadVisual(glyphQuadVisual),
         mGlyphVertexBuffer(glyphVertexBuffer)
@@ -61,10 +60,8 @@ public:
     // NOTE(Wuxiang): Only valid during one frame.
     std::vector<FontRenderItem>     mBatchedItemList;
 
-    int                             mPendingGlyphNum;        // Number of all displayable glyph in single instance of filling.
-    int                             mPendingGlyphNumPredict; // Number of estimated displayable glyph (without configuring out which one is displayable, like \n).
-
     int                             mFrameGlyphNum;          // Number of glyph cross multiple instance of filling.
+    int                             mPendingGlyphNumPredict; // Number of estimated displayable glyph (without configuring out which one is displayable, like \n).
 
     // NOTE(Wuxiang): Persistent cross frames.
     std::shared_ptr<PrimitiveQuads> mGlyphQuadPrimitive;

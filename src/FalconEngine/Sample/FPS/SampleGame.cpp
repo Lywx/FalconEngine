@@ -181,6 +181,7 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
     }
 
     graphics->Draw(mCamera.get(), mScene.get());
+    graphics->DrawBoundingBox(mCamera.get(), mScene.get(), Transparent(ColorPalette::Red, 1.0f));
     graphics->DrawBoundingBox(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f));
     graphics->DrawBoundingBox(mCamera.get(), mPointLight2.get(), Transparent(ColorPalette::Green, 1.0f));
 

@@ -44,7 +44,14 @@
 #endif
 #endif
 
+#if defined(_DEBUG)
+#define FALCON_ENGINE_DEBUG
+#endif
+
+#if defined(FALCON_ENGINE_DEBUG)
+#define FALCON_ENGINE_DEBUG_GRAPHICS
 #define FALCON_ENGINE_DEBUG_MEMORY
+#endif
 
 /************************************************************************/
 /* Development Items                                                    */

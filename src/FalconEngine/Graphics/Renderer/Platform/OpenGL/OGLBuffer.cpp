@@ -50,7 +50,20 @@ PlatformBuffer::Unmap()
 void
 PlatformBuffer::Flush(int64_t offset, int64_t size)
 {
+    glBindBuffer(mBufferTarget, mBufferObj);
+
+#if defined(FALCON_ENGINE_DEBUG_GRAPHICS)
+    GLint bufferSize;
+    glGetBufferParameteriv(mBufferTarget, GL_BUFFER_SIZE, &bufferSize);
+    if (offset + size > bufferSize)
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Buffer is overflowed.");
+    }
+#endif
+
+    // NOTE(Wuxiang): Remember that the offset is related to mapped range.
     glFlushMappedBufferRange(mBufferTarget, offset, size);
+    glBindBuffer(mBufferTarget, 0);
 }
 
 /************************************************************************/

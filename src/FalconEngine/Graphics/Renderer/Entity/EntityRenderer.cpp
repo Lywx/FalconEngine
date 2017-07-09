@@ -134,6 +134,7 @@ EntityRenderer::RenderBegin()
     for (auto& cameraBoundingBoxBatchPair : mEntityAABBBatchTable)
     {
         auto& batch = cameraBoundingBoxBatchPair.second;
+        //  TODO(Wuxiang): To test.
         batch->mInstanceBufferCirculer->FillBegin();
         batch->mInstanceNum = 0;
     }
@@ -205,6 +206,7 @@ EntityRenderer::RenderEnd()
     for (auto& cameraBoundingBoxBatchPair : mEntityAABBBatchTable)
     {
         auto& batch = cameraBoundingBoxBatchPair.second;
+        //  TODO(Wuxiang): To test.
         batch->mInstanceBufferCirculer->FillEnd();
     }
 }

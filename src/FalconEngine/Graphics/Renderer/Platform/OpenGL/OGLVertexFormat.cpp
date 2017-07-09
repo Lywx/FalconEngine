@@ -8,6 +8,7 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 PlatformVertexFormat::PlatformVertexFormat(const VertexFormat *vertexFormat) :
+    mVertexArrayObj(),
     mVertexFormatPtr(vertexFormat)
 {
     Create();
@@ -39,7 +40,8 @@ PlatformVertexFormat::Disable()
 void
 PlatformVertexFormat::Create()
 {
-    glCreateVertexArrays(1, &mVertexArrayObj);
+    // NOTE(Wuxiang): glCreateVertexArrays only available in OGL 4.5.
+    glGenVertexArrays(1, &mVertexArrayObj);
     glBindVertexArray(mVertexArrayObj);
 
     for (auto& vertexAttrib : mVertexFormatPtr->mVertexAttributeList)

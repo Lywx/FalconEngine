@@ -424,7 +424,10 @@ Renderer::Enable(const VertexFormat *vertexFormat)
     }
     else
     {
-        Disable(mVertexFormatPrevious);
+        if (mVertexFormatPrevious)
+        {
+            Disable(mVertexFormatPrevious);
+        }
 
         mVertexFormatPrevious = vertexFormat;
     }
@@ -469,7 +472,10 @@ Renderer::Enable(const VertexGroup *vertexGroup)
     }
     else
     {
-        Disable(mVertexGroupPrevious);
+        if (mVertexGroupPrevious)
+        {
+            Disable(mVertexGroupPrevious);
+        }
 
         mVertexGroupPrevious = vertexGroup;
     }
@@ -536,7 +542,10 @@ Renderer::Enable(const IndexBuffer *indexBuffer)
     }
     else
     {
-        Disable(mIndexBufferPrevious);
+        if (mIndexBufferPrevious)
+        {
+            Disable(mIndexBufferPrevious);
+        }
 
         mIndexBufferPrevious = indexBuffer;
     }
@@ -619,7 +628,10 @@ Renderer::Enable(int textureUnit, const Texture *texture)
     }
     else
     {
-        Disable(textureUnit, texture);
+        if (mTexturePrevious[textureUnit])
+        {
+            Disable(textureUnit, mTexturePrevious[textureUnit]);
+        }
 
         mTexturePrevious[textureUnit] = texture;
     }
@@ -1055,7 +1067,10 @@ Renderer::Enable(int textureUnit, const Sampler *sampler)
     }
     else
     {
-        Disable(textureUnit, sampler);
+        if (mSamplerPrevious[textureUnit])
+        {
+            Disable(textureUnit, mSamplerPrevious[textureUnit]);
+        }
 
         mSamplerPrevious[textureUnit] = sampler;
     }
@@ -1127,7 +1142,10 @@ Renderer::Enable(Shader *shader)
     }
     else
     {
-        Disable(mShaderPrevious);
+        if (mShaderPrevious)
+        {
+            Disable(mShaderPrevious);
+        }
 
         mShaderPrevious = shader;
     }

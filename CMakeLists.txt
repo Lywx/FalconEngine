@@ -37,7 +37,12 @@ if (NOT "${FALCON_ENGINE_CONTENT_PIPELINE_SOURCE_FILES}" STREQUAL "")
 endif()
 
 file(GLOB_RECURSE FALCON_ENGINE_CONTENT_HEADER_FILES include/FalconEngine/Content/*.h)
-file(GLOB_RECURSE FALCON_ENGINE_CONTEXT_SOURCE_FILES src/FalconEngine/Context/*.cpp)
+
+# If we need to use glad, we need to compile the C file as C++ code.
+file(GLOB_RECURSE FALCON_ENGINE_CONTEXT_SOURCE_FILES include/glad/glad.c
+                                                     src/FalconEngine/Context/*.cpp)
+set_source_files_properties(include/glad/glad.c PROPERTIES LANGUAGE CXX)
+
 file(GLOB_RECURSE FALCON_ENGINE_CONTEXT_HEADER_FILES include/FalconEngine/Context/*.h)
 file(GLOB_RECURSE FALCON_ENGINE_CORE_SOURCE_FILES src/FalconEngine/Core/*.cpp)
 file(GLOB_RECURSE FALCON_ENGINE_CORE_HEADER_FILES include/FalconEngine/Core/*.h)

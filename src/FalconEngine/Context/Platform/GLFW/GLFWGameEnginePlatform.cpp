@@ -1,5 +1,6 @@
 #include <FalconEngine/Context/GameEnginePlatform.h>
 #include <FalconEngine/Context/GameEngineSettings.h>
+#include <FalconEngine/Context/GameDebug.h>
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
 #include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
@@ -15,7 +16,15 @@ GameEnginePlatform::InitializePlatform()
 
     // Initialize GLFW.
     {
-        glfwInit();
+        if (glfwInit())
+        {
+            GameDebug::OutputString("GLFW initialization succeeded.\n");
+        }
+        else
+        {
+            GameDebug::OutputString("GLFW initialization failed.\n");
+            glfwTerminate();
+        }
 
         // GLFW Window Hints
         {
@@ -69,7 +78,15 @@ GameEnginePlatform::InitializePlatform()
     {
         // NOTE(Wuxiang): Need to initialize glew after window has been created.
         // http://stackoverflow.com/questions/13943825/access-violation-when-using-glew-and-glfw
-        glewInit();
+        if (glewInit() == GLEW_OK)
+        {
+            GameDebug::OutputString("GLEW initialization succeeded.\n");
+        }
+        else
+        {
+            GameDebug::OutputString("GLEW initialization failed.\n");
+            glfwTerminate();
+        }
     }
 
 }

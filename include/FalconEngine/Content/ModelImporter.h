@@ -7,6 +7,7 @@
 #include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Core/Path.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
+#include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/IndexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
@@ -99,25 +100,32 @@ private:
             }
         }
 
+        static auto sRenderer = Renderer::GetInstance();
+
         // Memory allocation for index buffer.
         auto indexBuffer = std::make_shared<IndexBuffer>(indexNum, indexType,
                            BufferStorageMode::Device, indexBufferUsage);
-        auto indexData = reinterpret_cast<T *>(indexBuffer->GetData());
+        auto indexData = reinterpret_cast<T *>(sRenderer->Map(indexBuffer.get(),
+                                               BufferAccessMode::WriteBuffer,
+                                               BufferFlushMode::Automatic,
+                                               BufferSynchronizationMode::Unsynchronized,
+                                               indexBuffer->GetDataOffset(),
+                                               indexBuffer->GetDataSize()));
 
         // Walk through each of the mesh's faces (a face is a mesh its triangle)
         // and retrieve the corresponding vertex indexes.
+        int indexNumAdded = 0;
+        for (unsigned int faceIndex = 0; faceIndex < aiMesh->mNumFaces; ++faceIndex)
         {
-            int indexNumAdded = 0;
-            for (unsigned int faceIndex = 0; faceIndex < aiMesh->mNumFaces; ++faceIndex)
+            auto& face = aiMesh->mFaces[faceIndex];
+            for (unsigned int i = 0; i < face.mNumIndices; ++i)
             {
-                auto& face = aiMesh->mFaces[faceIndex];
-                for (unsigned int i = 0; i < face.mNumIndices; ++i)
-                {
-                    indexData[indexNumAdded] = T(face.mIndices[i]);
-                    ++indexNumAdded;
-                }
+                indexData[indexNumAdded] = T(face.mIndices[i]);
+                ++indexNumAdded;
             }
         }
+
+        sRenderer->Unmap(indexBuffer.get());
 
         // Update model metadata.
         model->mIndexNum += indexNum;

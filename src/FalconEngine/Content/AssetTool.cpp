@@ -1,5 +1,6 @@
 #include <FalconEngine/Content/AssetTool.h>
 
+#include <FalconEngine/Context/GameDebug.h>
 #include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLShader.h>
 
@@ -39,7 +40,15 @@ AssetTool::Initialize()
     auto window = glfwCreateWindow(1, 1, "Compile", nullptr, nullptr);
     glfwMakeContextCurrent(window);
 
-    glewInit();
+    if (glewInit() == GLEW_OK)
+    {
+        GameDebug::OutputString("GLEW initialization succeeded.\n");
+    }
+    else
+    {
+        GameDebug::OutputString("GLEW initialization failed.\n");
+        glfwTerminate();
+    }
 }
 
 }

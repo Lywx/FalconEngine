@@ -43,7 +43,7 @@ public:
 // @summary Implements a signed distanced field based bitmap font rendering effect.
 class FALCON_ENGINE_API FontEffect : public VisualEffect
 {
-    FALCON_ENGINE_EFFECT_DECLARE(FontEffect);
+    FALCON_ENGINE_EFFECT_GLOBAL_DECLARE(FontEffect);
 
 public:
     /************************************************************************/

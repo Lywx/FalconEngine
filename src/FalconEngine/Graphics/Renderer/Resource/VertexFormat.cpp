@@ -1,4 +1,5 @@
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
+#include <FalconEngine/Graphics/Renderer/Renderer.h>
 
 namespace FalconEngine
 {
@@ -12,6 +13,7 @@ VertexFormat::VertexFormat()
 
 VertexFormat::~VertexFormat()
 {
+    FALCON_ENGINE_RENDERER_UNBIND(this);
 }
 
 /************************************************************************/

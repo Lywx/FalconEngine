@@ -39,7 +39,7 @@ class ShaderSource;
 // variable for each update (which is done by setting shader uniform in visual
 // effect instance).
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_API Shader
+class FALCON_ENGINE_API Shader final
 {
 public:
     /************************************************************************/

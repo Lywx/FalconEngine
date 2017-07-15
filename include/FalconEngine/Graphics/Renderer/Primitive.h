@@ -1,7 +1,8 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Common.h>
 #include <FalconEngine/Core/Object.h>
+#include <FalconEngine/Graphics/Common.h>
+#include <FalconEngine/Math/AABB.h>
 
 namespace FalconEngine
 {
@@ -17,8 +18,6 @@ enum class FALCON_ENGINE_API PrimitiveType
     TriangleFan,
     Count,
 };
-
-class BoundingBox;
 
 class IndexBuffer;
 
@@ -54,11 +53,11 @@ public:
     /************************************************************************/
     // NOTE(Wuxiang): The decision to put bounding box inside primitive is
     // natural. I don't see changes that it would change in the future.
-    const BoundingBox *
-    GetBoundingBox() const;
+    const AABB *
+    GetAABB() const;
 
     void
-    SetBoundingBox(std::shared_ptr<BoundingBox> boundingBox);
+    SetAABB(const AABB& aabb);
 
     /************************************************************************/
     /* Vertex Format Management                                             */
@@ -132,7 +131,7 @@ protected:
     // different buffer into the vertex group you could set the vertex group in
     // in Visual class so that you retain the vertex information in the Primitive
     // class, which is necessary when creating special use vertex format.
-    std::shared_ptr<BoundingBox>  mBoundingBox;
+    std::shared_ptr<AABB>         mAABB;
 
     std::shared_ptr<VertexFormat> mVertexFormat;
     std::shared_ptr<VertexGroup>  mVertexGroup;

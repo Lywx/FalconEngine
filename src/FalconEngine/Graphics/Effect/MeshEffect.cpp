@@ -9,7 +9,7 @@ using namespace std;
 namespace FalconEngine
 {
 
-FALCON_ENGINE_EFFECT_IMPLEMENT(MeshEffect);
+FALCON_ENGINE_EFFECT_GLOBAL_IMPLEMENT(MeshEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

@@ -6,14 +6,10 @@
 #include <map>
 #include <queue>
 
-#include <FalconEngine/Graphics/Renderer/Entity/EntityAABBBatch.h>
-
 #include <FalconEngine/Math/Color.h>
 
 namespace FalconEngine
 {
-
-class BoundingBox;
 
 class Camera;
 class Entity;
@@ -52,14 +48,6 @@ public:
     void
     Draw(const Camera *camera, const Entity *entity);
 
-    // @summary Recursively draw bounding box for the entity.
-    void
-    DrawBoundingBox(const Camera *camera, const Entity *entity, const Color& color);
-
-    // @summary Recursively draw bounding box for the node.
-    void
-    DrawBoundingBox(const Camera *camera, const Node *node, const Color& color);
-
     /************************************************************************/
     /* Rendering Engine API                                                 */
     /************************************************************************/
@@ -76,20 +64,7 @@ public:
     RenderEnd();
 
 private:
-    void
-    DrawBoundingBox(const Camera *camera, const Visual *visual, const Color& color);
-
-    std::shared_ptr<EntityAABBBatch>
-    FindBoundingBoxBatch(const Camera *camera);
-
-    void
-    FillBoundingBox(_IN_ EntityAABBBatch& batch,
-                    _IN_ const Camera    *camera,
-                    _IN_ const Visual    *visual,
-                    _IN_ Color            color = ColorPalette::White);
-private:
-    std::map<const Camera *, std::vector<const Entity *>>      mEntityListTable;
-    std::map<const Camera *, std::shared_ptr<EntityAABBBatch>> mEntityAABBBatchTable;
+    std::map<const Camera *, std::vector<const Entity *>> mEntityListTable;
 
 };
 #pragma warning(default: 4251)

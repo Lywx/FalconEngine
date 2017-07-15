@@ -39,13 +39,10 @@ public:
 class FALCON_ENGINE_API DebugEffect : public VisualEffect
 {
 public:
-    FALCON_ENGINE_EFFECT_DECLARE(DebugEffect);
-
-public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    DebugEffect();
+    explicit DebugEffect(bool depthTestEnabled);
     virtual ~DebugEffect();
 
 public:

@@ -9,7 +9,10 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PrimitiveTriangles::PrimitiveTriangles(PrimitiveType primitiveType, std::shared_ptr<VertexFormat> vertexFormat, std::shared_ptr<VertexGroup> vertexGroup, std::shared_ptr<IndexBuffer> indexBuffer) :
+PrimitiveTriangles::PrimitiveTriangles(PrimitiveType primitiveType,
+                                       std::shared_ptr<VertexFormat> vertexFormat,
+                                       std::shared_ptr<VertexGroup> vertexGroup,
+                                       std::shared_ptr<IndexBuffer> indexBuffer) :
     Primitive(primitiveType, vertexFormat, vertexGroup, indexBuffer)
 {
     if (primitiveType == PrimitiveType::Triangle

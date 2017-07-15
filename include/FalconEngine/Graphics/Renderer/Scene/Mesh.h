@@ -7,6 +7,8 @@
 namespace FalconEngine
 {
 
+class AABB;
+
 class IndexBuffer;
 
 class Material;
@@ -37,8 +39,8 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
-    const BoundingBox *
-    GetBoundingBox() const;
+    const AABB *
+    GetAABB() const;
 
     const Material *
     GetMaterial() const;

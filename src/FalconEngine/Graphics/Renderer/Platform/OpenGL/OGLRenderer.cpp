@@ -366,7 +366,7 @@ Renderer::SetWindowPlatform(int width, int height, float near, float far)
 /* Default Framebuffer Management                                       */
 /************************************************************************/
 void
-Renderer::ClearColorBufferPlatform(Vector4f color)
+Renderer::ClearColorBufferPlatform(const Vector4f& color)
 {
     glClearColor(color[0], color[1], color[2], color[3]);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -380,7 +380,7 @@ Renderer::ClearDepthBufferPlatform(float depth)
 }
 
 void
-Renderer::ClearFrameBufferPlatform(Vector4f color, float depth, unsigned stencil)
+Renderer::ClearFrameBufferPlatform(const Vector4f& color, float depth, unsigned stencil)
 {
     glClearColor(color[0], color[1], color[2], color[3]);
     glClearDepth(static_cast<GLclampd>(depth));

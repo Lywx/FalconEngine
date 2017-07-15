@@ -39,7 +39,7 @@ class FALCON_ENGINE_API AABBEffectParams : public VisualEffectParams
 // that all bounding box is drawn in one draw call.
 class FALCON_ENGINE_API AABBEffect : public VisualEffect
 {
-    FALCON_ENGINE_EFFECT_DECLARE(AABBEffect);
+    FALCON_ENGINE_EFFECT_GLOBAL_DECLARE(AABBEffect);
 
 public:
     /************************************************************************/

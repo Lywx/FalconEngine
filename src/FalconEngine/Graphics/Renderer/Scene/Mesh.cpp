@@ -33,10 +33,10 @@ Mesh::~Mesh()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-const BoundingBox *
-Mesh::GetBoundingBox() const
+const AABB *
+Mesh::GetAABB() const
 {
-    return mPrimitive->GetBoundingBox();
+    return mPrimitive->GetAABB();
 }
 
 const Material *

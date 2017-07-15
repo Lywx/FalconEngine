@@ -5,7 +5,7 @@ using namespace std;
 namespace FalconEngine
 {
 
-FALCON_ENGINE_EFFECT_IMPLEMENT(AABBEffect);
+FALCON_ENGINE_EFFECT_GLOBAL_IMPLEMENT(AABBEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

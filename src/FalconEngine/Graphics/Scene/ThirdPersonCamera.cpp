@@ -2,6 +2,7 @@
 
 #include <FalconEngine/Context/GameEngineGraphics.h>
 #include <FalconEngine/Context/GameEngineInput.h>
+#include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Input/KeyboardState.h>
 #include <FalconEngine/Input/KeyState.h>
 #include <FalconEngine/Input/MouseState.h>
@@ -146,8 +147,8 @@ ThirdPersonCamera::Update(GameEngineInput *input, double elapsed)
         // Pan distance in window space.
         Vector3f panDistanceWindow = Vector3f(panDistancePixel, 0);
 
-        auto graphics = GameEngineGraphics::GetInstance();
-        auto viewport = graphics->GetViewport();
+        static auto sMasterRenderer = Renderer::GetInstance();
+        auto viewport = sMasterRenderer->GetViewport();
 
         // Target position in window space.
         Vector3f targetPositionWindow = viewport->Project(mOrigin, mProjection, mView);

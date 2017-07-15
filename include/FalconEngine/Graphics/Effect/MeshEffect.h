@@ -40,7 +40,7 @@ public:
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API MeshEffect : public VisualEffect
 {
-    FALCON_ENGINE_EFFECT_DECLARE(MeshEffect);
+    FALCON_ENGINE_EFFECT_GLOBAL_DECLARE(MeshEffect);
 
 public:
     /************************************************************************/

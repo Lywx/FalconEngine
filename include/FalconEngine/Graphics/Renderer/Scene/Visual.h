@@ -13,7 +13,6 @@
 namespace FalconEngine
 {
 
-class BoundingBox;
 class Primitive;
 class Renderer;
 class VertexFormat;

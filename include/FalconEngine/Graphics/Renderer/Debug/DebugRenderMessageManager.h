@@ -1,32 +1,34 @@
 #pragma once
 
-#include <FalconEngine/Math/Common.h>
+#include <FalconEngine/Graphics/Common.h>
 
+#include <list>
 #include <vector>
 
-#include <FalconEngine/Math/Vector3.h>
+#include <FalconEngine/Graphics/Renderer/Debug/DebugRenderMessage.h>
 
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_API BoundingBox
+class DebugRenderMessageManager
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    BoundingBox();
-    virtual ~BoundingBox();
+    DebugRenderMessageManager() = default;
+    ~DebugRenderMessageManager() = default;
 
 public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
-    virtual int
-    GetModelPositionNum() const = 0;
+    void
+    Update(double elapsed);
 
-    virtual std::vector<Vector3f>
-    GetModelPositionList() const = 0;
+public:
+    std::list<DebugRenderMessage> mMessageList;
+
 };
 
 }

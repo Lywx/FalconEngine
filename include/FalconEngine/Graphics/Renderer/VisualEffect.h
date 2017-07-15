@@ -118,10 +118,10 @@ protected:
     /* Effect Instancing Utility                                            */
     /************************************************************************/
     // @remark Force derived class to implement visual based instancing method.
-    // Derived classes could use FALCON_ENGINE_EFFECT_IMPLEMENT macro to implement
-    // this method.
+    // Derived classes could use FALCON_ENGINE_EFFECT_GLOBAL_IMPLEMENT macro to
+    // implement this method.
     virtual std::shared_ptr<VisualEffectInstance>
-    CreateInstance() const = 0;
+    CreateInstance() const;
 
     void
     CheckVertexFormatCompatible(Visual *visual) const;
@@ -186,7 +186,13 @@ protected:
 };
 #pragma warning(default: 4251)
 
-#define FALCON_ENGINE_EFFECT_DECLARE(klass) \
+// NOTE(Wuxiang): This macro allow you to quickly spawn effect instance in scene
+// graph. But it is not necessary for effects that is limited to single Node or
+// Visual.
+//
+// It has its limitation. If you cannot have a default constructor in effect class,
+// you might need consider not to use it.
+#define FALCON_ENGINE_EFFECT_GLOBAL_DECLARE(klass) \
 private: \
     static std::shared_ptr<klass> GetEffect() \
 { \
@@ -197,7 +203,7 @@ protected: \
     virtual std::shared_ptr<FalconEngine::VisualEffectInstance> \
     CreateInstance() const override;
 
-#define FALCON_ENGINE_EFFECT_IMPLEMENT(klass) \
+#define FALCON_ENGINE_EFFECT_GLOBAL_IMPLEMENT(klass) \
 std::shared_ptr<FalconEngine::VisualEffectInstance> \
 klass::CreateInstance() const \
 { \

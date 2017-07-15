@@ -2,13 +2,6 @@
 
 #include <FalconEngine/Graphics/Common.h>
 
-#include <functional>
-
-#include <FalconEngine/Math/Color.h>
-#include <FalconEngine/Math/Matrix4.h>
-#include <FalconEngine/Math/Vector3.h>
-#include <FalconEngine/Math/Vector4.h>
-
 namespace FalconEngine
 {
 

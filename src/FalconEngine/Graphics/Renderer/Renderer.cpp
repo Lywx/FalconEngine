@@ -23,6 +23,7 @@ using namespace std;
 #include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
 #include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
 #include <FalconEngine/Graphics/Renderer/Resource/IndexBuffer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/ShaderBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
@@ -42,6 +43,7 @@ using namespace std;
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLTexture3d.h>
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLTextureSampler.h>
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLShader.h>
+#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLShaderBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLShaderUniform.h>
 #endif
 
@@ -128,6 +130,33 @@ Renderer::DestroyData()
 }
 
 /************************************************************************/
+/* Framebuffer Management                                               */
+/************************************************************************/
+void
+Renderer::ClearColorBuffer(const Vector4f& color)
+{
+    ClearColorBufferPlatform(color);
+}
+
+void
+Renderer::ClearDepthBuffer(float depth)
+{
+    ClearDepthBufferPlatform(depth);
+}
+
+void
+Renderer::ClearStencilBuffer(unsigned stencil)
+{
+    ClearStencilBufferPlatform(stencil);
+}
+
+void
+Renderer::ClearFrameBuffer(const Vector4f& color, float depth, unsigned stencil)
+{
+    ClearFrameBufferPlatform(color, depth, stencil);
+}
+
+/************************************************************************/
 /* Viewport Management                                                  */
 /************************************************************************/
 const Viewport *
@@ -149,10 +178,24 @@ Renderer::SetViewportData(float x, float y, float width, float height)
     }
 }
 
+void
+Renderer::SetViewport(float x, float y, float width, float height)
+{
+    SetViewportData(x, y, width, height);
+    SetViewportPlatform(x, y, width, height);
+}
+
 const Window *
 Renderer::GetWindow() const
 {
     return &mWindow;
+}
+
+void
+Renderer::SetWindow(int width, int height, float near, float far)
+{
+    SetWindowData(width, height, near, far);
+    SetWindowPlatform(width, height, near, far);
 }
 
 void
@@ -169,41 +212,113 @@ Renderer::SetWindowData(int width, int height, float near, float far)
 /************************************************************************/
 /* Universal Buffer Management                                          */
 /************************************************************************/
+void
+Renderer::Bind(const Buffer *buffer)
+{
+    switch (buffer->GetType())
+    {
+    case BufferType::None:
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.")
+    case BufferType::VertexBuffer:
+        Bind(reinterpret_cast<const VertexBuffer *>(buffer));
+        break;
+    case BufferType::IndexBuffer:
+        Bind(reinterpret_cast<const IndexBuffer *>(buffer));
+        break;
+    case BufferType::ShaderBuffer:
+        Bind(reinterpret_cast<const ShaderBuffer *>(buffer));
+        break;
+    case BufferType::UniformBuffer:
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    default:
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+    }
+}
+
+void
+Renderer::Unbind(const Buffer *buffer)
+{
+    switch (buffer->GetType())
+    {
+    case BufferType::None:
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.")
+    case BufferType::VertexBuffer:
+        Unbind(reinterpret_cast<const VertexBuffer *>(buffer));
+        break;
+    case BufferType::IndexBuffer:
+        Unbind(reinterpret_cast<const IndexBuffer *>(buffer));
+        break;
+    case BufferType::ShaderBuffer:
+        Unbind(reinterpret_cast<const ShaderBuffer *>(buffer));
+        break;
+    case BufferType::UniformBuffer:
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    default:
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+    }
+}
+
+void
+Renderer::Enable(const Buffer *buffer)
+{
+    switch (buffer->GetType())
+    {
+    case BufferType::None:
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.")
+    case BufferType::VertexBuffer:
+        Enable(reinterpret_cast<const VertexBuffer *>(buffer));
+        break;
+    case BufferType::IndexBuffer:
+        Enable(reinterpret_cast<const IndexBuffer *>(buffer));
+        break;
+    case BufferType::ShaderBuffer:
+        Enable(reinterpret_cast<const ShaderBuffer *>(buffer));
+        break;
+    case BufferType::UniformBuffer:
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    default:
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+    }
+}
+
+void
+Renderer::Disable(const Buffer *buffer)
+{
+    switch (buffer->GetType())
+    {
+    case BufferType::None:
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.")
+    case BufferType::VertexBuffer:
+        Disable(reinterpret_cast<const VertexBuffer *>(buffer));
+        break;
+    case BufferType::IndexBuffer:
+        Disable(reinterpret_cast<const IndexBuffer *>(buffer));
+        break;
+    case BufferType::ShaderBuffer:
+        Disable(reinterpret_cast<const ShaderBuffer *>(buffer));
+        break;
+    case BufferType::UniformBuffer:
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    default:
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+    }
+}
+
 void *
 Renderer::Map(const Buffer *buffer, BufferAccessMode access, BufferFlushMode flush, BufferSynchronizationMode synchronization, int64_t offset, int64_t size)
 {
     switch (buffer->GetType())
     {
     case BufferType::None:
-    {
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.")
-    }
-    break;
-
     case BufferType::VertexBuffer:
-    {
         return Map(reinterpret_cast<const VertexBuffer *>(buffer), access, flush, synchronization, offset, size);
-    }
-    break;
-
     case BufferType::IndexBuffer:
-    {
         return Map(reinterpret_cast<const IndexBuffer *>(buffer), access, flush, synchronization, offset, size);
-    }
-    break;
-
     case BufferType::ShaderBuffer:
-    {
-        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-    }
-    break;
-
+        return Map(reinterpret_cast<const ShaderBuffer *>(buffer), access, flush, synchronization, offset, size);
     case BufferType::UniformBuffer:
-    {
         FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-    }
-    break;
-
     default:
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
@@ -215,35 +330,41 @@ Renderer::Unmap(const Buffer *buffer)
     switch (buffer->GetType())
     {
     case BufferType::None:
-    {
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.")
-    }
-    break;
-
     case BufferType::VertexBuffer:
-    {
-        return Unmap(reinterpret_cast<const VertexBuffer *>(buffer));
-    }
-    break;
-
+        Unmap(reinterpret_cast<const VertexBuffer *>(buffer));
+        break;
     case BufferType::IndexBuffer:
-    {
-        return Unmap(reinterpret_cast<const IndexBuffer *>(buffer));
-    }
-    break;
-
+        Unmap(reinterpret_cast<const IndexBuffer *>(buffer));
+        break;
     case BufferType::ShaderBuffer:
-    {
-        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-    }
-    break;
-
+        Unmap(reinterpret_cast<const ShaderBuffer *>(buffer));
+        break;
     case BufferType::UniformBuffer:
-    {
         FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    default:
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
-    break;
+}
 
+void
+Renderer::Flush(const Buffer *buffer, int64_t offset, int64_t size)
+{
+    switch (buffer->GetType())
+    {
+    case BufferType::None:
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.")
+    case BufferType::VertexBuffer:
+        Flush(reinterpret_cast<const VertexBuffer *>(buffer), offset, size);
+        break;
+    case BufferType::IndexBuffer:
+        Flush(reinterpret_cast<const IndexBuffer *>(buffer), offset, size);
+        break;
+    case BufferType::ShaderBuffer:
+        Flush(reinterpret_cast<const ShaderBuffer *>(buffer), offset, size);
+        break;
+    case BufferType::UniformBuffer:
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
     default:
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
@@ -265,6 +386,102 @@ Renderer::Update(const Buffer             *buffer,
     Unmap(buffer);
 }
 
+/************************************************************************/
+/* Shader Buffer Management                                             */
+/************************************************************************/
+void
+Renderer::Bind(const ShaderBuffer *shaderBuffer)
+{
+    FALCON_ENGINE_RENDERER_BIND_IMPLEMENT(shaderBuffer, mShaderBufferTable, PlatformShaderBuffer);
+}
+
+void
+Renderer::Unbind(const ShaderBuffer *shaderBuffer)
+{
+    FALCON_ENGINE_RENDERER_UNBIND_IMPLEMENT(shaderBuffer, mShaderBufferTable);
+}
+
+void
+Renderer::Enable(const ShaderBuffer *shaderBuffer)
+{
+    FALCON_ENGINE_RENDERER_ENABLE_LAZY(shaderBuffer, mShaderBufferPrevious);
+    FALCON_ENGINE_RENDERER_ENABLE_IMPLEMENT(shaderBuffer, mShaderBufferTable, PlatformShaderBuffer);
+}
+
+void
+Renderer::Disable(const ShaderBuffer *shaderBuffer)
+{
+    FALCON_ENGINE_RENDERER_DISABLE_IMPLEMENT(shaderBuffer, mShaderBufferTable);
+}
+
+void *
+Renderer::Map(const ShaderBuffer *shaderBuffer, BufferAccessMode access, BufferFlushMode flush, BufferSynchronizationMode synchronization, int64_t offset, int64_t size)
+{
+    FALCON_ENGINE_RENDERER_MAP_IMPLEMENT(shaderBuffer, mShaderBufferTable, PlatformShaderBuffer);
+}
+
+void
+Renderer::Unmap(const ShaderBuffer *shaderBuffer)
+{
+    FALCON_ENGINE_RENDERER_UNMAP_IMPLEMENT(shaderBuffer, mShaderBufferTable);
+}
+
+void
+Renderer::Flush(const ShaderBuffer *shaderBuffer, int64_t offset, int64_t size)
+{
+    FALCON_ENGINE_RENDERER_FLUSH_IMPLEMENT(shaderBuffer, mShaderBufferTable);
+}
+
+/************************************************************************/
+/* Index Buffer Management                                              */
+/************************************************************************/
+void
+Renderer::Bind(const IndexBuffer *indexBuffer)
+{
+    FALCON_ENGINE_RENDERER_BIND_IMPLEMENT(indexBuffer, mIndexBufferTable, PlatformIndexBuffer);
+}
+
+void
+Renderer::Unbind(const IndexBuffer *indexBuffer)
+{
+    FALCON_ENGINE_RENDERER_UNBIND_IMPLEMENT(indexBuffer, mIndexBufferTable);
+}
+
+void
+Renderer::Enable(const IndexBuffer *indexBuffer)
+{
+    FALCON_ENGINE_RENDERER_ENABLE_LAZY(indexBuffer, mIndexBufferPrevious);
+    FALCON_ENGINE_RENDERER_ENABLE_IMPLEMENT(indexBuffer, mIndexBufferTable, PlatformIndexBuffer);
+}
+
+void
+Renderer::Disable(const IndexBuffer *indexBuffer)
+{
+    FALCON_ENGINE_RENDERER_DISABLE_IMPLEMENT(indexBuffer, mIndexBufferTable);
+}
+
+void *
+Renderer::Map(const IndexBuffer        *indexBuffer,
+              BufferAccessMode          access,
+              BufferFlushMode           flush,
+              BufferSynchronizationMode synchronization,
+              int64_t                   offset,
+              int64_t                   size)
+{
+    FALCON_ENGINE_RENDERER_MAP_IMPLEMENT(indexBuffer, mIndexBufferTable, PlatformIndexBuffer);
+}
+
+void
+Renderer::Unmap(const IndexBuffer *indexBuffer)
+{
+    FALCON_ENGINE_RENDERER_UNMAP_IMPLEMENT(indexBuffer, mIndexBufferTable);
+}
+
+void
+Renderer::Flush(const IndexBuffer *indexBuffer, int64_t offset, int64_t size)
+{
+    FALCON_ENGINE_RENDERER_FLUSH_IMPLEMENT(indexBuffer, mIndexBufferTable);
+}
 
 /************************************************************************/
 /* Vertex Buffer Management                                             */
@@ -272,27 +489,13 @@ Renderer::Update(const Buffer             *buffer,
 void
 Renderer::Bind(const VertexBuffer *vertexBuffer)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
-
-    // When has not been bound before
-    if (mVertexBufferTable.find(vertexBuffer) == mVertexBufferTable.end())
-    {
-        mVertexBufferTable[vertexBuffer] = new PlatformVertexBuffer(vertexBuffer);
-    }
+    FALCON_ENGINE_RENDERER_BIND_IMPLEMENT(vertexBuffer, mVertexBufferTable, PlatformVertexBuffer);
 }
 
 void
 Renderer::Unbind(const VertexBuffer *vertexBuffer)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
-
-    auto iter = mVertexBufferTable.find(vertexBuffer);
-    if (iter != mVertexBufferTable.end())
-    {
-        auto veretxBufferPlatform = iter->second;
-        delete veretxBufferPlatform;
-        mVertexBufferTable.erase(iter);
-    }
+    FALCON_ENGINE_RENDERER_UNBIND_IMPLEMENT(vertexBuffer, mVertexBufferTable);
 }
 
 void
@@ -336,53 +539,21 @@ Renderer::Map(const VertexBuffer       *vertexBuffer,
               int64_t                   offset,
               int64_t                   size)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
-
-    auto iter = mVertexBufferTable.find(vertexBuffer);
-    PlatformVertexBuffer *vertexBufferPlatform;
-    if (iter != mVertexBufferTable.end())
-    {
-        vertexBufferPlatform = iter->second;
-    }
-    else
-    {
-        vertexBufferPlatform = new PlatformVertexBuffer(vertexBuffer);
-        mVertexBufferTable[vertexBuffer] = vertexBufferPlatform;
-    }
-
-    return vertexBufferPlatform->Map(access, flush, synchronization, offset, size);
+    FALCON_ENGINE_RENDERER_MAP_IMPLEMENT(vertexBuffer, mVertexBufferTable, PlatformVertexBuffer);
 }
 
 void
 Renderer::Unmap(const VertexBuffer *vertexBuffer)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
-
-    auto iter = mVertexBufferTable.find(vertexBuffer);
-    if (iter != mVertexBufferTable.end())
-    {
-        auto vertexBufferPlatform = iter->second;
-        vertexBufferPlatform->Unmap();
-    }
+    FALCON_ENGINE_RENDERER_UNMAP_IMPLEMENT(vertexBuffer, mVertexBufferTable);
 }
 
 void
-Renderer::Flush(VertexBuffer *vertexBuffer,
-                int64_t       offset,
-                int64_t       size)
+Renderer::Flush(const VertexBuffer *vertexBuffer,
+                int64_t             offset,
+                int64_t             size)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
-
-    auto iter = mVertexBufferTable.find(vertexBuffer);
-    if (iter != mVertexBufferTable.end())
-    {
-        auto vertexBufferPlatform = iter->second;
-        vertexBufferPlatform->Flush(offset, size);
-    }
-    else
-    {
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Vertex format is not mapped before.");
-    }
+    FALCON_ENGINE_RENDERER_FLUSH_IMPLEMENT(vertexBuffer, mVertexBufferTable);
 }
 
 /************************************************************************/
@@ -391,73 +562,26 @@ Renderer::Flush(VertexBuffer *vertexBuffer,
 void
 Renderer::Bind(const VertexFormat *vertexFormat)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(vertexFormat);
-
-    if (mVertexFormatTable.find(vertexFormat) == mVertexFormatTable.end())
-    {
-        mVertexFormatTable[vertexFormat] = new PlatformVertexFormat(vertexFormat);
-    }
+    FALCON_ENGINE_RENDERER_BIND_IMPLEMENT(vertexFormat, mVertexFormatTable, PlatformVertexFormat);
 }
 
 void
 Renderer::Unbind(const VertexFormat *vertexFormat)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(vertexFormat);
-
-    auto iter = mVertexFormatTable.find(vertexFormat);
-    if (iter != mVertexFormatTable.end())
-    {
-        auto *vertexFormatPlatform = iter->second;
-        delete vertexFormatPlatform;
-        mVertexFormatTable.erase(iter);
-    }
+    FALCON_ENGINE_RENDERER_UNBIND_IMPLEMENT(vertexFormat, mVertexFormatTable);
 }
 
 void
 Renderer::Enable(const VertexFormat *vertexFormat)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(vertexFormat);
-
-    if (vertexFormat == mVertexFormatPrevious)
-    {
-        return;
-    }
-    else
-    {
-        if (mVertexFormatPrevious)
-        {
-            Disable(mVertexFormatPrevious);
-        }
-
-        mVertexFormatPrevious = vertexFormat;
-    }
-
-    auto iter = mVertexFormatTable.find(vertexFormat);
-    PlatformVertexFormat *vertexFormatPlatform;
-    if (iter != mVertexFormatTable.end())
-    {
-        vertexFormatPlatform = iter->second;
-    }
-    else
-    {
-        vertexFormatPlatform = new PlatformVertexFormat(vertexFormat);
-        mVertexFormatTable[vertexFormat] = vertexFormatPlatform;
-    }
-
-    vertexFormatPlatform->Enable();
+    FALCON_ENGINE_RENDERER_ENABLE_LAZY(vertexFormat, mVertexFormatPrevious);
+    FALCON_ENGINE_RENDERER_ENABLE_IMPLEMENT(vertexFormat, mVertexFormatTable, PlatformVertexFormat);
 }
 
 void
 Renderer::Disable(const VertexFormat *vertexFormat)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(vertexFormat);
-
-    auto iter = mVertexFormatTable.find(vertexFormat);
-    if (iter != mVertexFormatTable.end())
-    {
-        auto vertexFormatPlatform = iter->second;
-        vertexFormatPlatform->Disable();
-    }
+    FALCON_ENGINE_RENDERER_DISABLE_IMPLEMENT(vertexFormat, mVertexFormatTable);
 }
 
 /************************************************************************/
@@ -466,19 +590,7 @@ Renderer::Disable(const VertexFormat *vertexFormat)
 void
 Renderer::Enable(const VertexGroup *vertexGroup)
 {
-    if (vertexGroup == mVertexGroupPrevious)
-    {
-        return;
-    }
-    else
-    {
-        if (mVertexGroupPrevious)
-        {
-            Disable(mVertexGroupPrevious);
-        }
-
-        mVertexGroupPrevious = vertexGroup;
-    }
+    FALCON_ENGINE_RENDERER_ENABLE_LAZY(vertexGroup, mVertexGroupPrevious);
 
     for (const auto& vertexBindingBufferPair : vertexGroup->mVertexBufferTable)
     {
@@ -504,145 +616,69 @@ Renderer::Disable(const VertexGroup *vertexGroup)
 }
 
 /************************************************************************/
-/* Index Buffer Management                                              */
-/************************************************************************/
-void
-Renderer::Bind(const IndexBuffer *indexBuffer)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(indexBuffer);
-
-    if (mIndexBufferTable.find(indexBuffer) == mIndexBufferTable.end())
-    {
-        mIndexBufferTable[indexBuffer] = new PlatformIndexBuffer(indexBuffer);
-    }
-}
-
-void
-Renderer::Unbind(const IndexBuffer *indexBuffer)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(indexBuffer);
-
-    auto iter = mIndexBufferTable.find(indexBuffer);
-    if (iter != mIndexBufferTable.end())
-    {
-        auto *indexBufferPlatform = iter->second;
-        delete indexBufferPlatform;
-        mIndexBufferTable.erase(iter);
-    }
-}
-
-void
-Renderer::Enable(const IndexBuffer *indexBuffer)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(indexBuffer);
-
-    if (indexBuffer == mIndexBufferPrevious)
-    {
-        return;
-    }
-    else
-    {
-        if (mIndexBufferPrevious)
-        {
-            Disable(mIndexBufferPrevious);
-        }
-
-        mIndexBufferPrevious = indexBuffer;
-    }
-
-    auto iter = mIndexBufferTable.find(indexBuffer);
-    PlatformIndexBuffer *indexBufferPlatform;
-    if (iter != mIndexBufferTable.end())
-    {
-        indexBufferPlatform = iter->second;
-    }
-    else
-    {
-        indexBufferPlatform = new PlatformIndexBuffer(indexBuffer);
-        mIndexBufferTable[indexBuffer] = indexBufferPlatform;
-    }
-
-    indexBufferPlatform->Enable();
-}
-
-void
-Renderer::Disable(const IndexBuffer *indexBuffer)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(indexBuffer);
-
-    auto iter = mIndexBufferTable.find(indexBuffer);
-    if (iter != mIndexBufferTable.end())
-    {
-        auto indexBufferPlatform = iter->second;
-        indexBufferPlatform->Disable();
-    }
-}
-
-void *
-Renderer::Map(const IndexBuffer        *indexBuffer,
-              BufferAccessMode          access,
-              BufferFlushMode           flush,
-              BufferSynchronizationMode synchronization,
-              int64_t                   offset,
-              int64_t                   size)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(indexBuffer);
-
-    auto iter = mIndexBufferTable.find(indexBuffer);
-    PlatformIndexBuffer *indexBufferPlatform;
-    if (iter != mIndexBufferTable.end())
-    {
-        indexBufferPlatform = iter->second;
-    }
-    else
-    {
-        indexBufferPlatform = new PlatformIndexBuffer(indexBuffer);
-        mIndexBufferTable[indexBuffer] = indexBufferPlatform;
-    }
-
-    return indexBufferPlatform->Map(access, flush, synchronization, offset, size);
-}
-
-void
-Renderer::Unmap(const IndexBuffer *indexBuffer)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(indexBuffer);
-
-    auto iter = mIndexBufferTable.find(indexBuffer);
-    if (iter != mIndexBufferTable.end())
-    {
-        auto indexBufferPlatform = iter->second;
-        indexBufferPlatform->Unmap();
-    }
-}
-
-/************************************************************************/
 /* Universal Texture Management                                         */
 /************************************************************************/
 void
+Renderer::Bind(const Texture *texture)
+{
+    switch (texture->mType)
+    {
+    case TextureType::None:
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+    case TextureType::Texture1d:
+        Bind(reinterpret_cast<const Texture1d *>(texture));
+        break;
+    case TextureType::Texture2d:
+        Bind(reinterpret_cast<const Texture2d *>(texture));
+        break;
+    case TextureType::Texture2dArray:
+        Bind(reinterpret_cast<const Texture2dArray *>(texture));
+        break;
+    case TextureType::Texture3d:
+        Bind(reinterpret_cast<const Texture3d *>(texture));
+        break;
+    case TextureType::TextureCube:
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    default:
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+    }
+}
+
+void
+Renderer::Unbind(const Texture *texture)
+{
+    switch (texture->mType)
+    {
+    case TextureType::None:
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+    case TextureType::Texture1d:
+        Unbind(reinterpret_cast<const Texture1d *>(texture));
+        break;
+    case TextureType::Texture2d:
+        Unbind(reinterpret_cast<const Texture2d *>(texture));
+        break;
+    case TextureType::Texture2dArray:
+        Unbind(reinterpret_cast<const Texture2dArray *>(texture));
+        break;
+    case TextureType::Texture3d:
+        Unbind(reinterpret_cast<const Texture3d *>(texture));
+        break;
+    case TextureType::TextureCube:
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    default:
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+    }
+}
+
+void
 Renderer::Enable(int textureUnit, const Texture *texture)
 {
-    if (mTexturePrevious[textureUnit] == texture)
-    {
-        return;
-    }
-    else
-    {
-        if (mTexturePrevious[textureUnit])
-        {
-            Disable(textureUnit, mTexturePrevious[textureUnit]);
-        }
-
-        mTexturePrevious[textureUnit] = texture;
-    }
-
-    FALCON_ENGINE_CHECK_NULLPTR(texture);
+    FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_LAZY(texture, mTexturePrevious);
 
     switch (texture->mType)
     {
     case TextureType::None:
-        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-        break;
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     case TextureType::Texture1d:
         Enable(textureUnit, reinterpret_cast<const Texture1d *>(texture));
         break;
@@ -657,7 +693,6 @@ Renderer::Enable(int textureUnit, const Texture *texture)
         break;
     case TextureType::TextureCube:
         FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-        break;
     default:
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
@@ -671,8 +706,7 @@ Renderer::Disable(int textureUnit, const Texture *texture)
     switch (texture->mType)
     {
     case TextureType::None:
-        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-        break;
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     case TextureType::Texture1d:
         Disable(textureUnit, reinterpret_cast<const Texture1d *>(texture));
         break;
@@ -687,7 +721,6 @@ Renderer::Disable(int textureUnit, const Texture *texture)
         break;
     case TextureType::TextureCube:
         FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-        break;
     default:
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
@@ -697,48 +730,27 @@ Renderer::Disable(int textureUnit, const Texture *texture)
 /* Texture 1D Management                                                */
 /************************************************************************/
 void
-Renderer::Bind(const Texture1d * /* texture */)
+Renderer::Bind(const Texture1d *texture)
 {
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    FALCON_ENGINE_RENDERER_BIND_IMPLEMENT(texture, mTexture1dTable, PlatformTexture1d);
 }
 
 void
-Renderer::Unbind(const Texture1d * /* texture */)
+Renderer::Unbind(const Texture1d *texture)
 {
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    FALCON_ENGINE_RENDERER_UNBIND_IMPLEMENT(texture, mTexture1dTable);
 }
 
 void
 Renderer::Enable(int textureUnit, const Texture1d *texture)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(texture);
-
-    auto iter = mTexture1dTable.find(texture);
-    PlatformTexture1d *texturePlatform;
-    if (iter != mTexture1dTable.end())
-    {
-        texturePlatform = iter->second;
-    }
-    else
-    {
-        texturePlatform = new PlatformTexture1d(texture);
-        mTexture1dTable[texture] = texturePlatform;
-    }
-
-    texturePlatform->Enable(textureUnit);
+    FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_IMPLEMENT(texture, mTexture1dTable, PlatformTexture1d);
 }
 
 void
 Renderer::Disable(int textureUnit, const Texture1d *texture)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(texture);
-
-    auto iter = mTexture1dTable.find(texture);
-    if (iter != mTexture1dTable.end())
-    {
-        auto texturePlatform = iter->second;
-        texturePlatform->Disable(textureUnit);
-    }
+    FALCON_ENGINE_RENDERER_TEXTURE_DISABLE_IMPLEMENT(texture, mTexture1dTable);
 }
 
 void *
@@ -750,34 +762,13 @@ Renderer::Map(const Texture1d          *texture,
               int64_t                   offset,
               int64_t                   size)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(texture);
-
-    auto iter = mTexture1dTable.find(texture);
-    PlatformTexture1d *texturePlatform;
-    if (iter != mTexture1dTable.end())
-    {
-        texturePlatform = iter->second;
-    }
-    else
-    {
-        texturePlatform = new PlatformTexture1d(texture);
-        mTexture1dTable[texture] = texturePlatform;
-    }
-
-    return texturePlatform->Map(access, flush, synchronization, offset, size);
+    FALCON_ENGINE_RENDERER_TEXTURE_MAP_IMPLEMENT(texture, mTexture1dTable, PlatformTexture1d);
 }
 
 void
 Renderer::Unmap(const Texture1d *texture, int /* mipmapLevel */)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(texture);
-
-    auto iter = mTexture1dTable.find(texture);
-    if (iter != mTexture1dTable.end())
-    {
-        auto texturePlatform = iter->second;
-        texturePlatform->Unmap();
-    }
+    FALCON_ENGINE_RENDERER_TEXTURE_UNMAP_IMPLEMENT(texture, mTexture1dTable);
 }
 
 /************************************************************************/
@@ -786,59 +777,25 @@ Renderer::Unmap(const Texture1d *texture, int /* mipmapLevel */)
 void
 Renderer::Bind(const Texture2d *texture)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(texture);
-
-    if (mTexture2dTable.find(texture) == mTexture2dTable.end())
-    {
-        mTexture2dTable[texture] = new PlatformTexture2d(texture);
-    }
+    FALCON_ENGINE_RENDERER_BIND_IMPLEMENT(texture, mTexture2dTable, PlatformTexture2d);
 }
 
 void
 Renderer::Unbind(const Texture2d *texture)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(texture);
-
-    auto iter = mTexture2dTable.find(texture);
-    if (iter != mTexture2dTable.end())
-    {
-        auto *texturePlatform = iter->second;
-        delete texturePlatform;
-        mTexture2dTable.erase(iter);
-    }
+    FALCON_ENGINE_RENDERER_UNBIND_IMPLEMENT(texture, mTexture2dTable);
 }
 
 void
 Renderer::Enable(int textureUnit, const Texture2d *texture)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(texture);
-
-    auto iter = mTexture2dTable.find(texture);
-    PlatformTexture2d *texturePlatform;
-    if (iter != mTexture2dTable.end())
-    {
-        texturePlatform = iter->second;
-    }
-    else
-    {
-        texturePlatform = new PlatformTexture2d(texture);
-        mTexture2dTable[texture] = texturePlatform;
-    }
-
-    texturePlatform->Enable(textureUnit);
+    FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_IMPLEMENT(texture, mTexture2dTable, PlatformTexture2d);
 }
 
 void
 Renderer::Disable(int textureUnit, const Texture2d *texture)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(texture);
-
-    auto iter = mTexture2dTable.find(texture);
-    if (iter != mTexture2dTable.end())
-    {
-        auto texturePlatform = iter->second;
-        texturePlatform->Disable(textureUnit);
-    }
+    FALCON_ENGINE_RENDERER_TEXTURE_DISABLE_IMPLEMENT(texture, mTexture2dTable);
 }
 
 void *
@@ -850,34 +807,13 @@ Renderer::Map(const Texture2d          *texture,
               int64_t                   offset,
               int64_t                   size)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(texture);
-
-    auto iter = mTexture2dTable.find(texture);
-    PlatformTexture2d *texturePlatform;
-    if (iter != mTexture2dTable.end())
-    {
-        texturePlatform = iter->second;
-    }
-    else
-    {
-        texturePlatform = new PlatformTexture2d(texture);
-        mTexture2dTable[texture] = texturePlatform;
-    }
-
-    return texturePlatform->Map(access, flush, synchronization, offset, size);
+    FALCON_ENGINE_RENDERER_TEXTURE_MAP_IMPLEMENT(texture, mTexture2dTable, PlatformTexture2d);
 }
 
 void
 Renderer::Unmap(const Texture2d *texture, int /* mipmapLevel */)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(texture);
-
-    auto iter = mTexture2dTable.find(texture);
-    if (iter != mTexture2dTable.end())
-    {
-        auto texturePlatform = iter->second;
-        texturePlatform->Unmap();
-    }
+    FALCON_ENGINE_RENDERER_TEXTURE_UNMAP_IMPLEMENT(texture, mTexture2dTable);
 }
 
 /************************************************************************/
@@ -886,59 +822,25 @@ Renderer::Unmap(const Texture2d *texture, int /* mipmapLevel */)
 void
 Renderer::Bind(const Texture2dArray *textureArray)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(textureArray);
-
-    if (mTexture2dArrayTable.find(textureArray) == mTexture2dArrayTable.end())
-    {
-        mTexture2dArrayTable[textureArray] = new PlatformTexture2dArray(textureArray);
-    }
+    FALCON_ENGINE_RENDERER_BIND_IMPLEMENT(textureArray, mTexture2dArrayTable, PlatformTexture2dArray);
 }
 
 void
 Renderer::Unbind(const Texture2dArray *textureArray)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(textureArray);
-
-    auto iter = mTexture2dArrayTable.find(textureArray);
-    if (iter != mTexture2dArrayTable.end())
-    {
-        auto *textureArrayPlatform = iter->second;
-        delete textureArrayPlatform;
-        mTexture2dArrayTable.erase(iter);
-    }
+    FALCON_ENGINE_RENDERER_UNBIND_IMPLEMENT(textureArray, mTexture2dArrayTable);
 }
 
 void
 Renderer::Enable(int textureUnit, const Texture2dArray *textureArray)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(textureArray);
-
-    auto iter = mTexture2dArrayTable.find(textureArray);
-    PlatformTexture2dArray *textureArrayPlatform;
-    if (iter != mTexture2dArrayTable.end())
-    {
-        textureArrayPlatform = iter->second;
-    }
-    else
-    {
-        textureArrayPlatform = new PlatformTexture2dArray(textureArray);
-        mTexture2dArrayTable[textureArray] = textureArrayPlatform;
-    }
-
-    textureArrayPlatform->Enable(textureUnit);
+    FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_IMPLEMENT(textureArray, mTexture2dArrayTable, PlatformTexture2dArray);
 }
 
 void
 Renderer::Disable(int textureUnit, const Texture2dArray *textureArray)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(textureArray);
-
-    auto iter = mTexture2dArrayTable.find(textureArray);
-    if (iter != mTexture2dArrayTable.end())
-    {
-        auto textureArrayPlatform = iter->second;
-        textureArrayPlatform->Disable(textureUnit);
-    }
+    FALCON_ENGINE_RENDERER_TEXTURE_DISABLE_IMPLEMENT(textureArray, mTexture2dArrayTable);
 }
 
 void *
@@ -951,21 +853,7 @@ Renderer::Map(const Texture2dArray     *textureArray,
               int64_t                   offset,
               int64_t                   size)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(textureArray);
-
-    auto iter = mTexture2dArrayTable.find(textureArray);
-    PlatformTexture2dArray *texturePlatform;
-    if (iter != mTexture2dArrayTable.end())
-    {
-        texturePlatform = iter->second;
-    }
-    else
-    {
-        texturePlatform = new PlatformTexture2dArray(textureArray);
-        mTexture2dArrayTable[textureArray] = texturePlatform;
-    }
-
-    return texturePlatform->Map(textureIndex, access, flush, synchronization, offset, size);
+    FALCON_ENGINE_RENDERER_TEXTURE_ARRAY_MAP_IMPLEMENT(textureArray, mTexture2dArrayTable, PlatformTexture2dArray);
 }
 
 void
@@ -973,14 +861,7 @@ Renderer::Unmap(const Texture2dArray *textureArray,
                 int                   textureIndex,
                 int                /* mipmapLevel */)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(textureArray);
-
-    auto iter = mTexture2dArrayTable.find(textureArray);
-    if (iter != mTexture2dArrayTable.end())
-    {
-        auto texturePlatform = iter->second;
-        texturePlatform->Unmap(textureIndex);
-    }
+    FALCON_ENGINE_RENDERER_TEXTURE_ARRAY_UNMAP_IMPLEMENT(textureArray, mTexture2dArrayTable);
 }
 
 /************************************************************************/
@@ -1010,97 +891,32 @@ Renderer::Disable(int /* textureUnit */, const Texture3d * /* texture */)
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
-void *
-Renderer::Map(const Texture3d * /* texture */, int /* mipmapLevel */, BufferAccessMode /* mode */)
-{
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-}
-
-void
-Renderer::Unmap(const Texture3d * /* texture */, int /* mipmapLevel */)
-{
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-}
-
-void
-Renderer::Update(const Texture3d * /* texture */, int /* mipmapLevel */)
-{
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-}
-
 /************************************************************************/
 /* Sampler Management                                                   */
 /************************************************************************/
 void
 Renderer::Bind(const Sampler *sampler)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(sampler);
-
-    if (mSamplerTable.find(sampler) == mSamplerTable.end())
-    {
-        mSamplerTable[sampler] = new PlatformSampler(sampler);
-    }
+    FALCON_ENGINE_RENDERER_UNBIND_IMPLEMENT(sampler, mSamplerTable, PlatformSampler);
 }
 
 void
 Renderer::Unbind(const Sampler *sampler)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(sampler);
-
-    auto iter = mSamplerTable.find(sampler);
-    if (iter != mSamplerTable.end())
-    {
-        auto *samplerPlatform = iter->second;
-        delete samplerPlatform;
-        mSamplerTable.erase(iter);
-    }
+    FALCON_ENGINE_RENDERER_UNBIND_IMPLEMENT(sampler, mSamplerTable);
 }
 
 void
 Renderer::Enable(int textureUnit, const Sampler *sampler)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(sampler);
-
-    if (mSamplerPrevious[textureUnit] == sampler)
-    {
-        return;
-    }
-    else
-    {
-        if (mSamplerPrevious[textureUnit])
-        {
-            Disable(textureUnit, mSamplerPrevious[textureUnit]);
-        }
-
-        mSamplerPrevious[textureUnit] = sampler;
-    }
-
-    auto iter = mSamplerTable.find(sampler);
-    PlatformSampler *samplerPlatform;
-    if (iter != mSamplerTable.end())
-    {
-        samplerPlatform = iter->second;
-    }
-    else
-    {
-        samplerPlatform = new PlatformSampler(sampler);
-        mSamplerTable[sampler] = samplerPlatform;
-    }
-
-    samplerPlatform->Enable(textureUnit);
+    FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_LAZY(sampler, mSamplerPrevious);
+    FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_IMPLEMENT(sampler, mSamplerTable, PlatformSampler);
 }
 
 void
 Renderer::Disable(int textureUnit, const Sampler *sampler)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(sampler);
-
-    auto iter = mSamplerTable.find(sampler);
-    if (iter != mSamplerTable.end())
-    {
-        auto samplerPlatform = iter->second;
-        samplerPlatform->Disable(textureUnit);
-    }
+    FALCON_ENGINE_RENDERER_TEXTURE_DISABLE_IMPLEMENT(sampler, mSamplerTable);
 }
 
 /************************************************************************/
@@ -1109,73 +925,26 @@ Renderer::Disable(int textureUnit, const Sampler *sampler)
 void
 Renderer::Bind(Shader *shader)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(shader);
-
-    if (mShaderTable.find(shader) == mShaderTable.end())
-    {
-        mShaderTable[shader] = new PlatformShader(shader);
-    }
+    FALCON_ENGINE_RENDERER_BIND_IMPLEMENT(shader, mShaderTable, PlatformShader);
 }
 
 void
 Renderer::Unbind(const Shader *shader)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(shader);
-
-    auto iter = mShaderTable.find(shader);
-    if (iter != mShaderTable.end())
-    {
-        auto platformShader = iter->second;
-        delete platformShader;
-        mShaderTable.erase(iter);
-    }
+    FALCON_ENGINE_RENDERER_UNBIND_IMPLEMENT(shader, mShaderTable);
 }
 
 void
 Renderer::Enable(Shader *shader)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(shader);
-
-    if (shader == mShaderPrevious)
-    {
-        return;
-    }
-    else
-    {
-        if (mShaderPrevious)
-        {
-            Disable(mShaderPrevious);
-        }
-
-        mShaderPrevious = shader;
-    }
-
-    auto iter = mShaderTable.find(shader);
-    PlatformShader *platformShader;
-    if (iter != mShaderTable.end())
-    {
-        platformShader = iter->second;
-    }
-    else
-    {
-        platformShader = new PlatformShader(shader);
-        mShaderTable[shader] = platformShader;
-    }
-
-    platformShader->Enable();
+    FALCON_ENGINE_RENDERER_ENABLE_LAZY(shader, mShaderPrevious);
+    FALCON_ENGINE_RENDERER_ENABLE_IMPLEMENT(shader, mShaderTable, PlatformShader);
 }
 
 void
 Renderer::Disable(const Shader *shader)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(shader);
-
-    auto iter = mShaderTable.find(shader);
-    if (iter != mShaderTable.end())
-    {
-        auto platformShader = iter->second;
-        platformShader->Disable();
-    }
+    FALCON_ENGINE_RENDERER_DISABLE_IMPLEMENT(shader, mShaderTable);
 }
 
 /************************************************************************/

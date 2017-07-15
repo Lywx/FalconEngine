@@ -17,12 +17,17 @@
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 
+#include <FalconEngine/Graphics/Renderer/Debug/DebugRenderer.h>
+
+#include <FalconEngine/Graphics/Renderer/Entity/Entity.h>
+#include <FalconEngine/Graphics/Renderer/Entity/EntityRenderer.h>
+
 #include <FalconEngine/Graphics/Renderer/Font/Font.h>
-#include <FalconEngine/Graphics/Renderer/Font/FontRenderer.h>
 #include <FalconEngine/Graphics/Renderer/Font/FontGlyph.h>
 #include <FalconEngine/Graphics/Renderer/Font/FontLine.h>
 #include <FalconEngine/Graphics/Renderer/Font/FontText.h>
 #include <FalconEngine/Graphics/Renderer/Font/FontWord.h>
+#include <FalconEngine/Graphics/Renderer/Font/FontRenderer.h>
 
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/IndexBuffer.h>

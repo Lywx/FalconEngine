@@ -5,13 +5,40 @@ using namespace std;
 namespace FalconEngine
 {
 
-FALCON_ENGINE_EFFECT_IMPLEMENT(DebugEffect);
-
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-DebugEffect::DebugEffect()
+DebugEffect::DebugEffect(bool depthTestEnabled)
 {
+    auto shader = std::make_shared<Shader>();
+    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/Debug.vert.glsl");
+    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shader/Debug.frag.glsl");
+
+    auto pass = make_unique<VisualEffectPass>();
+    pass->SetShader(shader);
+
+    auto blendState = make_unique<BlendState>();
+    blendState->mEnabled = true;
+    blendState->mSourceFactor = BlendSourceFactor::SRC_ALPHA;
+    blendState->mDestinationFactor = BlendDestinationFactor::ONE_MINUS_SRC_ALPHA;
+    pass->SetBlendState(move(blendState));
+
+    auto cullState = make_unique<CullState>();
+    cullState->mEnabled = false;
+    pass->SetCullState(move(cullState));
+
+    auto depthTestState = make_unique<DepthTestState>();
+    depthTestState->mTestEnabled = depthTestEnabled;
+    pass->SetDepthTestState(move(depthTestState));
+
+    pass->SetOffsetState(make_unique<OffsetState>());
+    pass->SetStencilTestState(make_unique<StencilTestState>());
+
+    auto wireframwState = make_unique<WireframeState>();
+    wireframwState->mEnabled = false;
+    pass->SetWireframeState(move(wireframwState));
+
+    InsertPass(move(pass));
 }
 
 DebugEffect::~DebugEffect()

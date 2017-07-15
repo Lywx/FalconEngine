@@ -8,7 +8,7 @@ using namespace std;
 namespace FalconEngine
 {
 
-FALCON_ENGINE_EFFECT_IMPLEMENT(FontEffect);
+FALCON_ENGINE_EFFECT_GLOBAL_IMPLEMENT(FontEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

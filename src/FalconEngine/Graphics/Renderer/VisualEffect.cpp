@@ -2,6 +2,7 @@
 
 #include <queue>
 
+#include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Node.h>
@@ -12,7 +13,6 @@
 #include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
 #include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
 #include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
-#include "FalconEngine/Context/GameEngineGraphics.h"
 
 using namespace std;
 
@@ -100,8 +100,14 @@ VisualEffect::GetWireframeState(int passIndex) const
 }
 
 /************************************************************************/
-/* Effect Instancing Helper                                             */
+/* Effect Instancing Utility                                            */
 /************************************************************************/
+std::shared_ptr<VisualEffectInstance>
+VisualEffect::CreateInstance() const
+{
+    FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Effect does not implement effect instancing.");
+}
+
 void
 VisualEffect::CheckVertexFormatCompatible(Visual *visual) const
 {
@@ -154,6 +160,9 @@ VisualEffect::GetVertexFormat() const
     return sVertexFormat;
 }
 
+/************************************************************************/
+/* Effect Instancing Utility                                            */
+/************************************************************************/
 void
 VisualEffect::TraverseLevelOrder(Node *node, std::function<void(Visual *visual)> visit) const
 {
@@ -279,7 +288,8 @@ VisualEffect::SetShaderUniformAutomaticScreenTransform(VisualEffectInstance *vis
     visualEffectInstance->SetShaderUniform(passIndex, ShareAutomatic<Matrix4f>(uniformName,
                                            std::bind([](const Visual *, const Camera *)
     {
-        auto viewport = GameEngineGraphics::GetInstance()->GetViewport();
+        static auto sMasterRenderer = Renderer::GetInstance();
+        auto viewport = sMasterRenderer->GetViewport();
 
         float wOver2 = 0.5f * viewport->GetWidth();
         float hOver2 = 0.5f * viewport->GetHeight();

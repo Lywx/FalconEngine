@@ -1,4 +1,5 @@
 #include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>
+#include <FalconEngine/Graphics/Renderer/Renderer.h>
 
 namespace FalconEngine
 {
@@ -31,6 +32,7 @@ Sampler::Sampler(SamplerMinificationFilter minificationFilter,
 
 Sampler::~Sampler()
 {
+    FALCON_ENGINE_RENDERER_UNBIND(this);
 }
 
 }

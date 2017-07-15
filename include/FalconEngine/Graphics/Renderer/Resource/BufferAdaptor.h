@@ -1,5 +1,6 @@
 #pragma once
 
+#include <FalconEngine/Graphics/Common.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 
 namespace FalconEngine
@@ -57,6 +58,9 @@ public:
 
     virtual void
     FillEnd();
+
+    std::shared_ptr<Buffer>
+    GetBuffer();
 
 protected:
     std::shared_ptr<Buffer> mBuffer;

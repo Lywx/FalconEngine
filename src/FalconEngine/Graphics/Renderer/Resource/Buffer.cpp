@@ -1,4 +1,5 @@
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
+#include <FalconEngine/Graphics/Renderer/Renderer.h>
 
 namespace FalconEngine
 {
@@ -45,6 +46,8 @@ Buffer::Buffer(int elementNum,
 
 Buffer::~Buffer()
 {
+    FALCON_ENGINE_RENDERER_UNBIND(this);
+
     delete [] mData;
 }
 

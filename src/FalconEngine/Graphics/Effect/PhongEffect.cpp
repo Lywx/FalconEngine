@@ -10,7 +10,7 @@ using namespace std;
 namespace FalconEngine
 {
 
-FALCON_ENGINE_EFFECT_IMPLEMENT(PhongEffect);
+FALCON_ENGINE_EFFECT_GLOBAL_IMPLEMENT(PhongEffect);
 
 /************************************************************************/
 /* Static Members                                                       */

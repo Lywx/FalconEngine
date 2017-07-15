@@ -20,7 +20,8 @@ Primitive::Primitive(PrimitiveType primitiveType, std::shared_ptr<VertexFormat> 
     mVertexGroup(vertexGroup),
     mVertexOffset(0),
     mIndexBuffer(indexBuffer),
-    mIndexOffset(0)
+    mIndexOffset(0),
+    mAABB()
 {
     // NOTE(Wuxiang): All vertex format, vertex group and index buffer is allowed to be null
     // here. But they should be initialized in the derived class's constructor.
@@ -42,18 +43,16 @@ Primitive::GetPrimitiveType() const
 /************************************************************************/
 /* Bounding Box Management                                              */
 /************************************************************************/
-const BoundingBox *
-Primitive::GetBoundingBox() const
+const AABB *
+Primitive::GetAABB() const
 {
-    return mBoundingBox.get();
+    return mAABB.get();
 }
 
 void
-Primitive::SetBoundingBox(std::shared_ptr<BoundingBox> boundingBox)
+Primitive::SetAABB(const AABB& aabb)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(boundingBox);
-
-    mBoundingBox = boundingBox;
+    mAABB = std::make_shared<AABB>(aabb);
 }
 
 /************************************************************************/
@@ -135,7 +134,7 @@ void
 Primitive::CopyTo(Primitive *lhs)
 {
     lhs->mPrimitiveType = mPrimitiveType;
-    lhs->mBoundingBox = mBoundingBox;
+    lhs->mAABB = mAABB;
 
     lhs->mVertexFormat = mVertexFormat;
     lhs->mVertexGroup = mVertexGroup;

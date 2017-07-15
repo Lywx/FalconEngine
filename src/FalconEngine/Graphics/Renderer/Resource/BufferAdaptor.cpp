@@ -30,4 +30,10 @@ BufferAdaptor::FillEnd()
 {
 }
 
+std::shared_ptr<Buffer>
+BufferAdaptor::GetBuffer()
+{
+    return mBuffer;
+}
+
 }

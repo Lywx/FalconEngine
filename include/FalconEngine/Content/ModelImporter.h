@@ -20,7 +20,7 @@
 #include <FalconEngine/Graphics/Renderer/Scene/Model.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Node.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
-#include <FalconEngine/Math/Bound/AABB.h>
+#include <FalconEngine/Math/AABB.h>
 
 using namespace std;
 
@@ -75,8 +75,8 @@ private:
 
     // NEW(Wuxiang): Bounding box loading has a lot of space for optimization.
     // You could precomputed the bounding box in the asset processor.
-    static std::shared_ptr<BoundingBox>
-    CreateBoundingBox(const aiMesh *aiMesh);
+    static AABB
+    CreateAABB(const aiMesh *aiMesh);
 
     static std::shared_ptr<IndexBuffer>
     CreateIndexBuffer(_IN_OUT_ Model        *model,
@@ -100,12 +100,12 @@ private:
             }
         }
 
-        static auto sRenderer = Renderer::GetInstance();
+        static auto sMasterRenderer = Renderer::GetInstance();
 
         // Memory allocation for index buffer.
         auto indexBuffer = std::make_shared<IndexBuffer>(indexNum, indexType,
                            BufferStorageMode::Device, indexBufferUsage);
-        auto indexData = reinterpret_cast<T *>(sRenderer->Map(indexBuffer.get(),
+        auto indexData = reinterpret_cast<T *>(sMasterRenderer->Map(indexBuffer.get(),
                                                BufferAccessMode::WriteBuffer,
                                                BufferFlushMode::Automatic,
                                                BufferSynchronizationMode::Unsynchronized,
@@ -125,7 +125,7 @@ private:
             }
         }
 
-        sRenderer->Unmap(indexBuffer.get());
+        sMasterRenderer->Unmap(indexBuffer.get());
 
         // Update model metadata.
         model->mIndexNum += indexNum;

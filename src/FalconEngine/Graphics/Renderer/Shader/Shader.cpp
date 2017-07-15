@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include <FalconEngine/Content/AssetManager.h>
+#include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
 
 using namespace std;
@@ -21,6 +22,7 @@ Shader::Shader()
 
 Shader::~Shader()
 {
+    FALCON_ENGINE_RENDERER_UNBIND(this);
 }
 
 /************************************************************************/

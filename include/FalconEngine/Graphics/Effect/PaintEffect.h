@@ -34,7 +34,7 @@ public:
 class FALCON_ENGINE_API PaintEffect : public VisualEffect
 {
 public:
-    FALCON_ENGINE_EFFECT_DECLARE(PaintEffect);
+    FALCON_ENGINE_EFFECT_GLOBAL_DECLARE(PaintEffect);
 
 public:
     /************************************************************************/

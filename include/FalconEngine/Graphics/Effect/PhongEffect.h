@@ -30,7 +30,7 @@ public:
 
 class FALCON_ENGINE_API PhongEffect : public VisualEffect
 {
-    FALCON_ENGINE_EFFECT_DECLARE(PhongEffect);
+    FALCON_ENGINE_EFFECT_GLOBAL_DECLARE(PhongEffect);
 
 public:
     static int PointLightNumMax;

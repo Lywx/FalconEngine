@@ -6,8 +6,8 @@
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveQuads.h>
 #include <FalconEngine/Graphics/Renderer/Font/Font.h>
-#include <FalconEngine/Graphics/Renderer/Font/FontData.h>
 #include <FalconEngine/Graphics/Renderer/Font/FontLine.h>
+#include <FalconEngine/Graphics/Renderer/Font/FontRendererHelper.h>
 #include <FalconEngine/Graphics/Renderer/Font/FontText.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
@@ -34,39 +34,30 @@ FontRenderer::~FontRenderer()
 }
 
 /************************************************************************/
-/* Public Members                                                       */
+/* Rendering API                                                        */
+/************************************************************************/
+void
+FontRenderer::DrawString(const Font *font, float fontSize, Vector2f textPosition, const std::string& text, Color textColor, float textLineWidth)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(font);
+
+    BatchText(font, fontSize, GetWString(text), textPosition, textColor, textLineWidth);
+}
+
+void
+FontRenderer::DrawString(const Font *font, float fontSize, Vector2f textPosition, const std::wstring& text, Color textColor, float textLineWidth)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(font);
+
+    BatchText(font, fontSize, text, textPosition, textColor, textLineWidth);
+}
+
+/************************************************************************/
+/* Rendering Engine API                                                 */
 /************************************************************************/
 void
 FontRenderer::Initialize()
 {
-}
-
-void
-FontRenderer::BatchText(
-    const Font    *font,
-    float          fontSize,
-
-    const wstring& textString,
-    Vector2f       textPosition,
-    Color          textColor,
-    float          textLineWidth)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(font);
-
-    auto text = FontText(fontSize, textString, textPosition, textLineWidth);
-    auto batch = FindBatch(font);
-
-    auto const TextItemMaxNum = 1024;
-
-    // Add the text into the batch
-    batch->mBatchedItemList.emplace_back(text, textColor);
-    batch->mPendingGlyphNumPredict += int(text.mTextString.size());
-
-    // Fill the text VRAM buffer when the batch item number reach the item limit.
-    if (batch->mBatchedItemList.size() >= TextItemMaxNum)
-    {
-        FillText(font, batch.get());
-    }
 }
 
 void
@@ -101,8 +92,8 @@ FontRenderer::Render(double /* percent */)
             batch->mGlyphQuadPrimitive->SetVertexOffset(batch->mGlyphVertexBuffer->GetElementOffset());
             batch->mGlyphVertexBuffer->SetElementNum(batch->mFrameGlyphNum * 6);
 
-            static auto sRenderer = Renderer::GetInstance();
-            sRenderer->Draw(nullptr, batch->mGlyphQuadVisual.get());
+            static auto sMasterRenderer = Renderer::GetInstance();
+            sMasterRenderer->Draw(nullptr, batch->mGlyphQuadVisual.get());
         }
     }
 }
@@ -113,8 +104,36 @@ FontRenderer::RenderEnd()
 }
 
 /************************************************************************/
-/* Protected Members                                                    */
+/* Private Members                                                      */
 /************************************************************************/
+void
+FontRenderer::BatchText(
+    const Font    *font,
+    float          fontSize,
+
+    const wstring& textString,
+    Vector2f       textPosition,
+    Color          textColor,
+    float          textLineWidth)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(font);
+
+    auto text = FontText(fontSize, textString, textPosition, textLineWidth);
+    auto batch = FindBatch(font);
+
+    auto const TextItemMaxNum = 1024;
+
+    // Add the text into the batch
+    batch->mBatchedItemList.emplace_back(text, textColor);
+    batch->mPendingGlyphNumPredict += int(text.mTextString.size());
+
+    // Fill the text VRAM buffer when the batch item number reach the item limit.
+    if (batch->mBatchedItemList.size() >= TextItemMaxNum)
+    {
+        FillText(font, batch.get());
+    }
+}
+
 std::shared_ptr<FontRenderBatch>
 FontRenderer::FindBatch(const Font *font)
 {
@@ -167,14 +186,14 @@ FontRenderer::FillText(
     bufferAdaptor->FillBegin();
 
     {
-        static auto sRenderer = Renderer::GetInstance();
+        static auto sMasterRenderer = Renderer::GetInstance();
         auto bufferData = static_cast<unsigned char *>(
-                              sRenderer->Map(buffer,
-                                             BufferAccessMode::WriteRange,
-                                             BufferFlushMode::Explicit,
-                                             BufferSynchronizationMode::Unsynchronized,
-                                             buffer->GetDataOffset(),
-                                             batch->mPendingGlyphNumPredict * 6 * buffer->GetElementSize()));
+                              sMasterRenderer->Map(buffer,
+                                      BufferAccessMode::WriteRange,
+                                      BufferFlushMode::Explicit,
+                                      BufferSynchronizationMode::Unsynchronized,
+                                      buffer->GetDataOffset(),
+                                      batch->mPendingGlyphNumPredict * 6 * buffer->GetElementSize()));
 
         static auto sTextLines = vector<FontLine>();
         for (auto& textItem : batch->mBatchedItemList)
@@ -185,12 +204,12 @@ FontRenderer::FillText(
             auto& textColor = textItem.mTextColor;
 
             // Construct lines with glyph information.
-            pendingGlyphNumExact += FontData::CreateTextLines(font, text, sTextLines);
+            pendingGlyphNumExact += FontRendererHelper::CreateTextLines(font, text, sTextLines);
 
             // Fill the vertex attribute into the buffer
-            FontData::FillTextLines(
-                bufferData,
+            FontRendererHelper::FillTextLines(
                 bufferAdaptor,
+                bufferData,
                 font,
                 text->mFontSize,
                 Vector2f(text->mTextBounds.x, text->mTextBounds.y),
@@ -203,8 +222,8 @@ FontRenderer::FillText(
         // Only after processing all the glyph we can get the accurate number of valid glyph.
         buffer->SetElementNum(pendingGlyphNumExact * 6);
 
-        sRenderer->Flush(buffer, 0, buffer->GetDataSize());
-        sRenderer->Unmap(buffer);
+        sMasterRenderer->Flush(buffer, 0, buffer->GetDataSize());
+        sMasterRenderer->Unmap(buffer);
     }
 
     bufferAdaptor->FillEnd();

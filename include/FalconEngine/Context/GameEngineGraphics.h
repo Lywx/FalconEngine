@@ -63,57 +63,8 @@ public:
 
 public:
     /************************************************************************/
-    /* Rendering API                                                        */
+    /* Rendering Engine API                                                 */
     /************************************************************************/
-    void
-    ClearColorBuffer(Vector4f color);
-
-    void
-    ClearDepthBuffer(float depth);
-
-    void
-    ClearFrameBuffer(Vector4f color, float depth, unsigned int stencil);
-
-    void
-    ClearStencilBuffer(unsigned int stencil);
-
-    void
-    Draw(const Camera *camera, const Entity *entity);
-
-    void
-    DrawBoundingBox(const Camera *camera,
-                    const Entity *entity,
-                    Color         color = Transparent(ColorPalette::White, 0.5f));
-
-    void
-    DrawString(const Font   *font,
-               float               fontSize,
-               Vector2f            textPosition,
-               const std::string&  text,
-               Color               textColor = ColorPalette::White,
-               float               textLineWidth = std::numeric_limits<float>().max());
-
-    void
-    DrawString(const Font   *font,
-               float               fontSize,
-               Vector2f            textPosition,
-               const std::wstring& text,
-               Color               textColor = ColorPalette::White,
-               float               textLineWidth = std::numeric_limits<float>().max());
-
-    const Viewport *
-    GetViewport() const;
-
-    void
-    SetViewport(float x, float y, float width, float height);
-
-    const Window *
-    GetWindow() const;
-
-    void
-    SetWindow(int width, int height, float near, float far);
-
-public:
     void
     Initialize();
 
@@ -132,6 +83,31 @@ public:
 private:
     void
     Destroy();
+
+public:
+    DebugRenderer *
+    GetDebugRenderer() const
+    {
+        return mDebugRenderer;
+    }
+
+    EntityRenderer *
+    GetEntityRenderer() const
+    {
+        return mEntityRenderer;
+    }
+
+    FontRenderer *
+    GetFontRenderer() const
+    {
+        return mFontRenderer;
+    }
+
+    Renderer *
+    GetMasterRenderer() const
+    {
+        return mMasterRenderer;
+    }
 
 private:
     DebugRenderer      *mDebugRenderer;

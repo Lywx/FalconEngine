@@ -3,6 +3,7 @@
 #include <FalconEngine/Graphics/Common.h>
 
 #include <map>
+#include <unordered_map>
 #include <vector>
 
 #include <FalconEngine/Graphics/Renderer/Viewport.h>
@@ -38,10 +39,11 @@ class Buffer;
 enum class BufferAccessMode;
 enum class BufferFlushMode;
 enum class BufferSynchronizationMode;
+class IndexBuffer;
+class ShaderBuffer;
 class VertexBuffer;
 class VertexFormat;
 class VertexGroup;
-class IndexBuffer;
 
 class Texture;
 class Texture1d;
@@ -65,6 +67,7 @@ class WireframeState;
 /************************************************************************/
 /* Platform Renderer Resource                                           */
 /************************************************************************/
+class PlatformShaderBuffer;
 class PlatformIndexBuffer;
 class PlatformVertexBuffer;
 class PlatformVertexFormat;
@@ -124,20 +127,44 @@ private:
 
 public:
     /************************************************************************/
+    /* Framebuffer Management                                               */
+    /************************************************************************/
+    void
+    ClearColorBuffer(const Vector4f& color);
+
+    void
+    ClearDepthBuffer(float depth);
+
+    void
+    ClearStencilBuffer(unsigned int stencil);
+
+    void
+    ClearFrameBuffer(const Vector4f& color, float depth, unsigned int stencil);
+
+    /************************************************************************/
     /* Viewport Management                                                  */
     /************************************************************************/
     const Viewport *
     GetViewport() const;
 
+    void
+    SetViewport(float x, float y, float width, float height);
+
+private:
     // @note The viewport is specified in right-handed screen
     // coordinates. The origin is the lower-left corner of the screen, the
     // y-axis points upward, and the x-axis points rightward.
     void
     SetViewportData(float x, float y, float width, float height);
 
+public:
     const Window *
     GetWindow() const;
 
+    void
+    SetWindow(int width, int height, float near, float far);
+
+private:
     void
     SetWindowData(int width, int height, float near, float far);
 
@@ -145,6 +172,18 @@ public:
     /************************************************************************/
     /* Universal Buffer Management                                          */
     /************************************************************************/
+    void
+    Bind(const Buffer *buffer);
+
+    void
+    Unbind(const Buffer *buffer);
+
+    void
+    Enable(const Buffer *buffer);
+
+    void
+    Disable(const Buffer *buffer);
+
     void *
     Map(const Buffer             *buffer,
         BufferAccessMode          access,
@@ -157,10 +196,77 @@ public:
     Unmap(const Buffer *buffer);
 
     void
+    Flush(const Buffer *buffer,
+          int64_t       offset,
+          int64_t       size);
+
+    void
     Update(const Buffer             *buffer,
            BufferAccessMode          access,
            BufferFlushMode           flush,
            BufferSynchronizationMode synchronization);
+
+    /************************************************************************/
+    /* Shader Buffer Management                                             */
+    /************************************************************************/
+    void
+    Bind(const ShaderBuffer *shaderBuffer);
+
+    void
+    Unbind(const ShaderBuffer *shaderBuffer);
+
+    void
+    Enable(const ShaderBuffer *shaderBuffer);
+
+    void
+    Disable(const ShaderBuffer *shaderBuffer);
+
+    void *
+    Map(const ShaderBuffer       *shaderBuffer,
+        BufferAccessMode          access,
+        BufferFlushMode           flush,
+        BufferSynchronizationMode synchronization,
+        int64_t                   offset,
+        int64_t                   size);
+
+    void
+    Unmap(const ShaderBuffer *shaderBuffer);
+
+    void
+    Flush(const ShaderBuffer *shaderBuffer,
+          int64_t             offset,
+          int64_t             size);
+
+    /************************************************************************/
+    /* Index Buffer Management                                              */
+    /************************************************************************/
+    void
+    Bind(const IndexBuffer *indexBuffer);
+
+    void
+    Unbind(const IndexBuffer *indexBuffer);
+
+    void
+    Enable(const IndexBuffer *indexBuffer);
+
+    void
+    Disable(const IndexBuffer *indexBuffer);
+
+    void *
+    Map(const IndexBuffer        *indexBuffer,
+        BufferAccessMode          access,
+        BufferFlushMode           flush,
+        BufferSynchronizationMode synchronization,
+        int64_t                   offset,
+        int64_t                   size);
+
+    void
+    Unmap(const IndexBuffer *indexBuffer);
+
+    void
+    Flush(const IndexBuffer *indexBuffer,
+          int64_t            offset,
+          int64_t            size);
 
     /************************************************************************/
     /* Vertex Buffer Management                                             */
@@ -191,9 +297,7 @@ public:
     Unmap(const VertexBuffer *vertexBuffer);
 
     void
-    Flush(VertexBuffer *vertexBuffer,
-          int64_t       offset,
-          int64_t       size);
+    Flush(const VertexBuffer *vertexBuffer, int64_t offset, int64_t size);
 
     /************************************************************************/
     /* Vertex Format Management                                             */
@@ -220,34 +324,14 @@ public:
     Disable(const VertexGroup *vertexGroup);
 
     /************************************************************************/
-    /* Index Buffer Management                                              */
-    /************************************************************************/
-    void
-    Bind(const IndexBuffer *indexBuffer);
-
-    void
-    Unbind(const IndexBuffer *indexBuffer);
-
-    void
-    Enable(const IndexBuffer *indexBuffer);
-
-    void
-    Disable(const IndexBuffer *indexBuffer);
-
-    void *
-    Map(const IndexBuffer        *indexBuffer,
-        BufferAccessMode          access,
-        BufferFlushMode           flush,
-        BufferSynchronizationMode synchronization,
-        int64_t                   offset,
-        int64_t                   size);
-
-    void
-    Unmap(const IndexBuffer *indexBuffer);
-
-    /************************************************************************/
     /* Universal Texture Management                                         */
     /************************************************************************/
+    void
+    Bind(const Texture *texture);
+
+    void
+    Unbind(const Texture *texture);
+
     // @summary Provide a uniform interface for all texture.
     void
     Enable(int textureUnit, const Texture *texture);
@@ -360,15 +444,6 @@ public:
     void
     Disable(int textureUnit, const Texture3d *texture);
 
-    void *
-    Map(const Texture3d *texture, int mipmapLevel, BufferAccessMode mode);
-
-    void
-    Unmap(const Texture3d *texture, int mipmapLevel);
-
-    void
-    Update(const Texture3d *texture, int mipmapLevel);
-
     /************************************************************************/
     /* Sampler Management                                                   */
     /************************************************************************/
@@ -425,9 +500,13 @@ public:
 
 private:
     /************************************************************************/
-    /* Platform Hash Table                                                  */
+    /* Platform Resource Table                                              */
     /************************************************************************/
+    // NOTE(Wuxiang): The reason I choose to use std::map here is that the element
+    // number is relatively small to a point that the performance gain is not
+    // significant.
     std::map<const IndexBuffer *, PlatformIndexBuffer *>       mIndexBufferTable;
+    std::map<const ShaderBuffer *, PlatformShaderBuffer *>     mShaderBufferTable;
     std::map<const VertexBuffer *, PlatformVertexBuffer *>     mVertexBufferTable;
     std::map<const VertexFormat *, PlatformVertexFormat *>     mVertexFormatTable;
 
@@ -441,13 +520,18 @@ private:
     /* Dirty Flags                                                          */
     /************************************************************************/
     const IndexBuffer             *mIndexBufferPrevious;
+    const ShaderBuffer            *mShaderBufferPrevious;
     const VertexGroup             *mVertexGroupPrevious;
     const VertexFormat            *mVertexFormatPrevious;
 
     const VisualEffectPass        *mPassPrevious;
 
     Shader                        *mShaderPrevious;
+
+    // Sampler table indexed by texture binding index.
     std::map<int, const Sampler *> mSamplerPrevious;
+
+    // Texture table indexed by texture binding index.
     std::map<int, const Texture *> mTexturePrevious;
 
     /************************************************************************/
@@ -520,10 +604,10 @@ public:
 
 public:
     /************************************************************************/
-    /* Default Framebuffer Management                                       */
+    /* Framebuffer Management                                               */
     /************************************************************************/
     void
-    ClearColorBufferPlatform(Vector4f color);
+    ClearColorBufferPlatform(const Vector4f& color);
 
     void
     ClearDepthBufferPlatform(float depth);
@@ -532,7 +616,7 @@ public:
     ClearStencilBufferPlatform(unsigned int stencil);
 
     void
-    ClearFrameBufferPlatform(Vector4f color, float depth, unsigned int stencil);
+    ClearFrameBufferPlatform(const Vector4f& color, float depth, unsigned int stencil);
 
     void
     SwapFrameBufferPlatform();
@@ -549,4 +633,219 @@ private:
 };
 #pragma warning(default: 4251)
 
+}
+
+/************************************************************************/
+/* Resource Management Helper                                           */
+/************************************************************************/
+#define FALCON_ENGINE_RENDERER_BIND(resource) \
+static auto sMasterRenderer = FalconEngine::Renderer::GetInstance(); \
+sMasterRenderer->Bind(resource);
+
+#define FALCON_ENGINE_RENDERER_UNBIND(resource) \
+static auto sMasterRenderer = FalconEngine::Renderer::GetInstance(); \
+sMasterRenderer->Unbind(resource);
+
+/************************************************************************/
+/* Resource Management Implementation                                   */
+/************************************************************************/
+#define FALCON_ENGINE_RENDERER_BIND_IMPLEMENT(resource, resourceTable, PlatformResourceKlass) \
+FALCON_ENGINE_CHECK_NULLPTR(resource); \
+\
+if (resourceTable.find(resource) == resourceTable.end()) \
+{ \
+    resourceTable[resource] = new PlatformResourceKlass(resource); \
+}
+
+#define FALCON_ENGINE_RENDERER_UNBIND_IMPLEMENT(resource, resourceTable) \
+FALCON_ENGINE_CHECK_NULLPTR(resource); \
+\
+auto iter = resourceTable.find(resource); \
+if (iter != resourceTable.end()) \
+{ \
+    auto resource##Platform = iter->second; \
+    delete resource##Platform; \
+    resourceTable.erase(iter); \
+}
+
+#define FALCON_ENGINE_RENDERER_ENABLE_LAZY(resource, resourcePrevious) \
+FALCON_ENGINE_CHECK_NULLPTR(resource); \
+\
+if (resource == resourcePrevious) \
+{ \
+    return; \
+} \
+else \
+{ \
+    if (resourcePrevious) \
+    { \
+        Disable(resourcePrevious); \
+    } \
+    resourcePrevious = resource; \
+}
+
+#define FALCON_ENGINE_RENDERER_ENABLE_IMPLEMENT(resource, resourceTable, PlatformResourceKlass) \
+FALCON_ENGINE_CHECK_NULLPTR(resource); \
+\
+auto iter = resourceTable.find(resource); \
+PlatformResourceKlass *resource##Platform; \
+if (iter != resourceTable.end()) \
+{ \
+    resource##Platform = iter->second; \
+} \
+else \
+{ \
+    resource##Platform = new PlatformResourceKlass(resource); \
+    resourceTable[resource] = resource##Platform; \
+} \
+\
+resource##Platform->Enable();
+
+#define FALCON_ENGINE_RENDERER_DISABLE_IMPLEMENT(resource, resourceTable) \
+FALCON_ENGINE_CHECK_NULLPTR(resource); \
+\
+auto iter = resourceTable.find(resource); \
+if (iter != resourceTable.end()) \
+{ \
+    auto resource##Platform = iter->second; \
+    resource##Platform->Disable(); \
+}
+
+#define FALCON_ENGINE_RENDERER_MAP_IMPLEMENT(resource, resourceTable, PlatformResourceKlass) \
+FALCON_ENGINE_CHECK_NULLPTR(resource); \
+\
+auto iter = resourceTable.find(resource); \
+PlatformResourceKlass *resource##Platform; \
+if (iter != resourceTable.end()) \
+{ \
+    resource##Platform = iter->second; \
+} \
+else \
+{ \
+    resource##Platform = new PlatformResourceKlass(resource); \
+    resourceTable[resource] = resource##Platform; \
+} \
+\
+return resource##Platform->Map(access, flush, synchronization, offset, size);
+
+#define FALCON_ENGINE_RENDERER_UNMAP_IMPLEMENT(resource, resourceTable) \
+FALCON_ENGINE_CHECK_NULLPTR(resource); \
+\
+auto iter = resourceTable.find(resource); \
+if (iter != resourceTable.end()) \
+{ \
+    auto resource##Platform = iter->second; \
+    resource##Platform->Unmap(); \
+}
+
+#define FALCON_ENGINE_RENDERER_FLUSH_IMPLEMENT(resource, resourceTable) \
+FALCON_ENGINE_CHECK_NULLPTR(resource); \
+\
+auto iter = resourceTable.find(resource); \
+if (iter != resourceTable.end()) \
+{ \
+    auto resource##Platform = iter->second; \
+    resource##Platform->Flush(offset, size); \
+} \
+else \
+{ \
+    FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(std::string("The ") + #resource + " is not mapped before."); \
+}
+
+#define FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_LAZY(texture, texturePrevious) \
+FALCON_ENGINE_CHECK_NULLPTR(texture); \
+\
+if (texturePrevious[textureUnit] == texture) \
+{ \
+    return; \
+} \
+else \
+{ \
+    if (texturePrevious[textureUnit]) \
+    { \
+        Disable(textureUnit, texturePrevious[textureUnit]); \
+    } \
+\
+    texturePrevious[textureUnit] = texture; \
+}
+
+#define FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_IMPLEMENT(texture, textureTable, PlatformTextureKlass) \
+FALCON_ENGINE_CHECK_NULLPTR(texture); \
+\
+auto iter = textureTable.find(texture); \
+PlatformTextureKlass *texture##Platform; \
+if (iter != textureTable.end()) \
+{ \
+    texture##Platform = iter->second; \
+} \
+else \
+{ \
+    texture##Platform = new PlatformTextureKlass(texture); \
+    textureTable[texture] = texture##Platform; \
+} \
+\
+texture##Platform->Enable(textureUnit);
+
+#define FALCON_ENGINE_RENDERER_TEXTURE_DISABLE_IMPLEMENT(texture, textureTable) \
+FALCON_ENGINE_CHECK_NULLPTR(texture); \
+\
+auto iter = textureTable.find(texture); \
+if (iter != textureTable.end()) \
+{ \
+    auto texture##Platform = iter->second; \
+    texture##Platform->Disable(textureUnit); \
+}
+
+#define FALCON_ENGINE_RENDERER_TEXTURE_MAP_IMPLEMENT(texture, textureTable, PlatformTextureKlass) \
+FALCON_ENGINE_CHECK_NULLPTR(texture); \
+\
+auto iter = textureTable.find(texture); \
+PlatformTextureKlass *texturePlatform; \
+if (iter != textureTable.end()) \
+{ \
+    texturePlatform = iter->second; \
+} \
+else \
+{ \
+    texturePlatform = new PlatformTextureKlass(texture); \
+    textureTable[texture] = texturePlatform; \
+} \
+\
+return texturePlatform->Map(access, flush, synchronization, offset, size);
+
+#define FALCON_ENGINE_RENDERER_TEXTURE_UNMAP_IMPLEMENT(texture, textureTable) \
+FALCON_ENGINE_CHECK_NULLPTR(texture); \
+\
+auto iter = textureTable.find(texture); \
+if (iter != textureTable.end()) \
+{ \
+    auto texturePlatform = iter->second; \
+    texturePlatform->Unmap(); \
+}
+
+#define FALCON_ENGINE_RENDERER_TEXTURE_ARRAY_MAP_IMPLEMENT(textureArray, textureArrayTable, PlatformTextureArrayKlass) \
+FALCON_ENGINE_CHECK_NULLPTR(textureArray); \
+\
+auto iter = textureArrayTable.find(textureArray); \
+PlatformTextureArrayKlass *texturePlatform; \
+if (iter != textureArrayTable.end()) \
+{ \
+    texturePlatform = iter->second; \
+} \
+else \
+{ \
+    texturePlatform = new PlatformTextureArrayKlass(textureArray); \
+    textureArrayTable[textureArray] = texturePlatform; \
+} \
+\
+return texturePlatform->Map(textureIndex, access, flush, synchronization, offset, size);
+
+#define FALCON_ENGINE_RENDERER_TEXTURE_ARRAY_UNMAP_IMPLEMENT(textureArray, textureArrayTable) \
+FALCON_ENGINE_CHECK_NULLPTR(textureArray); \
+\
+auto iter = textureArrayTable.find(textureArray); \
+if (iter != textureArrayTable.end()) \
+{ \
+    auto texturePlatform = iter->second; \
+    texturePlatform->Unmap(textureIndex); \
 }

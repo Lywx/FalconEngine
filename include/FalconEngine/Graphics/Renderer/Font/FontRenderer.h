@@ -52,13 +52,20 @@ public:
     /* Rendering API                                                        */
     /************************************************************************/
     void
-    BatchText(const Font *font,
-              float       fontSize,
+    DrawString(const Font         *font,
+               float               fontSize,
+               Vector2f            textPosition,
+               const std::string&  text,
+               Color               textColor = ColorPalette::White,
+               float               textLineWidth = std::numeric_limits<float>().max());
 
-              const std::wstring& textString,
-              Vector2f            textPosition,
-              Color               textColor = ColorPalette::White,
-              float               textLineWidth = std::numeric_limits<float>().max());
+    void
+    DrawString(const Font         *font,
+               float               fontSize,
+               Vector2f            textPosition,
+               const std::wstring& text,
+               Color               textColor = ColorPalette::White,
+               float               textLineWidth = std::numeric_limits<float>().max());
 
     /************************************************************************/
     /* Rendering Engine API                                                 */
@@ -75,7 +82,16 @@ public:
     void
     RenderEnd();
 
-protected:
+private:
+    void
+    BatchText(const Font *font,
+              float       fontSize,
+
+              const std::wstring& textString,
+              Vector2f            textPosition,
+              Color               textColor = ColorPalette::White,
+              float               textLineWidth = std::numeric_limits<float>().max());
+
     std::shared_ptr<FontRenderBatch>
     FindBatch(const Font *font);
 

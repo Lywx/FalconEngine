@@ -26,7 +26,7 @@ using namespace std;
 namespace FalconEngine
 {
 
-FALCON_ENGINE_EFFECT_IMPLEMENT(PaintEffect);
+FALCON_ENGINE_EFFECT_GLOBAL_IMPLEMENT(PaintEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

@@ -14,7 +14,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit BufferAdaptor(std::shared_ptr<Buffer> buffer);
+    explicit BufferAdaptor(const std::shared_ptr<Buffer>& buffer);
     virtual ~BufferAdaptor();
 
 public:

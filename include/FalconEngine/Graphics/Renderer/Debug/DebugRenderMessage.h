@@ -9,6 +9,9 @@ namespace FalconEngine
 
 enum class DebugRenderType
 {
+    // NOTE(Wuxiang): This list is used to generate mapping. Be careful when you
+    // make changes.
+
     AABB,
     OBB,
 
@@ -18,6 +21,8 @@ enum class DebugRenderType
     Sphere,
 
     Text,
+
+    Count,
 };
 
 class DebugRenderMessage

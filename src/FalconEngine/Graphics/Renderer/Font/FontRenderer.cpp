@@ -88,8 +88,10 @@ FontRenderer::Render(double /* percent */)
 
         if (batch->mFrameGlyphNum > 0)
         {
-            // Update buffer data to reflect buffer data accumulated during entire frame.
-            batch->mGlyphQuadPrimitive->SetVertexOffset(batch->mGlyphVertexBuffer->GetElementOffset());
+            // Update buffer data to reflect buffer data accumulated during
+            // entire frame.
+            batch->mGlyphQuadPrimitive->SetVertexOffset(
+                batch->mGlyphVertexBuffer->GetElementOffset());
             batch->mGlyphVertexBuffer->SetElementNum(batch->mFrameGlyphNum * 6);
 
             static auto sMasterRenderer = Renderer::GetInstance();

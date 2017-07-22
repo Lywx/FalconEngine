@@ -1,13 +1,7 @@
 #include <FalconEngine/Graphics/Renderer/Debug/DebugRenderer.h>
 
-#include <FalconEngine/Graphics/Effect/DebugEffect.h>
-#include <FalconEngine/Graphics/Renderer/Renderer.h>
-#include <FalconEngine/Graphics/Renderer/Debug/DebugRendererHelper.h>
-#include <FalconEngine/Graphics/Renderer/Entity/Entity.h>
-#include <FalconEngine/Graphics/Renderer/Resource/BufferController.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Node.h>
-#include <FalconEngine/Math/AABB.h>
-#include <FalconEngine/Math/Color.h>
+#include "FalconEngine/Graphics/Renderer/Renderer.h"
 
 using namespace std;
 
@@ -17,13 +11,34 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-DebugRenderer::DebugRenderer()
+DebugRenderer::DebugRenderer() :
+    mVertexResource(make_shared<VertexResource>())
 {
 }
 
 DebugRenderer::~DebugRenderer()
 {
 }
+
+enum BufferChannel
+{
+    ChannelLine     = 0,
+    ChannelTriangle = 1,
+    ChannelCount
+};
+
+const int BufferChannelMap[int(DebugRenderType::Count)] =
+{
+    ChannelLine,
+    ChannelLine,
+
+    ChannelLine,
+    ChannelLine,
+    ChannelLine,
+    ChannelTriangle,
+
+    ChannelTriangle,
+};
 
 /************************************************************************/
 /* Rendering API                                                        */
@@ -90,7 +105,7 @@ DebugRenderer::AddAABB(const Vector3f& min,
                        float           duration,
                        bool            depthEnabled)
 {
-    mDebugMessageManager.mMessageList.emplace_back(DebugRenderType::AABB, 0.f,
+    mMessageManager->mMessageList.emplace_back(DebugRenderType::AABB, 0.f,
             min, max, color, duration,
             depthEnabled);
 }
@@ -98,7 +113,7 @@ DebugRenderer::AddAABB(const Vector3f& min,
 void
 DebugRenderer::AddCircle(const Vector3f& center, const Vector3f& normal, float radius, const Color& color, float duration, bool depthEnabled)
 {
-    mDebugMessageManager.mMessageList.emplace_back(DebugRenderType::Circle, radius,
+    mMessageManager->mMessageList.emplace_back(DebugRenderType::Circle, radius,
             center, normal, color, duration,
             depthEnabled);
 }
@@ -106,7 +121,7 @@ DebugRenderer::AddCircle(const Vector3f& center, const Vector3f& normal, float r
 void
 DebugRenderer::AddCross(const Vector3f& center, float radius, const Color& color, float duration, bool depthEnabled)
 {
-    mDebugMessageManager.mMessageList.emplace_back(DebugRenderType::Cross, radius,
+    mMessageManager->mMessageList.emplace_back(DebugRenderType::Cross, radius,
             center, Vector3f::Zero, color,
             duration, depthEnabled);
 }
@@ -114,7 +129,7 @@ DebugRenderer::AddCross(const Vector3f& center, float radius, const Color& color
 void
 DebugRenderer::AddLine(const Vector3f& from, const Vector3f& to, const Color& color, float duration, bool depthEnabled)
 {
-    mDebugMessageManager.mMessageList.emplace_back(DebugRenderType::Line, 0.f,
+    mMessageManager->mMessageList.emplace_back(DebugRenderType::Line, 0.f,
             from, to, color, duration,
             depthEnabled);
 }
@@ -122,7 +137,7 @@ DebugRenderer::AddLine(const Vector3f& from, const Vector3f& to, const Color& co
 void
 DebugRenderer::AddSphere(const Vector3f& center, float radius, const Color& color, float duration, bool depthEnabled)
 {
-    mDebugMessageManager.mMessageList.emplace_back(DebugRenderType::Sphere, radius,
+    mMessageManager->mMessageList.emplace_back(DebugRenderType::Sphere, radius,
             center, Vector3f::Zero, color,
             duration, depthEnabled);
 }
@@ -130,31 +145,47 @@ DebugRenderer::AddSphere(const Vector3f& center, float radius, const Color& colo
 /************************************************************************/
 /* Rendering Engine API                                                 */
 /************************************************************************/
-
 void
 DebugRenderer::Initialize()
 {
-    mDebugLineBatch[0] = DebugRendererHelper::CreateBatch(make_shared<DebugEffect>(false));
-    mDebugLineBatch[1] = DebugRendererHelper::CreateBatch(make_shared<DebugEffect>(true));
+    const auto LineMaxNum = int(Kilobytes(32));
+    const auto TriangleMaxNum = int(Kilobytes(32));
+
+    CreateChannel<PrimitiveLines>(
+        ChannelLine,
+        LineMaxNum * 2, make_shared<DebugEffect>(false));
+    CreateChannel<PrimitiveLines>(
+        ChannelLine + ChannelCount,
+        LineMaxNum * 2, make_shared<DebugEffect>(true));
+
+    CreateChannel<PrimitiveTriangles>(
+        ChannelTriangle,
+        TriangleMaxNum * 3, make_shared<DebugEffect>(false));
+    CreateChannel<PrimitiveTriangles>(
+        ChannelTriangle + ChannelCount,
+        TriangleMaxNum * 3, make_shared<DebugEffect>(true));
 }
 
 void
 DebugRenderer::RenderBegin()
 {
-    mDebugLineBatch->mLineNum = 0;
-    mDebugLineBatch->mVertexBufferDataIndex = 0;
+    // TODO(Wuxiang): visual data update.
+    int channelNum = ChannelCount * 2;
+    for (int channel = 0; channel < channelNum; ++channel)
+    {
+        mVertexResource->ResetChannel(channel);
+    }
 }
 
 void
 DebugRenderer::Render(Renderer *renderer, double percent)
 {
-    if (mDebugLineBatch->mLineNum > 0)
+    int channelNum = ChannelCount * 2;
+    for (int channel = 0; channel < channelNum; ++channel)
     {
-        // Update buffer data before drawing
-        int vertexNum = mDebugLineBatch->mLineNum * 2;
-        mDebugLineBatch->mVertexBuffer->SetElementNum(vertexNum);
-        renderer->Update(mDebugLineBatch->mVertexBuffer.get());
-        renderer->Draw(nullptr, mDebugLineBatch->mLines.get());
+        // TODO(Wuxiang): Bad performance?
+        auto visual = mVertexResource->GetChannelVisual(channel);
+        renderer->Draw(nullptr, visual);
     }
 }
 
@@ -163,102 +194,77 @@ DebugRenderer::RenderEnd()
 {
 }
 
-enum BufferChannel
-{
-    BufferChannel_PrimitiveLine = 0,
-    BufferChannel_PrimitiveTriangle = 1,
-};
-
 void
 DebugRenderer::Update(double elapsed)
 {
-    static auto sMasterRenderer = Renderer::GetInstance();
-
-    auto bufferController = new BufferController();
-
-    auto buffer = make_shared<VertexBuffer>();
-    bufferController->CreateChannel(BufferChannel_PrimitiveLine,
-                                    make_shared<BufferCircular>(buffer,
-                                            buffer->GetCapacitySize() / 4));
-
-    int64_t lineVertexNumList[2] = { 0, 0 };
-    int64_t triangleVertexNumList[2] = { 0, 0 };
-
-    // Compute mapped buffer size.
-    UpdateMappedSize();
-
-    for (auto& message : mDebugMessageManager->mMessageList)
+    // Compute channel size.
+    for (auto& message : mMessageManager->mMessageList)
     {
-        auto batchIndex = message.mDepthEnabled ? 1 : 0;
+        // Find channel index.
+        int channel = BufferChannelMap[int(message.mType)];
+        channel = message.mDepthEnabled
+                  ? channel + ChannelCount
+                  : channel;
 
+        // Update channel data number.
         switch (message.mType)
         {
         case DebugRenderType::AABB:
-            lineVertexNumList[batchIndex] += 24;
+            mVertexResource->UpdateChannel(channel, 24);
             break;
-
         case DebugRenderType::OBB:
             FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-            break;
-
         case DebugRenderType::Circle:
-            lineVertexNumList[batchIndex] += DebugRendererHelper::CircleSampleNum * 2;
+            mVertexResource->UpdateChannel(
+                channel, DebugRendererHelper::CircleSampleNum * 2);
             break;
-
         case DebugRenderType::Cross:
-            lineVertexNumList[batchIndex] += 4;
+            mVertexResource->UpdateChannel(
+                channel, 6);
             break;
-
         case DebugRenderType::Line:
-            lineVertexNumList[batchIndex] += 2;
+            mVertexResource->UpdateChannel(
+                channel, 2);
             break;
-
         case DebugRenderType::Sphere:
-            triangleVertexNumList[batchIndex] += DebugRendererHelper::SphereSampleNum * 2;
+            mVertexResource->UpdateChannel(
+                channel, DebugRendererHelper::SpherePhiSampleNum
+                * DebugRendererHelper::SphereThetaSampleNum * 6);
             break;
-
         case DebugRenderType::Text:
             FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
             break;
-
         default:
             FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
         }
     }
 
-    unsigned char *bufferDataList[2];
+    // Map channel buffers.
+    mVertexResource->MapChannel(BufferAccessMode::WriteBuffer,
+                                BufferFlushMode::Automatic,
+                                BufferSynchronizationMode::Unsynchronized);
 
-    // Map buffers for all batches.
-    for (auto batchIndex = 0; batchIndex < 2; ++batchIndex)
+    // Fill channel buffer data.
+    for (auto& message : mMessageManager->mMessageList)
     {
-        auto batch = mDebugLineBatch[batchIndex];
+        // Find channel index.
+        int channel = BufferChannelMap[int(message.mType)];
+        channel = message.mDepthEnabled
+                  ? channel + ChannelCount
+                  : channel;
 
-        auto buffer = batch->mLineVertexBuffer;
-        auto bufferAdaptor = batch->mLineVertexBufferAdaptor;
-        bufferDataList[batchIndex] = static_cast<unsigned char *>(
-                                         sMasterRenderer->Map(
-                                             buffer.get(),
-                                             BufferAccessMode::WriteBuffer,
-                                             BufferFlushMode::Automatic,
-                                             BufferSynchronizationMode::Unsynchronized,
-                                             buffer->GetDataOffset(),
-                                             lineVertexNumList[batchIndex] * sizeof(DebugVertex)));
-    }
+        // Get buffer data pointer.
+        BufferAdaptor *bufferAdaptor;
+        unsigned char *bufferData;
+        std::tie(bufferAdaptor, bufferData) = mVertexResource->GetChannelData(channel);
 
-    for (auto& message : mDebugMessageManager->mMessageList)
-    {
-        // Get the batch this message need to reside.
-        auto batchIndex = message.mDepthEnabled ? 1 : 0;
-        auto batch = mDebugLineBatch[batchIndex];
-
-        auto bufferAdaptor = batch->mLineVertexBufferAdaptor;
-
+        // Fill vertex data by inspecting the message.
         switch (message.mType)
         {
         case DebugRenderType::AABB:
-            DebugRendererHelper::FillAABB(bufferAdaptor,
-                                          bufferDataList[batchIndex], message.mFloatVector1,
-                                          message.mFloatVector2, message.mColor);
+            DebugRendererHelper::FillAABB(
+                bufferAdaptor, bufferData, message.mFloatVector1,
+                message.mFloatVector2, message.mColor);
             break;
 
         case DebugRenderType::OBB:
@@ -266,28 +272,27 @@ DebugRenderer::Update(double elapsed)
             break;
 
         case DebugRenderType::Circle:
-            DebugRendererHelper::FillCircle(bufferAdaptor,
-                                            bufferDataList[batchIndex], message.mFloatVector1,
-                                            message.mFloatVector2, message.mFloat1,
-                                            message.mColor);
+            DebugRendererHelper::FillCircle(
+                bufferAdaptor, bufferData, message.mFloatVector1,
+                message.mFloatVector2, message.mFloat1, message.mColor);
             break;
 
         case DebugRenderType::Cross:
-            DebugRendererHelper::FillCross(bufferAdaptor,
-                                           bufferDataList[batchIndex], message.mFloatVector1,
-                                           message.mFloat1, message.mColor);
+            DebugRendererHelper::FillCross(
+                bufferAdaptor, bufferData, message.mFloatVector1,
+                message.mFloat1, message.mColor);
             break;
 
         case DebugRenderType::Line:
-            DebugRendererHelper::FillLine(bufferAdaptor,
-                                          bufferDataList[batchIndex], message.mFloatVector1,
-                                          message.mFloatVector2, message.mColor);
+            DebugRendererHelper::FillLine(
+                bufferAdaptor, bufferData, message.mFloatVector1,
+                message.mFloatVector2, message.mColor);
             break;
 
         case DebugRenderType::Sphere:
-            DebugRendererHelper::FillSphere(bufferAdaptor,
-                                            bufferDataList[batchIndex], message.mFloatVector1,
-                                            message.mFloat1, message.mColor);
+            DebugRendererHelper::FillSphere(
+                bufferAdaptor, bufferData, message.mFloatVector1,
+                message.mFloat1, message.mColor);
             break;
 
         case DebugRenderType::Text:
@@ -297,13 +302,12 @@ DebugRenderer::Update(double elapsed)
         default:
             FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
         }
-
-        // TODO(Wuxiang)
-        bufferDataList[batchIndex];
     }
 
+    mVertexResource->UnmapChannel();
+
     // Remove time-out message.
-    mDebugMessageManager->Update(elapsed);
+    mMessageManager->Update(elapsed);
 }
 
 }

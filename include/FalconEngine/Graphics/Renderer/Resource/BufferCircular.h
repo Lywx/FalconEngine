@@ -8,7 +8,7 @@ namespace FalconEngine
 class FALCON_ENGINE_API BufferCircular : public BufferAdaptor
 {
 public:
-    explicit BufferCircular(std::shared_ptr<Buffer> buffer, size_t bufferZoneSize);
+    explicit BufferCircular(const std::shared_ptr<Buffer>& buffer, size_t bufferZoneSize);
 
 protected:
     /************************************************************************/

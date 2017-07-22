@@ -21,7 +21,7 @@ public:
     // @summary Map buffer data in the memory, so you could copy data into
     // the buffer by yourself.
     //
-    // @Return: buffer memory pointer
+    // @return Buffer memory pointer
     void *
     Map(BufferAccessMode          access,
         BufferFlushMode           flush,
@@ -36,7 +36,7 @@ public:
     // @summary Map buffer data in the memory, so you could copy data into
     // the buffer by yourself.
     //
-    // @Return: buffer memory pointer
+    // @return Buffer memory pointer
     void
     Flush(int64_t offset, int64_t size);
 

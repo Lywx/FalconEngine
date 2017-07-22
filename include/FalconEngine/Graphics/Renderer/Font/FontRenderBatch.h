@@ -38,6 +38,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
+    // TODO(Wuxiang): Remove this?
     FontRenderBatch(std::shared_ptr<VertexBuffer>   glyphVertexBuffer,
                     std::shared_ptr<PrimitiveQuads> glyphQuadPrimitive,
                     std::shared_ptr<Visual>         glyphQuadVisual) :

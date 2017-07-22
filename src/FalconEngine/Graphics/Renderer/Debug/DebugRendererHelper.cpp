@@ -12,38 +12,17 @@ const int
 DebugRendererHelper::CircleSampleNum = 16;
 
 const int
-DebugRendererHelper::SphereSampleNum = 16;
+DebugRendererHelper::SpherePhiSampleNum = 16;
+
+const int
+DebugRendererHelper::SphereThetaSampleNum = 8;
 
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-std::shared_ptr<DebugRenderLineBatch>
-DebugRendererHelper::CreateBatch(std::shared_ptr<DebugEffect> visualEffect)
-{
-    const auto LineMaxNum = int(Kilobytes(10));
-
-    auto vertexBuffer = make_shared<VertexBuffer>(LineMaxNum * 2, sizeof(DebugVertex),
-                        BufferStorageMode::Device, BufferUsage::Stream);
-
-    // NOTE(Wuxiang): Even two effect have different depth test state, they
-    // can still share vertex format.
-    auto vertexFormat = visualEffect->GetVertexFormat();
-
-    auto vertexGroup = make_shared<VertexGroup>();
-    vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, vertexFormat->GetVertexBufferStride(0));
-
-    auto linePrimitive = make_shared<PrimitiveLines>(vertexFormat, vertexGroup, nullptr, false);
-    auto lineVisual = make_shared<Visual>(make_shared<Mesh>(linePrimitive, nullptr));
-
-    auto visualEffectParams = make_shared<DebugEffectParams>();
-    visualEffect->CreateInstance(lineVisual.get(), visualEffectParams);
-
-    return make_shared<DebugRenderLineBatch>(vertexBuffer, lineVisual);
-}
-
 void
-DebugRendererHelper::FillAABB(std::shared_ptr<BufferAdaptor> bufferAdaptor,
-                              unsigned char                 *bufferData,
+DebugRendererHelper::FillAABB(BufferAdaptor  *bufferAdaptor,
+                              unsigned char  *bufferData,
                               const Vector3f& min,
                               const Vector3f& max,
                               const Color&    color)
@@ -96,8 +75,8 @@ CirclePosition(float theta, float radius, const Vector3f& u, const Vector3f& v)
 }
 
 void
-DebugRendererHelper::FillCircle(std::shared_ptr<BufferAdaptor>& bufferAdaptor,
-                                unsigned char                  *bufferData,
+DebugRendererHelper::FillCircle(BufferAdaptor  *bufferAdaptor,
+                                unsigned char  *bufferData,
 
                                 const Vector3f& center,
                                 const Vector3f& normal,
@@ -136,8 +115,8 @@ DebugRendererHelper::FillCircle(std::shared_ptr<BufferAdaptor>& bufferAdaptor,
 }
 
 void
-DebugRendererHelper::FillCross(std::shared_ptr<BufferAdaptor>& bufferAdaptor,
-                               unsigned char                  *bufferData,
+DebugRendererHelper::FillCross(BufferAdaptor  *bufferAdaptor,
+                               unsigned char  *bufferData,
 
                                const Vector3f& center,
                                float           radius,
@@ -163,26 +142,26 @@ SpherePosition(float radius, float theta, float phi)
 }
 
 void
-DebugRendererHelper::FillSphere(std::shared_ptr<BufferAdaptor> bufferAdaptor,
-                                unsigned char                 *bufferData,
+DebugRendererHelper::FillSphere(BufferAdaptor  *bufferAdaptor,
+                                unsigned char  *bufferData,
                                 const Vector3f& center,
                                 float           radius,
                                 const Color&    color)
 {
-    auto thetaStep = float(Pi / SphereSampleNum);
-    auto phiStep = float(2 * Pi / SphereSampleNum);
+    auto thetaStep = float(Pi / SphereThetaSampleNum);
+    auto phiStep = float(2 * Pi / SpherePhiSampleNum);
 
-    for (auto thetaIndex = 0; thetaIndex < SphereSampleNum; ++thetaIndex)
+    for (auto thetaIndex = 0; thetaIndex < SphereThetaSampleNum; ++thetaIndex)
     {
         float theta = thetaStep * thetaIndex;
-        float thetaNext = thetaIndex + 1 == SphereSampleNum
+        float thetaNext = thetaIndex + 1 == SphereThetaSampleNum
                           ? Pi
                           : (thetaIndex + 1) * thetaStep;
 
-        for (auto phiIndex = 0; phiIndex < SphereSampleNum; ++phiIndex)
+        for (auto phiIndex = 0; phiIndex < SpherePhiSampleNum; ++phiIndex)
         {
             float phi = phiStep * phiIndex;
-            float phiNext = phiIndex + 1 == SphereSampleNum
+            float phiNext = phiIndex + 1 == SpherePhiSampleNum
                             ? 2 * Pi
                             : (phiIndex + 1) * phiStep;
 

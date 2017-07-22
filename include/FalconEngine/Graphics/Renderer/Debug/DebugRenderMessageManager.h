@@ -28,7 +28,6 @@ public:
 
 public:
     std::list<DebugRenderMessage> mMessageList;
-
 };
 
 }

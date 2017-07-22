@@ -170,7 +170,7 @@ LoadFntPageLine(Font& font, vector<string>& fontPageElems)
     font.mTextureArchiveNameList.push_back(AddAssetExtension(fontTextureFileName));
 }
 
-// @Return: whether should continue reading texture file. If you should, the
+// @return Whether should continue reading texture file. If you should, the
 // pointer points to the half loaded font.
 std::shared_ptr<Font>
 LoadFntFile(const std::string& fntFilePath)

@@ -6,7 +6,7 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-BufferCircular::BufferCircular(std::shared_ptr<Buffer> buffer, size_t bufferZoneSize) :
+BufferCircular::BufferCircular(const std::shared_ptr<Buffer>& buffer, size_t bufferZoneSize) :
     BufferAdaptor(buffer),
     mBufferDataOffsetNext(0),
     mBufferZoneSize(bufferZoneSize)

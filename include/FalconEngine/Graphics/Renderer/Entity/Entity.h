@@ -10,16 +10,12 @@ namespace FalconEngine
 {
 
 class Entity;
-using EntitySharedPtr = std::shared_ptr<Entity>;
 
 class GameEngineInput;
 
 class Node;
 
 class Visual;
-using VisualSharedPtr = std::shared_ptr<Visual>;
-
-class Vector3f;
 
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API Entity : public Object

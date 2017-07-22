@@ -49,6 +49,9 @@ GameEngineGraphics::Initialize()
 
     mFontRenderer = FontRenderer::GetInstance();
     mFontRenderer->Initialize();
+
+    mDebugRenderer = DebugRenderer::GetInstance();
+    mDebugRenderer->Initialize();
 }
 
 void

@@ -80,8 +80,8 @@ public:
     }
 
     static void
-    FillFont(_IN_OUT_ std::shared_ptr<BufferAdaptor> bufferAdaptor,
-             _IN_     unsigned char                 *bufferData,
+    FillFont(_IN_OUT_ const std::shared_ptr<BufferAdaptor>& bufferAdaptor,
+             _IN_     unsigned char                        *bufferData,
 
              _IN_ const FontGlyph *glyph,
              _IN_ Vector4f         glyphColor,
@@ -106,8 +106,8 @@ public:
 
     static void
     FillGlyph(
-        _IN_OUT_ std::shared_ptr<BufferAdaptor> bufferAdaptor,
-        _IN_     unsigned char                 *bufferData,
+        _IN_OUT_ const std::shared_ptr<BufferAdaptor>& bufferAdaptor,
+        _IN_     unsigned char                        *bufferData,
 
         _IN_ const FontGlyph *glyph,
         _IN_ Vector4f         glyphColor,
@@ -152,8 +152,8 @@ public:
     }
 
     static void
-    FillPoint(_IN_OUT_ std::shared_ptr<BufferAdaptor> bufferAdaptor,
-              _IN_     unsigned char                 *bufferData,
+    FillPoint(_IN_OUT_ const std::shared_ptr<BufferAdaptor>& bufferAdaptor,
+              _IN_     unsigned char                        *bufferData,
 
               _IN_ const Vector2f   position,
               _IN_ const Vector2f   texCoord,
@@ -172,8 +172,8 @@ public:
     // @summary Fill the vertex buffer with the text line information.
     static void
     FillTextLines(
-        _IN_OUT_ std::shared_ptr<BufferAdaptor> bufferAdaptor,
-        _IN_     unsigned char                 *bufferData,
+        _IN_OUT_ const std::shared_ptr<BufferAdaptor>& bufferAdaptor,
+        _IN_     unsigned char                        *bufferData,
 
         _IN_  const Font             *font,
         _IN_  float                   fontSize,

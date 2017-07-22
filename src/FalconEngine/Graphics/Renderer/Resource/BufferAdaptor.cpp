@@ -6,7 +6,7 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-BufferAdaptor::BufferAdaptor(std::shared_ptr<Buffer> buffer) :
+BufferAdaptor::BufferAdaptor(const std::shared_ptr<Buffer>& buffer) :
     mBuffer(buffer),
     mBufferDataRelativeOffsetEnd(0)
 {

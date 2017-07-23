@@ -56,12 +56,15 @@ public:
 
 public:
     // NOTE(Wuxiang): The vertex attribute vector is assumed to be in order of
-    // layout location in OpenGL. This rule is enforced by the PushAttribute function.
+    // layout location in OpenGL. This rule is enforced by the PushAttribute
+    // function.
     std::vector<VertexAttribute> mVertexAttributeList;
 
 private:
-    // NOTE(Wuxiang): Vertex attribute stride list. Each element counts buffer's data total stride in byte, at specific vertex buffer binding index.
-    std::vector<int>             mVertexAttributeOffsetList;
+    // NOTE(Wuxiang): Vertex attribute stride list. Each element counts
+    // buffer's data total stride in byte, at specific vertex buffer binding
+    // index.
+    std::vector<int>             mVertexAttributeStrideList;
 
     // NOTE(Wuxiang): This is used as an enforcement for making vertex attribute
     // list immutable once it is set up correctly.

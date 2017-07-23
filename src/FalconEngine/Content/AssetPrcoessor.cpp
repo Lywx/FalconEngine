@@ -360,7 +360,7 @@ AssetProcessor::LoadRawTexture1d(const std::string& textureFilePath)
     }
     else
     {
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("File does not exist.")
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("File does not exist.");
     }
 }
 
@@ -391,7 +391,7 @@ AssetProcessor::LoadRawTexture2d(const std::string& textureFilePath)
     }
     else
     {
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("File does not exist.")
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("File does not exist.");
     }
 }
 
@@ -454,7 +454,7 @@ AssetProcessor::BakeModel(const std::string& modelFilePath)
     }
     else
     {
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("File does not exist.")
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("File does not exist.");
     }
 }
 

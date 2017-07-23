@@ -43,9 +43,9 @@ public:
         mFloatVector1(floatVector1),
         mFloatVector2(floatVector2)
     {
-
     }
 
+public:
     // NOTE(Wuxiang): Those are common data field for all different item type.
     DebugRenderType mType;
 

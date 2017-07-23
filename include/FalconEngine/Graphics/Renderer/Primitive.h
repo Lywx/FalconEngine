@@ -25,6 +25,8 @@ class VertexBuffer;
 class VertexFormat;
 class VertexGroup;
 
+// @summary Primitive represents all the resource and metadata that defines a
+// geometry primitive that could be rendered into a scene.
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API Primitive
 {
@@ -32,11 +34,11 @@ class FALCON_ENGINE_API Primitive
     /* Constructors and Destructor                                          */
     /************************************************************************/
 protected:
-    explicit Primitive(PrimitiveType primitiveType);
-    Primitive(PrimitiveType                 primitiveType,
-              std::shared_ptr<VertexFormat> vertexFormat,
-              std::shared_ptr<VertexGroup>  vertexGroup,
-              std::shared_ptr<IndexBuffer>  indexBuffer);
+    explicit Primitive(PrimitiveType type);
+    Primitive(PrimitiveType type,
+              const std::shared_ptr<VertexFormat>& vertexFormat,
+              const std::shared_ptr<VertexGroup>& vertexGroup,
+              const std::shared_ptr<IndexBuffer>& indexBuffer);
 
 public:
     virtual ~Primitive();
@@ -120,8 +122,6 @@ public:
     CopyTo(Primitive *rhs);
 
 protected:
-    PrimitiveType                 mPrimitiveType;
-
     // NOTE(Wuxiang): Notice that both Primitive and Visual class contain vertex
     // format information like class VertexFormat and class VertexGroup. It is
     // necessary and efficient because when loading model you could share the
@@ -131,14 +131,17 @@ protected:
     // different buffer into the vertex group you could set the vertex group in
     // in Visual class so that you retain the vertex information in the Primitive
     // class, which is necessary when creating special use vertex format.
-    std::shared_ptr<AABB>         mAABB;
+    PrimitiveType                   mType;
 
-    std::shared_ptr<VertexFormat> mVertexFormat;
-    std::shared_ptr<VertexGroup>  mVertexGroup;
-    int                           mVertexOffset;
+    std::shared_ptr<AABB>           mAABB;
 
-    std::shared_ptr<IndexBuffer>  mIndexBuffer;
-    int                           mIndexOffset;
+    std::shared_ptr<VertexFormat>   mVertexFormat;
+    std::shared_ptr<VertexGroup>    mVertexGroup;
+    int                             mVertexOffset;
+
+    std::shared_ptr<IndexBuffer>    mIndexBuffer;
+    int                             mIndexOffset;
+
 };
 #pragma warning(default: 4251)
 

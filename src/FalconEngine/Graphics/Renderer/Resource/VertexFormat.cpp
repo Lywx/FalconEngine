@@ -82,16 +82,19 @@ VertexFormat::PushVertexAttribute(
     }
 
     // Initialize offset storage for specific binding index.
-    while (attributeBindingIndex >= int(mVertexAttributeOffsetList.size()))
+    while (attributeBindingIndex >= int(mVertexAttributeStrideList.size()))
     {
-        mVertexAttributeOffsetList.push_back(0);
+        mVertexAttributeStrideList.push_back(0);
     }
 
     // NOTE(Wuxiang): mVertexAttributeOffset is summed.
     mVertexAttributeList.push_back(
-        VertexAttribute(attributeLocation, attributeName, attributeType, attributeNormalized,
-                        mVertexAttributeOffsetList[attributeBindingIndex], attributeBindingIndex, attributeDivision));
-    mVertexAttributeOffsetList[attributeBindingIndex] += VertexAttributeSize[int(mVertexAttributeList.back().mType)];
+        VertexAttribute(
+            attributeLocation, attributeName, attributeType,
+            attributeNormalized,
+            mVertexAttributeStrideList[attributeBindingIndex],
+            attributeBindingIndex, attributeDivision));
+    mVertexAttributeStrideList[attributeBindingIndex] += VertexAttributeSize[int(mVertexAttributeList.back().mType)];
 }
 
 void
@@ -105,7 +108,7 @@ VertexFormat::GetVertexBufferStride(int attributeBindingIndex) const
 {
     if (mVertexAttributeFinished)
     {
-        return mVertexAttributeOffsetList.at(attributeBindingIndex);
+        return mVertexAttributeStrideList.at(attributeBindingIndex);
     }
     else
     {

@@ -13,8 +13,6 @@ class IndexBuffer;
 
 class Material;
 
-class PrimitiveTriangles;
-
 class VertexBuffer;
 class VertexFormat;
 class VertexGroup;

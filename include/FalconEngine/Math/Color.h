@@ -36,8 +36,11 @@ public:
     Uint8 A;
 };
 
-bool operator==(Color lhs, Color rhs);
-bool operator!=(Color lhs, Color rhs);
+bool
+operator==(const Color& lhs, const Color& rhs);
+
+bool
+operator!=(const Color& lhs, const Color& rhs);
 
 class FALCON_ENGINE_API ColorPalette
 {

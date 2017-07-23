@@ -12,10 +12,10 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    PrimitiveLines(std::shared_ptr<VertexFormat> vertexFormat,
-                   std::shared_ptr<VertexGroup>  vertexGroup,
-                   std::shared_ptr<IndexBuffer>  indexBuffer,
-                   bool                          vertexStrip);
+    PrimitiveLines(const std::shared_ptr<VertexFormat>& vertexFormat,
+                   const std::shared_ptr<VertexGroup>& vertexGroup,
+                   const std::shared_ptr<IndexBuffer>& indexBuffer,
+                   bool vertexStrip = false);
     virtual ~PrimitiveLines();
 
 public:

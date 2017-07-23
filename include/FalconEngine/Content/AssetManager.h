@@ -54,6 +54,7 @@ public:
     AssetManager(const AssetManager&) = delete;
     AssetManager& operator=(const AssetManager&) = delete;
 
+public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
@@ -98,7 +99,7 @@ public:
             {
                 FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(
                     std::string("Texture found but it had different texture type: \'")
-                    + textureFilePath + "\'.")
+                    + textureFilePath + "\'.");
             }
         }
 

@@ -59,27 +59,17 @@ public:
         {
         case AssetType::None:
             FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Asset type is unknown.");
-
         case AssetType::Audio:
             FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-            break;
-
         case AssetType::Font:
             FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-            break;
-
         case AssetType::Shader:
             FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-            break;
-
         case AssetType::Model:
             ImportDispatch<Model>(dynamic_cast<Model *>(asset), assetFilePath, assetImportOption);
             break;
-
         case AssetType::Texture:
             FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-            break;
-
         default:
             FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
         }

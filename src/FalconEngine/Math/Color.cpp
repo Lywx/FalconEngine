@@ -215,7 +215,8 @@ Color::operator Vector4f() const
     return Vector4f(R / 255.0f, G / 255.0f, B / 255.0f, A / 255.0f);
 }
 
-bool operator==(Color lhs, Color rhs)
+bool
+operator==(const Color& lhs, const Color& rhs)
 {
     return lhs.A == rhs.A &&
            lhs.R == rhs.R &&
@@ -223,7 +224,8 @@ bool operator==(Color lhs, Color rhs)
            lhs.B == rhs.B;
 }
 
-bool operator!=(Color lhs, Color rhs)
+bool
+operator!=(const Color& lhs, const Color& rhs)
 {
     return !(lhs == rhs);
 }

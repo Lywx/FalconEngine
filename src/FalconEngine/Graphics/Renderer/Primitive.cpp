@@ -9,19 +9,22 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Primitive::Primitive(PrimitiveType primitiveType) :
-    Primitive(primitiveType, nullptr, nullptr, nullptr)
+Primitive::Primitive(PrimitiveType type) :
+    Primitive(type, nullptr, nullptr, nullptr)
 {
 }
 
-Primitive::Primitive(PrimitiveType primitiveType, std::shared_ptr<VertexFormat> vertexFormat, std::shared_ptr<VertexGroup> vertexGroup, std::shared_ptr<IndexBuffer> indexBuffer) :
-    mPrimitiveType(primitiveType),
+Primitive::Primitive(PrimitiveType type,
+                     const std::shared_ptr<VertexFormat>& vertexFormat,
+                     const std::shared_ptr<VertexGroup>& vertexGroup,
+                     const std::shared_ptr<IndexBuffer>& indexBuffer) :
+    mType(type),
+    mAABB(),
     mVertexFormat(vertexFormat),
     mVertexGroup(vertexGroup),
     mVertexOffset(0),
     mIndexBuffer(indexBuffer),
-    mIndexOffset(0),
-    mAABB()
+    mIndexOffset(0)
 {
     // NOTE(Wuxiang): All vertex format, vertex group and index buffer is allowed to be null
     // here. But they should be initialized in the derived class's constructor.
@@ -37,7 +40,7 @@ Primitive::~Primitive()
 PrimitiveType
 Primitive::GetPrimitiveType() const
 {
-    return mPrimitiveType;
+    return mType;
 }
 
 /************************************************************************/
@@ -133,7 +136,7 @@ Primitive::SetIndexOffset(int indexOffset)
 void
 Primitive::CopyTo(Primitive *lhs)
 {
-    lhs->mPrimitiveType = mPrimitiveType;
+    lhs->mType = mType;
     lhs->mAABB = mAABB;
 
     lhs->mVertexFormat = mVertexFormat;

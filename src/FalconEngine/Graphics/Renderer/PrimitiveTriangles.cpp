@@ -9,23 +9,21 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PrimitiveTriangles::PrimitiveTriangles(PrimitiveType primitiveType,
-                                       std::shared_ptr<VertexFormat> vertexFormat,
-                                       std::shared_ptr<VertexGroup> vertexGroup,
-                                       std::shared_ptr<IndexBuffer> indexBuffer) :
-    Primitive(primitiveType, vertexFormat, vertexGroup, indexBuffer)
+PrimitiveTriangles::PrimitiveTriangles(
+    const std::shared_ptr<VertexFormat>& vertexFormat,
+    const std::shared_ptr<VertexGroup>& vertexGroup,
+    const std::shared_ptr<IndexBuffer>& indexBuffer,
+    PrimitiveType type) :
+    Primitive(type, vertexFormat, vertexGroup, indexBuffer)
 {
-    if (primitiveType == PrimitiveType::Triangle
-            || primitiveType == PrimitiveType::TriangleStrip
-            || primitiveType == PrimitiveType::TriangleFan)
+    auto isTriangleType = type == PrimitiveType::Triangle
+                          || type == PrimitiveType::TriangleStrip
+                          || type == PrimitiveType::TriangleFan;
+
+    if (!isTriangleType)
     {
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Primitive type is not triangle type.");
     }
-}
-
-PrimitiveTriangles::PrimitiveTriangles(std::shared_ptr<VertexFormat> vertexFormat, std::shared_ptr<VertexGroup> vertexGroup, std::shared_ptr<IndexBuffer> indexBuffer) :
-    Primitive(PrimitiveType::Triangle, vertexFormat, vertexGroup, indexBuffer)
-{
 }
 
 PrimitiveTriangles::~PrimitiveTriangles()
@@ -38,7 +36,7 @@ PrimitiveTriangles::~PrimitiveTriangles()
 size_t
 PrimitiveTriangles::GetTriangleNum() const
 {
-    switch (mPrimitiveType)
+    switch (mType)
     {
     case PrimitiveType::Triangle:
     {

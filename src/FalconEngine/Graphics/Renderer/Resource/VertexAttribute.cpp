@@ -6,14 +6,20 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-VertexAttribute::VertexAttribute(unsigned int location, const std::string& name, VertexAttributeType type, bool normalized, unsigned int offset, unsigned int bindingIndex, unsigned int division) :
+VertexAttribute::VertexAttribute(unsigned int        location,
+                                 const std::string&  name,
+                                 VertexAttributeType type,
+                                 bool                normalized,
+                                 unsigned int        stride,
+                                 unsigned int        bindingIndex,
+                                 unsigned int        division) :
     mBindingIndex(bindingIndex),
     mDivision(division),
     mLocation(location),
     mName(name),
     mNormalized(normalized),
     mType(type),
-    mOffset(offset),
+    mStride(stride),
     mChannel(VertexAttributeChannels[int(type)])
 {
 }

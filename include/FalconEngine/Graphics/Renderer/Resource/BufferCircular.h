@@ -21,8 +21,11 @@ protected:
     FillEnd() override;
 
 private:
-    size_t mBufferDataOffsetNext; // Where the data offset should be when the next fill phrase begins.
-    size_t mBufferZoneSize;    // How much data should be keep safely at once without wrapping the data offset.
+    // Where the data offset should be when the next fill phrase begins.
+    int64_t mBufferDataOffsetNext;
+
+    // How much data should be keep safely at once without wrapping the data offset.
+    size_t  mBufferZoneSize;
 };
 
 }

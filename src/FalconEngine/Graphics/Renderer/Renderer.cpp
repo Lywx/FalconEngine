@@ -174,7 +174,7 @@ Renderer::SetViewportData(float x, float y, float width, float height)
     }
     else
     {
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Need to initialize window first.")
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Need to initialize window first.");
     }
 }
 
@@ -218,7 +218,7 @@ Renderer::Bind(const Buffer *buffer)
     switch (buffer->GetType())
     {
     case BufferType::None:
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.")
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.");
     case BufferType::VertexBuffer:
         Bind(reinterpret_cast<const VertexBuffer *>(buffer));
         break;
@@ -241,7 +241,7 @@ Renderer::Unbind(const Buffer *buffer)
     switch (buffer->GetType())
     {
     case BufferType::None:
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.")
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.");
     case BufferType::VertexBuffer:
         Unbind(reinterpret_cast<const VertexBuffer *>(buffer));
         break;
@@ -264,7 +264,7 @@ Renderer::Enable(const Buffer *buffer)
     switch (buffer->GetType())
     {
     case BufferType::None:
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.")
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.");
     case BufferType::VertexBuffer:
         Enable(reinterpret_cast<const VertexBuffer *>(buffer));
         break;
@@ -287,7 +287,7 @@ Renderer::Disable(const Buffer *buffer)
     switch (buffer->GetType())
     {
     case BufferType::None:
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.")
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.");
     case BufferType::VertexBuffer:
         Disable(reinterpret_cast<const VertexBuffer *>(buffer));
         break;
@@ -310,7 +310,7 @@ Renderer::Map(const Buffer *buffer, BufferAccessMode access, BufferFlushMode flu
     switch (buffer->GetType())
     {
     case BufferType::None:
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.")
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.");
     case BufferType::VertexBuffer:
         return Map(reinterpret_cast<const VertexBuffer *>(buffer), access, flush, synchronization, offset, size);
     case BufferType::IndexBuffer:
@@ -330,7 +330,7 @@ Renderer::Unmap(const Buffer *buffer)
     switch (buffer->GetType())
     {
     case BufferType::None:
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.")
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.");
     case BufferType::VertexBuffer:
         Unmap(reinterpret_cast<const VertexBuffer *>(buffer));
         break;
@@ -353,7 +353,7 @@ Renderer::Flush(const Buffer *buffer, int64_t offset, int64_t size)
     switch (buffer->GetType())
     {
     case BufferType::None:
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.")
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.");
     case BufferType::VertexBuffer:
         Flush(reinterpret_cast<const VertexBuffer *>(buffer), offset, size);
         break;
@@ -499,7 +499,10 @@ Renderer::Unbind(const VertexBuffer *vertexBuffer)
 }
 
 void
-Renderer::Enable(const VertexBuffer *vertexBuffer, int bindingIndex, int64_t offset, int stride)
+Renderer::Enable(const VertexBuffer *vertexBuffer,
+                 unsigned int        bindingIndex,
+                 int64_t             offset,
+                 int                 stride)
 {
     FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
 
@@ -519,7 +522,7 @@ Renderer::Enable(const VertexBuffer *vertexBuffer, int bindingIndex, int64_t off
 }
 
 void
-Renderer::Disable(const VertexBuffer *vertexBuffer, int bindingIndex)
+Renderer::Disable(const VertexBuffer *vertexBuffer, unsigned int bindingIndex)
 {
     FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
 
@@ -592,26 +595,32 @@ Renderer::Enable(const VertexGroup *vertexGroup)
 {
     FALCON_ENGINE_RENDERER_ENABLE_LAZY(vertexGroup, mVertexGroupPrevious);
 
-    for (const auto& vertexBindingBufferPair : vertexGroup->mVertexBufferTable)
+    for (auto vertexBufferBindingIter = vertexGroup->GetVertexBufferBindingBegin();
+            vertexBufferBindingIter != vertexGroup->GetVertexBufferBindingEnd();
+            ++vertexBufferBindingIter)
     {
-        auto const & vertexBufferBinding = vertexBindingBufferPair.second;
+        const auto& vertexBufferBinding =
+            static_pointer_cast<const VertexBufferBinding>(vertexBufferBindingIter->second);
 
-        Enable(vertexBufferBinding.GetBuffer(),
-               vertexBufferBinding.GetIndex(),
-               vertexBufferBinding.GetOffset(),
-               vertexBufferBinding.GetStride());
+        Enable(vertexBufferBinding->GetBuffer(),
+               vertexBufferBinding->GetIndex(),
+               vertexBufferBinding->GetOffset(),
+               vertexBufferBinding->GetStride());
     }
 }
 
 void
 Renderer::Disable(const VertexGroup *vertexGroup)
 {
-    for (const auto& vertexBindingBufferPair : vertexGroup->mVertexBufferTable)
+    for (auto vertexBufferBindingIter = vertexGroup->GetVertexBufferBindingBegin();
+            vertexBufferBindingIter != vertexGroup->GetVertexBufferBindingEnd();
+            ++vertexBufferBindingIter)
     {
-        auto const & vertexBufferBinding = vertexBindingBufferPair.second;
+        const shared_ptr<const VertexBufferBinding>& vertexBufferBinding =
+            vertexBufferBindingIter->second;
 
-        Disable(vertexBufferBinding.GetBuffer(),
-                vertexBufferBinding.GetIndex());
+        Disable(vertexBufferBinding->GetBuffer(),
+                vertexBufferBinding->GetIndex());
     }
 }
 
@@ -897,7 +906,7 @@ Renderer::Disable(int /* textureUnit */, const Texture3d * /* texture */)
 void
 Renderer::Bind(const Sampler *sampler)
 {
-    FALCON_ENGINE_RENDERER_UNBIND_IMPLEMENT(sampler, mSamplerTable, PlatformSampler);
+    FALCON_ENGINE_RENDERER_BIND_IMPLEMENT(sampler, mSamplerTable, PlatformSampler);
 }
 
 void
@@ -1042,13 +1051,15 @@ Renderer::Draw(const Camera *camera,
 
     FALCON_ENGINE_CHECK_NULLPTR(visual);
 
-    visual->ForEffectInstance([ = ](std::shared_ptr<VisualEffectInstance> visualEffectInstance)
+    for (auto visualEffectInstanceIter = visual->GetEffectInstanceBegin();
+            visualEffectInstanceIter != visual->GetEffectInstanceEnd();
+            ++visualEffectInstanceIter)
     {
         // NOTE(Wuxiang): The visual instance is guaranteed to not be null.
-        FALCON_ENGINE_CHECK_NULLPTR(visualEffectInstance);
+        FALCON_ENGINE_CHECK_NULLPTR(*visualEffectInstanceIter);
 
-        Draw(camera, visual, visualEffectInstance.get());
-    });
+        Draw(camera, visual, visualEffectInstanceIter->get());
+    }
 }
 
 void

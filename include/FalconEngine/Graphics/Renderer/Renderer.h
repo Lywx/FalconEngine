@@ -280,10 +280,13 @@ public:
     // @param offset - offset into the first data in byte.
     // @param stride - stride between contiguous data in byte.
     void
-    Enable(const VertexBuffer *vertexBuffer, int bindingIndex, int64_t offset, int stride);
+    Enable(const VertexBuffer *vertexBuffer,
+           unsigned int        bindingIndex,
+           int64_t             offset,
+           int                 stride);
 
     void
-    Disable(const VertexBuffer *vertexBuffer, int bindingIndex);
+    Disable(const VertexBuffer *vertexBuffer, unsigned int bindingIndex);
 
     void *
     Map(const VertexBuffer       *vertexBuffer,

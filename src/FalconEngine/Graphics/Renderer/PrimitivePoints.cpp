@@ -6,7 +6,9 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PrimitivePoints::PrimitivePoints(std::shared_ptr<VertexFormat> vertexFormat, std::shared_ptr<VertexGroup> vertexGroup) :
+PrimitivePoints::PrimitivePoints(
+    const std::shared_ptr<VertexFormat>& vertexFormat,
+    const std::shared_ptr<VertexGroup>& vertexGroup) :
     Primitive(PrimitiveType::Point, vertexFormat, vertexGroup, nullptr)
 {
 }

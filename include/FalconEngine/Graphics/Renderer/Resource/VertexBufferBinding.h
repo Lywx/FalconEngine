@@ -9,6 +9,7 @@ namespace FalconEngine
 {
 
 class VertexBuffer;
+class VertexGroup;
 
 // @summary Buffer binding is the basic unit of meta-vertex-buffer data. Buffer binding
 // represents an OpenGL vertex buffer binding point.
@@ -21,7 +22,11 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    VertexBufferBinding(std::shared_ptr<VertexBuffer> buffer, int index, int offset, int stride);
+    VertexBufferBinding(const std::shared_ptr<VertexBuffer>& buffer,
+                        unsigned int                         index,
+                        int64_t                              offset,
+                        int                                  stride,
+                        const VertexGroup                   *group);
     VertexBufferBinding(const VertexBufferBinding& rhs) = default;
     ~VertexBufferBinding();
 
@@ -51,11 +56,21 @@ public:
     std::shared_ptr<VertexBuffer>
     GetBuffer();
 
+    const VertexGroup *
+    GetGroup() const;
+
 private:
+    // Vertex array binding index.
     unsigned int                  mIndex;
+
+    // Byte offset into the first element of the valid data in vertex buffer.
     int64_t                       mOffset;
+
+    // Byte stride between two valid attribute value.
     int                           mStride;
+
     std::shared_ptr<VertexBuffer> mBuffer;
+    const VertexGroup            *mGroup;
 };
 #pragma warning(default: 4251)
 

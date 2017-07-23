@@ -188,8 +188,8 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
 
     static auto sDebugRenderer = graphics->GetDebugRenderer();
     sDebugRenderer->AddAABB(mCamera.get(), mScene.get(), Transparent(ColorPalette::Red, 1.0f));
-    sDebugRenderer->AddAABB(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f));
-    sDebugRenderer->AddAABB(mCamera.get(), mPointLight2.get(), Transparent(ColorPalette::Green, 1.0f));
+    sDebugRenderer->AddAABB(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f), true);
+    sDebugRenderer->AddAABB(mCamera.get(), mPointLight2.get(), Transparent(ColorPalette::Green, 1.0f), true);
 
     Game::Render(graphics, percent);
 }

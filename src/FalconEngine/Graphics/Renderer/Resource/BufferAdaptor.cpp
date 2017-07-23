@@ -30,6 +30,12 @@ BufferAdaptor::FillEnd()
 {
 }
 
+const Buffer *
+BufferAdaptor::GetBuffer() const
+{
+    return mBuffer.get();
+}
+
 std::shared_ptr<Buffer>
 BufferAdaptor::GetBuffer()
 {

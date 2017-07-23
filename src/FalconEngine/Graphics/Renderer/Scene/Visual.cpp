@@ -13,15 +13,16 @@ FALCON_ENGINE_RTTI_IMPLEMENT(Visual, Spatial);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Visual::Visual(std::shared_ptr<Mesh> mesh) :
-    mMesh(mesh),
-
-    // NOTE(Wuxiang): By default Visual "inherit" from Primitives' vertex
-    // information.  You could override those vertex information by using the
-    // setter in Visual API.
-    mVertexFormat(mesh->GetPrimitive()->GetVertexFormat()),
-    mVertexGroup(mesh->GetPrimitive()->GetVertexGroup())
+Visual::Visual(const std::shared_ptr<Mesh>& mesh) :
+    mMesh(mesh)
 {
+    // NOTE(Wuxiang): By default Visual "inherit" from Primitives' vertex
+    // information. You could override those vertex information by using the
+    // setter in Visual API.
+    auto primitive = mesh->GetPrimitive();
+
+    mVertexFormat = primitive->GetVertexFormat();
+    mVertexGroup = primitive->GetVertexGroup();
 }
 
 Visual::Visual()

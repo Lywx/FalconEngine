@@ -8,13 +8,15 @@ DebugRenderMessageManager::Update(double elapsed)
 {
     auto tSecond = elapsed / 1000;
 
-    for (auto& message : mMessageList)
+    for (auto messageIter = mMessageList.begin();
+            messageIter != mMessageList.end();
+            ++messageIter)
     {
         // Compute left duration.
-        message.mDuration -= float(tSecond);
-        if (message.mDuration < 0)
+        messageIter->mDuration -= float(tSecond);
+        if (messageIter->mDuration < 0)
         {
-            mMessageList.remove(message);
+            mMessageList.erase(messageIter);
         }
     }
 }

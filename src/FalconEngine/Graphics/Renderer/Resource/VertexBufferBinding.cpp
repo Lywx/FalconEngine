@@ -6,11 +6,17 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-VertexBufferBinding::VertexBufferBinding(std::shared_ptr<VertexBuffer> buffer, int index, int offset, int stride):
+VertexBufferBinding::VertexBufferBinding(
+    const std::shared_ptr<VertexBuffer>& buffer,
+    unsigned int                         index,
+    int64_t                              offset,
+    int                                  stride,
+    const VertexGroup                   *group) :
     mIndex(index),
     mOffset(offset),
     mStride(stride),
-    mBuffer(buffer)
+    mBuffer(buffer),
+    mGroup(group)
 {
 }
 
@@ -57,4 +63,9 @@ VertexBufferBinding::GetBuffer()
     return mBuffer;
 }
 
+const VertexGroup *
+VertexBufferBinding::GetGroup() const
+{
+    return mGroup;
+}
 }

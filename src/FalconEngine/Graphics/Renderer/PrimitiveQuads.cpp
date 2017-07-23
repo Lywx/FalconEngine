@@ -8,9 +8,10 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PrimitiveQuads::PrimitiveQuads(std::shared_ptr<VertexFormat> vertexFormat,
-                               std::shared_ptr<VertexGroup> vertexGroup,
-                               std::shared_ptr<IndexBuffer> indexBuffer) :
+PrimitiveQuads::PrimitiveQuads(
+    const std::shared_ptr<VertexFormat>& vertexFormat,
+    const std::shared_ptr<VertexGroup>& vertexGroup,
+    const std::shared_ptr<IndexBuffer>& indexBuffer) :
     PrimitiveTriangles(vertexFormat, vertexGroup, indexBuffer)
 {
 }

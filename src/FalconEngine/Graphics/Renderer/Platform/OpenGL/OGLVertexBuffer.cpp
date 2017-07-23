@@ -21,7 +21,9 @@ PlatformVertexBuffer::~PlatformVertexBuffer()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PlatformVertexBuffer::Enable(unsigned int bindingIndex, int64_t offset, int stride)
+PlatformVertexBuffer::Enable(unsigned int bindingIndex,
+                             int64_t      offset,
+                             int          stride)
 {
     glBindVertexBuffer(bindingIndex, mBufferObj, offset, stride);
 }

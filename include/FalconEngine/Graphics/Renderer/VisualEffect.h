@@ -64,7 +64,7 @@ class WireframeState;
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API VisualEffect : public Object
 {
-public:
+protected:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
@@ -72,6 +72,7 @@ public:
     VisualEffect(const VisualEffect&) = delete;
     VisualEffect& operator=(const VisualEffect&) = delete;
 
+public:
     // @remark You should not manually call destructor of VisualEffect. The
     // destructor would be called by shared_ptr.
     virtual ~VisualEffect();
@@ -186,12 +187,14 @@ protected:
 };
 #pragma warning(default: 4251)
 
+// TODO(Wuxiang): This has problem.
 // NOTE(Wuxiang): This macro allow you to quickly spawn effect instance in scene
 // graph. But it is not necessary for effects that is limited to single Node or
 // Visual.
 //
 // It has its limitation. If you cannot have a default constructor in effect class,
 // you might need consider not to use it.
+// TODO(Wuxiang): This has problem.
 #define FALCON_ENGINE_EFFECT_GLOBAL_DECLARE(klass) \
 private: \
     static std::shared_ptr<klass> GetEffect() \
@@ -203,6 +206,7 @@ protected: \
     virtual std::shared_ptr<FalconEngine::VisualEffectInstance> \
     CreateInstance() const override;
 
+// TODO(Wuxiang): This has problem.
 #define FALCON_ENGINE_EFFECT_GLOBAL_IMPLEMENT(klass) \
 std::shared_ptr<FalconEngine::VisualEffectInstance> \
 klass::CreateInstance() const \

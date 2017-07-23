@@ -11,8 +11,8 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    PrimitivePoints(std::shared_ptr<VertexFormat> vertexFormat,
-                    std::shared_ptr<VertexGroup>  vertexGroup);
+    PrimitivePoints(const std::shared_ptr<VertexFormat>& vertexFormat,
+                    const std::shared_ptr<VertexGroup>&  vertexGroup);
     virtual ~PrimitivePoints();
 
 public:

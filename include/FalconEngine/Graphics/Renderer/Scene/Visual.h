@@ -36,7 +36,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit Visual(std::shared_ptr<Mesh> mesh);
+    explicit Visual(const std::shared_ptr<Mesh>& mesh);
     virtual ~Visual();
 
 protected:
@@ -50,10 +50,52 @@ public:
     /************************************************************************/
     /* Effect Management                                                    */
     /************************************************************************/
-    template <class T>
-    void ForEffectInstance(T func) const
+    auto
+    GetEffectInstanceBegin() const
     {
-        std::for_each(mEffectInstances.begin(), mEffectInstances.end(), func);
+        return mEffectInstances.cbegin();
+    }
+
+    auto
+    GetEffectInstanceEnd() const
+    {
+        return mEffectInstances.end();
+    }
+
+    auto
+    GetEffectInstanceBegin()
+    {
+        return mEffectInstances.begin();
+    }
+
+    auto
+    GetEffectInstanceEnd()
+    {
+        return mEffectInstances.end();
+    }
+
+    auto
+    GetEffectParamBegin() const
+    {
+        return mEffectParamses.cbegin();
+    }
+
+    auto
+    GetEffectParamEnd() const
+    {
+        return mEffectParamses.cend();
+    }
+
+    auto
+    GetEffectParamBegin()
+    {
+        return mEffectParamses.begin();
+    }
+
+    auto
+    GetEffectParamEnd()
+    {
+        return mEffectParamses.end();
     }
 
     int
@@ -150,7 +192,6 @@ protected:
     // also, because you are not allowed to do that.
     std::shared_ptr<const VertexFormat>              mVertexFormat;
     std::shared_ptr<const VertexGroup>               mVertexGroup;
-
 };
 #pragma warning(default: 4251)
 

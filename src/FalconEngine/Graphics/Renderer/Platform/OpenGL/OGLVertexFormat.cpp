@@ -48,7 +48,8 @@ PlatformVertexFormat::Create()
     {
         glEnableVertexAttribArray(vertexAttrib.mLocation);
 
-        glVertexAttribBinding(vertexAttrib.mLocation, vertexAttrib.mBindingIndex);
+        glVertexAttribBinding(vertexAttrib.mLocation,
+                              vertexAttrib.mBindingIndex);
 
         glVertexAttribFormat(vertexAttrib.mLocation,
                              vertexAttrib.mChannel,
@@ -57,12 +58,13 @@ PlatformVertexFormat::Create()
 
                              // The distance between elements within the buffer.
                              // So that you only need to properly sum up offset
-                             // for this specific binding index.
-                             vertexAttrib.mOffset);
+                             // for all binding index.
+                             vertexAttrib.mStride);
 
         if (vertexAttrib.mDivision != 0)
         {
-            glVertexBindingDivisor(vertexAttrib.mBindingIndex, vertexAttrib.mDivision);
+            glVertexBindingDivisor(vertexAttrib.mBindingIndex,
+                                   vertexAttrib.mDivision);
         }
     }
 

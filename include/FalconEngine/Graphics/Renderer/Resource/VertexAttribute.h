@@ -64,7 +64,13 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    VertexAttribute(unsigned int location, const std::string& name, VertexAttributeType type, bool normalized, unsigned int offset, unsigned int bindingIndex, unsigned int division);
+    VertexAttribute(unsigned int        location,
+                    const std::string&  name,
+                    VertexAttributeType type,
+                    bool                normalized,
+                    unsigned int        stride,
+                    unsigned int        bindingIndex,
+                    unsigned int        division);
     virtual ~VertexAttribute();
 
 public:
@@ -73,19 +79,31 @@ public:
 
 public:
     // NOTE(Wuxiang): Initialized on construction.
-    unsigned int        mBindingIndex;                                        // Vertex attribute buffer binding index.
+
+    // Vertex attribute buffer binding index.
+    unsigned int        mBindingIndex;
 
     // NOTE(Wuxiang) If divisor is non-zero, the attribute advances once per
     // divisor instances of the set(s) of vertices being rendered.
-    unsigned int        mDivision;                                            // Vertex attribute update division when instancing.
-    unsigned int        mLocation;                                            // Vertex attribute layout location.
-    std::string         mName;                                                // Vertex attribute name.
-    bool                mNormalized;                                          // Vertex attribute should be normalized or not.
-    VertexAttributeType mType;                                                // Vertex attribute type.
-    unsigned int        mOffset;                                              // Vertex attribute's offset into first valid value in the whole vertex buffer.
 
-    // NOTE(Wuxiang): Initialized based on mType.
-    int                 mChannel;                                             // Vertex attribute dimension.
+    // Vertex attribute update division when instancing.
+    unsigned int        mDivision;
+    // Vertex attribute layout location.
+    unsigned int        mLocation;
+
+    // Vertex attribute name.
+    std::string         mName;
+    // Vertex attribute should be normalized or not.
+    bool                mNormalized;
+    // Vertex attribute type.
+    VertexAttributeType mType;
+
+    // Vertex attribute's offset between each valid value of the same
+    // attribute in the vertex buffer.
+    unsigned int        mStride;
+
+    // Vertex attribute dimension. Initialized based on mType.
+    int                 mChannel;
 };
 #pragma warning(default: 4251)
 

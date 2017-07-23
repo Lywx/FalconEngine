@@ -90,6 +90,8 @@ FontRenderer::Render(double /* percent */)
         {
             // Update buffer data to reflect buffer data accumulated during
             // entire frame.
+
+            // TODO(Wuxiang)
             batch->mGlyphQuadPrimitive->SetVertexOffset(
                 batch->mGlyphVertexBuffer->GetElementOffset());
             batch->mGlyphVertexBuffer->SetElementNum(batch->mFrameGlyphNum * 6);

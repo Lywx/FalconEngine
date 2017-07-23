@@ -7,7 +7,11 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PrimitiveLines::PrimitiveLines(std::shared_ptr<VertexFormat> vertexFormat, std::shared_ptr<VertexGroup> vertexGroup, std::shared_ptr<IndexBuffer> indexBuffer, bool vertexStrip) :
+PrimitiveLines::PrimitiveLines(
+    const std::shared_ptr<VertexFormat>& vertexFormat,
+    const std::shared_ptr<VertexGroup>& vertexGroup,
+    const std::shared_ptr<IndexBuffer>& indexBuffer,
+    bool vertexStrip) :
     Primitive(vertexStrip
               ? PrimitiveType::LineStrip
               : PrimitiveType::Line, vertexFormat, vertexGroup, indexBuffer),

@@ -68,10 +68,10 @@ CheckAssertion(bool value, std::string message)
 
 }
 
-#define FALCON_ENGINE_THROW_ASSERTION_EXCEPTION() throw FalconEngine::RuntimeException("Assertion failed.\n");
-#define FALCON_ENGINE_THROW_NULLPTR_EXCEPTION(pointer) FalconEngine::ThrowNullException(#pointer);
-#define FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(message) throw FalconEngine::RuntimeException(message);
-#define FALCON_ENGINE_THROW_SUPPORT_EXCEPTION() throw FalconEngine::RuntimeException("Not implemented.\n");
+#define FALCON_ENGINE_THROW_ASSERTION_EXCEPTION() throw FalconEngine::RuntimeException("Assertion failed.\n")
+#define FALCON_ENGINE_THROW_NULLPTR_EXCEPTION(pointer) FalconEngine::ThrowNullException(#pointer)
+#define FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(message) throw FalconEngine::RuntimeException(message)
+#define FALCON_ENGINE_THROW_SUPPORT_EXCEPTION() throw FalconEngine::RuntimeException("Not implemented.\n")
 
-#define FALCON_ENGINE_CHECK_ASSERTION(value, message) FalconEngine::CheckAssertion(value, message);
-#define FALCON_ENGINE_CHECK_NULLPTR(pointer) FalconEngine::CheckNullPointer(pointer, #pointer);
+#define FALCON_ENGINE_CHECK_ASSERTION(value, message) FalconEngine::CheckAssertion(value, message)
+#define FALCON_ENGINE_CHECK_NULLPTR(pointer) FalconEngine::CheckNullPointer(pointer, #pointer)

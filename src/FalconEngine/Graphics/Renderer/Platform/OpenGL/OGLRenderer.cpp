@@ -358,7 +358,7 @@ Renderer::SetWindowPlatform(int width, int height, float near, float far)
     }
     else
     {
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Renderer data is not initialized.")
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Renderer data is not initialized.");
     }
 }
 

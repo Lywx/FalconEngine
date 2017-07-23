@@ -2,9 +2,11 @@
 
 #include <FalconEngine/Graphics/Common.h>
 
+#include <algorithm>
 #include <vector>
 
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBufferBinding.h>
+#include "Buffer.h"
 
 namespace FalconEngine
 {
@@ -36,16 +38,53 @@ public:
     ClearVertexBuffer();
 
     const VertexBuffer *
-    GetVertexBuffer(int bindingIndex) const;
+    GetVertexBuffer(unsigned int bindingIndex) const;
 
     std::shared_ptr<VertexBuffer>
-    GetVertexBuffer(int bindingIndex);
+    GetVertexBuffer(unsigned int bindingIndex);
 
     void
-    SetVertexBuffer(int bindingIndex, std::shared_ptr<VertexBuffer> vertexBuffer, int offset, int stride);
+    SetVertexBuffer(unsigned int                         bindingIndex,
+                    const std::shared_ptr<VertexBuffer>& vertexBuffer,
+                    int64_t                              offset,
+                    int                                  stride);
 
-public:
-    std::map<int, VertexBufferBinding> mVertexBufferTable;
+    std::shared_ptr<VertexBufferBinding>
+    FindVertexBufferBinding(const VertexBuffer *vertexBuffer) const;
+
+    std::shared_ptr<VertexBufferBinding>
+    GetVertexBufferBinding(unsigned int bindingIndex) const;
+
+    auto
+    GetVertexBufferBindingBegin() const
+    {
+        return mVertexBufferBindingTable.cbegin();
+    }
+
+    auto
+    GetVertexBufferBindingEnd() const
+    {
+        return mVertexBufferBindingTable.cend();
+    }
+
+    auto
+    GetVertexBufferBindingBegin()
+    {
+        return mVertexBufferBindingTable.begin();
+    }
+
+    auto
+    GetVertexBufferBindingEnd()
+    {
+        return mVertexBufferBindingTable.end();
+    }
+
+private:
+    void
+    CheckVertexBufferBindingValid(unsigned int bindingIndex) const;
+
+private:
+    std::map<unsigned int, std::shared_ptr<VertexBufferBinding>> mVertexBufferBindingTable;
 };
 #pragma warning(default: 4251)
 

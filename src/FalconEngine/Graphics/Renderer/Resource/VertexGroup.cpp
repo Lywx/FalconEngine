@@ -23,51 +23,107 @@ VertexGroup::~VertexGroup()
 int
 VertexGroup::GetVertexNum() const
 {
-    if (mVertexBufferTable.size() == 0)
+    if (mVertexBufferBindingTable.size() == 0)
     {
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The vertex group is empty.");
     }
 
     // Use first vertex binding to determine the element number of entire vertex
     // group.
-    auto vertexBinding = mVertexBufferTable.begin()->second;
-    return vertexBinding.GetBuffer()->GetElementNum();
+    const shared_ptr<const VertexBufferBinding>& vertexBufferBinding = mVertexBufferBindingTable.begin()->second;
+    return vertexBufferBinding->GetBuffer()->GetElementNum();
 }
 
 void
 VertexGroup::ClearVertexBuffer()
 {
-    mVertexBufferTable.clear();
+    mVertexBufferBindingTable.clear();
 }
 
 const VertexBuffer *
-VertexGroup::GetVertexBuffer(int bindingIndex) const
+VertexGroup::GetVertexBuffer(unsigned int bindingIndex) const
 {
-    if (mVertexBufferTable.find(bindingIndex) == mVertexBufferTable.end())
-    {
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The binding index is unspecified.");
-    }
+    CheckVertexBufferBindingValid(bindingIndex);
 
-    return mVertexBufferTable.at(bindingIndex).GetBuffer();
+    const shared_ptr<const VertexBufferBinding>& vertexBufferBinding
+        = mVertexBufferBindingTable.at(bindingIndex);
+    return vertexBufferBinding->GetBuffer();
 }
 
 std::shared_ptr<VertexBuffer>
-VertexGroup::GetVertexBuffer(int bindingIndex)
+VertexGroup::GetVertexBuffer(unsigned int bindingIndex)
 {
-    if (mVertexBufferTable.find(bindingIndex) == mVertexBufferTable.end())
-    {
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The binding index is unspecified.");
-    }
+    CheckVertexBufferBindingValid(bindingIndex);
 
-    return mVertexBufferTable.at(bindingIndex).GetBuffer();
+    return mVertexBufferBindingTable.at(bindingIndex)->GetBuffer();
 }
 
 void
-VertexGroup::SetVertexBuffer(int bindingIndex, std::shared_ptr<VertexBuffer> vertexBuffer, int offset, int stride)
+VertexGroup::SetVertexBuffer(
+    unsigned int                         bindingIndex,
+    const std::shared_ptr<VertexBuffer>& vertexBuffer,
+    int64_t                              offset,
+    int                                  stride)
 {
     FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
 
-    mVertexBufferTable.insert(std::make_pair(bindingIndex, VertexBufferBinding(vertexBuffer, bindingIndex, offset, stride)));
+    auto vertexBufferBinding = make_shared<VertexBufferBinding>(
+                                   vertexBuffer, bindingIndex, offset,
+                                   stride, this);
+
+    vertexBuffer->SetBinding(vertexBufferBinding.get());
+
+    mVertexBufferBindingTable.emplace(
+        bindingIndex, std::move(vertexBufferBinding));
+}
+
+std::shared_ptr<VertexBufferBinding>
+VertexGroup::FindVertexBufferBinding(const VertexBuffer *vertexBuffer) const
+{
+    if (vertexBuffer->IsBound())
+    {
+        for (list<VertexBufferBinding *>::const_iterator
+                vertexBufferBindingIter = vertexBuffer->GetBindingBegin();
+                vertexBufferBindingIter != vertexBuffer->GetBindingEnd();
+                ++vertexBufferBindingIter)
+        {
+            const VertexBufferBinding *vertexBufferBinding
+                = *vertexBufferBindingIter;
+
+            if (vertexBufferBinding->GetGroup() == this)
+            {
+                auto iter = mVertexBufferBindingTable.find(
+                                vertexBufferBinding->GetIndex());
+                if (iter != mVertexBufferBindingTable.end())
+                {
+                    return iter->second;
+                }
+            }
+        }
+    }
+
+    // Return null when both key is not registered or buffer is not the same.
+    return nullptr;
+}
+
+std::shared_ptr<VertexBufferBinding>
+VertexGroup::GetVertexBufferBinding(unsigned int bindingIndex) const
+{
+    CheckVertexBufferBindingValid(bindingIndex);
+
+    return mVertexBufferBindingTable.at(bindingIndex);
+}
+
+/************************************************************************/
+/* Private Members                                                      */
+/************************************************************************/
+void
+VertexGroup::CheckVertexBufferBindingValid(unsigned int bindingIndex) const
+{
+    if (mVertexBufferBindingTable.find(bindingIndex) == mVertexBufferBindingTable.end())
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The binding index is unspecified.");
+    }
 }
 
 }

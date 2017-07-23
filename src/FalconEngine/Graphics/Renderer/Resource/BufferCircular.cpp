@@ -45,10 +45,12 @@ BufferCircular::FillEnd()
     // NOTE(Wuxiang): Since the offset end is moved after filling data into next
     // write position. Suppose the last valid byte is just written, the offset is
     // moved to "byte count" or "byte number" position, which is one past valid offset.
-    auto offset = mBuffer->GetDataOffset() + mBufferDataRelativeOffsetEnd;
+
+    // ALERT(Wuxiang): unsigned to signed conversion here.
+    size_t offset = size_t(mBuffer->GetDataOffset()) + mBufferDataRelativeOffsetEnd;
     if (mBuffer->GetCapacitySize() + 1 < offset)
     {
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Buffer is overflowed.")
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Buffer is overflowed.");
     }
 
     // When offset is in safe zone.

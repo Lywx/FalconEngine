@@ -101,11 +101,17 @@ public:
     size_t
     GetDataSize() const;
 
-    size_t
+    int64_t
     GetDataOffset() const;
 
-    void
-    SetDataOffset(size_t dataOffset);
+    // @remark The reason this function is virtual is that derived classes like
+    // VertexBuffer might re-implement this method to provide a way to
+    // synchronize with vertex buffer binding.
+    //
+    // @remark For GPU with over 16GB, roughly 16,000,000,000 bytes. Any 64-bit
+    // integer (unsigned or signed) would be large enough to hold the offset.
+    virtual void
+    SetDataOffset(int64_t dataOffset);
 
     int
     GetElementNum() const;
@@ -132,7 +138,7 @@ public:
 private:
     unsigned char    *mData;
     size_t            mDataSize;            // Actual data size in bytes.
-    size_t            mDataOffset;
+    int64_t           mDataOffset;
 
     size_t            mCapacitySize;        // Maximum capacity size in bytes include space not used.
     int               mCapacityElementNum;  // Maximum capacity size in term of element number include space not used.

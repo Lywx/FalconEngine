@@ -78,7 +78,6 @@ DebugEffect::CreateVertexFormat() const
 void
 DebugEffect::InitializeInstance(VisualEffectInstance *instance, std::shared_ptr<DebugEffectParams> params) const
 {
-    SetShaderUniformAutomaticModelViewTransform(instance, 0, "ViewProjectionTransform");
 }
 
 }

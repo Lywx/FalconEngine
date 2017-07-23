@@ -60,22 +60,26 @@ public:
     ShaderUniform&
     GetUniform(std::string uniformName);
 
-    auto GetUniformBegin()
+    auto
+    GetUniformBegin()
     {
         return mUniformTable.begin();
     }
 
-    auto GetUniformEnd()
+    auto
+    GetUniformEnd()
     {
         return mUniformTable.end();
     }
 
-    auto GetUniformBegin() const
+    auto
+    GetUniformBegin() const
     {
         return mUniformTable.cbegin();
     }
 
-    auto GetUniformEnd() const
+    auto
+    GetUniformEnd() const
     {
         return mUniformTable.cend();
     }
@@ -98,22 +102,26 @@ public:
     ShaderSource *
     GetShaderSource(int shaderIndex) const;
 
-    auto GetShaderSourceBegin() const
+    auto
+    GetShaderSourceBegin() const
     {
         return mSourceTable.cbegin();
     }
 
-    auto GetShaderSourceEnd() const
+    auto
+    GetShaderSourceEnd() const
     {
         return mSourceTable.cend();
     }
 
-    auto GetShaderSourceBegin()
+    auto
+    GetShaderSourceBegin()
     {
         return mSourceTable.begin();
     }
 
-    auto GetShaderSourceEnd()
+    auto
+    GetShaderSourceEnd()
     {
         return mSourceTable.end();
     }

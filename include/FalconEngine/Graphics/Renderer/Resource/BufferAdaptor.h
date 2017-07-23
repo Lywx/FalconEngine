@@ -59,6 +59,9 @@ public:
     virtual void
     FillEnd();
 
+    const Buffer *
+    GetBuffer() const;
+
     std::shared_ptr<Buffer>
     GetBuffer();
 

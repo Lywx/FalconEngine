@@ -13,15 +13,12 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    PrimitiveTriangles(std::shared_ptr<VertexFormat> vertexFormat,
-                       std::shared_ptr<VertexGroup>  vertexGroup,
-                       std::shared_ptr<IndexBuffer>  indexBuffer);
-
-    // @remark Allow derived class to pass primitive type themselves.
-    PrimitiveTriangles(PrimitiveType                 primitiveType,
-                       std::shared_ptr<VertexFormat> vertexFormat,
-                       std::shared_ptr<VertexGroup>  vertexGroup,
-                       std::shared_ptr<IndexBuffer>  indexBuffer);
+    // @remark Allow derived class to pass extra primitive type to fine-tune
+    // primitive behavior.
+    PrimitiveTriangles(const std::shared_ptr<VertexFormat>& vertexFormat,
+                       const std::shared_ptr<VertexGroup>& vertexGroup,
+                       const std::shared_ptr<IndexBuffer>& indexBuffer,
+                       PrimitiveType type = PrimitiveType::Triangle);
     virtual ~PrimitiveTriangles();
 
 public:

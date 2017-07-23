@@ -84,23 +84,41 @@ public:
     Shader *
     GetShader();
 
+    BlendState *
+    GetBlendState();
+
     const BlendState *
     GetBlendState() const;
 
     const CullState *
     GetCullState() const;
 
+    CullState *
+    GetCullState();
+
     const DepthTestState *
     GetDepthTestState() const;
+
+    DepthTestState *
+    GetDepthTestState();
 
     const OffsetState *
     GetOffsetState() const;
 
+    OffsetState *
+    GetOffsetState();
+
     const StencilTestState *
     GetStencilTestState() const;
 
+    StencilTestState *
+    GetStencilTestState();
+
     const WireframeState *
     GetWireframeState() const;
+
+    WireframeState *
+    GetWireframeState();
 
 protected:
     ShaderSharedPtr           mShader;

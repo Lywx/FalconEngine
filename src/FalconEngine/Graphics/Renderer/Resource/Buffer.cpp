@@ -78,15 +78,21 @@ Buffer::GetDataSize() const
     return mDataSize;
 }
 
-size_t
+int64_t
 Buffer::GetDataOffset() const
 {
     return mDataOffset;
 }
 
 void
-Buffer::SetDataOffset(size_t dataOffset)
+Buffer::SetDataOffset(int64_t dataOffset)
 {
+    if (dataOffset < 0)
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Data offset is not allowed to be"
+                                              " negative.");
+    }
+
     mDataOffset = dataOffset;
 }
 

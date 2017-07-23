@@ -113,6 +113,12 @@ VisualEffectPass::GetShader()
     return mShader.get();
 }
 
+BlendState *
+VisualEffectPass::GetBlendState()
+{
+    return mBlendState.get();
+}
+
 const BlendState *
 VisualEffectPass::GetBlendState() const
 {
@@ -125,8 +131,20 @@ VisualEffectPass::GetCullState() const
     return mCullState.get();
 }
 
+CullState *
+VisualEffectPass::GetCullState()
+{
+    return mCullState.get();
+}
+
 const DepthTestState *
 VisualEffectPass::GetDepthTestState() const
+{
+    return mDepthTestState.get();
+}
+
+DepthTestState *
+VisualEffectPass::GetDepthTestState()
 {
     return mDepthTestState.get();
 }
@@ -137,8 +155,20 @@ VisualEffectPass::GetOffsetState() const
     return mOffsetState.get();
 }
 
+OffsetState *
+VisualEffectPass::GetOffsetState()
+{
+    return mOffsetState.get();
+}
+
 const StencilTestState *
 VisualEffectPass::GetStencilTestState() const
+{
+    return mStencilTestState.get();
+}
+
+StencilTestState *
+VisualEffectPass::GetStencilTestState()
 {
     return mStencilTestState.get();
 }
@@ -149,4 +179,9 @@ VisualEffectPass::GetWireframeState() const
     return mWireframeState.get();
 }
 
+WireframeState *
+VisualEffectPass::GetWireframeState()
+{
+    return mWireframeState.get();
+}
 }

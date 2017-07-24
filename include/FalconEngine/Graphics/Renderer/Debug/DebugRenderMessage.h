@@ -7,6 +7,8 @@
 namespace FalconEngine
 {
 
+class Camera;
+
 enum class DebugRenderType
 {
     // NOTE(Wuxiang): This list is used to generate mapping. Be careful when you
@@ -28,13 +30,15 @@ enum class DebugRenderType
 class DebugRenderMessage
 {
 public:
-    DebugRenderMessage(DebugRenderType type,
+    DebugRenderMessage(const Camera   *camera,
+                       DebugRenderType type,
                        float           float1,
                        const Vector3f& floatVector1,
                        const Vector3f& floatVector2,
                        const Color&    color,
                        float           duration,
                        bool            depthEnabled) :
+        mCamera(camera),
         mType(type),
         mColor(color),
         mDuration(duration),
@@ -46,6 +50,8 @@ public:
     }
 
 public:
+    const Camera   *mCamera;
+
     // NOTE(Wuxiang): Those are common data field for all different item type.
     DebugRenderType mType;
 

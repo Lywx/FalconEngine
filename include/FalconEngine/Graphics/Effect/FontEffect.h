@@ -43,7 +43,7 @@ public:
 // @summary Implements a signed distanced field based bitmap font rendering effect.
 class FALCON_ENGINE_API FontEffect : public VisualEffect
 {
-    FALCON_ENGINE_EFFECT_GLOBAL_DECLARE(FontEffect);
+    FALCON_ENGINE_EFFECT_DECLARE(FontEffect);
 
 public:
     /************************************************************************/
@@ -57,8 +57,8 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    CreateInstance(_IN_OUT_ Visual                           *visual,
-                   _IN_     std::shared_ptr<FontEffectParams> params) const;
+    CreateInstance(_IN_OUT_ Visual                                  *visual,
+                   _IN_     const std::shared_ptr<FontEffectParams>& params);
 
     virtual std::shared_ptr<VertexFormat>
     GetVertexFormat() const override;

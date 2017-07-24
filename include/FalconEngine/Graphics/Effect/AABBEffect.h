@@ -39,7 +39,7 @@ class FALCON_ENGINE_API AABBEffectParams : public VisualEffectParams
 // that all bounding box is drawn in one draw call.
 class FALCON_ENGINE_API AABBEffect : public VisualEffect
 {
-    FALCON_ENGINE_EFFECT_GLOBAL_DECLARE(AABBEffect);
+    FALCON_ENGINE_EFFECT_DECLARE(AABBEffect);
 
 public:
     /************************************************************************/
@@ -53,8 +53,8 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     std::shared_ptr<VisualEffectInstance>
-    CreateInstance(_IN_OUT_ Visual                           *visual,
-                   _IN_     std::shared_ptr<AABBEffectParams> params) const;
+    CreateInstance(_IN_OUT_ Visual                                  *visual,
+                   _IN_     const std::shared_ptr<AABBEffectParams>& params);
 
     virtual std::shared_ptr<VertexFormat>
     GetVertexFormat() const override;

@@ -9,7 +9,7 @@ using namespace std;
 namespace FalconEngine
 {
 
-FALCON_ENGINE_EFFECT_GLOBAL_IMPLEMENT(MeshEffect);
+FALCON_ENGINE_EFFECT_IMPLEMENT(MeshEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -55,7 +55,7 @@ MeshEffect::~MeshEffect()
 /* Public Members                                                       */
 /************************************************************************/
 void
-MeshEffect::CreateInstance(Node *node, std::shared_ptr<MeshEffectParams> params) const
+MeshEffect::CreateInstance(Node *node, const std::shared_ptr<MeshEffectParams>& params)
 {
     using namespace placeholders;
 
@@ -88,9 +88,9 @@ MeshEffect::GetVertexFormat() const
 }
 
 void
-MeshEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance             *instance,
-                               _IN_     std::shared_ptr<Material>         material,
-                               _IN_     std::shared_ptr<MeshEffectParams> params) const
+MeshEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                    *instance,
+                               _IN_     const std::shared_ptr<Material>&         material,
+                               _IN_     const std::shared_ptr<MeshEffectParams>& params) const
 {
     using namespace placeholders;
 

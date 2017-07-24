@@ -14,9 +14,10 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-DebugRenderer::DebugRenderer() :
-    mDebugBufferResource(make_shared<BufferResource>())
+DebugRenderer::DebugRenderer()
 {
+    mDebugBufferResource = make_shared<BufferResource>();
+    mDebugMessageManager = make_shared<DebugRenderMessageManager>();
 }
 
 DebugRenderer::~DebugRenderer()
@@ -93,54 +94,89 @@ DebugRenderer::AddAABB(const Camera *camera,
 
     auto aabb = visual->GetMesh()->GetAABB();
 
-    Matrix4f modelViewProjectionTransform = camera->GetViewProjection()
-                                            * visual->mWorldTransform;
-
-    AddAABB(Vector3f(modelViewProjectionTransform * Vector4f(aabb->mMin, 1)),
-            Vector3f(modelViewProjectionTransform * Vector4f(aabb->mMax, 1)),
+    AddAABB(camera,
+            Vector3f(visual->mWorldTransform * Vector4f(aabb->mMin, 1)),
+            Vector3f(visual->mWorldTransform * Vector4f(aabb->mMax, 1)),
             color, duration, depthEnabled);
 }
 
 void
-DebugRenderer::AddAABB(const Vector3f& min,
+DebugRenderer::AddAABB(const Camera   *camera,
+                       const Vector3f& min,
                        const Vector3f& max,
+
                        const Color&    color,
                        float           duration,
                        bool            depthEnabled)
 {
-    mDebugMessageManager->mMessageList.emplace_back(DebugRenderType::AABB, 0.f,
+    mDebugMessageManager->mMessageList.emplace_back(camera,
+            DebugRenderType::AABB, 0.f,
             min, max, color, duration,
             depthEnabled);
 }
 
 void
-DebugRenderer::AddCircle(const Vector3f& center, const Vector3f& normal, float radius, const Color& color, float duration, bool depthEnabled)
+DebugRenderer::AddCamera(const Camera *camera)
 {
-    mDebugMessageManager->mMessageList.emplace_back(DebugRenderType::Circle, radius,
+}
+
+void
+DebugRenderer::AddCircle(const Camera   *camera,
+                         const Vector3f& center,
+                         const Vector3f& normal,
+                         float           radius,
+
+                         const Color&    color,
+                         float           duration,
+                         bool            depthEnabled)
+{
+    mDebugMessageManager->mMessageList.emplace_back(camera,
+            DebugRenderType::Circle, radius,
             center, normal, color, duration,
             depthEnabled);
 }
 
 void
-DebugRenderer::AddCross(const Vector3f& center, float radius, const Color& color, float duration, bool depthEnabled)
+DebugRenderer::AddCross(const Camera   *camera,
+                        const Vector3f& center,
+                        float           radius,
+
+                        const Color&    color,
+                        float           duration,
+                        bool            depthEnabled)
 {
-    mDebugMessageManager->mMessageList.emplace_back(DebugRenderType::Cross, radius,
+    mDebugMessageManager->mMessageList.emplace_back(camera,
+            DebugRenderType::Cross, radius,
             center, Vector3f::Zero, color,
             duration, depthEnabled);
 }
 
 void
-DebugRenderer::AddLine(const Vector3f& from, const Vector3f& to, const Color& color, float duration, bool depthEnabled)
+DebugRenderer::AddLine(const Camera   *camera,
+                       const Vector3f& from,
+                       const Vector3f& to,
+
+                       const Color&    color,
+                       float           duration,
+                       bool            depthEnabled)
 {
-    mDebugMessageManager->mMessageList.emplace_back(DebugRenderType::Line, 0.f,
+    mDebugMessageManager->mMessageList.emplace_back(camera,
+            DebugRenderType::Line, 0.f,
             from, to, color, duration,
             depthEnabled);
 }
 
 void
-DebugRenderer::AddSphere(const Vector3f& center, float radius, const Color& color, float duration, bool depthEnabled)
+DebugRenderer::AddSphere(const Camera   *camera,
+                         const Vector3f& center,
+                         float           radius,
+
+                         const Color&    color,
+                         float           duration,
+                         bool            depthEnabled)
 {
-    mDebugMessageManager->mMessageList.emplace_back(DebugRenderType::Sphere, radius,
+    mDebugMessageManager->mMessageList.emplace_back(camera,
+            DebugRenderType::Sphere, radius,
             center, Vector3f::Zero, color,
             duration, depthEnabled);
 }
@@ -176,9 +212,9 @@ DebugRenderer::RenderBegin()
 }
 
 void
-DebugRenderer::Render(Renderer * /* renderer */, double /* percent */)
+DebugRenderer::Render(double /* percent */)
 {
-    mDebugBufferResource->Draw(nullptr);
+    mDebugBufferResource->Draw(mCamera);
 }
 
 void

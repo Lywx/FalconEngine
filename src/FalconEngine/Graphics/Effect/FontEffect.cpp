@@ -8,7 +8,7 @@ using namespace std;
 namespace FalconEngine
 {
 
-FALCON_ENGINE_EFFECT_GLOBAL_IMPLEMENT(FontEffect);
+FALCON_ENGINE_EFFECT_IMPLEMENT(FontEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -55,7 +55,7 @@ FontEffect::~FontEffect()
 /* Public Members                                                       */
 /************************************************************************/
 void
-FontEffect::CreateInstance(Visual *visual, std::shared_ptr<FontEffectParams> params) const
+FontEffect::CreateInstance(Visual *visual, const std::shared_ptr<FontEffectParams>& params)
 {
     auto instance = InstallInstance(visual, params);
     InitializeInstance(instance.get(), params);

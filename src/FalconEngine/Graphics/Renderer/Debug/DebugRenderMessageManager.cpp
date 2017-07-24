@@ -16,7 +16,9 @@ DebugRenderMessageManager::Update(double elapsed)
         messageIter->mDuration -= float(tSecond);
         if (messageIter->mDuration < 0)
         {
-            mMessageList.erase(messageIter);
+            auto messageIterPrevious = messageIter;
+            ++messageIter;
+            mMessageList.erase(messageIterPrevious);
         }
     }
 }

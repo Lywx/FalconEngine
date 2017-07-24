@@ -16,7 +16,7 @@ public:
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API BlinnEffect : public PhongEffect
 {
-    FALCON_ENGINE_EFFECT_GLOBAL_DECLARE(BlinnEffect);
+    FALCON_ENGINE_EFFECT_DECLARE(BlinnEffect);
 
 public:
     /************************************************************************/

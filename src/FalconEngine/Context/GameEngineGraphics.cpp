@@ -1,17 +1,9 @@
 #include <FalconEngine/Context/GameEngineGraphics.h>
 
-#include <FalconEngine/Core/Path.h>
-#include <FalconEngine/Context/GameEngineSettings.h>
-#include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Debug/DebugRenderer.h>
 #include <FalconEngine/Graphics/Renderer/Entity/EntityRenderer.h>
 #include <FalconEngine/Graphics/Renderer/Font/FontRenderer.h>
-#include <FalconEngine/Math/Color.h>
-
-#if defined(FALCON_ENGINE_WINDOW_GLFW)
-#include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
-#endif
 
 namespace FalconEngine
 {
@@ -62,6 +54,7 @@ GameEngineGraphics::Destroy()
 void
 GameEngineGraphics::RenderBegin()
 {
+    mDebugRenderer->RenderBegin();
     mEntityRenderer->RenderBegin();
     mFontRenderer->RenderBegin();
 }
@@ -69,6 +62,7 @@ GameEngineGraphics::RenderBegin()
 void
 GameEngineGraphics::Render(double percent)
 {
+    mDebugRenderer->Render(percent);
     mEntityRenderer->Render(percent);
     mFontRenderer->Render(percent);
 }
@@ -76,6 +70,7 @@ GameEngineGraphics::Render(double percent)
 void
 GameEngineGraphics::RenderEnd()
 {
+    mDebugRenderer->RenderEnd();
     mEntityRenderer->RenderEnd();
     mFontRenderer->RenderEnd();
 

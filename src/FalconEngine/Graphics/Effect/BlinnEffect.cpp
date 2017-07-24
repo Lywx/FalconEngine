@@ -5,7 +5,7 @@ using namespace std;
 namespace FalconEngine
 {
 
-FALCON_ENGINE_EFFECT_GLOBAL_IMPLEMENT(BlinnEffect);
+FALCON_ENGINE_EFFECT_IMPLEMENT(BlinnEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

@@ -10,7 +10,7 @@ using namespace std;
 namespace FalconEngine
 {
 
-FALCON_ENGINE_EFFECT_GLOBAL_IMPLEMENT(PhongEffect);
+FALCON_ENGINE_EFFECT_IMPLEMENT(PhongEffect);
 
 /************************************************************************/
 /* Static Members                                                       */
@@ -65,8 +65,8 @@ PhongEffect::~PhongEffect()
 /************************************************************************/
 void
 PhongEffect::CreateInstance(
-    _IN_OUT_ Node                              *node,
-    _IN_     std::shared_ptr<PhongEffectParams> params) const
+    _IN_OUT_ Node                                     *node,
+    _IN_     const std::shared_ptr<PhongEffectParams>& params)
 {
     FALCON_ENGINE_CHECK_NULLPTR(params);
 
@@ -101,9 +101,9 @@ PhongEffect::GetVertexFormat() const
 }
 
 void
-PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance              *instance,
-                                _IN_     std::shared_ptr<Material>          material,
-                                _IN_     std::shared_ptr<PhongEffectParams> params) const
+PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                     *instance,
+                                _IN_     const std::shared_ptr<Material>&          material,
+                                _IN_     const std::shared_ptr<PhongEffectParams>& params) const
 {
     // NEW(Wuxiang): 2017-05-24 12:35 Implement spot lights?
 

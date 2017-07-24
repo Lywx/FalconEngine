@@ -8,10 +8,12 @@ out Vout
     noperspective vec4 Color;
 } vout;
 
+uniform mat4 ViewProjectionTransform;
+
 void
 main()
 {
     vout.Color = Color;
 
-    gl_Position = vec4(Position, 1); 
+    gl_Position = ViewProjectionTransform * vec4(Position, 1); 
 }

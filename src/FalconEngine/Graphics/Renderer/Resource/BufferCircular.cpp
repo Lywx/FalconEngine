@@ -21,7 +21,8 @@ BufferCircular::FillBegin()
 {
     BufferAdaptor::FillBegin();
 
-    mBuffer->SetDataOffset(mBufferDataOffsetNext);
+    // ALERT(Wuxiang): Conversion from unsigned to signed.
+    mBuffer->SetDataOffset(int64_t(mBufferDataOffsetNext));
 }
 
 void

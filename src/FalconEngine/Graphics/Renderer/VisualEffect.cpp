@@ -102,10 +102,23 @@ VisualEffect::GetWireframeState(int passIndex) const
 /************************************************************************/
 /* Effect Instancing Utility                                            */
 /************************************************************************/
-std::shared_ptr<VisualEffectInstance>
-VisualEffect::CreateInstance() const
+std::shared_ptr<const VisualEffect>
+VisualEffect::GetEffect() const
 {
-    FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Effect does not implement effect instancing.");
+    return shared_from_this();
+}
+
+std::shared_ptr<VisualEffect>
+VisualEffect::GetEffect()
+{
+    return shared_from_this();
+}
+
+std::shared_ptr<FalconEngine::VisualEffectInstance>
+VisualEffect::CreateInstance()
+{
+    auto visualEffectInstance = std::make_shared<FalconEngine::VisualEffectInstance>(GetEffect());
+    return visualEffectInstance;
 }
 
 void

@@ -62,7 +62,7 @@ class WireframeState;
 // because you could guarantee the effect params is kept safely when it is binded
 // to the visual by using std::shared_ptr.
 #pragma warning(disable: 4251)
-class FALCON_ENGINE_API VisualEffect : public Object
+class FALCON_ENGINE_API VisualEffect : public std::enable_shared_from_this<VisualEffect>
 {
 protected:
     /************************************************************************/
@@ -118,11 +118,17 @@ protected:
     /************************************************************************/
     /* Effect Instancing Utility                                            */
     /************************************************************************/
+    std::shared_ptr<const VisualEffect>
+    GetEffect() const;
+
+    std::shared_ptr<VisualEffect>
+    GetEffect();
+
     // @remark Force derived class to implement visual based instancing method.
     // Derived classes could use FALCON_ENGINE_EFFECT_GLOBAL_IMPLEMENT macro to
     // implement this method.
-    virtual std::shared_ptr<VisualEffectInstance>
-    CreateInstance() const;
+    std::shared_ptr<VisualEffectInstance>
+    CreateInstance();
 
     void
     CheckVertexFormatCompatible(Visual *visual) const;
@@ -137,7 +143,7 @@ protected:
     // instance. It is managed by the Visual class using shared_ptr.
     template <typename T>
     std::shared_ptr<VisualEffectInstance>
-    InstallInstance(Visual *visual, std::shared_ptr<T> params) const
+    InstallInstance(Visual *visual, std::shared_ptr<T> params)
     {
         static_assert(std::is_base_of<VisualEffectParams, T>::value, "Params must derive from VisualEffectParams");
 
@@ -187,32 +193,7 @@ protected:
 };
 #pragma warning(default: 4251)
 
-// TODO(Wuxiang): This has problem.
-// NOTE(Wuxiang): This macro allow you to quickly spawn effect instance in scene
-// graph. But it is not necessary for effects that is limited to single Node or
-// Visual.
-//
-// It has its limitation. If you cannot have a default constructor in effect class,
-// you might need consider not to use it.
-// TODO(Wuxiang): This has problem.
-#define FALCON_ENGINE_EFFECT_GLOBAL_DECLARE(klass) \
-private: \
-    static std::shared_ptr<klass> GetEffect() \
-{ \
-    static auto sEffect = std::make_shared<klass>(); \
-    return sEffect; \
-} \
-protected: \
-    virtual std::shared_ptr<FalconEngine::VisualEffectInstance> \
-    CreateInstance() const override;
-
-// TODO(Wuxiang): This has problem.
-#define FALCON_ENGINE_EFFECT_GLOBAL_IMPLEMENT(klass) \
-std::shared_ptr<FalconEngine::VisualEffectInstance> \
-klass::CreateInstance() const \
-{ \
-    auto visualEffectInstance = std::make_shared<FalconEngine::VisualEffectInstance>(GetEffect()); \
-    return visualEffectInstance; \
-}
+#define FALCON_ENGINE_EFFECT_DECLARE(klass)
+#define FALCON_ENGINE_EFFECT_IMPLEMENT(klass)
 
 }

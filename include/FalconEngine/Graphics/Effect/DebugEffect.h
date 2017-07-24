@@ -38,6 +38,8 @@ public:
 
 class FALCON_ENGINE_API DebugEffect : public VisualEffect
 {
+    FALCON_ENGINE_EFFECT_DECLARE(DebugEffect);
+
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -50,8 +52,8 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    CreateInstance(_IN_OUT_ Visual                            *visual,
-                   _IN_     std::shared_ptr<DebugEffectParams> params) const;
+    CreateInstance(_IN_OUT_ Visual                                   *visual,
+                   _IN_     const std::shared_ptr<DebugEffectParams>& params);
 
     virtual std::shared_ptr<VertexFormat>
     GetVertexFormat() const override;

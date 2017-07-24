@@ -87,10 +87,15 @@ BufferResource::FillChannelBegin(int                       channel,
 {
     CheckChannelValid(channel);
 
-    // Must call before mapping.
-    mChannelTable.at(channel).mBufferAdaptor->FillBegin();
+    auto& channelInfo = mChannelTable.at(channel);
 
-    MapChannel(channel, access, flush, synchronization);
+    // Must call before mapping.
+    channelInfo.mBufferAdaptor->FillBegin();
+
+    if (channelInfo.mElementNum > 0)
+    {
+        MapChannel(channel, access, flush, synchronization);
+    }
 }
 
 void
@@ -108,9 +113,11 @@ BufferResource::FillChannelEnd(int channel)
 {
     CheckChannelValid(channel);
 
-    UnmapChannel(channel);
-
     auto& channelInfo = mChannelTable.at(channel);
+    if (channelInfo.mElementNum > 0)
+    {
+        UnmapChannel(channel);
+    }
 
     // Must call after mapping.
     channelInfo.mBufferAdaptor->FillEnd();

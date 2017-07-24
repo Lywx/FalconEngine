@@ -40,7 +40,7 @@ public:
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API MeshEffect : public VisualEffect
 {
-    FALCON_ENGINE_EFFECT_GLOBAL_DECLARE(MeshEffect);
+    FALCON_ENGINE_EFFECT_DECLARE(MeshEffect);
 
 public:
     /************************************************************************/
@@ -54,8 +54,8 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    CreateInstance(_IN_ Node                             *node,
-                   _IN_ std::shared_ptr<MeshEffectParams> params) const;
+    CreateInstance(_IN_ Node                                    *node,
+                   _IN_ const std::shared_ptr<MeshEffectParams>& params);
 protected:
     /************************************************************************/
     /* Protected Members                                                    */
@@ -67,9 +67,9 @@ protected:
     GetVertexFormat() const override;
 
     void
-    InitializeInstance(_IN_OUT_ VisualEffectInstance             *instance,
-                       _IN_     std::shared_ptr<Material>         material,
-                       _IN_     std::shared_ptr<MeshEffectParams> params) const;
+    InitializeInstance(_IN_OUT_ VisualEffectInstance                    *instance,
+                       _IN_     const std::shared_ptr<Material>&         material,
+                       _IN_     const std::shared_ptr<MeshEffectParams>& params) const;
 
 };
 #pragma warning(default: 4251)

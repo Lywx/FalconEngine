@@ -26,7 +26,7 @@ using namespace std;
 namespace FalconEngine
 {
 
-FALCON_ENGINE_EFFECT_GLOBAL_IMPLEMENT(PaintEffect);
+FALCON_ENGINE_EFFECT_IMPLEMENT(PaintEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -71,8 +71,8 @@ PaintEffect::~PaintEffect()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PaintEffect::CreateInstance(_IN_OUT_ Node                              *node,
-                            _IN_     std::shared_ptr<PaintEffectParams> params) const
+PaintEffect::CreateInstance(_IN_OUT_ Node                                     *node,
+                            _IN_     const std::shared_ptr<PaintEffectParams>& params)
 {
     FALCON_ENGINE_CHECK_NULLPTR(params);
 
@@ -108,8 +108,8 @@ PaintEffect::GetVertexFormat() const
 
 void
 PaintEffect::InitializeInstance(
-    _IN_OUT_ VisualEffectInstance              *instance,
-    _IN_     std::shared_ptr<PaintEffectParams> params) const
+    _IN_OUT_ VisualEffectInstance                     *instance,
+    _IN_     const std::shared_ptr<PaintEffectParams>& params) const
 {
     // Transform
     SetShaderUniformAutomaticModelViewProjectionTransform(instance, 0, "ModelViewProjectionTransform");

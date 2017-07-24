@@ -5,7 +5,7 @@ using namespace std;
 namespace FalconEngine
 {
 
-FALCON_ENGINE_EFFECT_GLOBAL_IMPLEMENT(AABBEffect);
+FALCON_ENGINE_EFFECT_IMPLEMENT(AABBEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -51,7 +51,7 @@ AABBEffect::~AABBEffect()
 /* Public Members                                                       */
 /************************************************************************/
 std::shared_ptr<VisualEffectInstance>
-AABBEffect::CreateInstance(Visual *visual, std::shared_ptr<AABBEffectParams> params) const
+AABBEffect::CreateInstance(Visual *visual, const std::shared_ptr<AABBEffectParams>& params)
 {
     CheckVertexFormatCompatible(visual);
 

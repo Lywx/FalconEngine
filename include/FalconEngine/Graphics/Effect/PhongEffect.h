@@ -30,7 +30,7 @@ public:
 
 class FALCON_ENGINE_API PhongEffect : public VisualEffect
 {
-    FALCON_ENGINE_EFFECT_GLOBAL_DECLARE(PhongEffect);
+    FALCON_ENGINE_EFFECT_DECLARE(PhongEffect);
 
 public:
     static int PointLightNumMax;
@@ -48,8 +48,8 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    CreateInstance(_IN_OUT_ Node                              *node,
-                   _IN_     std::shared_ptr<PhongEffectParams> params) const;
+    CreateInstance(_IN_OUT_ Node                                     *node,
+                   _IN_     const std::shared_ptr<PhongEffectParams>& params);
 
 protected:
     virtual std::shared_ptr<VertexFormat>
@@ -60,9 +60,9 @@ protected:
 
     // @summary Add required parameters to the existing visual effect instance.
     void
-    InitializeInstance(_IN_OUT_ VisualEffectInstance              *instance,
-                       _IN_     std::shared_ptr<Material>          material,
-                       _IN_     std::shared_ptr<PhongEffectParams> params) const;
+    InitializeInstance(_IN_OUT_ VisualEffectInstance                     *instance,
+                       _IN_     const std::shared_ptr<Material>&          material,
+                       _IN_     const std::shared_ptr<PhongEffectParams>& params) const;
 };
 #pragma warning(default: 4251)
 

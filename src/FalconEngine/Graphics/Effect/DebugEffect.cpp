@@ -5,6 +5,8 @@ using namespace std;
 namespace FalconEngine
 {
 
+FALCON_ENGINE_EFFECT_IMPLEMENT(DebugEffect);
+
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
@@ -49,7 +51,7 @@ DebugEffect::~DebugEffect()
 /* Public Members                                                       */
 /************************************************************************/
 void
-DebugEffect::CreateInstance(Visual *visual, std::shared_ptr<DebugEffectParams> params) const
+DebugEffect::CreateInstance(Visual *visual, const std::shared_ptr<DebugEffectParams>& params)
 {
     auto instance = InstallInstance(visual, params);
     InitializeInstance(instance.get(), params);
@@ -76,8 +78,9 @@ DebugEffect::CreateVertexFormat() const
 }
 
 void
-DebugEffect::InitializeInstance(VisualEffectInstance *instance, std::shared_ptr<DebugEffectParams> params) const
+DebugEffect::InitializeInstance(VisualEffectInstance *instance, std::shared_ptr<DebugEffectParams> /* params */) const
 {
+    SetShaderUniformAutomaticViewProjectionTransform(instance, 0, "ViewProjectionTransform");
 }
 
 }

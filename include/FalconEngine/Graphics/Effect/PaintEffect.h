@@ -34,7 +34,7 @@ public:
 class FALCON_ENGINE_API PaintEffect : public VisualEffect
 {
 public:
-    FALCON_ENGINE_EFFECT_GLOBAL_DECLARE(PaintEffect);
+    FALCON_ENGINE_EFFECT_DECLARE(PaintEffect);
 
 public:
     /************************************************************************/
@@ -46,8 +46,8 @@ public:
 public:
     void
     CreateInstance(
-        _IN_OUT_ Node                              *node,
-        _IN_     std::shared_ptr<PaintEffectParams> params) const;
+        _IN_OUT_ Node                                     *node,
+        _IN_     const std::shared_ptr<PaintEffectParams>& params);
 
 protected:
     virtual std::shared_ptr<VertexFormat>
@@ -58,8 +58,8 @@ protected:
 
     void
     InitializeInstance(
-        _IN_OUT_ VisualEffectInstance              *instance,
-        _IN_     std::shared_ptr<PaintEffectParams> params) const;
+        _IN_OUT_ VisualEffectInstance                     *instance,
+        _IN_     const std::shared_ptr<PaintEffectParams>& params) const;
 };
 
 }

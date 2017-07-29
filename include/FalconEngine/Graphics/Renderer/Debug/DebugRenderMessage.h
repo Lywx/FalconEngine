@@ -40,6 +40,7 @@ public:
         mDuration(duration),
         mDepthEnabled(depthEnabled),
         mFloat1(),
+        mFloat2(),
         mFloatVector1(),
         mFloatVector2(),
         mString1()
@@ -57,6 +58,7 @@ public:
 
     // NOTE(Wuxiang): Those are different data field which may be zero.
     float           mFloat1;
+    float           mFloat2;
     Vector3f        mFloatVector1;
     Vector3f        mFloatVector2;
 

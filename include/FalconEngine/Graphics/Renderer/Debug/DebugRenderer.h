@@ -137,15 +137,18 @@ public:
     // NEW(Wuxiang): Add 3d text rendering support.
 
     // @summary Render 2d text on screen space.
-
     void
-    AddText(const Vector2f&    textPosition,
-            const std::string& text,
+    AddText(const std::string& text,
+            const Vector2f&    textPosition,
             float              fontSize = 16.0f,
             const Color&       color = ColorPalette::White,
             float              duration = 0.0f,
-            bool               depthEnabled = true);
+            bool               depthEnabled = true,
+            float              textLineWidth = std::numeric_limits<float>().max());
 
+    /************************************************************************/
+    /* Camera API                                                           */
+    /************************************************************************/
     void
     AddCamera(const Camera *camera);
 

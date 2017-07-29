@@ -213,9 +213,9 @@ SampleGame::UpdateFrame(GameEngineGraphics *graphics, GameEngineInput *input, do
     }
 
     static auto sDebugRenderer = graphics->GetDebugRenderer();
-    if (keyboard->KeyDown(Key::P))
+    if (keyboard->KeyPressed(Key::P))
     {
-        sDebugRenderer->AddText(Vector2f(5.0f, 5.0f), "Test", 16.0f, ColorPalette::White, 5.0f);
+        sDebugRenderer->AddText(std::to_string(GameTimer::GetSeconds()), Vector2f(500.0f, 500.0f), 16.0f, ColorPalette::White, 0.0f);
     }
 
     //sDebugRenderer->AddSphere(mCamera.get(), mCamera->GetPosition(), 5.0f, ColorPalette::Red, 0.0f, false);

@@ -33,7 +33,6 @@ public:
         return MillisecondsPeriod::den * double(counter.QuadPart) / double(GetCounterFrequency().QuadPart) / MillisecondsPeriod::num;
     }
 
-    // TODO(Wuxiang): Need testing.
     static double
     GetSeconds()
     {
@@ -53,7 +52,7 @@ private:
     }
 
 private:
-    using Seconds = std::chrono::milliseconds;
+    using Seconds = std::chrono::seconds;
     using SecondsPeriod = Seconds::period;
 
     using Milliseconds = std::chrono::milliseconds;

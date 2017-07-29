@@ -122,18 +122,6 @@ DebugRenderer::AddAABB(const Camera   *camera,
 }
 
 void
-DebugRenderer::AddCamera(const Camera *camera)
-{
-    mDebugEffectParams->AddCamera(camera);
-}
-
-void
-DebugRenderer::RemoveCamera(const Camera *camera)
-{
-    mDebugEffectParams->RemoveCamera(camera);
-}
-
-void
 DebugRenderer::AddCircle(const Camera   *camera,
                          const Vector3f& center,
                          const Vector3f& normal,
@@ -204,14 +192,36 @@ DebugRenderer::AddSphere(const Camera   *camera,
 }
 
 void
-DebugRenderer::AddText(const Vector2f& textPosition, const std::string& text, float fontSize, const Color& color, float duration, bool depthEnabled)
+DebugRenderer::AddText(const std::string& text,
+                       const Vector2f&    textPosition,
+                       float              fontSize,
+                       const Color&       color,
+                       float              duration,
+                       bool               depthEnabled,
+                       float              textLineWidth)
 {
     DebugRenderMessage message(DebugRenderType::Text, color, duration, depthEnabled);
     message.mFloat1 = fontSize;
+    message.mFloat2 = textLineWidth;
     message.mFloatVector1 = Vector3f(textPosition, 0);
     message.mString1 = text;
 
     mDebugMessageManager->mMessageList.push_back(std::move(message));
+}
+
+/************************************************************************/
+/* Camera API                                                           */
+/************************************************************************/
+void
+DebugRenderer::AddCamera(const Camera *camera)
+{
+    mDebugEffectParams->AddCamera(camera);
+}
+
+void
+DebugRenderer::RemoveCamera(const Camera *camera)
+{
+    mDebugEffectParams->RemoveCamera(camera);
 }
 
 /************************************************************************/
@@ -305,7 +315,7 @@ DebugRenderer::UpdateFrame(double elapsed)
         case DebugRenderType::Text:
             sFontRenderer->AddText(
                 mDebugFont, message.mFloat1, Vector2f(message.mFloatVector1),
-                message.mString1, message.mColor);
+                message.mString1, message.mColor, message.mFloat2);
             break;
         default:
             FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();

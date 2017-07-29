@@ -61,9 +61,14 @@ public:
     /************************************************************************/
     /* Update Operation                                                     */
     /************************************************************************/
+    // @remark This function is called at variable rate but at lease once per frame.
     // @param elapsed -- Millisecond elapsed during last update / render cycle.
     virtual void
     Update(GameEngineGraphics *graphics, GameEngineInput *input, double elapsed);
+
+    // @remark This function is guaranteed to be called exactly once per frame.
+    virtual void
+    UpdateInput(GameEngineGraphics *graphics, GameEngineInput *input);
 
 protected:
     GameEngine *mGameEngine;

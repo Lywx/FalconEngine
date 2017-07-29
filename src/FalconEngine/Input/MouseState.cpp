@@ -1,4 +1,5 @@
 #include <FalconEngine/Input/MouseState.h>
+#include <FalconEngine/Context/GameTimer.h>
 
 namespace FalconEngine
 {
@@ -42,44 +43,15 @@ MouseState::ButtonUp(MouseButton button) const
 }
 
 void
-MouseState::SetButtonInternal(MouseButton button, bool pressed, double time)
+MouseState::SetButtonInternal(MouseButton button, bool buttonPressed, double timeCurrent)
 {
     auto& buttonState = mButtonTable.at(button);
-    auto buttonPressedCurrent = pressed;
+    buttonState.mButtonChanged = true;
+
+    auto buttonPressedCurrent = buttonPressed;
     auto buttonPressedPrevious = buttonState.mPressed;
 
-    // When just pressed.
-    if (buttonPressedCurrent && !buttonPressedPrevious)
-    {
-        buttonState.mPressed = true;
-        buttonState.mPressedMoment = time;
-
-        buttonState.mDown = true;
-        buttonState.mUp = false;
-    }
-
-    // When just released.
-    else if (!buttonPressedCurrent && buttonPressedPrevious)
-    {
-        buttonState.mPressed = false;
-        buttonState.mPressedMoment = 0;
-
-        buttonState.mDown = false;
-        buttonState.mUp = true;
-    }
-
-    // When still pressed.
-    else if (buttonPressedCurrent /*&& buttonPressedPrevious*/)
-    {
-        // NOTE(Wuxiang): Need not modify the mPressedMoment.
-        buttonState.mDown = false;
-    }
-
-    // When still released.
-    else // (!buttonPressedCurrent && !buttonPressedPrevious)
-    {
-        buttonState.mUp = false;
-    }
+    UpdateButton(buttonState, buttonPressedCurrent, buttonPressedPrevious, timeCurrent);
 }
 
 Vector2f
@@ -89,28 +61,14 @@ MouseState::GetPosition() const
 }
 
 void
-MouseState::UpdatePosition(Vector2f mousePositionPrevious, Vector2f mousePositionCurrent)
-{
-    if (mousePositionCurrent != mousePositionPrevious)
-    {
-        mPositionDiff = mousePositionCurrent - mousePositionPrevious;
-        mPosition = mousePositionCurrent;
-    }
-    else
-    {
-        mPositionDiff = Vector2f::Zero;
-    }
-}
-
-void
-MouseState::SetPositionInternal(double x, double y, double /* time */)
+MouseState::SetPositionInternal(double x, double y, double /* timeCurrent */)
 {
     mPositionChanged = true;
 
     auto mousePositionPrevious = mPosition;
     auto mousePositionCurrent = Vector2f(float(x), float(y));
 
-    UpdatePosition(mousePositionPrevious, mousePositionCurrent);
+    UpdatePosition(mousePositionCurrent, mousePositionPrevious);
 }
 
 Vector2f
@@ -132,13 +90,120 @@ MouseState::GetWheelValueDiff() const
 }
 
 void
-MouseState::SetWheelValueInternal(double yoffset, double /* time */)
+MouseState::SetWheelValueInternal(double yoffset, double /* timeCurrent */)
 {
     mWheelValueChanged = true;
 
     auto wheelValueCurrent = int(yoffset);
     auto wheelValuePrevious = mWheelValue;
     UpdateWheelValue(wheelValueCurrent, wheelValuePrevious);
+}
+
+void
+MouseState::UpdateEvent(double /* elapsed */)
+{
+    if (!mPositionChanged)
+    {
+        // NOTE(Wuxiang): The event polling has not polled anything reflecting
+        // position changes. So the position is not changed. We have to reset
+        // position difference.
+        UpdatePosition(mPosition, mPosition);
+    }
+    else
+    {
+        // Reset change flag if there has been changes during this frame.
+        mPositionChanged = false;
+    }
+
+    // Same idea as above.
+    if (!mWheelValueChanged)
+    {
+        UpdateWheelValue(mWheelValue, mWheelValue);
+    }
+    else
+    {
+        mWheelValueChanged = false;
+    }
+
+    // Same idea as above.
+    for (auto& buttonStatePair : mButtonTable)
+    {
+        auto& buttonState = buttonStatePair.second;
+        if (!buttonState.mButtonChanged)
+        {
+            UpdateButton(buttonState,
+                         buttonState.mPressed,
+                         buttonState.mPressed,
+                         GameTimer::GetMilliseconds());
+        }
+        else
+        {
+            buttonState.mButtonChanged = false;
+        }
+    }
+}
+
+/************************************************************************/
+/* Private Members                                                      */
+/************************************************************************/
+void
+MouseState::UpdateButton(MouseButtonState& buttonState,
+                         bool              buttonPressedCurrent,
+                         bool              buttonPressedPrevious,
+                         double            timeCurrent)
+{
+    // When just pressed.
+    if (buttonPressedCurrent && !buttonPressedPrevious)
+    {
+        Debug::OutputString("K");
+
+        buttonState.mPressed = true;
+        buttonState.mPressedMoment = timeCurrent;
+
+        buttonState.mDown = true;
+        buttonState.mUp = false;
+    }
+
+    // When just released.
+    else if (!buttonPressedCurrent && buttonPressedPrevious)
+    {
+        buttonState.mPressed = false;
+        buttonState.mPressedMoment = 0;
+
+        buttonState.mDown = false;
+        buttonState.mUp = true;
+    }
+
+    // When still pressed.
+    else if (buttonPressedCurrent /*&& buttonPressedPrevious*/)
+    {
+        // TODO(Wuxiang): To Test.
+        // NOTE(Wuxiang): Need not modify the mPressedMoment.
+        buttonState.mDown = false;
+        buttonState.mUp = false;
+    }
+
+    // When still released.
+    else // (!buttonPressedCurrent && !buttonPressedPrevious)
+    {
+        // TODO(Wuxiang): To Test.
+        buttonState.mUp = false;
+        buttonState.mDown = false;
+    }
+}
+
+void
+MouseState::UpdatePosition(Vector2f mousePositionCurrent, Vector2f mousePositionPrevious)
+{
+    if (mousePositionCurrent != mousePositionPrevious)
+    {
+        mPositionDiff = mousePositionCurrent - mousePositionPrevious;
+        mPosition = mousePositionCurrent;
+    }
+    else
+    {
+        mPositionDiff = Vector2f::Zero;
+    }
 }
 
 void
@@ -158,32 +223,6 @@ MouseState::UpdateWheelValue(int wheelValueCurrent, int wheelValuePrevious)
         mWheelValue = 0;
         mWheelDirection = MouseWheelDirection::None;
         mWheelValueDiff = 0;
-    }
-}
-
-void
-MouseState::UpdateEvent()
-{
-    if (!mPositionChanged)
-    {
-        // NOTE(Wuxiang): The event polling has not polled anything reflecting
-        // position changes. So the position is not changed. We have to reset
-        // position difference.
-        UpdatePosition(mPosition, mPosition);
-    }
-    else
-    {
-        mPositionChanged = false;
-    }
-
-    if (!mWheelValueChanged)
-    {
-        // NOTE(Wuxiang): Same idea as above.
-        UpdateWheelValue(mWheelValue, mWheelValue);
-    }
-    else
-    {
-        mWheelValueChanged = false;
     }
 }
 

@@ -48,19 +48,20 @@ GameEngineInput::Initialize()
 }
 
 void
-GameEngineInput::Update()
+GameEngineInput::Update(double elapsed)
 {
     // NOTE(Wuxiang): Have to poll events before updating based on events.
     PollEvent();
 
     // NOTE(Wuxiang): Update based on events pulled.
-    UpdateEvent();
+    UpdateEvent(elapsed);
 }
 
 void
-GameEngineInput::UpdateEvent()
+GameEngineInput::UpdateEvent(double elapsed)
 {
-    mMouseState->UpdateEvent();
+    mKeyboardState->UpdateEvent(elapsed);
+    mMouseState->UpdateEvent(elapsed);
 }
 
 }

@@ -195,6 +195,15 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
 void
 SampleGame::Update(GameEngineGraphics *graphics, GameEngineInput *input, double elapsed)
 {
+    mCamera->Update(input, elapsed);
+    mScene->Update(input, elapsed);
+
+    Game::Update(graphics, input, elapsed);
+}
+
+void
+SampleGame::UpdateInput(GameEngineGraphics *graphics, GameEngineInput *input)
+{
     auto keyboard = input->GetKeyboardState();
     auto mouse = input->GetMouseState();
 
@@ -203,21 +212,15 @@ SampleGame::Update(GameEngineGraphics *graphics, GameEngineInput *input, double 
         GetEngine()->Exit();
     }
 
-    mCamera->Update(input, elapsed);
-    mScene->Update(input, elapsed);
-
     static auto sDebugRenderer = graphics->GetDebugRenderer();
-
-    if (keyboard->KeyDown(Key::A))
+    if (keyboard->KeyDown(Key::P))
     {
-        sDebugRenderer->AddCircle(mCamera.get(), Vector3f(1, 0, 0), Vector3f::UnitX, 1.0f, ColorPalette::Red, 3.0f, false);
-        sDebugRenderer->AddCircle(mCamera.get(), Vector3f(1, 0, 0), Vector3f::UnitY, 5.0f, ColorPalette::Red, 4.0f, false);
-        sDebugRenderer->AddCircle(mCamera.get(), Vector3f(1, 0, 0), Vector3f::UnitZ, 7.0f, ColorPalette::Red, 5.0f, false);
+        sDebugRenderer->AddAABB(mCamera.get(), mCamera->GetPosition() + Vector3f(-1, -1, -1), mCamera->GetPosition() + Vector3f(1, 1, 1), Transparent(ColorPalette::Yellow, 1.0f), 3.0f, true);
     }
+
+    //sDebugRenderer->AddSphere(mCamera.get(), mCamera->GetPosition(), 5.0f, ColorPalette::Red, 0.0f, false);
     // sDebugRenderer->AddAABB(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f), 0.0f, true);
     // sDebugRenderer->AddAABB(mCamera.get(), mPointLight2.get(), Transparent(ColorPalette::Green, 1.0f), 0.0f, true);
-
-    Game::Update(graphics, input, elapsed);
 }
 
 }

@@ -26,6 +26,9 @@ public:
     Render(GameEngineGraphics *graphics, double percent) override;
 
     virtual void
+    UpdateInput(GameEngineGraphics *graphics, GameEngineInput *input) override;
+
+    virtual void
     Update(GameEngineGraphics *graphics, GameEngineInput *input, double elapsed) override;
 
 private:

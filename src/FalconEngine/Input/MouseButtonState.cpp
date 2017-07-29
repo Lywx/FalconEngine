@@ -24,6 +24,9 @@ MouseButtonState::MouseButtonState(MouseButton button) :
 {
 }
 
+/************************************************************************/
+/* Constructors and Destructor                                          */
+/************************************************************************/
 MouseButtonStateMap::MouseButtonStateMap()
 {
     static std::vector<MouseButton> sButtons = { MouseButton::LeftButton, MouseButton::RightButton, MouseButton::MiddleButton };

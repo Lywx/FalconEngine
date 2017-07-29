@@ -2,9 +2,14 @@
 
 #include <vector>
 
+#include <FalconEngine/Context/GameTimer.h>
+
 namespace FalconEngine
 {
 
+/************************************************************************/
+/* Constructors and Destructor                                          */
+/************************************************************************/
 KeyboardState::KeyboardState()
 {
     // NOTE(Wuxiang): Copy from the Key enum value.
@@ -52,17 +57,55 @@ KeyboardState::KeyUp(Key key) const
 }
 
 void
-KeyboardState::SetKeyInternal(Key key, bool pressed, double time)
+KeyboardState::SetKeyInternal(Key key, bool kepPressed, double timeCurrent)
 {
     auto keyPressedPrevious = at(key).mPressed;
-    auto keyPressedCurrent = pressed;
+    auto keyPressedCurrent = kepPressed;
     auto& keyState = at(key);
+    keyState.mKeyChanged = true;
 
+    UpdateKey(keyState, keyPressedCurrent, keyPressedPrevious, timeCurrent);
+}
+
+/************************************************************************/
+/* Private Members                                                      */
+/************************************************************************/
+void
+KeyboardState::UpdateEvent(double /* elapsed */)
+{
+    for (auto& keyStatePair : *this)
+    {
+        auto& keyState = keyStatePair.second;
+
+        // NOTE(Wuxiang): The event polling has not polled anything reflecting
+        // position changes. So the position is not changed. We have to reset
+        // position difference.
+        if (!keyState.mKeyChanged)
+        {
+            UpdateKey(keyState,
+                      keyState.mPressed,
+                      keyState.mPressed,
+                      GameTimer::GetMilliseconds());
+        }
+        else
+        {
+            // Reset change flag if there has been changes during this frame.
+            keyState.mKeyChanged = false;
+        }
+    }
+}
+
+void
+KeyboardState::UpdateKey(KeyState& keyState,
+                         bool      keyPressedCurrent,
+                         bool      keyPressedPrevious,
+                         double    timeCurrent)
+{
     // When just pressed.
     if (keyPressedCurrent && !keyPressedPrevious)
     {
         keyState.mPressed = true;
-        keyState.mPressedMoment = time;
+        keyState.mPressedMoment = timeCurrent;
 
         keyState.mDown = true;
         keyState.mUp = false;
@@ -83,14 +126,15 @@ KeyboardState::SetKeyInternal(Key key, bool pressed, double time)
     {
         // NOTE(Wuxiang): Need not modify the mPressedMoment.
         keyState.mDown = false;
+        keyState.mUp = false;
     }
 
     // When still released.
     else // (!keyPressedCurrent && !keyPressedPrevious)
     {
+        keyState.mDown = false;
         keyState.mUp = false;
     }
-
 }
 
 }

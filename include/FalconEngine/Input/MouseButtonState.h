@@ -19,12 +19,16 @@ enum class MouseButton;
 class FALCON_ENGINE_API MouseButtonState final
 {
 public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
     MouseButtonState();
     explicit MouseButtonState(MouseButton button);
     ~MouseButtonState() = default;
 
 public:
     MouseButton mButton;
+    bool        mButtonChanged = false;
     bool        mPressed;
     double      mPressedMoment = 0;   // Millisecond time stamp.
     bool        mDown;                // Transition from being released to being pressed.
@@ -35,6 +39,9 @@ public:
 class FALCON_ENGINE_API MouseButtonStateMap : public std::unordered_map<MouseButton, MouseButtonState>
 {
 public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
     MouseButtonStateMap();
 };
 #pragma warning(default: 4251)

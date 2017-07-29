@@ -62,7 +62,7 @@ public:
 
     // @remark Update gets called every frame by game engine.
     void
-    Update();
+    Update(double elasped);
 
 private:
     void
@@ -75,7 +75,7 @@ private:
     PollEvent();
 
     void
-    UpdateEvent();
+    UpdateEvent(double elapsed);
 
 private:
     std::unique_ptr<GameEngineInputDispatcher, GameEngineInputDispatcherDeleter> mDispatcher;

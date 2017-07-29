@@ -1,4 +1,5 @@
 #include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineInputDispatcher.h>
+#include <FalconEngine/Context/GameTimer.h>
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
 
@@ -78,19 +79,19 @@ void
 GameEngineInputDispatcher::KeyCallback(GLFWwindow * /* window */, int key, int /* scancode */, int action, int /* mods */)
 {
     auto keyPressed = action == GLFW_PRESS || action == GLFW_REPEAT;
-    mInput->mKeyboardState->SetKeyInternal(Key(key), keyPressed, glfwGetTime());
+    mInput->mKeyboardState->SetKeyInternal(Key(key), keyPressed, GameTimer::GetMilliseconds());
 }
 
 void
 GameEngineInputDispatcher::MouseButtonCallback(GLFWwindow * /* window */, int button, int action, int /* mods */)
 {
-    mInput->mMouseState->SetButtonInternal(MouseButton(button), action == GLFW_PRESS, glfwGetTime());
+    mInput->mMouseState->SetButtonInternal(MouseButton(button), action == GLFW_PRESS, GameTimer::GetMilliseconds());
 }
 
 void
 GameEngineInputDispatcher::ScrollCallback(GLFWwindow * /* window */, double /* xoffset */, double yoffset)
 {
-    mInput->mMouseState->SetWheelValueInternal(yoffset, glfwGetTime());
+    mInput->mMouseState->SetWheelValueInternal(yoffset, GameTimer::GetMilliseconds());
 }
 
 void
@@ -108,7 +109,7 @@ GameEngineInputDispatcher::MousePositionCallback(GLFWwindow *window, double x, d
         sScreenInitialized = true;
     }
 
-    mInput->mMouseState->SetPositionInternal(x, sScreenHeight - y, glfwGetTime());
+    mInput->mMouseState->SetPositionInternal(x, sScreenHeight - y, GameTimer::GetMilliseconds());
 }
 
 }

@@ -137,12 +137,16 @@ using KeyHash = std::hash<int>;
 class FALCON_ENGINE_API KeyState final
 {
 public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
     KeyState();
     explicit KeyState(Key key);
     ~KeyState() = default;
 
 public:
     Key    mKey;
+    bool   mKeyChanged = false;
     bool   mPressed;
     double mPressedMoment = 0;   // Millisecond time stamp.
     bool   mUp;                  // Transition from being pressed to being released.
@@ -157,7 +161,8 @@ namespace std
 template <>
 struct hash<FalconEngine::Key>
 {
-    size_t operator()(const FalconEngine::Key& key) const
+    size_t
+    operator()(const FalconEngine::Key& key) const
     {
         return FalconEngine::KeyHash {} (int(key));
     }

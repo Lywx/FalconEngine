@@ -29,7 +29,18 @@ public:
 public:
     // @param time -- Millisecond time stamp.
     void
-    SetKeyInternal(Key key, bool pressed, double time);
+    SetKeyInternal(Key key, bool keyPressed, double timeCurrent);
+
+    // @param elpased -- Millisecond duration between last and this update.
+    void
+    UpdateEvent(double elapsed);
+
+private:
+    void
+    UpdateKey(KeyState& keyState,
+              bool      keyPressedCurrent,
+              bool      keyPressedPrevious,
+              double    timeCurrent);
 };
 #pragma warning(default: 4251)
 

@@ -68,4 +68,9 @@ Game::Update(GameEngineGraphics *graphics, GameEngineInput * /* input */, double
     graphics->Update(elapsed);
 }
 
+void
+Game::UpdateInput(GameEngineGraphics *graphics, GameEngineInput *input)
+{
+}
+
 }

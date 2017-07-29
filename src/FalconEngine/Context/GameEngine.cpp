@@ -119,16 +119,26 @@ GameEngine::Loop()
             // Reset frame start point.
             lastFrameBegunMillisecond = lastFrameEndedMillisecond;
 
-            mInput->Update();
+            // NOTE(Wuxiang): Elapsed time count from before last input update
+            // to before current input update.
+            mInput->Update(lastFrameElapsedMillisecond);
+
+            // NOTE(Wuxiang): Update frame-rate sensitive data.
+            mGame->UpdateInput(mGraphics, mInput);
 
             // Reset update accumulated time elapsed.
             int    currentFrameUpdateTotalCount = 0;
             double currentUpdateTotalElapsedMillisecond = 0;
             double lastUpdateBegunMillisecond = GameTimer::GetMilliseconds();
             double lastUpdateEndedMillisecond = 0;
+
             do
             {
-                mGame->Update(mGraphics, mInput, currentFrameUpdateTotalCount == 0 ? lastUpdateElapsedMillisecond + lastRenderElapsedMillisecond : lastUpdateElapsedMillisecond);
+                // NOTE(Wuxiang): Elapsed time count from before last game update
+                // to before current game update.
+                mGame->Update(mGraphics, mInput, currentFrameUpdateTotalCount == 0
+                              ? lastUpdateElapsedMillisecond + lastRenderElapsedMillisecond
+                              : lastUpdateElapsedMillisecond);
                 ++currentFrameUpdateTotalCount;
 
                 lastUpdateEndedMillisecond = GameTimer::GetMilliseconds();
@@ -140,7 +150,7 @@ GameEngine::Loop()
                 // Reset update start point.
                 lastUpdateBegunMillisecond = lastUpdateEndedMillisecond;
             }
-            while (currentUpdateTotalElapsedMillisecond + lastUpdateElapsedMillisecond <= mSettings->mFrameElapsedMillisecond - lastRenderElapsedMillisecond);
+            while (currentUpdateTotalElapsedMillisecond <= mSettings->mFrameElapsedMillisecond - lastRenderElapsedMillisecond);
 
             // Output performance profile
             double lastFrameFps = 1000 / lastFrameElapsedMillisecond;
@@ -155,7 +165,7 @@ GameEngine::Loop()
             lastFrameUpdateTotalCount = currentFrameUpdateTotalCount;
 
             // Reset render start point.
-            lastRenderBegunMillisecond = lastUpdateEndedMillisecond;
+            lastRenderBegunMillisecond = GameTimer::GetMilliseconds();
 
             mGame->RenderBegin(mGraphics);
 

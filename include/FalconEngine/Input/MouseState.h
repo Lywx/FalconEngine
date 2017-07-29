@@ -45,9 +45,6 @@ public:
     Vector2f
     GetPosition() const;
 
-    void
-    UpdatePosition(Vector2f mousePositionPrevious, Vector2f mousePositionCurrent);
-
     Vector2f
     GetPositionDiff() const;
 
@@ -57,25 +54,35 @@ public:
     int
     GetWheelValueDiff() const;
 
-    void
-    UpdateWheelValue(int wheelValueCurrent, int wheelValuePrevious);
-
 // internal
 public:
     /************************************************************************/
     /* Internal Members                                                     */
     /************************************************************************/
     void
-    SetButtonInternal(MouseButton button, bool pressed, double time);
+    SetButtonInternal(MouseButton button, bool buttonPressed, double timeCurrent);
 
     void
-    SetPositionInternal(double x, double y, double time);
+    SetPositionInternal(double x, double y, double timeCurrent);
 
     void
-    SetWheelValueInternal(double yoffset, double time);
+    SetWheelValueInternal(double yoffset, double timeCurrent);
 
     void
-    UpdateEvent();
+    UpdateEvent(double elapsed);
+
+private:
+    void
+    UpdateButton(MouseButtonState& buttonState,
+                 bool              buttonPressedCurrent,
+                 bool              buttonPressedPrevious,
+                 double            timeCurrent);
+
+    void
+    UpdatePosition(Vector2f mousePositionCurrent, Vector2f mousePositionPrevious);
+
+    void
+    UpdateWheelValue(int wheelValueCurrent, int wheelValuePrevious);
 
 private:
     MouseButtonStateMap mButtonTable;

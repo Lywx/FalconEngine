@@ -24,10 +24,10 @@ public:
     //
     // @return The glyph number inside the text lines.
     static int
-    CreateTextLines(
+    CreateTextLineList(
         _IN_  const Font *font,
-        _IN_  const FontText        *text,
-        _OUT_ std::vector<FontLine>& textLines)
+        _IN_  const FontText&        text,
+        _OUT_ std::vector<FontLine>& textLineList)
     {
         using namespace boost;
 
@@ -35,10 +35,10 @@ public:
         sTextLineStrings.clear();
 
         // Split string into lines.
-        split(sTextLineStrings, text->mTextString, is_any_of(L"\n"));
+        split(sTextLineStrings, text.mTextString, is_any_of(L"\n"));
 
         // Bounds is formatted as [x, y, width, height]
-        const auto textLineWidth = text->mTextBounds[2];
+        const auto textLineWidth = text.mTextBounds[2];
 
         int glyphCount = 0;
         auto textLineCurrent = FontLine(textLineWidth);
@@ -61,56 +61,31 @@ public:
                 auto&  glyph = font->mGlyphTable.at(glyphIndex);
                 ++glyphCount;
 
-                double fontSizeScale = text->mFontSize / font->mSizePt;
+                double fontSizeScale = text.mFontSize / font->mSizePt;
                 bool success = textLineCurrent.PushGlyph(glyph, fontSizeScale);
                 if (!success)
                 {
                     // Have to start a new line for this glyph
-                    textLines.push_back(textLineCurrent);
+                    textLineList.push_back(textLineCurrent);
                     textLineCurrent = FontLine(textLineWidth);
                     textLineCurrent.PushGlyph(glyph, fontSizeScale);
                 }
             }
 
             // NOTE(Wuxiang): There will be at least one line even the string is empty.
-            textLines.push_back(textLineCurrent);
+            textLineList.push_back(textLineCurrent);
         }
 
         return glyphCount;
     }
 
     static void
-    FillFont(_IN_OUT_ const std::shared_ptr<BufferAdaptor>& bufferAdaptor,
-             _IN_     unsigned char                        *bufferData,
-
-             _IN_ const FontGlyph *glyph,
-             _IN_ Vector4f         glyphColor,
-
-             _IN_ double fontSizeScale)
-    {
-        // Font color
-        bufferAdaptor->Fill<Vector4f>(bufferData, glyphColor);
-
-        // NOTE(Wuxiang): 1.32 is value the when imported font size is 33. 1.32 is
-        // used as origin for scaling.
-
-        // Font width
-        bufferAdaptor->FillAs<double, float>(bufferData, 0.50 * (1 + 0.15 * (fontSizeScale - 1.32)));
-
-        // Font edge
-        bufferAdaptor->FillAs<double, float>(bufferData, 0.03 / (1 + 1.05 * (fontSizeScale - 1.32)));
-
-        // Font page
-        bufferAdaptor->FillAs<double, float>(bufferData, glyph->mPage);
-    }
-
-    static void
     FillGlyph(
-        _IN_OUT_ const std::shared_ptr<BufferAdaptor>& bufferAdaptor,
-        _IN_     unsigned char                        *bufferData,
+        _IN_OUT_ BufferAdaptor *bufferAdaptor,
+        _IN_     unsigned char *bufferData,
 
-        _IN_ const FontGlyph *glyph,
-        _IN_ Vector4f         glyphColor,
+        _IN_ const FontGlyph& glyph,
+        _IN_ const Color&     glyphColor,
         _IN_ float            glyphPosX,
         _IN_ float            glyphPosY,
 
@@ -127,14 +102,14 @@ public:
         // set, which means English would have different advance than Chinese.
         // However, the influence of width indeed is compensated using this method in
         // spacing of the glyph.
-        auto x1 = float(glyphPosX + (glyph->mAdvance / 2 - glyph->mWidth / 2 + glyph->mOffsetX) * fontSizeScale);
-        auto y2 = float(glyphPosY + (font->mLineBase - glyph->mOffsetY) * fontSizeScale);
-        auto y1 = float(y2 - glyph->mHeight * fontSizeScale);
-        auto x2 = float(x1 + glyph->mWidth * fontSizeScale);
-        auto s1 = float(glyph->mS1);
-        auto s2 = float(glyph->mS2);
-        auto t1 = float(glyph->mT1);
-        auto t2 = float(glyph->mT2);
+        auto x1 = float(glyphPosX + (glyph.mAdvance / 2 - glyph.mWidth / 2 + glyph.mOffsetX) * fontSizeScale);
+        auto y2 = float(glyphPosY + (font->mLineBase - glyph.mOffsetY) * fontSizeScale);
+        auto y1 = float(y2 - glyph.mHeight * fontSizeScale);
+        auto x2 = float(x1 + glyph.mWidth * fontSizeScale);
+        auto s1 = float(glyph.mS1);
+        auto s2 = float(glyph.mS2);
+        auto t1 = float(glyph.mT1);
+        auto t2 = float(glyph.mT2);
 
         FillPoint(bufferAdaptor, bufferData, Vector2f(x1, y1), Vector2f(s1, t1),
                   glyph, glyphColor, fontSizeScale);
@@ -152,46 +127,58 @@ public:
     }
 
     static void
-    FillPoint(_IN_OUT_ const std::shared_ptr<BufferAdaptor>& bufferAdaptor,
-              _IN_     unsigned char                        *bufferData,
+    FillPoint(_IN_OUT_ BufferAdaptor *bufferAdaptor,
+              _IN_     unsigned char *bufferData,
 
               _IN_ const Vector2f   position,
               _IN_ const Vector2f   texCoord,
 
-              _IN_ const FontGlyph *glyph,
-              _IN_ Vector4f         glyphColor,
+              _IN_ const FontGlyph& glyph,
+              _IN_ const Color&     glyphColor,
 
               _IN_ double fontSizeScale)
     {
-        bufferAdaptor->Fill<Vector2f>(bufferData, position);
-        bufferAdaptor->Fill<Vector2f>(bufferData, texCoord);
+        bufferAdaptor->Fill(bufferData, position);
+        bufferAdaptor->Fill(bufferData, texCoord);
+        bufferAdaptor->Fill(bufferData, Vector4f(glyphColor));
 
-        FillFont(bufferAdaptor, bufferData, glyph, glyphColor, fontSizeScale);
+        // NOTE(Wuxiang): 1.32 is value the when imported font size is 33. 1.32 is
+        // used as origin for scaling.
+
+        // Font width
+        bufferAdaptor->FillAs<double, float>(bufferData, 0.50 * (1 + 0.15 * (fontSizeScale - 1.32)));
+
+        // Font edge
+        bufferAdaptor->FillAs<double, float>(bufferData, 0.03 / (1 + 1.05 * (fontSizeScale - 1.32)));
+
+        // Font page
+        bufferAdaptor->FillAs<double, float>(bufferData, glyph.mPage);
     }
 
     // @summary Fill the vertex buffer with the text line information.
     static void
-    FillTextLines(
-        _IN_OUT_ const std::shared_ptr<BufferAdaptor>& bufferAdaptor,
-        _IN_     unsigned char                        *bufferData,
+    FillTextLineList(
+        _IN_OUT_ BufferAdaptor *bufferAdaptor,
+        _IN_     unsigned char *bufferData,
 
-        _IN_  const Font             *font,
-        _IN_  float                   fontSize,
+        _IN_  const Font       *font,
+        _IN_  float             fontSize,
 
         _IN_  Vector2f                     textPosition,
-        _IN_  Vector4f                     textColor,
-        _IN_  const std::vector<FontLine>& textLines)
+        _IN_  const Color&                 textColor,
+        _IN_  const std::vector<FontLine>& textLineList)
     {
         float x = textPosition.x;
         float y = textPosition.y;
 
         double fontSizeScale = fontSize / font->mSizePt;
 
-        for(auto& line : textLines)
+        for(auto& line : textLineList)
         {
-            for (auto& glyph : line.mLineGlyphs)
+            for (auto& glyph : line.mGlyphList)
             {
-                FillGlyph(bufferAdaptor, bufferData, &glyph, textColor, x, y,
+                FillGlyph(bufferAdaptor, bufferData,
+                          glyph, textColor, x, y,
                           font, fontSizeScale);
 
                 x += float(glyph.mAdvance * fontSizeScale);

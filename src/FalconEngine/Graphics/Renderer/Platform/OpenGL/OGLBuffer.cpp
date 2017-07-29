@@ -1,5 +1,7 @@
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLBuffer.h>
 
+#include <FalconEngine/Context/GameDebug.h>
+
 namespace FalconEngine
 {
 
@@ -29,8 +31,6 @@ PlatformBuffer::Map(BufferAccessMode          access,
                     int64_t                   offset,
                     int64_t                   size)
 {
-    CheckRangeValid(offset, size);
-
     glBindBuffer(mBufferTarget, mBufferObj);
 
     void *data = glMapBufferRange(mBufferTarget, offset, size,
@@ -53,8 +53,6 @@ PlatformBuffer::Unmap()
 void
 PlatformBuffer::Flush(int64_t offset, int64_t size)
 {
-    CheckRangeValid(offset, size);
-
     glBindBuffer(mBufferTarget, mBufferObj);
 
     // NOTE(Wuxiang): Remember that the offset is related to mapped range.
@@ -80,6 +78,12 @@ PlatformBuffer::CheckRangeValid(int64_t offset, int64_t size)
 
     glBindBuffer(mBufferTarget, 0);
 #endif
+}
+
+void
+PlatformBuffer::PrintRange(const char *message, GLuint bufferTarget, int64_t offset, int64_t size)
+{
+    GameDebug::OutputStringFormat("Buffer %s %s from %llu to %llu\n", std::to_string(bufferTarget).c_str(), message, offset, size);
 }
 
 /************************************************************************/

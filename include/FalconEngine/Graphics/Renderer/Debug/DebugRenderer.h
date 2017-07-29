@@ -205,16 +205,14 @@ private:
         auto visual = make_shared<Visual>(make_shared<Mesh>(primitive, nullptr));
         visualEffect->CreateInstance(visual.get(), mDebugEffectParams);
 
-        mDebugBufferResource->CreateChannel(channel, visual, vertexBufferAdaptor);
+        mDebugBufferResource->CreateChannel(channel, vertexBufferAdaptor, visual);
     }
 
 private:
-    const Font                                *mDebugFont;
-    std::shared_ptr<DebugEffectParams>         mDebugEffectParams;
-    std::shared_ptr<BufferResource>            mDebugBufferResource;
-
-    // Store if the index slot is used by a camera.
-    std::shared_ptr<DebugRenderMessageManager> mDebugMessageManager;
+    std::shared_ptr<BufferResource<BufferResourceChannel>> mDebugBufferResource;
+    const Font                                            *mDebugFont;
+    std::shared_ptr<DebugEffectParams>                     mDebugEffectParams;
+    std::shared_ptr<DebugRenderMessageManager>             mDebugMessageManager;
 };
 #pragma warning(default: 4251)
 

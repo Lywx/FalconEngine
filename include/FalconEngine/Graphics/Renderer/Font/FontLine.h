@@ -19,10 +19,10 @@ public:
     bool
     PushGlyph(const FontGlyph& glyph, double fontSizeScale);
 
-    double                 mLineWidth;                                        // Maximum width of this line in pixel. The font type specific scaling is already included.
-    double                 mLineWidthCurrent = 0;                             // Width of this line in pixel. The font type specific scaling is already included.
+    double                 mWidth;                                        // Maximum width of this line in pixel. The font type specific scaling is already included.
+    double                 mWidthCurrent = 0;                             // Width of this line in pixel. The font type specific scaling is already included.
 
-    std::vector<FontGlyph> mLineGlyphs;
+    std::vector<FontGlyph> mGlyphList;
 };
 #pragma warning(default: 4251)
 

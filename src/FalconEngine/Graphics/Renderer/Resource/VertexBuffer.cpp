@@ -53,8 +53,7 @@ VertexBuffer::SetDataOffset(int64_t dataOffset)
 {
     Buffer::SetDataOffset(dataOffset);
 
-    for (list<VertexBufferBinding *>::const_iterator
-            vertexBufferBindingIter = GetBindingBegin();
+    for (auto vertexBufferBindingIter = GetBindingBegin();
             vertexBufferBindingIter != GetBindingEnd();
             ++vertexBufferBindingIter)
     {

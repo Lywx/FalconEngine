@@ -35,25 +35,25 @@ public:
     void
     SetBinding(VertexBufferBinding *binding);
 
-    auto
+    std::list<VertexBufferBinding *>::const_iterator
     GetBindingBegin() const
     {
         return mBinding.cbegin();
     }
 
-    auto
+    std::list<VertexBufferBinding *>::const_iterator
     GetBindingEnd() const
     {
         return mBinding.cend();
     }
 
-    auto
+    std::list<VertexBufferBinding *>::iterator
     GetBindingBegin()
     {
         return mBinding.begin();
     }
 
-    auto
+    std::list<VertexBufferBinding *>::iterator
     GetBindingEnd()
     {
         return mBinding.end();

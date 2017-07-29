@@ -7,7 +7,8 @@
 #include <string>
 #include <vector>
 
-#include <FalconEngine/Graphics/Renderer/Font/FontRenderBatch.h>
+#include <FalconEngine/Graphics/Renderer/Font/FontResourceChannel.h>
+#include <FalconEngine/Graphics/Renderer/Resource/BufferResource.h>
 
 #include <FalconEngine/Math/Color.h>
 #include <FalconEngine/Math/Handedness.h>
@@ -17,7 +18,7 @@ namespace FalconEngine
 {
 
 class Font;
-class FontRenderBatch;
+class FontResourceChannel;
 class FontText;
 
 class Renderer;
@@ -31,6 +32,9 @@ class FALCON_ENGINE_API FontRenderer final
     /* Static Members                                                       */
     /************************************************************************/
 public:
+    static const int BatchItemNumMax;
+    static const int FrameGlyphNumMax;
+
     static FontRenderer *
     GetInstance()
     {
@@ -92,23 +96,20 @@ private:
               Color               textColor = ColorPalette::White,
               float               textLineWidth = std::numeric_limits<float>().max());
 
-    std::shared_ptr<FontRenderBatch>
-    FindBatch(const Font *font);
+    const std::shared_ptr<FontResourceChannel>&
+    FindChannel(const Font *font);
 
     void
-    FillText(_IN_     const Font      *font,
-             _IN_OUT_ FontRenderBatch *batch);
+    FillText(_IN_     const Font          *font,
+             _IN_OUT_ FontResourceChannel *fontChannelInfo);
 
 private:
     // NOTE(Wuxiang): Since the shader sampler could not be indexed using vertex
     // attribute input, it is impossible to use vertex attribute to do texture
     // selection. So I need to use different draw call to implement multiple font
     // support.
-    // http://stackoverflow.com/questions/21524535/opengl-sampler-array-limit
-    // http://stackoverflow.com/questions/12030711/glsl-array-of-textures-of-differing-size/
-    using FontRenderBatchMap = std::map<const Font *, std::shared_ptr<FontRenderBatch>>;
+    std::shared_ptr<BufferResource<FontResourceChannel>> mTextBufferResource;
 
-    FontRenderBatchMap mTextBatchTable;
 };
 #pragma warning(default: 4251)
 

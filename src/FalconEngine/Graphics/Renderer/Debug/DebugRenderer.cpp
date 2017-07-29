@@ -19,7 +19,7 @@ namespace FalconEngine
 DebugRenderer::DebugRenderer() :
     mDebugFont(nullptr)
 {
-    mDebugBufferResource = make_shared<BufferResource>();
+    mDebugBufferResource = make_shared<BufferResource<BufferResourceChannel>>();
     mDebugEffectParams = make_shared<DebugEffectParams>();
     mDebugMessageManager = make_shared<DebugRenderMessageManager>();
 }
@@ -259,7 +259,6 @@ DebugRenderer::Initialize()
 void
 DebugRenderer::RenderBegin()
 {
-    mDebugBufferResource->ResetElement();
 }
 
 void
@@ -271,6 +270,7 @@ DebugRenderer::Render(double /* percent */)
 void
 DebugRenderer::RenderEnd()
 {
+    mDebugBufferResource->ResetPersistent();
 }
 
 void
@@ -291,7 +291,8 @@ DebugRenderer::UpdateFrame(double elapsed)
         switch (message.mType)
         {
         case DebugRenderType::AABB:
-            mDebugBufferResource->AddChannelElement(channel, 24);
+            mDebugBufferResource->AddChannelElement(
+                channel, 24);
             break;
         case DebugRenderType::OBB:
             FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
@@ -322,7 +323,7 @@ DebugRenderer::UpdateFrame(double elapsed)
         }
     }
 
-    mDebugBufferResource->FillBegin(
+    mDebugBufferResource->FillDataBegin(
         BufferAccessMode::WriteBuffer,
         BufferFlushMode::Automatic,
         BufferSynchronizationMode::Unsynchronized);
@@ -389,7 +390,8 @@ DebugRenderer::UpdateFrame(double elapsed)
         }
     }
 
-    mDebugBufferResource->FillEnd();
+    mDebugBufferResource->FillDataEnd();
+    mDebugBufferResource->Reset();
 
     // Remove time-out message.
     mDebugMessageManager->UpdateFrame(elapsed);

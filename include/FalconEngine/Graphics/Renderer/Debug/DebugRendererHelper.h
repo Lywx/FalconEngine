@@ -31,15 +31,6 @@ public:
              _IN_ int             cameraIndex);
 
     static void
-    FillColor(_IN_OUT_ BufferAdaptor *bufferAdaptor,
-              _IN_OUT_ unsigned char *bufferData,
-
-              _IN_ const Color& color)
-    {
-        bufferAdaptor->Fill(bufferData, Vector4f(color));
-    }
-
-    static void
     FillCircle(_IN_OUT_ BufferAdaptor *bufferAdaptor,
                _IN_OUT_ unsigned char *bufferData,
 
@@ -72,14 +63,6 @@ public:
     }
 
     static void
-    FillCamera(_IN_OUT_ BufferAdaptor *bufferAdaptor,
-               _IN_OUT_ unsigned char *bufferData,
-               _IN_     int            cameraIndex)
-    {
-        bufferAdaptor->Fill(bufferData, cameraIndex);
-    }
-
-    static void
     FillPoint(_IN_OUT_ BufferAdaptor *bufferAdaptor,
               _IN_OUT_ unsigned char *bufferData,
 
@@ -87,18 +70,9 @@ public:
               _IN_ const Color&    color,
               int                  cameraIndex)
     {
-        FillPosition(bufferAdaptor, bufferData, position);
-        FillColor(bufferAdaptor, bufferData, color);
-        FillCamera(bufferAdaptor, bufferData, cameraIndex);
-    }
-
-    static void
-    FillPosition(_IN_OUT_ BufferAdaptor *bufferAdaptor,
-                 _IN_OUT_ unsigned char *bufferData,
-
-                 _IN_ const Vector3f& position)
-    {
         bufferAdaptor->Fill(bufferData, position);
+        bufferAdaptor->Fill(bufferData, Vector4f(color));
+        bufferAdaptor->Fill(bufferData, cameraIndex);
     }
 
     static void

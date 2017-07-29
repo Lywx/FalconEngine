@@ -5,17 +5,17 @@ namespace FalconEngine
 {
 
 FontLine::FontLine(double lineWidth) :
-    mLineWidth(lineWidth)
+    mWidth(lineWidth)
 {
 }
 
 bool FontLine::PushGlyph(const FontGlyph& glyph, double fontSizeScale)
 {
     double additionalWidth = glyph.mAdvance * fontSizeScale;
-    if (mLineWidthCurrent + additionalWidth <= mLineWidth)
+    if (mWidthCurrent + additionalWidth <= mWidth)
     {
-        mLineGlyphs.push_back(glyph);
-        mLineWidthCurrent += additionalWidth;
+        mGlyphList.push_back(glyph);
+        mWidthCurrent += additionalWidth;
         return true;
     }
 

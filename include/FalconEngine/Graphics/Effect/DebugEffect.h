@@ -49,6 +49,7 @@ public:
     RemoveCamera(const Camera *camera);
 
 public:
+    // Store if the index slot is used by a camera.
     std::vector<bool>                           mCameraSlot;
     std::map<const Camera *, int>               mCameraSlotTable;
     std::vector<ShaderUniformValueSp<Matrix4f>> mCameraSlotUniform;

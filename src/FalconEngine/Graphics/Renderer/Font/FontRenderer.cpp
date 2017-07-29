@@ -13,6 +13,8 @@
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/BufferAdaptor.h>
+#include <FalconEngine/Graphics/Renderer/Resource/BufferResource.h>
+#include <FalconEngine/Graphics/Renderer/Resource/BufferCircular.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 
 using namespace std;
@@ -20,13 +22,21 @@ using namespace FalconEngine;
 
 namespace FalconEngine
 {
+/************************************************************************/
+/* Public Members                                                       */
+/************************************************************************/
+const int
+FontRenderer::FrameGlyphNumMax = int(Kilobytes(10));
 
+const int
+FontRenderer::BatchItemNumMax = 1024;
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
 FontRenderer::FontRenderer()
 {
+    mTextBufferResource = make_shared<BufferResource<FontResourceChannel>>();
 }
 
 FontRenderer::~FontRenderer()
@@ -78,41 +88,31 @@ FontRenderer::RenderBegin()
 void
 FontRenderer::Render(double /* percent */)
 {
-    for (auto& fontBatchPair : mTextBatchTable)
+    mTextBufferResource->Draw(nullptr);
+
+    for (auto fontChannelIter = mTextBufferResource->GetChannelBegin();
+            fontChannelIter != mTextBufferResource->GetChannelEnd();
+            ++fontChannelIter)
     {
-        auto batch = fontBatchPair.second;
+        auto fontChannel = fontChannelIter->first;
+        auto& fontChannelInfo = fontChannelIter->second;
 
-        if (batch->mPendingGlyphNumPredict > 0)
+        if (mTextBufferResource->GetChannel(fontChannel)->mRenderItemList.size() > 0)
         {
-            auto font = fontBatchPair.first;
-            FillText(font, batch.get());
+            FillText(reinterpret_cast<const Font *>(fontChannel),
+                     fontChannelInfo.get());
         }
 
-        if (batch->mFrameGlyphNum > 0)
-        {
-            // Update buffer data to reflect buffer data accumulated during
-            // entire frame.
-
-            // TODO(Wuxiang)
-            batch->mGlyphVertexBuffer->SetElementNum(batch->mFrameGlyphNum * 6);
-
-            static auto sMasterRenderer = Renderer::GetInstance();
-            sMasterRenderer->Draw(nullptr, batch->mGlyphQuadVisual.get());
-        }
+        mTextBufferResource->DrawChannel(fontChannel, nullptr);
     }
 }
 
 void
 FontRenderer::RenderEnd()
 {
-    for (auto& fontBatchPair : mTextBatchTable)
-    {
-        auto& batch = fontBatchPair.second;
-
-        batch->mBatchedItemList.clear();
-        batch->mPendingGlyphNumPredict = 0;
-        batch->mFrameGlyphNum = 0;
-    }
+    // NOTE(Wuxiang): Only need to reset persistent data because after Render
+    // method gets called, all the non-persistent data is cleared already.
+    mTextBufferResource->ResetPersistent();
 }
 
 /************************************************************************/
@@ -130,119 +130,119 @@ FontRenderer::BatchText(
 {
     FALCON_ENGINE_CHECK_NULLPTR(font);
 
-    auto text = FontText(fontSize, textString, textPosition, textLineWidth);
-    auto batch = FindBatch(font);
-
-    auto const TextItemMaxNum = 1024;
+    auto& fontChannelInfo = FindChannel(font);
+    auto fontChannel = intptr_t(font);
 
     // Add the text into the batch
-    batch->mBatchedItemList.emplace_back(text, textColor);
-    batch->mPendingGlyphNumPredict += int(text.mTextString.size());
+    auto fontVertexNumMapped = int(textString.size()) * 6;
+    mTextBufferResource->AddChannelElementMapped(fontChannel, fontVertexNumMapped);
+    mTextBufferResource->AddChannelItem(fontChannel, FontRenderItem(
+                                            FontText(fontSize,
+                                                    textString,
+                                                    textPosition,
+                                                    textLineWidth),
+                                            textColor));
 
     // Fill the text VRAM buffer when the batch item number reach the item limit.
-    if (batch->mBatchedItemList.size() >= TextItemMaxNum)
+    int itemNum = int(fontChannelInfo->mRenderItemList.size());
+    if (itemNum >= BatchItemNumMax)
     {
-        FillText(font, batch.get());
+        FillText(font, fontChannelInfo.get());
     }
 }
 
-std::shared_ptr<FontRenderBatch>
-FontRenderer::FindBatch(const Font *font)
+const std::shared_ptr<FontResourceChannel>&
+FontRenderer::FindChannel(const Font *font)
 {
+    auto fontChannel = intptr_t(font);
+
     // When the font is prepared before.
+    auto fontChannelExist = mTextBufferResource->ContainChannel(fontChannel);
+    if (fontChannelExist)
     {
-        auto iter = mTextBatchTable.find(font);
-        if (iter != mTextBatchTable.end())
-        {
-            return iter->second;
-        }
+        return mTextBufferResource->GetChannel(fontChannel);
     }
 
     // Initialize new batch for given font.
-    {
-        const int GlyphMaxNum = int(Kilobytes(10));
+    static auto sVisualEffect = make_shared<FontEffect>();
 
-        auto visualEffect = make_shared<FontEffect>();
-
-        auto vertexBuffer = make_shared<VertexBuffer>(GlyphMaxNum * 6, sizeof(FontVertex),
+    // Take account for the buffer zone.
+    int vertexBufferVertexNum = int(FrameGlyphNumMax * 6 * 1.25);
+    auto vertexBuffer = make_shared<VertexBuffer>(
+                            vertexBufferVertexNum, sizeof(FontVertex),
                             BufferStorageMode::Device, BufferUsage::Stream);
 
-        auto vertexFormat = visualEffect->GetVertexFormat();
-        auto vertexGroup = make_shared<VertexGroup>();
-        vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, vertexFormat->GetVertexBufferStride(0));
+    auto vertexBufferAdaptor = make_shared<BufferCircular>(
+                                   vertexBuffer,
+                                   vertexBuffer->GetCapacitySize() / 4);
 
-        auto primitiveQuads = make_shared<PrimitiveQuads>(vertexFormat, vertexGroup, nullptr);
+    auto vertexFormat = sVisualEffect->GetVertexFormat();
+    auto vertexGroup = make_shared<VertexGroup>();
+    vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, vertexFormat->GetVertexBufferStride(0));
 
-        auto visualQuads = make_shared<Visual>(make_shared<Mesh>(primitiveQuads, nullptr));
-        auto visualEffectParams = make_shared<FontEffectParams>(font, HandednessRight::GetInstance());
-        visualEffect->CreateInstance(visualQuads.get(), visualEffectParams);
+    auto primitive = make_shared<PrimitiveQuads>(vertexFormat, vertexGroup, nullptr);
 
-        auto batch = make_shared<FontRenderBatch>(vertexBuffer, primitiveQuads, visualQuads);
-        mTextBatchTable.insert({ font, batch });
-        return batch;
-    }
+    auto visual = make_shared<Visual>(make_shared<Mesh>(primitive, nullptr));
+    auto visualEffectParams = make_shared<FontEffectParams>(font, HandednessRight::GetInstance());
+    sVisualEffect->CreateInstance(visual.get(), visualEffectParams);
+
+    return mTextBufferResource->CreateChannel(fontChannel, vertexBufferAdaptor, visual);
 }
 
 void
 FontRenderer::FillText(
-    _IN_     const Font      *font,
-    _IN_OUT_ FontRenderBatch *batch)
+    _IN_     const Font          *font,
+    _IN_OUT_ FontResourceChannel *fontChannelInfo)
 {
     FALCON_ENGINE_CHECK_NULLPTR(font);
 
-    auto pendingGlyphNumExact = 0;
+    auto fontChannel = intptr_t(font);
 
-    auto buffer = batch->mGlyphVertexBuffer.get();
-    auto bufferAdaptor = batch->mGlyphVertexBufferAdaptor;
-
-    bufferAdaptor->FillBegin();
+    mTextBufferResource->FillChannelDataBegin(
+        fontChannel,
+        BufferAccessMode::WriteRange,
+        BufferFlushMode::Explicit,
+        BufferSynchronizationMode::Unsynchronized);
 
     {
-        static auto sMasterRenderer = Renderer::GetInstance();
-        auto bufferData = static_cast<unsigned char *>(
-                              sMasterRenderer->Map(buffer,
-                                      BufferAccessMode::WriteRange,
-                                      BufferFlushMode::Explicit,
-                                      BufferSynchronizationMode::Unsynchronized,
-                                      buffer->GetDataOffset(),
-                                      batch->mPendingGlyphNumPredict * 6 * buffer->GetElementSize()));
+        BufferAdaptor *bufferAdaptor;
+        unsigned char *bufferData;
+        std::tie(bufferAdaptor, bufferData)
+            = mTextBufferResource->GetChannelData(fontChannel);
 
-        static auto sTextLines = vector<FontLine>();
-        for (auto& textItem : batch->mBatchedItemList)
+        int fontPendingGlyphNum = 0;
+
+        // Created text vertex on the fly and fill them into the buffer.
+        static auto sTextLineList = vector<FontLine>();
+        for (auto& textItem : fontChannelInfo->mRenderItemList)
         {
-            sTextLines.clear();
+            sTextLineList.clear();
 
-            auto  text = &textItem.mText;
+            auto& text = textItem.mText;
             auto& textColor = textItem.mTextColor;
 
             // Construct lines with glyph information.
-            pendingGlyphNumExact += FontRendererHelper::CreateTextLines(font, text, sTextLines);
+            fontPendingGlyphNum +=
+                FontRendererHelper::CreateTextLineList(font, text, sTextLineList);
 
             // Fill the vertex attribute into the buffer
-            FontRendererHelper::FillTextLines(
+            FontRendererHelper::FillTextLineList(
                 bufferAdaptor,
                 bufferData,
                 font,
-                text->mFontSize,
-                Vector2f(text->mTextBounds.x, text->mTextBounds.y),
-                Vector4f(textColor),
-                sTextLines);
+                text.mFontSize,
+                Vector2f(text.mTextBounds.x, text.mTextBounds.y),
+                textColor,
+                sTextLineList);
         }
 
-        // NOTE(Wuxiang): This set statement is only used to flush the buffer.
-        // The final buffer element number is set later.
-        // Only after processing all the glyph we can get the accurate number of valid glyph.
-        buffer->SetElementNum(pendingGlyphNumExact * 6);
-
-        sMasterRenderer->Flush(buffer, 0, buffer->GetDataSize());
-        sMasterRenderer->Unmap(buffer);
+        auto fontPendingVertexNum = fontPendingGlyphNum * 6;
+        mTextBufferResource->AddChannelElementPersistent(fontChannel, fontPendingVertexNum);
+        mTextBufferResource->FlushChannelData(fontChannel, fontPendingVertexNum);
     }
 
-    bufferAdaptor->FillEnd();
-
-    batch->mBatchedItemList.clear();
-    batch->mFrameGlyphNum += pendingGlyphNumExact;
-    batch->mPendingGlyphNumPredict = 0;
+    mTextBufferResource->FillChannelDataEnd(fontChannel);
+    mTextBufferResource->ResetChannel(fontChannel);
 }
 
 }

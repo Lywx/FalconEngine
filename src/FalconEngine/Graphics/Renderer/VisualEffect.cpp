@@ -2,10 +2,20 @@
 
 #include <queue>
 
+#include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexAttribute.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture1d.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture2dArray.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture3d.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Node.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Graphics/Renderer/State/BlendState.h>
 #include <FalconEngine/Graphics/Renderer/State/CullState.h>
 #include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
@@ -13,6 +23,9 @@
 #include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
 #include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
 #include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
+#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
+#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformAutomatic.h>
+#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformManual.h>
 
 using namespace std;
 

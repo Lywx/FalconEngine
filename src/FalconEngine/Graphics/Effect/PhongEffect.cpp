@@ -1,9 +1,16 @@
 #include <FalconEngine/Graphics/Effect/PhongEffect.h>
 
+#include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Light.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Material.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Mesh.h>
+#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformAutomatic.h>
+#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexAttribute.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 
 using namespace std;
 

@@ -35,8 +35,6 @@ public:
     void
     SetUpdateFunction(ShaderUniformUpdateFunction<T> updateFunction);
 
-    // TODO(Wuxiang 2017-01-25 11:42): not done yet
-
     // @summry The function update the uniform variable optionally using update
     // function. If you intent to enforce reusability, you could override this
     // method using a fixed template class argument.
@@ -52,6 +50,7 @@ ShaderUniformAutomatic<T>::ShaderUniformAutomatic(const std::string& name, const
     ShaderUniformValue<T>(name, T()),
     mUpdateFunction(updateFunction)
 {
+    this->mValueIsCurrent = false;
 }
 
 template <typename T>
@@ -83,12 +82,14 @@ ShaderUniformAutomatic<T>::Update(const Camera *camera, const Visual *visual)
     if (mUpdateFunction)
     {
         this->mValue = mUpdateFunction(visual, camera);
-        this->mUpdated = true;
+
+        // NOTE(Wuxiang): Automatic uniform is always being updated.
+        this->mValueIsCurrent = false;
     }
 }
 
 template<typename T>
-using ShaderUniformAutomaticSharedPtr = std::shared_ptr<ShaderUniformAutomatic<T>>;
+using ShaderUniformAutomaticSp = std::shared_ptr<ShaderUniformAutomatic<T>>;
 
 template <typename T, typename ... Args>
 std::shared_ptr<ShaderUniformValue<T>>

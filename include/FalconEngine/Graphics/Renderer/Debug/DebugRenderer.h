@@ -8,15 +8,15 @@
 #include <FalconEngine/Graphics/Renderer/PrimitiveLines.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveQuads.h>
+#include <FalconEngine/Graphics/Renderer/Debug/DebugRenderMessageManager.h>
+#include <FalconEngine/Graphics/Renderer/Debug/DebugRendererHelper.h>
 #include <FalconEngine/Graphics/Renderer/Resource/BufferCircular.h>
 #include <FalconEngine/Graphics/Renderer/Resource/BufferResource.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Math/Color.h>
-
-#include <FalconEngine/Graphics/Renderer/Debug/DebugRenderMessageManager.h>
-#include <FalconEngine/Graphics/Renderer/Debug/DebugRendererHelper.h>
-#include "FalconEngine/Graphics/Scene/FirstPersonCamera.h"
 
 namespace FalconEngine
 {
@@ -88,9 +88,6 @@ public:
             bool            depthEnabled = true);
 
     void
-    AddCamera(const Camera *camera);
-
-    void
     AddCircle(const Camera   *camera,
               const Vector3f& center,
               const Vector3f& normal,
@@ -144,6 +141,12 @@ public:
     //         float           duration = 0.0f,
     //         bool            depthEnabled = true);
 
+    void
+    AddCamera(const Camera *camera);
+
+    void
+    RemoveCamera(const Camera *camera);
+
     /************************************************************************/
     /* Rendering Engine API                                                 */
     /************************************************************************/
@@ -192,14 +195,16 @@ private:
         auto primitive = make_shared<T>(vertexFormat, vertexGroup, nullptr);
 
         auto visual = make_shared<Visual>(make_shared<Mesh>(primitive, nullptr));
-        auto visualEffectParams = make_shared<DebugEffectParams>();
-        visualEffect->CreateInstance(visual.get(), visualEffectParams);
+        visualEffect->CreateInstance(visual.get(), mDebugEffectParams);
 
         mDebugBufferResource->CreateChannel(channel, visual, vertexBufferAdaptor);
     }
 
 private:
+    std::shared_ptr<DebugEffectParams>         mDebugEffectParams;
     std::shared_ptr<BufferResource>            mDebugBufferResource;
+
+    // Store if the index slot is used by a camera.
     std::shared_ptr<DebugRenderMessageManager> mDebugMessageManager;
 };
 #pragma warning(default: 4251)

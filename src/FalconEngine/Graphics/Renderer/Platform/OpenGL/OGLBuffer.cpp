@@ -29,7 +29,10 @@ PlatformBuffer::Map(BufferAccessMode          access,
                     int64_t                   offset,
                     int64_t                   size)
 {
+    CheckRangeValid(offset, size);
+
     glBindBuffer(mBufferTarget, mBufferObj);
+
     void *data = glMapBufferRange(mBufferTarget, offset, size,
                                   OpenGLBufferAccessModeMark[int(access)] |
                                   OpenGLBufferFlushModeMark[int(flush)] |
@@ -50,20 +53,33 @@ PlatformBuffer::Unmap()
 void
 PlatformBuffer::Flush(int64_t offset, int64_t size)
 {
+    CheckRangeValid(offset, size);
+
     glBindBuffer(mBufferTarget, mBufferObj);
 
+    // NOTE(Wuxiang): Remember that the offset is related to mapped range.
+    glFlushMappedBufferRange(mBufferTarget, offset, size);
+    glBindBuffer(mBufferTarget, 0);
+}
+
+/************************************************************************/
+/* Protected Members                                                    */
+/************************************************************************/
+void
+PlatformBuffer::CheckRangeValid(int64_t offset, int64_t size)
+{
 #if defined(FALCON_ENGINE_DEBUG_GRAPHICS)
+    glBindBuffer(mBufferTarget, mBufferObj);
+
     GLint bufferSize;
     glGetBufferParameteriv(mBufferTarget, GL_BUFFER_SIZE, &bufferSize);
     if (offset + size > bufferSize)
     {
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Buffer is overflowed.");
     }
-#endif
 
-    // NOTE(Wuxiang): Remember that the offset is related to mapped range.
-    glFlushMappedBufferRange(mBufferTarget, offset, size);
     glBindBuffer(mBufferTarget, 0);
+#endif
 }
 
 /************************************************************************/

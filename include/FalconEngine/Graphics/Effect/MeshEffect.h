@@ -5,7 +5,9 @@
 #include <functional>
 #include <memory>
 
+#include <FalconEngine/Graphics/Renderer/Scene/Material.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffectParams.h>
 #include <FalconEngine/Math/Color.h>
 
 namespace FalconEngine

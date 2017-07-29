@@ -1,8 +1,15 @@
 #include <FalconEngine/Graphics/Effect/MeshEffect.h>
 
 #include <FalconEngine/Context/GameEngineGraphics.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
+#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformAutomatic.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexAttribute.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Light.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Material.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
+#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
 
 using namespace std;
 

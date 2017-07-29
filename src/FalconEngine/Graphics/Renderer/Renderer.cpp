@@ -616,8 +616,8 @@ Renderer::Disable(const VertexGroup *vertexGroup)
             vertexBufferBindingIter != vertexGroup->GetVertexBufferBindingEnd();
             ++vertexBufferBindingIter)
     {
-        const shared_ptr<const VertexBufferBinding>& vertexBufferBinding =
-            vertexBufferBindingIter->second;
+        const auto& vertexBufferBinding =
+            static_pointer_cast<const VertexBufferBinding>(vertexBufferBindingIter->second);
 
         Disable(vertexBufferBinding->GetBuffer(),
                 vertexBufferBinding->GetIndex());
@@ -1018,23 +1018,33 @@ Renderer::Enable(const VisualEffectInstancePass *pass, const Camera *camera, con
 void
 Renderer::Update(const VisualEffectInstancePass *pass, ShaderUniform *uniform, const Camera *camera, const Visual *visual)
 {
-    // Update uniform state and location
-    if (uniform->mLocation == 0)
+    // NOTE(Wuxiang): Note that uniform comes from the instance pass. This
+    // means there would be user modification.
+
+    // Initialize uniform state and location.
+    if (!uniform->mInitialized)
     {
+        // NOTE(Wuxiang): This is necessary because the uniform in instance
+        // pass is different entity from uniform in shader.
         auto shader = pass->GetShader();
         uniform->mEnabled = shader->IsUniformEnabled(uniform->mName);
         uniform->mLocation = shader->GetUniformLocation(uniform->mName);
+        uniform->mInitialized = true;
     }
 
-    // Update uniform value
+    // Update uniform value.
     if (uniform->mEnabled)
     {
-        uniform->Update(camera, visual);
-    }
+        if (uniform->IsUpdateNeeded())
+        {
+            uniform->Update(camera, visual);
+        }
 
-    // Update uniform value in context.
-    if (uniform->mUpdated)
-    {
+        // Update uniform value in context.
+        //
+        // NOTE(Wuxiang): You have to update a uniform value regardless whether it
+        // has been updated or not because the shader program is changed
+        // arbitrarily.
         PlatformShaderUniform::UpdateContext(uniform);
     }
 }

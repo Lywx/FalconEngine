@@ -62,8 +62,10 @@ GameEngineGraphics::RenderBegin()
 void
 GameEngineGraphics::Render(double percent)
 {
-    mDebugRenderer->Render(percent);
     mEntityRenderer->Render(percent);
+
+    // NOTE(Wuxiang): The render order is important here.
+    mDebugRenderer->Render(percent);
     mFontRenderer->Render(percent);
 }
 

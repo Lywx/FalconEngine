@@ -28,7 +28,7 @@ VisualEffectPass::~VisualEffectPass()
 /* Public Members                                                       */
 /************************************************************************/
 void
-VisualEffectPass::SetShader(ShaderSharedPtr shader)
+VisualEffectPass::SetShader(std::shared_ptr<Shader> shader)
 {
     FALCON_ENGINE_CHECK_NULLPTR(shader);
 
@@ -36,7 +36,7 @@ VisualEffectPass::SetShader(ShaderSharedPtr shader)
 }
 
 void
-VisualEffectPass::SetBlendState(BlendStateUniquePtr blendStateHandle)
+VisualEffectPass::SetBlendState(std::unique_ptr<BlendState> blendStateHandle)
 {
     if (blendStateHandle == nullptr)
     {
@@ -47,7 +47,7 @@ VisualEffectPass::SetBlendState(BlendStateUniquePtr blendStateHandle)
 }
 
 void
-VisualEffectPass::SetCullState(CullStateUniquePtr cullStateHandle)
+VisualEffectPass::SetCullState(std::unique_ptr<CullState> cullStateHandle)
 {
     if (cullStateHandle == nullptr)
     {
@@ -58,7 +58,7 @@ VisualEffectPass::SetCullState(CullStateUniquePtr cullStateHandle)
 }
 
 void
-VisualEffectPass::SetDepthTestState(DepthTestStateUniquePtr depthTestStateHandle)
+VisualEffectPass::SetDepthTestState(std::unique_ptr<DepthTestState> depthTestStateHandle)
 {
     if (depthTestStateHandle == nullptr)
     {
@@ -69,7 +69,7 @@ VisualEffectPass::SetDepthTestState(DepthTestStateUniquePtr depthTestStateHandle
 }
 
 void
-VisualEffectPass::SetOffsetState(OffsetStateUniquePtr offsetStateHandle)
+VisualEffectPass::SetOffsetState(std::unique_ptr<OffsetState> offsetStateHandle)
 {
     if (offsetStateHandle == nullptr)
     {
@@ -80,7 +80,7 @@ VisualEffectPass::SetOffsetState(OffsetStateUniquePtr offsetStateHandle)
 }
 
 void
-VisualEffectPass::SetStencilTestState(StencilTestStateUniquePtr stencilTestStateHandle)
+VisualEffectPass::SetStencilTestState(std::unique_ptr<StencilTestState> stencilTestStateHandle)
 {
     if (stencilTestStateHandle == nullptr)
     {
@@ -91,7 +91,7 @@ VisualEffectPass::SetStencilTestState(StencilTestStateUniquePtr stencilTestState
 }
 
 void
-VisualEffectPass::SetWireframeState(WireframeStateUniquePtr wireframeStateHandle)
+VisualEffectPass::SetWireframeState(std::unique_ptr<WireframeState> wireframeStateHandle)
 {
     if (wireframeStateHandle == nullptr)
     {

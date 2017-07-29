@@ -131,7 +131,6 @@ SampleGame::Initialize()
 
         static auto sDebugRenderer = DebugRenderer::GetInstance();
         sDebugRenderer->AddCamera(mCamera.get());
-
     }
 }
 
@@ -190,11 +189,6 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
     static auto sEntityRenderer = graphics->GetEntityRenderer();
     sEntityRenderer->Draw(mCamera.get(), mScene.get());
 
-    static auto sDebugRenderer = graphics->GetDebugRenderer();
-    sDebugRenderer->AddAABB(mCamera.get(), mScene.get(), Transparent(ColorPalette::Red, 1.0f));
-    sDebugRenderer->AddAABB(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f), true);
-    sDebugRenderer->AddAABB(mCamera.get(), mPointLight2.get(), Transparent(ColorPalette::Green, 1.0f), true);
-
     Game::Render(graphics, percent);
 }
 
@@ -211,6 +205,17 @@ SampleGame::Update(GameEngineGraphics *graphics, GameEngineInput *input, double 
 
     mCamera->Update(input, elapsed);
     mScene->Update(input, elapsed);
+
+    static auto sDebugRenderer = graphics->GetDebugRenderer();
+
+    if (keyboard->KeyDown(Key::A))
+    {
+        sDebugRenderer->AddCircle(mCamera.get(), Vector3f(1, 0, 0), Vector3f::UnitX, 1.0f, ColorPalette::Red, 3.0f, false);
+        sDebugRenderer->AddCircle(mCamera.get(), Vector3f(1, 0, 0), Vector3f::UnitY, 5.0f, ColorPalette::Red, 4.0f, false);
+        sDebugRenderer->AddCircle(mCamera.get(), Vector3f(1, 0, 0), Vector3f::UnitZ, 7.0f, ColorPalette::Red, 5.0f, false);
+    }
+    // sDebugRenderer->AddAABB(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f), 0.0f, true);
+    // sDebugRenderer->AddAABB(mCamera.get(), mPointLight2.get(), Transparent(ColorPalette::Green, 1.0f), 0.0f, true);
 
     Game::Update(graphics, input, elapsed);
 }

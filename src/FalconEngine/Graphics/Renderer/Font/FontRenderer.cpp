@@ -92,8 +92,6 @@ FontRenderer::Render(double /* percent */)
             // entire frame.
 
             // TODO(Wuxiang)
-            batch->mGlyphQuadPrimitive->SetVertexOffset(
-                batch->mGlyphVertexBuffer->GetElementOffset());
             batch->mGlyphVertexBuffer->SetElementNum(batch->mFrameGlyphNum * 6);
 
             static auto sMasterRenderer = Renderer::GetInstance();

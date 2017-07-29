@@ -2,6 +2,7 @@
 
 #include <FalconEngine/Core/Memory.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveLines.h>
+#include <FalconEngine/Math/Constant.h>
 
 using namespace std;
 
@@ -25,46 +26,47 @@ DebugRendererHelper::FillAABB(BufferAdaptor  *bufferAdaptor,
                               unsigned char  *bufferData,
                               const Vector3f& min,
                               const Vector3f& max,
-                              const Color&    color)
+                              const Color&    color,
+                              int             cameraIndex)
 {
     FillLine(bufferAdaptor, bufferData,
              Vector3f(min.x, min.y, min.z),
-             Vector3f(max.x, min.y, min.z), color);
+             Vector3f(max.x, min.y, min.z), color, cameraIndex);
     FillLine(bufferAdaptor, bufferData,
              Vector3f(min.x, max.y, min.z),
-             Vector3f(max.x, max.y, min.z), color);
+             Vector3f(max.x, max.y, min.z), color, cameraIndex);
     FillLine(bufferAdaptor, bufferData,
              Vector3f(min.x, min.y, max.z),
-             Vector3f(max.x, min.y, max.z), color);
+             Vector3f(max.x, min.y, max.z), color, cameraIndex);
     FillLine(bufferAdaptor, bufferData,
              Vector3f(min.x, max.y, max.z),
-             Vector3f(max.x, max.y, max.z), color);
+             Vector3f(max.x, max.y, max.z), color, cameraIndex);
 
     FillLine(bufferAdaptor, bufferData,
              Vector3f(min.x, min.y, min.z),
-             Vector3f(min.x, max.y, min.z), color);
+             Vector3f(min.x, max.y, min.z), color, cameraIndex);
     FillLine(bufferAdaptor, bufferData,
              Vector3f(max.x, min.y, min.z),
-             Vector3f(max.x, max.y, min.z), color);
+             Vector3f(max.x, max.y, min.z), color, cameraIndex);
     FillLine(bufferAdaptor, bufferData,
              Vector3f(min.x, min.y, max.z),
-             Vector3f(min.x, max.y, max.z), color);
+             Vector3f(min.x, max.y, max.z), color, cameraIndex);
     FillLine(bufferAdaptor, bufferData,
              Vector3f(max.x, min.y, max.z),
-             Vector3f(max.x, max.y, max.z), color);
+             Vector3f(max.x, max.y, max.z), color, cameraIndex);
 
     FillLine(bufferAdaptor, bufferData,
              Vector3f(min.x, min.y, min.z),
-             Vector3f(min.x, min.y, max.z), color);
+             Vector3f(min.x, min.y, max.z), color, cameraIndex);
     FillLine(bufferAdaptor, bufferData,
              Vector3f(min.x, max.y, min.z),
-             Vector3f(min.x, max.y, max.z), color);
+             Vector3f(min.x, max.y, max.z), color, cameraIndex);
     FillLine(bufferAdaptor, bufferData,
              Vector3f(max.x, min.y, min.z),
-             Vector3f(max.x, min.y, max.z), color);
+             Vector3f(max.x, min.y, max.z), color, cameraIndex);
     FillLine(bufferAdaptor, bufferData,
              Vector3f(max.x, max.y, min.z),
-             Vector3f(max.x, max.y, max.z), color);
+             Vector3f(max.x, max.y, max.z), color, cameraIndex);
 }
 
 // @params u, v Those must be unit vector.
@@ -81,7 +83,8 @@ DebugRendererHelper::FillCircle(BufferAdaptor  *bufferAdaptor,
                                 const Vector3f& center,
                                 const Vector3f& normal,
                                 float           radius,
-                                const Color&    color)
+                                const Color&    color,
+                                int             cameraIndex)
 {
     auto thetaStep = float(2 * Pi / CircleSampleNum);
 
@@ -92,14 +95,33 @@ DebugRendererHelper::FillCircle(BufferAdaptor  *bufferAdaptor,
     //     [0 0 0]      [z]
     //
     // Then finish Schmidt process to orthogonalise and normalize those vectors.
-    Vector3f u(-normal.y / normal.x, 1.0f, 0.0f);
-    Vector3f v(-normal.z / normal.x, 0.0f, 1.0f);
 
-    auto uNormalized = Vector3f::Normalize(u);
-    auto vProjection = Vector3f::Dot(uNormalized, v);
+    Vector3f u;
+    Vector3f v;
+
+    if (normal.x != 0)
+    {
+        u = Vector3f(-normal.y / normal.x, 1.0f, 0.0f);
+        v = Vector3f(-normal.z / normal.x, 0.0f, 1.0f);
+    }
+    else if (normal.y != 0)
+    {
+        u = Vector3f(0.0f, -normal.z / normal.y, 1.0f);
+        v = Vector3f(1.0f, -normal.z / normal.y, 1.0f);
+    }
+    else if (normal.z != 0)
+    {
+        u = Vector3f(1.0f, 0.0f, 0.0f);
+        v = Vector3f(0.0f, 1.0f, 0.0f);
+    }
+    else
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Don't allow zero vector here.");
+    }
 
     // This is not only normalized but orthogonalised.
-    auto vNormalized = Vector3f::Normalize(v - vProjection * uNormalized);
+    u = Vector3f::Normalize(u);
+    v = Vector3f::Normalize(v - Vector3f::Dot(u, v) * u);
 
     for (int thetaIndex = 0; thetaIndex < CircleSampleNum; ++thetaIndex)
     {
@@ -109,8 +131,9 @@ DebugRendererHelper::FillCircle(BufferAdaptor  *bufferAdaptor,
                           : thetaStep * (thetaIndex + 1);;
 
         FillLine(bufferAdaptor, bufferData,
-                 center + CirclePosition(theta, radius, uNormalized, vNormalized),
-                 center + CirclePosition(thetaNext, radius, uNormalized, vNormalized), color);
+                 center + CirclePosition(theta, radius, u, v),
+                 center + CirclePosition(thetaNext, radius, u, v),
+                 color, cameraIndex);
     }
 }
 
@@ -120,19 +143,20 @@ DebugRendererHelper::FillCross(BufferAdaptor  *bufferAdaptor,
 
                                const Vector3f& center,
                                float           radius,
-                               const Color&    color)
+                               const Color&    color,
+                               int             cameraIndex)
 {
     FillLine(bufferAdaptor, bufferData,
              center + Vector3f(radius, 0, 0),
-             center + Vector3f(-radius, 0, 0), color);
+             center + Vector3f(-radius, 0, 0), color, cameraIndex);
 
     FillLine(bufferAdaptor, bufferData,
              center + Vector3f(0, radius, 0),
-             center + Vector3f(0, -radius, 0), color);
+             center + Vector3f(0, -radius, 0), color, cameraIndex);
 
     FillLine(bufferAdaptor, bufferData,
              center + Vector3f(0, 0, radius),
-             center + Vector3f(0, 0, -radius), color);
+             center + Vector3f(0, 0, -radius), color, cameraIndex);
 }
 
 inline Vector3f
@@ -146,7 +170,8 @@ DebugRendererHelper::FillSphere(BufferAdaptor  *bufferAdaptor,
                                 unsigned char  *bufferData,
                                 const Vector3f& center,
                                 float           radius,
-                                const Color&    color)
+                                const Color&    color,
+                                int             cameraIndex)
 {
     auto thetaStep = float(Pi / SphereThetaSampleNum);
     auto phiStep = float(2 * Pi / SpherePhiSampleNum);
@@ -170,8 +195,8 @@ DebugRendererHelper::FillSphere(BufferAdaptor  *bufferAdaptor,
             auto p2 = center + SpherePosition(radius, thetaNext, phi);
             auto p3 = center + SpherePosition(radius, thetaNext, phiNext);
 
-            FillTriangle(bufferAdaptor, bufferData, p0, p1, p2, color);
-            FillTriangle(bufferAdaptor, bufferData, p1, p3, p2, color);
+            FillTriangle(bufferAdaptor, bufferData, p0, p1, p2, color, cameraIndex);
+            FillTriangle(bufferAdaptor, bufferData, p1, p3, p2, color, cameraIndex);
         }
     }
 }

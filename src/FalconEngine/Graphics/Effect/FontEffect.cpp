@@ -1,7 +1,15 @@
 #include <FalconEngine/Graphics/Effect/FontEffect.h>
 
+#include <FalconEngine/Context/GameEngineSettings.h>
 #include <FalconEngine/Graphics/Renderer/Font/Font.h>
-#include "FalconEngine/Context/GameEngineSettings.h"
+#include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture2dArray.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexAttribute.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
+#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
+#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformAutomatic.h>
 
 using namespace std;
 

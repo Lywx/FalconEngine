@@ -1,11 +1,91 @@
 #include <FalconEngine/Graphics/Effect/DebugEffect.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
+#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
+#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformManual.h>
+#include <FalconEngine/Graphics/Renderer/State/BlendState.h>
+#include <FalconEngine/Graphics/Renderer/State/CullState.h>
+#include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexAttribute.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 
 using namespace std;
 
 namespace FalconEngine
 {
 
+/************************************************************************/
+/* Constructors and Destructor                                          */
+/************************************************************************/
+DebugEffectParams::DebugEffectParams()
+{
+    // Set camera projection parameter for each taken camera slot.
+    for (int cameraIndex = 0; cameraIndex < DebugEffect::CameraNumMax; ++cameraIndex)
+    {
+        auto cameraUniform = ShareManual<Matrix4f>(
+                                 string("ViewProjectionTransformArray[")
+                                 + std::to_string(cameraIndex) + "]",
+                                 Matrix4f::Identity);
+
+        mCameraSlotUniform.push_back(cameraUniform);
+    }
+}
+
+/************************************************************************/
+/* Public Members                                                       */
+/************************************************************************/
+void
+DebugEffectParams::AddCamera(const Camera *camera)
+{
+    if (mCameraSlotTable.find(camera) == mCameraSlotTable.end())
+    {
+        int cameraIndex;
+
+        auto cameraIndexIter = find(mCameraSlot.begin(),
+                                    mCameraSlot.end(),
+                                    false);
+
+        if (cameraIndexIter == mCameraSlot.end())
+        {
+            mCameraSlot.push_back(true);
+            cameraIndex = int(mCameraSlot.size()) - 1;
+        }
+        else
+        {
+            cameraIndex = int(cameraIndexIter - mCameraSlot.begin());
+        }
+
+        int cameraNum = int(mCameraSlotTable.size());
+        if (cameraNum < DebugEffect::CameraNumMax)
+        {
+            mCameraSlotTable.insert({camera, cameraIndex});
+        }
+        else
+        {
+            FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Don't support camera number "
+                                                  "more than the defined constant.");
+        }
+    }
+}
+
+void
+DebugEffectParams::RemoveCamera(const Camera *camera)
+{
+    auto iter = mCameraSlotTable.find(camera);
+    if (iter != mCameraSlotTable.end())
+    {
+        mCameraSlot[iter->second] = false;
+        mCameraSlotTable.erase(iter);
+    }
+}
+
 FALCON_ENGINE_EFFECT_IMPLEMENT(DebugEffect);
+
+/************************************************************************/
+/* Static Members                                                       */
+/************************************************************************/
+const int
+DebugEffect::CameraNumMax = 4;
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -20,7 +100,7 @@ DebugEffect::DebugEffect(bool depthTestEnabled)
     pass->SetShader(shader);
 
     auto blendState = make_unique<BlendState>();
-    blendState->mEnabled = true;
+    blendState->mEnabled = false;
     blendState->mSourceFactor = BlendSourceFactor::SRC_ALPHA;
     blendState->mDestinationFactor = BlendDestinationFactor::ONE_MINUS_SRC_ALPHA;
     pass->SetBlendState(move(blendState));
@@ -37,7 +117,7 @@ DebugEffect::DebugEffect(bool depthTestEnabled)
     pass->SetStencilTestState(make_unique<StencilTestState>());
 
     auto wireframwState = make_unique<WireframeState>();
-    wireframwState->mEnabled = false;
+    wireframwState->mEnabled = true;
     pass->SetWireframeState(move(wireframwState));
 
     InsertPass(move(pass));
@@ -73,14 +153,23 @@ DebugEffect::CreateVertexFormat() const
     auto vertexFormat = std::make_shared<VertexFormat>();
     vertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
     vertexFormat->PushVertexAttribute(1, "Color", VertexAttributeType::FloatVec4, false, 0);
+    vertexFormat->PushVertexAttribute(2, "Camera", VertexAttributeType::Int, false, 0);
     vertexFormat->FinishVertexAttribute();
     return vertexFormat;
 }
 
 void
-DebugEffect::InitializeInstance(VisualEffectInstance *instance, std::shared_ptr<DebugEffectParams> /* params */) const
+DebugEffect::InitializeInstance(
+    VisualEffectInstance              *instance,
+    std::shared_ptr<DebugEffectParams> params) const
 {
-    SetShaderUniformAutomaticViewProjectionTransform(instance, 0, "ViewProjectionTransform");
+    using namespace std;
+    using namespace std::placeholders;
+
+    for (int cameraIndex = 0; cameraIndex < CameraNumMax; ++cameraIndex)
+    {
+        instance->SetShaderUniform(0, params->mCameraSlotUniform[cameraIndex]);
+    }
 }
 
 }

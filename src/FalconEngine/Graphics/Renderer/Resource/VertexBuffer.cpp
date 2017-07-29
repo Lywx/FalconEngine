@@ -37,7 +37,7 @@ VertexBuffer::SetBinding(VertexBufferBinding *binding)
     if (binding)
     {
         auto iter = std::find(mBinding.begin(), mBinding.end(), binding);
-        if (iter != mBinding.end())
+        if (iter == mBinding.end())
         {
             mBinding.push_back(binding);
         }

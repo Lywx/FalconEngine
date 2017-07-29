@@ -6,7 +6,6 @@
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformAutomatic.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformConstant.h>
 #include <FalconEngine/Graphics/Renderer/State/BlendState.h>
 #include <FalconEngine/Graphics/Renderer/State/CullState.h>
 #include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>

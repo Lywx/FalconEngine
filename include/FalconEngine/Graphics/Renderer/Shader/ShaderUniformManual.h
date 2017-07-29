@@ -18,23 +18,21 @@ public:
     using ShaderUniformValue<T>::ShaderUniformValue;
 
 public:
-    void
-    SetValue(T value);
+    virtual void
+    SetValue(const T& value) override;
 };
 
 template <typename T>
 void
-ShaderUniformManual<T>::SetValue(T value)
+ShaderUniformManual<T>::SetValue(const T& value)
 {
     this->mValue = value;
-    this->mUpdated = true;
+    this->mValueIsCurrent = true;
 }
 
-template<typename T>
-using ShaderUniformManualSharedPtr = std::shared_ptr<ShaderUniformManual<T>>;
-
 template <typename T, typename ... Args>
-std::shared_ptr<ShaderUniformValue<T>> ShareManual(const Args& ... args)
+std::shared_ptr<ShaderUniformValue<T>>
+                                    ShareManual(const Args& ... args)
 {
     return ShareUniform<T, ShaderUniformManual<T>>(args ...);
 }

@@ -54,19 +54,27 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    ShaderUniform(const std::string name, ShaderUniformType type);
+    ShaderUniform(const std::string& name, ShaderUniformType type);
     virtual ~ShaderUniform();
 
 public:
+    // @remark If the value is not current, renderer would call Update member
+    // function for this instance of uniform.
+    bool
+    IsUpdateNeeded() const;
+
     virtual void
     Update(const Camera *camera, const Visual *visual);
 
 public:
     std::string       mName;
     bool              mEnabled;
-    unsigned int      mLocation;
+    bool              mInitialized;
+    int               mLocation;
     ShaderUniformType mType;
-    bool              mUpdated;
+
+protected:
+    bool              mValueIsCurrent;
 };
 #pragma warning(default: 4251)
 
@@ -86,6 +94,9 @@ public:
     const T&
     GetValue() const;
 
+    virtual void
+    SetValue(const T& value);
+
 protected:
     T mValue;
 };
@@ -94,7 +105,8 @@ template <typename T, typename U, typename ... Args>
 std::shared_ptr<ShaderUniformValue<T>>
                                     ShareUniform(Args&& ... args)
 {
-    return std::static_pointer_cast<ShaderUniformValue<T>>(std::make_shared<U>(args ...));
+    return std::static_pointer_cast<ShaderUniformValue<T>>(
+               std::make_shared<U>(args ...));
 }
 
 /************************************************************************/
@@ -186,9 +198,19 @@ ShaderUniformValue<T>::~ShaderUniformValue()
 /* Public Members                                                       */
 /************************************************************************/
 template <typename T>
-const T& ShaderUniformValue<T>::GetValue() const
+const T&
+ShaderUniformValue<T>::GetValue() const
 {
     return mValue;
 }
 
+template <typename T>
+void
+ShaderUniformValue<T>::SetValue(const T& value)
+{
+    mValue = value;
+}
+
+template <typename T>
+using ShaderUniformValueSp = std::shared_ptr<ShaderUniformValue<T>>;
 }

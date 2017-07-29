@@ -20,25 +20,13 @@ class Sampler;
 class Texture;
 
 class Shader;
-using ShaderSharedPtr = std::shared_ptr<Shader>;
 
 class BlendState;
-using BlendStateUniquePtr = std::unique_ptr<BlendState>;
-
 class CullState;
-using CullStateUniquePtr = std::unique_ptr<CullState>;
-
 class DepthTestState;
-using DepthTestStateUniquePtr = std::unique_ptr<DepthTestState>;
-
 class OffsetState;
-using OffsetStateUniquePtr = std::unique_ptr<OffsetState>;
-
 class StencilTestState;
-using StencilTestStateUniquePtr = std::unique_ptr<StencilTestState>;
-
 class WireframeState;
-using WireframeStateUniquePtr = std::unique_ptr<WireframeState>;
 
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API VisualEffectPass final
@@ -58,25 +46,25 @@ public:
 
 public:
     void
-    SetShader(ShaderSharedPtr shader);
+    SetShader(std::shared_ptr<Shader> shader);
 
     void
-    SetBlendState(BlendStateUniquePtr blendStateHandle);
+    SetBlendState(std::unique_ptr<BlendState> blendStateHandle);
 
     void
-    SetCullState(CullStateUniquePtr cullStateHandle);
+    SetCullState(std::unique_ptr<CullState> cullStateHandle);
 
     void
-    SetDepthTestState(DepthTestStateUniquePtr depthTestStateHandle);
+    SetDepthTestState(std::unique_ptr<DepthTestState> depthTestStateHandle);
 
     void
-    SetOffsetState(OffsetStateUniquePtr offsetStateHandle);
+    SetOffsetState(std::unique_ptr<OffsetState> offsetStateHandle);
 
     void
-    SetStencilTestState(StencilTestStateUniquePtr stencilTestStateHandle);
+    SetStencilTestState(std::unique_ptr<StencilTestState> stencilTestStateHandle);
 
     void
-    SetWireframeState(WireframeStateUniquePtr wireframeStateHandle);
+    SetWireframeState(std::unique_ptr<WireframeState> wireframeStateHandle);
 
     const Shader *
     GetShader() const;
@@ -121,14 +109,14 @@ public:
     GetWireframeState();
 
 protected:
-    ShaderSharedPtr           mShader;
+    std::shared_ptr<Shader> mShader;
 
-    BlendStateUniquePtr       mBlendState;
-    CullStateUniquePtr        mCullState;
-    DepthTestStateUniquePtr   mDepthTestState;
-    OffsetStateUniquePtr      mOffsetState;
-    StencilTestStateUniquePtr mStencilTestState;
-    WireframeStateUniquePtr   mWireframeState;
+    std::unique_ptr<BlendState> mBlendState;
+    std::unique_ptr<CullState> mCullState;
+    std::unique_ptr<DepthTestState> mDepthTestState;
+    std::unique_ptr<OffsetState> mOffsetState;
+    std::unique_ptr<StencilTestState> mStencilTestState;
+    std::unique_ptr<WireframeState> mWireframeState;
 };
 #pragma warning(default: 4251)
 

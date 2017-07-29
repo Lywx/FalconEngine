@@ -187,17 +187,34 @@ PlatformShader::CollectUniformLocation(Shader *shader) const
             uniformIter != shader->GetUniformEnd();
             ++uniformIter)
     {
-        GLint uniformLocation = glGetUniformLocation(mProgram, uniformIter->first.c_str());
+        ShaderUniform& uniform = uniformIter->second;
+        GLint uniformLocation = glGetUniformLocation(mProgram, uniform.mName.c_str());
 
         if (uniformLocation == -1)
         {
-            // NOTE(Wuxiang): If the uniform is not found, the uniform location
-            // would be -1. If -1 is passed to later pipeline, it will get ignored.
-            // This happens for compiler optimization.
-            uniformIter->second.mEnabled = false;
+            GameDebug::OutputStringFormat("Failed to find shader uniform \"%s\"'s location.\n",
+                                          uniform.mName.c_str());
+
+            uniform.mEnabled = false;
+        }
+        else
+        {
+            uniform.mEnabled = true;
         }
 
-        uniformIter->second.mLocation = uniformLocation;
+        // NOTE(Wuxiang): If the uniform is not found, the uniform location
+        // would be -1. If -1 is passed to later pipeline, it will get
+        // ignored.
+        //
+        // https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glUniform.xhtml
+        // If location is a value other than -1 and it does not represent
+        // a valid uniform variable location in the current program object,
+        // an error will be generated, and no changes will be made to the
+        // uniform variable storage of the current program object.
+        // If location is equal to -1, the data passed in will be silently
+        // ignored and the specified uniform variable will not be changed.
+        uniform.mLocation = uniformLocation;
+        uniform.mInitialized = true;
     }
 }
 

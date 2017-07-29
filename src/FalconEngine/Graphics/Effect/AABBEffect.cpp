@@ -1,5 +1,10 @@
 #include <FalconEngine/Graphics/Effect/AABBEffect.h>
 
+#include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexAttribute.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
+#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
+
 using namespace std;
 
 namespace FalconEngine

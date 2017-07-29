@@ -3,6 +3,7 @@
 #include <FalconEngine/Graphics/Common.h>
 
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffectParams.h>
 
 #include <FalconEngine/Math/Handedness.h>
 #include <FalconEngine/Math/Vector2.h>

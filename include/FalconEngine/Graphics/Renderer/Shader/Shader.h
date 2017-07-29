@@ -52,13 +52,13 @@ public:
     /* Uniform Management                                                   */
     /************************************************************************/
     bool
-    ContainUniform(std::string uniformName) const;
+    ContainUniform(const std::string& uniformName) const;
 
     int
     GetUniformNum() const;
 
     ShaderUniform&
-    GetUniform(std::string uniformName);
+    GetUniform(const std::string& uniformName);
 
     auto
     GetUniformBegin()
@@ -85,13 +85,13 @@ public:
     }
 
     int
-    GetUniformLocation(std::string uniformName) const;
+    GetUniformLocation(const std::string& uniformName) const;
 
     bool
-    IsUniformEnabled(std::string uniformName) const;
+    IsUniformEnabled(const std::string& uniformName) const;
 
     void
-    PushUniform(std::string uniformName, ShaderUniformType uniformType);
+    PushUniform(const std::string& uniformName, ShaderUniformType uniformType);
 
     /************************************************************************/
     /* Composition Management                                               */

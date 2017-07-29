@@ -1,10 +1,10 @@
 #include <FalconEngine/Graphics/Renderer/Debug/DebugRenderer.h>
 
 #include <FalconEngine/Graphics/Effect/DebugEffect.h>
-
+#include <FalconEngine/Graphics/Renderer/Camera.h>
+#include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Entity/Entity.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Node.h>
-#include <FalconEngine/Graphics/Renderer/Renderer.h>
 
 using namespace std;
 
@@ -17,6 +17,7 @@ namespace FalconEngine
 DebugRenderer::DebugRenderer()
 {
     mDebugBufferResource = make_shared<BufferResource>();
+    mDebugEffectParams = make_shared<DebugEffectParams>();
     mDebugMessageManager = make_shared<DebugRenderMessageManager>();
 }
 
@@ -109,15 +110,22 @@ DebugRenderer::AddAABB(const Camera   *camera,
                        float           duration,
                        bool            depthEnabled)
 {
-    mDebugMessageManager->mMessageList.emplace_back(camera,
-            DebugRenderType::AABB, 0.f,
-            min, max, color, duration,
-            depthEnabled);
+    mDebugMessageManager->mMessageList.emplace_back(
+        camera, DebugRenderType::AABB, 0.f,
+        min, max, color, duration,
+        depthEnabled);
 }
 
 void
 DebugRenderer::AddCamera(const Camera *camera)
 {
+    mDebugEffectParams->AddCamera(camera);
+}
+
+void
+DebugRenderer::RemoveCamera(const Camera *camera)
+{
+    mDebugEffectParams->RemoveCamera(camera);
 }
 
 void
@@ -130,10 +138,10 @@ DebugRenderer::AddCircle(const Camera   *camera,
                          float           duration,
                          bool            depthEnabled)
 {
-    mDebugMessageManager->mMessageList.emplace_back(camera,
-            DebugRenderType::Circle, radius,
-            center, normal, color, duration,
-            depthEnabled);
+    mDebugMessageManager->mMessageList.emplace_back(
+        camera, DebugRenderType::Circle, radius,
+        center, normal, color, duration,
+        depthEnabled);
 }
 
 void
@@ -187,22 +195,25 @@ DebugRenderer::AddSphere(const Camera   *camera,
 void
 DebugRenderer::Initialize()
 {
-    const auto LineMaxNum = int(Kilobytes(32));
-    const auto TriangleMaxNum = int(Kilobytes(32));
+    const auto LineMaxNum = int(Kilobytes(100));
+    const auto TriangleMaxNum = int(Kilobytes(100));
+
+    auto noDepthEffect = make_shared<DebugEffect>(false);
+    auto hasDepthEffect = make_shared<DebugEffect>(true);
 
     CreateChannel<PrimitiveLines>(
         ChannelLine,
-        LineMaxNum * 2, make_shared<DebugEffect>(false));
+        LineMaxNum * 2, noDepthEffect);
     CreateChannel<PrimitiveLines>(
         ChannelLine + ChannelCount,
-        LineMaxNum * 2, make_shared<DebugEffect>(true));
+        LineMaxNum * 2, hasDepthEffect);
 
     CreateChannel<PrimitiveTriangles>(
         ChannelTriangle,
-        TriangleMaxNum * 3, make_shared<DebugEffect>(false));
+        TriangleMaxNum * 3, noDepthEffect);
     CreateChannel<PrimitiveTriangles>(
         ChannelTriangle + ChannelCount,
-        TriangleMaxNum * 3, make_shared<DebugEffect>(true));
+        TriangleMaxNum * 3, hasDepthEffect);
 }
 
 void
@@ -214,7 +225,7 @@ DebugRenderer::RenderBegin()
 void
 DebugRenderer::Render(double /* percent */)
 {
-    mDebugBufferResource->Draw(mCamera);
+    mDebugBufferResource->Draw(nullptr);
 }
 
 void
@@ -286,34 +297,38 @@ DebugRenderer::Update(double elapsed)
             unsigned char *bufferData;
             std::tie(bufferAdaptor, bufferData) = mDebugBufferResource->GetChannelData(channel);
 
+            int cameraIndex = mDebugEffectParams->mCameraSlotTable[message.mCamera];
+
             // Fill vertex data by inspecting the message.
             switch (message.mType)
             {
             case DebugRenderType::AABB:
                 DebugRendererHelper::FillAABB(
                     bufferAdaptor, bufferData, message.mFloatVector1,
-                    message.mFloatVector2, message.mColor);
+                    message.mFloatVector2, message.mColor, cameraIndex);
                 break;
             case DebugRenderType::OBB:
                 FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
             case DebugRenderType::Circle:
                 DebugRendererHelper::FillCircle(
                     bufferAdaptor, bufferData, message.mFloatVector1,
-                    message.mFloatVector2, message.mFloat1, message.mColor);
+                    message.mFloatVector2, message.mFloat1, message.mColor,
+                    cameraIndex);
+                break;
             case DebugRenderType::Cross:
                 DebugRendererHelper::FillCross(
                     bufferAdaptor, bufferData, message.mFloatVector1,
-                    message.mFloat1, message.mColor);
+                    message.mFloat1, message.mColor, cameraIndex);
                 break;
             case DebugRenderType::Line:
                 DebugRendererHelper::FillLine(
                     bufferAdaptor, bufferData, message.mFloatVector1,
-                    message.mFloatVector2, message.mColor);
+                    message.mFloatVector2, message.mColor, cameraIndex);
                 break;
             case DebugRenderType::Sphere:
                 DebugRendererHelper::FillSphere(
                     bufferAdaptor, bufferData, message.mFloatVector1,
-                    message.mFloat1, message.mColor);
+                    message.mFloat1, message.mColor, cameraIndex);
                 break;
             case DebugRenderType::Text:
                 FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
@@ -327,6 +342,16 @@ DebugRenderer::Update(double elapsed)
 
     // Remove time-out message.
     mDebugMessageManager->Update(elapsed);
+
+    // Update transform uniform.
+    for (auto cameraIndexPair : mDebugEffectParams->mCameraSlotTable)
+    {
+        int cameraIndex = cameraIndexPair.second;
+        auto camera = cameraIndexPair.first;
+
+        mDebugEffectParams->mCameraSlotUniform[cameraIndex]->SetValue(
+            camera->GetViewProjection());
+    }
 }
 
 }

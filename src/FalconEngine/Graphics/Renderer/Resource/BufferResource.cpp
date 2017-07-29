@@ -23,6 +23,10 @@ BufferResource::~BufferResource()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+
+/************************************************************************/
+/* Channel Creation                                                     */
+/************************************************************************/
 void
 BufferResource::CreateChannel(int                                   channel,
                               const std::shared_ptr<Visual>&        channelVisual,
@@ -49,6 +53,59 @@ BufferResource::CreateChannel(int                                   channel,
     }
 }
 
+/************************************************************************/
+/* Element Management                                                   */
+/************************************************************************/
+void
+BufferResource::AddChannelElement(int channel, int channelElement)
+{
+    CheckChannelValid(channel);
+
+    auto& channelInfo = mChannelTable.at(channel);
+    channelInfo.mElementNum += channelElement;
+    channelInfo.mElementNumMapped += channelElement;
+}
+
+void
+BufferResource::AddChannelElementMapping(int channel, int channelElementMapped)
+{
+    CheckChannelValid(channel);
+
+    auto& channelInfo = mChannelTable.at(channel);
+    channelInfo.mElementNumMapped += channelElementMapped;
+}
+
+void
+BufferResource::ResetElement()
+{
+    for (auto& channelInfoPair : mChannelTable)
+    {
+        auto channel = channelInfoPair.first;
+        ResetChannelElement(channel);
+    }
+}
+
+void
+BufferResource::ResetChannelElement(int channel)
+{
+    CheckChannelValid(channel);
+
+    mChannelTable.at(channel).mElementNum = 0;
+    mChannelTable.at(channel).mElementNumMapped = 0;
+}
+
+void
+BufferResource::SetChannelElement(int channel, int channelElement)
+{
+    CheckChannelValid(channel);
+
+    auto& channelInfo = mChannelTable.at(channel);
+    channelInfo.mElementNum = channelElement;
+}
+
+/************************************************************************/
+/* Draw                                                                 */
+/************************************************************************/
 void
 BufferResource::Draw(const Camera *camera) const
 {
@@ -67,6 +124,9 @@ BufferResource::DrawChannel(int channel, const Camera *camera) const
     sMasterRenderer->Draw(camera, GetChannelVisual(channel));
 }
 
+/************************************************************************/
+/* Data Management                                                      */
+/************************************************************************/
 void
 BufferResource::FillBegin(BufferAccessMode          access,
                           BufferFlushMode           flush,
@@ -92,7 +152,7 @@ BufferResource::FillChannelBegin(int                       channel,
     // Must call before mapping.
     channelInfo.mBufferAdaptor->FillBegin();
 
-    if (channelInfo.mElementNum > 0)
+    if (channelInfo.mElementNumMapped > 0)
     {
         MapChannel(channel, access, flush, synchronization);
     }
@@ -114,7 +174,7 @@ BufferResource::FillChannelEnd(int channel)
     CheckChannelValid(channel);
 
     auto& channelInfo = mChannelTable.at(channel);
-    if (channelInfo.mElementNum > 0)
+    if (channelInfo.mElementNumMapped > 0)
     {
         UnmapChannel(channel);
     }
@@ -122,6 +182,7 @@ BufferResource::FillChannelEnd(int channel)
     // Must call after mapping.
     channelInfo.mBufferAdaptor->FillEnd();
     channelInfo.mBuffer->SetElementNum(channelInfo.mElementNum);
+    channelInfo.mData = nullptr;
 }
 
 std::tuple<BufferAdaptor *, unsigned char *>
@@ -131,61 +192,6 @@ BufferResource::GetChannelData(int channel)
 
     auto& channelInfo = mChannelTable.at(channel);
     return std::make_tuple(channelInfo.mBufferAdaptor.get(), channelInfo.mData);
-}
-
-const Visual *
-BufferResource::GetChannelVisual(int channel) const
-{
-    CheckChannelValid(channel);
-
-    if (mChannelTable.at(channel).mVisual != nullptr)
-    {
-        return mChannelTable.at(channel).mVisual.get();
-    }
-    else
-    {
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The channel doesn't have a valid Visual.");
-    }
-}
-
-void
-BufferResource::UpdateChannelElement(int channel, int channelElement)
-{
-    CheckChannelValid(channel);
-
-    auto& channelInfo = mChannelTable.at(channel);
-    channelInfo.mElementNum += channelElement;
-}
-
-void
-BufferResource::Reset()
-{
-    for (auto& channelInfoPair : mChannelTable)
-    {
-        auto channel = channelInfoPair.first;
-        ResetChannel(channel);
-    }
-}
-
-void
-BufferResource::ResetChannel(int channel)
-{
-    CheckChannelValid(channel);
-
-    mChannelTable.at(channel).mData = nullptr;
-    mChannelTable.at(channel).mElementNum = 0;
-}
-
-/************************************************************************/
-/* Private Members                                                      */
-/************************************************************************/
-void
-BufferResource::CheckChannelValid(int channel) const
-{
-    if (mChannelTable.find(channel) == mChannelTable.end())
-    {
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Channel has not been created.");
-    }
 }
 
 void
@@ -206,7 +212,7 @@ BufferResource::MapChannel(int channel, BufferAccessMode access, BufferFlushMode
     auto& channelInfo = mChannelTable.at(channel);
 
     // ALERT(Wuxiang): signed, unsigned conversion.
-    int64_t size = int64_t(channelInfo.mElementNum)
+    int64_t size = int64_t(channelInfo.mElementNumMapped)
                    * int64_t(channelInfo.mBuffer->GetElementSize());
     int64_t offset = channelInfo.mBuffer->GetDataOffset();
 
@@ -235,6 +241,33 @@ BufferResource::UnmapChannel(int channel)
     static auto sMasterRenderer = Renderer::GetInstance();
     auto& channelInfo = mChannelTable.at(channel);
     sMasterRenderer->Unmap(channelInfo.mBuffer.get());
+}
+
+/************************************************************************/
+/* Helper Members                                                       */
+/************************************************************************/
+void
+BufferResource::CheckChannelValid(int channel) const
+{
+    if (mChannelTable.find(channel) == mChannelTable.end())
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Channel has not been created.");
+    }
+}
+
+const Visual *
+BufferResource::GetChannelVisual(int channel) const
+{
+    CheckChannelValid(channel);
+
+    if (mChannelTable.at(channel).mVisual != nullptr)
+    {
+        return mChannelTable.at(channel).mVisual.get();
+    }
+    else
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The channel doesn't have a valid Visual.");
+    }
 }
 
 }

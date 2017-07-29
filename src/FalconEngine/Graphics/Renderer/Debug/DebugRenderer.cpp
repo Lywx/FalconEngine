@@ -259,7 +259,7 @@ DebugRenderer::Initialize()
 void
 DebugRenderer::RenderBegin()
 {
-    mDebugBufferResource->Reset();
+    mDebugBufferResource->ResetElement();
 }
 
 void
@@ -291,24 +291,24 @@ DebugRenderer::UpdateFrame(double elapsed)
         switch (message.mType)
         {
         case DebugRenderType::AABB:
-            mDebugBufferResource->UpdateChannelElement(channel, 24);
+            mDebugBufferResource->AddChannelElement(channel, 24);
             break;
         case DebugRenderType::OBB:
             FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
         case DebugRenderType::Circle:
-            mDebugBufferResource->UpdateChannelElement(
+            mDebugBufferResource->AddChannelElement(
                 channel, DebugRendererHelper::CircleSampleNum * 2);
             break;
         case DebugRenderType::Cross:
-            mDebugBufferResource->UpdateChannelElement(
+            mDebugBufferResource->AddChannelElement(
                 channel, 6);
             break;
         case DebugRenderType::Line:
-            mDebugBufferResource->UpdateChannelElement(
+            mDebugBufferResource->AddChannelElement(
                 channel, 2);
             break;
         case DebugRenderType::Sphere:
-            mDebugBufferResource->UpdateChannelElement(
+            mDebugBufferResource->AddChannelElement(
                 channel, DebugRendererHelper::SpherePhiSampleNum
                 * DebugRendererHelper::SphereThetaSampleNum * 6);
             break;

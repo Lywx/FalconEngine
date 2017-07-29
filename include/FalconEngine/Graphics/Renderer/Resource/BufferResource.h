@@ -27,7 +27,8 @@ public:
         mBuffer(bufferAdaptor->GetBuffer()),
         mBufferAdaptor(bufferAdaptor),
         mData(nullptr),
-        mElementNum(0)
+        mElementNum(0),
+        mElementNumMapped(0)
     {
         // NOTE(Wuxiang): Allow visual to be null when you don't need
         // functionality that need visual involved.
@@ -47,6 +48,7 @@ public:
 
     unsigned char                       *mData;
     int                                  mElementNum;
+    int                                  mElementNumMapped;
 };
 
 class FALCON_ENGINE_API BufferResource
@@ -62,6 +64,10 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
+
+    /************************************************************************/
+    /* Channel Creation                                                     */
+    /************************************************************************/
     // @remark When a visual is provided, given adaptor has to connect to a
     // vertex buffer. When given adaptor is connected to buffer that is not
     // vertex buffer, the visual must be null.
@@ -70,12 +76,36 @@ public:
                   const std::shared_ptr<Visual>&        channelVisual,
                   const std::shared_ptr<BufferAdaptor>& channelAdaptor);
 
+    /************************************************************************/
+    /* Element Management                                                   */
+    /************************************************************************/
+    void
+    AddChannelElement(int channel, int channelElement);
+
+    void
+    AddChannelElementMapping(int channel, int channelElementMapped);
+
+    void
+    ResetElement();
+
+    void
+    ResetChannelElement(int channel);
+
+    void
+    SetChannelElement(int channel, int channelElement);
+
+    /************************************************************************/
+    /* Draw                                                                 */
+    /************************************************************************/
     void
     Draw(const Camera *camera) const;
 
     void
     DrawChannel(int channel, const Camera *camera) const;
 
+    /************************************************************************/
+    /* Data Management                                                      */
+    /************************************************************************/
     void
     FillBegin(BufferAccessMode          access,
               BufferFlushMode           flush,
@@ -96,28 +126,7 @@ public:
     std::tuple<BufferAdaptor *, unsigned char *>
     GetChannelData(int channel);
 
-    // @remark Only provide const visual pointer rather than the shared_ptr
-    // version for efficient use in rendering.
-    const Visual *
-    GetChannelVisual(int channel) const;
-
-    void
-    UpdateChannelElement(int channel,
-                         int channelElement);
-
-    void
-    Reset();
-
-    void
-    ResetChannel(int channel);
-
 private:
-    /************************************************************************/
-    /* Private Members                                                      */
-    /************************************************************************/
-    void
-    CheckChannelValid(int channel) const;
-
     // @summary Map all channels registered.
     void
     Map(BufferAccessMode          access,
@@ -136,6 +145,17 @@ private:
 
     void
     UnmapChannel(int channel);
+
+    /************************************************************************/
+    /* Helper Members                                                       */
+    /************************************************************************/
+    void
+    CheckChannelValid(int channel) const;
+
+    // @remark Only provide const visual pointer rather than the shared_ptr
+    // version for efficient use in rendering.
+    const Visual *
+    GetChannelVisual(int channel) const;
 
 private:
     std::unordered_map<int, BufferResourceChannel> mChannelTable;

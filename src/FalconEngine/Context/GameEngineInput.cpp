@@ -48,7 +48,7 @@ GameEngineInput::Initialize()
 }
 
 void
-GameEngineInput::Update(double elapsed)
+GameEngineInput::UpdateFrame(double elapsed)
 {
     // NOTE(Wuxiang): Have to poll events before updating based on events.
     PollEvent();

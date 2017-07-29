@@ -4,7 +4,7 @@ namespace FalconEngine
 {
 
 void
-DebugRenderMessageManager::Update(double elapsed)
+DebugRenderMessageManager::UpdateFrame(double elapsed)
 {
     auto tSecond = elapsed / 1000;
 

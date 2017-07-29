@@ -30,7 +30,8 @@ VertexGroup::GetVertexNum() const
 
     // Use first vertex binding to determine the element number of entire vertex
     // group.
-    const shared_ptr<const VertexBufferBinding>& vertexBufferBinding = mVertexBufferBindingTable.begin()->second;
+    const shared_ptr<const VertexBufferBinding>& vertexBufferBinding
+        = mVertexBufferBindingTable.begin()->second;
     return vertexBufferBinding->GetBuffer()->GetElementNum();
 }
 

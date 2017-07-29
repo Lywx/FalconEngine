@@ -68,7 +68,7 @@ public:
 
     // @remark This function is guaranteed to be called exactly once per frame.
     virtual void
-    UpdateInput(GameEngineGraphics *graphics, GameEngineInput *input);
+    UpdateFrame(GameEngineGraphics *graphics, GameEngineInput *input, double elasped);
 
 protected:
     GameEngine *mGameEngine;

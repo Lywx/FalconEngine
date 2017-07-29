@@ -60,9 +60,9 @@ public:
     void
     Initialize();
 
-    // @remark Update gets called every frame by game engine.
+    // @remark Update gets called once every frame by game engine.
     void
-    Update(double elasped);
+    UpdateFrame(double elasped);
 
 private:
     void

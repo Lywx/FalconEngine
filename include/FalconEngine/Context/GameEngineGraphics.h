@@ -80,6 +80,9 @@ public:
     void
     Update(double elapsed);
 
+    void
+    UpdateFrame(double elapsed);
+
 private:
     void
     Destroy();

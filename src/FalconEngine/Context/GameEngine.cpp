@@ -121,10 +121,10 @@ GameEngine::Loop()
 
             // NOTE(Wuxiang): Elapsed time count from before last input update
             // to before current input update.
-            mInput->Update(lastFrameElapsedMillisecond);
+            mInput->UpdateFrame(lastFrameElapsedMillisecond);
 
             // NOTE(Wuxiang): Update frame-rate sensitive data.
-            mGame->UpdateInput(mGraphics, mInput);
+            mGame->UpdateFrame(mGraphics, mInput, lastFrameElapsedMillisecond);
 
             // Reset update accumulated time elapsed.
             int    currentFrameUpdateTotalCount = 0;
@@ -132,12 +132,18 @@ GameEngine::Loop()
             double lastUpdateBegunMillisecond = GameTimer::GetMilliseconds();
             double lastUpdateEndedMillisecond = 0;
 
+            // NOTE(Wuxiang): Elapsed time count from before frame-sensitive
+            // update to after frame-sensitive update.
+            double currentFrameSensitiveUpdateElapsedMillisecond = lastUpdateBegunMillisecond - lastFrameEndedMillisecond;
+
             do
             {
                 // NOTE(Wuxiang): Elapsed time count from before last game update
                 // to before current game update.
                 mGame->Update(mGraphics, mInput, currentFrameUpdateTotalCount == 0
-                              ? lastUpdateElapsedMillisecond + lastRenderElapsedMillisecond
+                              ? lastUpdateElapsedMillisecond
+                              + lastRenderElapsedMillisecond
+                              + currentFrameSensitiveUpdateElapsedMillisecond
                               : lastUpdateElapsedMillisecond);
                 ++currentFrameUpdateTotalCount;
 

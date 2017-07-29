@@ -69,8 +69,9 @@ Game::Update(GameEngineGraphics *graphics, GameEngineInput * /* input */, double
 }
 
 void
-Game::UpdateInput(GameEngineGraphics *graphics, GameEngineInput *input)
+Game::UpdateFrame(GameEngineGraphics *graphics, GameEngineInput *input, double elapsed)
 {
+    graphics->UpdateFrame(elapsed);
 }
 
 }

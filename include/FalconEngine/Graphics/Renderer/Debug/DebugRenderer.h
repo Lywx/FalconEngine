@@ -163,7 +163,7 @@ public:
     RenderEnd();
 
     void
-    Update(double elapsed);
+    UpdateFrame(double elapsed);
 
 private:
     /************************************************************************/

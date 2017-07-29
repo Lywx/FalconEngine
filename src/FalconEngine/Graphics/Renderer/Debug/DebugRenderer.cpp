@@ -234,7 +234,7 @@ DebugRenderer::RenderEnd()
 }
 
 void
-DebugRenderer::Update(double elapsed)
+DebugRenderer::UpdateFrame(double elapsed)
 {
     // Compute channel size.
     for (auto& message : mDebugMessageManager->mMessageList)
@@ -341,7 +341,7 @@ DebugRenderer::Update(double elapsed)
     mDebugBufferResource->FillEnd();
 
     // Remove time-out message.
-    mDebugMessageManager->Update(elapsed);
+    mDebugMessageManager->UpdateFrame(elapsed);
 
     // Update transform uniform.
     for (auto cameraIndexPair : mDebugEffectParams->mCameraSlotTable)

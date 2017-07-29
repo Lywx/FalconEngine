@@ -177,7 +177,6 @@ MouseState::UpdateButton(MouseButtonState& buttonState,
     // When still pressed.
     else if (buttonPressedCurrent /*&& buttonPressedPrevious*/)
     {
-        // TODO(Wuxiang): To Test.
         // NOTE(Wuxiang): Need not modify the mPressedMoment.
         buttonState.mDown = false;
         buttonState.mUp = false;
@@ -186,7 +185,6 @@ MouseState::UpdateButton(MouseButtonState& buttonState,
     // When still released.
     else // (!buttonPressedCurrent && !buttonPressedPrevious)
     {
-        // TODO(Wuxiang): To Test.
         buttonState.mUp = false;
         buttonState.mDown = false;
     }

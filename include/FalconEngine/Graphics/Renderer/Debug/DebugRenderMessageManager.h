@@ -24,7 +24,7 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Update(double elapsed);
+    UpdateFrame(double elapsed);
 
 public:
     std::list<DebugRenderMessage> mMessageList;

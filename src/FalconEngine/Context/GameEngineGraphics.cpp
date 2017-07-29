@@ -81,9 +81,14 @@ GameEngineGraphics::RenderEnd()
 }
 
 void
-GameEngineGraphics::Update(double elapsed)
+GameEngineGraphics::Update(double /* elapsed */)
 {
-    mDebugRenderer->Update(elapsed);
+}
+
+void
+GameEngineGraphics::UpdateFrame(double elapsed)
+{
+    mDebugRenderer->UpdateFrame(elapsed);
 }
 
 }

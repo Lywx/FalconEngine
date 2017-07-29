@@ -188,7 +188,6 @@ FontRenderer::FillText(
     bufferAdaptor->FillBegin();
 
     {
-        // TODO(Wuxiang): Think about synchronization.
         static auto sMasterRenderer = Renderer::GetInstance();
         auto bufferData = static_cast<unsigned char *>(
                               sMasterRenderer->Map(buffer,

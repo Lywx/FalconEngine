@@ -71,11 +71,12 @@ DebugEffectParams::AddCamera(const Camera *camera)
 void
 DebugEffectParams::RemoveCamera(const Camera *camera)
 {
-    auto iter = mCameraSlotTable.find(camera);
-    if (iter != mCameraSlotTable.end())
+    auto cameraIter = mCameraSlotTable.find(camera);
+    if (cameraIter != mCameraSlotTable.end())
     {
-        mCameraSlot[iter->second] = false;
-        mCameraSlotTable.erase(iter);
+        auto cameraIndex = cameraIter->second;
+        mCameraSlot[cameraIndex] = false;
+        mCameraSlotTable.erase(cameraIter);
     }
 }
 

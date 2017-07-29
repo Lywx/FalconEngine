@@ -37,7 +37,12 @@ FontRenderer::~FontRenderer()
 /* Rendering API                                                        */
 /************************************************************************/
 void
-FontRenderer::DrawString(const Font *font, float fontSize, Vector2f textPosition, const std::string& text, Color textColor, float textLineWidth)
+FontRenderer::AddText(const Font *font,
+                      float       fontSize,
+                      const Vector2f&    textPosition,
+                      const std::string& text,
+                      Color              textColor,
+                      float              textLineWidth)
 {
     FALCON_ENGINE_CHECK_NULLPTR(font);
 
@@ -45,7 +50,12 @@ FontRenderer::DrawString(const Font *font, float fontSize, Vector2f textPosition
 }
 
 void
-FontRenderer::DrawString(const Font *font, float fontSize, Vector2f textPosition, const std::wstring& text, Color textColor, float textLineWidth)
+FontRenderer::AddText(const Font *font,
+                      float       fontSize,
+                      const Vector2f&     textPosition,
+                      const std::wstring& text,
+                      Color               textColor,
+                      float               textLineWidth)
 {
     FALCON_ENGINE_CHECK_NULLPTR(font);
 
@@ -63,14 +73,6 @@ FontRenderer::Initialize()
 void
 FontRenderer::RenderBegin()
 {
-    for (auto& fontBatchPair : mTextBatchTable)
-    {
-        auto& batch = fontBatchPair.second;
-
-        batch->mBatchedItemList.clear();
-        batch->mPendingGlyphNumPredict = 0;
-        batch->mFrameGlyphNum = 0;
-    }
 }
 
 void
@@ -103,6 +105,14 @@ FontRenderer::Render(double /* percent */)
 void
 FontRenderer::RenderEnd()
 {
+    for (auto& fontBatchPair : mTextBatchTable)
+    {
+        auto& batch = fontBatchPair.second;
+
+        batch->mBatchedItemList.clear();
+        batch->mPendingGlyphNumPredict = 0;
+        batch->mFrameGlyphNum = 0;
+    }
 }
 
 /************************************************************************/
@@ -110,13 +120,13 @@ FontRenderer::RenderEnd()
 /************************************************************************/
 void
 FontRenderer::BatchText(
-    const Font    *font,
-    float          fontSize,
+    const Font     *font,
+    float           fontSize,
 
-    const wstring& textString,
-    Vector2f       textPosition,
-    Color          textColor,
-    float          textLineWidth)
+    const wstring&  textString,
+    const Vector2f& textPosition,
+    Color           textColor,
+    float           textLineWidth)
 {
     FALCON_ENGINE_CHECK_NULLPTR(font);
 

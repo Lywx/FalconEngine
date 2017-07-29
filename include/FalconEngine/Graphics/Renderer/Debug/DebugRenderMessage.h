@@ -30,31 +30,27 @@ enum class DebugRenderType
 class DebugRenderMessage
 {
 public:
-    DebugRenderMessage(const Camera   *camera,
-                       DebugRenderType type,
-                       float           float1,
-                       const Vector3f& floatVector1,
-                       const Vector3f& floatVector2,
+    DebugRenderMessage(DebugRenderType type,
                        const Color&    color,
                        float           duration,
                        bool            depthEnabled) :
-        mCamera(camera),
         mType(type),
+        mCamera(),
         mColor(color),
         mDuration(duration),
         mDepthEnabled(depthEnabled),
-        mFloat1(float1),
-        mFloatVector1(floatVector1),
-        mFloatVector2(floatVector2)
+        mFloat1(),
+        mFloatVector1(),
+        mFloatVector2(),
+        mString1()
     {
     }
 
 public:
-    const Camera   *mCamera;
-
     // NOTE(Wuxiang): Those are common data field for all different item type.
     DebugRenderType mType;
 
+    const Camera   *mCamera;
     Color           mColor;
     float           mDuration;
     bool            mDepthEnabled;
@@ -63,6 +59,8 @@ public:
     float           mFloat1;
     Vector3f        mFloatVector1;
     Vector3f        mFloatVector2;
+
+    std::string     mString1;
 };
 
 }

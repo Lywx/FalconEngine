@@ -34,10 +34,14 @@ namespace FalconEngine
 class FontText
 {
 public:
-    FontText(float fontSize, const std::wstring& textString, Vector2f textPosition,
-             float textLineWidth);
+    FontText(float fontSize,
+             const std::wstring& textString,
+             const Vector2f&     textPosition,
+             float               textLineWidth);
 
-    FontText(float fontSize, const std::wstring& textString, Vector4f textBounds);
+    FontText(float fontSize,
+             const std::wstring& textString,
+             const Vector4f&     textBounds);
 
 public:
     float        mFontSize;

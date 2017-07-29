@@ -1,8 +1,10 @@
 #include <FalconEngine/Graphics/Renderer/Debug/DebugRenderer.h>
 
+#include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Graphics/Effect/DebugEffect.h>
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
+#include <FalconEngine/Graphics/Renderer/Font/FontRenderer.h>
 #include <FalconEngine/Graphics/Renderer/Entity/Entity.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Node.h>
 
@@ -14,7 +16,8 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-DebugRenderer::DebugRenderer()
+DebugRenderer::DebugRenderer() :
+    mDebugFont(nullptr)
 {
     mDebugBufferResource = make_shared<BufferResource>();
     mDebugEffectParams = make_shared<DebugEffectParams>();
@@ -110,10 +113,12 @@ DebugRenderer::AddAABB(const Camera   *camera,
                        float           duration,
                        bool            depthEnabled)
 {
-    mDebugMessageManager->mMessageList.emplace_back(
-        camera, DebugRenderType::AABB, 0.f,
-        min, max, color, duration,
-        depthEnabled);
+    DebugRenderMessage message(DebugRenderType::AABB, color, duration, depthEnabled);
+    message.mCamera = camera;
+    message.mFloatVector1 = min;
+    message.mFloatVector2 = max;
+
+    mDebugMessageManager->mMessageList.push_back(std::move(message));
 }
 
 void
@@ -138,10 +143,13 @@ DebugRenderer::AddCircle(const Camera   *camera,
                          float           duration,
                          bool            depthEnabled)
 {
-    mDebugMessageManager->mMessageList.emplace_back(
-        camera, DebugRenderType::Circle, radius,
-        center, normal, color, duration,
-        depthEnabled);
+    DebugRenderMessage message(DebugRenderType::Circle, color, duration, depthEnabled);
+    message.mCamera = camera;
+    message.mFloat1 = radius;
+    message.mFloatVector1 = center;
+    message.mFloatVector2 = normal;
+
+    mDebugMessageManager->mMessageList.push_back(std::move(message));
 }
 
 void
@@ -153,10 +161,12 @@ DebugRenderer::AddCross(const Camera   *camera,
                         float           duration,
                         bool            depthEnabled)
 {
-    mDebugMessageManager->mMessageList.emplace_back(camera,
-            DebugRenderType::Cross, radius,
-            center, Vector3f::Zero, color,
-            duration, depthEnabled);
+    DebugRenderMessage message(DebugRenderType::Cross, color, duration, depthEnabled);
+    message.mCamera = camera;
+    message.mFloat1 = radius;
+    message.mFloatVector1 = center;
+
+    mDebugMessageManager->mMessageList.push_back(std::move(message));
 }
 
 void
@@ -168,10 +178,12 @@ DebugRenderer::AddLine(const Camera   *camera,
                        float           duration,
                        bool            depthEnabled)
 {
-    mDebugMessageManager->mMessageList.emplace_back(camera,
-            DebugRenderType::Line, 0.f,
-            from, to, color, duration,
-            depthEnabled);
+    DebugRenderMessage message(DebugRenderType::Line, color, duration, depthEnabled);
+    message.mCamera = camera;
+    message.mFloatVector1 = from;
+    message.mFloatVector2 = to;
+
+    mDebugMessageManager->mMessageList.push_back(std::move(message));
 }
 
 void
@@ -183,10 +195,23 @@ DebugRenderer::AddSphere(const Camera   *camera,
                          float           duration,
                          bool            depthEnabled)
 {
-    mDebugMessageManager->mMessageList.emplace_back(camera,
-            DebugRenderType::Sphere, radius,
-            center, Vector3f::Zero, color,
-            duration, depthEnabled);
+    DebugRenderMessage message(DebugRenderType::Sphere, color, duration, depthEnabled);
+    message.mCamera = camera;
+    message.mFloat1 = radius;
+    message.mFloatVector1 = center;
+
+    mDebugMessageManager->mMessageList.push_back(std::move(message));
+}
+
+void
+DebugRenderer::AddText(const Vector2f& textPosition, const std::string& text, float fontSize, const Color& color, float duration, bool depthEnabled)
+{
+    DebugRenderMessage message(DebugRenderType::Text, color, duration, depthEnabled);
+    message.mFloat1 = fontSize;
+    message.mFloatVector1 = Vector3f(textPosition, 0);
+    message.mString1 = text;
+
+    mDebugMessageManager->mMessageList.push_back(std::move(message));
 }
 
 /************************************************************************/
@@ -195,6 +220,7 @@ DebugRenderer::AddSphere(const Camera   *camera,
 void
 DebugRenderer::Initialize()
 {
+    // Allocate necessary resource.
     const auto LineMaxNum = int(Kilobytes(100));
     const auto TriangleMaxNum = int(Kilobytes(100));
 
@@ -214,6 +240,10 @@ DebugRenderer::Initialize()
     CreateChannel<PrimitiveTriangles>(
         ChannelTriangle + ChannelCount,
         TriangleMaxNum * 3, hasDepthEffect);
+
+    // Load necessary asset.
+    static auto sAssetManager = AssetManager::GetInstance();
+    mDebugFont = sAssetManager->LoadFont("Content/Font/LuciadaConsoleDistanceField.fnt.bin").get();
 }
 
 void
@@ -236,6 +266,8 @@ DebugRenderer::RenderEnd()
 void
 DebugRenderer::UpdateFrame(double elapsed)
 {
+    static auto sFontRenderer = FontRenderer::GetInstance();
+
     // Compute channel size.
     for (auto& message : mDebugMessageManager->mMessageList)
     {
@@ -271,7 +303,10 @@ DebugRenderer::UpdateFrame(double elapsed)
                 * DebugRendererHelper::SphereThetaSampleNum * 6);
             break;
         case DebugRenderType::Text:
-            FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+            sFontRenderer->AddText(
+                mDebugFont, message.mFloat1, Vector2f(message.mFloatVector1),
+                message.mString1, message.mColor);
+            break;
         default:
             FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
         }
@@ -297,7 +332,13 @@ DebugRenderer::UpdateFrame(double elapsed)
             unsigned char *bufferData;
             std::tie(bufferAdaptor, bufferData) = mDebugBufferResource->GetChannelData(channel);
 
-            int cameraIndex = mDebugEffectParams->mCameraSlotTable[message.mCamera];
+            // NOTE(Wuxiang): Text doesn't have a camera parameter. When
+            // cameraIndex is invalid it will not be used.
+            int cameraIndex = 0;
+            if (message.mCamera)
+            {
+                cameraIndex = mDebugEffectParams->mCameraSlotTable.at(message.mCamera);
+            }
 
             // Fill vertex data by inspecting the message.
             switch (message.mType)
@@ -331,7 +372,7 @@ DebugRenderer::UpdateFrame(double elapsed)
                     message.mFloat1, message.mColor, cameraIndex);
                 break;
             case DebugRenderType::Text:
-                FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+                break;
             default:
                 FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
             }

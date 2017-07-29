@@ -52,20 +52,20 @@ public:
     /* Rendering API                                                        */
     /************************************************************************/
     void
-    DrawString(const Font         *font,
-               float               fontSize,
-               Vector2f            textPosition,
-               const std::string&  text,
-               Color               textColor = ColorPalette::White,
-               float               textLineWidth = std::numeric_limits<float>().max());
+    AddText(const Font         *font,
+            float               fontSize,
+            const Vector2f&     textPosition,
+            const std::string&  text,
+            Color               textColor = ColorPalette::White,
+            float               textLineWidth = std::numeric_limits<float>().max());
 
     void
-    DrawString(const Font         *font,
-               float               fontSize,
-               Vector2f            textPosition,
-               const std::wstring& text,
-               Color               textColor = ColorPalette::White,
-               float               textLineWidth = std::numeric_limits<float>().max());
+    AddText(const Font         *font,
+            float               fontSize,
+            const Vector2f&     textPosition,
+            const std::wstring& text,
+            Color               textColor = ColorPalette::White,
+            float               textLineWidth = std::numeric_limits<float>().max());
 
     /************************************************************************/
     /* Rendering Engine API                                                 */
@@ -88,7 +88,7 @@ private:
               float       fontSize,
 
               const std::wstring& textString,
-              Vector2f            textPosition,
+              const Vector2f&     textPosition,
               Color               textColor = ColorPalette::White,
               float               textLineWidth = std::numeric_limits<float>().max());
 

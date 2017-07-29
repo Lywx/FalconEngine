@@ -156,7 +156,7 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
         auto lastFrameUpdateCount = int(profiler->GetLastFrameUpdateTotalCount());
         auto lastRenderElapsedMillisecond = int(profiler->GetLastRenderElapsedMillisecond());
 
-        sFontRenderer->DrawString(mFont, 16.f, Vector2f(50.f, gameEngineSettings->mWindowHeight - 50.f),
+        sFontRenderer->AddText(mFont, 16.f, Vector2f(50.f, gameEngineSettings->mWindowHeight - 50.f),
                                   "U: " + std::to_string(lastUpdateElapsedMillisecond) + "ms Uc: " + std::to_string(lastFrameUpdateCount) +
                                   " R: " + std::to_string(lastRenderElapsedMillisecond) + "ms Rc: " + std::to_string(lastFrameFPS),
                                   ColorPalette::Gold);
@@ -171,20 +171,20 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
         auto mousePositionDiff = mouse->GetPositionDiff();
         auto mousePosition = mouse->GetPosition();
 
-        sFontRenderer->DrawString(mFont, 16.f, Vector2f(50.f, gameEngineSettings->mWindowHeight - 100.f),
+        sFontRenderer->AddText(mFont, 16.f, Vector2f(50.f, gameEngineSettings->mWindowHeight - 100.f),
                                   "Mouse Position: " + to_string(mousePosition) + " Diff: " + to_string(mousePositionDiff), ColorPalette::White);
     }
 
     // Draw Camera
     {
         auto position = mCamera->GetPosition();
-        sFontRenderer->DrawString(mFont, 16.f, Vector2f(50.f, 50.f),
+        sFontRenderer->AddText(mFont, 16.f, Vector2f(50.f, 50.f),
                                   "Camera Position: " + to_string(position), ColorPalette::White);
 
         auto theta = Degree(mCamera->mAzimuthalRadian);
         auto phi = Degree(mCamera->mPolarRadian);
         auto distance = Degree(mCamera->mRadialDistance);
-        sFontRenderer->DrawString(mFont, 16.f, Vector2f(50.f, 100.f),
+        sFontRenderer->AddText(mFont, 16.f, Vector2f(50.f, 100.f),
                                   "Camera Theta: " + std::to_string(theta) + " Phi: " + std::to_string(phi) + " Distance: " + std::to_string(distance), ColorPalette::White);
     }
 
@@ -195,7 +195,7 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
     sDebugRenderer->AddAABB(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f));
     sDebugRenderer->AddAABB(mCamera.get(), mPointLight2.get(), Transparent(ColorPalette::Green, 1.0f));
 
-    sFontRenderer->DrawString(mFont, 16.0f, Vector2f(gameEngineSettings->mWindowWidth / 2.0f, gameEngineSettings->mWindowHeight / 2.0f), ".");
+    sFontRenderer->AddText(mFont, 16.0f, Vector2f(gameEngineSettings->mWindowWidth / 2.0f, gameEngineSettings->mWindowHeight / 2.0f), ".");
 
     Game::Render(graphics, percent);
 }

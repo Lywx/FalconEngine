@@ -154,10 +154,10 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
         auto lastFrameUpdateCount = int(profiler->GetLastFrameUpdateTotalCount());
         auto lastRenderElapsedMillisecond = int(profiler->GetLastRenderElapsedMillisecond());
 
-        sFontRenderer->DrawString(mFont, 16.f, Vector2f(50.f, height - 50.f),
-                                  "U: " + std::to_string(lastUpdateElapsedMillisecond) + "ms Uc: " + std::to_string(lastFrameUpdateCount) +
-                                  " R: " + std::to_string(lastRenderElapsedMillisecond) + "ms Rc: " + std::to_string(lastFrameFPS),
-                                  ColorPalette::Gold);
+        sFontRenderer->AddText(mFont, 16.f, Vector2f(50.f, height - 50.f),
+                               "U: " + std::to_string(lastUpdateElapsedMillisecond) + "ms Uc: " + std::to_string(lastFrameUpdateCount) +
+                               " R: " + std::to_string(lastRenderElapsedMillisecond) + "ms Rc: " + std::to_string(lastFrameFPS),
+                               ColorPalette::Gold);
     }
 
     auto input = GameEngineInput::GetInstance();
@@ -169,21 +169,21 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
         auto mousePositionDiff = mouse->GetPositionDiff();
         auto mousePosition = mouse->GetPosition();
 
-        sFontRenderer->DrawString(mFont, 16.f, Vector2f(50.f, height - 100.f),
-                                  "Mouse Position: " + to_string(mousePosition) + " Diff: " + to_string(mousePositionDiff), ColorPalette::White);
+        sFontRenderer->AddText(mFont, 16.f, Vector2f(50.f, height - 100.f),
+                               "Mouse Position: " + to_string(mousePosition) + " Diff: " + to_string(mousePositionDiff), ColorPalette::White);
     }
 
     // Draw Camera
     {
         auto position = mCamera->GetPosition();
-        sFontRenderer->DrawString(mFont, 16.f, Vector2f(50.f, 50.f),
-                                  "Camera Position: " + to_string(position), ColorPalette::White);
+        sFontRenderer->AddText(mFont, 16.f, Vector2f(50.f, 50.f),
+                               "Camera Position: " + to_string(position), ColorPalette::White);
 
         auto pitch = Degree(mCamera->mPitchRadian);
         auto yaw = Degree(mCamera->mYawRadian);
         auto roll = Degree(mCamera->mRollRadian);
-        sFontRenderer->DrawString(mFont, 16.f, Vector2f(50.f, 100.f),
-                                  "Camera Pitch: " + std::to_string(pitch) + " Yaw: " + std::to_string(yaw) + " Roll: " + std::to_string(roll), ColorPalette::White);
+        sFontRenderer->AddText(mFont, 16.f, Vector2f(50.f, 100.f),
+                               "Camera Pitch: " + std::to_string(pitch) + " Yaw: " + std::to_string(yaw) + " Roll: " + std::to_string(roll), ColorPalette::White);
     }
 
     static auto sEntityRenderer = graphics->GetEntityRenderer();
@@ -213,10 +213,10 @@ SampleGame::UpdateFrame(GameEngineGraphics *graphics, GameEngineInput *input, do
     }
 
     static auto sDebugRenderer = graphics->GetDebugRenderer();
-    //if (keyboard->KeyDown(Key::P))
-    //{
-    sDebugRenderer->AddAABB(mCamera.get(), mCamera->GetPosition() + Vector3f(-1, -1, -1), mCamera->GetPosition() + Vector3f(1, 1, 1), Transparent(ColorPalette::Yellow, 1.0f), 0.0f, true);
-    //}
+    if (keyboard->KeyDown(Key::P))
+    {
+        sDebugRenderer->AddText(Vector2f(5.0f, 5.0f), "Test", 16.0f, ColorPalette::White, 5.0f);
+    }
 
     //sDebugRenderer->AddSphere(mCamera.get(), mCamera->GetPosition(), 5.0f, ColorPalette::Red, 0.0f, false);
     // sDebugRenderer->AddAABB(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f), 0.0f, true);

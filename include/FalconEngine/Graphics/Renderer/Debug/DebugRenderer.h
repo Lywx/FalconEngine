@@ -17,6 +17,8 @@
 #include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Math/Color.h>
+#include "FalconEngine/Content/AssetManager.h"
+#include "FalconEngine/Graphics/Renderer/Font/Font.h"
 
 namespace FalconEngine
 {
@@ -133,13 +135,16 @@ public:
               bool            depthEnabled = true);
 
     // NEW(Wuxiang): Add 3d text rendering support.
-    // void
-    // AddText(const Vector3f& position,
-    //         const char     *text,
-    //         const Color&    color,
-    //         float           fontSize = 16.0f,
-    //         float           duration = 0.0f,
-    //         bool            depthEnabled = true);
+
+    // @summary Render 2d text on screen space.
+
+    void
+    AddText(const Vector2f&    textPosition,
+            const std::string& text,
+            float              fontSize = 16.0f,
+            const Color&       color = ColorPalette::White,
+            float              duration = 0.0f,
+            bool               depthEnabled = true);
 
     void
     AddCamera(const Camera *camera);
@@ -201,6 +206,7 @@ private:
     }
 
 private:
+    const Font                                *mDebugFont;
     std::shared_ptr<DebugEffectParams>         mDebugEffectParams;
     std::shared_ptr<BufferResource>            mDebugBufferResource;
 

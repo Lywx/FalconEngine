@@ -8,7 +8,7 @@ include/*
 lib
 res
 
-src/FalconEngine/Content/Pipeline/*
+# src/FalconEngine/Content/Pipeline/*
 
 CMakeLists.txt.user
 

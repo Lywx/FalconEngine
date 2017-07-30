@@ -105,27 +105,30 @@ private:
         // Memory allocation for index buffer.
         auto indexBuffer = std::make_shared<IndexBuffer>(indexNum, indexType,
                            BufferStorageMode::Device, indexBufferUsage);
-        auto indexData = reinterpret_cast<T *>(sMasterRenderer->Map(indexBuffer.get(),
-                                               BufferAccessMode::WriteBuffer,
-                                               BufferFlushMode::Automatic,
-                                               BufferSynchronizationMode::Unsynchronized,
-                                               indexBuffer->GetDataOffset(),
-                                               indexBuffer->GetDataSize()));
-
-        // Walk through each of the mesh's faces (a face is a mesh its triangle)
-        // and retrieve the corresponding vertex indexes.
-        int indexNumAdded = 0;
-        for (unsigned int faceIndex = 0; faceIndex < aiMesh->mNumFaces; ++faceIndex)
         {
-            auto& face = aiMesh->mFaces[faceIndex];
-            for (unsigned int i = 0; i < face.mNumIndices; ++i)
+            auto indexData = reinterpret_cast<T *>(
+                                 sMasterRenderer->Map(
+                                     indexBuffer.get(),
+                                     BufferAccessMode::WriteBuffer,
+                                     BufferFlushMode::Automatic,
+                                     BufferSynchronizationMode::Unsynchronized,
+                                     indexBuffer->GetDataOffset(),
+                                     indexBuffer->GetDataSize()));
+            // Walk through each of the mesh's faces (a face is a mesh its triangle)
+            // and retrieve the corresponding vertex indexes.
+            int indexNumAdded = 0;
+            for (unsigned int faceIndex = 0; faceIndex < aiMesh->mNumFaces; ++faceIndex)
             {
-                indexData[indexNumAdded] = T(face.mIndices[i]);
-                ++indexNumAdded;
+                auto& face = aiMesh->mFaces[faceIndex];
+                for (unsigned int i = 0; i < face.mNumIndices; ++i)
+                {
+                    indexData[indexNumAdded] = T(face.mIndices[i]);
+                    ++indexNumAdded;
+                }
             }
-        }
 
-        sMasterRenderer->Unmap(indexBuffer.get());
+            sMasterRenderer->Unmap(indexBuffer.get());
+        }
 
         // Update model metadata.
         model->mIndexNum += indexNum;

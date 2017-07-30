@@ -119,12 +119,14 @@ std::shared_ptr<Mesh>
 ModelImporter::CreateMesh(Model *model, const string& modelFilePath, const ModelImportOption& modelImportOption, const aiScene *aiScene, const aiMesh *aiMesh)
 {
     // Load vertex and index data.
-    auto vertexGroup = CreateVertexGroup(model,
-                                         modelImportOption.mVertexBufferUsage,
-                                         modelImportOption.mVertexBufferLayout, aiMesh);
-    auto indexBuffer = CreateIndexBuffer(model,
-                                         modelImportOption.mIndexType,
-                                         modelImportOption.mIndexBufferUsage, aiMesh);
+    auto vertexGroup = CreateVertexGroup(
+                           model,
+                           modelImportOption.mVertexBufferUsage,
+                           modelImportOption.mVertexBufferLayout, aiMesh);
+    auto indexBuffer = CreateIndexBuffer(
+                           model,
+                           modelImportOption.mIndexType,
+                           modelImportOption.mIndexBufferUsage, aiMesh);
 
     auto primitive = make_shared<PrimitiveTriangles>(GetVertexFormat(), vertexGroup, indexBuffer);
 
@@ -218,18 +220,23 @@ ModelImporter::CreateVertexGroup(
     auto vertexNum = int(aiMesh->mNumVertices);
 
     // Position
-    auto vertexBuffer = std::make_shared<VertexBuffer>(vertexNum,
-                        sizeof(ModelVertex::mPosition), BufferStorageMode::Device, vertexBufferUsage.mPosition);
+    auto vertexBuffer = std::make_shared<VertexBuffer>(
+                            vertexNum, sizeof(ModelVertex::mPosition),
+                            BufferStorageMode::Device,
+                            vertexBufferUsage.mPosition);
     {
         auto vertexData = reinterpret_cast<Vector3f *>(
-                              sMasterRenderer->Map(vertexBuffer.get(),
-                                      BufferAccessMode::WriteBuffer,
-                                      BufferFlushMode::Automatic,
-                                      BufferSynchronizationMode::Unsynchronized,
-                                      vertexBuffer->GetDataOffset(),
-                                      vertexBuffer->GetDataSize()));
+                              sMasterRenderer->Map(
+                                  vertexBuffer.get(),
+                                  BufferAccessMode::WriteBuffer,
+                                  BufferFlushMode::Automatic,
+                                  BufferSynchronizationMode::Unsynchronized,
+                                  vertexBuffer->GetDataOffset(),
+                                  vertexBuffer->GetDataSize()));
 
-        for (size_t vertexIndex = 0; vertexIndex < aiMesh->mNumVertices; ++vertexIndex)
+        for (size_t vertexIndex = 0;
+                vertexIndex < aiMesh->mNumVertices;
+                ++vertexIndex)
         {
             vertexData[vertexIndex] = Vector3f(aiMesh->mVertices[vertexIndex].x,
                                                aiMesh->mVertices[vertexIndex].y,
@@ -244,12 +251,13 @@ ModelImporter::CreateVertexGroup(
                         sizeof(ModelVertex::mNormal), BufferStorageMode::Device, vertexBufferUsage.mNormal);
     {
         auto normalData = reinterpret_cast<Vector3f *>(
-                              sMasterRenderer->Map(normalBuffer.get(),
-                                      BufferAccessMode::WriteBuffer,
-                                      BufferFlushMode::Automatic,
-                                      BufferSynchronizationMode::Unsynchronized,
-                                      normalBuffer->GetDataOffset(),
-                                      normalBuffer->GetDataSize()));
+                              sMasterRenderer->Map(
+                                  normalBuffer.get(),
+                                  BufferAccessMode::WriteBuffer,
+                                  BufferFlushMode::Automatic,
+                                  BufferSynchronizationMode::Unsynchronized,
+                                  normalBuffer->GetDataOffset(),
+                                  normalBuffer->GetDataSize()));
 
         for (size_t vertexIndex = 0; vertexIndex < aiMesh->mNumVertices; ++vertexIndex)
         {
@@ -275,12 +283,13 @@ ModelImporter::CreateVertexGroup(
                           sizeof(ModelVertex::mTexCoord), BufferStorageMode::Device, vertexBufferUsage.mTexCoord);
     {
         auto texCoordData = reinterpret_cast<Vector2f *>(
-                                sMasterRenderer->Map(texCoordBuffer.get(),
-                                        BufferAccessMode::WriteBuffer,
-                                        BufferFlushMode::Automatic,
-                                        BufferSynchronizationMode::Unsynchronized,
-                                        texCoordBuffer->GetDataOffset(),
-                                        texCoordBuffer->GetDataSize()));
+                                sMasterRenderer->Map(
+                                    texCoordBuffer.get(),
+                                    BufferAccessMode::WriteBuffer,
+                                    BufferFlushMode::Automatic,
+                                    BufferSynchronizationMode::Unsynchronized,
+                                    texCoordBuffer->GetDataOffset(),
+                                    texCoordBuffer->GetDataSize()));
 
         for (size_t vertexIndex = 0; vertexIndex < aiMesh->mNumVertices; ++vertexIndex)
         {

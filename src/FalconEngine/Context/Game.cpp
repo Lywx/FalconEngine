@@ -69,7 +69,7 @@ Game::Update(GameEngineGraphics *graphics, GameEngineInput * /* input */, double
 }
 
 void
-Game::UpdateFrame(GameEngineGraphics *graphics, GameEngineInput *input, double elapsed)
+Game::UpdateFrame(GameEngineGraphics *graphics, GameEngineInput * /* input */, double elapsed)
 {
     graphics->UpdateFrame(elapsed);
 }

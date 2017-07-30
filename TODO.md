@@ -13,4 +13,3 @@ Rendering Pipeline Specifics
 (0) Merge asset importing: model, shader, texture into same interface.
 
 (0) Linux TPS Camera issue.
-(0) Finish debug renderer.

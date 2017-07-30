@@ -216,7 +216,7 @@ public:
     Unbind(const ShaderBuffer *shaderBuffer);
 
     void
-    Enable(const ShaderBuffer *shaderBuffer);
+    Enable(const ShaderBuffer *shaderBuffer, unsigned int bindingIndex);
 
     void
     Disable(const ShaderBuffer *shaderBuffer);

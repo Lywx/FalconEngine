@@ -57,8 +57,6 @@ private:
 protected:
     GLuint        mBufferObj;
     const Buffer *mBufferPtr;
-
-private:
     GLuint        mBufferTarget;
 };
 

@@ -21,7 +21,7 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Enable();
+    Enable(unsigned int bindingIndex);
 
     void
     Disable();

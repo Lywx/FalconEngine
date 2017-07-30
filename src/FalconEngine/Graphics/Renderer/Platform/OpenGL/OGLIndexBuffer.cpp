@@ -23,13 +23,13 @@ PlatformIndexBuffer::~PlatformIndexBuffer()
 void
 PlatformIndexBuffer::Enable()
 {
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mBufferObj);
+    glBindBuffer(mBufferTarget, mBufferObj);
 }
 
 void
 PlatformIndexBuffer::Disable()
 {
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindBuffer(mBufferTarget, 0);
 }
 
 }

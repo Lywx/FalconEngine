@@ -21,9 +21,10 @@ PlatformShaderBuffer::~PlatformShaderBuffer()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PlatformShaderBuffer::Enable()
+PlatformShaderBuffer::Enable(unsigned int bindingIndex)
 {
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, mBufferObj);
+    glBindBuffer(mBufferTarget, mBufferObj);
+    glBindBufferBase(mBufferTarget, bindingIndex, mBufferObj);
 }
 
 void

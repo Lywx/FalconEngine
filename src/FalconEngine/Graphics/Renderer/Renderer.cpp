@@ -402,10 +402,23 @@ Renderer::Unbind(const ShaderBuffer *shaderBuffer)
 }
 
 void
-Renderer::Enable(const ShaderBuffer *shaderBuffer)
+Renderer::Enable(const ShaderBuffer *shaderBuffer, unsigned int bindingIndex)
 {
     FALCON_ENGINE_RENDERER_ENABLE_LAZY(shaderBuffer, mShaderBufferPrevious);
-    FALCON_ENGINE_RENDERER_ENABLE_IMPLEMENT(shaderBuffer, mShaderBufferTable, PlatformShaderBuffer);
+    FALCON_ENGINE_CHECK_NULLPTR(shaderBuffer);
+
+    auto iter = mShaderBufferTable.find(shaderBuffer);
+    PlatformShaderBuffer *shaderBufferPlatform;
+    if (iter != mShaderBufferTable.end())
+    {
+        shaderBufferPlatform = iter->second;
+    }
+    else
+    {
+        shaderBufferPlatform = new PlatformShaderBuffer(shaderBuffer);
+        mShaderBufferTable[shaderBuffer] = shaderBufferPlatform;
+    }
+    shaderBufferPlatform->Enable(bindingIndex);;
 }
 
 void

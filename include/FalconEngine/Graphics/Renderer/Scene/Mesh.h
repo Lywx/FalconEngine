@@ -7,7 +7,7 @@
 namespace FalconEngine
 {
 
-class AABB;
+class Aabb;
 
 class IndexBuffer;
 
@@ -37,14 +37,17 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
-    const AABB *
-    GetAABB() const;
+    const Aabb *
+    GetAabb() const;
 
     const Material *
     GetMaterial() const;
 
-    std::shared_ptr<Material>
+    Material *
     GetMaterial();
+
+    const std::shared_ptr<Material>&
+    GetMaterialSp();
 
     void
     SetMaterial(std::shared_ptr<Material> material);

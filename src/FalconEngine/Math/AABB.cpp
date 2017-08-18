@@ -1,4 +1,4 @@
-#include <FalconEngine/Math/AABB.h>
+#include <FalconEngine/Math/Aabb.h>
 
 namespace FalconEngine
 {
@@ -6,7 +6,7 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-AABB::AABB(const Vector3f& position)
+Aabb::Aabb(const Vector3f& position)
 {
     Initialize(position);
 }
@@ -15,14 +15,14 @@ AABB::AABB(const Vector3f& position)
 /* Public Members                                                       */
 /************************************************************************/
 void
-AABB::Initialize(const Vector3f& position)
+Aabb::Initialize(const Vector3f& position)
 {
     mMax = position;
     mMin = position;
 }
 
 void
-AABB::Extend(const Vector3f& position)
+Aabb::Extend(const Vector3f& position)
 {
     if (position.x > mMax.x)
     {

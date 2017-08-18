@@ -69,7 +69,7 @@ MeshEffect::CreateInstance(Node *node, const std::shared_ptr<MeshEffectParams>& 
     VisualEffect::TraverseLevelOrder(node, std::bind([&, this](Visual * visual)
     {
         auto instance = InstallInstance(visual, params);
-        InitializeInstance(instance.get(), visual->GetMesh()->GetMaterial(), params);
+        InitializeInstance(instance.get(), visual->GetMesh()->GetMaterialSp(), params);
     }, _1));
 }
 
@@ -81,14 +81,14 @@ MeshEffect::CreateVertexFormat() const
 {
     auto vertexFormat = std::make_shared<VertexFormat>();
     vertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
-    vertexFormat->PushVertexAttribute(1, "Normal", VertexAttributeType::FloatVec3, false, 0);
-    vertexFormat->PushVertexAttribute(2, "TexCoord", VertexAttributeType::FloatVec2, false, 0);
+    vertexFormat->PushVertexAttribute(1, "Normal", VertexAttributeType::FloatVec3, false, 1);
+    vertexFormat->PushVertexAttribute(2, "TexCoord", VertexAttributeType::FloatVec2, false, 2);
     vertexFormat->FinishVertexAttribute();
     return vertexFormat;
 }
 
 std::shared_ptr<VertexFormat>
-MeshEffect::GetVertexFormat() const
+MeshEffect::GetVertexFormatSp() const
 {
     static shared_ptr<VertexFormat> sVertexFormat = CreateVertexFormat();
     return sVertexFormat;

@@ -59,7 +59,7 @@ public:
     /************************************************************************/
     // @summary Recursively draw AABB for the entity.
     void
-    AddAABB(const Camera *camera,
+    AddAabb(const Camera *camera,
             const Entity *entity,
             const Color&  color,
             float         duration = 0.0f,
@@ -67,21 +67,21 @@ public:
 
     // @summary Recursively draw AABB for the node.
     void
-    AddAABB(const Camera *camera,
+    AddAabb(const Camera *camera,
             const Node   *node,
             const Color&  color,
             float         duration = 0.0f,
             bool          depthEnabled = true);
 
     void
-    AddAABB(const Camera *camera,
+    AddAabb(const Camera *camera,
             const Visual *visual,
             const Color&  color,
             float         duration = 0.0f,
             bool          depthEnabled = true);
 
     void
-    AddAABB(const Camera   *camera,
+    AddAabb(const Camera   *camera,
             const Vector3f& min,
             const Vector3f& max,
 
@@ -196,7 +196,7 @@ private:
 
         // NOTE(Wuxiang): Even two effect have different depth test state, they
         // can still share vertex format.
-        auto vertexFormat = visualEffect->GetVertexFormat();
+        auto vertexFormat = visualEffect->GetVertexFormatSp();
         auto vertexGroup = make_shared<VertexGroup>();
         vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, vertexFormat->GetVertexBufferStride(0));
 

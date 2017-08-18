@@ -19,7 +19,7 @@ Primitive::Primitive(PrimitiveType type,
                      const std::shared_ptr<VertexGroup>& vertexGroup,
                      const std::shared_ptr<IndexBuffer>& indexBuffer) :
     mType(type),
-    mAABB(),
+    mAabb(),
     mVertexFormat(vertexFormat),
     mVertexGroup(vertexGroup),
     mVertexOffset(0),
@@ -46,16 +46,16 @@ Primitive::GetPrimitiveType() const
 /************************************************************************/
 /* Bounding Box Management                                              */
 /************************************************************************/
-const AABB *
-Primitive::GetAABB() const
+const Aabb *
+Primitive::GetAabb() const
 {
-    return mAABB.get();
+    return mAabb.get();
 }
 
 void
-Primitive::SetAABB(const AABB& aabb)
+Primitive::SetAabb(const Aabb& aabb)
 {
-    mAABB = std::make_shared<AABB>(aabb);
+    mAabb = std::make_shared<Aabb>(aabb);
 }
 
 /************************************************************************/
@@ -113,7 +113,7 @@ Primitive::GetIndexBuffer() const
 }
 
 std::shared_ptr<IndexBuffer>
-Primitive::GetIndexBuffer()
+Primitive::GetIndexBufferSp()
 {
     return mIndexBuffer;
 }
@@ -137,7 +137,7 @@ void
 Primitive::CopyTo(Primitive *lhs)
 {
     lhs->mType = mType;
-    lhs->mAABB = mAABB;
+    lhs->mAabb = mAabb;
 
     lhs->mVertexFormat = mVertexFormat;
     lhs->mVertexGroup = mVertexGroup;

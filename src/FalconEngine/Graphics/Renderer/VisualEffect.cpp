@@ -146,7 +146,7 @@ VisualEffect::CheckVertexFormatCompatible(Visual *visual) const
         // they provide visual to use that shader effect. The user should be able
         // to customize the binding index of vertex format and use much more
         // flexible buffer arrangement if they need that benefit.
-        if (vertexFormat->IsVertexAttributeCompatible(GetVertexFormat()))
+        if (vertexFormat->IsVertexAttributeCompatible(GetVertexFormatSp()))
         {
             return;
         }
@@ -157,10 +157,6 @@ VisualEffect::CheckVertexFormatCompatible(Visual *visual) const
     {
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Visual is not correctly initialized.");
     }
-
-    // NOTE(Wuxiang): Assume the user would correctly set up vertex group
-    // because there is no reliable to test vertex group is compatible
-    // with vertex format.
 }
 
 std::shared_ptr<VertexFormat>
@@ -175,7 +171,7 @@ VisualEffect::CreateVertexFormat() const
 }
 
 std::shared_ptr<VertexFormat>
-VisualEffect::GetVertexFormat() const
+VisualEffect::GetVertexFormatSp() const
 {
     // NOTE(Wuxiang): Because the static qualifier here would only evaluate the
     // first time using dynamic typing to get the correct vertex format you could
@@ -184,6 +180,26 @@ VisualEffect::GetVertexFormat() const
     // you could get a static variable for each derived class.
     static shared_ptr<VertexFormat> sVertexFormat = CreateVertexFormat();
     return sVertexFormat;
+}
+
+void
+VisualEffect::CheckVertexGroupCompatible(Visual *visual) const
+{
+    auto vertexGroup = visual->GetVertexGroup();
+    if (vertexGroup)
+    {
+        auto vertexFormat = GetVertexFormatSp();
+        if (vertexFormat->IsVertexBindingCompatible(vertexGroup))
+        {
+            return;
+        }
+
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Vertex group is not compatible.");
+    }
+    else
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Visual is not correctly initialized.");
+    }
 }
 
 /************************************************************************/
@@ -215,15 +231,15 @@ VisualEffect::TraverseLevelOrder(Node *node, std::function<void(Visual *visual)>
             for (auto slotIndex = 0; slotIndex < slotNum; ++slotIndex)
             {
                 auto child = renderNodeCurrent->GetChildAt(slotIndex);
-                if (auto childVisual = dynamic_pointer_cast<Visual>(child))
+                if (auto childVisual = dynamic_cast<Visual *>(child))
                 {
                     // Perform the given operation only on Mesh child.
-                    visit(childVisual.get());
+                    visit(childVisual);
                 }
-                else if (auto childNode = dynamic_pointer_cast<Node>(child))
+                else if (auto childNode = dynamic_cast<Node *>(child))
                 {
                     // Prepare for traversing next level.
-                    nodeQueueNext.push(make_pair(childNode.get(), sceneDepthCurrent + 1));
+                    nodeQueueNext.push(make_pair(childNode, sceneDepthCurrent + 1));
                 }
                 else
                 {

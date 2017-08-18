@@ -10,14 +10,14 @@ namespace FalconEngine
 
 #pragma warning(disable : 4251)
 #pragma pack(push, 1)
-class FALCON_ENGINE_API AABB final
+class FALCON_ENGINE_API Aabb final
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit AABB(const Vector3f& position);
-    ~AABB() = default;
+    explicit Aabb(const Vector3f& position);
+    ~Aabb() = default;
 
 public:
     /************************************************************************/

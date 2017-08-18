@@ -38,30 +38,30 @@ SampleGame::Initialize()
         // Entities
         {
             mScene = make_shared<SceneEntity>();
-            auto sceneNode = mScene->GetNode();
+            auto sceneNode = mScene->GetNodeSp();
             sceneNode->mWorldTransform = Matrix4f::Zero;
 
             // Room
             auto roomModel = assetManager->LoadModel("Content/Model/Bedroom.dae");
-            mRoomNode = ShareClone(roomModel->GetNode());
+            mRoomNode = ShareClone(roomModel->GetNodeSp());
             sceneNode->AttachChild(mRoomNode);
 
             // Light
             auto boxModel = assetManager->LoadModel("Content/Model/Engine/Box.dae");
-            auto boxNode = boxModel->GetNode();
+            auto boxNode = boxModel->GetNodeSp();
             mDirectionalLight = make_shared<LightEntity>(ShareClone(boxNode), LightType::Directional);
             mPointLight1 = make_shared<LightEntity>(ShareClone(boxNode), LightType::Point);
             mPointLight2 = make_shared<LightEntity>(ShareClone(boxNode), LightType::Point);
             mPointLight3 = make_shared<LightEntity>(ShareClone(boxNode), LightType::Point);
-            mRoomNode->AttachChild(mPointLight1->GetNode());
-            mRoomNode->AttachChild(mPointLight2->GetNode());
-            mRoomNode->AttachChild(mPointLight3->GetNode());
+            mRoomNode->AttachChild(mPointLight1->GetNodeSp());
+            mRoomNode->AttachChild(mPointLight2->GetNodeSp());
+            mRoomNode->AttachChild(mPointLight3->GetNodeSp());
 
             // Axis
             auto axeModel = assetManager->LoadModel("Content/Model/Engine/Axe.dae");
-            auto axeNodeX = ShareClone(axeModel->GetNode());
-            auto axeNodeY = ShareClone(axeModel->GetNode());
-            auto axeNodeZ = ShareClone(axeModel->GetNode());
+            auto axeNodeX = ShareClone(axeModel->GetNodeSp());
+            auto axeNodeY = ShareClone(axeModel->GetNodeSp());
+            auto axeNodeZ = ShareClone(axeModel->GetNodeSp());
             mAxeNode = make_shared<Node>();
             mAxeNode->AttachChild(axeNodeX);
             mAxeNode->AttachChild(axeNodeY);
@@ -192,8 +192,8 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
     sEntityRenderer->Draw(mCamera.get(), mScene.get());
 
     static auto sDebugRenderer = graphics->GetDebugRenderer();
-    sDebugRenderer->AddAABB(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f));
-    sDebugRenderer->AddAABB(mCamera.get(), mPointLight2.get(), Transparent(ColorPalette::Green, 1.0f));
+    sDebugRenderer->AddAabb(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f));
+    sDebugRenderer->AddAabb(mCamera.get(), mPointLight2.get(), Transparent(ColorPalette::Green, 1.0f));
 
     sFontRenderer->AddText(mFont, 16.0f, Vector2f(gameEngineSettings->mWindowWidth / 2.0f, gameEngineSettings->mWindowHeight / 2.0f), ".");
 

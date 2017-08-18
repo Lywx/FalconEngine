@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Effect/AABBEffect.h>
+#include <FalconEngine/Graphics/Effect/AabbEffect.h>
 
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexAttribute.h>
@@ -10,16 +10,16 @@ using namespace std;
 namespace FalconEngine
 {
 
-FALCON_ENGINE_EFFECT_IMPLEMENT(AABBEffect);
+FALCON_ENGINE_EFFECT_IMPLEMENT(AabbEffect);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-AABBEffect::AABBEffect()
+AabbEffect::AabbEffect()
 {
     auto shader = std::make_shared<Shader>();
-    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/AABB.vert.glsl");
-    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shader/AABB.frag.glsl");
+    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/Aabb.vert.glsl");
+    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shader/Aabb.frag.glsl");
 
     auto pass = make_unique<VisualEffectPass>();
     pass->SetShader(shader);
@@ -48,7 +48,7 @@ AABBEffect::AABBEffect()
     InsertPass(move(pass));
 }
 
-AABBEffect::~AABBEffect()
+AabbEffect::~AabbEffect()
 {
 }
 
@@ -56,10 +56,8 @@ AABBEffect::~AABBEffect()
 /* Public Members                                                       */
 /************************************************************************/
 std::shared_ptr<VisualEffectInstance>
-AABBEffect::CreateInstance(Visual *visual, const std::shared_ptr<AABBEffectParams>& params)
+AabbEffect::CreateInstance(Visual *visual, const std::shared_ptr<AabbEffectParams>& params)
 {
-    CheckVertexFormatCompatible(visual);
-
     auto instance = InstallInstance(visual, params);
 
     // NOTE(Wuxiang): Don't need to initialize any instance because all the
@@ -72,7 +70,7 @@ AABBEffect::CreateInstance(Visual *visual, const std::shared_ptr<AABBEffectParam
 /* Protected Members                                                    */
 /************************************************************************/
 std::shared_ptr<VertexFormat>
-AABBEffect::CreateVertexFormat() const
+AabbEffect::CreateVertexFormat() const
 {
     auto vertexFormat = std::make_shared<VertexFormat>();
 
@@ -96,7 +94,7 @@ AABBEffect::CreateVertexFormat() const
 }
 
 std::shared_ptr<VertexFormat>
-AABBEffect::GetVertexFormat() const
+AabbEffect::GetVertexFormatSp() const
 {
     static shared_ptr<VertexFormat> sVertexFormat = CreateVertexFormat();
     return sVertexFormat;

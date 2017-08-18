@@ -6,7 +6,6 @@
 #include <vector>
 
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBufferBinding.h>
-#include "Buffer.h"
 
 namespace FalconEngine
 {
@@ -78,6 +77,9 @@ public:
     {
         return mVertexBufferBindingTable.end();
     }
+
+    bool
+    IsVertexBufferBindingAvailable(unsigned int bindingIndex) const;
 
 private:
     void

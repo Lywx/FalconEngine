@@ -139,7 +139,7 @@ DebugEffect::CreateInstance(Visual *visual, const std::shared_ptr<DebugEffectPar
 }
 
 std::shared_ptr<VertexFormat>
-DebugEffect::GetVertexFormat() const
+DebugEffect::GetVertexFormatSp() const
 {
     static shared_ptr<VertexFormat> sVertexFormat = CreateVertexFormat();
     return sVertexFormat;

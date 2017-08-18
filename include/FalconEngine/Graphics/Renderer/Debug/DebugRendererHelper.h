@@ -22,7 +22,7 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     static void
-    FillAABB(_IN_OUT_ BufferAdaptor *bufferAdaptor,
+    FillAabb(_IN_OUT_ BufferAdaptor *bufferAdaptor,
              _IN_OUT_ unsigned char *bufferData,
 
              _IN_ const Vector3f& min,

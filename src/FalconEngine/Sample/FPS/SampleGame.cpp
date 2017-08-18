@@ -40,24 +40,24 @@ SampleGame::Initialize()
             sceneNode->mWorldTransform = Matrix4f::Zero;
 
             auto roomModel = assetManager->LoadModel("Content/Model/Bedroom.dae");
-            mRoomNode = ShareClone(roomModel->GetNode());
+            mRoomNode = ShareClone(roomModel->GetNodeSp());
             sceneNode->AttachChild(mRoomNode);
 
             auto boxModel = assetManager->LoadModel("Content/Model/Engine/Box.dae");
-            auto boxNode = boxModel->GetNode();
+            auto boxNode = boxModel->GetNodeSp();
             mDirectionalLight = make_shared<LightEntity>(ShareClone(boxNode), LightType::Directional);
             mPointLight1 = make_shared<LightEntity>(ShareClone(boxNode), LightType::Point);
             mPointLight2 = make_shared<LightEntity>(ShareClone(boxNode), LightType::Point);
             mPointLight3 = make_shared<LightEntity>(ShareClone(boxNode), LightType::Point);
-            mRoomNode->AttachChild(mPointLight1->GetNode());
-            mRoomNode->AttachChild(mPointLight2->GetNode());
-            mRoomNode->AttachChild(mPointLight3->GetNode());
+            mRoomNode->AttachChild(mPointLight1->GetNodeSp());
+            mRoomNode->AttachChild(mPointLight2->GetNodeSp());
+            mRoomNode->AttachChild(mPointLight3->GetNodeSp());
 
             // Axis
             auto axeModel = assetManager->LoadModel("Content/Model/Engine/Axe.dae");
-            auto axeNodeX = ShareClone(axeModel->GetNode());
-            auto axeNodeY = ShareClone(axeModel->GetNode());
-            auto axeNodeZ = ShareClone(axeModel->GetNode());
+            auto axeNodeX = ShareClone(axeModel->GetNodeSp());
+            auto axeNodeY = ShareClone(axeModel->GetNodeSp());
+            auto axeNodeZ = ShareClone(axeModel->GetNodeSp());
             auto axeNode = make_shared<Node>();
             axeNode->AttachChild(axeNodeX);
             axeNode->AttachChild(axeNodeY);
@@ -218,14 +218,14 @@ SampleGame::UpdateFrame(GameEngineGraphics *graphics, GameEngineInput *input, do
     if (keyboard->KeyPressed(Key::P))
     {
         //sDebugRenderer->AddText(std::to_string(GameTimer::GetSeconds()), Vector2f(500.0f, 500.0f), 16.0f, ColorPalette::White, 0.0f);
-        sDebugRenderer->AddAABB(mCamera.get(), mCamera->GetPosition() + Vector3f(-1, -1, -1), mCamera->GetPosition() + Vector3f(1, 1, 1), Transparent(ColorPalette::Yellow, 1.0f), 4.0f, true);
+        sDebugRenderer->AddAabb(mCamera.get(), mCamera->GetPosition() + Vector3f(-1, -1, -1), mCamera->GetPosition() + Vector3f(1, 1, 1), Transparent(ColorPalette::Yellow, 1.0f), 4.0f, true);
     }
 
     //}
 
     //sDebugRenderer->AddSphere(mCamera.get(), mCamera->GetPosition(), 5.0f, ColorPalette::Red, 0.0f, false);
-    // sDebugRenderer->AddAABB(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f), 0.0f, true);
-    // sDebugRenderer->AddAABB(mCamera.get(), mPointLight2.get(), Transparent(ColorPalette::Green, 1.0f), 0.0f, true);
+    // sDebugRenderer->AddAabb(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f), 0.0f, true);
+    // sDebugRenderer->AddAabb(mCamera.get(), mPointLight2.get(), Transparent(ColorPalette::Green, 1.0f), 0.0f, true);
 
     Game::UpdateFrame(graphics, input, elasped);
 }

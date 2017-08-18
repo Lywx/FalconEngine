@@ -102,37 +102,37 @@ public:
     GetEffectInstanceNum() const;
 
     void
-    PushEffectInstance(std::shared_ptr<VisualEffectInstance> effectInstance);
+    PushEffectInstance(const std::shared_ptr<VisualEffectInstance>& effectInstance);
 
     void
-    RemoveEffectInstance(std::shared_ptr<VisualEffectInstance> effectInstance);
+    RemoveEffectInstance(const std::shared_ptr<VisualEffectInstance>& effectInstance);
 
     int
     GetEffectParamsNum() const;
 
     void
-    PushEffectParams(std::shared_ptr<VisualEffectParams> effectParmas);
+    PushEffectParams(const std::shared_ptr<VisualEffectParams>& effectParmas);
 
     void
-    RemoveEffectParams(std::shared_ptr<VisualEffectParams> effectParmas);
+    RemoveEffectParams(const std::shared_ptr<VisualEffectParams>& effectParmas);
 
     const VertexFormat *
     GetVertexFormat() const;
 
     std::shared_ptr<const VertexFormat>
-    GetVertexFormat();
+    GetVertexFormatSp();
 
     void
-    SetVertexFormat(std::shared_ptr<VertexFormat> vertexFormat);
+    SetVertexFormat(const std::shared_ptr<VertexFormat>& vertexFormat);
 
     const VertexGroup *
     GetVertexGroup() const;
 
     std::shared_ptr<const VertexGroup>
-    GetVertexGroup();
+    GetVertexGroupSp();
 
     void
-    SetVertexGroup(std::shared_ptr<VertexGroup> vertexGroup);
+    SetVertexGroup(const std::shared_ptr<VertexGroup>& vertexGroup);
 
     /************************************************************************/
     /* Mesh Management                                                      */
@@ -140,11 +140,14 @@ public:
     const Mesh *
     GetMesh() const;
 
-    std::shared_ptr<Mesh>
+    Mesh *
     GetMesh();
 
+    std::shared_ptr<Mesh>
+    GetMeshSp();
+
     void
-    SetMesh(std::shared_ptr<Mesh> mesh);
+    SetMesh(const std::shared_ptr<Mesh>& mesh);
 
     /************************************************************************/
     /* Spatial Management                                                   */

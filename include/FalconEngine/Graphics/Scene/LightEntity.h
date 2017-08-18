@@ -18,8 +18,8 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit LightEntity(const std::shared_ptr<Node> node, LightType lightType);
-    LightEntity(const std::shared_ptr<Node> node, const std::shared_ptr<Light> light);
+    explicit LightEntity(const std::shared_ptr<Node>& node, LightType lightType);
+    LightEntity(const std::shared_ptr<Node>& node, const std::shared_ptr<Light>& light);
     ~LightEntity();
 
 public:

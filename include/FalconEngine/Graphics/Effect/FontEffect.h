@@ -62,7 +62,7 @@ public:
                    _IN_     const std::shared_ptr<FontEffectParams>& params);
 
     virtual std::shared_ptr<VertexFormat>
-    GetVertexFormat() const override;
+    GetVertexFormatSp() const override;
 
 protected:
     virtual std::shared_ptr<VertexFormat>

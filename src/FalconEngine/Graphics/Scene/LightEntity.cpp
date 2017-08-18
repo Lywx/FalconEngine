@@ -9,7 +9,7 @@ FALCON_ENGINE_RTTI_IMPLEMENT(LightEntity, Entity);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-LightEntity::LightEntity(const std::shared_ptr<Node> node, LightType lightType) :
+LightEntity::LightEntity(const std::shared_ptr<Node>& node, LightType lightType) :
     SceneEntity(node),
     mLight(std::make_shared<Light>(lightType))
 {
@@ -22,7 +22,7 @@ LightEntity::LightEntity(const std::shared_ptr<Node> node, LightType lightType) 
     SetScale(Vector3f(0.25f, 0.25f, 0.25f));
 }
 
-LightEntity::LightEntity(const std::shared_ptr<Node> node, const std::shared_ptr<Light> light) :
+LightEntity::LightEntity(const std::shared_ptr<Node>& node, const std::shared_ptr<Light>& light) :
     SceneEntity(node),
     mLight(light)
 {

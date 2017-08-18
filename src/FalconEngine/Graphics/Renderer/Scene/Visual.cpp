@@ -47,7 +47,7 @@ Visual::GetEffectInstanceNum() const
 }
 
 void
-Visual::PushEffectInstance(std::shared_ptr<VisualEffectInstance> effectInstance)
+Visual::PushEffectInstance(const std::shared_ptr<VisualEffectInstance>& effectInstance)
 {
     // NOTE(Wuxiang): Don't allow
     FALCON_ENGINE_CHECK_NULLPTR(effectInstance);
@@ -56,7 +56,7 @@ Visual::PushEffectInstance(std::shared_ptr<VisualEffectInstance> effectInstance)
 }
 
 void
-Visual::RemoveEffectInstance(std::shared_ptr<VisualEffectInstance> effectInstance)
+Visual::RemoveEffectInstance(const std::shared_ptr<VisualEffectInstance>& effectInstance)
 {
     FALCON_ENGINE_CHECK_NULLPTR(effectInstance);
 
@@ -74,7 +74,7 @@ Visual::GetEffectParamsNum() const
 }
 
 void
-Visual::PushEffectParams(std::shared_ptr<VisualEffectParams> effectParmas)
+Visual::PushEffectParams(const std::shared_ptr<VisualEffectParams>& effectParmas)
 {
     FALCON_ENGINE_CHECK_NULLPTR(effectParmas);
 
@@ -82,7 +82,7 @@ Visual::PushEffectParams(std::shared_ptr<VisualEffectParams> effectParmas)
 }
 
 void
-Visual::RemoveEffectParams(std::shared_ptr<VisualEffectParams> effectParmas)
+Visual::RemoveEffectParams(const std::shared_ptr<VisualEffectParams>& effectParmas)
 {
     FALCON_ENGINE_CHECK_NULLPTR(effectParmas);
 
@@ -100,13 +100,13 @@ Visual::GetVertexFormat() const
 }
 
 std::shared_ptr<const VertexFormat>
-Visual::GetVertexFormat()
+Visual::GetVertexFormatSp()
 {
     return mVertexFormat;
 }
 
 void
-Visual::SetVertexFormat(std::shared_ptr<VertexFormat> vertexFormat)
+Visual::SetVertexFormat(const std::shared_ptr<VertexFormat>& vertexFormat)
 {
     mVertexFormat = vertexFormat;
 }
@@ -118,13 +118,13 @@ Visual::GetVertexGroup() const
 }
 
 std::shared_ptr<const VertexGroup>
-Visual::GetVertexGroup()
+Visual::GetVertexGroupSp()
 {
     return mVertexGroup;
 }
 
 void
-Visual::SetVertexGroup(std::shared_ptr<VertexGroup> vertexGroup)
+Visual::SetVertexGroup(const std::shared_ptr<VertexGroup>& vertexGroup)
 {
     mVertexGroup = vertexGroup;
 }
@@ -138,14 +138,20 @@ Visual::GetMesh() const
     return mMesh.get();
 }
 
-std::shared_ptr<Mesh>
+Mesh *
 Visual::GetMesh()
+{
+    return mMesh.get();
+}
+
+std::shared_ptr<Mesh>
+Visual::GetMeshSp()
 {
     return mMesh;
 }
 
 void
-Visual::SetMesh(std::shared_ptr<Mesh> mesh)
+Visual::SetMesh(const std::shared_ptr<Mesh>& mesh)
 {
     FALCON_ENGINE_CHECK_NULLPTR(mesh);
 

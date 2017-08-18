@@ -117,13 +117,16 @@ protected:
     CreateVertexFormat() const = 0;
 
     virtual std::shared_ptr<VertexFormat>
-    GetVertexFormat() const = 0;
+    GetVertexFormatSp() const = 0;
+
+    void
+    CheckVertexGroupCompatible(Visual *visual) const;
 
     // @remark You don't need to worry about the lifetime of returned visual effect
     // instance. It is managed by the Visual class using shared_ptr.
     template <typename T>
     std::shared_ptr<VisualEffectInstance>
-    InstallInstance(Visual *visual, std::shared_ptr<T> params)
+    InstallInstance(Visual *visual, const std::shared_ptr<T>& params)
     {
         static_assert(std::is_base_of<VisualEffectParams, T>::value, "Params must derive from VisualEffectParams");
 
@@ -133,9 +136,14 @@ protected:
         // data might be passed unexpectedly.
         CheckVertexFormatCompatible(visual);
 
-        // NOTE(Wuxiang): Assume the user would correctly set up vertex group
-        // because there is no reliable to test vertex group is compatible
-        // with vertex format.
+        // NOTE(Wuxiang): After checking the vertex format is compatible, it is
+        // necessary to replace visual's default vertex format so that all
+        // needed vertex attributes are enabled when rendered.
+        visual->SetVertexFormat(GetVertexFormatSp());
+
+        // NOTE(Wuxiang): Must check the user have correctly set up vertex
+        // group that is compatible with newly inserted vertex format.
+        CheckVertexGroupCompatible(visual);
 
         auto instance = CreateInstance();
         visual->PushEffectInstance(instance);

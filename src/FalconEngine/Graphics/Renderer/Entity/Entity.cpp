@@ -12,7 +12,7 @@ FALCON_ENGINE_RTTI_IMPLEMENT(Entity, Object);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Entity::Entity(std::shared_ptr<Node> node) :
+Entity::Entity(const std::shared_ptr<Node>& node) :
     mId(0),
     mNode(node),
     mLocalPosition(),
@@ -43,8 +43,14 @@ Entity::GetNode() const
     return mNode.get();
 }
 
-std::shared_ptr<Node>
+Node *
 Entity::GetNode()
+{
+    return mNode.get();
+}
+
+std::shared_ptr<Node>
+Entity::GetNodeSp()
 {
     return mNode;
 }

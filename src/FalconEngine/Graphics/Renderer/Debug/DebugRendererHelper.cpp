@@ -22,7 +22,7 @@ DebugRendererHelper::SphereThetaSampleNum = 8;
 /* Public Members                                                       */
 /************************************************************************/
 void
-DebugRendererHelper::FillAABB(BufferAdaptor  *bufferAdaptor,
+DebugRendererHelper::FillAabb(BufferAdaptor  *bufferAdaptor,
                               unsigned char  *bufferData,
                               const Vector3f& min,
                               const Vector3f& max,

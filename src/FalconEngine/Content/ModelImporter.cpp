@@ -131,7 +131,7 @@ ModelImporter::CreateMesh(Model *model, const string& modelFilePath, const Model
     auto primitive = make_shared<PrimitiveTriangles>(GetVertexFormat(), vertexGroup, indexBuffer);
 
     // Extract bounding box from mesh.
-    primitive->SetAABB(CreateAABB(aiMesh));
+    primitive->SetAabb(CreateAabb(aiMesh));
 
     // Load texture data in term of material.
     auto material = CreateMaterial(modelFilePath, aiScene, aiMesh);
@@ -146,15 +146,15 @@ ModelImporter::CreateVisual(Model *model, const string& modelFilePath, const Mod
     return make_shared<Visual>(CreateMesh(model, modelFilePath, modelImportOption, aiScene, aiMesh));
 }
 
-AABB
-ModelImporter::CreateAABB(const aiMesh *aiMesh)
+Aabb
+ModelImporter::CreateAabb(const aiMesh *aiMesh)
 {
     if (!aiMesh->mVertices)
     {
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Model doesn't have vertex data.");
     }
 
-    auto aabb = AABB(Vector3f(aiMesh->mVertices[0].x,
+    auto aabb = Aabb(Vector3f(aiMesh->mVertices[0].x,
                               aiMesh->mVertices[0].y,
                               aiMesh->mVertices[0].z));
 

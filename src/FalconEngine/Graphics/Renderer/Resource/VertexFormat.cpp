@@ -1,5 +1,7 @@
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
+
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
 
 namespace FalconEngine
 {
@@ -20,7 +22,7 @@ VertexFormat::~VertexFormat()
 /* Public Members                                                       */
 /************************************************************************/
 bool
-VertexFormat::IsVertexAttributeCompatible(std::shared_ptr<VertexFormat> rhs) const
+VertexFormat::IsVertexAttributeCompatible(const std::shared_ptr<VertexFormat>& rhs) const
 {
     return IsVertexAttributeCompatible(rhs.get());
 }
@@ -30,14 +32,12 @@ VertexFormat::IsVertexAttributeCompatible(const VertexFormat *rhs) const
 {
     FALCON_ENGINE_CHECK_NULLPTR(rhs);
 
-    if (mVertexAttributeList.size() != rhs->mVertexAttributeList.size())
-    {
-        return false;
-    }
-
+    // NOTE(Wuxiang): Allow the rhs vertex format has more vertex attribute
+    // than this vertex format as long as both vertex formats are the same for
+    // the range [0, min(vf1, vf2)].
     for (size_t attributeIndex = 0; attributeIndex < mVertexAttributeList.size(); ++attributeIndex)
     {
-        if (!mVertexAttributeList[attributeIndex].IsCompatible(mVertexAttributeList[attributeIndex]))
+        if (!mVertexAttributeList[attributeIndex].IsCompatible(rhs->mVertexAttributeList[attributeIndex]))
         {
             return false;
         }
@@ -101,6 +101,30 @@ void
 VertexFormat::FinishVertexAttribute()
 {
     mVertexAttributeFinished = true;
+}
+
+bool
+VertexFormat::IsVertexBindingCompatible(const std::shared_ptr<VertexGroup>& rhs) const
+{
+    return IsVertexBindingCompatible(rhs.get());
+}
+
+bool
+VertexFormat::IsVertexBindingCompatible(const VertexGroup *rhs) const
+{
+    FALCON_ENGINE_CHECK_NULLPTR(rhs);
+
+    // NOTE(Wuxiang): Allow the rhs vertex group has more vertex buffer binding
+    // than this vertex format.
+    for (size_t attributeIndex = 0; attributeIndex < mVertexAttributeList.size(); ++attributeIndex)
+    {
+        if (!rhs->IsVertexBufferBindingAvailable(mVertexAttributeList[attributeIndex].mBindingIndex))
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 int

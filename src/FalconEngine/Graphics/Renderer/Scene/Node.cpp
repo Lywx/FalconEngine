@@ -31,7 +31,7 @@ Node::~Node()
 /* Public Members                                                       */
 /************************************************************************/
 int
-Node::AttachChild(std::shared_ptr<Spatial> child)
+Node::AttachChild(const std::shared_ptr<Spatial>& child)
 {
     FALCON_ENGINE_CHECK_NULLPTR(child);
 
@@ -63,7 +63,7 @@ Node::AttachChild(std::shared_ptr<Spatial> child)
 }
 
 int
-Node::DetachChild(std::shared_ptr<Spatial> child)
+Node::DetachChild(const std::shared_ptr<Spatial>& child)
 {
     if (child)
     {
@@ -129,8 +129,19 @@ Node::GetChildAt(int slotIndex) const
     FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The slot index out of bound.");
 }
 
-std::shared_ptr<Spatial>
+Spatial *
 Node::GetChildAt(int slotIndex)
+{
+    if (0 <= slotIndex && slotIndex < GetChildrenSlotNum())
+    {
+        return mChildrenSlot.at(slotIndex).get();
+    }
+
+    FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("The slot index out of bound.");
+}
+
+std::shared_ptr<Spatial>
+Node::GetChildSpAt(int slotIndex)
 {
     if (0 <= slotIndex && slotIndex < GetChildrenSlotNum())
     {
@@ -141,7 +152,7 @@ Node::GetChildAt(int slotIndex)
 }
 
 std::shared_ptr<Spatial>
-Node::SetChildAt(int slotIndex, std::shared_ptr<Spatial> child)
+Node::SetChildAt(int slotIndex, const std::shared_ptr<Spatial>& child)
 {
     // NOTE(Wuxiang): The child is allowed to be null so that you would be able
     // to clear the child from the children list.
@@ -294,7 +305,7 @@ Node::UpdateWorldTransform(double elapsed)
 }
 
 std::shared_ptr<Node>
-ShareClone(std::shared_ptr<Node> node)
+ShareClone(const std::shared_ptr<Node>& node)
 {
     return std::shared_ptr<Node>(node->GetClone());
 }

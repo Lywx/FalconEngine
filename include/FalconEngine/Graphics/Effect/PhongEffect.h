@@ -56,7 +56,7 @@ protected:
     CreateVertexFormat() const override;
 
     virtual std::shared_ptr<VertexFormat>
-    GetVertexFormat() const override;
+    GetVertexFormatSp() const override;
 
     // @summary Add required parameters to the existing visual effect instance.
     void

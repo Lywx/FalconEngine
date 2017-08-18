@@ -52,7 +52,7 @@ const int BufferChannelMap[int(DebugRenderType::Count)] =
 /* Rendering API                                                        */
 /************************************************************************/
 void
-DebugRenderer::AddAABB(const Camera *camera,
+DebugRenderer::AddAabb(const Camera *camera,
                        const Entity *entity,
                        const Color&  color,
                        float         duration,
@@ -60,11 +60,11 @@ DebugRenderer::AddAABB(const Camera *camera,
 {
     FALCON_ENGINE_CHECK_NULLPTR(entity);
 
-    AddAABB(camera, entity->GetNode(), color, duration, depthEnabled);
+    AddAabb(camera, entity->GetNode(), color, duration, depthEnabled);
 }
 
 void
-DebugRenderer::AddAABB(const Camera *camera,
+DebugRenderer::AddAabb(const Camera *camera,
                        const Node   *node,
                        const Color&  color,
                        float         duration,
@@ -78,17 +78,17 @@ DebugRenderer::AddAABB(const Camera *camera,
         auto child = node->GetChildAt(slotIndex);
         if (auto childVisual = dynamic_cast<const Visual *>(child))
         {
-            AddAABB(camera, childVisual, color, duration, depthEnabled);
+            AddAabb(camera, childVisual, color, duration, depthEnabled);
         }
         else if (auto childNode = dynamic_cast<const Node *>(child))
         {
-            AddAABB(camera, childNode, color, duration, depthEnabled);
+            AddAabb(camera, childNode, color, duration, depthEnabled);
         }
     }
 }
 
 void
-DebugRenderer::AddAABB(const Camera *camera,
+DebugRenderer::AddAabb(const Camera *camera,
                        const Visual *visual,
                        const Color&  color,
                        float         duration,
@@ -96,16 +96,16 @@ DebugRenderer::AddAABB(const Camera *camera,
 {
     FALCON_ENGINE_CHECK_NULLPTR(visual);
 
-    auto aabb = visual->GetMesh()->GetAABB();
+    auto aabb = visual->GetMesh()->GetAabb();
 
-    AddAABB(camera,
+    AddAabb(camera,
             Vector3f(visual->mWorldTransform * Vector4f(aabb->mMin, 1)),
             Vector3f(visual->mWorldTransform * Vector4f(aabb->mMax, 1)),
             color, duration, depthEnabled);
 }
 
 void
-DebugRenderer::AddAABB(const Camera   *camera,
+DebugRenderer::AddAabb(const Camera   *camera,
                        const Vector3f& min,
                        const Vector3f& max,
 
@@ -113,7 +113,7 @@ DebugRenderer::AddAABB(const Camera   *camera,
                        float           duration,
                        bool            depthEnabled)
 {
-    DebugRenderMessage message(DebugRenderType::AABB, color, duration, depthEnabled);
+    DebugRenderMessage message(DebugRenderType::Aabb, color, duration, depthEnabled);
     message.mCamera = camera;
     message.mFloatVector1 = min;
     message.mFloatVector2 = max;
@@ -290,11 +290,11 @@ DebugRenderer::UpdateFrame(double elapsed)
         // Update channel data number.
         switch (message.mType)
         {
-        case DebugRenderType::AABB:
+        case DebugRenderType::Aabb:
             mDebugBufferResource->AddChannelElement(
                 channel, 24);
             break;
-        case DebugRenderType::OBB:
+        case DebugRenderType::Obb:
             FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
         case DebugRenderType::Circle:
             mDebugBufferResource->AddChannelElement(
@@ -354,12 +354,12 @@ DebugRenderer::UpdateFrame(double elapsed)
             // Fill vertex data by inspecting the message.
             switch (message.mType)
             {
-            case DebugRenderType::AABB:
-                DebugRendererHelper::FillAABB(
+            case DebugRenderType::Aabb:
+                DebugRendererHelper::FillAabb(
                     bufferAdaptor, bufferData, message.mFloatVector1,
                     message.mFloatVector2, message.mColor, cameraIndex);
                 break;
-            case DebugRenderType::OBB:
+            case DebugRenderType::Obb:
                 FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
             case DebugRenderType::Circle:
                 DebugRendererHelper::FillCircle(

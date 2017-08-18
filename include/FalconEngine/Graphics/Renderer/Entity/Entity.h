@@ -26,15 +26,18 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit Entity(std::shared_ptr<Node> node);
+    explicit Entity(const std::shared_ptr<Node>& node);
     virtual ~Entity();
 
 public:
     const Node *
     GetNode() const;
 
-    std::shared_ptr<Node>
+    Node *
     GetNode();
+
+    std::shared_ptr<Node>
+    GetNodeSp();
 
     virtual Vector3f
     GetScale() const;

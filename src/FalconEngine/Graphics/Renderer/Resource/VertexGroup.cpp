@@ -115,6 +115,12 @@ VertexGroup::GetVertexBufferBinding(unsigned int bindingIndex) const
     return mVertexBufferBindingTable.at(bindingIndex);
 }
 
+bool
+VertexGroup::IsVertexBufferBindingAvailable(unsigned bindingIndex) const
+{
+    return mVertexBufferBindingTable.find(bindingIndex) != mVertexBufferBindingTable.end();
+}
+
 /************************************************************************/
 /* Private Members                                                      */
 /************************************************************************/

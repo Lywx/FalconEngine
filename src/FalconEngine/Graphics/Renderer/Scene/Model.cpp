@@ -29,8 +29,14 @@ Model::GetNode() const
     return mNode.get();
 }
 
-std::shared_ptr<Node>
+Node *
 Model::GetNode()
+{
+    return mNode.get();
+}
+
+std::shared_ptr<Node>
+Model::GetNodeSp()
 {
     return mNode;
 }

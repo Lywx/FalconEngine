@@ -78,7 +78,7 @@ public:
                    _IN_     const std::shared_ptr<DebugEffectParams>& params);
 
     virtual std::shared_ptr<VertexFormat>
-    GetVertexFormat() const override;
+    GetVertexFormatSp() const override;
 
     /************************************************************************/
     /* Protected Members                                                    */

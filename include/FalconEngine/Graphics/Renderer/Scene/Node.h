@@ -57,7 +57,7 @@ public:
     //     node0->DetachChild(saveChild);
     //     node1->AttachChild(saveChild);
     int
-    AttachChild(std::shared_ptr<Spatial> child);
+    AttachChild(const std::shared_ptr<Spatial>& child);
 
     // @summary Clear all children.
     void
@@ -67,7 +67,7 @@ public:
     // array, the return value is the index in the array that had stored the
     // child. Otherwise, the function returns -1.
     int
-    DetachChild(std::shared_ptr<Spatial> child);
+    DetachChild(const std::shared_ptr<Spatial>& child);
 
     // @summary Detach a child from this node. If 0 <= i < ChildrenNum(), the
     // return value is the child at index i; otherwise, the function returns
@@ -82,9 +82,12 @@ public:
     const Spatial *
     GetChildAt(int slotIndex) const;
 
+    Spatial *
+    GetChildAt(int slotIndex);
+
     // @return Child at specific index. The return value could be null.
     std::shared_ptr<Spatial>
-    GetChildAt(int slotIndex);
+    GetChildSpAt(int slotIndex);
 
     // The same comments for AttachChild apply here regarding the inability
     // to have multiple parents. If 0 <= i < ChildrenNum(), the function
@@ -92,7 +95,7 @@ public:
     // succeeds, appending the child to the end of the array. The return
     // value is the previous child stored at index i.
     std::shared_ptr<Spatial>
-    SetChildAt(int slotIndex, std::shared_ptr<Spatial> child);
+    SetChildAt(int slotIndex, const std::shared_ptr<Spatial>& child);
 
     int
     GetChildrenNum() const;
@@ -136,7 +139,7 @@ private:
 };
 #pragma warning(default: 4251)
 
-FALCON_ENGINE_API std::shared_ptr<Node> ShareClone(std::shared_ptr<Node> node);
-FALCON_ENGINE_API std::shared_ptr<Node> ShareClone(std::shared_ptr<Node> node, int);
+FALCON_ENGINE_API std::shared_ptr<Node>
+ShareClone(const std::shared_ptr<Node>& node);
 
 }

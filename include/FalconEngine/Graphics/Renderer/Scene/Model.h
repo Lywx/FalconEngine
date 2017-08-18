@@ -29,8 +29,11 @@ public:
     const Node *
     GetNode() const;
 
-    std::shared_ptr<Node>
+    Node *
     GetNode();
+
+    std::shared_ptr<Node>
+    GetNodeSp();
 
     void
     SetNode(std::shared_ptr<Node> node);

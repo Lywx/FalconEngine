@@ -2,7 +2,7 @@
 
 #include <FalconEngine/Core/Object.h>
 #include <FalconEngine/Graphics/Common.h>
-#include <FalconEngine/Math/AABB.h>
+#include <FalconEngine/Math/Aabb.h>
 
 namespace FalconEngine
 {
@@ -55,11 +55,11 @@ public:
     /************************************************************************/
     // NOTE(Wuxiang): The decision to put bounding box inside primitive is
     // natural. I don't see changes that it would change in the future.
-    const AABB *
-    GetAABB() const;
+    const Aabb *
+    GetAabb() const;
 
     void
-    SetAABB(const AABB& aabb);
+    SetAabb(const Aabb& aabb);
 
     /************************************************************************/
     /* Vertex Format Management                                             */
@@ -107,7 +107,7 @@ public:
     GetIndexBuffer() const;
 
     std::shared_ptr<IndexBuffer>
-    GetIndexBuffer();
+    GetIndexBufferSp();
 
     int
     GetIndexOffset() const;
@@ -133,7 +133,7 @@ protected:
     // class, which is necessary when creating special use vertex format.
     PrimitiveType                   mType;
 
-    std::shared_ptr<AABB>           mAABB;
+    std::shared_ptr<Aabb>           mAabb;
 
     std::shared_ptr<VertexFormat>   mVertexFormat;
     std::shared_ptr<VertexGroup>    mVertexGroup;

@@ -20,7 +20,7 @@
 #include <FalconEngine/Graphics/Renderer/Scene/Model.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Node.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
-#include <FalconEngine/Math/AABB.h>
+#include <FalconEngine/Math/Aabb.h>
 
 using namespace std;
 
@@ -75,8 +75,8 @@ private:
 
     // NEW(Wuxiang): Bounding box loading has a lot of space for optimization.
     // You could precomputed the bounding box in the asset processor.
-    static AABB
-    CreateAABB(const aiMesh *aiMesh);
+    static Aabb
+    CreateAabb(const aiMesh *aiMesh);
 
     static std::shared_ptr<IndexBuffer>
     CreateIndexBuffer(_IN_OUT_ Model        *model,
@@ -103,8 +103,9 @@ private:
         static auto sMasterRenderer = Renderer::GetInstance();
 
         // Memory allocation for index buffer.
-        auto indexBuffer = std::make_shared<IndexBuffer>(indexNum, indexType,
-                           BufferStorageMode::Device, indexBufferUsage);
+        auto indexBuffer = std::make_shared<IndexBuffer>(
+                               indexNum, indexType,
+                               BufferStorageMode::Device, indexBufferUsage);
         {
             auto indexData = reinterpret_cast<T *>(
                                  sMasterRenderer->Map(
@@ -120,9 +121,11 @@ private:
             for (unsigned int faceIndex = 0; faceIndex < aiMesh->mNumFaces; ++faceIndex)
             {
                 auto& face = aiMesh->mFaces[faceIndex];
-                for (unsigned int i = 0; i < face.mNumIndices; ++i)
+                for (unsigned int faceVertex = 0;
+                        faceVertex < face.mNumIndices;
+                        ++faceVertex)
                 {
-                    indexData[indexNumAdded] = T(face.mIndices[i]);
+                    indexData[indexNumAdded] = T(face.mIndices[faceVertex]);
                     ++indexNumAdded;
                 }
             }

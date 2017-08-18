@@ -33,10 +33,10 @@ Mesh::~Mesh()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-const AABB *
-Mesh::GetAABB() const
+const Aabb *
+Mesh::GetAabb() const
 {
-    return mPrimitive->GetAABB();
+    return mPrimitive->GetAabb();
 }
 
 const Material *
@@ -45,8 +45,14 @@ Mesh::GetMaterial() const
     return mMaterial.get();
 }
 
-std::shared_ptr<Material>
+Material *
 Mesh::GetMaterial()
+{
+    return mMaterial.get();
+}
+
+const std::shared_ptr<Material>&
+Mesh::GetMaterialSp()
 {
     return mMaterial;
 }

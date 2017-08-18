@@ -66,7 +66,7 @@ protected:
     CreateVertexFormat() const override;
 
     virtual std::shared_ptr<VertexFormat>
-    GetVertexFormat() const override;
+    GetVertexFormatSp() const override;
 
     void
     InitializeInstance(_IN_OUT_ VisualEffectInstance                    *instance,

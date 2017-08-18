@@ -7,6 +7,7 @@ namespace FalconEngine
 {
 
 enum class VertexAttributeType;
+class VertexGroup;
 
 // @remark Vertex format should be attached to visual level object. In modeling
 // software, the vertex format should be attached to any individual object.
@@ -31,7 +32,7 @@ public:
     /* Vertex Attribute Management                                          */
     /************************************************************************/
     bool
-    IsVertexAttributeCompatible(std::shared_ptr<VertexFormat> rhs) const;
+    IsVertexAttributeCompatible(const std::shared_ptr<VertexFormat>& rhs) const;
 
     bool
     IsVertexAttributeCompatible(const VertexFormat *rhs) const;
@@ -43,7 +44,12 @@ public:
     GetVertexAttribute(int attributeIndex);
 
     void
-    PushVertexAttribute(int attributeLocation, std::string attributeName, VertexAttributeType attributeType, bool attributeNormalized, int attributeBindingIndex, int attributeDivision = 0);
+    PushVertexAttribute(int                 attributeLocation,
+                        std::string         attributeName,
+                        VertexAttributeType attributeType,
+                        bool                attributeNormalized,
+                        int                 attributeBindingIndex,
+                        int                 attributeDivision = 0);
 
     void
     FinishVertexAttribute();
@@ -51,6 +57,12 @@ public:
     /************************************************************************/
     /* Vertex Buffer Management                                             */
     /************************************************************************/
+    bool
+    IsVertexBindingCompatible(const std::shared_ptr<VertexGroup>& rhs) const;
+
+    bool
+    IsVertexBindingCompatible(const VertexGroup *rhs) const;
+
     int
     GetVertexBufferStride(int attributeBindingIndex) const;
 

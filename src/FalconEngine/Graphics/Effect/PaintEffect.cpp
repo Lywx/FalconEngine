@@ -92,14 +92,14 @@ PaintEffect::CreateVertexFormat() const
 {
     auto vertexFormat = make_shared<VertexFormat>();
     vertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
-    vertexFormat->PushVertexAttribute(1, "Normal", VertexAttributeType::FloatVec3, false, 0);
-    vertexFormat->PushVertexAttribute(2, "TexCoord", VertexAttributeType::FloatVec2, false, 0);
+    vertexFormat->PushVertexAttribute(1, "Normal", VertexAttributeType::FloatVec3, false, 1);
+    vertexFormat->PushVertexAttribute(2, "TexCoord", VertexAttributeType::FloatVec2, false, 2);
     vertexFormat->FinishVertexAttribute();
     return vertexFormat;
 }
 
 std::shared_ptr<VertexFormat>
-PaintEffect::GetVertexFormat() const
+PaintEffect::GetVertexFormatSp() const
 {
     static shared_ptr<VertexFormat> sVertexFormat = CreateVertexFormat();
     return sVertexFormat;

@@ -87,7 +87,7 @@ FontEffect::CreateVertexFormat() const
 }
 
 std::shared_ptr<VertexFormat>
-FontEffect::GetVertexFormat() const
+FontEffect::GetVertexFormatSp() const
 {
     static shared_ptr<VertexFormat> sVertexFormat = CreateVertexFormat();
     return sVertexFormat;

@@ -1,11 +1,7 @@
 bin
 build
 doc
-
-include/*
-!include/FalconEngine
-
-lib
+external
 res
 
 src/FalconEngine/Content/Pipeline/*

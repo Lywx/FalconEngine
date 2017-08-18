@@ -176,7 +176,7 @@ FontRenderer::FindChannel(const Font *font)
                                    vertexBuffer,
                                    vertexBuffer->GetCapacitySize() / 4);
 
-    auto vertexFormat = sVisualEffect->GetVertexFormat();
+    auto vertexFormat = sVisualEffect->GetVertexFormatSp();
     auto vertexGroup = make_shared<VertexGroup>();
     vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, vertexFormat->GetVertexBufferStride(0));
 

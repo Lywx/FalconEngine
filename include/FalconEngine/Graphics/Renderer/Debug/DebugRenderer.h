@@ -17,8 +17,6 @@
 #include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Math/Color.h>
-#include "FalconEngine/Content/AssetManager.h"
-#include "FalconEngine/Graphics/Renderer/Font/Font.h"
 
 namespace FalconEngine
 {

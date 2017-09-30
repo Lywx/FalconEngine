@@ -34,11 +34,10 @@ VertexAttribute::~VertexAttribute()
 bool
 VertexAttribute::IsCompatible(const VertexAttribute& rhs) const
 {
-    // NOTE(Wuxiang): Binding index is not required to be the same.
+    // NOTE(Wuxiang): Binding index and name is not required to be the same.
     return mLocation == rhs.mLocation
            && mChannel == rhs.mChannel
            && mDivision == rhs.mDivision
-           && mName == rhs.mName
            && mNormalized == rhs.mNormalized
            && mType == rhs.mType;
 }

@@ -7,7 +7,6 @@
 
 namespace FalconEngine
 {
-
 void
 GameEnginePlatform::InitializePlatform()
 {
@@ -71,7 +70,7 @@ GameEnginePlatform::InitializePlatform()
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
 
-        gameEngineData->mWindow = window;
+        gameEngineData->mWindow = GameEngineWindow(window);
     }
 
     // Initialize GLEW.
@@ -88,7 +87,6 @@ GameEnginePlatform::InitializePlatform()
             glfwTerminate();
         }
     }
-
 }
 
 }

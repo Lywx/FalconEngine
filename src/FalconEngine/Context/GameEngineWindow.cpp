@@ -1,24 +1,15 @@
-#include <FalconEngine/Context/GameEnginePlatform.h>
+#include <FalconEngine/Context/GameEngineWindow.h>
+
+#include <FalconEngine/Context/GameEngineInput.h>
 
 namespace FalconEngine
 {
 
 /************************************************************************/
-/* Constructors and Destructor                                          */
-/************************************************************************/
-GameEnginePlatform::GameEnginePlatform()
-{
-}
-
-GameEnginePlatform::~GameEnginePlatform()
-{
-}
-
-/************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
 void
-GameEnginePlatform::Initialize()
+GameEngineWindow::Initialize()
 {
     InitializeData();
     InitializePlatform();
@@ -28,8 +19,10 @@ GameEnginePlatform::Initialize()
 /* Private Members                                                      */
 /************************************************************************/
 void
-GameEnginePlatform::InitializeData()
+GameEngineWindow::InitializeData()
 {
+    mInput = GameEngineInput::GetInstance();
+    mSettings = GameEngineSettings::GetInstance();
 }
 
 }

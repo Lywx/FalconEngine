@@ -54,13 +54,13 @@ private:
     /************************************************************************/
     /* Context Components                                                   */
     /************************************************************************/
-    GameEngineData             *mData;
-    Game                       *mGame;
-    GameEngineGraphics         *mGraphics;
-    GameEngineInput            *mInput;
-    GameEnginePlatform         *mPlatform;
-    GameEngineProfiler         *mProfiler;
-    GameEngineSettings         *mSettings;
+    GameEngineData     *mData;
+    Game               *mGame;
+    GameEngineGraphics *mGraphics;
+    GameEngineInput    *mInput;
+    GameEnginePlatform *mPlatform;
+    GameEngineProfiler *mProfiler;
+    GameEngineSettings *mSettings;
 
     /************************************************************************/
     /* Context States                                                       */

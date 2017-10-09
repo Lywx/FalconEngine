@@ -1,10 +1,9 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Common.h>
-
-#if defined(FALCON_ENGINE_WINDOW_GLFW)
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/Common.h>
+
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLRendererState.h>
+
 namespace FalconEngine
 {
 
@@ -12,7 +11,7 @@ namespace FalconEngine
 class FALCON_ENGINE_API PlatformRendererData final
 {
 public:
-    explicit PlatformRendererData(GLFWwindow *window);
+    explicit PlatformRendererData(QtWindow *window);
     ~PlatformRendererData();
 
 public:
@@ -22,4 +21,3 @@ public:
 #pragma warning(default: 4251)
 
 }
-#endif

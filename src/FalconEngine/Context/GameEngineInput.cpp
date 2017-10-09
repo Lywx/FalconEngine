@@ -4,10 +4,6 @@
 #include <FalconEngine/Input/MouseState.h>
 #include <FalconEngine/Input/KeyboardState.h>
 
-#if defined(FALCON_ENGINE_WINDOW_GLFW)
-#include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
-#endif
-
 namespace FalconEngine
 {
 
@@ -15,7 +11,6 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 GameEngineInput::GameEngineInput() :
-    mDispatcher(nullptr),
     mKeyboardState(std::make_shared<KeyboardState>()),
     mMouseState(std::make_shared<MouseState>())
 {
@@ -44,6 +39,7 @@ GameEngineInput::GetMouseState() const
 void
 GameEngineInput::Initialize()
 {
+    InitializeData();
     InitializePlatform();
 }
 
@@ -55,6 +51,14 @@ GameEngineInput::UpdateFrame(double elapsed)
 
     // NOTE(Wuxiang): Update based on events pulled.
     UpdateEvent(elapsed);
+}
+
+/************************************************************************/
+/* Private Members                                                      */
+/************************************************************************/
+void
+GameEngineInput::InitializeData()
+{
 }
 
 void

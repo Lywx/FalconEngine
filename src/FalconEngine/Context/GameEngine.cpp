@@ -9,6 +9,8 @@
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
 #include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
+#elif defined(FALCON_ENGINE_WINDOW_QT)
+#include <FalconEngine/Context/Platform/Qt/QtGameEngineData.h>
 #endif
 
 namespace FalconEngine
@@ -66,6 +68,7 @@ GameEngine::Initialize()
     mPlatform = GameEnginePlatform::GetInstance();
     if (mPlatform != nullptr)
     {
+        // NOTE(Wuxiang): GLFW or Qt context is initialized here.
         mPlatform->Initialize();
     }
 

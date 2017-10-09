@@ -1,16 +1,16 @@
-#include <FalconEngine/Context/GameEnginePlatform.h>
+#include <FalconEngine/Context/GameEngineWindow.h>
 
+#if defined(FALCON_ENGINE_WINDOW_QT)
 namespace FalconEngine
 {
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-GameEnginePlatform::GameEnginePlatform()
-{
-}
-
-GameEnginePlatform::~GameEnginePlatform()
+GameEngineWindow::GameEngineWindow(QWidget *parent, Qt::WindowFlags flags) :
+    QOpenGLWidget(parent, flags),
+    mInput(nullptr),
+    mSettings(nullptr)
 {
 }
 
@@ -18,18 +18,47 @@ GameEnginePlatform::~GameEnginePlatform()
 /* Public Members                                                       */
 /************************************************************************/
 void
-GameEnginePlatform::Initialize()
+GameEngineWindow::keyReleaseEvent(QKeyEvent *event)
 {
-    InitializeData();
-    InitializePlatform();
+}
+
+void
+GameEngineWindow::keyPressEvent(QKeyEvent *event)
+{
+}
+
+void
+GameEngineWindow::mouseDoubleClickEvent(QMouseEvent *event)
+{
+}
+
+void
+GameEngineWindow::mouseMoveEvent(QMouseEvent *event)
+{
+}
+
+void
+GameEngineWindow::mousePressEvent(QMouseEvent *event)
+{
+}
+
+void
+GameEngineWindow::mouseReleaseEvent(QMouseEvent *event)
+{
+}
+
+void
+GameEngineWindow::wheelEvent(QWheelEvent *event)
+{
 }
 
 /************************************************************************/
 /* Private Members                                                      */
 /************************************************************************/
 void
-GameEnginePlatform::InitializeData()
+GameEngineWindow::InitializePlatform()
 {
 }
 
 }
+#endif

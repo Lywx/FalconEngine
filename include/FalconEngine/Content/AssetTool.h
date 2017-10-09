@@ -10,6 +10,9 @@ class FALCON_ENGINE_API AssetTool
 public:
     static void
     Initialize();
+
+    static void
+    InitializePlatform();
 };
 
 }

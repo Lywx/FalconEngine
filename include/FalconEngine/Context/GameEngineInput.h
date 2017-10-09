@@ -17,17 +17,12 @@ using KeyboardStateSharedPtr = std::shared_ptr<KeyboardState>;
 class MouseState;
 using MouseStateSharedPtr = std::shared_ptr<MouseState>;
 
-class GameEngineInputDispatcher;
-class GameEngineInputDispatcherDeleter
-{
-public:
-    void operator()(GameEngineInputDispatcher *inputDispatcher);
-};
+class GameEngineWindow;
 
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API GameEngineInput
 {
-    friend class GameEngineInputDispatcher;
+    friend class GameEngineWindow;
 
 public:
     /************************************************************************/
@@ -50,13 +45,15 @@ public:
     ~GameEngineInput();
 
 public:
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
     KeyboardState *
     GetKeyboardState() const;
 
     MouseState *
     GetMouseState() const;
 
-public:
     void
     Initialize();
 
@@ -66,10 +63,13 @@ public:
 
 private:
     void
-    InitializePlatform();
+    DestroyPlatform();
 
     void
-    DestroyPlatform();
+    InitializeData();
+
+    void
+    InitializePlatform();
 
     void
     PollEvent();
@@ -78,10 +78,8 @@ private:
     UpdateEvent(double elapsed);
 
 private:
-    std::unique_ptr<GameEngineInputDispatcher, GameEngineInputDispatcherDeleter> mDispatcher;
-
-    KeyboardStateSharedPtr                                                       mKeyboardState;
-    MouseStateSharedPtr                                                          mMouseState;
+    KeyboardStateSharedPtr mKeyboardState;
+    MouseStateSharedPtr    mMouseState;
 };
 #pragma warning(default: 4251)
 

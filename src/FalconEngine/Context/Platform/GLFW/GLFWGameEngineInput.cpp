@@ -7,30 +7,20 @@
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
 #include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
-#include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineInputDispatcher.h>
 
 namespace FalconEngine
 {
-
-void
-GameEngineInputDispatcherDeleter::operator()(GameEngineInputDispatcher *inputDispatcher)
-{
-    delete inputDispatcher;
-}
 
 /************************************************************************/
 /* Private Members                                                      */
 /************************************************************************/
 void
-GameEngineInput::InitializePlatform()
+GameEngineInput::DestroyPlatform()
 {
-    mDispatcher = std::unique_ptr<GameEngineInputDispatcher, GameEngineInputDispatcherDeleter>(
-                      new GameEngineInputDispatcher(this),
-                      GameEngineInputDispatcherDeleter());
 }
 
 void
-GameEngineInput::DestroyPlatform()
+GameEngineInput::InitializePlatform()
 {
 }
 

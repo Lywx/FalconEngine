@@ -4,6 +4,9 @@
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
 #include <FalconEngine/Context/Platform/GLFW/Common.h>
+#elif defined(FALCON_ENGINE_WINDOW_QT)
+#include <FalconEngine/Context/Platform/Qt/Common.h>
+#endif
 
 using namespace std;
 
@@ -11,7 +14,7 @@ namespace FalconEngine
 {
 
 void
-glDebugCheckError()
+glCheckError()
 {
     assert(glGetError() == GL_NO_ERROR);
 }
@@ -140,5 +143,3 @@ GameDebug::Initialize()
 }
 
 }
-
-#endif

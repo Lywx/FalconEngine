@@ -11,18 +11,10 @@ namespace FalconEngine
 void
 GameEngineWindow::Initialize()
 {
-    InitializeData();
-    InitializePlatform();
-}
-
-/************************************************************************/
-/* Private Members                                                      */
-/************************************************************************/
-void
-GameEngineWindow::InitializeData()
-{
     mInput = GameEngineInput::GetInstance();
     mSettings = GameEngineSettings::GetInstance();
+
+    InitializeInputPlatform();
 }
 
 }

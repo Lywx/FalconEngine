@@ -1,4 +1,5 @@
 #include <FalconEngine/Context/GameEngine.h>
+#include <FalconEngine/Context/GameEngineData.h>
 #include <FalconEngine/Context/GameEnginePlatform.h>
 #include <FalconEngine/Context/GameEngineProfiler.h>
 #include <FalconEngine/Context/GameEngineGraphics.h>
@@ -6,12 +7,6 @@
 #include <FalconEngine/Context/GameEngineSettings.h>
 
 #include <mutex>
-
-#if defined(FALCON_ENGINE_WINDOW_GLFW)
-#include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
-#elif defined(FALCON_ENGINE_WINDOW_QT)
-#include <FalconEngine/Context/Platform/Qt/QtGameEngineData.h>
-#endif
 
 namespace FalconEngine
 {

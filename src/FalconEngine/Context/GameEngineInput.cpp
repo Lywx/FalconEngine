@@ -18,7 +18,6 @@ GameEngineInput::GameEngineInput() :
 
 GameEngineInput::~GameEngineInput()
 {
-    DestroyPlatform();
 }
 
 /************************************************************************/
@@ -39,8 +38,6 @@ GameEngineInput::GetMouseState() const
 void
 GameEngineInput::Initialize()
 {
-    InitializeData();
-    InitializePlatform();
 }
 
 void
@@ -51,14 +48,6 @@ GameEngineInput::UpdateFrame(double elapsed)
 
     // NOTE(Wuxiang): Update based on events pulled.
     UpdateEvent(elapsed);
-}
-
-/************************************************************************/
-/* Private Members                                                      */
-/************************************************************************/
-void
-GameEngineInput::InitializeData()
-{
 }
 
 void

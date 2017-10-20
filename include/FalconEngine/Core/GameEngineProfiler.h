@@ -2,23 +2,27 @@
 
 #include <FalconEngine/Context/Common.h>
 
+#include <memory>
+#include <vector>
+
 namespace FalconEngine
 {
 
 class GameEngineData;
 class GameEngineSettings;
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API GameEnginePlatform
+class FALCON_ENGINE_API GameEngineProfiler
 {
+    friend class GameEngine;
+
 public:
     /************************************************************************/
     /* Static Members                                                       */
     /************************************************************************/
-    static GameEnginePlatform *
+    static GameEngineProfiler *
     GetInstance()
     {
-        static GameEnginePlatform sInstance;
+        static GameEngineProfiler sInstance;
         return &sInstance;
     }
 
@@ -26,30 +30,40 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
 private:
-    GameEnginePlatform();
+    GameEngineProfiler() = default;
 
 public:
-    virtual ~GameEnginePlatform();
+    ~GameEngineProfiler() = default;
 
+public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
     void
     Initialize();
 
+    double
+    GetLastFrameElapsedMillisecond() const;
+
+    double
+    GetLastFrameFps() const;
+
+    double
+    GetLastFrameUpdateTotalCount() const;
+
+    double
+    GetLastUpdateElapsedMillisecond() const;
+
+    double
+    GetLastRenderElapsedMillisecond() const;
+
 private:
-    void
-    InitializeData();
+    double mLastFrameElapsedMillisecond;
+    double mLastFrameFps;
+    int    mLastFrameUpdateTotalCount;
 
-    void
-    InitializePlatform();
-
-    void
-    InitializeContextPlatform();
-
-    void
-    InitializeLoaderPlatform();
+    double mLastUpdateElapsedMillisecond;
+    double mLastRenderElapsedMillisecond;
 };
-#pragma warning(default: 4251)
 
 }

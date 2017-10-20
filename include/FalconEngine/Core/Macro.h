@@ -7,6 +7,8 @@
 /************************************************************************/
 // API
 #define FALCON_ENGINE_API_OPENGL
+// #define FALCON_ENGINE_API_OPENGL_GLAD
+#define FALCON_ENGINE_API_OPENGL_GLEW
 
 // Compiler
 #if defined(BOOST_COMP_MSVC_AVAILABLE)
@@ -53,10 +55,12 @@
 #define FALCON_ENGINE_DEBUG_MEMORY
 #endif
 
+#define FALCON_ENGINE_API_ERROR 1
+#define FALCON_ENGINE_CONTEXT_ERROR 2
+
 /************************************************************************/
 /* Development Items                                                    */
 /************************************************************************/
 #define _IN_
 #define _IN_OUT_
 #define _OUT_
-

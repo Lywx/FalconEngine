@@ -9,7 +9,7 @@ namespace FalconEngine
 void
 AssetTool::Initialize()
 {
-    InitializePlatform();
+    InitializeContextPlatform();
 }
 
 }

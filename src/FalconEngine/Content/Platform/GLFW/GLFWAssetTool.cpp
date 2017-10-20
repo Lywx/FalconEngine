@@ -1,13 +1,16 @@
 #include <FalconEngine/Content/AssetTool.h>
 #include <FalconEngine/Context/GameDebug.h>
 
-#if defined(FALCON_ENGINE_WINDOW_GLFW)
+// NOTE(Wuxiang): Always used GLFW to create OpenGL context.
+#include <FalconEngine/Context/Platform/GLFW/Common.h>
+#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/Common.h>
 #include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLShader.h>
+
 namespace FalconEngine
 {
 
 void
-AssetTool::InitializePlatform()
+AssetTool::InitializeContextPlatform()
 {
     glfwInit();
 
@@ -48,4 +51,3 @@ AssetTool::InitializePlatform()
 }
 
 }
-#endif

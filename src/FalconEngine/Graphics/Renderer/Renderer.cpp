@@ -48,24 +48,21 @@ using namespace std;
 #endif
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
-#include <FalconEngine/Context/Platform/GLFW/GLFWGameEngineData.h>
-#include <FalconEngine/Graphics/Renderer/Platform/GLFW/GLFWRendererData.h>
+#include <FalconEngine/Context/GameEngineData.h>
+#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLRendererData.h>
 #endif
 
 namespace FalconEngine
 {
 
-void
-PlatformRendererDataDeleter::operator()(PlatformRendererData *rendererData)
-{
-    delete rendererData;
-}
+FALCON_ENGINE_DELETER_IMPLEMENT(PlatformRendererData, PlatformRendererDataDeleter);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
 Renderer::Renderer() :
     mIndexBufferPrevious(nullptr),
+    mShaderBufferPrevious(nullptr),
     mVertexGroupPrevious(nullptr),
     mVertexFormatPrevious(nullptr),
     mPassPrevious(nullptr),
@@ -98,6 +95,7 @@ Renderer::Initialize()
 void
 Renderer::InitializeData()
 {
+    // TODO(Wuxiang): naming.
     auto gameEngineSettings = GameEngineSettings::GetInstance();
 
     SetWindowData(gameEngineSettings->mWindowWidth,

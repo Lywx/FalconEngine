@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include <FalconEngine/Core/Memory.h>
 #include <FalconEngine/Graphics/Renderer/Viewport.h>
 #include <FalconEngine/Graphics/Renderer/Window.h>
 
@@ -81,12 +82,10 @@ class PlatformSampler;
 /* Platform Rendering Pipeline                                          */
 /************************************************************************/
 class PlatformShader;
-class PlatformRendererData;
-class PlatformRendererDataDeleter
-{
-public:
-    void operator()(PlatformRendererData *rendererData);
-};
+class PlatformRendererState;
+FALCON_ENGINE_DELETER_DECLARE(PlatformRendererState, PlatformRendererStateDeleter);
+class PlatformWindowData;
+FALCON_ENGINE_DELETER_DECLARE(PlatformWindowData, PlatformWindowDataDeleter);
 
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API Renderer final
@@ -569,6 +568,12 @@ private:
     InitializePlatform();
 
     void
+    InitializeStatePlatform();
+
+    void
+    InitializeDataPlatform();
+
+    void
     DestroyPlatform();
 
     /************************************************************************/
@@ -602,6 +607,9 @@ public:
     void
     SetViewportPlatform(float x, float y, float width, float height);
 
+    /************************************************************************/
+    /* Window Management                                                    */
+    /************************************************************************/
     void
     SetWindowPlatform(int width, int height, float near, float far);
 
@@ -631,8 +639,9 @@ public:
     DrawPrimitivePlatform(const Primitive *primitive, int instancingNum);
 
 private:
-    std::unique_ptr<PlatformRendererData, PlatformRendererDataDeleter> mData;
-    bool                                                               mDataInitialized = false;
+    // TODO(Wuxiang): Naming.
+    std::unique_ptr<PlatformRendererState, PlatformRendererStateDeleter> mState;
+    std::unique_ptr<PlatformWindowData, PlatformWindowDataDeleter>       mWindowA;
 };
 #pragma warning(default: 4251)
 

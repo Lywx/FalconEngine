@@ -50,3 +50,19 @@ if(FALCON_ENGINE_PLATFORM_WINDOWS)
 elseif(FALCON_ENGINE_PLATFORM_LINUX)
     set(GLFW_LIBRARY_FILE glfw3)
 endif()
+
+# Qt
+if(FALCON_ENGINE_PLATFORM_WINDOWS)
+    fe_assert_defined(FALCON_ENGINE_BUILD_DYNAMIC)
+    if(FALCON_ENGINE_BUILD_DYNAMIC)
+        set(QT_LIBRARY_FILE Qt5Cored.dll Qt5Guid.dll Qt5OpenGLd.dll Qt5Widgetsd.dll)
+    else()
+        set(QT_LIBRARY_FILE Qt5Cored Qt5Guid Qt5OpenGLd Qt5Widgetsd)
+    endif()
+elseif(FALCON_ENGINE_PLATFORM_LINUX)
+    # TODO(Wuxiang): 2017-10-11 19:55 Add linux support.
+    set(QT_LIBRARY_FILE)
+endif()
+
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
+

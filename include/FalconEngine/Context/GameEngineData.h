@@ -3,8 +3,6 @@
 #include <FalconEngine/Context/Common.h>
 #include <FalconEngine/Context/GameEngineWindow.h>
 
-#if defined(FALCON_ENGINE_WINDOW_QT)
-#include <FalconEngine/Context/Platform/Qt/Common.h>
 namespace FalconEngine
 {
 
@@ -31,8 +29,8 @@ public:
     ~GameEngineData() = default;
 
 public:
-    GameEngineWindow mWindow;
+    // NEW(Wuxiang): May add multiple contexts and multiple windows support in the future.
+    std::shared_ptr<GameEngineWindow> mWindow;
 };
 
 }
-#endif

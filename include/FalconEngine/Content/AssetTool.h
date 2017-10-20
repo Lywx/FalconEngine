@@ -12,7 +12,7 @@ public:
     Initialize();
 
     static void
-    InitializePlatform();
+    InitializeContextPlatform();
 };
 
 }

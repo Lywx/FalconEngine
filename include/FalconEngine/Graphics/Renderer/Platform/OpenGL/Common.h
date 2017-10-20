@@ -2,8 +2,9 @@
 
 #include <FalconEngine/Graphics/Common.h>
 
-#if defined(FALCON_ENGINE_WINDOW_GLFW)
-#include <FalconEngine/Context/Platform/GLFW/Common.h>
-#else defined(FALCON_ENGINE_WINDOW_QT)
-#include <FalconEngine/Context/Platform/Qt/Common.h>
+// NOTE(Wuxiang): Choose between GL loader. GLEW or GLAD.
+#if defined(FALCON_ENGINE_API_OPENGL_GLAD)
+#include <FalconEngine/Context/Platform/GLAD/Common.h>
+#elif defined(FALCON_ENGINE_API_OPENGL_GLEW)
+#include <FalconEngine/Context/Platform/GLEW/Common.h>
 #endif

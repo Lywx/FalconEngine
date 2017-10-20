@@ -51,3 +51,17 @@ extern size_t __line__;
 #define New(memoryPool) new(memoryPool)
 #define Delete(memoryPool) delete(memoryPool)
 #endif
+
+#define FALCON_ENGINE_DELETER_DECLARE(PlatformClass, PlatformDeleterClass) \
+class PlatformDeleterClass \
+{ \
+public: \
+    void operator()(PlatformClass *platformClass); \
+}; \
+
+#define FALCON_ENGINE_DELETER_IMPLEMENT(PlatformClass, PlatformDeleterClass) \
+void \
+PlatformDeleterClass::operator()(PlatformClass *platformClass) \
+{ \
+    delete platformClass; \
+}

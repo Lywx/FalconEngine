@@ -58,15 +58,11 @@ public:
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-GameEngineWindow::GameEngineWindow(GLFWwindow *window) :
+GameEngineWindow::GameEngineWindow(GLFWwindow *handle) :
+    mHandle(handle),
     mInput(nullptr),
     mSettings(nullptr)
 {
-    glfwSetKeyCallback(window, GameWindowDispatcher::KeyCallbackDispatch);
-    glfwSetMouseButtonCallback(window, GameWindowDispatcher::MouseButtonCallbackDispatch);
-    glfwSetCursorPosCallback(window, GameWindowDispatcher::MousePositionCallbackDispatch);
-    glfwSetScrollCallback(window, GameWindowDispatcher::ScrollCallbackDispatch);
-    glfwSetWindowUserPointer(window, this);
 }
 
 /************************************************************************/
@@ -103,8 +99,13 @@ GameEngineWindow::ScrollCallback(GLFWwindow * /* window */, double /* xoffset */
 /* Private Members                                                      */
 /************************************************************************/
 void
-GameEngineWindow::InitializePlatform()
+GameEngineWindow::InitializeInputPlatform()
 {
+    glfwSetKeyCallback(mHandle, GameWindowDispatcher::KeyCallbackDispatch);
+    glfwSetMouseButtonCallback(mHandle, GameWindowDispatcher::MouseButtonCallbackDispatch);
+    glfwSetCursorPosCallback(mHandle, GameWindowDispatcher::MousePositionCallbackDispatch);
+    glfwSetScrollCallback(mHandle, GameWindowDispatcher::ScrollCallbackDispatch);
+    glfwSetWindowUserPointer(mHandle, this);
 }
 
 }

@@ -1,0 +1,9 @@
+Platform Module
+===
+
+Platform module's interface should be just the frontend header "Common.h" that
+corresponding source file might need to include. 
+
+When the developer include the "Common.h" header file, the #define inside the it
+should be able to take care of all the dependency that are specific to the
+platform / operating system.

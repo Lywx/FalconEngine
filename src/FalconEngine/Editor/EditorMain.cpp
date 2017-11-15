@@ -1,6 +1,6 @@
 #include <FalconEngine/Editor/Common.h>
 
-#include <FalconEngine/Context/GameEngineWindow.h>
+#include <FalconEngine/Core/GameEngineWindow.h>
 
 #if defined(FALCON_ENGINE_WINDOW_QT)
 #include <QtWidgets/QApplication>

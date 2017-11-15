@@ -1,0 +1,8 @@
+Platform Compilation 
+
+directx   
+opengl - glad 
+         glew - glfw
+                qt
+
+

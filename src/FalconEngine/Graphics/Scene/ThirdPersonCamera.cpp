@@ -1,7 +1,7 @@
 #include <FalconEngine/Graphics/Scene/ThirdPersonCamera.h>
 
-#include <FalconEngine/Context/GameEngineGraphics.h>
-#include <FalconEngine/Context/GameEngineInput.h>
+#include <FalconEngine/Core/GameEngineGraphics.h>
+#include <FalconEngine/Core/GameEngineInput.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Input/KeyboardState.h>
 #include <FalconEngine/Input/KeyState.h>

@@ -1,0 +1,11 @@
+The design of Visual ensure that every derived class would be able to share
+vertex buffer using different offset into the same buffer. The direct result of
+this design is that the vertex number should not depend on the vertex buffer
+itself. The vertex number should be recorded for each Primitive (or Visual). 
+
+The problem is when should I initialize the vertex number or primitive number
+information in the Primitive class. 
+
+Eventually, I put a pure virtual function SetPrimitiveNum inside Primitive class
+so that derived class constructor would finish initialize the vertex number and
+primitive number.

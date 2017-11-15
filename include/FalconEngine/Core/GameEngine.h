@@ -1,8 +1,8 @@
 #pragma once
 
-#include <FalconEngine/Context/Game.h>
-#include <FalconEngine/Context/GameDebug.h>
-#include <FalconEngine/Context/GameTimer.h>
+#include <FalconEngine/Core/Game.h>
+#include <FalconEngine/Core/GameEngineDebugger.h>
+#include <FalconEngine/Core/Timer.h>
 
 namespace FalconEngine
 {

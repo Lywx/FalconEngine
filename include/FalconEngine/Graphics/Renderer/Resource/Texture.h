@@ -11,7 +11,7 @@
 #include <cereal/types/memory.hpp>
 
 #include <FalconEngine/Content/Asset.h>
-#include <FalconEngine/Graphics/Common.h>
+#include <FalconEngine/Core/Common.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 
 namespace FalconEngine

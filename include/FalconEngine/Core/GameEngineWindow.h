@@ -1,12 +1,12 @@
 #pragma once
 
-#include <FalconEngine/Context/Common.h>
+#include <FalconEngine/Core/Common.h>
 
-#include <FalconEngine/Context/GameEngineSettings.h>
+#include <FalconEngine/Core/GameEngineSettings.h>
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
-#include <FalconEngine/Context/Platform/GLFW/Common.h>
+#include <FalconEngine/Core/Platform/GLFW/Common.h>
 #elif defined(FALCON_ENGINE_WINDOW_QT)
-#include <FalconEngine/Context/Platform/Qt/Common.h>
+#include <FalconEngine/Core/Platform/Qt/Common.h>
 #include <QtWidgets/QOpenGLWidget>
 #endif
 

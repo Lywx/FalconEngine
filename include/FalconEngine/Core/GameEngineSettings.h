@@ -1,12 +1,11 @@
 #pragma once
 
-#include <FalconEngine/Context/Common.h>
+#include <FalconEngine/Core/Common.h>
 
 namespace FalconEngine
 {
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API GameEngineSettings
+FALCON_ENGINE_CLASS_BEGIN GameEngineSettings
 {
 public:
     /************************************************************************/
@@ -52,7 +51,13 @@ public:
     int         mWindowHeight;
     float       mWindowNear;
     float       mWindowFar;
+
+    // TODO(Wuxiang):
+    bool        mOpenGLErrorBreak;
+
+    bool        mTrace;
+    std::string mTraceFile;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

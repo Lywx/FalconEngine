@@ -1,6 +1,6 @@
 #include <FalconEngine/Graphics/Effect/MeshEffect.h>
 
-#include <FalconEngine/Context/GameEngineGraphics.h>
+#include <FalconEngine/Core/GameEngineGraphics.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformAutomatic.h>

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <FalconEngine/Context/Common.h>
-#include <FalconEngine/Context/GameEngineWindow.h>
+#include <FalconEngine/Core/Common.h>
+#include <FalconEngine/Core/GameEngineWindow.h>
 
 namespace FalconEngine
 {

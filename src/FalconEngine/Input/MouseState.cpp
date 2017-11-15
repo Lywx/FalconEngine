@@ -1,5 +1,5 @@
 #include <FalconEngine/Input/MouseState.h>
-#include <FalconEngine/Context/GameTimer.h>
+#include <FalconEngine/Core/Timer.h>
 
 namespace FalconEngine
 {
@@ -134,7 +134,7 @@ MouseState::UpdateEvent(double /* elapsed */)
             UpdateButton(buttonState,
                          buttonState.mPressed,
                          buttonState.mPressed,
-                         GameTimer::GetMilliseconds());
+                         Timer::GetMilliseconds());
         }
         else
         {
@@ -155,8 +155,6 @@ MouseState::UpdateButton(MouseButtonState& buttonState,
     // When just pressed.
     if (buttonPressedCurrent && !buttonPressedPrevious)
     {
-        Debug::OutputString("K");
-
         buttonState.mPressed = true;
         buttonState.mPressedMoment = timeCurrent;
 

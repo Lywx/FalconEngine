@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Common.h>
+#include <FalconEngine/Core/Common.h>
 
 #include <FalconEngine/Core/Memory.h>
 // NOTE(Wuxiang): Necessary for template parameter checking.

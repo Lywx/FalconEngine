@@ -23,7 +23,7 @@ void
 SampleGame::Initialize()
 {
     // Initialize debug context.
-    GameDebug::Initialize();
+    GameEngineDebugger::Initialize();
 
     // Load all assets.
     {

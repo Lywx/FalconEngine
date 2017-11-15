@@ -38,13 +38,10 @@ endif()
 
 file(GLOB_RECURSE FALCON_ENGINE_CONTENT_HEADER_FILES include/FalconEngine/Content/*.h)
 
+file(GLOB_RECURSE FALCON_ENGINE_CONTEXT_HEADER_FILES include/FalconEngine/Core/*.h)
 # If we need to use glad, we need to compile the C file as C++ code.
-file(GLOB_RECURSE FALCON_ENGINE_CONTEXT_SOURCE_FILES include/glad/glad.c
-                                                     src/FalconEngine/Context/*.cpp)
+file(GLOB_RECURSE FALCON_ENGINE_CORE_SOURCE_FILES src/FalconEngine/Core/*.cpp include/glad/glad.c)
 set_source_files_properties(include/glad/glad.c PROPERTIES LANGUAGE CXX)
-
-file(GLOB_RECURSE FALCON_ENGINE_CONTEXT_HEADER_FILES include/FalconEngine/Context/*.h)
-file(GLOB_RECURSE FALCON_ENGINE_CORE_SOURCE_FILES src/FalconEngine/Core/*.cpp)
 file(GLOB_RECURSE FALCON_ENGINE_CORE_HEADER_FILES include/FalconEngine/Core/*.h)
 file(GLOB_RECURSE FALCON_ENGINE_EDITOR_SOURCE_FILES src/FalconEngine/Editor/*.cpp)
 file(GLOB_RECURSE FALCON_ENGINE_EDITOR_HEADER_FILES include/FalconEngine/Editor/*.h)
@@ -55,14 +52,14 @@ file(GLOB_RECURSE FALCON_ENGINE_INPUT_SOURCE_FILES src/FalconEngine/Input/*.cpp)
 file(GLOB_RECURSE FALCON_ENGINE_INPUT_HEADER_FILES include/FalconEngine/Input/*.h)
 file(GLOB_RECURSE FALCON_ENGINE_MATH_SOURCE_FILES src/FalconEngine/Math/*.cpp)
 file(GLOB_RECURSE FALCON_ENGINE_MATH_HEADER_FILES include/FalconEngine/Math/*.h)
+file(GLOB_RECURSE FALCON_ENGINE_PLATFORM_SOURCE_FILES src/FalconEngine/Platform/*.cpp)
+file(GLOB_RECURSE FALCON_ENGINE_PLATFORM_HEADER_FILES include/FalconEngine/Platform/*.h)
 
 add_library(FalconEngine                   # Name
     ${FALCON_ENGINE_LIBRARY_TYPE}          # Type
     ${FALCON_ENGINE_LIBRARY_TYPE}          # Type
     ${FALCON_ENGINE_CONTENT_HEADER_FILES}  # Source 
     ${FALCON_ENGINE_CONTENT_SOURCE_FILES}
-    ${FALCON_ENGINE_CONTEXT_HEADER_FILES}
-    ${FALCON_ENGINE_CONTEXT_SOURCE_FILES}
     ${FALCON_ENGINE_CORE_HEADER_FILES}
     ${FALCON_ENGINE_CORE_SOURCE_FILES}
     ${FALCON_ENGINE_EDITOR_HEADER_FILES}
@@ -74,7 +71,10 @@ add_library(FalconEngine                   # Name
     ${FALCON_ENGINE_INPUT_HEADER_FILES}
     ${FALCON_ENGINE_INPUT_SOURCE_FILES}
     ${FALCON_ENGINE_MATH_HEADER_FILES}
-    ${FALCON_ENGINE_MATH_SOURCE_FILES})
+    ${FALCON_ENGINE_MATH_SOURCE_FILES}
+    ${FALCON_ENGINE_PLATFORM_HEADER_FILES}
+    ${FALCON_ENGINE_PLATFORM_SOURCE_FILES}
+    )
 
 # Qt Signals & Slots 
 set(CMAKE_AUTOMOC ON) 
@@ -101,20 +101,20 @@ fe_add_export_definition(FalconEngine)
 fe_add_source_group("Shader Files" ${CMAKE_CURRENT_SOURCE_DIR}/src/FalconEngine "${FALCON_ENGINE_GRAPHICS_SHADER_FILES}")
 
 fe_add_source_group("Source Files" ${CMAKE_CURRENT_SOURCE_DIR}/src/FalconEngine "${FALCON_ENGINE_CONTENT_SOURCE_FILES}")
-fe_add_source_group("Source Files" ${CMAKE_CURRENT_SOURCE_DIR}/src/FalconEngine "${FALCON_ENGINE_CONTEXT_SOURCE_FILES}")
 fe_add_source_group("Source Files" ${CMAKE_CURRENT_SOURCE_DIR}/src/FalconEngine "${FALCON_ENGINE_CORE_SOURCE_FILES}")
 fe_add_source_group("Source Files" ${CMAKE_CURRENT_SOURCE_DIR}/src/FalconEngine "${FALCON_ENGINE_EDITOR_SOURCE_FILES}")
 fe_add_source_group("Source Files" ${CMAKE_CURRENT_SOURCE_DIR}/src/FalconEngine "${FALCON_ENGINE_GRAPHICS_SOURCE_FILES}")
 fe_add_source_group("Source Files" ${CMAKE_CURRENT_SOURCE_DIR}/src/FalconEngine "${FALCON_ENGINE_INPUT_SOURCE_FILES}")
 fe_add_source_group("Source Files" ${CMAKE_CURRENT_SOURCE_DIR}/src/FalconEngine "${FALCON_ENGINE_MATH_SOURCE_FILES}")
+fe_add_source_group("Source Files" ${CMAKE_CURRENT_SOURCE_DIR}/src/FalconEngine "${FALCON_ENGINE_PLATFORM_SOURCE_FILES}")
 
 fe_add_source_group("Header Files" ${CMAKE_CURRENT_SOURCE_DIR}/include/FalconEngine "${FALCON_ENGINE_CONTENT_HEADER_FILES}")
-fe_add_source_group("Header Files" ${CMAKE_CURRENT_SOURCE_DIR}/include/FalconEngine "${FALCON_ENGINE_CONTEXT_HEADER_FILES}")
 fe_add_source_group("Header Files" ${CMAKE_CURRENT_SOURCE_DIR}/include/FalconEngine "${FALCON_ENGINE_CORE_HEADER_FILES}")
 fe_add_source_group("Header Files" ${CMAKE_CURRENT_SOURCE_DIR}/include/FalconEngine "${FALCON_ENGINE_EDITOR_HEADER_FILES}")
 fe_add_source_group("Header Files" ${CMAKE_CURRENT_SOURCE_DIR}/include/FalconEngine "${FALCON_ENGINE_GRAPHICS_HEADER_FILES}")
 fe_add_source_group("Header Files" ${CMAKE_CURRENT_SOURCE_DIR}/include/FalconEngine "${FALCON_ENGINE_INPUT_HEADER_FILES}")
 fe_add_source_group("Header Files" ${CMAKE_CURRENT_SOURCE_DIR}/include/FalconEngine "${FALCON_ENGINE_MATH_HEADER_FILES}")
+fe_add_source_group("Header Files" ${CMAKE_CURRENT_SOURCE_DIR}/include/FalconEngine "${FALCON_ENGINE_PLATFORM_HEADER_FILES}")
 
 fe_set_target_folder(FalconEngine "Falcon Engine Library Targets")
 fe_set_target_output(FalconEngine)

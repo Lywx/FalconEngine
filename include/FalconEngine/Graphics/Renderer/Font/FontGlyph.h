@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Graphics/Common.h>
+#include <FalconEngine/Core/Common.h>
 
 #include <cereal/access.hpp>
 

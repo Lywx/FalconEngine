@@ -1,0 +1,17 @@
+How to allocate vertex buffer memory in bitmap font rendering:
+
+1. VertexBuffer allocates memory in global heap. Users use VertexBuffer's memory
+   for static and dynamic drawing. User would like to have one VertexBuffer for
+   static drawing, which rarely rewritten; User would have another one for
+   dynamic drawing, which is rewritten every frame.
+
+2. VertexBuffer allocates memory from Users' memory pool. Users would use the
+   VertexBuffer in the same method in 1. Memory pool would be similar to
+   https://www.codeproject.com/Articles/15527/C-Memory-Pool.
+
+3. VertexBuffer take allocated memory from users. Users are using memory
+   segmentation to allocate contiguous memory space and recycle discarded
+   VertexBuffers using circular buffer and linked list.
+
+I am using first method.
+   

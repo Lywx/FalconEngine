@@ -1,0 +1,6 @@
+How vertex format is used with other resources:
+
+1. Vertex format could be shared cross shaders if shaders are using the same vertex input.
+2. Vertex format could be shared cross vertex buffers if vertex buffers are
+   using the same vertex layout when the underlying shaders are using the same
+   vertex input.

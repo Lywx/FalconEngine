@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include <FalconEngine/Context/GameTimer.h>
+#include <FalconEngine/Core/Timer.h>
 
 namespace FalconEngine
 {
@@ -85,7 +85,7 @@ KeyboardState::UpdateEvent(double /* elapsed */)
             UpdateKey(keyState,
                       keyState.mPressed,
                       keyState.mPressed,
-                      GameTimer::GetMilliseconds());
+                      Timer::GetMilliseconds());
         }
         else
         {

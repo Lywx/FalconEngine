@@ -5,7 +5,7 @@
 
 using namespace std;
 
-#include <FalconEngine/Context/GameEngineSettings.h>
+#include <FalconEngine/Core/GameEngineSettings.h>
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
@@ -34,22 +34,22 @@ using namespace std;
 #include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>
 
 #if defined(FALCON_ENGINE_API_OPENGL)
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLIndexBuffer.h>
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLVertexBuffer.h>
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLVertexFormat.h>
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLTexture1d.h>
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLTexture2d.h>
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLTexture2dArray.h>
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLTexture3d.h>
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLTextureSampler.h>
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLShader.h>
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLShaderBuffer.h>
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLShaderUniform.h>
+#include <FalconEngine/Platform/OpenGL/OglIndexBuffer.h>
+#include <FalconEngine/Platform/OpenGL/OglVertexBuffer.h>
+#include <FalconEngine/Platform/OpenGL/OglVertexFormat.h>
+#include <FalconEngine/Platform/OpenGL/OglTexture1d.h>
+#include <FalconEngine/Platform/OpenGL/OglTexture2d.h>
+#include <FalconEngine/Platform/OpenGL/OglTexture2dArray.h>
+#include <FalconEngine/Platform/OpenGL/OglTexture3d.h>
+#include <FalconEngine/Platform/OpenGL/OglTextureSampler.h>
+#include <FalconEngine/Platform/OpenGL/OglShader.h>
+#include <FalconEngine/Platform/OpenGL/OglShaderBuffer.h>
+#include <FalconEngine/Platform/OpenGL/OglShaderUniform.h>
 #endif
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
-#include <FalconEngine/Context/GameEngineData.h>
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/OGLRendererData.h>
+#include <FalconEngine/Core/GameEngineData.h>
+#include <FalconEngine/Platform/OpenGL/OglRendererData.h>
 #endif
 
 namespace FalconEngine

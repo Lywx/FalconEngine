@@ -58,9 +58,13 @@
 #define FALCON_ENGINE_API_ERROR 1
 #define FALCON_ENGINE_CONTEXT_ERROR 2
 
+#define FALCON_ENGINE_CLASS_BEGIN __pragma("warning(disable: 4275)") class FALCON_ENGINE_API
+#define FALCON_ENGINE_CLASS_END __pragma("warning(default: 4275)")
+
 /************************************************************************/
 /* Development Items                                                    */
 /************************************************************************/
 #define _IN_
 #define _IN_OUT_
 #define _OUT_
+

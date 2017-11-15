@@ -1,10 +1,6 @@
 bin
 build
-doc
 external
-res
-
-src/FalconEngine/Content/Pipeline/*
 
 CMakeLists.txt.user
 

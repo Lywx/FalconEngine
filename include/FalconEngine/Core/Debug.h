@@ -7,7 +7,7 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_API Debug
+class Debug
 {
 public:
     static void

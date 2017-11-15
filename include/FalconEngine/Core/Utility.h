@@ -3,8 +3,6 @@
 #include <FalconEngine/Core/Macro.h>
 
 #include <memory>
-#include <stdexcept>
-#include <string>
 
 #include <FalconEngine/Core/Debug.h>
 
@@ -20,17 +18,6 @@ ArraySize(T(& /* array */)[N])
 {
     return N;
 }
-
-/************************************************************************/
-/* Exception Handling                                                   */
-/************************************************************************/
-#pragma warning(disable: 4275)
-class FALCON_ENGINE_API RuntimeException : public std::runtime_error
-{
-public:
-    explicit RuntimeException(const std::string& message);
-};
-#pragma warning(default: 4275)
 
 inline void
 ThrowNullException(const std::string& name)

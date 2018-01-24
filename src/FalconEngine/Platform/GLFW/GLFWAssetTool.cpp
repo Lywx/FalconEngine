@@ -2,8 +2,8 @@
 #include <FalconEngine/Core/GameEngineDebugger.h>
 
 // NOTE(Wuxiang): Always used GLFW to create OpenGL context.
-#include <FalconEngine/Core/Platform/GLFW/Common.h>
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/Common.h>
+#include <FalconEngine/Platform/GLFW/Common.h>
+#include <FalconEngine/Platform/OpenGL/Common.h>
 #include <FalconEngine/Platform/OpenGL/OglShader.h>
 
 namespace FalconEngine

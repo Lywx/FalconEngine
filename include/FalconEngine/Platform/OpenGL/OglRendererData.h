@@ -5,9 +5,9 @@
 #include <FalconEngine/Core/Memory.h>
 #include <FalconEngine/Core/GameEngineWindow.h>
 #if defined(FALCON_ENGINE_API_OPENGL)
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/Common.h>
+#include <FalconEngine/Platform/OpenGL/Common.h>
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
-#include <FalconEngine/Graphics/Renderer/Platform/GLFW/GLFWWindowData.h>
+#include <FalconEngine/Platform/GLFW/GLFWWindowData.h>
 #elif defined(FALCON_ENGINE_WINDOW_QT)
 #include <FalconEngine/Graphics/Renderer/Platform/Qt/QtWindowData.h>
 #endif

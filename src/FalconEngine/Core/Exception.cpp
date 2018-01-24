@@ -1,4 +1,5 @@
 #include <FalconEngine/Core/Exception.h>
+#include <FalconEngine/Core/Debug.h>
 
 namespace FalconEngine
 {

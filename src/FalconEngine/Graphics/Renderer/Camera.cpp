@@ -33,6 +33,7 @@ Camera::Camera(const Coordinate coordinate, const Handedness *handedness, float 
     mHandedness(handedness)
 {
     mProjection = mHandedness->CreatePerspectiveFieldOfView(mFovy, mAspect, mNear, mFar);
+    mViewProjection = mProjection * mView;
 }
 
 Camera::~Camera()

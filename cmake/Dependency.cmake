@@ -64,5 +64,7 @@ elseif(FALCON_ENGINE_PLATFORM_LINUX)
     set(QT_LIBRARY_FILE)
 endif()
 
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
+if (FALCON_ENGINE_WINDOW_QT)
+    find_package(Qt5 COMPONENTS Widgets REQUIRED)
+endif()
 

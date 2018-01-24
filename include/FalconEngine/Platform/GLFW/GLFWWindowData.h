@@ -1,9 +1,7 @@
 #pragma once
 
 #include <FalconEngine/Core/Common.h>
-
-#include <FalconEngine/Core/Platform/GLFW/Common.h>
-#include <FalconEngine/Graphics/Renderer/Platform/OpenGL/Common.h>
+#include <FalconEngine/Platform/GLFW/Common.h>
 
 namespace FalconEngine
 {

@@ -6,7 +6,7 @@
 #include <FalconEngine/Input/KeyState.h>
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
-#include <FalconEngine/Core/Platform/GLFW/Common.h>
+#include <FalconEngine/Platform/GLFW/Common.h>
 namespace FalconEngine
 {
 

@@ -4,9 +4,9 @@
 
 #include <FalconEngine/Core/GameEngineSettings.h>
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
-#include <FalconEngine/Core/Platform/GLFW/Common.h>
+#include <FalconEngine/Platform/GLFW/Common.h>
 #elif defined(FALCON_ENGINE_WINDOW_QT)
-#include <FalconEngine/Core/Platform/Qt/Common.h>
+#include <FalconEngine/Platform/Qt/Common.h>
 #include <QtWidgets/QOpenGLWidget>
 #endif
 

@@ -48,3 +48,8 @@ Platform Feature Requires:
     Add keyboard action mapping.
 
 
+Handedness::GetRight() GetLeft()
+
+Entity::GetPosition() -> Entity::GetLocalPosition()
+Entity::GetWorldPosition()
+    return Vector3f(mNode->mWorldTransform * Vector4f(0, 0, 0, 1));

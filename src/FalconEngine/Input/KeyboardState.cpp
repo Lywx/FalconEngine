@@ -53,7 +53,7 @@ KeyboardState::KeyPressed(Key key) const
 bool
 KeyboardState::KeyUp(Key key) const
 {
-    return at(key).mPressed;
+    return at(key).mUp;
 }
 
 void

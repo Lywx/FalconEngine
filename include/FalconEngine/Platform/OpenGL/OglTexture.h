@@ -8,6 +8,8 @@
 namespace FalconEngine
 {
 
+class Texture;
+
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API PlatformTexture
 {

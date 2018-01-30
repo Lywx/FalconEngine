@@ -1,7 +1,12 @@
 #pragma once
 
 #include <FalconEngine/Platform/OpenGL/Common.h>
+
 #if defined(FALCON_ENGINE_API_OPENGL)
+#include <array>
+#include <vector>
+#include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
+
 
 namespace FalconEngine
 {

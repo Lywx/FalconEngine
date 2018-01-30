@@ -8,7 +8,6 @@ using namespace std;
 #include <FalconEngine/Core/GameEngineSettings.h>
 #include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/Camera.h>
-#include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstancePass.h>
@@ -16,6 +15,7 @@ using namespace std;
 #include <FalconEngine/Graphics/Renderer/Font/Font.h>
 #include <FalconEngine/Graphics/Renderer/Font/FontRenderer.h>
 #include <FalconEngine/Graphics/Renderer/Font/FontText.h>
+#include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
 #include <FalconEngine/Graphics/Renderer/State/BlendState.h>
 #include <FalconEngine/Graphics/Renderer/State/CullState.h>
@@ -47,6 +47,9 @@ using namespace std;
 #include <FalconEngine/Platform/OpenGL/OglShader.h>
 #include <FalconEngine/Platform/OpenGL/OglShaderBuffer.h>
 #include <FalconEngine/Platform/OpenGL/OglShaderUniform.h>
+#endif
+
+#if defined(FALCON_ENGINE_API_DIRECT3D)
 #endif
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)

@@ -4,6 +4,7 @@
 #include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Core/GameEngineDebugger.h>
 #include <FalconEngine/Core/Path.h>
+#include <FalconEngine/Platform/OpenGL/OglMapping.h>
 #include <FalconEngine/Platform/OpenGL/OglShaderProcessor.h>
 
 using namespace std;

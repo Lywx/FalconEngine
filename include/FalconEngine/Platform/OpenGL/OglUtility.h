@@ -1,7 +1,9 @@
 #pragma once
 
 #include <FalconEngine/Platform/OpenGL/Common.h>
+
 #if defined(FALCON_ENGINE_API_OPENGL)
+#include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
 
 namespace FalconEngine
 {

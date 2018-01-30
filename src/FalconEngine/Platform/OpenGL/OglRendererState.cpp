@@ -7,6 +7,7 @@
 #include <FalconEngine/Graphics/Renderer/State/OffsetState.h>
 #include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
 #include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
+#include <FalconEngine/Platform/OpenGL/OglMapping.h>
 
 namespace FalconEngine
 {

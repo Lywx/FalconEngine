@@ -1,5 +1,6 @@
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 
+#if defined(FALCON_ENGINE_API_OPENGL)
 #include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveLines.h>
 #include <FalconEngine/Graphics/Renderer/PrimitivePoints.h>
@@ -9,8 +10,7 @@
 #include <FalconEngine/Graphics/Renderer/State/CullState.h>
 #include <FalconEngine/Graphics/Renderer/State/OffsetState.h>
 #include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
-
-#if defined(FALCON_ENGINE_API_OPENGL)
+#include <FalconEngine/Platform/OpenGL/OglMapping.h>
 #include <FalconEngine/Platform/OpenGL/OglRendererData.h>
 #include <FalconEngine/Platform/OpenGL/OglRendererState.h>
 

@@ -1,6 +1,7 @@
 #include <FalconEngine/Platform/OpenGL/OglTextureSampler.h>
 
 #if defined(FALCON_ENGINE_API_OPENGL)
+#include <FalconEngine/Platform/OpenGL/OglMapping.h>
 #include <FalconEngine/Platform/OpenGL/OglUtility.h>
 
 namespace FalconEngine

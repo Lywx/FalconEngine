@@ -2,6 +2,7 @@
 
 #if defined(FALCON_ENGINE_API_OPENGL)
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
+#include <FalconEngine/Platform/OpenGL/OglMapping.h>
 
 namespace FalconEngine
 {

@@ -1,13 +1,19 @@
 #include <FalconEngine/Platform/Win32/Win32GameEngineWindow.h>
 
 #if defined(FALCON_ENGINE_WINDOW_WIN32)
+#include <FalconEngine/Core/GameEngineInput.h>
+#include <FalconEngine/Core/GameEngineSettings.h>
+#include <FalconEngine/Core/Timer.h>
+#include <FalconEngine/Input/KeyboardState.h>
+#include <FalconEngine/Input/KeyState.h>
+#include <FalconEngine/Input/MouseState.h>
 #include <FalconEngine/Platform/Win32/Common.h>
 
 namespace FalconEngine
 {
 
 LRESULT CALLBACK
-WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+GameEngineWindowProcess(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     PAINTSTRUCT ps;
     HDC hdc;
@@ -15,35 +21,54 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     static bool s_in_sizemove = false;
     static bool s_in_suspend = false;
     static bool s_minimized = false;
-    static bool s_fullscreen = false;
     // TODO: Set s_fullscreen to true if defaulting to fullscreen.
+    static bool s_fullscreen = false;
 
-    auto game = reinterpret_cast<GameEngineWindow *>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
-    auto gameInput = GameInput::GetInstance();
+    auto gameEngineWindow = reinterpret_cast<GameEngineWindow *>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+    auto gameEngineSettings = GameEngineSettings::GetInstance();
 
     switch (message)
     {
-    // NOTE(Wuxiang): Game input messages.
+    // NOTE(Wuxiang): Input messages.
     case WM_KEYDOWN:
     {
-        auto key = Key(unsigned int(wParam));
-        gameInput->GetKeyboardState()->SetKeyInternal(key, true, Timer::GetMilliseconds());
+        gameEngineWindow->ProcessKeyEvent(Key(wParam), true);
     }
     break;
 
     case WM_KEYUP:
     {
-        auto key = Key(unsigned int(wParam));
-        gameInput->GetKeyboardState()->SetKeyInternal(key, false, Timer::GetMilliseconds());
+        gameEngineWindow->ProcessKeyEvent(Key(wParam), false);
+    }
+    break;
+
+    case WM_LBUTTONDOWN:
+    case WM_LBUTTONUP:
+    {
+        gameEngineWindow->ProcessMouseButtonEvent(MouseButton::LeftButton, message == WM_LBUTTONDOWN);
+    }
+    break;
+
+    case WM_MBUTTONDOWN:
+    case WM_MBUTTONUP:
+    {
+        gameEngineWindow->ProcessMouseButtonEvent(MouseButton::MiddleButton, message == WM_MBUTTONDOWN);
+    }
+    break;
+
+    case WM_RBUTTONDOWN:
+    case WM_RBUTTONUP:
+    {
+        gameEngineWindow->ProcessMouseButtonEvent(MouseButton::RightButton, message == WM_RBUTTONDOWN);
     }
     break;
 
     case WM_MOUSEMOVE:
     {
-        auto x = GET_X_LPARAM(lParam);
-        auto y = GET_Y_LPARAM(lParam);
+        auto x = double(GET_X_LPARAM(lParam));
+        auto y = double(GET_Y_LPARAM(lParam));
 
-        gameInput->GetMouseState()->SetPositionInternal(x, y, Timer::GetMilliseconds());
+        gameEngineWindow->ProcessMouseMoveEvent(x, y);
     }
     break;
 
@@ -56,15 +81,10 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 SetWindowLongPtr(hWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW);
                 SetWindowLongPtr(hWnd, GWL_EXSTYLE, 0);
 
-                int width = 800;
-                int height = 600;
-                if (game)
-                {
-                    game->GetDefaultSize(width, height);
-                }
+                int width = gameEngineSettings->mWindowWidth;
+                int height = gameEngineSettings->mWindowHeight;
 
                 ShowWindow(hWnd, SW_SHOWNORMAL);
-
                 SetWindowPos(hWnd, HWND_TOP, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
             }
             else
@@ -83,7 +103,7 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     // NOTE(Wuxiang): Game update messages.
     case WM_PAINT:
-        if (s_in_sizemove && game)
+        if (s_in_sizemove && gameEngineWindow)
         {
             // TODO(Wuxiang): I think the game is not running 60 frames per second.
             //game->Tick();
@@ -101,9 +121,9 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             if (!s_minimized)
             {
                 s_minimized = true;
-                if (!s_in_suspend && game)
+                if (!s_in_suspend && gameEngineWindow)
                 {
-                    game->OnSuspending();
+                    gameEngineWindow->OnSuspending();
                 }
                 s_in_suspend = true;
             }
@@ -111,15 +131,15 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         else if (s_minimized)
         {
             s_minimized = false;
-            if (s_in_suspend && game)
+            if (s_in_suspend && gameEngineWindow)
             {
-                game->OnResuming();
+                gameEngineWindow->OnResuming();
             }
             s_in_suspend = false;
         }
-        else if (!s_in_sizemove && game)
+        else if (!s_in_sizemove && gameEngineWindow)
         {
-            game->OnWindowSizeChanged(LOWORD(lParam), HIWORD(lParam));
+            gameEngineWindow->OnSizeChanged(LOWORD(lParam), HIWORD(lParam));
         }
         break;
 
@@ -129,12 +149,12 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_EXITSIZEMOVE:
         s_in_sizemove = false;
-        if (game)
+        if (gameEngineWindow)
         {
             RECT rc;
             GetClientRect(hWnd, &rc);
 
-            game->OnWindowSizeChanged(rc.right - rc.left, rc.bottom - rc.top);
+            gameEngineWindow->OnSizeChanged(rc.right - rc.left, rc.bottom - rc.top);
         }
         break;
 
@@ -147,15 +167,15 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     break;
 
     case WM_ACTIVATEAPP:
-        if (game)
+        if (gameEngineWindow)
         {
             if (wParam)
             {
-                game->OnActivated();
+                gameEngineWindow->OnActivated();
             }
             else
             {
-                game->OnDeactivated();
+                gameEngineWindow->OnDeactivated();
             }
         }
         break;
@@ -164,9 +184,9 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         switch (wParam)
         {
         case PBT_APMQUERYSUSPEND:
-            if (!s_in_suspend && game)
+            if (!s_in_suspend && gameEngineWindow)
             {
-                game->OnSuspending();
+                gameEngineWindow->OnSuspending();
             }
             s_in_suspend = true;
             return TRUE;
@@ -174,9 +194,9 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case PBT_APMRESUMESUSPEND:
             if (!s_minimized)
             {
-                if (s_in_suspend && game)
+                if (s_in_suspend && gameEngineWindow)
                 {
-                    game->OnResuming();
+                    gameEngineWindow->OnResuming();
                 }
                 s_in_suspend = false;
             }
@@ -186,7 +206,7 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     // NOTE(Wuxiang): Game exit messages.
     case WM_CLOSE:
-        game->Exit();
+        gameEngineWindow->OnClose();
         break;
 
     case WM_DESTROY:
@@ -208,12 +228,38 @@ WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-GameEngineWindow::GameEngineWindow() : mInput(nullptr), mSettings(nullptr)
+GameEngineWindow::GameEngineWindow(const HWND& handle) :
+    mHandle(handle),
+    mInput(nullptr),
+    mSettings(nullptr)
 {
 }
 
 /************************************************************************/
 /* Public Members                                                       */
+/************************************************************************/
+void
+GameEngineWindow::ProcessKeyEvent(Key key, bool keyPressed)
+{
+    mInput->mKeyboardState->SetKeyInternal(key, keyPressed, Timer::GetMilliseconds());
+}
+
+void
+GameEngineWindow::ProcessMouseButtonEvent(MouseButton button, bool buttonPressed)
+{
+    mInput->mMouseState->SetButtonInternal(MouseButton(button), buttonPressed, Timer::GetMilliseconds());
+}
+
+void
+GameEngineWindow::ProcessMouseMoveEvent(double x, double y)
+{
+    // NOTE(Wuxiang): I invert the Y coordinate of screen space so that (0, 0)
+    // as left lower corner to be consistent with the OpenGL NDC convention.
+    mInput->mMouseState->SetPositionInternal(x, mSettings->mWindowHeight - y, Timer::GetMilliseconds());
+}
+
+/************************************************************************/
+/* Private Members                                                      */
 /************************************************************************/
 void
 GameEngineWindow::InitializeInputPlatform()

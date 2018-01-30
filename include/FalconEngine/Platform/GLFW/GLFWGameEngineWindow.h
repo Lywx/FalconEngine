@@ -26,14 +26,6 @@ public:
     void
     Initialize();
 
-private:
-    /************************************************************************/
-    /* Private Members                                                      */
-    /************************************************************************/
-    void
-    InitializeInputPlatform();
-
-public:
     void
     KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods);
 
@@ -45,6 +37,14 @@ public:
 
     void
     ScrollCallback(GLFWwindow *window, double x, double y);
+
+private:
+    /************************************************************************/
+    /* Private Members                                                      */
+    /************************************************************************/
+    void
+    InitializeInputPlatform();
+
 public:
     GLFWwindow         *mHandle;
 

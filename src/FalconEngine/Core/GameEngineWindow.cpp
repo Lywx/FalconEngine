@@ -1,5 +1,6 @@
 #include <FalconEngine/Core/GameEngineWindow.h>
 #include <FalconEngine/Core/GameEngineInput.h>
+#include <FalconEngine/Core/GameEngineSettings.h>
 
 namespace FalconEngine
 {

@@ -23,8 +23,14 @@ fe_assert_defined(FALCON_ENGINE_WINDOW_GLFW)
 
 if(FALCON_ENGINE_WINDOW_QT)
     add_definitions(-DFALCON_ENGINE_WINDOW_QT)
-elseif (FALCON_ENGINE_WINDOW_GLFW)
+endif()
+
+if (FALCON_ENGINE_WINDOW_GLFW)
     add_definitions(-DFALCON_ENGINE_WINDOW_GLFW)
+endif()
+
+if (FALCON_ENGINE_WINDOW_WIN32)
+    add_definitions(-DFALCON_ENGINE_WINDOW_WIN32)
 endif()
 
 fe_assert_defined(CMAKE_CXX_COMPILER_ID)

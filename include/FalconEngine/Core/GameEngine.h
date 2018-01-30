@@ -13,17 +13,16 @@ class GameEngineInput;
 class GameEnginePlatform;
 class GameEngineProfiler;
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API GameEngine
+FALCON_ENGINE_CLASS_BEGIN GameEngine
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit GameEngine(Game *game);
+    explicit GameEngine(Game * game);
     virtual ~GameEngine();
-    GameEngine(const GameEngine& rhs) = delete;
-    GameEngine& operator=(const GameEngine& rhs) = delete;
+    GameEngine(const GameEngine & rhs) = delete;
+    GameEngine& operator=(const GameEngine & rhs) = delete;
 
     /************************************************************************/
     /* Public Members                                                       */
@@ -74,6 +73,6 @@ private:
     /************************************************************************/
     std::mutex mMutex;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

@@ -6,7 +6,7 @@ namespace FalconEngine
 {
 
 // @remark The enum value is copied from the GLFW definition to smooth the conversion.
-enum class FALCON_ENGINE_API Key
+enum class Key
 {
     Unknown = -1,
     Space = 32,

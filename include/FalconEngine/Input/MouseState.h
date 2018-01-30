@@ -9,7 +9,7 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_API MouseWheelDirection
+enum class MouseWheelDirection
 {
     None = 0,
     Down = 1,

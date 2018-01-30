@@ -10,7 +10,7 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_API IndexType
+enum class IndexType
 {
     UnsignedShort,
     UnsignedInt

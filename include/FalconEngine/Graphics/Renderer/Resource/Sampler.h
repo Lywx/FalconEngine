@@ -8,7 +8,7 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_API SamplerMinificationFilter
+enum class SamplerMinificationFilter
 {
     Nearest,
     Linear,
@@ -21,7 +21,7 @@ enum class FALCON_ENGINE_API SamplerMinificationFilter
     Count,
 };
 
-enum class FALCON_ENGINE_API SamplerMagnificationFilter
+enum class SamplerMagnificationFilter
 {
     Nearest,
     Linear,
@@ -29,7 +29,7 @@ enum class FALCON_ENGINE_API SamplerMagnificationFilter
     Count,
 };
 
-enum class FALCON_ENGINE_API SamplerWrapMode
+enum class SamplerWrapMode
 {
     ClampToBorder,
     ClampToEdge,

@@ -17,7 +17,7 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_API TextureUnit
+enum class TextureUnit
 {
     Ambient   = 0,
     Diffuse   = 1,
@@ -61,7 +61,7 @@ GetTextureType()
     return T::sType;
 }
 
-enum class FALCON_ENGINE_API TextureFormat
+enum class TextureFormat
 {
     None,
 

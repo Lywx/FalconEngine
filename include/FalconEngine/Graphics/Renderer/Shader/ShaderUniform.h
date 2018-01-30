@@ -17,7 +17,7 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_API ShaderUniformType
+enum class ShaderUniformType
 {
     None,
 

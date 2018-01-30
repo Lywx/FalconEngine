@@ -6,7 +6,7 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_API BlendSourceFactor
+enum class BlendSourceFactor
 {
     ZERO,
     ONE,
@@ -31,7 +31,7 @@ enum class FALCON_ENGINE_API BlendSourceFactor
     Count
 };
 
-enum class FALCON_ENGINE_API BlendDestinationFactor
+enum class BlendDestinationFactor
 {
     ZERO,
     ONE,

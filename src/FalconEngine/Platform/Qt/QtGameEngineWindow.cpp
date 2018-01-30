@@ -1,8 +1,9 @@
-#include <FalconEngine/Core/GameEngineWindow.h>
-#include <FalconEngine/Core/GameEngineInput.h>
+#include <FalconEngine/Platform/Qt/QtGameEngineWindow.h>
 
 #if defined(FALCON_ENGINE_WINDOW_QT)
+#include <FalconEngine/Core/GameEngineInput.h>
 #include <QtGui/QOpenGLContext.h>
+
 namespace FalconEngine
 {
 

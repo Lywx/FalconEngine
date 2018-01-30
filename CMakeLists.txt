@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.1)
 option(FALCON_ENGINE_BUILD_DYNAMIC "Build dynamic library" ON)
 option(FALCON_ENGINE_WINDOW_QT "Using Qt window system" OFF)
 option(FALCON_ENGINE_WINDOW_GLFW "Using GLFW window system" ON)
+option(FALCON_ENGINE_WINDOW_WIN32 "Using Win32 native window system" OFF)
 
 # Set up solution root
 set(FALCON_ENGINE_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Falcon Engine root path.")
@@ -29,16 +30,7 @@ include_directories(${FALCON_ENGINE_INCLUDE_DIR})
 link_directories(${FALCON_ENGINE_LIBRARY_DIR} ${FALCON_ENGINE_ARCHIVE_OUTPUT_DIR})
 
 file(GLOB_RECURSE FALCON_ENGINE_CONTENT_SOURCE_FILES src/FalconEngine/Content/*.cpp)
-file(GLOB_RECURSE FALCON_ENGINE_CONTENT_PIPELINE_SOURCE_FILES src/FalconEngine/Content/Pipeline/*.cpp)
-
-# Remove pipeline source from content source.
-if (NOT "${FALCON_ENGINE_CONTENT_PIPELINE_SOURCE_FILES}" STREQUAL "")
-    list(REMOVE_ITEM FALCON_ENGINE_CONTENT_SOURCE_FILES ${FALCON_ENGINE_CONTENT_PIPELINE_SOURCE_FILES})
-endif()
-
 file(GLOB_RECURSE FALCON_ENGINE_CONTENT_HEADER_FILES include/FalconEngine/Content/*.h)
-
-file(GLOB_RECURSE FALCON_ENGINE_CONTEXT_HEADER_FILES include/FalconEngine/Core/*.h)
 # If we need to use glad, we need to compile the C file as C++ code.
 file(GLOB_RECURSE FALCON_ENGINE_CORE_SOURCE_FILES src/FalconEngine/Core/*.cpp include/glad/glad.c)
 set_source_files_properties(include/glad/glad.c PROPERTIES LANGUAGE CXX)
@@ -54,6 +46,7 @@ file(GLOB_RECURSE FALCON_ENGINE_MATH_SOURCE_FILES src/FalconEngine/Math/*.cpp)
 file(GLOB_RECURSE FALCON_ENGINE_MATH_HEADER_FILES include/FalconEngine/Math/*.h)
 file(GLOB_RECURSE FALCON_ENGINE_PLATFORM_SOURCE_FILES src/FalconEngine/Platform/*.cpp)
 file(GLOB_RECURSE FALCON_ENGINE_PLATFORM_HEADER_FILES include/FalconEngine/Platform/*.h)
+file(GLOB_RECURSE FALCON_ENGINE_TOOL_SOURCE_FILES src/FalconEngine/Tool/*.cpp)
 
 add_library(FalconEngine                   # Name
     ${FALCON_ENGINE_LIBRARY_TYPE}          # Type
@@ -131,16 +124,12 @@ file(COPY ${FALCON_ENGINE_GRAPHICS_SHADER_FILES} DESTINATION "${FALCON_ENGINE_RU
 # Set up Falcon Engine tool targets
 #
 
-if (NOT "${FALCON_ENGINE_CONTENT_PIPELINE_SOURCE_FILES}" STREQUAL "")
-    add_executable(FalconEngine.Pipeline
-        ${FALCON_ENGINE_CONTENT_PIPELINE_SOURCE_FILES})
+add_executable(FalconEngine.Tool ${FALCON_ENGINE_TOOL_SOURCE_FILES})
+target_link_libraries(FalconEngine.Tool
+    FalconEngine)
 
-    target_link_libraries(FalconEngine.Pipeline
-        FalconEngine)
-
-    fe_set_target_folder(FalconEngine.Pipeline "Falcon Engine Tool Targets")
-    fe_set_target_output(FalconEngine.Pipeline)
-endif()
+fe_set_target_folder(FalconEngine.Tool "Falcon Engine Tool Targets")
+fe_set_target_output(FalconEngine.Tool)
 
 #
 # Set up Falcon Engine sample targets

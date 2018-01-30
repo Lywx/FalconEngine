@@ -7,7 +7,7 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_API BufferAccessMode
+enum class BufferAccessMode
 {
     WriteBuffer,
     WriteBufferInvalidateBuffer, // Enable buffer orphaning to avoid implicit synchronization.
@@ -24,7 +24,7 @@ enum class FALCON_ENGINE_API BufferAccessMode
     Count
 };
 
-enum class FALCON_ENGINE_API BufferFlushMode
+enum class BufferFlushMode
 {
     Automatic,
     Explicit,
@@ -32,7 +32,7 @@ enum class FALCON_ENGINE_API BufferFlushMode
     Count,
 };
 
-enum class FALCON_ENGINE_API BufferSynchronizationMode
+enum class BufferSynchronizationMode
 {
     Synchronized,
     Unsynchronized,
@@ -41,13 +41,13 @@ enum class FALCON_ENGINE_API BufferSynchronizationMode
 };
 
 // @summary Indicate buffer storage resides on 1) RAM and VRAM or 2) VRAM only.
-enum class FALCON_ENGINE_API BufferStorageMode
+enum class BufferStorageMode
 {
     Device, // Buffer resides on VRAM only, accessible by CPU only in pinned memory.
     Host,   // Buffer resides on RAM, explicitly copied to VRAM.
 };
 
-enum class FALCON_ENGINE_API BufferType
+enum class BufferType
 {
     None,
 
@@ -57,13 +57,13 @@ enum class FALCON_ENGINE_API BufferType
     UniformBuffer,
 };
 
-enum class FALCON_ENGINE_API BufferLayout
+enum class BufferLayout
 {
     Interleaved,
     Separated,
 };
 
-enum class FALCON_ENGINE_API BufferUsage
+enum class BufferUsage
 {
     None,
 

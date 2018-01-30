@@ -10,7 +10,7 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_API AssetSource
+enum class AssetSource
 {
     None,
     Normal,

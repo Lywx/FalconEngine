@@ -1,10 +1,8 @@
 #include <FalconEngine/Core/GameEngineWindow.h>
-
 #include <FalconEngine/Core/GameEngineInput.h>
 
 namespace FalconEngine
 {
-
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/

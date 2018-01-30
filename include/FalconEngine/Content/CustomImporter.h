@@ -17,7 +17,7 @@ class Mesh;
 class Model;
 class ModelImportOption;
 
-enum class FALCON_ENGINE_API CustomImporterPolicy
+enum class CustomImporterPolicy
 {
     Replacement,
     Supplement,

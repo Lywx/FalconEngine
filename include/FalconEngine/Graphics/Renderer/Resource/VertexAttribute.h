@@ -9,7 +9,7 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_API VertexAttributeType
+enum class VertexAttributeType
 {
     None,
 

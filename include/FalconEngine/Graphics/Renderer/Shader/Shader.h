@@ -10,11 +10,11 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_API ShaderUniformType;
+enum class ShaderUniformType;
 
 // @remark The integer number is used to index into the shader source table, which
 // is referred as shader type index.
-enum class FALCON_ENGINE_API ShaderType
+enum class ShaderType
 {
     VertexShader   = 0,
     GeometryShader = 1,

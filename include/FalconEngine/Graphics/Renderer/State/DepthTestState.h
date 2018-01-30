@@ -5,7 +5,7 @@
 namespace FalconEngine
 {
 
-enum class FALCON_ENGINE_API DepthFunction
+enum class DepthFunction
 {
     NEVER,    // Never passes.
     LESS,     // Passes if the incoming depth value is less than the stored depth value.

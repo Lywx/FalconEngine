@@ -1,7 +1,10 @@
 #pragma once
 
-#include <FalconEngine/Platform/OpenGL/OglMapping.h>
+#include <FalconEngine/Platform/OpenGL/Common.h>
+
+#if defined(FALCON_ENGINE_API_OPENGL)
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
+#include <FalconEngine/Platform/OpenGL/OglMapping.h>
 
 namespace FalconEngine
 {
@@ -122,3 +125,5 @@ PlatformShaderUniform::Cast(ShaderUniform *shaderUniform)
 }
 
 }
+
+#endif

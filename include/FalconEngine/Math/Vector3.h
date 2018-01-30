@@ -1,13 +1,13 @@
 #pragma once
 
+#include <string>
+
 #include <FalconEngine/Math/Common.h>
 
 // NOTE(Wuxiang): Disable warning C4201: nonstandard extension used : nameless struct/union.
 #pragma warning(disable : 4201)
-
 #include <glm/glm.hpp>
 #include <glm/vec3.hpp>
-
 #pragma warning(default : 4201)
 
 namespace FalconEngine

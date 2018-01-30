@@ -1,5 +1,7 @@
 #include <FalconEngine/Platform/OpenGL/OglTexture2dArray.h>
 
+#if defined(FALCON_ENGINE_API_OPENGL)
+
 #include <cstring>
 
 #include <FalconEngine/Platform/OpenGL/OglUtility.h>
@@ -44,3 +46,4 @@ PlatformTexture2dArray::~PlatformTexture2dArray()
 
 }
 
+#endif

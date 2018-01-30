@@ -1,5 +1,6 @@
 #include <FalconEngine/Platform/OpenGL/OglShaderBuffer.h>
 
+#if defined(FALCON_ENGINE_API_OPENGL)
 #include <cstring>
 
 namespace FalconEngine
@@ -34,3 +35,5 @@ PlatformShaderBuffer::Disable()
 }
 
 }
+
+#endif

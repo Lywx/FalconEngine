@@ -2,6 +2,7 @@
 
 #include <FalconEngine/Core/Common.h>
 
+#include <memory>
 #include <vector>
 
 #include <FalconEngine/Core/Object.h>

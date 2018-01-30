@@ -1,7 +1,8 @@
 #pragma once
 
 #include <FalconEngine/Platform/OpenGL/Common.h>
-#include <FalconEngine/Platform/OpenGL/OglMapping.h>
+
+#if defined(FALCON_ENGINE_API_OPENGL)
 #include <FalconEngine/Math/Vector4.h>
 
 namespace FalconEngine
@@ -78,3 +79,5 @@ public:
 };
 
 }
+
+#endif

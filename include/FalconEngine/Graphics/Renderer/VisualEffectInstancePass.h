@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <map>
+#include <memory>
 #include <vector>
 
 namespace FalconEngine
@@ -14,14 +15,13 @@ class Shader;
 class ShaderUniform;
 class Texture;
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API VisualEffectInstancePass final
+FALCON_ENGINE_CLASS_BEGIN VisualEffectInstancePass final
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit VisualEffectInstancePass(Shader *shader);
+    explicit VisualEffectInstancePass(Shader * shader);
     ~VisualEffectInstancePass();
 
     VisualEffectInstancePass(const VisualEffectInstancePass&) = delete;
@@ -41,10 +41,10 @@ public:
     SetShaderUniform(std::shared_ptr<ShaderUniform> shaderUniform);
 
     void
-    SetShaderTexture(int textureUnit, const Texture *texture);
+    SetShaderTexture(int textureUnit, const Texture * texture);
 
     void
-    SetShaderSampler(int textureUnit, const Sampler *sampler);
+    SetShaderSampler(int textureUnit, const Sampler * sampler);
 
     Shader *
     GetShader() const;
@@ -135,6 +135,6 @@ private:
     std::map<int, const Texture *>              mShaderTextureTable;
     std::vector<std::shared_ptr<ShaderUniform>> mShaderUniformList;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

@@ -4,6 +4,7 @@
 #include <FalconEngine/Input/KeyboardState.h>
 #include <FalconEngine/Input/KeyState.h>
 #include <FalconEngine/Input/MouseState.h>
+#include <FalconEngine/Math/Function.h>
 
 namespace FalconEngine
 {

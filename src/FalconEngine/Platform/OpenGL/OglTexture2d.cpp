@@ -1,7 +1,7 @@
 #include <FalconEngine/Platform/OpenGL/OglTexture2d.h>
 
+#if defined(FALCON_ENGINE_API_OPENGL)
 #include <cstring>
-
 #include <FalconEngine/Platform/OpenGL/OglUtility.h>
 
 namespace FalconEngine
@@ -39,3 +39,5 @@ PlatformTexture2d::~PlatformTexture2d()
 }
 
 }
+
+#endif

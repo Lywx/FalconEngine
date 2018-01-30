@@ -1,5 +1,6 @@
 #include <FalconEngine/Graphics/Effect/FontEffect.h>
 
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Core/GameEngineSettings.h>
 #include <FalconEngine/Graphics/Renderer/Font/Font.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>

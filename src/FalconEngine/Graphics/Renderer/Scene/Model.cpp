@@ -1,4 +1,6 @@
 #include <FalconEngine/Graphics/Renderer/Scene/Model.h>
+
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Node.h>
 
 using namespace std;

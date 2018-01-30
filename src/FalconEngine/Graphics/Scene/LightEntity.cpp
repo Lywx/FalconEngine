@@ -1,4 +1,6 @@
 #include <FalconEngine/Graphics/Scene/LightEntity.h>
+
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Node.h>
 
 namespace FalconEngine

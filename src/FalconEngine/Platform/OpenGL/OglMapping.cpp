@@ -1,5 +1,5 @@
 #include <FalconEngine/Platform/OpenGL/OglMapping.h>
-
+#if defined(FALCON_ENGINE_API_OPENGL)
 namespace FalconEngine
 {
 
@@ -239,3 +239,5 @@ BindSampler(GLuint textureUnit, GLuint sampler)
 }
 
 }
+
+#endif

@@ -1,13 +1,13 @@
 #include <FalconEngine/Core/GameEngineDebugger.h>
 
+#if defined(FALCON_ENGINE_API_OPENGL)
 #include <algorithm>
-
 #include <FalconEngine/Core/GameEngineSettings.h>
+#include <FalconEngine/Core/Utility.h>
 #include <FalconEngine/Platform/Common.h>
 
 using namespace std;
 
-// TODO(Wuxiang):
 namespace FalconEngine
 {
 
@@ -152,3 +152,5 @@ GameEngineDebugger::Initialize()
 }
 
 }
+
+#endif

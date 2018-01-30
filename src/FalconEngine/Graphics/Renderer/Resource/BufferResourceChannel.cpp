@@ -1,5 +1,7 @@
 #include <FalconEngine/Graphics/Renderer/Resource/BufferResourceChannel.h>
 
+#include <FalconEngine/Core/Exception.h>
+
 namespace FalconEngine
 {
 

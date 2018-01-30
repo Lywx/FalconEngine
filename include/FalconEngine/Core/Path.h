@@ -1,11 +1,11 @@
 #pragma once
 
-#include <FalconEngine/Core/Common.h>
-
 #include <fstream>
 #include <locale>
 #include <string>
 #include <vector>
+
+#include <FalconEngine/Core/Macro.h>
 
 #define FALCON_ENGINE_DIRECTORY_SEPARATOR "/"
 

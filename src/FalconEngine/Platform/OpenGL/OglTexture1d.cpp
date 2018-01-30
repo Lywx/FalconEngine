@@ -1,5 +1,6 @@
 #include <FalconEngine/Platform/OpenGL/OglTexture1d.h>
 
+#if defined(FALCON_ENGINE_API_OPENGL)
 #include <cstring>
 
 #include <FalconEngine/Platform/OpenGL/OglUtility.h>
@@ -38,3 +39,4 @@ PlatformTexture1d::~PlatformTexture1d()
 
 }
 
+#endif

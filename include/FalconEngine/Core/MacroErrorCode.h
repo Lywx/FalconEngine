@@ -1,0 +1,4 @@
+#pragma once
+
+#define FALCON_ENGINE_API_ERROR 1
+#define FALCON_ENGINE_CONTEXT_ERROR 2

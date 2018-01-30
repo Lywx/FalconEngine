@@ -1,4 +1,6 @@
 #include <FalconEngine/Math/Quaternion.h>
+
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Math/Matrix4.h>
 
 namespace FalconEngine

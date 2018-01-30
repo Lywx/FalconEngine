@@ -1,5 +1,6 @@
 #include <FalconEngine/Graphics/Scene/ThirdPersonCamera.h>
 
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Core/GameEngineGraphics.h>
 #include <FalconEngine/Core/GameEngineInput.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>

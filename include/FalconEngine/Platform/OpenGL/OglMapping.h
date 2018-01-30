@@ -2,8 +2,8 @@
 
 #include <FalconEngine/Platform/OpenGL/Common.h>
 
+#if defined(FALCON_ENGINE_API_OPENGL)
 #include <FalconEngine/Graphics/Renderer/Primitive.h>
-
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
@@ -12,7 +12,6 @@
 #include <FalconEngine/Graphics/Renderer/State/BlendState.h>
 #include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
 #include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
-
 namespace FalconEngine
 {
 
@@ -45,3 +44,5 @@ FALCON_ENGINE_API extern const GLenum OpenGLShaderType[int(ShaderType::Count)];
 FALCON_ENGINE_API extern const GLenum OpenGLPrimitiveType[int(PrimitiveType::Count)];
 
 }
+
+#endif

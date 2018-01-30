@@ -1,5 +1,8 @@
 #include <FalconEngine/Platform/OpenGL/OglShaderUniform.h>
 
+#if defined(FALCON_ENGINE_API_OPENGL)
+#include <FalconEngine/Core/Exception.h>
+
 namespace FalconEngine
 {
 
@@ -51,5 +54,6 @@ PlatformShaderUniform::UpdateContext(ShaderUniform *shaderUniform)
     }
 }
 
-
 }
+
+#endif

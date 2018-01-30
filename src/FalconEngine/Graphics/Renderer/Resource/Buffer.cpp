@@ -1,4 +1,6 @@
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
+
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 
 namespace FalconEngine

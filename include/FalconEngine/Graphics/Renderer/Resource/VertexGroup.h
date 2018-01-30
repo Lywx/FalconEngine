@@ -3,6 +3,7 @@
 #include <FalconEngine/Core/Common.h>
 
 #include <algorithm>
+#include <memory>
 #include <vector>
 
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBufferBinding.h>

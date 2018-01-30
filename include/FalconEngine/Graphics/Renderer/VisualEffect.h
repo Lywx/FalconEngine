@@ -5,6 +5,7 @@
 #include <functional>
 #include <vector>
 
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Core/Object.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectParams.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include <FalconEngine/Core/Common.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 

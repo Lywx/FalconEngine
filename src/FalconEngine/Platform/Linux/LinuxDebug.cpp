@@ -1,11 +1,9 @@
 #include <FalconEngine/Core/Debug.h>
-
+#include <FalconEngine/Core/Macro.h>
 #if defined(FALCON_ENGINE_OS_LINUX)
-
 #include <csignal>
 #include <iostream>
 #include <string>
-
 namespace FalconEngine
 {
 

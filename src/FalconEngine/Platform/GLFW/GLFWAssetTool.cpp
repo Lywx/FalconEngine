@@ -1,4 +1,7 @@
 #include <FalconEngine/Content/AssetTool.h>
+
+#if defined(FALCON_ENGINE_WINDOW_GLFW)
+
 #include <FalconEngine/Core/GameEngineDebugger.h>
 
 // NOTE(Wuxiang): Always used GLFW to create OpenGL context.
@@ -51,3 +54,5 @@ AssetTool::InitializeContextPlatform()
 }
 
 }
+
+#endif

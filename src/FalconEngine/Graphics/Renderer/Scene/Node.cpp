@@ -1,5 +1,7 @@
 #include <FalconEngine/Graphics/Renderer/Scene/Node.h>
 
+#include <FalconEngine/Core/Exception.h>
+
 using namespace std;
 
 namespace FalconEngine

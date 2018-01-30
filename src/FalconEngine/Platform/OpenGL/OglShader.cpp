@@ -1,9 +1,10 @@
 #include <FalconEngine/Platform/OpenGL/OglShader.h>
-#include <FalconEngine/Platform/OpenGL/OglShaderProcessor.h>
 
+#if defined(FALCON_ENGINE_API_OPENGL)
 #include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Core/GameEngineDebugger.h>
 #include <FalconEngine/Core/Path.h>
+#include <FalconEngine/Platform/OpenGL/OglShaderProcessor.h>
 
 using namespace std;
 
@@ -193,7 +194,7 @@ PlatformShader::CollectUniformLocation(Shader *shader) const
         if (uniformLocation == -1)
         {
             GameEngineDebugger::OutputStringFormat("Failed to find shader uniform \"%s\"'s location.\n",
-                                          uniform.mName.c_str());
+                                                   uniform.mName.c_str());
 
             uniform.mEnabled = false;
         }
@@ -219,3 +220,5 @@ PlatformShader::CollectUniformLocation(Shader *shader) const
 }
 
 }
+
+#endif

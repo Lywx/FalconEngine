@@ -6,6 +6,7 @@
 using namespace std;
 
 #include <FalconEngine/Core/GameEngineSettings.h>
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
@@ -42,14 +43,13 @@ using namespace std;
 #include <FalconEngine/Platform/OpenGL/OglTexture2dArray.h>
 #include <FalconEngine/Platform/OpenGL/OglTexture3d.h>
 #include <FalconEngine/Platform/OpenGL/OglTextureSampler.h>
+#include <FalconEngine/Platform/OpenGL/OglRendererData.h>
 #include <FalconEngine/Platform/OpenGL/OglShader.h>
 #include <FalconEngine/Platform/OpenGL/OglShaderBuffer.h>
 #include <FalconEngine/Platform/OpenGL/OglShaderUniform.h>
 #endif
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
-#include <FalconEngine/Core/GameEngineData.h>
-#include <FalconEngine/Platform/OpenGL/OglRendererData.h>
 #endif
 
 namespace FalconEngine

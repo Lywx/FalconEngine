@@ -1,6 +1,8 @@
 #pragma once
 
+#include <FalconEngine/Platform/OpenGL/Common.h>
 #include <FalconEngine/Platform/OpenGL/OglMapping.h>
+#if defined(FALCON_ENGINE_API_OPENGL)
 namespace FalconEngine
 {
 
@@ -60,3 +62,4 @@ protected:
 };
 
 }
+#endif

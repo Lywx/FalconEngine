@@ -1,7 +1,5 @@
 #pragma once
 
-#include <FalconEngine/Core/Macro.h>
-
 #include <string>
 
 namespace FalconEngine

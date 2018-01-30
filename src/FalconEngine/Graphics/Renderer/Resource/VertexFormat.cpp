@@ -1,5 +1,6 @@
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
 

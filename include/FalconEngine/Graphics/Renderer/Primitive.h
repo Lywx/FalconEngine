@@ -1,7 +1,9 @@
 #pragma once
 
-#include <FalconEngine/Core/Object.h>
+#include <memory>
+
 #include <FalconEngine/Core/Common.h>
+#include <FalconEngine/Core/Object.h>
 #include <FalconEngine/Math/Aabb.h>
 
 namespace FalconEngine

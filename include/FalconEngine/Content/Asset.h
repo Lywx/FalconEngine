@@ -29,12 +29,11 @@ enum class AssetType
     Texture = 5,
 };
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API Asset
+FALCON_ENGINE_CLASS_BEGIN Asset
 {
 public:
     Asset();
-    Asset(AssetSource assetSource, AssetType assetType, const std::string& fileName, const std::string& filePath);
+    Asset(AssetSource assetSource, AssetType assetType, const std::string & fileName, const std::string & filePath);
     Asset(const Asset&) = delete;
     Asset& operator=(const Asset&) = delete;
     virtual ~Asset() noexcept;
@@ -62,7 +61,7 @@ public:
         ar & mFilePath;
     }
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 FALCON_ENGINE_API std::string
 AddAssetExtension(const std::string& filePath);

@@ -2,6 +2,7 @@
 
 #include <FalconEngine/Core/Common.h>
 
+#include <memory>
 #include <vector>
 
 #include <FalconEngine/Graphics/Renderer/Scene/Spatial.h>

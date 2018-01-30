@@ -1,5 +1,6 @@
 #include <FalconEngine/Graphics/Renderer/Debug/DebugRendererHelper.h>
 
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Core/Memory.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveLines.h>
 #include <FalconEngine/Math/Constant.h>

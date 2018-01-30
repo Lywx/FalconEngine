@@ -1,5 +1,5 @@
 #include <FalconEngine/Platform/OpenGL/OglIndexBuffer.h>
-
+#if defined(FALCON_ENGINE_API_OPENGL)
 #include <cstring>
 
 namespace FalconEngine
@@ -33,3 +33,4 @@ PlatformIndexBuffer::Disable()
 }
 
 }
+#endif

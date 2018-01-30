@@ -1,4 +1,6 @@
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
+
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/State/BlendState.h>
 #include <FalconEngine/Graphics/Renderer/State/CullState.h>
 #include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>

@@ -1,5 +1,6 @@
 #include <FalconEngine/Platform/OpenGL/OglVertexBuffer.h>
 
+#if defined(FALCON_ENGINE_API_OPENGL)
 #include <cstring>
 
 namespace FalconEngine
@@ -35,3 +36,5 @@ PlatformVertexBuffer::Disable(unsigned int bindingIndex)
 }
 
 }
+
+#endif

@@ -1,5 +1,6 @@
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveLines.h>
 #include <FalconEngine/Graphics/Renderer/PrimitivePoints.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
@@ -12,7 +13,6 @@
 #if defined(FALCON_ENGINE_API_OPENGL)
 #include <FalconEngine/Platform/OpenGL/OglRendererData.h>
 #include <FalconEngine/Platform/OpenGL/OglRendererState.h>
-#endif
 
 using namespace std;
 
@@ -421,3 +421,5 @@ Renderer::DrawPrimitivePlatform(const Primitive *primitive, int primitiveInstanc
 }
 
 }
+
+#endif

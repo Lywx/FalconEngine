@@ -1,5 +1,6 @@
 #include <FalconEngine/Platform/OpenGL/OglRendererState.h>
 
+#if defined(FALCON_ENGINE_API_OPENGL)
 #include <FalconEngine/Graphics/Renderer/State/BlendState.h>
 #include <FalconEngine/Graphics/Renderer/State/CullState.h>
 #include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
@@ -104,3 +105,5 @@ PlatformRendererState::Initialize(const BlendState *blendState,
 }
 
 }
+
+#endif

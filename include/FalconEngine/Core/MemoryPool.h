@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include <FalconEngine/Core/Common.h>
 
 namespace FalconEngine

@@ -1,12 +1,14 @@
 #pragma once
 
+#include <memory>
+
 #include <FalconEngine/Core/Common.h>
 #include <FalconEngine/Core/GameEngineWindow.h>
 
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_API GameEngineData final
+FALCON_ENGINE_CLASS_BEGIN GameEngineData final
 {
 public:
     /************************************************************************/
@@ -32,5 +34,6 @@ public:
     // NEW(Wuxiang): May add multiple contexts and multiple windows support in the future.
     std::shared_ptr<GameEngineWindow> mWindow;
 };
+FALCON_ENGINE_CLASS_END
 
 }

@@ -1,5 +1,6 @@
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/Primitive.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>

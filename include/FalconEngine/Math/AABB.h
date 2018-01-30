@@ -8,15 +8,14 @@
 namespace FalconEngine
 {
 
-#pragma warning(disable : 4251)
 #pragma pack(push, 1)
-class FALCON_ENGINE_API Aabb final
+FALCON_ENGINE_CLASS_BEGIN Aabb final
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit Aabb(const Vector3f& position);
+    explicit Aabb(const Vector3f & position);
     ~Aabb() = default;
 
 public:
@@ -24,20 +23,20 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Extend(const Vector3f& position);
+    Extend(const Vector3f & position);
 
 private:
     /************************************************************************/
     /* Private Members                                                      */
     /************************************************************************/
     void
-    Initialize(const Vector3f& position);
+    Initialize(const Vector3f & position);
 
 public:
     Vector3f mMax;
     Vector3f mMin;
 };
 #pragma pack(pop)
-#pragma warning(default : 4251)
+FALCON_ENGINE_CLASS_END
 
 }

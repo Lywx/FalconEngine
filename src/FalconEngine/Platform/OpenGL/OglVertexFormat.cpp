@@ -1,4 +1,6 @@
 #include <FalconEngine/Platform/OpenGL/OglVertexFormat.h>
+
+#if defined(FALCON_ENGINE_API_OPENGL)
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 
 namespace FalconEngine
@@ -72,3 +74,5 @@ PlatformVertexFormat::Create()
 }
 
 }
+
+#endif

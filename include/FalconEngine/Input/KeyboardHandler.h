@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include <FalconEngine/Input/Common.h>
 #include <FalconEngine/Input/InputHandler.h>
 

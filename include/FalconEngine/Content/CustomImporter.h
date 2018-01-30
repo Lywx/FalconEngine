@@ -23,11 +23,9 @@ enum class FALCON_ENGINE_API CustomImporterPolicy
     Supplement,
 };
 
-#pragma warning(disable: 4251)
-
 // @remark Derived class should add supported asset type into the supported list
 // so that the asset importer will process the asset type using this custom importer.
-class FALCON_ENGINE_API CustomImporter
+FALCON_ENGINE_CLASS_BEGIN CustomImporter
 {
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -43,14 +41,14 @@ public:
     /************************************************************************/
 public:
     virtual bool
-    Import(_IN_OUT_ Model                   *model,
-           _IN_     const std::string&       modelFilePath,
-           _IN_     const ModelImportOption& modelImportOption);
+    Import(_IN_OUT_ Model                   * model,
+           _IN_     const std::string &       modelFilePath,
+           _IN_     const ModelImportOption & modelImportOption);
 
 public:
     CustomImporterPolicy mAssetImportPolicy;
     std::list<AssetType> mAssetTypeList;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

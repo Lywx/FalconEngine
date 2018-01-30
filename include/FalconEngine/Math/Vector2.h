@@ -6,10 +6,8 @@
 
 // NOTE(Wuxiang): Disable warning C4201: nonstandard extension used : nameless struct/union.
 #pragma warning(disable : 4201)
-
 #include <glm/glm.hpp>
 #include <glm/vec2.hpp>
-
 #pragma warning(default : 4201)
 
 namespace FalconEngine
@@ -17,7 +15,8 @@ namespace FalconEngine
 
 // Assume vector are column vector
 #pragma pack(push, 1)
-class FALCON_ENGINE_API Vector2f : public glm::vec2
+FALCON_ENGINE_CLASS_BEGIN Vector2f :
+public glm::vec2
 {
 public:
     /************************************************************************/
@@ -33,10 +32,10 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
     Vector2f();
-    Vector2f(const float& x, const float& y);
+    Vector2f(const float & x, const float & y);
 
     // Implicit Conversion
-    Vector2f(const glm::vec2& v);
+    Vector2f(const glm::vec2 & v);
 };
 #pragma pack(pop)
 
@@ -62,6 +61,7 @@ public:
     explicit operator glm::ivec2() const;
     explicit operator Vector2f() const;
 };
+FALCON_ENGINE_CLASS_END
 #pragma pack(pop)
 
 FALCON_ENGINE_API std::string

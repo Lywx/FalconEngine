@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include <FalconEngine/Core/Common.h>
 
 namespace FalconEngine

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <FalconEngine/Content/Common.h>
+#include <FalconEngine/Core/Exception.h>
 
 #include <map>
 

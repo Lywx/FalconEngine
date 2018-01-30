@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include <FalconEngine/Graphics/Renderer/Primitive.h>
 
 namespace FalconEngine

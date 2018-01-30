@@ -1,5 +1,7 @@
 #include <FalconEngine/Graphics/Renderer/Font/Font.h>
 
+#include <FalconEngine/Core/Exception.h>
+
 namespace FalconEngine
 {
 

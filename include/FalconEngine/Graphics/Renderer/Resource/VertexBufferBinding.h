@@ -3,6 +3,7 @@
 #include <FalconEngine/Core/Common.h>
 
 #include <map>
+#include <memory>
 #include <vector>
 
 namespace FalconEngine

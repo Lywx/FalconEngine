@@ -1,11 +1,12 @@
 #pragma once
 
-#include <FalconEngine/Platform/OpenGL/OglMapping.h>
-#include <FalconEngine/Platform/OpenGL/OglTextureArray.h>
+#include <FalconEngine/Platform/OpenGL/Common.h>
 
+#if defined(FALCON_ENGINE_API_OPENGL)
 #include <vector>
 
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2dArray.h>
+#include <FalconEngine/Platform/OpenGL/OglTextureArray.h>
 
 namespace FalconEngine
 {
@@ -23,3 +24,5 @@ public:
 #pragma warning(default: 4251)
 
 }
+
+#endif

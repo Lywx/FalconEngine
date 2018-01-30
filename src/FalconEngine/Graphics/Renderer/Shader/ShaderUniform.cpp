@@ -1,5 +1,7 @@
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
 
+#include <FalconEngine/Core/Exception.h>
+
 namespace FalconEngine
 {
 

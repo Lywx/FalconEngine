@@ -1,4 +1,6 @@
 #include <FalconEngine/Core/Game.h>
+
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Core/GameEngineGraphics.h>
 #include <FalconEngine/Core/GameEngineSettings.h>
 

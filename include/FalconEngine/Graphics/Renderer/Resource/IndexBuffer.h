@@ -6,7 +6,6 @@
 #include <memory>
 
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
-#include "FalconEngine/Math/Rectangle.h"
 
 namespace FalconEngine
 {

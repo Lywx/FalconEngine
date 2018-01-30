@@ -18,6 +18,7 @@
 
 #pragma warning(default : 4244)
 
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Core/Path.h>
 #include <FalconEngine/Graphics/Renderer/Font/Font.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture1d.h>

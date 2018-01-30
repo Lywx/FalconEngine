@@ -4,7 +4,7 @@
 #include <FalconEngine/Core/GameEngineData.h>
 #include <FalconEngine/Platform/OpenGL/OglRendererData.h>
 #include <FalconEngine/Platform/OpenGL/OglRendererState.h>
-#include <FalconEngine/Graphics/Renderer/Platform/GLFW/GLFWWindowData.h>
+#include <FalconEngine/Platform/GLFW/GLFWWindowData.h>
 namespace FalconEngine
 {
 

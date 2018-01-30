@@ -1,7 +1,8 @@
 #pragma once
 
-#include <FalconEngine/Core/Common.h>
+#include <memory>
 
+#include <FalconEngine/Core/Common.h>
 #include <FalconEngine/Core/EventHandler.h>
 #include <FalconEngine/Core/Object.h>
 #include <FalconEngine/Math/Vector3.h>

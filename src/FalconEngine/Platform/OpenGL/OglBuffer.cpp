@@ -1,5 +1,6 @@
 #include <FalconEngine/Platform/OpenGL/OglBuffer.h>
-
+#if defined(FALCON_ENGINE_API_OPENGL)
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Core/GameEngineDebugger.h>
 
 namespace FalconEngine
@@ -114,3 +115,4 @@ PlatformBuffer::Create()
 }
 
 }
+#endif

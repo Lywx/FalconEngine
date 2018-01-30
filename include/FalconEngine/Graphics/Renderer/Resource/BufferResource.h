@@ -6,6 +6,7 @@
 #include <tuple>
 #include <unordered_map>
 
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/BufferAdaptor.h>

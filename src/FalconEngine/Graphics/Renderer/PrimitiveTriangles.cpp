@@ -1,4 +1,6 @@
 #include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
+
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/Resource/IndexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>

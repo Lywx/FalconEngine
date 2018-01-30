@@ -1,7 +1,8 @@
 #pragma once
 
-#include <FalconEngine/Platform/OpenGL/OglMapping.h>
+#include <FalconEngine/Platform/OpenGL/Common.h>
 
+#if defined(FALCON_ENGINE_API_OPENGL)
 #include <map>
 #include <memory>
 #include <string>
@@ -61,3 +62,5 @@ private:
 typedef std::shared_ptr<PlatformShader> PlatformShaderSharedPtr;
 
 }
+
+#endif

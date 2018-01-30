@@ -1,10 +1,8 @@
 #include <FalconEngine/Core/Debug.h>
-
+#include <FalconEngine/Core/Macro.h>
 #if defined(FALCON_ENGINE_OS_WINDOWS)
 #include <string>
-
 #include <windows.h>
-
 namespace FalconEngine
 {
 
@@ -33,5 +31,4 @@ Debug::OutputString(const char *str)
 }
 
 }
-
 #endif

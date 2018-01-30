@@ -1,4 +1,6 @@
 #include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
+
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 
 #pragma warning(disable : 4244)

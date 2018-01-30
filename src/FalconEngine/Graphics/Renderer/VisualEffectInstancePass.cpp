@@ -1,5 +1,6 @@
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstancePass.h>
 
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
 

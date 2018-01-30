@@ -1,5 +1,6 @@
 #include <FalconEngine/Graphics/Renderer/Entity/EntityRenderer.h>
 
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Entity/Entity.h>

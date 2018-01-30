@@ -3,6 +3,7 @@
 #include <FalconEngine/Core/Common.h>
 
 #include <functional>
+#include <memory>
 
 #include <FalconEngine/Core/Object.h>
 #include <FalconEngine/Math/Matrix4.h>

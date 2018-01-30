@@ -1,10 +1,12 @@
 #include <FalconEngine/Platform/OpenGL/OglRendererData.h>
 
+#include <memory>
+
 #if defined(FALCON_ENGINE_API_OPENGL)
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
-#include <FalconEngine/Graphics/Renderer/Platform/GLFW/GLFWWindowData.h>
+#include <FalconEngine/Platform/GLFW/GLFWWindowData.h>
 #elif defined(FALCON_ENGINE_WINDOW_QT)
-#include <FalconEngine/Graphics/Renderer/Platform/Qt/QtWindowData.h>
+#include <FalconEngine/Platform/Qt/QtWindowData.h>
 #endif
 namespace FalconEngine
 {

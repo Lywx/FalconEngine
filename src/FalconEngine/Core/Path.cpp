@@ -1,4 +1,5 @@
 #include <FalconEngine/Core/Path.h>
+#include <FalconEngine/Core/Exception.h>
 
 #include <boost/filesystem.hpp>
 

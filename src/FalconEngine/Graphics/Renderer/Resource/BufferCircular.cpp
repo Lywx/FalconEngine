@@ -1,5 +1,7 @@
 #include <FalconEngine/Graphics/Renderer/Resource/BufferCircular.h>
 
+#include <FalconEngine/Core/Exception.h>
+
 namespace FalconEngine
 {
 

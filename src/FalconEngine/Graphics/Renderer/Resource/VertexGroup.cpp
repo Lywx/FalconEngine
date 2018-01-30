@@ -1,4 +1,6 @@
 #include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
+
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
 
 using namespace std;

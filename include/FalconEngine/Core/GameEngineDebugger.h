@@ -57,15 +57,23 @@ public:
         Debug::OutputStringFormat(format, std::forward<Args>(args)...);
     }
 
+
+private:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
+    GameEngineDebugger();
+
+public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
-public:
     void
     Initialize();
 
 private:
     static std::mutex sMutex;
+    bool              mInitialized = false;
 };
 FALCON_ENGINE_CLASS_END
 

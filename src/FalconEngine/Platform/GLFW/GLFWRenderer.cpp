@@ -2,9 +2,8 @@
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
 #include <FalconEngine/Core/GameEngineData.h>
-#include <FalconEngine/Platform/OpenGL/OglRendererData.h>
+#include <FalconEngine/Platform/GLFW/GLFWRendererData.h>
 #include <FalconEngine/Platform/OpenGL/OglRendererState.h>
-#include <FalconEngine/Platform/GLFW/GLFWWindowData.h>
 namespace FalconEngine
 {
 
@@ -56,11 +55,10 @@ Renderer::DestroyPlatform()
 /************************************************************************/
 /* Window Management                                                    */
 /************************************************************************/
-// TODO(Wuxiang):
 void
 Renderer::SetWindowPlatform(int width, int height, float near, float far)
 {
-    glfwSetWindowSize(mData->mWindowData->mHandle, width, height);
+    glfwSetWindowSize(mData->mWindowHandle, width, height);
     glDepthRange(GLclampd(near), GLclampd(far));
 }
 
@@ -70,7 +68,7 @@ Renderer::SetWindowPlatform(int width, int height, float near, float far)
 void
 Renderer::SwapFrameBufferPlatform()
 {
-    glfwSwapBuffers(mData->mWindowData->mHandle);
+    glfwSwapBuffers(mData->mWindowHandle);
 }
 
 }

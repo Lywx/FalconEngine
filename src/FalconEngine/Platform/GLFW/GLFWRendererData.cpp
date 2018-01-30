@@ -1,15 +1,15 @@
-#include <FalconEngine/Platform/OpenGL/OglRendererData.h>
+#include <FalconEngine/Platform/GLFW/GLFWRendererData.h>
 
+#if defined(FALCON_ENGINE_WINDOW_GLFW)
 #include <memory>
 
-#if defined(FALCON_ENGINE_API_OPENGL)
-#if defined(FALCON_ENGINE_WINDOW_GLFW)
-#include <FalconEngine/Platform/GLFW/GLFWWindowData.h>
-#elif defined(FALCON_ENGINE_WINDOW_QT)
-#include <FalconEngine/Platform/Qt/QtWindowData.h>
-#endif
+#include <FalconEngine/Core/Memory.h>
+
 namespace FalconEngine
 {
+
+FALCON_ENGINE_DELETER_DECLARE(PlatformRendererData, PlatformRendererDataDeleter);
+FALCON_ENGINE_DELETER_IMPLEMENT(PlatformRendererData, PlatformRendererDataDeleter);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -28,9 +28,7 @@ PlatformRendererData::~PlatformRendererData()
 void
 PlatformRendererData::Initialize(const std::shared_ptr<GameEngineWindow>& window)
 {
-    mWindowData = std::unique_ptr<PlatformWindowData, PlatformWindowDataDeleter>(
-                      new PlatformWindowData(window->mHandle),
-                      PlatformWindowDataDeleter());
+    mWindowHandle = window->mHandle;
 }
 
 }

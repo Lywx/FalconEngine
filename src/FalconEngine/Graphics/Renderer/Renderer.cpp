@@ -43,7 +43,6 @@ using namespace std;
 #include <FalconEngine/Platform/OpenGL/OglTexture2dArray.h>
 #include <FalconEngine/Platform/OpenGL/OglTexture3d.h>
 #include <FalconEngine/Platform/OpenGL/OglTextureSampler.h>
-#include <FalconEngine/Platform/OpenGL/OglRendererData.h>
 #include <FalconEngine/Platform/OpenGL/OglShader.h>
 #include <FalconEngine/Platform/OpenGL/OglShaderBuffer.h>
 #include <FalconEngine/Platform/OpenGL/OglShaderUniform.h>
@@ -53,13 +52,11 @@ using namespace std;
 #endif
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
+#include <FalconEngine/Platform/GLFW/GLFWRendererData.h>
 #endif
 
 namespace FalconEngine
 {
-
-FALCON_ENGINE_DELETER_IMPLEMENT(PlatformRendererData, PlatformRendererDataDeleter);
-
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
@@ -98,7 +95,6 @@ Renderer::Initialize()
 void
 Renderer::InitializeData()
 {
-    // TODO(Wuxiang): naming.
     auto gameEngineSettings = GameEngineSettings::GetInstance();
 
     SetWindowData(gameEngineSettings->mWindowWidth,

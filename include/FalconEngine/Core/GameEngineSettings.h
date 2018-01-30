@@ -54,8 +54,7 @@ public:
     float       mWindowNear;
     float       mWindowFar;
 
-    // TODO(Wuxiang):
-    bool        mOpenGLErrorBreak;
+    bool        mDebugErrorBreak;
 
     bool        mTrace;
     std::string mTraceFile;

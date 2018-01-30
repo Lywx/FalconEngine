@@ -83,10 +83,10 @@ class PlatformSampler;
 /* Platform Rendering Pipeline                                          */
 /************************************************************************/
 class PlatformShader;
+class PlatformRendererData;
+FALCON_ENGINE_DELETER_DECLARE(PlatformRendererData, PlatformRendererDataDeleter);
 class PlatformRendererState;
 FALCON_ENGINE_DELETER_DECLARE(PlatformRendererState, PlatformRendererStateDeleter);
-class PlatformWindowData;
-FALCON_ENGINE_DELETER_DECLARE(PlatformWindowData, PlatformWindowDataDeleter);
 
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API Renderer final
@@ -640,9 +640,8 @@ public:
     DrawPrimitivePlatform(const Primitive *primitive, int instancingNum);
 
 private:
-    // TODO(Wuxiang): Naming.
+    std::unique_ptr<PlatformRendererData, PlatformRendererDataDeleter>   mData;
     std::unique_ptr<PlatformRendererState, PlatformRendererStateDeleter> mState;
-    std::unique_ptr<PlatformWindowData, PlatformWindowDataDeleter>       mWindowA;
 };
 #pragma warning(default: 4251)
 

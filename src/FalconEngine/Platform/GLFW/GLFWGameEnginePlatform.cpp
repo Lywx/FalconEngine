@@ -11,12 +11,18 @@ void
 GameEnginePlatform::InitializePlatform()
 {
     // NOTE(Wuxiang): You have to initialize OpenGL context first.
-    InitializeContextPlatform();
+    InitializeWindowPlatform();
     InitializeLoaderPlatform();
 }
 
 void
 GameEnginePlatform::InitializeContextPlatform()
+{
+    // NOTE(Wuxiang): GLFW context is initialized with window.
+}
+
+void
+GameEnginePlatform::InitializeWindowPlatform()
 {
     auto gameEngineSettings = GameEngineSettings::GetInstance();
     auto gameEngineData = GameEngineData::GetInstance();
@@ -78,11 +84,11 @@ GameEnginePlatform::InitializeContextPlatform()
     // Matching GLFW context and window.
     glfwMakeContextCurrent(windowHandle);
 
-    // TODO(Wuxiang): ???
     auto window = std::make_shared<GameEngineWindow>(windowHandle);
     window->Initialize();
     gameEngineData->mWindow = window;
 }
+
 }
 
 #endif

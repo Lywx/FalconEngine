@@ -49,6 +49,9 @@ private:
 
     void
     InitializeLoaderPlatform();
+
+    void
+    InitializeWindowPlatform();
 };
 #pragma warning(default: 4251)
 

@@ -69,7 +69,7 @@ GetOpenGLDebugSeverityString(GLenum severity)
 }
 
 unsigned int
-glDebugColorString(GLenum severity)
+GetOpenGLDebugColorString(GLenum severity)
 {
     static unsigned int sevirityColors[] =
     {
@@ -104,9 +104,8 @@ OpenGLDebugCallback(
         GameEngineDebugger::OutputString(string("Source:    ") + GetOpenGLDebugSourceString(source) + "\n");
         GameEngineDebugger::OutputString(string("Message:   ") + message + "\n");
 
-        // TODO(Wuxiang):
         auto gameEngineSettings = GameEngineSettings::GetInstance();
-        if (gameEngineSettings->mOpenGLErrorBreak)
+        if (gameEngineSettings->mDebugErrorBreak)
         {
             // Trigger a breakpoint in gDEBugger...
             glFinish();
@@ -140,15 +139,6 @@ OpenGLDebugInitialize()
         // https://www.opengl.org/sdk/docs/man/html/glDebugMessageCallback.xhtml
         glDebugMessageCallback(reinterpret_cast<GLDEBUGPROCARB>(OpenGLDebugCallback), NULL);
     }
-}
-
-void
-GameEngineDebugger::Initialize()
-{
-    static auto sGameEngineDebugger = GetInstance();
-    sGameEngineDebugger->m
-
-    OpenGLDebugInitialize();
 }
 
 }

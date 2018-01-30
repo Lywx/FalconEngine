@@ -11,7 +11,6 @@
 #include <FalconEngine/Graphics/Renderer/State/OffsetState.h>
 #include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
 #include <FalconEngine/Platform/OpenGL/OglMapping.h>
-#include <FalconEngine/Platform/OpenGL/OglRendererData.h>
 #include <FalconEngine/Platform/OpenGL/OglRendererState.h>
 
 using namespace std;

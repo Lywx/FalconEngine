@@ -20,7 +20,9 @@ void
 SampleGame::Initialize()
 {
     // Initialize debug context.
-    GameEngineDebugger::Initialize();
+#if defined(FALCON_ENGINE_DEBUG)
+    GameEngineDebugger::GetInstance()->Initialize();
+#endif
 
     // Load all assets.
     {

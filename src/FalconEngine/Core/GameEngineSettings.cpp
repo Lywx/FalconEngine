@@ -16,7 +16,7 @@ GameEngineSettings::GameEngineSettings() :
     mWindowHeight(600),
     mWindowNear(0.0f),
     mWindowFar(1.0f),
-    mOpenGLErrorBreak(false)
+    mDebugErrorBreak(false)
 {
 }
 }

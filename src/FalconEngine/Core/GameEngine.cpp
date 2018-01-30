@@ -53,7 +53,6 @@ GameEngine::Exit()
 void
 GameEngine::Initialize()
 {
-    // TODO(Wuxiang):
     std::lock_guard<std::mutex> lock(mMutex);
 
     // NOTE(Wuxiang): Thread-safe singleton pattern is used in all the game engine

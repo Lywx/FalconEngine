@@ -23,7 +23,9 @@ void
 SampleGame::Initialize()
 {
     // Initialize debug context.
-    GameEngineDebugger::Initialize();
+#if defined(FALCON_ENGINE_DEBUG)
+    GameEngineDebugger::GetInstance()->Initialize();
+#endif
 
     // Load all assets.
     {
@@ -157,9 +159,9 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
         auto lastRenderElapsedMillisecond = int(profiler->GetLastRenderElapsedMillisecond());
 
         sFontRenderer->AddText(mFont, 16.f, Vector2f(50.f, gameEngineSettings->mWindowHeight - 50.f),
-                                  "U: " + std::to_string(lastUpdateElapsedMillisecond) + "ms Uc: " + std::to_string(lastFrameUpdateCount) +
-                                  " R: " + std::to_string(lastRenderElapsedMillisecond) + "ms Rc: " + std::to_string(lastFrameFPS),
-                                  ColorPalette::Gold);
+                               "U: " + std::to_string(lastUpdateElapsedMillisecond) + "ms Uc: " + std::to_string(lastFrameUpdateCount) +
+                               " R: " + std::to_string(lastRenderElapsedMillisecond) + "ms Rc: " + std::to_string(lastFrameFPS),
+                               ColorPalette::Gold);
     }
 
     auto input = GameEngineInput::GetInstance();
@@ -172,20 +174,20 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
         auto mousePosition = mouse->GetPosition();
 
         sFontRenderer->AddText(mFont, 16.f, Vector2f(50.f, gameEngineSettings->mWindowHeight - 100.f),
-                                  "Mouse Position: " + to_string(mousePosition) + " Diff: " + to_string(mousePositionDiff), ColorPalette::White);
+                               "Mouse Position: " + to_string(mousePosition) + " Diff: " + to_string(mousePositionDiff), ColorPalette::White);
     }
 
     // Draw Camera
     {
         auto position = mCamera->GetPosition();
         sFontRenderer->AddText(mFont, 16.f, Vector2f(50.f, 50.f),
-                                  "Camera Position: " + to_string(position), ColorPalette::White);
+                               "Camera Position: " + to_string(position), ColorPalette::White);
 
         auto theta = Degree(mCamera->mAzimuthalRadian);
         auto phi = Degree(mCamera->mPolarRadian);
         auto distance = Degree(mCamera->mRadialDistance);
         sFontRenderer->AddText(mFont, 16.f, Vector2f(50.f, 100.f),
-                                  "Camera Theta: " + std::to_string(theta) + " Phi: " + std::to_string(phi) + " Distance: " + std::to_string(distance), ColorPalette::White);
+                               "Camera Theta: " + std::to_string(theta) + " Phi: " + std::to_string(phi) + " Distance: " + std::to_string(distance), ColorPalette::White);
     }
 
     static auto sEntityRenderer = graphics->GetEntityRenderer();

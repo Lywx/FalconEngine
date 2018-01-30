@@ -1,6 +1,7 @@
 #include <FalconEngine/Platform/OpenGL/OglRendererState.h>
 
 #if defined(FALCON_ENGINE_API_OPENGL)
+#include <FalconEngine/Core/Memory.h>
 #include <FalconEngine/Graphics/Renderer/State/BlendState.h>
 #include <FalconEngine/Graphics/Renderer/State/CullState.h>
 #include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
@@ -11,6 +12,9 @@
 
 namespace FalconEngine
 {
+
+FALCON_ENGINE_DELETER_DECLARE(PlatformRendererState, PlatformRendererStateDeleter);
+FALCON_ENGINE_DELETER_IMPLEMENT(PlatformRendererState, PlatformRendererStateDeleter);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

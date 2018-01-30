@@ -2,7 +2,7 @@
 #include <FalconEngine/Core/GameEngineSettings.h>
 #include <FalconEngine/Core/GameEngineDebugger.h>
 
-#if defined(FALCON_ENGINE_API_OPENGL) && defined(FALCON_ENGINE_API_OPENGL_GLEW)
+#if defined(FALCON_ENGINE_API_OPENGL_GLEW)
 #include <FalconEngine/Platform/Common.h>
 namespace FalconEngine
 {
@@ -26,4 +26,5 @@ GameEnginePlatform::InitializeLoaderPlatform()
 }
 
 }
+
 #endif

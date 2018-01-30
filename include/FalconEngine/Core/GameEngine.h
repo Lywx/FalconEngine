@@ -65,8 +65,6 @@ private:
     /* Context States                                                       */
     /************************************************************************/
     bool mInitialized = false;
-    bool mPaused      = false;
-    bool mRunning     = true;
 
     /************************************************************************/
     /* Context Threading                                                    */

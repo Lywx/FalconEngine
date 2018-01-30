@@ -5,6 +5,7 @@
 #include <FalconEngine/Core/GameEngineGraphics.h>
 #include <FalconEngine/Core/GameEngineInput.h>
 #include <FalconEngine/Core/GameEngineSettings.h>
+#include <FalconEngine/Core/Exception.h>
 
 #include <mutex>
 
@@ -15,9 +16,16 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 GameEngine::GameEngine(Game *game) :
+    mData(nullptr),
     mGame(game),
-    mInput(nullptr)
+    mGraphics(nullptr),
+    mInput(nullptr),
+    mPlatform(nullptr),
+    mProfiler(nullptr),
+    mSettings(nullptr)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(game);
+
     mGame->SetEngine(this);
 }
 
@@ -44,7 +52,7 @@ GameEngine::Run()
 void
 GameEngine::Exit()
 {
-    mRunning = false;
+    mData->mRunning = false;
 }
 
 /************************************************************************/
@@ -60,35 +68,20 @@ GameEngine::Initialize()
     mData = GameEngineData::GetInstance();
     mSettings = GameEngineSettings::GetInstance();
 
+    // NOTE(Wuxiang): GLFW or Qt context is initialized here.
     mPlatform = GameEnginePlatform::GetInstance();
-    if (mPlatform != nullptr)
-    {
-        // NOTE(Wuxiang): GLFW or Qt context is initialized here.
-        mPlatform->Initialize();
-    }
+    mPlatform->Initialize();
 
     mProfiler = GameEngineProfiler::GetInstance();
-    if (mProfiler != nullptr)
-    {
-        mProfiler->Initialize();
-    }
+    mProfiler->Initialize();
 
     mGraphics = GameEngineGraphics::GetInstance();
-    if (mGraphics != nullptr)
-    {
-        mGraphics->Initialize();
-    }
+    mGraphics->Initialize();
 
     mInput = GameEngineInput::GetInstance();
-    if (mInput != nullptr)
-    {
-        mInput->Initialize();
-    }
+    mInput->Initialize();
 
-    if (mGame != nullptr)
-    {
-        mGame->Initialize();
-    }
+    mGame->Initialize();
 
     mInitialized = true;
 }
@@ -96,87 +89,86 @@ GameEngine::Initialize()
 void
 GameEngine::Loop()
 {
-    if (mGame != nullptr)
+    mData->mRunning = true;
+
+    double lastFrameBegunMillisecond = Timer::GetMilliseconds();
+    double lastRenderBegunMillisecond = lastFrameBegunMillisecond;
+    int    lastFrameUpdateTotalCount = 0;
+
+    // First update has no previous elapsed time
+    double lastUpdateElapsedMillisecond = 0;
+
+    while (mData->mRunning)
     {
-        double lastFrameBegunMillisecond = Timer::GetMilliseconds();
-        double lastRenderBegunMillisecond = lastFrameBegunMillisecond;
-        int    lastFrameUpdateTotalCount = 0;
+        double lastFrameEndedMillisecond = Timer::GetMilliseconds();
+        double lastRenderEndedMillisecond = lastFrameEndedMillisecond;
 
-        // First update has no previous elapsed time
-        double lastUpdateElapsedMillisecond = 0;
+        // Get the time elapsed during the LAST frame.
+        double lastFrameElapsedMillisecond = lastFrameEndedMillisecond - lastFrameBegunMillisecond;
+        double lastRenderElapsedMillisecond = lastRenderEndedMillisecond - lastRenderBegunMillisecond;
 
-        while (mRunning)
+        // Reset frame start point.
+        lastFrameBegunMillisecond = lastFrameEndedMillisecond;
+
+        // NOTE(Wuxiang): Elapsed time count from before last input update
+        // to before current input update.
+        mInput->UpdateFrame(lastFrameElapsedMillisecond);
+
+        // NOTE(Wuxiang): Update frame-rate sensitive data.
+        mGame->UpdateFrame(mGraphics, mInput, lastFrameElapsedMillisecond);
+
+        // Reset update accumulated time elapsed.
+        int    currentFrameUpdateTotalCount = 0;
+        double currentUpdateTotalElapsedMillisecond = 0;
+        double lastUpdateBegunMillisecond = Timer::GetMilliseconds();
+        double lastUpdateEndedMillisecond = 0;
+
+        // NOTE(Wuxiang): Elapsed time count from before frame-sensitive
+        // update to after frame-sensitive update.
+        double currentFrameSensitiveUpdateElapsedMillisecond = lastUpdateBegunMillisecond - lastFrameEndedMillisecond;
+
+        do
         {
-            double lastFrameEndedMillisecond = Timer::GetMilliseconds();
-            double lastRenderEndedMillisecond = lastFrameEndedMillisecond;
+            // NOTE(Wuxiang): Elapsed time count from before last game update
+            // to before current game update.
+            mGame->Update(mGraphics, mInput, currentFrameUpdateTotalCount == 0
+                ? lastUpdateElapsedMillisecond
+                + lastRenderElapsedMillisecond
+                + currentFrameSensitiveUpdateElapsedMillisecond
+                : lastUpdateElapsedMillisecond);
+            ++currentFrameUpdateTotalCount;
 
-            // Get the time elapsed during the LAST frame.
-            double lastFrameElapsedMillisecond = lastFrameEndedMillisecond - lastFrameBegunMillisecond;
-            double lastRenderElapsedMillisecond = lastRenderEndedMillisecond - lastRenderBegunMillisecond;
+            lastUpdateEndedMillisecond = Timer::GetMilliseconds();
 
-            // Reset frame start point.
-            lastFrameBegunMillisecond = lastFrameEndedMillisecond;
+            // Get the time elapsed during the LAST update.
+            lastUpdateElapsedMillisecond = lastUpdateEndedMillisecond - lastUpdateBegunMillisecond;
+            currentUpdateTotalElapsedMillisecond += lastUpdateElapsedMillisecond;
 
-            // NOTE(Wuxiang): Elapsed time count from before last input update
-            // to before current input update.
-            mInput->UpdateFrame(lastFrameElapsedMillisecond);
-
-            // NOTE(Wuxiang): Update frame-rate sensitive data.
-            mGame->UpdateFrame(mGraphics, mInput, lastFrameElapsedMillisecond);
-
-            // Reset update accumulated time elapsed.
-            int    currentFrameUpdateTotalCount = 0;
-            double currentUpdateTotalElapsedMillisecond = 0;
-            double lastUpdateBegunMillisecond = Timer::GetMilliseconds();
-            double lastUpdateEndedMillisecond = 0;
-
-            // NOTE(Wuxiang): Elapsed time count from before frame-sensitive
-            // update to after frame-sensitive update.
-            double currentFrameSensitiveUpdateElapsedMillisecond = lastUpdateBegunMillisecond - lastFrameEndedMillisecond;
-
-            do
-            {
-                // NOTE(Wuxiang): Elapsed time count from before last game update
-                // to before current game update.
-                mGame->Update(mGraphics, mInput, currentFrameUpdateTotalCount == 0
-                              ? lastUpdateElapsedMillisecond
-                              + lastRenderElapsedMillisecond
-                              + currentFrameSensitiveUpdateElapsedMillisecond
-                              : lastUpdateElapsedMillisecond);
-                ++currentFrameUpdateTotalCount;
-
-                lastUpdateEndedMillisecond = Timer::GetMilliseconds();
-
-                // Get the time elapsed during the LAST update.
-                lastUpdateElapsedMillisecond = lastUpdateEndedMillisecond - lastUpdateBegunMillisecond;
-                currentUpdateTotalElapsedMillisecond += lastUpdateElapsedMillisecond;
-
-                // Reset update start point.
-                lastUpdateBegunMillisecond = lastUpdateEndedMillisecond;
-            }
-            while (currentUpdateTotalElapsedMillisecond <= mSettings->mFrameElapsedMillisecond - lastRenderElapsedMillisecond);
-
-            // Output performance profile
-            double lastFrameFps = 1000 / lastFrameElapsedMillisecond;
-
-            mProfiler->mLastFrameElapsedMillisecond  = lastFrameElapsedMillisecond;
-            mProfiler->mLastFrameUpdateTotalCount    = lastFrameUpdateTotalCount;
-            mProfiler->mLastFrameFps                 = lastFrameFps;
-            mProfiler->mLastUpdateElapsedMillisecond = lastUpdateElapsedMillisecond;
-            mProfiler->mLastRenderElapsedMillisecond = lastRenderElapsedMillisecond;
-
-            // Store last update count
-            lastFrameUpdateTotalCount = currentFrameUpdateTotalCount;
-
-            // Reset render start point.
-            lastRenderBegunMillisecond = Timer::GetMilliseconds();
-
-            mGame->RenderBegin(mGraphics);
-
-            // NEW(Wuxiang): Add interpolation support.
-            mGame->Render(mGraphics, 1.0f);
-            mGame->RenderEnd(mGraphics);
+            // Reset update start point.
+            lastUpdateBegunMillisecond = lastUpdateEndedMillisecond;
         }
+        while (currentUpdateTotalElapsedMillisecond <= mSettings->mFrameElapsedMillisecond - lastRenderElapsedMillisecond);
+
+        // Output performance profile
+        double lastFrameFps = 1000 / lastFrameElapsedMillisecond;
+
+        mProfiler->mLastFrameElapsedMillisecond  = lastFrameElapsedMillisecond;
+        mProfiler->mLastFrameUpdateTotalCount    = lastFrameUpdateTotalCount;
+        mProfiler->mLastFrameFps                 = lastFrameFps;
+        mProfiler->mLastUpdateElapsedMillisecond = lastUpdateElapsedMillisecond;
+        mProfiler->mLastRenderElapsedMillisecond = lastRenderElapsedMillisecond;
+
+        // Store last update count
+        lastFrameUpdateTotalCount = currentFrameUpdateTotalCount;
+
+        // Reset render start point.
+        lastRenderBegunMillisecond = Timer::GetMilliseconds();
+
+        mGame->RenderBegin(mGraphics);
+
+        // NEW(Wuxiang): Add interpolation support.
+        mGame->Render(mGraphics, 1.0f);
+        mGame->RenderEnd(mGraphics);
     }
 }
 

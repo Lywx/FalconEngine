@@ -24,6 +24,5 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <Windowsx.h>
-#include <wrl/client.h>
 
 #include <FalconEngine/Platform/Win32/Win32CleanWinIncl.h>

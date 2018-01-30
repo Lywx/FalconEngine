@@ -99,7 +99,7 @@ GameEngineWindow::ScrollCallback(GLFWwindow * /* window */, double /* xoffset */
 /* Private Members                                                      */
 /************************************************************************/
 void
-GameEngineWindow::InitializeInputPlatform()
+GameEngineWindow::InitializePlatform()
 {
     glfwSetKeyCallback(mHandle, GameWindowDispatcher::KeyCallbackDispatch);
     glfwSetMouseButtonCallback(mHandle, GameWindowDispatcher::MouseButtonCallbackDispatch);

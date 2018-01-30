@@ -43,7 +43,7 @@ private:
     /* Private Members                                                      */
     /************************************************************************/
     void
-    InitializeInputPlatform();
+    InitializePlatform();
 
 public:
     GLFWwindow         *mHandle;

@@ -34,7 +34,7 @@ private:
     /* Private Members                                                      */
     /************************************************************************/
     void
-    InitializeInputPlatform();
+    InitializePlatform();
 
 public:
     virtual void

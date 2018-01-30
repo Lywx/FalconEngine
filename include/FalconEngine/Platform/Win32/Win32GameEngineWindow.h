@@ -9,6 +9,7 @@
 namespace FalconEngine
 {
 
+class GameEngineData;
 class GameEngineInput;
 class GameEngineSettings;
 
@@ -54,7 +55,7 @@ public:
     OnResuming();
 
     void
-    OnSizeChanged(WORD word, WORD word1);
+    OnSizeChanged(int width, int height);
 
     void
     OnClose();
@@ -64,11 +65,16 @@ private:
     /* Private Members                                                      */
     /************************************************************************/
     void
-    InitializeInputPlatform();
+    InitializeData();
+
+    void
+    InitializePlatform();
 
 public:
     HWND mHandle;
+
 private:
+    GameEngineData     *mData;
     GameEngineInput    *mInput;
     GameEngineSettings *mSettings;
 };

@@ -1,6 +1,7 @@
 #include <FalconEngine/Platform/Win32/Win32GameEngineWindow.h>
 
 #if defined(FALCON_ENGINE_WINDOW_WIN32)
+#include <FalconEngine/Core/GameEngineData.h>
 #include <FalconEngine/Core/GameEngineInput.h>
 #include <FalconEngine/Core/GameEngineSettings.h>
 #include <FalconEngine/Core/Timer.h>
@@ -11,6 +12,60 @@
 
 namespace FalconEngine
 {
+
+Key
+GetKey(WPARAM wParam)
+{
+    auto key = Key::Unknown;
+    switch (wParam)
+    {
+    case VK_MENU:
+    {
+        // TODO(Wuxiang): Test this.
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/gg153546(v=vs.85).aspx
+        if (GetKeyState(VK_LMENU) & 0x8000)
+        {
+            key = Key::LeftAlt;
+        }
+        else
+        {
+            key = Key::RightAlt;
+        }
+    }
+    break;
+
+    case VK_CONTROL:
+    {
+        if (GetKeyState(VK_LCONTROL) & 0x8000)
+        {
+            key = Key::LeftControl;
+        }
+        else
+        {
+            key = Key::RightControl;
+        }
+    }
+    break;
+
+    case VK_SHIFT:
+    {
+        if (GetKeyState(VK_LSHIFT) & 0x8000)
+        {
+            key = Key::LeftShift;
+        }
+        else
+        {
+            key = Key::RightShift;
+        }
+    }
+    break;
+
+    default:
+        key = Key(wParam);
+    }
+
+    return key;
+}
 
 LRESULT CALLBACK
 GameEngineWindowProcess(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -32,13 +87,7 @@ GameEngineWindowProcess(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     // NOTE(Wuxiang): Input messages.
     case WM_KEYDOWN:
     {
-        gameEngineWindow->ProcessKeyEvent(Key(wParam), true);
-    }
-    break;
-
-    case WM_KEYUP:
-    {
-        gameEngineWindow->ProcessKeyEvent(Key(wParam), false);
+        gameEngineWindow->ProcessKeyEvent(GetKey(wParam), message == WM_KEYDOWN);
     }
     break;
 
@@ -139,7 +188,9 @@ GameEngineWindowProcess(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         else if (!s_in_sizemove && gameEngineWindow)
         {
-            gameEngineWindow->OnSizeChanged(LOWORD(lParam), HIWORD(lParam));
+            auto width = int(LOWORD(lParam));
+            auto height = int(HIWORD(lParam));
+            gameEngineWindow->OnSizeChanged(width, height);
         }
         break;
 
@@ -228,7 +279,7 @@ GameEngineWindowProcess(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-GameEngineWindow::GameEngineWindow(const HWND& handle) :
+GameEngineWindow::GameEngineWindow(const HWND & handle) :
     mHandle(handle),
     mInput(nullptr),
     mSettings(nullptr)
@@ -258,12 +309,46 @@ GameEngineWindow::ProcessMouseMoveEvent(double x, double y)
     mInput->mMouseState->SetPositionInternal(x, mSettings->mWindowHeight - y, Timer::GetMilliseconds());
 }
 
+void
+GameEngineWindow::OnActivated()
+{
+}
+
+void
+GameEngineWindow::OnDeactivated()
+{
+}
+
+void
+GameEngineWindow::OnSuspending()
+{
+}
+
+void
+GameEngineWindow::OnResuming()
+{
+}
+
+void
+GameEngineWindow::OnSizeChanged(int width, int height)
+{
+    _UNUSE(width);
+    _UNUSE(height);
+}
+
+void
+GameEngineWindow::OnClose()
+{
+    mData->mRunning = false;
+}
+
 /************************************************************************/
 /* Private Members                                                      */
 /************************************************************************/
 void
-GameEngineWindow::InitializeInputPlatform()
+GameEngineWindow::InitializePlatform()
 {
+    // SetWindowLongPtr(mHandle, GWL_WNDPROC, reinterpret_cast<LONG_PTR>(GameEngineWindowProcess));
 }
 
 }

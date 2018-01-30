@@ -31,6 +31,8 @@ public:
     ~GameEngineData() = default;
 
 public:
+    bool                              mRunning;
+
     // NEW(Wuxiang): May add multiple contexts and multiple windows support in the future.
     std::shared_ptr<GameEngineWindow> mWindow;
 };

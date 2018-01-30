@@ -8,7 +8,7 @@
 namespace FalconEngine
 {
 
-// @remark The enum value is copied from the GLFW definition to smooth the conversion.
+// https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx
 enum class Key
 {
     Unknown = 0,
@@ -53,6 +53,15 @@ enum class Key
 
     Escape = VK_ESCAPE,
     Space = VK_SPACE,
+
+    // NOTE(Wuxiang): Exceed 0xFF. They are inspired by GLFW keys.
+    LeftShift = 340,
+    LeftControl = 341,
+    LeftAlt = 342,
+
+    RightShift = 344,
+    RightControl = 345,
+    RightAlt = 346,
 };
 
 }

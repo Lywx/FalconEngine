@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Content/Common.h>
+#include <FalconEngine/Core/Macro.h>
 
 #include <list>
 #include <unordered_map>

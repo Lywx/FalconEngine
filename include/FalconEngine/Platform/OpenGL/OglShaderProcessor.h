@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Core/Common.h>
+#include <FalconEngine/Core/Macro.h>
 
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/trim.hpp>
@@ -31,7 +31,7 @@ public:
         shaderExtensionSymbols.clear();
         split(shaderExtensionSymbols, shaderExtensionLine, is_any_of(" "));
 
-        if (shaderExtensionSymbols.front() != "#include")
+        if (shaderExtensionSymbols.front() != "#include <FalconEngine/Platform/GLEW/GLEWLib.h>")
         {
             return;
         }

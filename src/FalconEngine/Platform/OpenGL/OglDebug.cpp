@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <FalconEngine/Core/GameEngineSettings.h>
 #include <FalconEngine/Core/Utility.h>
-#include <FalconEngine/Platform/Common.h>
+#include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
 
 using namespace std;
 

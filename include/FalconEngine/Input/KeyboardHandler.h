@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include <FalconEngine/Input/Common.h>
+#include <FalconEngine/Core/Macro.h>
 #include <FalconEngine/Input/InputHandler.h>
 
 namespace FalconEngine

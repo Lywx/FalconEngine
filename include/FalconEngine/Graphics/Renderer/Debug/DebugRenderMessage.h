@@ -1,8 +1,8 @@
 #pragma once
 
-#include <FalconEngine/Core/Common.h>
+#include <FalconEngine/Core/Macro.h>
 #include <FalconEngine/Math/Vector3.h>
-#include "FalconEngine/Math/Color.h"
+#include <FalconEngine/Math/Color.h>
 
 namespace FalconEngine
 {

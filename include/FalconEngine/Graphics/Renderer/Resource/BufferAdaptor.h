@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include <FalconEngine/Core/Common.h>
+#include <FalconEngine/Core/Macro.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 
 namespace FalconEngine

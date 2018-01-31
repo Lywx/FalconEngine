@@ -49,10 +49,29 @@ using namespace std;
 #endif
 
 #if defined(FALCON_ENGINE_API_DIRECT3D)
+#include <FalconEngine/Platform/Direct3D/D3dIndexBuffer.h>
+#include <FalconEngine/Platform/Direct3D/D3dVertexBuffer.h>
+#include <FalconEngine/Platform/Direct3D/D3dVertexFormat.h>
+#include <FalconEngine/Platform/Direct3D/D3dTexture1d.h>
+#include <FalconEngine/Platform/Direct3D/D3dTexture2d.h>
+#include <FalconEngine/Platform/Direct3D/D3dTexture2dArray.h>
+#include <FalconEngine/Platform/Direct3D/D3dTexture3d.h>
+#include <FalconEngine/Platform/Direct3D/D3dTextureSampler.h>
+#include <FalconEngine/Platform/Direct3D/D3dShader.h>
+#include <FalconEngine/Platform/Direct3D/D3dShaderBuffer.h>
+#include <FalconEngine/Platform/Direct3D/D3dShaderUniform.h>
 #endif
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
 #include <FalconEngine/Platform/GLFW/GLFWRendererData.h>
+#endif
+
+#if defined(FALCON_ENGINE_WINDOW_QT)
+#include <FalconEngine/Platform/Qt/QtRendererData.h>
+#endif
+
+#if defined(FALCON_ENGINE_WINDOW_WIN32)
+#include <FalconEngine/Platform/Win32/Win32RendererData.h>
 #endif
 
 namespace FalconEngine
@@ -98,13 +117,13 @@ Renderer::InitializeData()
     auto gameEngineSettings = GameEngineSettings::GetInstance();
 
     SetWindowData(gameEngineSettings->mWindowWidth,
-                  gameEngineSettings->mWindowHeight,
-                  gameEngineSettings->mWindowNear,
-                  gameEngineSettings->mWindowFar);
+        gameEngineSettings->mWindowHeight,
+        gameEngineSettings->mWindowNear,
+        gameEngineSettings->mWindowFar);
 
     SetViewportData(0.0f, 0.0f,
-                    float(gameEngineSettings->mWindowWidth),
-                    float(gameEngineSettings->mWindowHeight));
+        float(gameEngineSettings->mWindowWidth),
+        float(gameEngineSettings->mWindowHeight));
 
     mBlendStateDefault = make_unique<BlendState>();
     mCullStateDefault = make_unique<CullState>();
@@ -369,14 +388,14 @@ Renderer::Flush(const Buffer *buffer, int64_t offset, int64_t size)
 
 void
 Renderer::Update(const Buffer             *buffer,
-                 BufferAccessMode          access,
-                 BufferFlushMode           flush,
-                 BufferSynchronizationMode synchronization)
+    BufferAccessMode          access,
+    BufferFlushMode           flush,
+    BufferSynchronizationMode synchronization)
 {
     auto sourceData = buffer->GetData() + buffer->GetDataOffset();
 
     auto destinationData = Map(buffer, access, flush, synchronization,
-                               buffer->GetDataOffset(), buffer->GetDataSize());
+            buffer->GetDataOffset(), buffer->GetDataSize());
 
     memcpy(destinationData, sourceData, buffer->GetDataSize());
 
@@ -472,11 +491,11 @@ Renderer::Disable(const IndexBuffer *indexBuffer)
 
 void *
 Renderer::Map(const IndexBuffer        *indexBuffer,
-              BufferAccessMode          access,
-              BufferFlushMode           flush,
-              BufferSynchronizationMode synchronization,
-              int64_t                   offset,
-              int64_t                   size)
+    BufferAccessMode          access,
+    BufferFlushMode           flush,
+    BufferSynchronizationMode synchronization,
+    int64_t                   offset,
+    int64_t                   size)
 {
     FALCON_ENGINE_RENDERER_MAP_IMPLEMENT(indexBuffer, mIndexBufferTable, PlatformIndexBuffer);
 }
@@ -510,9 +529,9 @@ Renderer::Unbind(const VertexBuffer *vertexBuffer)
 
 void
 Renderer::Enable(const VertexBuffer *vertexBuffer,
-                 unsigned int        bindingIndex,
-                 int64_t             offset,
-                 int                 stride)
+    unsigned int        bindingIndex,
+    int64_t             offset,
+    int                 stride)
 {
     FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
 
@@ -546,11 +565,11 @@ Renderer::Disable(const VertexBuffer *vertexBuffer, unsigned int bindingIndex)
 
 void *
 Renderer::Map(const VertexBuffer       *vertexBuffer,
-              BufferAccessMode          access,
-              BufferFlushMode           flush,
-              BufferSynchronizationMode synchronization,
-              int64_t                   offset,
-              int64_t                   size)
+    BufferAccessMode          access,
+    BufferFlushMode           flush,
+    BufferSynchronizationMode synchronization,
+    int64_t                   offset,
+    int64_t                   size)
 {
     FALCON_ENGINE_RENDERER_MAP_IMPLEMENT(vertexBuffer, mVertexBufferTable, PlatformVertexBuffer);
 }
@@ -563,8 +582,8 @@ Renderer::Unmap(const VertexBuffer *vertexBuffer)
 
 void
 Renderer::Flush(const VertexBuffer *vertexBuffer,
-                int64_t             offset,
-                int64_t             size)
+    int64_t             offset,
+    int64_t             size)
 {
     FALCON_ENGINE_RENDERER_FLUSH_IMPLEMENT(vertexBuffer, mVertexBufferTable);
 }
@@ -606,16 +625,16 @@ Renderer::Enable(const VertexGroup *vertexGroup)
     FALCON_ENGINE_RENDERER_ENABLE_LAZY(vertexGroup, mVertexGroupPrevious);
 
     for (auto vertexBufferBindingIter = vertexGroup->GetVertexBufferBindingBegin();
-            vertexBufferBindingIter != vertexGroup->GetVertexBufferBindingEnd();
-            ++vertexBufferBindingIter)
+        vertexBufferBindingIter != vertexGroup->GetVertexBufferBindingEnd();
+        ++vertexBufferBindingIter)
     {
         const auto& vertexBufferBinding =
             static_pointer_cast<const VertexBufferBinding>(vertexBufferBindingIter->second);
 
         Enable(vertexBufferBinding->GetBuffer(),
-               vertexBufferBinding->GetIndex(),
-               vertexBufferBinding->GetOffset(),
-               vertexBufferBinding->GetStride());
+            vertexBufferBinding->GetIndex(),
+            vertexBufferBinding->GetOffset(),
+            vertexBufferBinding->GetStride());
     }
 }
 
@@ -623,14 +642,14 @@ void
 Renderer::Disable(const VertexGroup *vertexGroup)
 {
     for (auto vertexBufferBindingIter = vertexGroup->GetVertexBufferBindingBegin();
-            vertexBufferBindingIter != vertexGroup->GetVertexBufferBindingEnd();
-            ++vertexBufferBindingIter)
+        vertexBufferBindingIter != vertexGroup->GetVertexBufferBindingEnd();
+        ++vertexBufferBindingIter)
     {
         const auto& vertexBufferBinding =
             static_pointer_cast<const VertexBufferBinding>(vertexBufferBindingIter->second);
 
         Disable(vertexBufferBinding->GetBuffer(),
-                vertexBufferBinding->GetIndex());
+            vertexBufferBinding->GetIndex());
     }
 }
 
@@ -774,12 +793,12 @@ Renderer::Disable(int textureUnit, const Texture1d *texture)
 
 void *
 Renderer::Map(const Texture1d          *texture,
-              int                    /* mipmapLevel */,
-              BufferAccessMode          access,
-              BufferFlushMode           flush,
-              BufferSynchronizationMode synchronization,
-              int64_t                   offset,
-              int64_t                   size)
+    int                    /* mipmapLevel */,
+    BufferAccessMode          access,
+    BufferFlushMode           flush,
+    BufferSynchronizationMode synchronization,
+    int64_t                   offset,
+    int64_t                   size)
 {
     FALCON_ENGINE_RENDERER_TEXTURE_MAP_IMPLEMENT(texture, mTexture1dTable, PlatformTexture1d);
 }
@@ -819,12 +838,12 @@ Renderer::Disable(int textureUnit, const Texture2d *texture)
 
 void *
 Renderer::Map(const Texture2d          *texture,
-              int                    /* mipmapLevel */,
-              BufferAccessMode          access,
-              BufferFlushMode           flush,
-              BufferSynchronizationMode synchronization,
-              int64_t                   offset,
-              int64_t                   size)
+    int                    /* mipmapLevel */,
+    BufferAccessMode          access,
+    BufferFlushMode           flush,
+    BufferSynchronizationMode synchronization,
+    int64_t                   offset,
+    int64_t                   size)
 {
     FALCON_ENGINE_RENDERER_TEXTURE_MAP_IMPLEMENT(texture, mTexture2dTable, PlatformTexture2d);
 }
@@ -864,21 +883,21 @@ Renderer::Disable(int textureUnit, const Texture2dArray *textureArray)
 
 void *
 Renderer::Map(const Texture2dArray     *textureArray,
-              int                       textureIndex,
-              int                    /* mipmapLevel */,
-              BufferAccessMode          access,
-              BufferFlushMode           flush,
-              BufferSynchronizationMode synchronization,
-              int64_t                   offset,
-              int64_t                   size)
+    int                       textureIndex,
+    int                    /* mipmapLevel */,
+    BufferAccessMode          access,
+    BufferFlushMode           flush,
+    BufferSynchronizationMode synchronization,
+    int64_t                   offset,
+    int64_t                   size)
 {
     FALCON_ENGINE_RENDERER_TEXTURE_ARRAY_MAP_IMPLEMENT(textureArray, mTexture2dArrayTable, PlatformTexture2dArray);
 }
 
 void
 Renderer::Unmap(const Texture2dArray *textureArray,
-                int                   textureIndex,
-                int                /* mipmapLevel */)
+    int                   textureIndex,
+    int                /* mipmapLevel */)
 {
     FALCON_ENGINE_RENDERER_TEXTURE_ARRAY_UNMAP_IMPLEMENT(textureArray, mTexture2dArrayTable);
 }
@@ -1064,7 +1083,7 @@ Renderer::Update(const VisualEffectInstancePass *pass, ShaderUniform *uniform, c
 /************************************************************************/
 void
 Renderer::Draw(const Camera *camera,
-               const Visual *visual)
+    const Visual *visual)
 {
     // NOTE(Wuxiang): We don't need to check the camera is not null here, because
     // certain rendering task won't need camera information.
@@ -1072,8 +1091,8 @@ Renderer::Draw(const Camera *camera,
     FALCON_ENGINE_CHECK_NULLPTR(visual);
 
     for (auto visualEffectInstanceIter = visual->GetEffectInstanceBegin();
-            visualEffectInstanceIter != visual->GetEffectInstanceEnd();
-            ++visualEffectInstanceIter)
+        visualEffectInstanceIter != visual->GetEffectInstanceEnd();
+        ++visualEffectInstanceIter)
     {
         // NOTE(Wuxiang): The visual instance is guaranteed to not be null.
         FALCON_ENGINE_CHECK_NULLPTR(*visualEffectInstanceIter);

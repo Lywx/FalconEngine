@@ -1,17 +1,17 @@
 #include <FalconEngine/Content/AssetTool.h>
 
 #if defined(FALCON_ENGINE_API_GLAD)
-#include <FalconEngine/Platform/GLAD/Common.h>
+#include <FalconEngine/Platform/GLAD/GLADLib.h>
 #endif
 
 #if defined(FALCON_ENGINE_API_GLEW)
-#include <FalconEngine/Platform/GLEW/Common.h>
+#include <FalconEngine/Platform/GLEW/GLEWLib.h>
 #endif
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
 #include <FalconEngine/Core/GameEngineDebugger.h>
 // NOTE(Wuxiang): Always used GLFW to create OpenGL context.
-#include <FalconEngine/Platform/GLFW/Common.h>
+#include <FalconEngine/Platform/GLFW/GLFWLib.h>
 
 namespace FalconEngine
 {

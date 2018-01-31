@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Core/Common.h>
+#include <FalconEngine/Core/Macro.h>
 
 #if defined(FALCON_ENGINE_WINDOW_QT)
 #include <FalconEngine/Core/GameEngineSettings.h>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Core/Common.h>
+#include <FalconEngine/Core/Macro.h>
 
 #include <FalconEngine/Graphics/Renderer/Entity/Entity.h>
 #include <FalconEngine/Graphics/Scene/SceneEntity.h>

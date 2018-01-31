@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Platform/OpenGL/Common.h>
+#include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
 
 #if defined(FALCON_ENGINE_API_OPENGL)
 #include <FalconEngine/Platform/OpenGL/OglBuffer.h>

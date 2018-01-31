@@ -3,7 +3,7 @@
 #include <FalconEngine/Core/Macro.h>
 
 #if defined(FALCON_ENGINE_WINDOW_WIN32)
-#include <FalconEngine/Platform/Win32/Common.h>
+#include <FalconEngine/Platform/Win32/Win32Lib.h>
 
 namespace FalconEngine
 {

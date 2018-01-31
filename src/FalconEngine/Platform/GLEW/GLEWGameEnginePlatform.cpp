@@ -3,7 +3,7 @@
 #include <FalconEngine/Core/GameEngineDebugger.h>
 
 #if defined(FALCON_ENGINE_API_OPENGL_GLEW)
-#include <FalconEngine/Platform/Common.h>
+#include <FalconEngine/Platform/GLEW/GLEWLib.h>
 namespace FalconEngine
 {
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Core/Common.h>
+#include <FalconEngine/Core/Macro.h>
 
 // NOTE(Wuxiang): Use GLEW static library.
 #if defined(FALCON_ENGINE_BUILD_STATIC)

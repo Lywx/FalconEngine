@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Input/Common.h>
+#include <FalconEngine/Core/Macro.h>
 
 #if defined (FALCON_ENGINE_WINDOW_GLFW)
 #include <FalconEngine/Platform/GLFW/GLFWKey.h>

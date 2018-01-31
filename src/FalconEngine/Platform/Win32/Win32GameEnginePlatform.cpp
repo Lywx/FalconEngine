@@ -5,7 +5,7 @@
 #include <FalconEngine/Core/GameEngineData.h>
 #include <FalconEngine/Core/GameEngineSettings.h>
 #include <FalconEngine/Core/GameEngineDebugger.h>
-#include <FalconEngine/Platform/Win32/Common.h>
+#include <FalconEngine/Platform/Win32/Win32Lib.h>
 namespace FalconEngine
 {
 
@@ -39,9 +39,9 @@ GameEnginePlatform::InitializeWindowPlatform()
         // Redraws the entire window if a movement or
         // size adjustment changes the width of the client area.
         wcex.style = CS_HREDRAW
-            // Redraws the entire window if a movement or
-            // size adjustment changes the height of the client area.
-            | CS_VREDRAW;
+                     // Redraws the entire window if a movement or
+                     // size adjustment changes the height of the client area.
+                     | CS_VREDRAW;
 
         wcex.lpfnWndProc = GameEngineWindowProcess;
         wcex.cbClsExtra = 0;
@@ -73,19 +73,19 @@ GameEnginePlatform::InitializeWindowPlatform()
         // TODO: Change to CreateWindowEx(WS_EX_TOPMOST, "", "", WS_POPUP,
         // to default to fullscreen.
         windowHandle = CreateWindowEx(
-                0,                                        //_In_     DWORD     dwExStyle,
-                nullptr,                                  //_In_opt_ LPCTSTR   lpClassName,
-                gameEngineSettings->mWindowTitle.c_str(), //_In_opt_ LPCTSTR   lpWindowName,
-                WS_OVERLAPPEDWINDOW,                      //_In_     DWORD     dwStyle,
-                CW_USEDEFAULT,                            //_In_     int       x,
-                CW_USEDEFAULT,                            //_In_     int       y,
-                rect.right - rect.left,                   //_In_     int       nWidth,
-                rect.bottom - rect.top,                   //_In_     int       nHeight,
-                nullptr,                                  //_In_opt_ HWND      hWndParent,
-                nullptr,                                  //_In_opt_ HMENU     hMenu,
-                moduleHandle,                             //_In_opt_ HINSTANCE hInstance,
-                nullptr                                   //_In_opt_ LPVOID    lpParam
-            );
+                           0,                                        //_In_     DWORD     dwExStyle,
+                           nullptr,                                  //_In_opt_ LPCTSTR   lpClassName,
+                           gameEngineSettings->mWindowTitle.c_str(), //_In_opt_ LPCTSTR   lpWindowName,
+                           WS_OVERLAPPEDWINDOW,                      //_In_     DWORD     dwStyle,
+                           CW_USEDEFAULT,                            //_In_     int       x,
+                           CW_USEDEFAULT,                            //_In_     int       y,
+                           rect.right - rect.left,                   //_In_     int       nWidth,
+                           rect.bottom - rect.top,                   //_In_     int       nHeight,
+                           nullptr,                                  //_In_opt_ HWND      hWndParent,
+                           nullptr,                                  //_In_opt_ HMENU     hMenu,
+                           moduleHandle,                             //_In_opt_ HINSTANCE hInstance,
+                           nullptr                                   //_In_opt_ LPVOID    lpParam
+                       );
 
         if (!windowHandle)
         {

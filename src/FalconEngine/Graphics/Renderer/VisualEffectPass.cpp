@@ -30,7 +30,7 @@ VisualEffectPass::~VisualEffectPass()
 /* Public Members                                                       */
 /************************************************************************/
 void
-VisualEffectPass::SetShader(std::shared_ptr<Shader> shader)
+VisualEffectPass::SetShader(const std::shared_ptr<Shader>& shader)
 {
     FALCON_ENGINE_CHECK_NULLPTR(shader);
 
@@ -40,10 +40,7 @@ VisualEffectPass::SetShader(std::shared_ptr<Shader> shader)
 void
 VisualEffectPass::SetBlendState(std::unique_ptr<BlendState> blendStateHandle)
 {
-    if (blendStateHandle == nullptr)
-    {
-        FALCON_ENGINE_THROW_NULLPTR_EXCEPTION(blendStateHandle);
-    }
+    FALCON_ENGINE_CHECK_NULLPTR(blendStateHandle);
 
     mBlendState.reset(blendStateHandle.release());
 }
@@ -51,10 +48,7 @@ VisualEffectPass::SetBlendState(std::unique_ptr<BlendState> blendStateHandle)
 void
 VisualEffectPass::SetCullState(std::unique_ptr<CullState> cullStateHandle)
 {
-    if (cullStateHandle == nullptr)
-    {
-        FALCON_ENGINE_THROW_NULLPTR_EXCEPTION(blendStateHandle);
-    }
+    FALCON_ENGINE_CHECK_NULLPTR(cullStateHandle);
 
     mCullState.reset(cullStateHandle.release());
 }
@@ -62,10 +56,7 @@ VisualEffectPass::SetCullState(std::unique_ptr<CullState> cullStateHandle)
 void
 VisualEffectPass::SetDepthTestState(std::unique_ptr<DepthTestState> depthTestStateHandle)
 {
-    if (depthTestStateHandle == nullptr)
-    {
-        FALCON_ENGINE_THROW_NULLPTR_EXCEPTION(blendStateHandle);
-    }
+    FALCON_ENGINE_CHECK_NULLPTR(depthTestStateHandle);
 
     mDepthTestState.reset(depthTestStateHandle.release());
 }
@@ -73,10 +64,7 @@ VisualEffectPass::SetDepthTestState(std::unique_ptr<DepthTestState> depthTestSta
 void
 VisualEffectPass::SetOffsetState(std::unique_ptr<OffsetState> offsetStateHandle)
 {
-    if (offsetStateHandle == nullptr)
-    {
-        FALCON_ENGINE_THROW_NULLPTR_EXCEPTION(blendStateHandle);
-    }
+    FALCON_ENGINE_CHECK_NULLPTR(offsetStateHandle);
 
     mOffsetState.reset(offsetStateHandle.release());
 }
@@ -84,10 +72,7 @@ VisualEffectPass::SetOffsetState(std::unique_ptr<OffsetState> offsetStateHandle)
 void
 VisualEffectPass::SetStencilTestState(std::unique_ptr<StencilTestState> stencilTestStateHandle)
 {
-    if (stencilTestStateHandle == nullptr)
-    {
-        FALCON_ENGINE_THROW_NULLPTR_EXCEPTION(blendStateHandle);
-    }
+    FALCON_ENGINE_CHECK_NULLPTR(stencilTestStateHandle);
 
     mStencilTestState.reset(stencilTestStateHandle.release());
 }
@@ -95,10 +80,7 @@ VisualEffectPass::SetStencilTestState(std::unique_ptr<StencilTestState> stencilT
 void
 VisualEffectPass::SetWireframeState(std::unique_ptr<WireframeState> wireframeStateHandle)
 {
-    if (wireframeStateHandle == nullptr)
-    {
-        FALCON_ENGINE_THROW_NULLPTR_EXCEPTION(blendStateHandle);
-    }
+    FALCON_ENGINE_CHECK_NULLPTR(wireframeStateHandle);
 
     mWireframeState.reset(wireframeStateHandle.release());
 }

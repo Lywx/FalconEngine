@@ -79,8 +79,8 @@ ThirdPersonCamera::Update(double elapsed)
     auto x = mRadialDistance * glm::sin(mAzimuthalRadian) * glm::sin(mPolarRadian);
     auto y = mRadialDistance * glm::cos(mAzimuthalRadian);
     auto r = mCoordinate.GetAxisX() * x +
-             mCoordinate.GetAxisY() * y +
-             mCoordinate.GetAxisZ() * z;
+        mCoordinate.GetAxisY() * y +
+        mCoordinate.GetAxisZ() * z;
 
     mPosition = mOrigin + r;
 
@@ -143,7 +143,7 @@ ThirdPersonCamera::Update(GameEngineInput *input, double elapsed)
     case ThirdPersonCameraMode::Pan:
     {
         Vector2f panDistancePixel = mousePositionDiff * mMouseSensitivity * mMouseSensitivityAdjust
-                                    * mPanSpeed * float(tSecond);
+            * mPanSpeed * float(tSecond);
 
         // Pan distance in window space.
         Vector3f panDistanceWindow = Vector3f(panDistancePixel, 0);
@@ -188,7 +188,7 @@ ThirdPersonCamera::Update(GameEngineInput *input, double elapsed)
     case ThirdPersonCameraMode::Zoom:
     {
         auto zoomDistance = mousePositionDiff.y * mMouseSensitivity * mMouseSensitivityAdjust
-                            * mZoomSpeed * float(tSecond);
+            * mZoomSpeed * float(tSecond);
         mRadialDistance += zoomDistance;
 
         // Don't allow distance to go below zero.

@@ -2,8 +2,11 @@
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
 #include <FalconEngine/Core/GameEngineData.h>
+#include <FalconEngine/Core/GameEnginePlatform.h>
 #include <FalconEngine/Platform/GLFW/GLFWRendererData.h>
-#include <FalconEngine/Platform/OpenGL/OglRendererState.h>
+#include <FalconEngine/Platform/OpenGL/OpenGLGameEnginePlatformData.h>
+#include <FalconEngine/Platform/OpenGL/OpenGLRendererState.h>
+
 namespace FalconEngine
 {
 
@@ -13,11 +16,22 @@ namespace FalconEngine
 void
 Renderer::InitializePlatform()
 {
-    InitializeStatePlatform();
     InitializeDataPlatform();
+    InitializeStatePlatform();
 
     SetWindowPlatform(mWindow.mWidth, mWindow.mHeight, mWindow.mNear, mWindow.mFar);
     SetViewportPlatform(mViewport.mLeft, mViewport.mBottom, mViewport.GetWidth(), mViewport.GetHeight());
+}
+
+void
+Renderer::InitializeDataPlatform()
+{
+    // Initialize platform renderer data.
+    mData = std::unique_ptr<PlatformRendererData, PlatformRendererDataDeleter>(
+                new PlatformRendererData(),
+                PlatformRendererDataDeleter());
+    mData->Initialize(
+        GameEnginePlatform::GetInstance()->mWindow->mHandle);
 }
 
 void
@@ -34,17 +48,6 @@ Renderer::InitializeStatePlatform()
         mOffsetStateDefault.get(),
         mStencilTestStateDefault.get(),
         mWireframeStateDefault.get());
-}
-
-void
-Renderer::InitializeDataPlatform()
-{
-    // Initialize platform renderer data.
-    mData = std::unique_ptr<PlatformRendererData, PlatformRendererDataDeleter>(
-                new PlatformRendererData(),
-                PlatformRendererDataDeleter());
-    mData->Initialize(
-        GameEngineData::GetInstance()->mWindow);
 }
 
 void

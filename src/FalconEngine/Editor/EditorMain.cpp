@@ -1,9 +1,8 @@
-#include <FalconEngine/Editor/Common.h>
-
-#include <FalconEngine/Core/GameEngineWindow.h>
+#include <FalconEngine/Core/Macro.h>
 
 #if defined(FALCON_ENGINE_WINDOW_QT)
 #include <QtWidgets/QApplication>
+#include <FalconEngine/Platform/Qt/QtGameEngineWindow.h>
 
 using namespace FalconEngine;
 
@@ -16,7 +15,7 @@ main(int argc, char *argv[])
     QCoreApplication::setApplicationName("AppName");
     QCoreApplication::setApplicationVersion("1.0.0");
 
-    GameEngineWindow window;
+    PlatformGameEngineWindow window;
     window.show();
     return app.exec();
 }

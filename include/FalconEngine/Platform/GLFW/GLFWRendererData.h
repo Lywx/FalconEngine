@@ -5,7 +5,7 @@
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
 #include <memory>
 
-#include <FalconEngine/Core/GameEngineWindow.h>
+#include <FalconEngine/Platform/GLFW//GLFWGameEngineWindow.h>
 
 namespace FalconEngine
 {
@@ -18,7 +18,7 @@ public:
 
 public:
     void
-    Initialize(const std::shared_ptr<GameEngineWindow>& window);
+    Initialize(GLFWwindow * windowHandle);
 
 public:
     GLFWwindow *mWindowHandle;

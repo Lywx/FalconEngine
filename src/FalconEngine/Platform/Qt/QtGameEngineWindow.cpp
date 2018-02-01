@@ -10,7 +10,7 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-GameEngineWindow::GameEngineWindow(QWidget *parent, Qt::WindowFlags flags) :
+PlatformGameEngineWindow::PlatformGameEngineWindow(QWidget *parent, Qt::WindowFlags flags) :
     QOpenGLWidget(parent, flags),
     mInput(nullptr),
     mSettings(nullptr)
@@ -21,7 +21,7 @@ GameEngineWindow::GameEngineWindow(QWidget *parent, Qt::WindowFlags flags) :
 /* Public Members                                                       */
 /************************************************************************/
 void
-GameEngineWindow::initializeGL()
+PlatformGameEngineWindow::initializeGL()
 {
     QSurfaceFormat format;
     format.setOption(QSurfaceFormat::DebugContext);
@@ -34,58 +34,58 @@ GameEngineWindow::initializeGL()
 }
 
 void
-GameEngineWindow::resizeEvent(QResizeEvent *event)
+PlatformGameEngineWindow::resizeEvent(QResizeEvent *event)
 {
 }
 
 void
-GameEngineWindow::resizeGL(int w, int h)
+PlatformGameEngineWindow::resizeGL(int w, int h)
 {
 }
 
 void
-GameEngineWindow::paintGL()
+PlatformGameEngineWindow::paintGL()
 {
 }
 
 void
-GameEngineWindow::paintEvent(QPaintEvent *event)
+PlatformGameEngineWindow::paintEvent(QPaintEvent *event)
 {
 }
 
 void
-GameEngineWindow::keyReleaseEvent(QKeyEvent *event)
+PlatformGameEngineWindow::keyReleaseEvent(QKeyEvent *event)
 {
     // TODO(Wuxiang): 2017-10-11 19:39
 }
 
 void
-GameEngineWindow::keyPressEvent(QKeyEvent *event)
+PlatformGameEngineWindow::keyPressEvent(QKeyEvent *event)
 {
 }
 
 void
-GameEngineWindow::mouseDoubleClickEvent(QMouseEvent *event)
+PlatformGameEngineWindow::mouseDoubleClickEvent(QMouseEvent *event)
 {
 }
 
 void
-GameEngineWindow::mouseMoveEvent(QMouseEvent *event)
+PlatformGameEngineWindow::mouseMoveEvent(QMouseEvent *event)
 {
 }
 
 void
-GameEngineWindow::mousePressEvent(QMouseEvent *event)
+PlatformGameEngineWindow::mousePressEvent(QMouseEvent *event)
 {
 }
 
 void
-GameEngineWindow::mouseReleaseEvent(QMouseEvent *event)
+PlatformGameEngineWindow::mouseReleaseEvent(QMouseEvent *event)
 {
 }
 
 void
-GameEngineWindow::wheelEvent(QWheelEvent *event)
+PlatformGameEngineWindow::wheelEvent(QWheelEvent *event)
 {
 }
 
@@ -93,7 +93,7 @@ GameEngineWindow::wheelEvent(QWheelEvent *event)
 /* Private Members                                                      */
 /************************************************************************/
 void
-GameEngineWindow::InitializeInput()
+PlatformGameEngineWindow::InitializeInput()
 {
 }
 

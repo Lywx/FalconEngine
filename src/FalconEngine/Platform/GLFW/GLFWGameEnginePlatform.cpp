@@ -1,18 +1,33 @@
 #include <FalconEngine/Core/GameEnginePlatform.h>
-#include <FalconEngine/Core/GameEngineSettings.h>
-#include <FalconEngine/Core/GameEngineDebugger.h>
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Core/GameEngineData.h>
+#include <FalconEngine/Core/GameEngineSettings.h>
+#include <FalconEngine/Core/GameEngineDebugger.h>
+#include <FalconEngine/Platform/GLFW/GLFWGameEngineWindow.h>
+#include <FalconEngine/Platform/GLFW/GLFWLib.h>
+#include <FalconEngine/Platform/OpenGL/OpenGLGameEnginePlatformData.h>
+
 namespace FalconEngine
 {
 
 void
 GameEnginePlatform::InitializePlatform()
 {
+    InitializeDataPlatform();
+
     // NOTE(Wuxiang): You have to initialize OpenGL context first.
     InitializeWindowPlatform();
     InitializeLoaderPlatform();
+}
+
+void
+GameEnginePlatform::InitializeDataPlatform()
+{
+    mData = std::unique_ptr<PlatformGameEnginePlatformData, PlatformGameEnginePlatformDataDeleter>(
+                new PlatformGameEnginePlatformData(),
+                PlatformGameEnginePlatformDataDeleter());
 }
 
 void
@@ -25,7 +40,6 @@ void
 GameEnginePlatform::InitializeWindowPlatform()
 {
     auto gameEngineSettings = GameEngineSettings::GetInstance();
-    auto gameEngineData = GameEngineData::GetInstance();
 
     // Initialize GLFW.
     if (glfwInit())
@@ -34,8 +48,7 @@ GameEnginePlatform::InitializeWindowPlatform()
     }
     else
     {
-        GameEngineDebugger::OutputString("GLFW initialization failed.\n");
-        exit(FALCON_ENGINE_CONTEXT_ERROR);
+        FALCON_ENGINE_THROW_API_EXCEPTION("GLFW initialization failed.\n");
     }
 
     // Initialize Context Hints
@@ -46,7 +59,9 @@ GameEnginePlatform::InitializeWindowPlatform()
         glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+#if defined(FALCON_ENGINE_DEBUG_GRAPHICS)
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+#endif
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_FALSE);
     }
 
@@ -84,9 +99,8 @@ GameEnginePlatform::InitializeWindowPlatform()
     // Matching GLFW context and window.
     glfwMakeContextCurrent(windowHandle);
 
-    auto window = std::make_shared<GameEngineWindow>(windowHandle);
-    window->Initialize();
-    gameEngineData->mWindow = window;
+    mWindow = std::make_shared<PlatformGameEngineWindow>(windowHandle);
+    mWindow->Initialize();
 }
 
 }

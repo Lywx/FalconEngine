@@ -9,6 +9,7 @@
 namespace FalconEngine
 {
 
+// NOTE(Wuxiang): The recoverable errors.
 FALCON_ENGINE_CLASS_BEGIN RuntimeException :
 public std::runtime_error
 {
@@ -17,11 +18,20 @@ public:
 };
 FALCON_ENGINE_CLASS_END
 
-FALCON_ENGINE_CLASS_BEGIN LogicError :
-public std::logic_error
+// NOTE(Wuxiang): The unrecoverable errors.
+FALCON_ENGINE_CLASS_BEGIN APIError :
+public RuntimeException
 {
 public:
-    explicit LogicError(const std::string & message);
+    explicit APIError(const std::string & message);
+};
+FALCON_ENGINE_CLASS_END
+
+FALCON_ENGINE_CLASS_BEGIN AssertionError :
+public RuntimeException
+{
+public:
+    explicit AssertionError(const std::string & message);
 };
 FALCON_ENGINE_CLASS_END
 
@@ -35,7 +45,7 @@ ThrowNullException(const std::string& name)
 }
 
 inline void
-CheckNullPointer(const void *pointer, const std::string name)
+CheckNullPointer(const void *pointer, const std::string& name)
 {
     if (!pointer)
     {
@@ -45,7 +55,7 @@ CheckNullPointer(const void *pointer, const std::string name)
 
 template<typename T>
 inline void
-CheckNullPointer(const std::shared_ptr<T> pointer, const std::string name)
+CheckNullPointer(const std::shared_ptr<T> pointer, const std::string& name)
 {
     if (!pointer)
     {
@@ -53,22 +63,45 @@ CheckNullPointer(const std::shared_ptr<T> pointer, const std::string name)
     }
 }
 
+template<typename T>
 inline void
-CheckAssertion(bool value, std::string message)
+CheckNullPointer(const std::unique_ptr<T>& pointer, const std::string& name)
 {
-    if (!value)
+    if (!pointer)
     {
-        throw RuntimeException(message);
+        ThrowNullException(name);
     }
 }
 }
 
 }
 
-#define FALCON_ENGINE_CHECK_ASSERTION(value, message) FalconEngine::CheckAssertion(value, message)
 #define FALCON_ENGINE_CHECK_NULLPTR(pointer) FalconEngine::CheckNullPointer(pointer, #pointer)
 
-#define FALCON_ENGINE_THROW_ASSERTION_EXCEPTION() throw FalconEngine::RuntimeException("Assertion failed.\n")
+#define FALCON_ENGINE_THROW_API_EXCEPTION(message) throw FalconEngine::APIError(message)
 #define FALCON_ENGINE_THROW_NULLPTR_EXCEPTION(pointer) FalconEngine::ThrowNullException(#pointer)
 #define FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(message) throw FalconEngine::RuntimeException(message)
 #define FALCON_ENGINE_THROW_SUPPORT_EXCEPTION() throw FalconEngine::RuntimeException("Not implemented.\n")
+
+namespace FalconEngine
+{
+
+namespace
+{
+
+inline void
+CheckAssertionPass(bool value)
+{
+    if (!value)
+    {
+        throw AssertionError("Assertion failed.\n");
+    }
+}
+
+}
+
+}
+
+#define FALCON_ENGINE_CHECK_ASSERTION(value) FalconEngine::CheckAssertionPass(value)
+#define FALCON_ENGINE_THROW_ASSERTION_EXCEPTION() throw FalconEngine::AssertionError("Assertion failed.\n");
+

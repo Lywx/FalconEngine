@@ -11,4 +11,16 @@ RuntimeException::RuntimeException(const std::string& message) :
     Debug::OutputString(message);
 }
 
+APIError::APIError(const std::string& message) :
+    RuntimeException(message)
+{
+    exit(FALCON_ENGINE_API_ERROR);
+}
+
+AssertionError::AssertionError(const std::string& message) :
+    RuntimeException(message)
+{
+    exit(FALCON_ENGINE_ASSERTION_ERROR);
+}
+
 }

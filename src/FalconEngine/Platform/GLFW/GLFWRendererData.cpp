@@ -14,7 +14,8 @@ FALCON_ENGINE_DELETER_IMPLEMENT(PlatformRendererData, PlatformRendererDataDelete
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PlatformRendererData::PlatformRendererData()
+PlatformRendererData::PlatformRendererData():
+    mWindowHandle(nullptr)
 {
 }
 
@@ -26,9 +27,9 @@ PlatformRendererData::~PlatformRendererData()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PlatformRendererData::Initialize(const std::shared_ptr<GameEngineWindow>& window)
+PlatformRendererData::Initialize(GLFWwindow *windowHandle)
 {
-    mWindowHandle = window->mHandle;
+    mWindowHandle = windowHandle;
 }
 
 }

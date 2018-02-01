@@ -3,9 +3,12 @@
 namespace FalconEngine
 {
 
+/************************************************************************/
+/* Constructors and Destructor                                          */
+/************************************************************************/
 GameEngineData::GameEngineData() :
-    mRunning(false),
-    mWindow(nullptr)
+    mRunning(false)
 {
 }
+
 }

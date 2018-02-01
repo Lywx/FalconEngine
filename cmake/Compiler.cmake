@@ -18,17 +18,27 @@ enable_language(CXX)
 # Predefined macro
 #
 
-fe_assert_defined(FALCON_ENGINE_WINDOW_QT)
-fe_assert_defined(FALCON_ENGINE_WINDOW_GLFW)
+fe_assert_defined(FALCON_ENGINE_API_DIRECT3D)
+if(FALCON_ENGINE_API_DIRECT3D)
+    add_definitions(-DFALCON_ENGINE_API_DIRECT3D)
+endif()
 
+fe_assert_defined(FALCON_ENGINE_API_OPENGL)
+if(FALCON_ENGINE_API_OPENGL)
+    add_definitions(-DFALCON_ENGINE_API_OPENGL)
+endif()
+
+fe_assert_defined(FALCON_ENGINE_WINDOW_QT)
 if(FALCON_ENGINE_WINDOW_QT)
     add_definitions(-DFALCON_ENGINE_WINDOW_QT)
 endif()
 
+fe_assert_defined(FALCON_ENGINE_WINDOW_GLFW)
 if (FALCON_ENGINE_WINDOW_GLFW)
     add_definitions(-DFALCON_ENGINE_WINDOW_GLFW)
 endif()
 
+fe_assert_defined(FALCON_ENGINE_WINDOW_WIN32)
 if (FALCON_ENGINE_WINDOW_WIN32)
     add_definitions(-DFALCON_ENGINE_WINDOW_WIN32)
 endif()

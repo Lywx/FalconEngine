@@ -79,7 +79,7 @@ GameEngineWindowProcess(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     // TODO: Set s_fullscreen to true if defaulting to fullscreen.
     static bool s_fullscreen = false;
 
-    auto gameEngineWindow = reinterpret_cast<GameEngineWindow *>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+    auto gameEngineWindow = reinterpret_cast<PlatformGameEngineWindow *>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
     auto gameEngineSettings = GameEngineSettings::GetInstance();
 
     switch (message)
@@ -279,7 +279,7 @@ GameEngineWindowProcess(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-GameEngineWindow::GameEngineWindow(const HWND & handle) :
+PlatformGameEngineWindow::PlatformGameEngineWindow(const HWND & handle) :
     mHandle(handle),
     mInput(nullptr),
     mSettings(nullptr)
@@ -290,19 +290,26 @@ GameEngineWindow::GameEngineWindow(const HWND & handle) :
 /* Public Members                                                       */
 /************************************************************************/
 void
-GameEngineWindow::ProcessKeyEvent(Key key, bool keyPressed)
+PlatformGameEngineWindow::Initialize()
+{
+    InitializeData();
+    InitializePlatform();
+}
+
+void
+PlatformGameEngineWindow::ProcessKeyEvent(Key key, bool keyPressed)
 {
     mInput->mKeyboardState->SetKeyInternal(key, keyPressed, Timer::GetMilliseconds());
 }
 
 void
-GameEngineWindow::ProcessMouseButtonEvent(MouseButton button, bool buttonPressed)
+PlatformGameEngineWindow::ProcessMouseButtonEvent(MouseButton button, bool buttonPressed)
 {
     mInput->mMouseState->SetButtonInternal(MouseButton(button), buttonPressed, Timer::GetMilliseconds());
 }
 
 void
-GameEngineWindow::ProcessMouseMoveEvent(double x, double y)
+PlatformGameEngineWindow::ProcessMouseMoveEvent(double x, double y)
 {
     // NOTE(Wuxiang): I invert the Y coordinate of screen space so that (0, 0)
     // as left lower corner to be consistent with the OpenGL NDC convention.
@@ -310,34 +317,34 @@ GameEngineWindow::ProcessMouseMoveEvent(double x, double y)
 }
 
 void
-GameEngineWindow::OnActivated()
+PlatformGameEngineWindow::OnActivated()
 {
 }
 
 void
-GameEngineWindow::OnDeactivated()
+PlatformGameEngineWindow::OnDeactivated()
 {
 }
 
 void
-GameEngineWindow::OnSuspending()
+PlatformGameEngineWindow::OnSuspending()
 {
 }
 
 void
-GameEngineWindow::OnResuming()
+PlatformGameEngineWindow::OnResuming()
 {
 }
 
 void
-GameEngineWindow::OnSizeChanged(int width, int height)
+PlatformGameEngineWindow::OnSizeChanged(int width, int height)
 {
     _UNUSE(width);
     _UNUSE(height);
 }
 
 void
-GameEngineWindow::OnClose()
+PlatformGameEngineWindow::OnClose()
 {
     mData->mRunning = false;
 }
@@ -346,7 +353,15 @@ GameEngineWindow::OnClose()
 /* Private Members                                                      */
 /************************************************************************/
 void
-GameEngineWindow::InitializePlatform()
+PlatformGameEngineWindow::InitializeData()
+{
+    mData = GameEngineData::GetInstance();
+    mInput = GameEngineInput::GetInstance();
+    mSettings = GameEngineSettings::GetInstance();
+}
+
+void
+PlatformGameEngineWindow::InitializePlatform()
 {
     // SetWindowLongPtr(mHandle, GWL_WNDPROC, reinterpret_cast<LONG_PTR>(GameEngineWindowProcess));
 }

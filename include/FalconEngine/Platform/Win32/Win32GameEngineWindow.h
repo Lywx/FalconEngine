@@ -20,11 +20,11 @@ GameEngineWindowProcess(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 // @summary Game window represent the window system encapsulation. You would use
 // same GameWindow class for different window system like, GLFW, Qt etc.
-FALCON_ENGINE_CLASS_BEGIN GameEngineWindow
+FALCON_ENGINE_CLASS_BEGIN PlatformGameEngineWindow
 {
 public:
-    explicit GameEngineWindow(const HWND & handle);
-    ~GameEngineWindow() = default;
+    explicit PlatformGameEngineWindow(const HWND & handle);
+    ~PlatformGameEngineWindow() = default;
 
 public:
     /************************************************************************/

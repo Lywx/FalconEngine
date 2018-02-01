@@ -20,4 +20,3 @@
 #include <FalconEngine/Core/GameEnginePlatform.h>
 #include <FalconEngine/Core/GameEngineProfiler.h>
 #include <FalconEngine/Core/GameEngineSettings.h>
-#include <FalconEngine/Core/GameEngineWindow.h>

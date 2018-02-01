@@ -13,11 +13,11 @@ class GameEngineInput;
 
 // @summary Game window represent the window system encapsulation. You would use
 // same GameWindow class for different window system like, GLFW, Qt etc.
-class FALCON_ENGINE_API GameEngineWindow
+class FALCON_ENGINE_API PlatformGameEngineWindow
 {
 public:
-    explicit GameEngineWindow(GLFWwindow *handle);
-    ~GameEngineWindow() = default;
+    explicit PlatformGameEngineWindow(GLFWwindow *handle);
+    ~PlatformGameEngineWindow() = default;
 
 public:
     /************************************************************************/
@@ -43,10 +43,13 @@ private:
     /* Private Members                                                      */
     /************************************************************************/
     void
+    InitializeData();
+
+    void
     InitializePlatform();
 
 public:
-    GLFWwindow         *mHandle;
+    GLFWwindow *mHandle;
 
 private:
     GameEngineInput    *mInput;

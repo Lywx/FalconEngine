@@ -46,7 +46,7 @@ public:
 
 public:
     void
-    SetShader(std::shared_ptr<Shader> shader);
+    SetShader(const std::shared_ptr<Shader>& shader);
 
     void
     SetBlendState(std::unique_ptr<BlendState> blendStateHandle);

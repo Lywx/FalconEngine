@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.1)
 
 # Set up deployment configuration
+OPTION(FALCON_ENGINE_API_OPENGL "Using OpenGL graphics API" ON)
+OPTION(FALCON_ENGINE_API_DIRECT3D "Using Direct3D graphics API" OFF)
 option(FALCON_ENGINE_BUILD_DYNAMIC "Build dynamic library" ON)
 option(FALCON_ENGINE_WINDOW_QT "Using Qt window system" OFF)
 option(FALCON_ENGINE_WINDOW_GLFW "Using GLFW window system" ON)

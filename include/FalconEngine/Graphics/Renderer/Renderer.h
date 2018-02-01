@@ -197,14 +197,14 @@ public:
 
     void
     Flush(const Buffer *buffer,
-          int64_t       offset,
-          int64_t       size);
+        int64_t       offset,
+        int64_t       size);
 
     void
     Update(const Buffer             *buffer,
-           BufferAccessMode          access,
-           BufferFlushMode           flush,
-           BufferSynchronizationMode synchronization);
+        BufferAccessMode          access,
+        BufferFlushMode           flush,
+        BufferSynchronizationMode synchronization);
 
     /************************************************************************/
     /* Shader Buffer Management                                             */
@@ -234,8 +234,8 @@ public:
 
     void
     Flush(const ShaderBuffer *shaderBuffer,
-          int64_t             offset,
-          int64_t             size);
+        int64_t             offset,
+        int64_t             size);
 
     /************************************************************************/
     /* Index Buffer Management                                              */
@@ -265,8 +265,8 @@ public:
 
     void
     Flush(const IndexBuffer *indexBuffer,
-          int64_t            offset,
-          int64_t            size);
+        int64_t            offset,
+        int64_t            size);
 
     /************************************************************************/
     /* Vertex Buffer Management                                             */
@@ -281,9 +281,9 @@ public:
     // @param stride - stride between contiguous data in byte.
     void
     Enable(const VertexBuffer *vertexBuffer,
-           unsigned int        bindingIndex,
-           int64_t             offset,
-           int                 stride);
+        unsigned int        bindingIndex,
+        int64_t             offset,
+        int                 stride);
 
     void
     Disable(const VertexBuffer *vertexBuffer, unsigned int bindingIndex);
@@ -411,11 +411,11 @@ public:
 
     void
     Enable(int                   textureUnit,
-           const Texture2dArray *textureArray);
+        const Texture2dArray *textureArray);
 
     void
     Disable(int                   textureUnit,
-            const Texture2dArray *textureArray);
+        const Texture2dArray *textureArray);
 
     void *
     Map(const Texture2dArray     *textureArray,
@@ -429,8 +429,8 @@ public:
 
     void
     Unmap(const Texture2dArray *textureArray,
-          int                   textureIndex,
-          int                   mipmapLevel);
+        int                   textureIndex,
+        int                   mipmapLevel);
 
     /************************************************************************/
     /* Texture 3D Management                                                */
@@ -569,10 +569,10 @@ private:
     InitializePlatform();
 
     void
-    InitializeStatePlatform();
+    InitializeDataPlatform();
 
     void
-    InitializeDataPlatform();
+    InitializeStatePlatform();
 
     void
     DestroyPlatform();

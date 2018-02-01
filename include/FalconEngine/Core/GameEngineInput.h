@@ -17,12 +17,12 @@ using KeyboardStateSharedPtr = std::shared_ptr<KeyboardState>;
 class MouseState;
 using MouseStateSharedPtr = std::shared_ptr<MouseState>;
 
-class GameEngineWindow;
+class PlatformGameEngineWindow;
 
 #pragma warning(disable: 4251)
 class FALCON_ENGINE_API GameEngineInput
 {
-    friend class GameEngineWindow;
+    friend class PlatformGameEngineWindow;
 
 public:
     /************************************************************************/

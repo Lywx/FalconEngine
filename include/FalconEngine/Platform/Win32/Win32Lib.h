@@ -22,6 +22,7 @@
 #define NOHELP
 
 #define WIN32_LEAN_AND_MEAN
+#include <comdef.h>
 #include <windows.h>
 #include <Windowsx.h>
 

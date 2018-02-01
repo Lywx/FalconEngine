@@ -1,8 +1,9 @@
 #include <FalconEngine/Core/GameEnginePlatform.h>
-#include <FalconEngine/Core/GameEngineSettings.h>
-#include <FalconEngine/Core/GameEngineDebugger.h>
 
 #if defined(FALCON_ENGINE_API_OPENGL_GLEW)
+#include <FalconEngine/Core/Exception.h>
+#include <FalconEngine/Core/GameEngineSettings.h>
+#include <FalconEngine/Core/GameEngineDebugger.h>
 #include <FalconEngine/Platform/GLEW/GLEWLib.h>
 namespace FalconEngine
 {
@@ -20,8 +21,7 @@ GameEnginePlatform::InitializeLoaderPlatform()
     }
     else
     {
-        GameEngineDebugger::OutputString("GLEW initialization failed.\n");
-        exit(FALCON_ENGINE_API_ERROR);
+        FALCON_ENGINE_THROW_API_EXCEPTION("GLEW initialization failed.\n");
     }
 }
 

@@ -4,8 +4,7 @@
 
 #if defined(FALCON_ENGINE_WINDOW_QT)
 #include <FalconEngine/Core/GameEngineSettings.h>
-#include <FalconEngine/Platform/Qt/Common.h>
-#include <QtWidgets/QOpenGLWidget>
+#include <FalconEngine/Platform/Qt/QtLib.h>
 
 namespace FalconEngine
 {
@@ -14,13 +13,13 @@ class GameEngineInput;
 
 // @summary Game window represent the window system encapsulation. You would use
 // same GameWindow class for different window system like, GLFW, Qt etc.
-class FALCON_ENGINE_API GameEngineWindow : public QOpenGLWidget
+class FALCON_ENGINE_API PlatformGameEngineWindow : public QOpenGLWidget
 {
     Q_OBJECT
 public:
-    explicit GameEngineWindow(QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = Qt::WindowFlags());
+    explicit PlatformGameEngineWindow(QWidget *parent = Q_NULLPTR, Qt::WindowFlags flags = Qt::WindowFlags());
 public:
-    ~GameEngineWindow() = default;
+    ~PlatformGameEngineWindow() = default;
 
 public:
     /************************************************************************/

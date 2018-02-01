@@ -1,11 +1,10 @@
 #include <FalconEngine/Core/Timer.h>
 
 #if defined(FALCON_ENGINE_OS_WINDOWS)
-
 #include <stdexcept>
 #include <string>
 
-#include <windows.h>
+#include <FalconEngine/Platform/Win32/Win32Lib.h>
 
 namespace FalconEngine
 {

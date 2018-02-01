@@ -2,7 +2,7 @@
 #include <FalconEngine/Core/Macro.h>
 #if defined(FALCON_ENGINE_OS_WINDOWS)
 #include <string>
-#include <windows.h>
+#include <FalconEngine/Platform/Win32/Win32Lib.h>
 namespace FalconEngine
 {
 

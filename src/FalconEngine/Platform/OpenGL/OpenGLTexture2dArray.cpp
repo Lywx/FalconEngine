@@ -12,8 +12,8 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PlatformTexture2dArray::PlatformTexture2dArray(const Texture2dArray *textureArray) :
-    PlatformTextureArray(textureArray)
+PlatformTexture2dArray::PlatformTexture2dArray(Renderer *renderer, const Texture2dArray *textureArray) :
+    PlatformTextureArray(renderer, textureArray)
 {
     GLuint textureBindingPrevious = BindTexture(mTextureArrayPtr->mType, mTextureArrayObj);
 

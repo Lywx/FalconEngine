@@ -5,7 +5,8 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_API BufferCircular : public BufferAdaptor
+FALCON_ENGINE_CLASS_BEGIN BufferCircular :
+public BufferAdaptor
 {
 public:
     explicit BufferCircular(const std::shared_ptr<Buffer>& buffer, size_t bufferZoneSize);
@@ -27,5 +28,6 @@ private:
     // How much data should be keep safely at once without wrapping the data offset.
     size_t mBufferZoneSize;
 };
+FALCON_ENGINE_CLASS_END
 
 }

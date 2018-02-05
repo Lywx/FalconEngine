@@ -281,6 +281,7 @@ GameEngineWindowProcess(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 /************************************************************************/
 PlatformGameEngineWindow::PlatformGameEngineWindow(const HWND & handle) :
     mHandle(handle),
+    mData(nullptr),
     mInput(nullptr),
     mSettings(nullptr)
 {
@@ -339,8 +340,8 @@ PlatformGameEngineWindow::OnResuming()
 void
 PlatformGameEngineWindow::OnSizeChanged(int width, int height)
 {
-    _UNUSE(width);
-    _UNUSE(height);
+    _UNUSED(width);
+    _UNUSED(height);
 }
 
 void

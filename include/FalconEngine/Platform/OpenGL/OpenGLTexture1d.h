@@ -16,7 +16,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformTexture1d(const Texture1d *texture);
+    explicit PlatformTexture1d(Renderer *renderer, const Texture1d *texture);
     ~PlatformTexture1d();
 };
 

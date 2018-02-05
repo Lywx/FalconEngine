@@ -11,7 +11,7 @@
 #include <FalconEngine/Graphics/Renderer/Debug/DebugRenderMessageManager.h>
 #include <FalconEngine/Graphics/Renderer/Debug/DebugRendererHelper.h>
 #include <FalconEngine/Graphics/Renderer/Resource/BufferCircular.h>
-#include <FalconEngine/Graphics/Renderer/Resource/BufferResource.h>
+#include <FalconEngine/Graphics/Renderer/Resource/BufferGroup.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
@@ -187,8 +187,11 @@ private:
                       "must be primitive type.");
 
         auto vertexBuffer = make_shared<VertexBuffer>(
-                                channelElementNum, sizeof(DebugVertex),
-                                BufferStorageMode::Device, BufferUsage::Stream);
+                                channelElementNum,
+                                sizeof(DebugVertex),
+                                BufferStorageMode::Device,
+                                ResourceCreationAccessMode::GpuRead_CpuWrite,
+                                ResourceCreationAccessUsage::Stream);
 
         auto vertexBufferAdaptor = make_shared<BufferCircular>(vertexBuffer, vertexBuffer->GetCapacitySize() / 4);
 
@@ -203,14 +206,14 @@ private:
         auto visual = make_shared<Visual>(make_shared<Mesh>(primitive, nullptr));
         visualEffect->CreateInstance(visual.get(), mDebugEffectParams);
 
-        mDebugBufferResource->CreateChannel(channel, vertexBufferAdaptor, visual);
+        mDebugBufferGroup->CreateChannel(channel, vertexBufferAdaptor, visual);
     }
 
 private:
-    std::shared_ptr<BufferResource<BufferResourceChannel>> mDebugBufferResource;
-    const Font                                            *mDebugFont;
-    std::shared_ptr<DebugEffectParams>                     mDebugEffectParams;
-    std::shared_ptr<DebugRenderMessageManager>             mDebugMessageManager;
+    std::shared_ptr<BufferGroup<BufferChannel>> mDebugBufferGroup;
+    const Font                                      *mDebugFont;
+    std::shared_ptr<DebugEffectParams>               mDebugEffectParams;
+    std::shared_ptr<DebugRenderMessageManager>       mDebugMessageManager;
 };
 #pragma warning(default: 4251)
 

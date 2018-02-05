@@ -38,8 +38,7 @@ class Renderer;
 class GameEngineData;
 class GameEngineSettings;
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API GameEngineGraphics
+FALCON_ENGINE_CLASS_BEGIN GameEngineGraphics
 {
 public:
     /************************************************************************/
@@ -119,6 +118,6 @@ private:
     Renderer           *mMasterRenderer;
     UiRenderer         *mUiRenderer;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

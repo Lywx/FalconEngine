@@ -12,15 +12,16 @@ BakeAssets()
     auto assetProcessor = AssetProcessor();
 
     // Fonts
-    // assetProcessor.BakeFont("Content/Font/LuciadaConsoleDistanceField.fnt");
-    // assetProcessor.BakeFont("Content/Font/NSimSunDistanceField.fnt");
+    assetProcessor.BakeFont("Content/Font/LuciadaConsoleDistanceField.fnt");
+    assetProcessor.BakeFont("Content/Font/NSimSunDistanceField.fnt");
 
     // Models
-    // assetProcessor.BakeModel("Content/Model/Engine/Axe.dae");
-    // assetProcessor.BakeModel("Content/Model/Engine/Box.dae");
+    assetProcessor.BakeModel("Content/Model/Engine/Axe.dae");
+    assetProcessor.BakeModel("Content/Model/Engine/Box.dae");
+    assetProcessor.BakeModel("Content/Model/Bedroom.dae");
 
     // Texture
-    // assetProcessor.BakeTexture1d("Content/Texture/Engine/Gradiant 1d.png");
+    assetProcessor.BakeTexture1d("Content/Texture/Engine/Gradiant 1d.png");
 }
 
 int

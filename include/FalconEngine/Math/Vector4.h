@@ -21,6 +21,9 @@ class Vector3f;
 class FALCON_ENGINE_API Vector4f : public glm::vec4
 {
 public:
+    /************************************************************************/
+    /* Static Members                                                       */
+    /************************************************************************/
     const static Vector4f One;
     const static Vector4f Zero;
     const static Vector4f UnitX;
@@ -28,12 +31,21 @@ public:
     const static Vector4f UnitZ;
     const static Vector4f UnitW;
 
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
     Vector4f();
     Vector4f(const Vector3f& v, const float w);
     Vector4f(const float x, const float y, const float z, const float w);
 
     // Implicit Conversion
     Vector4f(const glm::vec4& v);
+
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
+    const float *
+    Data() const;
 };
 #pragma pack(pop)
 

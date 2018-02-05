@@ -9,13 +9,15 @@
 namespace FalconEngine
 {
 
+class Renderer;
+
 class FALCON_ENGINE_API PlatformShaderBuffer : public PlatformBuffer
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformShaderBuffer(const ShaderBuffer *StorageBuffer);
+    explicit PlatformShaderBuffer(Renderer *renderer, const ShaderBuffer *storageBuffer);
     ~PlatformShaderBuffer();
 
 public:
@@ -23,10 +25,10 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Enable(unsigned int bindingIndex);
+    Enable(Renderer *, unsigned int bindingIndex);
 
     void
-    Disable();
+    Disable(Renderer *);
 };
 
 }

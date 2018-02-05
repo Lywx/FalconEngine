@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
+#include <FalconEngine/Core/Macro.h>
 
 #if defined(FALCON_ENGINE_API_OPENGL)
 #include <FalconEngine/Graphics/Renderer/Primitive.h>
@@ -12,14 +12,16 @@
 #include <FalconEngine/Graphics/Renderer/State/BlendState.h>
 #include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
 #include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
+#include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
+
 namespace FalconEngine
 {
 
-FALCON_ENGINE_API extern const GLuint OpenGLBufferAccessModeMark[int(BufferAccessMode::Count)];
-FALCON_ENGINE_API extern const GLuint OpenGLBufferFlushModeMark[int(BufferFlushMode::Count)];
-FALCON_ENGINE_API extern const GLuint OpenGLBufferSynchronizationModeMark[int(BufferSynchronizationMode::Count)];
+FALCON_ENGINE_API extern const GLuint OpenGLBufferAccessModeBit[int(ResourceMapAccessMode::Count)];
+FALCON_ENGINE_API extern const GLuint OpenGLBufferFlushModeBit[int(ResourceMapFlushMode::Count)];
+FALCON_ENGINE_API extern const GLuint OpenGLBufferSynchronizationModeBit[int(ResourceMapSyncMode::Count)];
 
-FALCON_ENGINE_API extern const GLuint OpenGLBufferUsage[int(BufferUsage::Count)];
+FALCON_ENGINE_API GLuint OpenGLBufferUsage(ResourceCreationAccessMode mode, ResourceCreationAccessUsage usage);
 
 FALCON_ENGINE_API extern const GLuint OpenGLTextureType[int(TextureFormat::Count)];               // Texture element type
 FALCON_ENGINE_API extern const GLuint OpenGLTextureFormat[int(TextureFormat::Count)];             // Texture format
@@ -28,6 +30,7 @@ FALCON_ENGINE_API extern const GLuint OpenGLTextureTarget[int(TextureType::Count
 FALCON_ENGINE_API extern const GLuint OpenGLTextureTargetBinding[int(TextureType::Count)];
 
 FALCON_ENGINE_API extern const GLint  OpenGLSamplerFilterMode[int(SamplerMinificationFilter::Count)];
+FALCON_ENGINE_API extern const int    OpenGLSamplerMipmapMode[4];
 FALCON_ENGINE_API extern const GLint  OpenGLSamplerWrapMode[int(SamplerWrapMode::Count)];
 
 FALCON_ENGINE_API extern const GLenum OpenGLBlendFactorSource[int(BlendSourceFactor::Count)];

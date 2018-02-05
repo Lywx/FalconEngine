@@ -13,12 +13,8 @@ namespace FalconEngine
 FALCON_ENGINE_CLASS_BEGIN PlatformRendererData final
 {
 public:
-    explicit PlatformRendererData();
+    explicit PlatformRendererData(GLFWwindow * windowHandle);
     ~PlatformRendererData();
-
-public:
-    void
-    Initialize(GLFWwindow * windowHandle);
 
 public:
     GLFWwindow *mWindowHandle;

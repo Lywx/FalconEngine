@@ -16,20 +16,26 @@ class StencilTestState;
 class WireframeState;
 
 // @summary Render state information to avoid redundant state changes.
-class FALCON_ENGINE_API PlatformRendererState
+FALCON_ENGINE_CLASS_BEGIN PlatformRendererState
 {
 public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
     PlatformRendererState();
     ~PlatformRendererState() = default;
 
 public:
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
     void
-    Initialize(const BlendState *blendState,
-               const CullState *cullState,
-               const DepthTestState *depthTestState,
-               const OffsetState *offsetState,
-               const StencilTestState *stencilTestState,
-               const WireframeState *wireframeState);
+    Initialize(const BlendState * blendState,
+               const CullState * cullState,
+               const DepthTestState * depthTestState,
+               const OffsetState * offsetState,
+               const StencilTestState * stencilTestState,
+               const WireframeState * wireframeState);
 
 public:
     /************************************************************************/
@@ -77,6 +83,7 @@ public:
     // Wireframe Mode
     bool mWireframeEnabled;
 };
+FALCON_ENGINE_CLASS_END
 
 }
 

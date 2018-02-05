@@ -14,15 +14,16 @@ Texture2d::Texture2d()
 {
 }
 
-Texture2d::Texture2d(AssetSource        assetSource,
+Texture2d::Texture2d(AssetSource assetSource,
                      const std::string& fileName,
                      const std::string& filePath,
-                     int                width,
-                     int                height,
-                     TextureFormat      format,
-                     BufferUsage        usage,
-                     int                mipmapLevel) :
-    Texture(assetSource, fileName, filePath, width, height, 1, format, TextureType::Texture2d, BufferStorageMode::Host, usage, mipmapLevel)
+                     int width,
+                     int height,
+                     TextureFormat format,
+                     ResourceCreationAccessMode accessMode,
+                     ResourceCreationAccessUsage accessUsage,
+                     int mipmapLevel) :
+    Texture(assetSource, fileName, filePath, width, height, 1, format, TextureType::Texture2d, BufferStorageMode::Host, accessMode, accessUsage, mipmapLevel)
 {
 }
 

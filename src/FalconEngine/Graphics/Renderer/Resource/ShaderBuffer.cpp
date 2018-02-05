@@ -6,8 +6,11 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-ShaderBuffer::ShaderBuffer(size_t storageSize, BufferStorageMode storageMode, BufferUsage usage) :
-    Buffer(1, storageSize, storageMode, BufferType::ShaderBuffer, usage)
+ShaderBuffer::ShaderBuffer(size_t storageSize,
+                           BufferStorageMode storageMode,
+                           ResourceCreationAccessMode accessMode,
+                           ResourceCreationAccessUsage accessUsage) :
+    Buffer(1, storageSize, storageMode, BufferType::ShaderBuffer, accessMode, accessUsage)
 {
 }
 

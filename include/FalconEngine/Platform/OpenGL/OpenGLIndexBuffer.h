@@ -9,13 +9,15 @@
 namespace FalconEngine
 {
 
+class Renderer;
+
 class FALCON_ENGINE_API PlatformIndexBuffer : public PlatformBuffer
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformIndexBuffer(const IndexBuffer *indexBuffer);
+    explicit PlatformIndexBuffer(Renderer *renderer, const IndexBuffer *indexBuffer);
     ~PlatformIndexBuffer();
 
 public:
@@ -23,10 +25,10 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Enable();
+    Enable(Renderer *);
 
     void
-    Disable();
+    Disable(Renderer *);
 };
 
 }

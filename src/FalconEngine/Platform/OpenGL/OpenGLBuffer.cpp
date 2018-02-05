@@ -9,7 +9,7 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PlatformBuffer::PlatformBuffer(GLuint target, const Buffer *buffer) :
+PlatformBuffer::PlatformBuffer(Renderer *, GLuint target, const Buffer *buffer) :
     mBufferObj(0),
     mBufferPtr(buffer),
     mBufferTarget(target)
@@ -26,25 +26,26 @@ PlatformBuffer::~PlatformBuffer()
 /* Public Members                                                       */
 /************************************************************************/
 void *
-PlatformBuffer::Map(BufferAccessMode          access,
-                    BufferFlushMode           flush,
-                    BufferSynchronizationMode synchronization,
-                    int64_t                   offset,
-                    int64_t                   size)
+PlatformBuffer::Map(Renderer *,
+                    ResourceMapAccessMode access,
+                    ResourceMapFlushMode flush,
+                    ResourceMapSyncMode synchronization,
+                    int64_t offset,
+                    int64_t size)
 {
     glBindBuffer(mBufferTarget, mBufferObj);
 
     void *data = glMapBufferRange(mBufferTarget, offset, size,
-                                  OpenGLBufferAccessModeMark[int(access)] |
-                                  OpenGLBufferFlushModeMark[int(flush)] |
-                                  OpenGLBufferSynchronizationModeMark[int(synchronization)]);
+                                  OpenGLBufferAccessModeBit[int(access)] |
+                                  OpenGLBufferFlushModeBit[int(flush)] |
+                                  OpenGLBufferSynchronizationModeBit[int(synchronization)]);
     glBindBuffer(mBufferTarget, 0);
 
     return data;
 }
 
 void
-PlatformBuffer::Unmap()
+PlatformBuffer::Unmap(Renderer *)
 {
     glBindBuffer(mBufferTarget, mBufferObj);
     glUnmapBuffer(mBufferTarget);
@@ -52,7 +53,7 @@ PlatformBuffer::Unmap()
 }
 
 void
-PlatformBuffer::Flush(int64_t offset, int64_t size)
+PlatformBuffer::Flush(Renderer *, int64_t offset, int64_t size)
 {
     glBindBuffer(mBufferTarget, mBufferObj);
 
@@ -99,10 +100,15 @@ PlatformBuffer::Create()
 
     // Allocate buffer storage.
     glBufferData(mBufferTarget, mBufferPtr->GetCapacitySize(), nullptr,
-                 OpenGLBufferUsage[int(mBufferPtr->GetUsage())]);
+                 OpenGLBufferUsage(mBufferPtr->GetAccessMode(), mBufferPtr->GetAccessUsage()));
     glBindBuffer(mBufferTarget, 0);
 
-    if (mBufferPtr->GetStorageMode() == BufferStorageMode::Host)
+    auto storageMode = mBufferPtr->GetStorageMode();
+    if (storageMode == BufferStorageMode::Device)
+    {
+        // Do nothing.
+    }
+    else if (storageMode == BufferStorageMode::Host)
     {
         glBindBuffer(mBufferTarget, mBufferObj);
 
@@ -111,6 +117,10 @@ PlatformBuffer::Create()
         glUnmapBuffer(mBufferTarget);
 
         glBindBuffer(mBufferTarget, 0);
+    }
+    else
+    {
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
 }
 

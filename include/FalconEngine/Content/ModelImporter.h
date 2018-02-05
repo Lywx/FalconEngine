@@ -79,16 +79,18 @@ private:
     CreateAabb(const aiMesh *aiMesh);
 
     static std::shared_ptr<IndexBuffer>
-    CreateIndexBuffer(_IN_OUT_ Model        *model,
-                      _IN_     IndexType     indexType,
-                      _IN_     BufferUsage   indexBufferUsage,
+    CreateIndexBuffer(_IN_OUT_ Model *model,
+                      _IN_     IndexType indexType,
+                      _IN_     ResourceCreationAccessMode indexBufferAccessMode,
+                      _IN_     ResourceCreationAccessUsage indexBufferAccessUsage,
                       _IN_     const aiMesh *aiMesh);
 
     template <typename T>
     static std::shared_ptr<IndexBuffer>
-    CreateIndexBufferInternal(_IN_OUT_ Model        *model,
-                              _IN_     IndexType     indexType,
-                              _IN_     BufferUsage   indexBufferUsage,
+    CreateIndexBufferInternal(_IN_OUT_ Model *model,
+                              _IN_     IndexType indexType,
+                              _IN_     ResourceCreationAccessMode indexBufferAccessMode,
+                              _IN_     ResourceCreationAccessUsage indexBufferAccessUsage,
                               _IN_     const aiMesh *aiMesh)
     {
         // Sum space for the index buffer memory allocation.
@@ -104,15 +106,18 @@ private:
 
         // Memory allocation for index buffer.
         auto indexBuffer = std::make_shared<IndexBuffer>(
-                               indexNum, indexType,
-                               BufferStorageMode::Device, indexBufferUsage);
+                               indexNum,
+                               indexType,
+                               BufferStorageMode::Device,
+                               indexBufferAccessMode,
+                               indexBufferAccessUsage);
         {
             auto indexData = reinterpret_cast<T *>(
                                  sMasterRenderer->Map(
                                      indexBuffer.get(),
-                                     BufferAccessMode::WriteBuffer,
-                                     BufferFlushMode::Automatic,
-                                     BufferSynchronizationMode::Unsynchronized,
+                                     ResourceMapAccessMode::WriteBuffer,
+                                     ResourceMapFlushMode::Automatic,
+                                     ResourceMapSyncMode::Unsynchronized,
                                      indexBuffer->GetDataOffset(),
                                      indexBuffer->GetDataSize()));
             // Walk through each of the mesh's faces (a face is a mesh its triangle)
@@ -149,7 +154,7 @@ private:
     // position, normal and texture coordinate.
     static std::shared_ptr<VertexGroup>
     CreateVertexGroup(_IN_OUT_ Model                   *model,
-                      _IN_     const ModelUsageOption&  vertexBufferUsage,
+                      _IN_     const ModelAccessOption& vertexBufferAccess,
                       _IN_     const ModelLayoutOption& vertexBufferLayout,
                       _IN_     const aiMesh            *aiMesh);
 

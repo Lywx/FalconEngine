@@ -13,6 +13,7 @@
 #include <FalconEngine/Content/Asset.h>
 #include <FalconEngine/Core/Macro.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Resource.h>
 
 namespace FalconEngine
 {
@@ -36,7 +37,7 @@ GetTextureUnit(TextureUnit textureUnit)
     return int(textureUnit);
 }
 
-enum class FALCON_ENGINE_API TextureType
+enum class TextureType
 {
     None,
 
@@ -80,51 +81,54 @@ const size_t TexelSize[int(TextureFormat::Count)] =
 // @summary Thin layer describing what the most basic texture consists of. A texture
 // doesn't necessarily have data storage because the a texture could simply made of
 // array of existing textures.
-class FALCON_ENGINE_API Texture : public Asset
+FALCON_ENGINE_CLASS_BEGIN Texture :
+public Asset
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
     Texture();
-    Texture(AssetSource        assetSource,
-            const std::string& fileName,
-            const std::string& filePath,
-            int                width,
-            int                height,
-            int                depth,
-            TextureFormat      format,
-            TextureType        type,
-            BufferStorageMode  storageMode,
-            BufferUsage        usage,
-            int                mipmapLevel);
+    Texture(AssetSource assetSource,
+            const std::string & fileName,
+            const std::string & filePath,
+            int width,
+            int height,
+            int depth,
+            TextureFormat format,
+            TextureType type,
+            BufferStorageMode storageMode,
+            ResourceCreationAccessMode accessMode,
+            ResourceCreationAccessUsage accessUsage,
+            int mipmapLevel);
     virtual ~Texture();
 
 public:
+    // Texture buffer usage, needed during construction.
+    ResourceCreationAccessMode        mAccessMode;
+    ResourceCreationAccessUsage       mAccessUsage;
+
     // Texture RGBA color channel number.
-    int                mChannel = 0;
+    int                       mChannel = 0;
 
     // Texture dimension (width, height, depth).
-    std::array<int, 3> mDimension;
+    std::array<int, 3>        mDimension;
 
     // Texture binary format, needed during construction.
-    TextureFormat      mFormat;
+    TextureFormat             mFormat;
 
-    // Texture mipmap level, needed during construction.
-    int                mMipmapLevel;
+    // Texture                mipmap level, needed during construction.
+    int                       mMipmapLevel;
 
     // Texture type, needed during construction.
-    TextureType        mType;
+    TextureType               mType;
 
     // Texture buffer specific data.
-    unsigned char     *mData;
-    size_t             mDataSize;
+    unsigned char            *mData;
+    size_t                    mDataSize;
 
     // Texture buffer storage mode, currently only in Host mode.
-    BufferStorageMode  mStorageMode;
-
-    // Texture buffer usage, needed during construction.
-    BufferUsage        mUsage;
+    BufferStorageMode         mStorageMode;
 
     /************************************************************************/
     /* Asset Importing and Exporting                                        */
@@ -136,6 +140,9 @@ public:
     {
         ar & cereal::base_class<Asset>(this);
 
+        ar & mAccessMode;
+        ar & mAccessUsage;
+
         ar & mChannel;
         ar & mDimension;
         ar & mFormat;
@@ -146,9 +153,9 @@ public:
         ar & mDataSize;
 
         ar & mStorageMode;
-        ar & mUsage;
     }
 };
+FALCON_ENGINE_CLASS_END
 
 }
 

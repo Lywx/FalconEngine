@@ -8,20 +8,23 @@
 namespace FalconEngine
 {
 
+enum class SamplerMagnificationFilter
+{
+    Nearest,
+    Linear,
+
+    Count,
+};
+
 enum class SamplerMinificationFilter
 {
     Nearest,
     Linear,
 
-    NearestMipmapNearest,
-    NearestMipmapLinear,
-    LinearMipmapNearest,
-    LinearMipmapLinear,
-
     Count,
 };
 
-enum class SamplerMagnificationFilter
+enum class SamplerMipmapFilter
 {
     Nearest,
     Linear,
@@ -43,8 +46,9 @@ class FALCON_ENGINE_API Sampler
 {
 public:
     Sampler();
-    Sampler(SamplerMinificationFilter minificationFilter,
-            SamplerMagnificationFilter magnificationFilter,
+    Sampler(SamplerMagnificationFilter magnificationFilter,
+            SamplerMinificationFilter minificationFilter,
+            SamplerMipmapFilter mipmapFilter,
             SamplerWrapMode wrapS,
             SamplerWrapMode wrapT,
             SamplerWrapMode wrapR);
@@ -52,8 +56,10 @@ public:
     virtual ~Sampler();
 
 public:
-    SamplerMinificationFilter  mMinificationFilter;
     SamplerMagnificationFilter mMagnificationFilter;
+    SamplerMinificationFilter  mMinificationFilter;
+    bool                       mMipmapEnabled;
+    SamplerMipmapFilter        mMipmapFilter;
     SamplerWrapMode            mWrapS;
     SamplerWrapMode            mWrapT;
     SamplerWrapMode            mWrapR;

@@ -12,16 +12,17 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    TextureArray(AssetSource        assetSource,
+    TextureArray(AssetSource assetSource,
                  const std::string& fileName,
                  const std::string& filePath,
-                 int                width,
-                 int                height,
-                 int                depth,
-                 TextureFormat      format,
-                 TextureType        type,
-                 BufferUsage        usage = BufferUsage::Static,
-                 int                mipmapLevel = 0);
+                 int width,
+                 int height,
+                 int depth,
+                 TextureFormat format,
+                 TextureType type,
+                 ResourceCreationAccessMode accessMode = ResourceCreationAccessMode::GpuRead,
+                 ResourceCreationAccessUsage accessUsage = ResourceCreationAccessUsage::Static,
+                 int mipmapLevel = 0);
     virtual ~TextureArray();
 
 public:

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
+#include <FalconEngine/Core/Macro.h>
 
 #if defined(FALCON_ENGINE_API_OPENGL)
 #include <map>
@@ -8,9 +8,12 @@
 #include <string>
 
 #include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
+#include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
 
 namespace FalconEngine
 {
+
+class Renderer;
 
 class FALCON_ENGINE_API PlatformShader
 {
@@ -18,7 +21,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformShader(Shader *shader);
+    explicit PlatformShader(Renderer *, Shader *shader);
     ~PlatformShader();
 
 public:
@@ -38,10 +41,10 @@ public:
     GetProgram() const;
 
     void
-    Enable() const;
+    Enable(Renderer *) const;
 
     void
-    Disable() const;
+    Disable(Renderer *) const;
 
     // @remark This function is primarily used in debugging.
     void

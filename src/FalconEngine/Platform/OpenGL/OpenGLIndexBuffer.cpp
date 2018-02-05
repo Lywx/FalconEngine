@@ -8,8 +8,8 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PlatformIndexBuffer::PlatformIndexBuffer(const IndexBuffer *indexBuffer) :
-    PlatformBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer)
+PlatformIndexBuffer::PlatformIndexBuffer(Renderer *renderer, const IndexBuffer *indexBuffer) :
+    PlatformBuffer(renderer, GL_ELEMENT_ARRAY_BUFFER, indexBuffer)
 {
 }
 
@@ -21,13 +21,13 @@ PlatformIndexBuffer::~PlatformIndexBuffer()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PlatformIndexBuffer::Enable()
+PlatformIndexBuffer::Enable(Renderer *)
 {
     glBindBuffer(mBufferTarget, mBufferObj);
 }
 
 void
-PlatformIndexBuffer::Disable()
+PlatformIndexBuffer::Disable(Renderer *)
 {
     glBindBuffer(mBufferTarget, 0);
 }

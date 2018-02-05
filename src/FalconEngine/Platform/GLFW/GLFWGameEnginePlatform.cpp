@@ -74,6 +74,8 @@ GameEnginePlatform::InitializeWindowPlatform()
     }
 
     // Create GLFW context and window.
+    // TODO(Wuxiang): A lot of things to do to better the backbuffer format.
+    // http://www.glfw.org/docs/latest/window_guide.html
     auto windowHandle = glfwCreateWindow(gameEngineSettings->mWindowWidth,
                                          gameEngineSettings->mWindowHeight,
                                          gameEngineSettings->mWindowTitle.c_str(),

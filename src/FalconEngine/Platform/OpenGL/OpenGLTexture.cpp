@@ -10,7 +10,7 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PlatformTexture::PlatformTexture(const Texture *texture) :
+PlatformTexture::PlatformTexture(Renderer *renderer, const Texture *texture) :
     mBufferObj(0),
     mTextureObj(0),
     mTextureObjPrevious(0),
@@ -23,7 +23,7 @@ PlatformTexture::PlatformTexture(const Texture *texture) :
     mType = OpenGLTextureType[int(texture->mFormat)];
     mFormat = OpenGLTextureFormat[int(texture->mFormat)];
     mFormatInternal = OpenGLTextureInternalFormat[int(texture->mFormat)];
-    mUsage = OpenGLBufferUsage[int(texture->mUsage)];
+    mUsage = OpenGLBufferUsage(texture->mAccessMode, texture->mAccessUsage);
 
     // NEW(Wuxiang): Add texture / image's write / read support.
     // NEW(Wuxiang): Add mipmap support.
@@ -35,12 +35,14 @@ PlatformTexture::PlatformTexture(const Texture *texture) :
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
     // Fill in the texture data.
-    void *textureData = Map(BufferAccessMode::WriteBuffer,
-                            BufferFlushMode::Automatic,
-                            BufferSynchronizationMode::Unsynchronized,
-                            0, texture->mDataSize);
+    void *textureData = Map(renderer,
+                            ResourceMapAccessMode::WriteBuffer,
+                            ResourceMapFlushMode::Automatic,
+                            ResourceMapSyncMode::Unsynchronized,
+                            0,
+                            texture->mDataSize);
     memcpy(textureData, texture->mData, texture->mDataSize);
-    Unmap();
+    Unmap(renderer);
 
     // Generate texture object.
     glGenTextures(1, &mTextureObj);
@@ -59,35 +61,35 @@ PlatformTexture::~PlatformTexture()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PlatformTexture::Enable(int textureUnit)
+PlatformTexture::Enable(Renderer *, int textureUnit)
 {
     glActiveTexture(GL_TEXTURE0 + textureUnit);
     mTextureObjPrevious = BindTexture(mTexturePtr->mType, mTextureObj);
 }
 
 void
-PlatformTexture::Disable(int textureUnit)
+PlatformTexture::Disable(Renderer *, int textureUnit)
 {
     glActiveTexture(GL_TEXTURE0 + textureUnit);
     BindTexture(mTexturePtr->mType, mTextureObjPrevious);
 }
 
 void *
-PlatformTexture::Map(BufferAccessMode access, BufferFlushMode flush, BufferSynchronizationMode synchronization, int64_t offset, int64_t size)
+PlatformTexture::Map(Renderer *, ResourceMapAccessMode access, ResourceMapFlushMode flush, ResourceMapSyncMode synchronization, int64_t offset, int64_t size)
 {
     // NEW(Wuxiang): Add mipmap support.
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBufferObj);
     void *data = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, offset, size,
-                                  OpenGLBufferAccessModeMark[int(access)] |
-                                  OpenGLBufferFlushModeMark[int(flush)] |
-                                  OpenGLBufferSynchronizationModeMark[int(synchronization)]);
+                                  OpenGLBufferAccessModeBit[int(access)] |
+                                  OpenGLBufferFlushModeBit[int(flush)] |
+                                  OpenGLBufferSynchronizationModeBit[int(synchronization)]);
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
     return data;
 }
 
 void
-PlatformTexture::Unmap()
+PlatformTexture::Unmap(Renderer *)
 {
     // NEW(Wuxiang): Add mipmap support.
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBufferObj);

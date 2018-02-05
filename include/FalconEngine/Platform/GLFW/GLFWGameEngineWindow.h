@@ -9,6 +9,7 @@
 namespace FalconEngine
 {
 
+class GameEngineData;
 class GameEngineInput;
 
 // @summary Game window represent the window system encapsulation. You would use
@@ -38,6 +39,9 @@ public:
     void
     ScrollCallback(GLFWwindow *window, double x, double y);
 
+    void
+    WindowCloseCallback(GLFWwindow *window);
+
 private:
     /************************************************************************/
     /* Private Members                                                      */
@@ -52,6 +56,7 @@ public:
     GLFWwindow *mHandle;
 
 private:
+    GameEngineData     *mData;
     GameEngineInput    *mInput;
     GameEngineSettings *mSettings;
 };

@@ -18,10 +18,11 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    VertexBuffer(int               vertexNum,
-                 size_t            vertexSize,
+    VertexBuffer(int vertexNum,
+                 size_t vertexSize,
                  BufferStorageMode storageMode,
-                 BufferUsage       usage);
+                 ResourceCreationAccessMode accessMode,
+                 ResourceCreationAccessUsage accessUsage);
     virtual ~VertexBuffer();
 
 public:

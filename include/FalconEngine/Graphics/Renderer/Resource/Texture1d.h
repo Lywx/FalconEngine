@@ -19,13 +19,14 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
     Texture1d();
-    Texture1d(AssetSource        assetSource,
+    Texture1d(AssetSource assetSource,
               const std::string& fileName,
               const std::string& filePath,
-              int                width,
-              TextureFormat      format,
-              BufferUsage        usage = BufferUsage::Static,
-              int                mipmapLevel = 0);
+              int width,
+              TextureFormat format,
+              ResourceCreationAccessMode accessMode = ResourceCreationAccessMode::GpuRead,
+              ResourceCreationAccessUsage accessUsage = ResourceCreationAccessUsage::Static,
+              int mipmapLevel = 0);
     virtual ~Texture1d();
 
 public:

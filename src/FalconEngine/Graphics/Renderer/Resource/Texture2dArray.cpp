@@ -9,17 +9,18 @@ FALCON_ENGINE_TEXTURE_IMPLEMENT(Texture2dArray, TextureType::Texture2dArray);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Texture2dArray::Texture2dArray(AssetSource        assetSource,
+Texture2dArray::Texture2dArray(AssetSource assetSource,
                                const std::string& fileName,
                                const std::string& filePath,
-                               int                width,
-                               int                height,
-                               int                depth,
-                               TextureFormat      format,
-                               BufferUsage        usage,
-                               int                mipmapLevel) :
+                               int width,
+                               int height,
+                               int depth,
+                               TextureFormat format,
+                               ResourceCreationAccessMode accessMode,
+                               ResourceCreationAccessUsage accessUsage,
+                               int mipmapLevel) :
     TextureArray(assetSource, fileName, filePath, width, height, depth, format,
-                 TextureType::Texture2dArray, usage, mipmapLevel)
+                 TextureType::Texture2dArray, accessMode, accessUsage, mipmapLevel)
 {
 }
 

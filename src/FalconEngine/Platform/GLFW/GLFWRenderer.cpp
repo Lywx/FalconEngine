@@ -19,8 +19,7 @@ Renderer::InitializePlatform()
     InitializeDataPlatform();
     InitializeStatePlatform();
 
-    SetWindowPlatform(mWindow.mWidth, mWindow.mHeight, mWindow.mNear, mWindow.mFar);
-    SetViewportPlatform(mViewport.mLeft, mViewport.mBottom, mViewport.GetWidth(), mViewport.GetHeight());
+    SetViewportPlatform(mViewport.mLeft, mViewport.mBottom, mViewport.GetWidth(), mViewport.GetHeight(), mViewport.mNear, mViewport.mFar);
 }
 
 void
@@ -28,10 +27,8 @@ Renderer::InitializeDataPlatform()
 {
     // Initialize platform renderer data.
     mData = std::unique_ptr<PlatformRendererData, PlatformRendererDataDeleter>(
-                new PlatformRendererData(),
+                new PlatformRendererData(GameEnginePlatform::GetInstance()->mWindow->mHandle),
                 PlatformRendererDataDeleter());
-    mData->Initialize(
-        GameEnginePlatform::GetInstance()->mWindow->mHandle);
 }
 
 void
@@ -59,10 +56,9 @@ Renderer::DestroyPlatform()
 /* Window Management                                                    */
 /************************************************************************/
 void
-Renderer::SetWindowPlatform(int width, int height, float near, float far)
+Renderer::SetWindowPlatform(int width, int height)
 {
     glfwSetWindowSize(mData->mWindowHandle, width, height);
-    glDepthRange(GLclampd(near), GLclampd(far));
 }
 
 /************************************************************************/

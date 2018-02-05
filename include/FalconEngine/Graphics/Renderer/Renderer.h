@@ -38,9 +38,9 @@ class VisualEffectPass;
 /* Renderer Resource                                                    */
 /************************************************************************/
 class Buffer;
-enum class BufferAccessMode;
-enum class BufferFlushMode;
-enum class BufferSynchronizationMode;
+enum class ResourceMapAccessMode;
+enum class ResourceMapFlushMode;
+enum class ResourceMapSyncMode;
 class IndexBuffer;
 class ShaderBuffer;
 class VertexBuffer;
@@ -147,6 +147,7 @@ public:
     const Viewport *
     GetViewport() const;
 
+    // @note You aren't allowed to change near and far of the viewport.
     void
     SetViewport(float x, float y, float width, float height);
 
@@ -154,8 +155,10 @@ private:
     // @note The viewport is specified in right-handed screen
     // coordinates. The origin is the lower-left corner of the screen, the
     // y-axis points upward, and the x-axis points rightward.
+    //
+    // @note You aren't allowed to change near and far of the viewport.
     void
-    SetViewportData(float x, float y, float width, float height);
+    SetViewportData(float x, float y, float width, float height, float near, float far);
 
 public:
     const Window *
@@ -185,26 +188,26 @@ public:
     Disable(const Buffer *buffer);
 
     void *
-    Map(const Buffer             *buffer,
-        BufferAccessMode          access,
-        BufferFlushMode           flush,
-        BufferSynchronizationMode synchronization,
-        int64_t                   offset,
-        int64_t                   size);
+    Map(const Buffer *buffer,
+        ResourceMapAccessMode access,
+        ResourceMapFlushMode flush,
+        ResourceMapSyncMode sync,
+        int64_t offset,
+        int64_t size);
 
     void
     Unmap(const Buffer *buffer);
 
     void
     Flush(const Buffer *buffer,
-        int64_t       offset,
-        int64_t       size);
+          int64_t offset,
+          int64_t size);
 
     void
-    Update(const Buffer             *buffer,
-        BufferAccessMode          access,
-        BufferFlushMode           flush,
-        BufferSynchronizationMode synchronization);
+    Update(const Buffer *buffer,
+           ResourceMapAccessMode access,
+           ResourceMapFlushMode flush,
+           ResourceMapSyncMode sync);
 
     /************************************************************************/
     /* Shader Buffer Management                                             */
@@ -222,20 +225,20 @@ public:
     Disable(const ShaderBuffer *shaderBuffer);
 
     void *
-    Map(const ShaderBuffer       *shaderBuffer,
-        BufferAccessMode          access,
-        BufferFlushMode           flush,
-        BufferSynchronizationMode synchronization,
-        int64_t                   offset,
-        int64_t                   size);
+    Map(const ShaderBuffer *shaderBuffer,
+        ResourceMapAccessMode access,
+        ResourceMapFlushMode flush,
+        ResourceMapSyncMode sync,
+        int64_t offset,
+        int64_t size);
 
     void
     Unmap(const ShaderBuffer *shaderBuffer);
 
     void
     Flush(const ShaderBuffer *shaderBuffer,
-        int64_t             offset,
-        int64_t             size);
+          int64_t offset,
+          int64_t size);
 
     /************************************************************************/
     /* Index Buffer Management                                              */
@@ -254,9 +257,9 @@ public:
 
     void *
     Map(const IndexBuffer        *indexBuffer,
-        BufferAccessMode          access,
-        BufferFlushMode           flush,
-        BufferSynchronizationMode synchronization,
+        ResourceMapAccessMode          access,
+        ResourceMapFlushMode           flush,
+        ResourceMapSyncMode synchronization,
         int64_t                   offset,
         int64_t                   size);
 
@@ -265,8 +268,8 @@ public:
 
     void
     Flush(const IndexBuffer *indexBuffer,
-        int64_t            offset,
-        int64_t            size);
+          int64_t            offset,
+          int64_t            size);
 
     /************************************************************************/
     /* Vertex Buffer Management                                             */
@@ -281,20 +284,20 @@ public:
     // @param stride - stride between contiguous data in byte.
     void
     Enable(const VertexBuffer *vertexBuffer,
-        unsigned int        bindingIndex,
-        int64_t             offset,
-        int                 stride);
+           unsigned int        bindingIndex,
+           int64_t             offset,
+           int                 stride);
 
     void
     Disable(const VertexBuffer *vertexBuffer, unsigned int bindingIndex);
 
     void *
-    Map(const VertexBuffer       *vertexBuffer,
-        BufferAccessMode          access,
-        BufferFlushMode           flush,
-        BufferSynchronizationMode synchronization,
-        int64_t                   offset,
-        int64_t                   size);
+    Map(const VertexBuffer *vertexBuffer,
+        ResourceMapAccessMode access,
+        ResourceMapFlushMode flush,
+        ResourceMapSyncMode sync,
+        int64_t offset,
+        int64_t size);
 
     void
     Unmap(const VertexBuffer *vertexBuffer);
@@ -362,13 +365,13 @@ public:
     Disable(int textureUnit, const Texture1d *texture);
 
     void *
-    Map(const Texture1d          *texture,
-        int                       mipmapLevel,
-        BufferAccessMode          access,
-        BufferFlushMode           flush,
-        BufferSynchronizationMode synchronization,
-        int64_t                   offset,
-        int64_t                   size);
+    Map(const Texture1d *texture,
+        int mipmapLevel,
+        ResourceMapAccessMode access,
+        ResourceMapFlushMode flush,
+        ResourceMapSyncMode sync,
+        int64_t offset,
+        int64_t size);
 
     void
     Unmap(const Texture1d *texture, int mipmapLevel);
@@ -391,9 +394,9 @@ public:
     void *
     Map(const Texture2d          *texture,
         int                       mipmapLevel,
-        BufferAccessMode          access,
-        BufferFlushMode           flush,
-        BufferSynchronizationMode synchronization,
+        ResourceMapAccessMode          access,
+        ResourceMapFlushMode           flush,
+        ResourceMapSyncMode synchronization,
         int64_t                   offset,
         int64_t                   size);
 
@@ -411,26 +414,26 @@ public:
 
     void
     Enable(int                   textureUnit,
-        const Texture2dArray *textureArray);
+           const Texture2dArray *textureArray);
 
     void
     Disable(int                   textureUnit,
-        const Texture2dArray *textureArray);
+            const Texture2dArray *textureArray);
 
     void *
-    Map(const Texture2dArray     *textureArray,
-        int                       textureIndex,
-        int                       mipmapLevel,
-        BufferAccessMode          access,
-        BufferFlushMode           flush,
-        BufferSynchronizationMode synchronization,
-        int64_t                   offset,
-        int64_t                   size);
+    Map(const Texture2dArray *textureArray,
+        int textureIndex,
+        int mipmapLevel,
+        ResourceMapAccessMode access,
+        ResourceMapFlushMode flush,
+        ResourceMapSyncMode sync,
+        int64_t offset,
+        int64_t size);
 
     void
     Unmap(const Texture2dArray *textureArray,
-        int                   textureIndex,
-        int                   mipmapLevel);
+          int                   textureIndex,
+          int                   mipmapLevel);
 
     /************************************************************************/
     /* Texture 3D Management                                                */
@@ -606,13 +609,13 @@ public:
     // coordinates. The origin is the lower-left corner of the screen, the
     // y-axis points upward, and the x-axis points rightward.
     void
-    SetViewportPlatform(float x, float y, float width, float height);
+    SetViewportPlatform(float x, float y, float width, float height, float near, float far);
 
     /************************************************************************/
     /* Window Management                                                    */
     /************************************************************************/
     void
-    SetWindowPlatform(int width, int height, float near, float far);
+    SetWindowPlatform(int width, int height);
 
 public:
     /************************************************************************/
@@ -631,6 +634,9 @@ public:
     ClearFrameBufferPlatform(const Vector4f& color, float depth, unsigned int stencil);
 
     void
+    RecoverDeviceLostPlatform();
+
+    void
     SwapFrameBufferPlatform();
 
     /************************************************************************/
@@ -639,7 +645,8 @@ public:
     void
     DrawPrimitivePlatform(const Primitive *primitive, int instancingNum);
 
-private:
+// internal
+public:
     std::unique_ptr<PlatformRendererData, PlatformRendererDataDeleter>   mData;
     std::unique_ptr<PlatformRendererState, PlatformRendererStateDeleter> mState;
 };
@@ -666,7 +673,7 @@ FALCON_ENGINE_CHECK_NULLPTR(resource); \
 \
 if (resourceTable.find(resource) == resourceTable.end()) \
 { \
-    resourceTable[resource] = new PlatformResourceKlass(resource); \
+    resourceTable[resource] = new PlatformResourceKlass(this, resource); \
 }
 
 #define FALCON_ENGINE_RENDERER_UNBIND_IMPLEMENT(resource, resourceTable) \
@@ -707,11 +714,11 @@ if (iter != resourceTable.end()) \
 } \
 else \
 { \
-    resource##Platform = new PlatformResourceKlass(resource); \
+    resource##Platform = new PlatformResourceKlass(this, resource); \
     resourceTable[resource] = resource##Platform; \
 } \
 \
-resource##Platform->Enable();
+resource##Platform->Enable(this);
 
 #define FALCON_ENGINE_RENDERER_DISABLE_IMPLEMENT(resource, resourceTable) \
 FALCON_ENGINE_CHECK_NULLPTR(resource); \
@@ -720,7 +727,7 @@ auto iter = resourceTable.find(resource); \
 if (iter != resourceTable.end()) \
 { \
     auto resource##Platform = iter->second; \
-    resource##Platform->Disable(); \
+    resource##Platform->Disable(this); \
 }
 
 #define FALCON_ENGINE_RENDERER_MAP_IMPLEMENT(resource, resourceTable, PlatformResourceKlass) \
@@ -734,11 +741,11 @@ if (iter != resourceTable.end()) \
 } \
 else \
 { \
-    resource##Platform = new PlatformResourceKlass(resource); \
+    resource##Platform = new PlatformResourceKlass(this, resource); \
     resourceTable[resource] = resource##Platform; \
 } \
 \
-return resource##Platform->Map(access, flush, synchronization, offset, size);
+return resource##Platform->Map(this, access, flush, sync, offset, size);
 
 #define FALCON_ENGINE_RENDERER_UNMAP_IMPLEMENT(resource, resourceTable) \
 FALCON_ENGINE_CHECK_NULLPTR(resource); \
@@ -747,7 +754,7 @@ auto iter = resourceTable.find(resource); \
 if (iter != resourceTable.end()) \
 { \
     auto resource##Platform = iter->second; \
-    resource##Platform->Unmap(); \
+    resource##Platform->Unmap(this); \
 }
 
 #define FALCON_ENGINE_RENDERER_FLUSH_IMPLEMENT(resource, resourceTable) \
@@ -757,7 +764,7 @@ auto iter = resourceTable.find(resource); \
 if (iter != resourceTable.end()) \
 { \
     auto resource##Platform = iter->second; \
-    resource##Platform->Flush(offset, size); \
+    resource##Platform->Flush(this, offset, size); \
 } \
 else \
 { \
@@ -792,11 +799,11 @@ if (iter != textureTable.end()) \
 } \
 else \
 { \
-    texture##Platform = new PlatformTextureKlass(texture); \
+    texture##Platform = new PlatformTextureKlass(this, texture); \
     textureTable[texture] = texture##Platform; \
 } \
 \
-texture##Platform->Enable(textureUnit);
+texture##Platform->Enable(this, textureUnit);
 
 #define FALCON_ENGINE_RENDERER_TEXTURE_DISABLE_IMPLEMENT(texture, textureTable) \
 FALCON_ENGINE_CHECK_NULLPTR(texture); \
@@ -805,7 +812,7 @@ auto iter = textureTable.find(texture); \
 if (iter != textureTable.end()) \
 { \
     auto texture##Platform = iter->second; \
-    texture##Platform->Disable(textureUnit); \
+    texture##Platform->Disable(this, textureUnit); \
 }
 
 #define FALCON_ENGINE_RENDERER_TEXTURE_MAP_IMPLEMENT(texture, textureTable, PlatformTextureKlass) \
@@ -819,11 +826,11 @@ if (iter != textureTable.end()) \
 } \
 else \
 { \
-    texturePlatform = new PlatformTextureKlass(texture); \
+    texturePlatform = new PlatformTextureKlass(this, texture); \
     textureTable[texture] = texturePlatform; \
 } \
 \
-return texturePlatform->Map(access, flush, synchronization, offset, size);
+return texturePlatform->Map(this, access, flush, sync, offset, size);
 
 #define FALCON_ENGINE_RENDERER_TEXTURE_UNMAP_IMPLEMENT(texture, textureTable) \
 FALCON_ENGINE_CHECK_NULLPTR(texture); \
@@ -832,7 +839,7 @@ auto iter = textureTable.find(texture); \
 if (iter != textureTable.end()) \
 { \
     auto texturePlatform = iter->second; \
-    texturePlatform->Unmap(); \
+    texturePlatform->Unmap(this); \
 }
 
 #define FALCON_ENGINE_RENDERER_TEXTURE_ARRAY_MAP_IMPLEMENT(textureArray, textureArrayTable, PlatformTextureArrayKlass) \
@@ -846,11 +853,11 @@ if (iter != textureArrayTable.end()) \
 } \
 else \
 { \
-    texturePlatform = new PlatformTextureArrayKlass(textureArray); \
+    texturePlatform = new PlatformTextureArrayKlass(this, textureArray); \
     textureArrayTable[textureArray] = texturePlatform; \
 } \
 \
-return texturePlatform->Map(textureIndex, access, flush, synchronization, offset, size);
+return texturePlatform->Map(this, textureIndex, access, flush, sync, offset, size);
 
 #define FALCON_ENGINE_RENDERER_TEXTURE_ARRAY_UNMAP_IMPLEMENT(textureArray, textureArrayTable) \
 FALCON_ENGINE_CHECK_NULLPTR(textureArray); \
@@ -859,5 +866,5 @@ auto iter = textureArrayTable.find(textureArray); \
 if (iter != textureArrayTable.end()) \
 { \
     auto texturePlatform = iter->second; \
-    texturePlatform->Unmap(textureIndex); \
+    texturePlatform->Unmap(this, textureIndex); \
 }

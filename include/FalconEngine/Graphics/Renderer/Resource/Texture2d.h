@@ -20,14 +20,15 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
     Texture2d();
-    Texture2d(AssetSource        assetSource,
+    Texture2d(AssetSource assetSource,
               const std::string& fileName,
               const std::string& filePath,
-              int                width,
-              int                height,
-              TextureFormat      format,
-              BufferUsage        usage = BufferUsage::Static,
-              int                mipmapLevel = 0);
+              int width,
+              int height,
+              TextureFormat format,
+              ResourceCreationAccessMode accessMode = ResourceCreationAccessMode::GpuRead,
+              ResourceCreationAccessUsage accessUsage = ResourceCreationAccessUsage::Static,
+              int mipmapLevel = 0);
     virtual ~Texture2d();
 
 public:

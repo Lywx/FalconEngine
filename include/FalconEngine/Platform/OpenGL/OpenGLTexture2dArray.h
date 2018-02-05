@@ -18,7 +18,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformTexture2dArray(const Texture2dArray *textures);
+    explicit PlatformTexture2dArray(Renderer *, const Texture2dArray *textures);
     ~PlatformTexture2dArray();
 };
 #pragma warning(default: 4251)

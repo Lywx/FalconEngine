@@ -8,7 +8,7 @@ int main(int argc, char **argv)
 {
     auto gameEngineSettings = GameEngineSettings::GetInstance();
     gameEngineSettings->mMouseVisible = true;
-    gameEngineSettings->mMouseLimited = false;
+    gameEngineSettings->mMouseLimited = true;
     gameEngineSettings->mWindowWidth = 1600;
     gameEngineSettings->mWindowHeight = 900;
 

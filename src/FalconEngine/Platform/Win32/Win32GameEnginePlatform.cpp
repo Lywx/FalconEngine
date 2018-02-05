@@ -5,6 +5,7 @@
 #include <FalconEngine/Core/GameEngineData.h>
 #include <FalconEngine/Core/GameEngineSettings.h>
 #include <FalconEngine/Core/GameEngineDebugger.h>
+#include <FalconEngine/Platform/Win32/Win32GameEngineWindow.h>
 #include <FalconEngine/Platform/Win32/Win32Lib.h>
 
 #if defined(FALCON_ENGINE_API_DIRECT3D)

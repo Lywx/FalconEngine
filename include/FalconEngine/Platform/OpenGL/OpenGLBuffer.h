@@ -8,13 +8,15 @@
 namespace FalconEngine
 {
 
+class Renderer;
+
 class FALCON_ENGINE_API PlatformBuffer
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformBuffer(GLuint target, const Buffer *buffer);
+    explicit PlatformBuffer(Renderer *, GLuint target, const Buffer *buffer);
     virtual ~PlatformBuffer();
 
 public:
@@ -26,19 +28,20 @@ public:
     //
     // @return Buffer memory pointer
     void *
-    Map(BufferAccessMode          access,
-        BufferFlushMode           flush,
-        BufferSynchronizationMode synchronization,
-        int64_t                   offset,
-        int64_t                   size);
+    Map(Renderer *,
+        ResourceMapAccessMode access,
+        ResourceMapFlushMode flush,
+        ResourceMapSyncMode synchronization,
+        int64_t offset,
+        int64_t size);
 
     // @summary Unmap buffer.
     void
-    Unmap();
+    Unmap(Renderer *);
 
     // @remark Offset is relative to the start of the currently mapped range of buffer.
     void
-    Flush(int64_t offset, int64_t size);
+    Flush(Renderer *, int64_t offset, int64_t size);
 
 protected:
     /************************************************************************/

@@ -7,8 +7,8 @@
 #include <string>
 #include <vector>
 
-#include <FalconEngine/Graphics/Renderer/Font/FontResourceChannel.h>
-#include <FalconEngine/Graphics/Renderer/Resource/BufferResource.h>
+#include <FalconEngine/Graphics/Renderer/Font/FontBufferChannel.h>
+#include <FalconEngine/Graphics/Renderer/Resource/BufferGroup.h>
 
 #include <FalconEngine/Math/Color.h>
 #include <FalconEngine/Math/Handedness.h>
@@ -18,7 +18,7 @@ namespace FalconEngine
 {
 
 class Font;
-class FontResourceChannel;
+class FontBufferChannel;
 class FontText;
 
 class Renderer;
@@ -96,19 +96,19 @@ private:
               Color               textColor = ColorPalette::White,
               float               textLineWidth = std::numeric_limits<float>().max());
 
-    const std::shared_ptr<FontResourceChannel>&
+    const std::shared_ptr<FontBufferChannel>&
     FindChannel(const Font *font);
 
     void
     FillText(_IN_     const Font          *font,
-             _IN_OUT_ FontResourceChannel *fontChannelInfo);
+             _IN_OUT_ FontBufferChannel *fontChannelInfo);
 
 private:
     // NOTE(Wuxiang): Since the shader sampler could not be indexed using vertex
     // attribute input, it is impossible to use vertex attribute to do texture
     // selection. So I need to use different draw call to implement multiple font
     // support.
-    std::shared_ptr<BufferResource<FontResourceChannel>> mTextBufferResource;
+    std::shared_ptr<BufferGroup<FontBufferChannel>> mTextBufferGroup;
 
 };
 #pragma warning(default: 4251)

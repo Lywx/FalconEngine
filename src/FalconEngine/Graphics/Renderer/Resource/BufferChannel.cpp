@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Renderer/Resource/BufferResourceChannel.h>
+#include <FalconEngine/Graphics/Renderer/Resource/BufferChannel.h>
 
 #include <FalconEngine/Core/Exception.h>
 
@@ -8,7 +8,7 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-BufferResourceChannel::BufferResourceChannel(
+BufferChannel::BufferChannel(
     const std::shared_ptr<BufferAdaptor>& bufferAdaptor,
     const std::shared_ptr<Visual>&        visual):
     mBuffer(bufferAdaptor->GetBuffer()),
@@ -32,13 +32,13 @@ BufferResourceChannel::BufferResourceChannel(
 /* Public Members                                                       */
 /************************************************************************/
 void
-BufferResourceChannel::Reset()
+BufferChannel::Reset()
 {
     mElementNumMapped = 0;
 }
 
 void
-BufferResourceChannel::ResetPersistent()
+BufferChannel::ResetPersistent()
 {
     mElementNumPersistent = 0;
 }

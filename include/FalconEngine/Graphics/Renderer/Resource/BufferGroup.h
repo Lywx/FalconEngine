@@ -10,7 +10,7 @@
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/BufferAdaptor.h>
-#include <FalconEngine/Graphics/Renderer/Resource/BufferResourceChannel.h>
+#include <FalconEngine/Graphics/Renderer/Resource/BufferChannel.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 
 namespace FalconEngine
@@ -18,24 +18,24 @@ namespace FalconEngine
 
 class Camera;
 
-#pragma warning(disable: 4251)
+FALCON_ENGINE_PROGMA_BEGIN
 template <typename T>
-class FALCON_ENGINE_API BufferResource
+class FALCON_ENGINE_API BufferGroup
 {
 private:
-    using BufferResourceChannelSp = const std::shared_ptr<T>&;
+    using BufferChannelSp = const std::shared_ptr<T>&;
 
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    BufferResource()
+    BufferGroup()
     {
-        static_assert(std::is_base_of<BufferResourceChannel, T>::value,
-                      "Template parameter must inherit from BufferResourceChannel.");
+        static_assert(std::is_base_of<BufferChannel, T>::value,
+                      "Template parameter must inherit from BufferChannel.");
     }
 
-    virtual ~BufferResource()
+    virtual ~BufferGroup()
     {
     }
 
@@ -51,7 +51,7 @@ public:
     CreateChannel(intptr_t                              channel,
                   const std::shared_ptr<BufferAdaptor>& channelAdaptor,
                   const std::shared_ptr<Visual>&        channelVisual,
-                  const Args& ...                       channelArgs)
+                  const Args & ...                       channelArgs)
     {
         if (ContainChannel(channel))
         {
@@ -90,7 +90,7 @@ public:
     void
     AddChannelElement(intptr_t channel, int elementNum)
     {
-        BufferResourceChannelSp& channelInfo = mChannelTable.at(channel);
+        BufferChannelSp& channelInfo = mChannelTable.at(channel);
         channelInfo->mElementNumMapped += elementNum;
         channelInfo->mElementNumPersistent += elementNum;
     }
@@ -98,28 +98,28 @@ public:
     void
     AddChannelElementMapped(intptr_t channel, int elementNumMapped)
     {
-        BufferResourceChannelSp channelInfo = mChannelTable.at(channel);
+        BufferChannelSp channelInfo = mChannelTable.at(channel);
         channelInfo->mElementNumMapped += elementNumMapped;
     }
 
     void
     AddChannelElementPersistent(intptr_t channel, int elementNumPersistent)
     {
-        BufferResourceChannelSp channelInfo = mChannelTable.at(channel);
+        BufferChannelSp channelInfo = mChannelTable.at(channel);
         channelInfo->mElementNumPersistent += elementNumPersistent;
     }
 
     int
     GetChannelElementNumPersistent(intptr_t channel)
     {
-        BufferResourceChannelSp channelInfo = mChannelTable.at(channel);
+        BufferChannelSp channelInfo = mChannelTable.at(channel);
         return channelInfo->mElementNumPersistent;
     }
 
     int
     GetChannelElementNumMapped(intptr_t channel)
     {
-        BufferResourceChannelSp channelInfo = mChannelTable.at(channel);
+        BufferChannelSp channelInfo = mChannelTable.at(channel);
         return channelInfo->mElementNumMapped;
     }
 
@@ -130,7 +130,7 @@ public:
     void
     AddChannelItem(intptr_t channel, Args&& ... channelArgs)
     {
-        BufferResourceChannelSp channelInfo = mChannelTable.at(channel);
+        BufferChannelSp channelInfo = mChannelTable.at(channel);
 
         // NOTE(Wuxiang): Require inherit class to implement extra Add function
         // to support this.
@@ -139,9 +139,9 @@ public:
 
     template <typename ... Args>
     void
-    AddChannelItem(intptr_t channel, const Args& ... channelArgs)
+    AddChannelItem(intptr_t channel, const Args & ... channelArgs)
     {
-        BufferResourceChannelSp channelInfo = mChannelTable.at(channel);
+        BufferChannelSp channelInfo = mChannelTable.at(channel);
 
         // NOTE(Wuxiang): Require inherit class to implement extra Add function
         // to support this.
@@ -168,7 +168,7 @@ public:
     void
     ResetChannel(intptr_t channel)
     {
-        BufferResourceChannelSp channelInfo = mChannelTable.at(channel);
+        BufferChannelSp channelInfo = mChannelTable.at(channel);
         channelInfo->Reset();
     }
 
@@ -187,7 +187,7 @@ public:
     void
     ResetChannelPersistent(intptr_t channel)
     {
-        BufferResourceChannelSp channelInfo = mChannelTable.at(channel);
+        BufferChannelSp channelInfo = mChannelTable.at(channel);
         channelInfo->ResetPersistent();
     }
 
@@ -209,7 +209,7 @@ public:
     {
         static auto sMasterRenderer = Renderer::GetInstance();
 
-        BufferResourceChannelSp channelInfo = mChannelTable.at(channel);
+        BufferChannelSp channelInfo = mChannelTable.at(channel);
 
         if (channelInfo->mElementNumPersistent > 0)
         {
@@ -221,31 +221,31 @@ public:
     /* Data Management                                                      */
     /************************************************************************/
     void
-    FillDataBegin(BufferAccessMode          access,
-                  BufferFlushMode           flush,
-                  BufferSynchronizationMode synchronization)
+    FillDataBegin(ResourceMapAccessMode access,
+                  ResourceMapFlushMode flush,
+                  ResourceMapSyncMode sync)
     {
         for (auto& channelInfoPair : mChannelTable)
         {
             auto channel = channelInfoPair.first;
-            FillChannelDataBegin(channel, access, flush, synchronization);
+            FillChannelDataBegin(channel, access, flush, sync);
         }
     }
 
     void
-    FillChannelDataBegin(intptr_t                  channel,
-                         BufferAccessMode          access,
-                         BufferFlushMode           flush,
-                         BufferSynchronizationMode synchronization)
+    FillChannelDataBegin(intptr_t channel,
+                         ResourceMapAccessMode access,
+                         ResourceMapFlushMode flush,
+                         ResourceMapSyncMode sync)
     {
-        BufferResourceChannelSp channelInfo = mChannelTable.at(channel);
+        BufferChannelSp channelInfo = mChannelTable.at(channel);
 
         // Must call before mapping.
         channelInfo->mBufferAdaptor->FillBegin();
 
         if (channelInfo->mElementNumMapped > 0)
         {
-            MapChannelData(channel, access, flush, synchronization);
+            MapChannelData(channel, access, flush, sync);
         }
     }
 
@@ -267,7 +267,7 @@ public:
     void
     FillChannelDataEnd(intptr_t channel)
     {
-        BufferResourceChannelSp channelInfo = mChannelTable.at(channel);
+        BufferChannelSp channelInfo = mChannelTable.at(channel);
         if (channelInfo->mElementNumMapped > 0)
         {
             UnmapChannelData(channel);
@@ -285,7 +285,7 @@ public:
     void
     FlushChannelData(intptr_t channel, int elementNum)
     {
-        BufferResourceChannelSp channelInfo = mChannelTable.at(channel);
+        BufferChannelSp channelInfo = mChannelTable.at(channel);
         auto buffer = channelInfo->mBuffer.get();
 
         int64_t size = int64_t(elementNum)
@@ -298,31 +298,31 @@ public:
     std::tuple<BufferAdaptor *, unsigned char *>
     GetChannelData(intptr_t channel)
     {
-        BufferResourceChannelSp channelInfo = mChannelTable.at(channel);
+        BufferChannelSp channelInfo = mChannelTable.at(channel);
         return std::make_tuple(channelInfo->mBufferAdaptor.get(), channelInfo->mData);
     }
 
 private:
     // @summary Map all channels registered.
     void
-    MapData(BufferAccessMode          access,
-            BufferFlushMode           flush,
-            BufferSynchronizationMode synchronization)
+    MapData(ResourceMapAccessMode access,
+            ResourceMapFlushMode flush,
+            ResourceMapSyncMode sync)
     {
         for (auto& channelInfoPair : mChannelTable)
         {
             auto channel = channelInfoPair.first;
-            MapChannelData(channel, access, flush, synchronization);
+            MapChannelData(channel, access, flush, sync);
         }
     }
 
     void
-    MapChannelData(intptr_t                  channel,
-                   BufferAccessMode          access,
-                   BufferFlushMode           flush,
-                   BufferSynchronizationMode synchronization)
+    MapChannelData(intptr_t channel,
+                   ResourceMapAccessMode access,
+                   ResourceMapFlushMode flush,
+                   ResourceMapSyncMode sync)
     {
-        BufferResourceChannelSp channelInfo = mChannelTable.at(channel);
+        BufferChannelSp channelInfo = mChannelTable.at(channel);
 
         auto buffer = channelInfo->mBuffer.get();
 
@@ -334,7 +334,7 @@ private:
         static auto sMasterRenderer = Renderer::GetInstance();
         channelInfo->mData = static_cast<unsigned char *>(
                                  sMasterRenderer->Map(
-                                     buffer, access, flush, synchronization,
+                                     buffer, access, flush, sync,
                                      offset, size));
     }
 
@@ -353,7 +353,7 @@ private:
     UnmapChannelData(intptr_t channel)
     {
         static auto sMasterRenderer = Renderer::GetInstance();
-        BufferResourceChannelSp channelInfo = mChannelTable.at(channel);
+        BufferChannelSp channelInfo = mChannelTable.at(channel);
         sMasterRenderer->Unmap(channelInfo->mBuffer.get());
     }
 
@@ -365,7 +365,7 @@ private:
     const Visual *
     GetChannelVisual(intptr_t channel) const
     {
-        BufferResourceChannelSp channelInfo = mChannelTable.at(channel);
+        BufferChannelSp channelInfo = mChannelTable.at(channel);
         if (channelInfo->mVisual != nullptr)
         {
             return channelInfo->mVisual.get();
@@ -404,6 +404,6 @@ public:
 private:
     std::unordered_map<intptr_t, std::shared_ptr<T>> mChannelTable;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_PROGMA_END
 
 }

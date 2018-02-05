@@ -15,7 +15,7 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PlatformShader::PlatformShader(Shader *shader) :
+PlatformShader::PlatformShader(Renderer *, Shader *shader) :
     mProgram(0),
     mShaderNum(0)
 {
@@ -147,13 +147,13 @@ PlatformShader::GetProgram() const
 }
 
 void
-PlatformShader::Enable() const
+PlatformShader::Enable(Renderer *) const
 {
     glUseProgram(mProgram);
 }
 
 void
-PlatformShader::Disable() const
+PlatformShader::Disable(Renderer *) const
 {
     glUseProgram(0);
 }

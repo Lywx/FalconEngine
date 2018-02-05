@@ -173,7 +173,7 @@ AssetManager::LoadFontInternal(const std::string& fontAssetPath)
             fontPageTextureArray = std::make_shared<Texture2dArray>(AssetSource::Virtual,
                                    "None", "None", fontPage0Texture->mDimension[0],
                                    fontPage0Texture->mDimension[1], font->mTexturePages,
-                                   TextureFormat::R8G8B8A8, BufferUsage::Static, 0);
+                                   TextureFormat::R8G8B8A8);
         }
 
         // Load the other textures.
@@ -192,6 +192,7 @@ AssetManager::LoadFontInternal(const std::string& fontAssetPath)
     auto sampler = std::make_shared<Sampler>();
     sampler->mMagnificationFilter = SamplerMagnificationFilter::Linear;
     sampler->mMinificationFilter = SamplerMinificationFilter::Linear;
+    sampler->mMipmapFilter = SamplerMipmapFilter::Linear;
     font->SetSampler(sampler);
 
     return font;
@@ -249,7 +250,7 @@ AssetManager::LoadTexture1dInternal(const TextureImportOption& textureImportOpti
     }
 
     texture->mAssetSource = AssetSource::Stream;
-    texture->mUsage = textureImportOption.mTextureUsage;
+    texture->mAccessUsage = textureImportOption.mTextureUsage;
 
     return texture;
 }
@@ -268,7 +269,7 @@ AssetManager::LoadTexture2dInternal(const TextureImportOption& textureImportOpti
     }
 
     texture->mAssetSource = AssetSource::Stream;
-    texture->mUsage = textureImportOption.mTextureUsage;
+    texture->mAccessUsage = textureImportOption.mTextureUsage;
 
     return texture;
 }

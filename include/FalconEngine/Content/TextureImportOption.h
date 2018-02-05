@@ -26,7 +26,7 @@ public:
     TextureImportOption() = default;
 
 public:
-    BufferUsage mTextureUsage = BufferUsage::Static;
+    ResourceCreationAccessUsage mTextureUsage = ResourceCreationAccessUsage::Static;
 };
 
 }

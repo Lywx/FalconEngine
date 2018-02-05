@@ -12,16 +12,34 @@ namespace FalconEngine
 FALCON_ENGINE_CLASS_BEGIN PlatformRendererData final
 {
 public:
-    explicit PlatformRendererData();
+    explicit PlatformRendererData(const Microsoft::WRL::ComPtr<ID3D11DeviceContext4>& context,
+                                  const Microsoft::WRL::ComPtr<ID3D11Device4>&        device,
+                                  const HWND &                                        window);
     ~PlatformRendererData();
 
 public:
-    void
-    Initialize();
+    ID3D11DeviceContext4 *
+    GetContext();
+
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext4>
+    GetContextCp();
+
+    ID3D11Device4 *
+    GetDevice();
+
+    Microsoft::WRL::ComPtr<ID3D11Device4>
+    GetDeviceCp();
 
 public:
-    Microsoft::WRL::WeakRef mContext;
-    Microsoft::WRL::WeakRef mDevice;
+    HWND                                           mWindow;
+
+    Microsoft::WRL::ComPtr<IDXGISwapChain1>        m_swapChain;
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_renderTargetView;
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depthStencilView;
+
+private:
+    Microsoft::WRL::WeakRef                        mContext;
+    Microsoft::WRL::WeakRef                        mDevice;
 };
 FALCON_ENGINE_CLASS_END
 

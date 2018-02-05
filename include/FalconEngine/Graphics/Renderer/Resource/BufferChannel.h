@@ -8,23 +8,23 @@
 
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/BufferAdaptor.h>
-#include <FalconEngine/Graphics/Renderer/Resource/BufferResourceChannel.h>
+#include <FalconEngine/Graphics/Renderer/Resource/BufferChannel.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 
 namespace FalconEngine
 {
 
-class BufferResourceChannel
+class BufferChannel
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    BufferResourceChannel(
+    BufferChannel(
         const std::shared_ptr<BufferAdaptor>& bufferAdaptor,
         const std::shared_ptr<Visual>& visual);
 
-    virtual ~BufferResourceChannel() = default;
+    virtual ~BufferChannel() = default;
 
 public:
     /************************************************************************/

@@ -11,8 +11,8 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PlatformTexture1d::PlatformTexture1d(const Texture1d *texture) :
-    PlatformTexture(texture)
+PlatformTexture1d::PlatformTexture1d(Renderer *renderer, const Texture1d *texture) :
+    PlatformTexture(renderer, texture)
 {
     // Bind newly created texture
     GLuint textureBindingPrevious = BindTexture(mTexturePtr->mType, mTextureObj);

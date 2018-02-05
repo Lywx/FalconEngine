@@ -1,35 +1,46 @@
 #pragma once
 
-#include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
+#include <FalconEngine/Core/Macro.h>
 
 #if defined(FALCON_ENGINE_API_OPENGL)
 #include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>
+#include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
 
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_API PlatformSampler
+class Renderer;
+
+class FALCON_ENGINE_API PlatformSampler final
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformSampler(const Sampler *sampler);
-    virtual ~PlatformSampler();
+    explicit PlatformSampler(Renderer *, const Sampler *sampler);
+    ~PlatformSampler();
 
 public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Enable(int textureUnit);
+    Enable(Renderer *, int textureUnit);
 
     void
-    Disable(int textureUnit);
+    Disable(Renderer *, int textureUnit);
 
 private:
-    GLuint mSampler;
-    GLuint mSamplerPrevious;
+    /************************************************************************/
+    /* Private Members                                                      */
+    /************************************************************************/
+    void
+    Create();
+
+private:
+    GLuint         mSamplerObj;
+    GLuint         mSamplerObjPrevious;
+    const Sampler *mSamplerPtr;
 };
 
 }

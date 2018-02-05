@@ -49,17 +49,19 @@ using namespace std;
 #endif
 
 #if defined(FALCON_ENGINE_API_DIRECT3D)
-#include <FalconEngine/Platform/Direct3D/D3dIndexBuffer.h>
-#include <FalconEngine/Platform/Direct3D/D3dVertexBuffer.h>
-#include <FalconEngine/Platform/Direct3D/D3dVertexFormat.h>
-#include <FalconEngine/Platform/Direct3D/D3dTexture1d.h>
-#include <FalconEngine/Platform/Direct3D/D3dTexture2d.h>
-#include <FalconEngine/Platform/Direct3D/D3dTexture2dArray.h>
-#include <FalconEngine/Platform/Direct3D/D3dTexture3d.h>
-#include <FalconEngine/Platform/Direct3D/D3dTextureSampler.h>
-#include <FalconEngine/Platform/Direct3D/D3dShader.h>
-#include <FalconEngine/Platform/Direct3D/D3dShaderBuffer.h>
-#include <FalconEngine/Platform/Direct3D/D3dShaderUniform.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DIndexBuffer.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DVertexBuffer.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DVertexFormat.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DTexture1d.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DTexture2d.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DTexture2dArray.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DTexture3d.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DTextureSampler.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DRendererData.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DRendererState.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DShader.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DShaderBuffer.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DShaderUniform.h>
 #endif
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
@@ -71,7 +73,6 @@ using namespace std;
 #endif
 
 #if defined(FALCON_ENGINE_WINDOW_WIN32)
-#include <FalconEngine/Platform/Win32/Win32RendererData.h>
 #endif
 
 namespace FalconEngine
@@ -123,7 +124,9 @@ Renderer::InitializeData()
 
     SetViewportData(0.0f, 0.0f,
                     float(gameEngineSettings->mWindowWidth),
-                    float(gameEngineSettings->mWindowHeight));
+                    float(gameEngineSettings->mWindowHeight),
+                    float(gameEngineSettings->mWindowNear),
+                    float(gameEngineSettings->mWindowFar));
 
     mBlendStateDefault = make_unique<BlendState>();
     mCullStateDefault = make_unique<CullState>();
@@ -182,11 +185,11 @@ Renderer::GetViewport() const
 }
 
 void
-Renderer::SetViewportData(float x, float y, float width, float height)
+Renderer::SetViewportData(float x, float y, float width, float height, float near, float far)
 {
     if (mWindowInitialized)
     {
-        mViewport.Set(x, y, x + width, y + height, mWindow.mNear, mWindow.mFar);
+        mViewport.Set(x, y, x + width, y + height, near, far);
     }
     else
     {
@@ -197,8 +200,11 @@ Renderer::SetViewportData(float x, float y, float width, float height)
 void
 Renderer::SetViewport(float x, float y, float width, float height)
 {
-    SetViewportData(x, y, width, height);
-    SetViewportPlatform(x, y, width, height);
+    // NOTE(Wuxiang): The public interface is not allowed to change the near and
+    // far of the viewport. This is necessary to maintain a consistent near and
+    // far relationship with window.
+    SetViewportData(x, y, width, height, mWindow.mNear, mWindow.mFar);
+    SetViewportPlatform(x, y, width, height, mWindow.mNear, mWindow.mFar);
 }
 
 const Window *
@@ -211,7 +217,7 @@ void
 Renderer::SetWindow(int width, int height, float near, float far)
 {
     SetWindowData(width, height, near, far);
-    SetWindowPlatform(width, height, near, far);
+    SetWindowPlatform(width, height);
 }
 
 void
@@ -321,18 +327,18 @@ Renderer::Disable(const Buffer *buffer)
 }
 
 void *
-Renderer::Map(const Buffer *buffer, BufferAccessMode access, BufferFlushMode flush, BufferSynchronizationMode synchronization, int64_t offset, int64_t size)
+Renderer::Map(const Buffer *buffer, ResourceMapAccessMode access, ResourceMapFlushMode flush, ResourceMapSyncMode sync, int64_t offset, int64_t size)
 {
     switch (buffer->GetType())
     {
     case BufferType::None:
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.");
     case BufferType::VertexBuffer:
-        return Map(reinterpret_cast<const VertexBuffer *>(buffer), access, flush, synchronization, offset, size);
+        return Map(reinterpret_cast<const VertexBuffer *>(buffer), access, flush, sync, offset, size);
     case BufferType::IndexBuffer:
-        return Map(reinterpret_cast<const IndexBuffer *>(buffer), access, flush, synchronization, offset, size);
+        return Map(reinterpret_cast<const IndexBuffer *>(buffer), access, flush, sync, offset, size);
     case BufferType::ShaderBuffer:
-        return Map(reinterpret_cast<const ShaderBuffer *>(buffer), access, flush, synchronization, offset, size);
+        return Map(reinterpret_cast<const ShaderBuffer *>(buffer), access, flush, sync, offset, size);
     case BufferType::UniformBuffer:
         FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
     default:
@@ -387,14 +393,14 @@ Renderer::Flush(const Buffer *buffer, int64_t offset, int64_t size)
 }
 
 void
-Renderer::Update(const Buffer             *buffer,
-                 BufferAccessMode          access,
-                 BufferFlushMode           flush,
-                 BufferSynchronizationMode synchronization)
+Renderer::Update(const Buffer *buffer,
+                 ResourceMapAccessMode access,
+                 ResourceMapFlushMode flush,
+                 ResourceMapSyncMode sync)
 {
     auto sourceData = buffer->GetData() + buffer->GetDataOffset();
 
-    auto destinationData = Map(buffer, access, flush, synchronization,
+    auto destinationData = Map(buffer, access, flush, sync,
                                buffer->GetDataOffset(), buffer->GetDataSize());
 
     memcpy(destinationData, sourceData, buffer->GetDataSize());
@@ -431,10 +437,10 @@ Renderer::Enable(const ShaderBuffer *shaderBuffer, unsigned int bindingIndex)
     }
     else
     {
-        shaderBufferPlatform = new PlatformShaderBuffer(shaderBuffer);
+        shaderBufferPlatform = new PlatformShaderBuffer(this, shaderBuffer);
         mShaderBufferTable[shaderBuffer] = shaderBufferPlatform;
     }
-    shaderBufferPlatform->Enable(bindingIndex);;
+    shaderBufferPlatform->Enable(this, bindingIndex);
 }
 
 void
@@ -444,7 +450,7 @@ Renderer::Disable(const ShaderBuffer *shaderBuffer)
 }
 
 void *
-Renderer::Map(const ShaderBuffer *shaderBuffer, BufferAccessMode access, BufferFlushMode flush, BufferSynchronizationMode synchronization, int64_t offset, int64_t size)
+Renderer::Map(const ShaderBuffer *shaderBuffer, ResourceMapAccessMode access, ResourceMapFlushMode flush, ResourceMapSyncMode sync, int64_t offset, int64_t size)
 {
     FALCON_ENGINE_RENDERER_MAP_IMPLEMENT(shaderBuffer, mShaderBufferTable, PlatformShaderBuffer);
 }
@@ -490,12 +496,12 @@ Renderer::Disable(const IndexBuffer *indexBuffer)
 }
 
 void *
-Renderer::Map(const IndexBuffer        *indexBuffer,
-              BufferAccessMode          access,
-              BufferFlushMode           flush,
-              BufferSynchronizationMode synchronization,
-              int64_t                   offset,
-              int64_t                   size)
+Renderer::Map(const IndexBuffer *indexBuffer,
+              ResourceMapAccessMode access,
+              ResourceMapFlushMode flush,
+              ResourceMapSyncMode sync,
+              int64_t offset,
+              int64_t size)
 {
     FALCON_ENGINE_RENDERER_MAP_IMPLEMENT(indexBuffer, mIndexBufferTable, PlatformIndexBuffer);
 }
@@ -543,11 +549,11 @@ Renderer::Enable(const VertexBuffer *vertexBuffer,
     }
     else
     {
-        vertexBufferPlatform = new PlatformVertexBuffer(vertexBuffer);
+        vertexBufferPlatform = new PlatformVertexBuffer(this, vertexBuffer);
         mVertexBufferTable[vertexBuffer] = vertexBufferPlatform;
     }
 
-    vertexBufferPlatform->Enable(bindingIndex, offset, stride);
+    vertexBufferPlatform->Enable(this, bindingIndex, offset, stride);
 }
 
 void
@@ -559,17 +565,17 @@ Renderer::Disable(const VertexBuffer *vertexBuffer, unsigned int bindingIndex)
     if (iter != mVertexBufferTable.end())
     {
         auto vertexBufferPlatform = iter->second;
-        vertexBufferPlatform->Disable(bindingIndex);
+        vertexBufferPlatform->Disable(this, bindingIndex);
     }
 }
 
 void *
-Renderer::Map(const VertexBuffer       *vertexBuffer,
-              BufferAccessMode          access,
-              BufferFlushMode           flush,
-              BufferSynchronizationMode synchronization,
-              int64_t                   offset,
-              int64_t                   size)
+Renderer::Map(const VertexBuffer *vertexBuffer,
+              ResourceMapAccessMode access,
+              ResourceMapFlushMode flush,
+              ResourceMapSyncMode sync,
+              int64_t offset,
+              int64_t size)
 {
     FALCON_ENGINE_RENDERER_MAP_IMPLEMENT(vertexBuffer, mVertexBufferTable, PlatformVertexBuffer);
 }
@@ -792,13 +798,13 @@ Renderer::Disable(int textureUnit, const Texture1d *texture)
 }
 
 void *
-Renderer::Map(const Texture1d          *texture,
-              int                    /* mipmapLevel */,
-              BufferAccessMode          access,
-              BufferFlushMode           flush,
-              BufferSynchronizationMode synchronization,
-              int64_t                   offset,
-              int64_t                   size)
+Renderer::Map(const Texture1d *texture,
+              int /* mipmapLevel */,
+              ResourceMapAccessMode access,
+              ResourceMapFlushMode flush,
+              ResourceMapSyncMode sync,
+              int64_t offset,
+              int64_t size)
 {
     FALCON_ENGINE_RENDERER_TEXTURE_MAP_IMPLEMENT(texture, mTexture1dTable, PlatformTexture1d);
 }
@@ -837,13 +843,13 @@ Renderer::Disable(int textureUnit, const Texture2d *texture)
 }
 
 void *
-Renderer::Map(const Texture2d          *texture,
-              int                    /* mipmapLevel */,
-              BufferAccessMode          access,
-              BufferFlushMode           flush,
-              BufferSynchronizationMode synchronization,
-              int64_t                   offset,
-              int64_t                   size)
+Renderer::Map(const Texture2d *texture,
+              int /* mipmapLevel */,
+              ResourceMapAccessMode access,
+              ResourceMapFlushMode flush,
+              ResourceMapSyncMode sync,
+              int64_t offset,
+              int64_t size)
 {
     FALCON_ENGINE_RENDERER_TEXTURE_MAP_IMPLEMENT(texture, mTexture2dTable, PlatformTexture2d);
 }
@@ -882,14 +888,14 @@ Renderer::Disable(int textureUnit, const Texture2dArray *textureArray)
 }
 
 void *
-Renderer::Map(const Texture2dArray     *textureArray,
-              int                       textureIndex,
-              int                    /* mipmapLevel */,
-              BufferAccessMode          access,
-              BufferFlushMode           flush,
-              BufferSynchronizationMode synchronization,
-              int64_t                   offset,
-              int64_t                   size)
+Renderer::Map(const Texture2dArray *textureArray,
+              int textureIndex,
+              int /* mipmapLevel */,
+              ResourceMapAccessMode access,
+              ResourceMapFlushMode flush,
+              ResourceMapSyncMode sync,
+              int64_t offset,
+              int64_t size)
 {
     FALCON_ENGINE_RENDERER_TEXTURE_ARRAY_MAP_IMPLEMENT(textureArray, mTexture2dArrayTable, PlatformTexture2dArray);
 }

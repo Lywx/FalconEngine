@@ -1,9 +1,12 @@
 #include <FalconEngine/Platform/OpenGL/OpenGLMapping.h>
+
 #if defined(FALCON_ENGINE_API_OPENGL)
+#include <FalconEngine/Core/Exception.h>
+
 namespace FalconEngine
 {
 
-const GLuint OpenGLBufferAccessModeMark[int(BufferAccessMode::Count)] =
+const GLuint OpenGLBufferAccessModeBit[int(ResourceMapAccessMode::Count)] =
 {
     GL_MAP_WRITE_BIT,
     GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT,
@@ -18,26 +21,87 @@ const GLuint OpenGLBufferAccessModeMark[int(BufferAccessMode::Count)] =
     GL_MAP_READ_BIT,
 };
 
-const GLuint OpenGLBufferFlushModeMark[int(BufferFlushMode::Count)] =
+const GLuint OpenGLBufferFlushModeBit[int(ResourceMapFlushMode::Count)] =
 {
     0,
     GL_MAP_FLUSH_EXPLICIT_BIT,
 };
 
-const GLuint OpenGLBufferSynchronizationModeMark[int(BufferSynchronizationMode::Count)] =
+const GLuint OpenGLBufferSynchronizationModeBit[int(ResourceMapSyncMode::Count)] =
 {
     0,
     GL_MAP_UNSYNCHRONIZED_BIT,
 };
 
-const GLuint OpenGLBufferUsage[int(BufferUsage::Count)] =
+GLuint
+OpenGLBufferUsage(ResourceCreationAccessMode mode, ResourceCreationAccessUsage usage)
 {
-    GL_INVALID_ENUM,
-
-    GL_STATIC_DRAW,
-    GL_STREAM_DRAW,
-    GL_DYNAMIC_DRAW,
-};
+    if (mode == ResourceCreationAccessMode::GpuRead)
+    {
+        return GL_STATIC_DRAW;
+    }
+    else if (mode == ResourceCreationAccessMode::GpuRead_CpuWrite)
+    {
+        if (usage == ResourceCreationAccessUsage::Static)
+        {
+            return GL_STATIC_DRAW;
+        }
+        else if (usage == ResourceCreationAccessUsage::Stream)
+        {
+            return GL_STREAM_DRAW;
+        }
+        else if (usage == ResourceCreationAccessUsage::Dynamic)
+        {
+            return GL_DYNAMIC_DRAW;
+        }
+        else
+        {
+            FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+        }
+    }
+    else if (mode == ResourceCreationAccessMode::GpuReadWrite)
+    {
+        if (usage == ResourceCreationAccessUsage::Static)
+        {
+            return GL_STATIC_COPY;
+        }
+        else if (usage == ResourceCreationAccessUsage::Stream)
+        {
+            return GL_STREAM_COPY;
+        }
+        else if (usage == ResourceCreationAccessUsage::Dynamic)
+        {
+            return GL_DYNAMIC_COPY;
+        }
+        else
+        {
+            FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+        }
+    }
+    else if (mode == ResourceCreationAccessMode::GpuWrite_CpuRead)
+    {
+        if (usage == ResourceCreationAccessUsage::Static)
+        {
+            return GL_STATIC_READ;
+        }
+        else if (usage == ResourceCreationAccessUsage::Stream)
+        {
+            return GL_STREAM_READ;
+        }
+        else if (usage == ResourceCreationAccessUsage::Dynamic)
+        {
+            return GL_DYNAMIC_READ;
+        }
+        else
+        {
+            FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+        }
+    }
+    else
+    {
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+    }
+}
 
 const GLuint OpenGLTextureType[int(TextureFormat::Count)] =
 {
@@ -81,13 +145,16 @@ const GLuint OpenGLTextureTargetBinding[int(TextureType::Count)] =
 
 const GLint OpenGLSamplerFilterMode[int(SamplerMinificationFilter::Count)] =
 {
-    GL_NEAREST,                 // Nearest
-    GL_LINEAR,                  // Linear
+    GL_NEAREST, // Nearest
+    GL_LINEAR,  // Linear
+};
 
-    GL_NEAREST_MIPMAP_NEAREST,  // NearestMipmapNearest
-    GL_NEAREST_MIPMAP_LINEAR,   // NearestMipmapLinear
-    GL_LINEAR_MIPMAP_NEAREST,   // LinearMipmapNearest
-    GL_LINEAR_MIPMAP_LINEAR     // LinearMipmapLinear
+const int    OpenGLSamplerMipmapMode[4] =
+{
+    GL_NEAREST_MIPMAP_NEAREST, // NearestMipmapNearest
+    GL_NEAREST_MIPMAP_LINEAR,  // NearestMipmapLinear
+    GL_LINEAR_MIPMAP_NEAREST,  // LinearMipmapNearest
+    GL_LINEAR_MIPMAP_LINEAR    // LinearMipmapLinear
 };
 
 const GLint OpenGLSamplerWrapMode[int(SamplerWrapMode::Count)] =
@@ -182,12 +249,13 @@ const GLenum OpenGLStencilOperation[int(StencilOperation::Count)] =
 
 const GLenum OpenGLPrimitiveType[int(PrimitiveType::Count)] =
 {
-    0,             // None
+    0,                // None
 
-    GL_POINTS,     // Point
-    GL_LINES,      // Line
-    GL_LINE_STRIP, // Line Strip
-    GL_TRIANGLES,  // Triangle
+    GL_POINTS,        // Point
+    GL_LINES,         // Line
+    GL_LINE_STRIP,    // Line Strip
+    GL_TRIANGLES,     // Triangle
+    GL_TRIANGLE_STRIP // Triangle Strip
 };
 
 const GLuint OpenGLShaderAttributeType[int(VertexAttributeType::Count)] =

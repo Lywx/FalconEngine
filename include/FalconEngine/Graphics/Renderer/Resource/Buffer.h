@@ -3,48 +3,20 @@
 #include <cstdint>
 
 #include <FalconEngine/Core/Macro.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Resource.h>
 
 namespace FalconEngine
 {
 
-enum class BufferAccessMode
-{
-    WriteBuffer,
-    WriteBufferInvalidateBuffer, // Enable buffer orphaning to avoid implicit synchronization.
-    WriteRange,
-    WriteRangeInvalidateBuffer,  // Enable buffer orphaning to avoid implicit synchronization.
-    WriteRangeInvalidateRange,
-
-    ReadWriteBuffer,
-    ReadWriteRange,
-
-    ReadBuffer,
-    ReadRange,
-
-    Count
-};
-
-enum class BufferFlushMode
-{
-    Automatic,
-    Explicit,
-
-    Count,
-};
-
-enum class BufferSynchronizationMode
-{
-    Synchronized,
-    Unsynchronized,
-
-    Count,
-};
-
 // @summary Indicate buffer storage resides on 1) RAM and VRAM or 2) VRAM only.
 enum class BufferStorageMode
 {
+    None,
+
     Device, // Buffer resides on VRAM only, accessible by CPU only in pinned memory.
     Host,   // Buffer resides on RAM, explicitly copied to VRAM.
+
+    Count
 };
 
 enum class BufferType
@@ -55,6 +27,8 @@ enum class BufferType
     IndexBuffer,
     ShaderBuffer,
     UniformBuffer,
+
+    Count,
 };
 
 enum class BufferLayout
@@ -63,24 +37,18 @@ enum class BufferLayout
     Separated,
 };
 
-enum class BufferUsage
-{
-    None,
-
-    Static,
-    Stream,
-    Dynamic,
-
-    Count
-};
-
-class FALCON_ENGINE_API Buffer
+FALCON_ENGINE_CLASS_BEGIN Buffer
 {
 protected:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Buffer(int elementNum, size_t elementSize, BufferStorageMode storageMode, BufferType type, BufferUsage usage);
+    Buffer(int elementNum,
+           size_t elementSize,
+           BufferStorageMode storageMode,
+           BufferType type,
+           ResourceCreationAccessMode accessMode,
+           ResourceCreationAccessUsage accessUsage);
     Buffer(const Buffer&) = delete;
     Buffer& operator=(const Buffer&) = delete;
 
@@ -134,24 +102,30 @@ public:
     BufferType
     GetType() const;
 
-    BufferUsage
-    GetUsage() const;
+    ResourceCreationAccessMode
+    GetAccessMode() const;
+
+    ResourceCreationAccessUsage
+    GetAccessUsage() const;
 
 private:
-    unsigned char    *mData;
-    size_t            mDataSize;            // Actual data size in bytes.
-    int64_t           mDataOffset;
+    ResourceCreationAccessMode    mAccessMode;
+    ResourceCreationAccessUsage   mAccessUsage;
 
-    size_t            mCapacitySize;        // Maximum capacity size in bytes include space not used.
-    int               mCapacityElementNum;  // Maximum capacity size in term of element number include space not used.
+    unsigned char        *mData;
+    size_t                mDataSize;            // Actual data size in bytes.
+    int64_t               mDataOffset;
 
-    int               mElementNum;          // Actual data size in term of element number.
-    size_t            mElementSize;         // Each element's data size in bytes.
+    size_t                mCapacitySize;        // Maximum capacity size in bytes include space not used.
+    int                   mCapacityElementNum;  // Maximum capacity size in term of element number include space not used.
 
-    BufferStorageMode mStorageMode;
-    BufferType        mType;
-    BufferUsage       mUsage;
+    int                   mElementNum;          // Actual data size in term of element number.
+    size_t                mElementSize;         // Each element's data size in bytes.
+
+    BufferStorageMode     mStorageMode;
+    BufferType            mType;
 };
+FALCON_ENGINE_CLASS_END
 
 // @summary Prevent template parameter deduction because the buffer data filling
 // is often where mistakes are made, you better be careful.

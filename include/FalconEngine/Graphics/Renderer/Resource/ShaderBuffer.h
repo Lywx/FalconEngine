@@ -13,7 +13,10 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    ShaderBuffer(size_t storageSize, BufferStorageMode storageMode, BufferUsage usage);
+    ShaderBuffer(size_t storageSize,
+                 BufferStorageMode storageMode,
+                 ResourceCreationAccessMode accessMode,
+                 ResourceCreationAccessUsage accessUsage);
     virtual ~ShaderBuffer();
 };
 

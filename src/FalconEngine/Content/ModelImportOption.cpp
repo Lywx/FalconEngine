@@ -8,13 +8,15 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-ModelImportOption::ModelImportOption(ModelLayoutOption vertexBufferLayout,
-                                     ModelUsageOption  vertexBufferUsage,
-                                     BufferUsage       indexBufferUsage,
-                                     IndexType         indexType) :
+ModelImportOption::ModelImportOption(ModelAccessOption vertexBufferAccess,
+                                     ModelLayoutOption vertexBufferLayout,
+                                     ResourceCreationAccessMode indexBufferMode,
+                                     ResourceCreationAccessUsage indexBufferUsage,
+                                     IndexType indexType) :
+    mVertexBufferAccess(vertexBufferAccess),
     mVertexBufferLayout(vertexBufferLayout),
-    mVertexBufferUsage(vertexBufferUsage),
-    mIndexBufferUsage(indexBufferUsage),
+    mIndexBufferAccessMode(indexBufferMode),
+    mIndexBufferAccessUsage(indexBufferUsage),
     mIndexType(indexType)
 {
 }

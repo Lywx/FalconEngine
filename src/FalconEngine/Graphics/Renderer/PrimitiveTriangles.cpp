@@ -19,8 +19,7 @@ PrimitiveTriangles::PrimitiveTriangles(
     Primitive(type, vertexFormat, vertexGroup, indexBuffer)
 {
     auto isTriangleType = type == PrimitiveType::Triangle
-                          || type == PrimitiveType::TriangleStrip
-                          || type == PrimitiveType::TriangleFan;
+                          || type == PrimitiveType::TriangleStrip;
 
     if (!isTriangleType)
     {
@@ -51,7 +50,6 @@ PrimitiveTriangles::GetTriangleNum() const
             return mVertexGroup->GetVertexNum() / 3;
         }
     }
-
     break;
 
     case PrimitiveType::TriangleStrip:
@@ -65,26 +63,10 @@ PrimitiveTriangles::GetTriangleNum() const
             return mVertexGroup->GetVertexNum() - 2;
         }
     }
-
-    break;
-
-    case PrimitiveType::TriangleFan:
-    {
-        // http://stackoverflow.com/questions/8043923/gl-triangle-fan-explanation
-        if (mIndexBuffer)
-        {
-            return mIndexBuffer->GetElementNum() - 2;
-        }
-        else
-        {
-            return mVertexGroup->GetVertexNum() - 2;
-        }
-    }
-
     break;
 
     default:
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("");
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
 }
 

@@ -19,7 +19,7 @@ namespace FalconEngine
 DebugRenderer::DebugRenderer() :
     mDebugFont(nullptr)
 {
-    mDebugBufferResource = make_shared<BufferResource<BufferResourceChannel>>();
+    mDebugBufferGroup = make_shared<BufferGroup<BufferChannel>>();
     mDebugEffectParams = make_shared<DebugEffectParams>();
     mDebugMessageManager = make_shared<DebugRenderMessageManager>();
 }
@@ -28,7 +28,7 @@ DebugRenderer::~DebugRenderer()
 {
 }
 
-enum BufferChannel
+enum BufferChannelName
 {
     ChannelLine     = 0,
     ChannelTriangle = 1,
@@ -264,13 +264,13 @@ DebugRenderer::RenderBegin()
 void
 DebugRenderer::Render(double /* percent */)
 {
-    mDebugBufferResource->Draw(nullptr);
+    mDebugBufferGroup->Draw(nullptr);
 }
 
 void
 DebugRenderer::RenderEnd()
 {
-    mDebugBufferResource->ResetPersistent();
+    mDebugBufferGroup->ResetPersistent();
 }
 
 void
@@ -291,25 +291,25 @@ DebugRenderer::UpdateFrame(double elapsed)
         switch (message.mType)
         {
         case DebugRenderType::Aabb:
-            mDebugBufferResource->AddChannelElement(
+            mDebugBufferGroup->AddChannelElement(
                 channel, 24);
             break;
         case DebugRenderType::Obb:
             FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
         case DebugRenderType::Circle:
-            mDebugBufferResource->AddChannelElement(
+            mDebugBufferGroup->AddChannelElement(
                 channel, DebugRendererHelper::CircleSampleNum * 2);
             break;
         case DebugRenderType::Cross:
-            mDebugBufferResource->AddChannelElement(
+            mDebugBufferGroup->AddChannelElement(
                 channel, 6);
             break;
         case DebugRenderType::Line:
-            mDebugBufferResource->AddChannelElement(
+            mDebugBufferGroup->AddChannelElement(
                 channel, 2);
             break;
         case DebugRenderType::Sphere:
-            mDebugBufferResource->AddChannelElement(
+            mDebugBufferGroup->AddChannelElement(
                 channel, DebugRendererHelper::SpherePhiSampleNum
                 * DebugRendererHelper::SphereThetaSampleNum * 6);
             break;
@@ -323,10 +323,10 @@ DebugRenderer::UpdateFrame(double elapsed)
         }
     }
 
-    mDebugBufferResource->FillDataBegin(
-        BufferAccessMode::WriteBuffer,
-        BufferFlushMode::Automatic,
-        BufferSynchronizationMode::Unsynchronized);
+    mDebugBufferGroup->FillDataBegin(
+        ResourceMapAccessMode::WriteBuffer,
+        ResourceMapFlushMode::Automatic,
+        ResourceMapSyncMode::Unsynchronized);
 
     {
         // Fill channel buffer data.
@@ -341,7 +341,7 @@ DebugRenderer::UpdateFrame(double elapsed)
             // Get buffer data pointer.
             BufferAdaptor *bufferAdaptor;
             unsigned char *bufferData;
-            std::tie(bufferAdaptor, bufferData) = mDebugBufferResource->GetChannelData(channel);
+            std::tie(bufferAdaptor, bufferData) = mDebugBufferGroup->GetChannelData(channel);
 
             // NOTE(Wuxiang): Text doesn't have a camera parameter. When
             // cameraIndex is invalid it will not be used.
@@ -390,8 +390,8 @@ DebugRenderer::UpdateFrame(double elapsed)
         }
     }
 
-    mDebugBufferResource->FillDataEnd();
-    mDebugBufferResource->Reset();
+    mDebugBufferGroup->FillDataEnd();
+    mDebugBufferGroup->Reset();
 
     // Remove time-out message.
     mDebugMessageManager->UpdateFrame(elapsed);

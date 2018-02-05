@@ -121,12 +121,14 @@ ModelImporter::CreateMesh(Model *model, const string& modelFilePath, const Model
     // Load vertex and index data.
     auto vertexGroup = CreateVertexGroup(
                            model,
-                           modelImportOption.mVertexBufferUsage,
+                           modelImportOption.mVertexBufferAccess,
                            modelImportOption.mVertexBufferLayout, aiMesh);
     auto indexBuffer = CreateIndexBuffer(
                            model,
                            modelImportOption.mIndexType,
-                           modelImportOption.mIndexBufferUsage, aiMesh);
+                           modelImportOption.mIndexBufferAccessMode,
+                           modelImportOption.mIndexBufferAccessUsage,
+                           aiMesh);
 
     auto primitive = make_shared<PrimitiveTriangles>(GetVertexFormat(), vertexGroup, indexBuffer);
 
@@ -169,15 +171,19 @@ ModelImporter::CreateAabb(const aiMesh *aiMesh)
 }
 
 std::shared_ptr<IndexBuffer>
-ModelImporter::CreateIndexBuffer(Model *model, IndexType indexType, BufferUsage indexBufferUsage, const aiMesh *aiMesh)
+ModelImporter::CreateIndexBuffer(Model *model,
+                                 IndexType indexType,
+                                 ResourceCreationAccessMode indexBufferAccessMode,
+                                 ResourceCreationAccessUsage indexBufferAccessUsage,
+                                 const aiMesh *aiMesh)
 {
     switch (indexType)
     {
     case IndexType::UnsignedShort:
-        return CreateIndexBufferInternal<unsigned short>(model, indexType, indexBufferUsage, aiMesh);
+        return CreateIndexBufferInternal<unsigned short>(model, indexType, indexBufferAccessMode, indexBufferAccessUsage, aiMesh);
 
     case IndexType::UnsignedInt:
-        return CreateIndexBufferInternal<unsigned int>(model, indexType, indexBufferUsage, aiMesh);
+        return CreateIndexBufferInternal<unsigned int>(model, indexType, indexBufferAccessMode, indexBufferAccessUsage, aiMesh);
 
     default:
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
@@ -205,7 +211,7 @@ ModelImporter::GetVertexFormat()
 std::shared_ptr<VertexGroup>
 ModelImporter::CreateVertexGroup(
     _IN_OUT_ Model                      *model,
-    _IN_     const ModelUsageOption&     vertexBufferUsage,
+    _IN_     const ModelAccessOption&    vertexBufferAccess,
     _IN_     const ModelLayoutOption& /* vertexBufferLayout */,
     _IN_     const aiMesh               *aiMesh)
 {
@@ -223,14 +229,15 @@ ModelImporter::CreateVertexGroup(
     auto vertexBuffer = std::make_shared<VertexBuffer>(
                             vertexNum, sizeof(ModelVertex::mPosition),
                             BufferStorageMode::Device,
-                            vertexBufferUsage.mPosition);
+                            vertexBufferAccess.mPositionMode,
+                            vertexBufferAccess.mPositionUsage);
     {
         auto vertexData = reinterpret_cast<Vector3f *>(
                               sMasterRenderer->Map(
                                   vertexBuffer.get(),
-                                  BufferAccessMode::WriteBuffer,
-                                  BufferFlushMode::Automatic,
-                                  BufferSynchronizationMode::Unsynchronized,
+                                  ResourceMapAccessMode::WriteBuffer,
+                                  ResourceMapFlushMode::Automatic,
+                                  ResourceMapSyncMode::Unsynchronized,
                                   vertexBuffer->GetDataOffset(),
                                   vertexBuffer->GetDataSize()));
 
@@ -247,15 +254,19 @@ ModelImporter::CreateVertexGroup(
     }
 
     // Normal
-    auto normalBuffer = std::make_shared<VertexBuffer>(vertexNum,
-                        sizeof(ModelVertex::mNormal), BufferStorageMode::Device, vertexBufferUsage.mNormal);
+    auto normalBuffer = std::make_shared<VertexBuffer>(
+                            vertexNum,
+                            sizeof(ModelVertex::mNormal),
+                            BufferStorageMode::Device,
+                            vertexBufferAccess.mNormalMode,
+                            vertexBufferAccess.mNormalUsage);
     {
         auto normalData = reinterpret_cast<Vector3f *>(
                               sMasterRenderer->Map(
                                   normalBuffer.get(),
-                                  BufferAccessMode::WriteBuffer,
-                                  BufferFlushMode::Automatic,
-                                  BufferSynchronizationMode::Unsynchronized,
+                                  ResourceMapAccessMode::WriteBuffer,
+                                  ResourceMapFlushMode::Automatic,
+                                  ResourceMapSyncMode::Unsynchronized,
                                   normalBuffer->GetDataOffset(),
                                   normalBuffer->GetDataSize()));
 
@@ -279,15 +290,19 @@ ModelImporter::CreateVertexGroup(
     }
 
     // Texture coordinate
-    auto texCoordBuffer = std::make_shared<VertexBuffer>(vertexNum,
-                          sizeof(ModelVertex::mTexCoord), BufferStorageMode::Device, vertexBufferUsage.mTexCoord);
+    auto texCoordBuffer = std::make_shared<VertexBuffer>(
+                              vertexNum,
+                              sizeof(ModelVertex::mTexCoord),
+                              BufferStorageMode::Device,
+                              vertexBufferAccess.mTexCoordMode,
+                              vertexBufferAccess.mTexCoordUsage);
     {
         auto texCoordData = reinterpret_cast<Vector2f *>(
                                 sMasterRenderer->Map(
                                     texCoordBuffer.get(),
-                                    BufferAccessMode::WriteBuffer,
-                                    BufferFlushMode::Automatic,
-                                    BufferSynchronizationMode::Unsynchronized,
+                                    ResourceMapAccessMode::WriteBuffer,
+                                    ResourceMapFlushMode::Automatic,
+                                    ResourceMapSyncMode::Unsynchronized,
                                     texCoordBuffer->GetDataOffset(),
                                     texCoordBuffer->GetDataSize()));
 

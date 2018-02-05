@@ -8,6 +8,21 @@
 namespace FalconEngine
 {
 
+class FALCON_ENGINE_API ModelAccessOption
+{
+public:
+    ModelAccessOption() = default;
+
+public:
+    ResourceCreationAccessUsage mPositionUsage = ResourceCreationAccessUsage::Static;
+    ResourceCreationAccessUsage mNormalUsage   = ResourceCreationAccessUsage::Static;
+    ResourceCreationAccessUsage mTexCoordUsage = ResourceCreationAccessUsage::Static;
+
+    ResourceCreationAccessMode  mPositionMode = ResourceCreationAccessMode::GpuRead;
+    ResourceCreationAccessMode  mNormalMode   = ResourceCreationAccessMode::GpuRead;
+    ResourceCreationAccessMode  mTexCoordMode = ResourceCreationAccessMode::GpuRead;
+};
+
 class FALCON_ENGINE_API ModelLayoutOption
 {
 public:
@@ -19,17 +34,6 @@ public:
     const BufferLayout mTexCoord = BufferLayout::Separated;
 };
 
-class FALCON_ENGINE_API ModelUsageOption
-{
-public:
-    ModelUsageOption() = default;
-
-public:
-    BufferUsage mPosition = BufferUsage::Static;
-    BufferUsage mNormal = BufferUsage::Static;
-    BufferUsage mTexCoord = BufferUsage::Static;
-};
-
 class FALCON_ENGINE_API ModelImportOption
 {
 public:
@@ -39,9 +43,10 @@ public:
     static ModelImportOption GetDefault()
     {
         static const ModelImportOption sDefault = ModelImportOption(
+                    ModelAccessOption(),
                     ModelLayoutOption(),
-                    ModelUsageOption(),
-                    BufferUsage::Static,
+                    ResourceCreationAccessMode::GpuRead,
+                    ResourceCreationAccessUsage::Static,
                     IndexType::UnsignedInt);
         return sDefault;
     }
@@ -50,16 +55,18 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    ModelImportOption(ModelLayoutOption vertexBufferLayout,
-                      ModelUsageOption  vertexBufferUsage,
-                      BufferUsage       indexBufferUsage,
-                      IndexType         indexType);
+    ModelImportOption(ModelAccessOption vertexBufferAccess,
+                      ModelLayoutOption vertexBufferLayout,
+                      ResourceCreationAccessMode indexBufferMode,
+                      ResourceCreationAccessUsage indexBufferUsage,
+                      IndexType indexType);
 
 public:
+    ModelAccessOption mVertexBufferAccess;
     ModelLayoutOption mVertexBufferLayout;
-    ModelUsageOption  mVertexBufferUsage;
-    BufferUsage       mIndexBufferUsage;
-    IndexType         mIndexType;
+    ResourceCreationAccessMode  mIndexBufferAccessMode;
+    ResourceCreationAccessUsage mIndexBufferAccessUsage;
+    IndexType mIndexType;
 };
 
 }

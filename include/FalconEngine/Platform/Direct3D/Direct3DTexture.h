@@ -1,9 +1,16 @@
 #pragma once
 
-#include <FalconEngine/Platform/Direct3D/Direct3DLib.h>
+#include <FalconEngine/Core/Macro.h>
 
 #if defined(FALCON_ENGINE_API_DIRECT3D)
+#include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DLib.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DResource.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DMapping.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DRendererData.h>
+#include <FalconEngine/Platform/Win32/Win32Exception.h>
 
 namespace FalconEngine
 {
@@ -11,13 +18,15 @@ namespace FalconEngine
 class Renderer;
 class Texture;
 
-FALCON_ENGINE_CLASS_BEGIN PlatformTexture
+FALCON_ENGINE_CLASS_BEGIN PlatformTexture :
+public PlatformResource
 {
-public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
+protected:
     explicit PlatformTexture(Renderer * renderer, const Texture * texture);
+public:
     virtual ~PlatformTexture();
 
 public:
@@ -25,33 +34,14 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Enable(int textureUnit);
+    Enable(Renderer * renderer, int textureUnit);
 
     void
-    Disable(int textureUnit);
-
-    void *
-    Map(BufferAccessMode          access,
-        BufferFlushMode           flush,
-        BufferSynchronizationMode synchronization,
-        int64_t                   offset,
-        int64_t                   size);
-
-    void
-    Unmap();
+    Disable(Renderer * renderer, int textureUnit);
 
 protected:
-    GLuint         mBufferObj;
-
-    GLuint         mTextureObj;
-    GLuint         mTextureObjPrevious;
-    const Texture *mTexturePtr;
-
-    GLuint         mDimension[3];
-    GLuint         mFormat;
-    GLuint         mFormatInternal;
-    GLuint         mType;
-    GLuint         mUsage;
+    ID3D11RenderTargetView   *mRenderTargetView;
+    ID3D11ShaderResourceView *mShaderResourceView;
 };
 FALCON_ENGINE_CLASS_END
 

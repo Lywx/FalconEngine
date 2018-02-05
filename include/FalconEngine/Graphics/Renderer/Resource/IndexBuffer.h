@@ -22,7 +22,11 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    IndexBuffer(int indexNum, IndexType indexType, BufferStorageMode storageMode, BufferUsage usage);
+    IndexBuffer(int indexNum,
+                IndexType indexType,
+                BufferStorageMode storageMode,
+                ResourceCreationAccessMode accessMode,
+                ResourceCreationAccessUsage accessUsage);
     virtual ~IndexBuffer();
 
 public:

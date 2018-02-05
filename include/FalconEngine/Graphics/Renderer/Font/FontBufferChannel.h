@@ -3,7 +3,7 @@
 #include <FalconEngine/Core/Macro.h>
 
 #include <FalconEngine/Graphics/Renderer/Font/FontText.h>
-#include <FalconEngine/Graphics/Renderer/Resource/BufferResource.h>
+#include <FalconEngine/Graphics/Renderer/Resource/BufferGroup.h>
 #include <FalconEngine/Math/Color.h>
 
 namespace FalconEngine
@@ -35,14 +35,14 @@ public:
     Color    mTextColor;
 };
 
-class FontResourceChannel : public BufferResourceChannel
+class FontBufferChannel : public BufferChannel
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    using BufferResourceChannel::BufferResourceChannel;
-    ~FontResourceChannel() = default;
+    using BufferChannel::BufferChannel;
+    ~FontBufferChannel() = default;
 
 public:
     void
@@ -60,7 +60,7 @@ public:
     virtual void
     Reset() override
     {
-        BufferResourceChannel::Reset();
+        BufferChannel::Reset();
         mRenderItemList.clear();
     }
 

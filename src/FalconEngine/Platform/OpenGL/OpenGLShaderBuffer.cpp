@@ -9,8 +9,8 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PlatformShaderBuffer::PlatformShaderBuffer(const ShaderBuffer *storageBuffer) :
-    PlatformBuffer(GL_SHADER_STORAGE_BUFFER, storageBuffer)
+PlatformShaderBuffer::PlatformShaderBuffer(Renderer *renderer, const ShaderBuffer *storageBuffer) :
+    PlatformBuffer(renderer, GL_SHADER_STORAGE_BUFFER, storageBuffer)
 {
 }
 
@@ -22,14 +22,14 @@ PlatformShaderBuffer::~PlatformShaderBuffer()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PlatformShaderBuffer::Enable(unsigned int bindingIndex)
+PlatformShaderBuffer::Enable(Renderer *, unsigned int bindingIndex)
 {
     glBindBuffer(mBufferTarget, mBufferObj);
     glBindBufferBase(mBufferTarget, bindingIndex, mBufferObj);
 }
 
 void
-PlatformShaderBuffer::Disable()
+PlatformShaderBuffer::Disable(Renderer *)
 {
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }

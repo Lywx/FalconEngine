@@ -308,9 +308,10 @@ Renderer::SetWireframeStatePlatform(const WireframeState *wireframeState)
 /* Viewport Management                                                  */
 /************************************************************************/
 void
-Renderer::SetViewportPlatform(float x, float y, float width, float height)
+Renderer::SetViewportPlatform(float x, float y, float width, float height, float near, float far)
 {
     glViewport(int(x), int(y), int(width), int(height));
+    glDepthRange(GLclampd(near), GLclampd(far));
 }
 
 /************************************************************************/
@@ -337,6 +338,11 @@ Renderer::ClearFrameBufferPlatform(const Vector4f& color, float depth, unsigned 
     glClearDepth(static_cast<GLclampd>(depth));
     glClearStencil(static_cast<GLint>(stencil));
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+}
+
+void
+Renderer::RecoverDeviceLostPlatform()
+{
 }
 
 void

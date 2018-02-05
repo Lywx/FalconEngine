@@ -9,12 +9,12 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-VertexBuffer::VertexBuffer(int               vertexNum,
-                           size_t            vertexSize,
+VertexBuffer::VertexBuffer(int vertexNum,
+                           size_t vertexSize,
                            BufferStorageMode storageMode,
-                           BufferUsage       usage) :
-    Buffer(vertexNum, vertexSize, storageMode, BufferType::VertexBuffer, usage),
-    mBinding()
+                           ResourceCreationAccessMode accessMode,
+                           ResourceCreationAccessUsage accessUsage) :
+    Buffer(vertexNum, vertexSize, storageMode, BufferType::VertexBuffer, accessMode, accessUsage)
 {
 }
 

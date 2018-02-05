@@ -4,3 +4,4 @@ external
 
 CMakeLists.txt.user
 
+*.TMP

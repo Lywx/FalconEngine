@@ -14,22 +14,13 @@ FALCON_ENGINE_DELETER_IMPLEMENT(PlatformRendererData, PlatformRendererDataDelete
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PlatformRendererData::PlatformRendererData():
-    mWindowHandle(nullptr)
+PlatformRendererData::PlatformRendererData(GLFWwindow *windowHandle) :
+    mWindowHandle(windowHandle)
 {
 }
 
 PlatformRendererData::~PlatformRendererData()
 {
-}
-
-/************************************************************************/
-/* Public Members                                                       */
-/************************************************************************/
-void
-PlatformRendererData::Initialize(GLFWwindow *windowHandle)
-{
-    mWindowHandle = windowHandle;
 }
 
 }

@@ -14,12 +14,14 @@ Buffer::Buffer(int elementNum,
                size_t elementSize,
                BufferStorageMode storageMode,
                BufferType type,
-               BufferUsage usage) :
+               ResourceCreationAccessMode accessMode,
+               ResourceCreationAccessUsage accessUsage) :
+    mAccessMode(accessMode),
+    mAccessUsage(accessUsage),
     mDataOffset(0),
     mElementSize(elementSize),
     mStorageMode(storageMode),
-    mType(type),
-    mUsage(usage)
+    mType(type)
 {
     if (elementNum < 1)
     {
@@ -36,13 +38,17 @@ Buffer::Buffer(int elementNum,
     mElementNum = elementNum;
 
     // NOTE(Wuxiang): Only allocate memory when the buffer storage resides on RAM.
-    if (mStorageMode == BufferStorageMode::Host)
+    if (mStorageMode == BufferStorageMode::Device)
+    {
+        mData = nullptr;
+    }
+    else if (mStorageMode == BufferStorageMode::Host)
     {
         mData = new unsigned char[mDataSize];
     }
     else
     {
-        mData = nullptr;
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
 }
 
@@ -139,10 +145,16 @@ Buffer::GetType() const
     return mType;
 }
 
-BufferUsage
-Buffer::GetUsage() const
+ResourceCreationAccessMode
+Buffer::GetAccessMode() const
 {
-    return mUsage;
+    return mAccessMode;
+}
+
+ResourceCreationAccessUsage
+Buffer::GetAccessUsage() const
+{
+    return mAccessUsage;
 }
 
 }

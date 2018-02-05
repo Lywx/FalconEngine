@@ -1,16 +1,16 @@
 #pragma once
 
+#include <FalconEngine/Core/Macro.h>
+
 #include <memory>
 
-#include <FalconEngine/Core/Macro.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 
 namespace FalconEngine
 {
 
 // @summary A wrapper around buffer that provide various convenient function.
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API BufferAdaptor
+FALCON_ENGINE_CLASS_BEGIN BufferAdaptor
 {
 public:
     /************************************************************************/
@@ -25,7 +25,7 @@ public:
     /************************************************************************/
     template<typename T>
     void
-    Fill(const T& value)
+    Fill(const T & value)
     {
         Fill(mBuffer->GetData(), value);
     }
@@ -34,14 +34,14 @@ public:
     // track of offset at the same time.
     template<typename T>
     void
-    Fill(unsigned char *data, const T& value)
+    Fill(unsigned char *data, const T & value)
     {
         BufferData::Fill<T>(data, mBufferDataRelativeOffsetEnd, value);
     }
 
     template<typename T, typename S>
     void
-    FillAs(const T& value)
+    FillAs(const T & value)
     {
         FillAs<T, S>(mBuffer->GetData(), value);
     }
@@ -50,7 +50,7 @@ public:
     // track of offset at the same time.
     template<typename T, typename S>
     void
-    FillAs(unsigned char *data, const T& value)
+    FillAs(unsigned char *data, const T & value)
     {
         BufferData::FillAs<T, S>(data, mBufferDataRelativeOffsetEnd, value);
     }
@@ -75,6 +75,6 @@ protected:
     // current at in the buffer.
     size_t                  mBufferDataRelativeOffsetEnd;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

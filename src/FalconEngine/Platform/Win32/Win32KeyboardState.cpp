@@ -6,14 +6,13 @@
 namespace FalconEngine
 {
 
-std::vector<int>
+std::vector<unsigned int>
 CreateKeyList()
 {
     // NOTE(Wuxiang): Copy from the Key enum value.
-    std::vector<int> keyCode;
-    keyCode.reserve(0xFF);
+    std::vector<unsigned int> keyCode = { 340, 341, 342, 344, 345, 346, };
 
-    // NOTE(Wuxiang): HACK on Windows API.
+    // HACK(Wuxiang): Windows API.
     for (unsigned int i = 0; i < 0xFF; ++i)
     {
         keyCode.push_back(i);
@@ -28,7 +27,7 @@ CreateKeyList()
 KeyboardState::KeyboardState()
 {
     // NOTE(Wuxiang): Copy from the Key enum value.
-    static std::vector<int> sKeyList = CreateKeyList();
+    static std::vector<unsigned int> sKeyList = CreateKeyList();
 
     int keyNum = int(sKeyList.size());
     for (int keyIndex = 0; keyIndex < keyNum; ++keyIndex)

@@ -1,19 +1,22 @@
 #pragma once
 
 #include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
+
 #if defined(FALCON_ENGINE_API_OPENGL)
 
 namespace FalconEngine
 {
 
+class Renderer;
 class VertexFormat;
-class FALCON_ENGINE_API PlatformVertexFormat
+
+class FALCON_ENGINE_API PlatformVertexFormat final
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformVertexFormat(const VertexFormat *vertexFormat);
+    explicit PlatformVertexFormat(Renderer *, const VertexFormat *vertexFormat);
     ~PlatformVertexFormat();
 
 public:
@@ -21,15 +24,15 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Enable();
+    Enable(Renderer *);
 
     void
-    Disable();
+    Disable(Renderer *);
 
+private:
     /************************************************************************/
     /* Private Members                                                      */
     /************************************************************************/
-private:
     void
     Create();
 

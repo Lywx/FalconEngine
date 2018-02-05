@@ -12,14 +12,15 @@ Texture1d::Texture1d()
 {
 }
 
-Texture1d::Texture1d(AssetSource        assetSource,
+Texture1d::Texture1d(AssetSource assetSource,
                      const std::string& fileName,
                      const std::string& filePath,
-                     int                width,
-                     TextureFormat      format,
-                     BufferUsage        usage,
-                     int                mipmapLevel) :
-    Texture(assetSource, fileName, filePath, width, 1, 1, format, TextureType::Texture1d, BufferStorageMode::Host, usage, mipmapLevel)
+                     int width,
+                     TextureFormat format,
+                     ResourceCreationAccessMode accessMode,
+                     ResourceCreationAccessUsage accessUsage,
+                     int mipmapLevel) :
+    Texture(assetSource, fileName, filePath, width, 1, 1, format, TextureType::Texture1d, BufferStorageMode::Host, accessMode, accessUsage, mipmapLevel)
 {
 }
 

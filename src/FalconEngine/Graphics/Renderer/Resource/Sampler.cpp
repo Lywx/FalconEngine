@@ -9,21 +9,26 @@ namespace FalconEngine
 /************************************************************************/
 Sampler::Sampler() :
     // @ref https://www.opengl.org/sdk/docs/man/html/glSamplerParameter.xhtml
-    mMinificationFilter(SamplerMinificationFilter::LinearMipmapLinear),
     mMagnificationFilter(SamplerMagnificationFilter::Linear),
+    mMinificationFilter(SamplerMinificationFilter::Linear),
+    mMipmapEnabled(false),
+    mMipmapFilter(SamplerMipmapFilter::Linear),
     mWrapS(SamplerWrapMode::Repeat),
     mWrapT(SamplerWrapMode::Repeat),
     mWrapR(SamplerWrapMode::Repeat)
 {
 }
 
-Sampler::Sampler(SamplerMinificationFilter minificationFilter,
-                 SamplerMagnificationFilter magnificationFilter,
+Sampler::Sampler(SamplerMagnificationFilter magnificationFilter,
+                 SamplerMinificationFilter minificationFilter,
+                 SamplerMipmapFilter mipmapFilter,
                  SamplerWrapMode wrapS,
                  SamplerWrapMode wrapT,
                  SamplerWrapMode wrapR) :
-    mMinificationFilter(minificationFilter),
     mMagnificationFilter(magnificationFilter),
+    mMinificationFilter(minificationFilter),
+    mMipmapEnabled(false),
+    mMipmapFilter(mipmapFilter),
     mWrapS(wrapS),
     mWrapT(wrapT),
     mWrapR(wrapR)

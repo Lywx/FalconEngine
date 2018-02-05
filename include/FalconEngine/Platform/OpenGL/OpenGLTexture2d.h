@@ -15,7 +15,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformTexture2d(const Texture2d *texture);
+    explicit PlatformTexture2d(Renderer *, const Texture2d *texture);
     ~PlatformTexture2d();
 };
 

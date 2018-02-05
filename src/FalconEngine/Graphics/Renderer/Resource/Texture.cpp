@@ -15,34 +15,37 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 Texture::Texture() :
+    mAccessMode(ResourceCreationAccessMode::None),
+    mAccessUsage(ResourceCreationAccessUsage::None),
     mDimension(),
     mFormat(TextureFormat::None),
     mMipmapLevel(0),
     mType(TextureType::None),
     mData(nullptr),
     mDataSize(0),
-    mStorageMode(BufferStorageMode::Host),
-    mUsage(BufferUsage::None)
+    mStorageMode(BufferStorageMode::None)
 {
 }
 
-Texture::Texture(AssetSource        assetSource,
+Texture::Texture(AssetSource assetSource,
                  const std::string& fileName,
                  const std::string& filePath,
-                 int                width,
-                 int                height,
-                 int                depth,
-                 TextureFormat      format,
-                 TextureType        type,
-                 BufferStorageMode  storageMode,
-                 BufferUsage        usage,
-                 int                mipmapLevel) :
+                 int width,
+                 int height,
+                 int depth,
+                 TextureFormat format,
+                 TextureType type,
+                 BufferStorageMode storageMode,
+                 ResourceCreationAccessMode accessMode,
+                 ResourceCreationAccessUsage accessUsage,
+                 int mipmapLevel) :
     Asset(assetSource, AssetType::Texture, fileName, filePath),
+    mAccessMode(accessMode),
+    mAccessUsage(accessUsage),
     mFormat(format),
     mMipmapLevel(mipmapLevel),
     mType(type),
-    mStorageMode(storageMode),
-    mUsage(usage)
+    mStorageMode(storageMode)
 {
     // Test validity of dimension.
     if (width < 1 || height < 1 || depth < 1)
@@ -55,15 +58,19 @@ Texture::Texture(AssetSource        assetSource,
     mDimension[2] = depth;
 
     // Allocate texture storage.
-    if (mStorageMode == BufferStorageMode::Host)
+    if (mStorageMode == BufferStorageMode::Device)
+    {
+        mData = nullptr;
+        mDataSize = 0;
+    }
+    else if (mStorageMode == BufferStorageMode::Host)
     {
         mDataSize = size_t(mDimension[0]) * size_t(mDimension[1]) * size_t(mDimension[2]) * TexelSize[int(mFormat)];
         mData = new unsigned char[mDataSize];
     }
     else
     {
-        mData = nullptr;
-        mDataSize = 0;
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
 }
 

@@ -11,6 +11,7 @@
 namespace FalconEngine
 {
 
+class Renderer;
 class TextureArray;
 
 #pragma warning(disable: 4251)
@@ -20,7 +21,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformTextureArray(const TextureArray *textureArray);
+    explicit PlatformTextureArray(Renderer *, const TextureArray *textureArray);
     virtual ~PlatformTextureArray();
 
 public:
@@ -28,21 +29,22 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Enable(int textureUnit);
+    Enable(Renderer *, int textureUnit);
 
     void
-    Disable(int textureUnit);
+    Disable(Renderer *, int textureUnit);
 
     void *
-    Map(int                       textureIndex,
-        BufferAccessMode          access,
-        BufferFlushMode           flush,
-        BufferSynchronizationMode synchronization,
-        int64_t                   offset,
-        int64_t                   size);
+    Map(Renderer *,
+        int textureIndex,
+        ResourceMapAccessMode access,
+        ResourceMapFlushMode flush,
+        ResourceMapSyncMode synchronization,
+        int64_t offset,
+        int64_t size);
 
     void
-    Unmap(int textureIndex);
+    Unmap(Renderer *, int textureIndex);
 
 protected:
     // The buffer object for each slice of texture

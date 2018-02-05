@@ -1,8 +1,9 @@
 #include <FalconEngine/Platform/GLFW/GLFWGameEngineWindow.h>
-#include <FalconEngine/Core/Timer.h>
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
+#include <FalconEngine/Core/GameEngineData.h>
 #include <FalconEngine/Core/GameEngineInput.h>
+#include <FalconEngine/Core/Timer.h>
 #include <FalconEngine/Input/MouseButton.h>
 #include <FalconEngine/Input/MouseState.h>
 #include <FalconEngine/Input/KeyboardState.h>
@@ -53,6 +54,17 @@ public:
             w->MousePositionCallback(window, x, y);
         }
     }
+
+    static void
+    WindowCloseCallbackDispatch(GLFWwindow *window)
+    {
+
+        auto w = reinterpret_cast<PlatformGameEngineWindow *>(glfwGetWindowUserPointer(window));
+        if (w)
+        {
+            w->WindowCloseCallback(window);
+        }
+    }
 };
 
 /************************************************************************/
@@ -91,6 +103,8 @@ PlatformGameEngineWindow::MouseButtonCallback(GLFWwindow * /* window */, int but
 void
 PlatformGameEngineWindow::MousePositionCallback(GLFWwindow *window, double x, double y)
 {
+    _UNUSED(window);
+
     // NOTE(Wuxiang): I invert the Y coordinate of screen space so that (0, 0)
     // as left lower corner to be consistent with the OpenGL NDC convention.
     mInput->mMouseState->SetPositionInternal(x, mSettings->mWindowHeight - y, Timer::GetMilliseconds());
@@ -102,12 +116,21 @@ PlatformGameEngineWindow::ScrollCallback(GLFWwindow * /* window */, double /* xo
     mInput->mMouseState->SetWheelValueInternal(yoffset, Timer::GetMilliseconds());
 }
 
+void
+PlatformGameEngineWindow::WindowCloseCallback(GLFWwindow *window)
+{
+    _UNUSED(window);
+
+    mData->mRunning = false;
+}
+
 /************************************************************************/
 /* Private Members                                                      */
 /************************************************************************/
 void
 PlatformGameEngineWindow::InitializeData()
 {
+    mData = GameEngineData::GetInstance();
     mInput = GameEngineInput::GetInstance();
     mSettings = GameEngineSettings::GetInstance();
 }
@@ -119,6 +142,7 @@ PlatformGameEngineWindow::InitializePlatform()
     glfwSetMouseButtonCallback(mHandle, GameWindowDispatcher::MouseButtonCallbackDispatch);
     glfwSetCursorPosCallback(mHandle, GameWindowDispatcher::MousePositionCallbackDispatch);
     glfwSetScrollCallback(mHandle, GameWindowDispatcher::ScrollCallbackDispatch);
+    glfwSetWindowCloseCallback(mHandle, GameWindowDispatcher::WindowCloseCallbackDispatch);
     glfwSetWindowUserPointer(mHandle, this);
 }
 

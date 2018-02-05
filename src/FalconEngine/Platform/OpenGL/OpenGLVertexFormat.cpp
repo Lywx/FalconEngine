@@ -10,7 +10,7 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PlatformVertexFormat::PlatformVertexFormat(const VertexFormat *vertexFormat) :
+PlatformVertexFormat::PlatformVertexFormat(Renderer *, const VertexFormat *vertexFormat) :
     mVertexArrayObj(),
     mVertexFormatPtr(vertexFormat)
 {
@@ -26,13 +26,13 @@ PlatformVertexFormat::~PlatformVertexFormat()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PlatformVertexFormat::Enable()
+PlatformVertexFormat::Enable(Renderer *)
 {
     glBindVertexArray(mVertexArrayObj);
 }
 
 void
-PlatformVertexFormat::Disable()
+PlatformVertexFormat::Disable(Renderer *)
 {
     glBindVertexArray(0);
 }

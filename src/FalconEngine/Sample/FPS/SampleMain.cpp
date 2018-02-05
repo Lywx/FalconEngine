@@ -10,7 +10,7 @@ int main(int argc, char **argv)
     gameEngineSettings->mContentDirectory = "Content/";
     gameEngineSettings->mShaderDirectory = "Content/Shader/";
     gameEngineSettings->mMouseVisible = true;
-    gameEngineSettings->mMouseLimited = false;
+    gameEngineSettings->mMouseLimited = true;
     gameEngineSettings->mWindowWidth = 1600;
     gameEngineSettings->mWindowHeight = 900;
 

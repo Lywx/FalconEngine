@@ -13,7 +13,7 @@
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/BufferAdaptor.h>
-#include <FalconEngine/Graphics/Renderer/Resource/BufferResource.h>
+#include <FalconEngine/Graphics/Renderer/Resource/BufferGroup.h>
 #include <FalconEngine/Graphics/Renderer/Resource/BufferCircular.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 
@@ -36,7 +36,7 @@ FontRenderer::BatchItemNumMax = 1024;
 /************************************************************************/
 FontRenderer::FontRenderer()
 {
-    mTextBufferResource = make_shared<BufferResource<FontResourceChannel>>();
+    mTextBufferGroup = make_shared<BufferGroup<FontBufferChannel>>();
 }
 
 FontRenderer::~FontRenderer()
@@ -88,22 +88,22 @@ FontRenderer::RenderBegin()
 void
 FontRenderer::Render(double /* percent */)
 {
-    mTextBufferResource->Draw(nullptr);
+    mTextBufferGroup->Draw(nullptr);
 
-    for (auto fontChannelIter = mTextBufferResource->GetChannelBegin();
-            fontChannelIter != mTextBufferResource->GetChannelEnd();
+    for (auto fontChannelIter = mTextBufferGroup->GetChannelBegin();
+            fontChannelIter != mTextBufferGroup->GetChannelEnd();
             ++fontChannelIter)
     {
         auto fontChannel = fontChannelIter->first;
         auto& fontChannelInfo = fontChannelIter->second;
 
-        if (mTextBufferResource->GetChannel(fontChannel)->mRenderItemList.size() > 0)
+        if (mTextBufferGroup->GetChannel(fontChannel)->mRenderItemList.size() > 0)
         {
             FillText(reinterpret_cast<const Font *>(fontChannel),
                      fontChannelInfo.get());
         }
 
-        mTextBufferResource->DrawChannel(fontChannel, nullptr);
+        mTextBufferGroup->DrawChannel(fontChannel, nullptr);
     }
 }
 
@@ -112,7 +112,7 @@ FontRenderer::RenderEnd()
 {
     // NOTE(Wuxiang): Only need to reset persistent data because after Render
     // method gets called, all the non-persistent data is cleared already.
-    mTextBufferResource->ResetPersistent();
+    mTextBufferGroup->ResetPersistent();
 }
 
 /************************************************************************/
@@ -135,13 +135,13 @@ FontRenderer::BatchText(
 
     // Add the text into the batch
     auto fontVertexNumMapped = int(textString.size()) * 6;
-    mTextBufferResource->AddChannelElementMapped(fontChannel, fontVertexNumMapped);
-    mTextBufferResource->AddChannelItem(fontChannel, FontRenderItem(
-                                            FontText(fontSize,
-                                                    textString,
-                                                    textPosition,
-                                                    textLineWidth),
-                                            textColor));
+    mTextBufferGroup->AddChannelElementMapped(fontChannel, fontVertexNumMapped);
+    mTextBufferGroup->AddChannelItem(fontChannel, FontRenderItem(
+                                         FontText(fontSize,
+                                                 textString,
+                                                 textPosition,
+                                                 textLineWidth),
+                                         textColor));
 
     // Fill the text VRAM buffer when the batch item number reach the item limit.
     int itemNum = int(fontChannelInfo->mRenderItemList.size());
@@ -151,16 +151,16 @@ FontRenderer::BatchText(
     }
 }
 
-const std::shared_ptr<FontResourceChannel>&
+const std::shared_ptr<FontBufferChannel>&
 FontRenderer::FindChannel(const Font *font)
 {
     auto fontChannel = intptr_t(font);
 
     // When the font is prepared before.
-    auto fontChannelExist = mTextBufferResource->ContainChannel(fontChannel);
+    auto fontChannelExist = mTextBufferGroup->ContainChannel(fontChannel);
     if (fontChannelExist)
     {
-        return mTextBufferResource->GetChannel(fontChannel);
+        return mTextBufferGroup->GetChannel(fontChannel);
     }
 
     // Initialize new batch for given font.
@@ -170,7 +170,9 @@ FontRenderer::FindChannel(const Font *font)
     int vertexBufferVertexNum = int(FrameGlyphNumMax * 6 * 1.25);
     auto vertexBuffer = make_shared<VertexBuffer>(
                             vertexBufferVertexNum, sizeof(FontVertex),
-                            BufferStorageMode::Device, BufferUsage::Stream);
+                            BufferStorageMode::Device,
+                            ResourceCreationAccessMode::GpuRead_CpuWrite,
+                            ResourceCreationAccessUsage::Stream);
 
     auto vertexBufferAdaptor = make_shared<BufferCircular>(
                                    vertexBuffer,
@@ -186,29 +188,29 @@ FontRenderer::FindChannel(const Font *font)
     auto visualEffectParams = make_shared<FontEffectParams>(font, HandednessRight::GetInstance());
     sVisualEffect->CreateInstance(visual.get(), visualEffectParams);
 
-    return mTextBufferResource->CreateChannel(fontChannel, vertexBufferAdaptor, visual);
+    return mTextBufferGroup->CreateChannel(fontChannel, vertexBufferAdaptor, visual);
 }
 
 void
 FontRenderer::FillText(
     _IN_     const Font          *font,
-    _IN_OUT_ FontResourceChannel *fontChannelInfo)
+    _IN_OUT_ FontBufferChannel *fontChannelInfo)
 {
     FALCON_ENGINE_CHECK_NULLPTR(font);
 
     auto fontChannel = intptr_t(font);
 
-    mTextBufferResource->FillChannelDataBegin(
+    mTextBufferGroup->FillChannelDataBegin(
         fontChannel,
-        BufferAccessMode::WriteRange,
-        BufferFlushMode::Explicit,
-        BufferSynchronizationMode::Unsynchronized);
+        ResourceMapAccessMode::WriteRange,
+        ResourceMapFlushMode::Explicit,
+        ResourceMapSyncMode::Unsynchronized);
 
     {
         BufferAdaptor *bufferAdaptor;
         unsigned char *bufferData;
         std::tie(bufferAdaptor, bufferData)
-            = mTextBufferResource->GetChannelData(fontChannel);
+            = mTextBufferGroup->GetChannelData(fontChannel);
 
         int fontPendingGlyphNum = 0;
 
@@ -237,12 +239,12 @@ FontRenderer::FillText(
         }
 
         auto fontPendingVertexNum = fontPendingGlyphNum * 6;
-        mTextBufferResource->AddChannelElementPersistent(fontChannel, fontPendingVertexNum);
-        mTextBufferResource->FlushChannelData(fontChannel, fontPendingVertexNum);
+        mTextBufferGroup->AddChannelElementPersistent(fontChannel, fontPendingVertexNum);
+        mTextBufferGroup->FlushChannelData(fontChannel, fontPendingVertexNum);
     }
 
-    mTextBufferResource->FillChannelDataEnd(fontChannel);
-    mTextBufferResource->ResetChannel(fontChannel);
+    mTextBufferGroup->FillChannelDataEnd(fontChannel);
+    mTextBufferGroup->ResetChannel(fontChannel);
 }
 
 }

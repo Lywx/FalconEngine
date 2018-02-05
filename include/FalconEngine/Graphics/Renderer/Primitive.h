@@ -12,12 +12,13 @@ namespace FalconEngine
 enum class PrimitiveType
 {
     None,
+
     Point,
     Line,
     LineStrip,
     Triangle,
     TriangleStrip,
-    TriangleFan,
+
     Count,
 };
 

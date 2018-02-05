@@ -9,13 +9,15 @@
 namespace FalconEngine
 {
 
+class Renderer;
+
 class FALCON_ENGINE_API PlatformVertexBuffer : public PlatformBuffer
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformVertexBuffer(const VertexBuffer *vertexBuffer);
+    explicit PlatformVertexBuffer(Renderer *renderer, const VertexBuffer *vertexBuffer);
     ~PlatformVertexBuffer();
 
 public:
@@ -24,11 +26,11 @@ public:
     /************************************************************************/
     // @Summar: Enable buffer in the renderer.
     void
-    Enable(unsigned int bindingIndex, int64_t offset, int stride);
+    Enable(Renderer *, unsigned int bindingIndex, int64_t offset, int stride);
 
     // @Summar: Disable buffer in the renderer.
     void
-    Disable(unsigned int bindingIndex);
+    Disable(Renderer *, unsigned int bindingIndex);
 };
 
 }

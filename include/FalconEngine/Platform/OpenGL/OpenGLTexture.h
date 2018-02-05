@@ -8,6 +8,7 @@
 namespace FalconEngine
 {
 
+class Renderer;
 class Texture;
 
 #pragma warning(disable: 4251)
@@ -17,7 +18,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformTexture(const Texture *texture);
+    explicit PlatformTexture(Renderer *renderer, const Texture *texture);
     virtual ~PlatformTexture();
 
 public:
@@ -25,20 +26,21 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Enable(int textureUnit);
+    Enable(Renderer *, int textureUnit);
 
     void
-    Disable(int textureUnit);
+    Disable(Renderer *, int textureUnit);
 
     void *
-    Map(BufferAccessMode          access,
-        BufferFlushMode           flush,
-        BufferSynchronizationMode synchronization,
-        int64_t                   offset,
-        int64_t                   size);
+    Map(Renderer *,
+        ResourceMapAccessMode access,
+        ResourceMapFlushMode flush,
+        ResourceMapSyncMode synchronization,
+        int64_t offset,
+        int64_t size);
 
     void
-    Unmap();
+    Unmap(Renderer *);
 
 protected:
     GLuint         mBufferObj;

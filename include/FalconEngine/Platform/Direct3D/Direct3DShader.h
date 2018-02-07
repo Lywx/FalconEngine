@@ -12,6 +12,7 @@
 
 namespace FalconEngine
 {
+class Renderer;
 
 class FALCON_ENGINE_API PlatformShader final
 {
@@ -19,7 +20,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformShader(Shader *shader);
+    explicit PlatformShader(Renderer *renderer, Shader *shader);
     ~PlatformShader();
 
 public:
@@ -39,10 +40,10 @@ public:
     GetProgram() const;
 
     void
-    Enable() const;
+    Enable(Renderer *renderer) const;
 
     void
-    Disable() const;
+    Disable(Renderer *renderer) const;
 
     // @remark This function is primarily used in debugging.
     void

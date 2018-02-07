@@ -1,10 +1,11 @@
 #pragma once
 
-#include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
+#include <FalconEngine/Core/Macro.h>
 
 #if defined(FALCON_ENGINE_API_OPENGL)
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLBuffer.h>
+#include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
 
 namespace FalconEngine
 {
@@ -18,7 +19,7 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
     explicit PlatformVertexBuffer(Renderer *renderer, const VertexBuffer *vertexBuffer);
-    ~PlatformVertexBuffer();
+    virtual ~PlatformVertexBuffer();
 
 public:
     /************************************************************************/

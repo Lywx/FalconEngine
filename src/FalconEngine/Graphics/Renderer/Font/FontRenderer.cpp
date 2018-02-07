@@ -170,9 +170,9 @@ FontRenderer::FindChannel(const Font *font)
     int vertexBufferVertexNum = int(FrameGlyphNumMax * 6 * 1.25);
     auto vertexBuffer = make_shared<VertexBuffer>(
                             vertexBufferVertexNum, sizeof(FontVertex),
-                            BufferStorageMode::Device,
-                            ResourceCreationAccessMode::GpuRead_CpuWrite,
-                            ResourceCreationAccessUsage::Stream);
+                            ResourceCreationAccessMode::GpuReadCpuWrite,
+                            ResourceCreationAccessUsage::Stream,
+                            ResourceStorageMode::Device);
 
     auto vertexBufferAdaptor = make_shared<BufferCircular>(
                                    vertexBuffer,

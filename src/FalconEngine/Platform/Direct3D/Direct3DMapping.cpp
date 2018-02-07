@@ -1,44 +1,127 @@
 #include <FalconEngine/Platform/Direct3D/Direct3DMapping.h>
 
 #if defined(FALCON_ENGINE_API_DIRECT3D)
+#include <FalconEngine/Core/Exception.h>
 
 namespace FalconEngine
 {
 
-const D3D11_MAP Direct3DBufferAccessMode[int(ResourceMapAccessMode::Count)] =
+const D3D11_USAGE Direct3DResourceAccessUsage[int(ResourceCreationAccessMode::Count)] =
 {
-    D3D11_MAP_WRITE,
-    D3D11_MAP_WRITE_DISCARD,
-    D3D11_MAP_WRITE,
-    D3D11_MAP_WRITE_DISCARD,
-    D3D11_MAP_WRITE_DISCARD,
+    D3D11_USAGE(-1),       // None
 
-    D3D11_MAP_READ_WRITE,
-    D3D11_MAP_READ_WRITE,
-
-    D3D11_MAP_READ,
-    D3D11_MAP_READ,
-
-    // TODO(Wuxiang): Add non overwrite support.
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ff476181(v=vs.85).aspx
-    D3D11_MAP_WRITE_NO_OVERWRITE
+    D3D11_USAGE_IMMUTABLE, // GpuRead
+    D3D11_USAGE_DYNAMIC,   // GpuReadCpuWrite
+    D3D11_USAGE_DEFAULT,   // GpuReadWrite
+    D3D11_USAGE_STAGING    // GpuWriteCpuRead
 };
 
-const D3D11_USAGE Direct3DResourceUsage[int(FALCON_ENGINE_RESOURCE_ACCESS_COUNT)] =
+UINT
+Direct3DResourceAccessFlag(ResourceCreationAccessMode mode)
 {
-    D3D11_USAGE(-1),       // FALCON_ENGINE_RESOURCE_ACCESS_NONE
+    if (mode == ResourceCreationAccessMode::GpuReadCpuWrite)
+    {
+        return D3D11_CPU_ACCESS_WRITE;
+    }
+    else if (mode == ResourceCreationAccessMode::GpuWriteCpuRead)
+    {
+        return D3D11_CPU_ACCESS_READ;
+    }
+    else
+    {
+        return 0;
+    }
+}
 
-    D3D11_USAGE_IMMUTABLE, // ResourceCreationAccessMode::GpuRead
-    D3D11_USAGE_DYNAMIC,   // ResourceCreationAccessMode::GpuRead_CpuWrite
-    D3D11_USAGE_DEFAULT,   // ResourceCreationAccessMode::GpuReadWrite
-    D3D11_USAGE_STAGING    // ResourceCreationAccessMode::GpuWrite_CpuRead
-};
+UINT
+Direct3DResourceBindFlag(const Buffer *buffer)
+{
+    UINT bindFlag = 0;
 
-const DXGI_FORMAT Direct3DTextureFormat[int(TextureFormat::Count)] =
+    switch (buffer->GetType())
+    {
+    case BufferType::None:
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION()
+    case BufferType::VertexBuffer:
+        bindFlag = D3D11_BIND_VERTEX_BUFFER;
+        break;
+    case BufferType::IndexBuffer:
+        bindFlag = D3D11_BIND_INDEX_BUFFER;
+        break;
+    case BufferType::ShaderBuffer:
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+        break;
+    case BufferType::UniformBuffer:
+        bindFlag = D3D11_BIND_CONSTANT_BUFFER;
+        break;
+    case BufferType::TextureBuffer:
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+        break;
+    case BufferType::RenderBuffer:
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+        break;
+    case BufferType::FeedbackBuffer:
+        bindFlag = D3D11_BIND_STREAM_OUTPUT;
+        break;
+    default:
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION()
+    }
+
+    return bindFlag;
+}
+
+UINT
+Direct3DResourceBindFlag(const Texture *texture)
+{
+    UINT bindFlag = 0;
+
+    if (texture->mAttachColorBuffer)
+    {
+        bindFlag += D3D11_BIND_RENDER_TARGET;
+    }
+
+    if (texture->mAttachDepthStencilBuffer)
+    {
+        bindFlag += D3D11_BIND_DEPTH_STENCIL;
+    }
+
+    if (texture->mAttachImage)
+    {
+        bindFlag += D3D11_BIND_UNORDERED_ACCESS;
+    }
+
+    if (texture->mAttachTexture)
+    {
+        bindFlag = D3D11_BIND_SHADER_RESOURCE;
+    }
+
+    return bindFlag;
+}
+
+const DXGI_FORMAT Direct3DResourceFormat[int(TextureFormat::Count)] =
 {
     DXGI_FORMAT_UNKNOWN,       // None
 
     DXGI_FORMAT_R8G8B8A8_UINT, // R8G8B8A8
+};
+
+const D3D11_MAP Direct3DResourceMapMode[int(ResourceMapAccessMode::Count)] =
+{
+    D3D11_MAP_WRITE,
+    D3D11_MAP_WRITE_DISCARD,
+    D3D11_MAP_WRITE,
+    D3D11_MAP_WRITE_DISCARD,
+    D3D11_MAP_WRITE_DISCARD,
+
+    D3D11_MAP_READ_WRITE,
+    D3D11_MAP_READ_WRITE,
+
+    D3D11_MAP_READ,
+    D3D11_MAP_READ,
+
+    // TODO(Wuxiang): 2018-02-06 12:10 Add non overwrite support.
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/ff476181(v=vs.85).aspx
+    D3D11_MAP_WRITE_NO_OVERWRITE
 };
 
 const D3D11_TEXTURE_ADDRESS_MODE Direct3DSamplerWrapMode[int(SamplerWrapMode::Count)] =

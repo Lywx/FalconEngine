@@ -235,29 +235,6 @@ Renderer::SetWindowData(int width, int height, float near, float far)
 /* Universal Buffer Management                                          */
 /************************************************************************/
 void
-Renderer::Bind(const Buffer *buffer)
-{
-    switch (buffer->GetType())
-    {
-    case BufferType::None:
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.");
-    case BufferType::VertexBuffer:
-        Bind(reinterpret_cast<const VertexBuffer *>(buffer));
-        break;
-    case BufferType::IndexBuffer:
-        Bind(reinterpret_cast<const IndexBuffer *>(buffer));
-        break;
-    case BufferType::ShaderBuffer:
-        Bind(reinterpret_cast<const ShaderBuffer *>(buffer));
-        break;
-    case BufferType::UniformBuffer:
-        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-    default:
-        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
-    }
-}
-
-void
 Renderer::Unbind(const Buffer *buffer)
 {
     switch (buffer->GetType())
@@ -272,52 +249,6 @@ Renderer::Unbind(const Buffer *buffer)
         break;
     case BufferType::ShaderBuffer:
         Unbind(reinterpret_cast<const ShaderBuffer *>(buffer));
-        break;
-    case BufferType::UniformBuffer:
-        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-    default:
-        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
-    }
-}
-
-void
-Renderer::Enable(const Buffer *buffer)
-{
-    switch (buffer->GetType())
-    {
-    case BufferType::None:
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.");
-    case BufferType::VertexBuffer:
-        Enable(reinterpret_cast<const VertexBuffer *>(buffer));
-        break;
-    case BufferType::IndexBuffer:
-        Enable(reinterpret_cast<const IndexBuffer *>(buffer));
-        break;
-    case BufferType::ShaderBuffer:
-        Enable(reinterpret_cast<const ShaderBuffer *>(buffer));
-        break;
-    case BufferType::UniformBuffer:
-        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-    default:
-        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
-    }
-}
-
-void
-Renderer::Disable(const Buffer *buffer)
-{
-    switch (buffer->GetType())
-    {
-    case BufferType::None:
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.");
-    case BufferType::VertexBuffer:
-        Disable(reinterpret_cast<const VertexBuffer *>(buffer));
-        break;
-    case BufferType::IndexBuffer:
-        Disable(reinterpret_cast<const IndexBuffer *>(buffer));
-        break;
-    case BufferType::ShaderBuffer:
-        Disable(reinterpret_cast<const ShaderBuffer *>(buffer));
         break;
     case BufferType::UniformBuffer:
         FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();

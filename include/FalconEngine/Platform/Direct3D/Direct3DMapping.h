@@ -17,13 +17,12 @@
 namespace FalconEngine
 {
 
-FALCON_ENGINE_API extern const D3D11_MAP                  Direct3DBufferAccessMode[int(ResourceMapAccessMode::Count)];
-FALCON_ENGINE_API extern const int                        Direct3DBufferFlushModeMark[int(ResourceMapFlushMode::Count)];
-FALCON_ENGINE_API extern const int                        Direct3DBufferSynchronizationModeMark[int(ResourceMapSyncMode::Count)];
-
-FALCON_ENGINE_API extern const D3D11_USAGE                Direct3DResourceUsage[int(FALCON_ENGINE_RESOURCE_ACCESS_COUNT)];
-
-FALCON_ENGINE_API extern const DXGI_FORMAT                Direct3DTextureFormat[int(TextureFormat::Count)];
+FALCON_ENGINE_API extern const D3D11_USAGE                Direct3DResourceAccessUsage[int(ResourceCreationAccessMode::Count)];
+FALCON_ENGINE_API UINT                                    Direct3DResourceAccessFlag(ResourceCreationAccessMode mode);
+FALCON_ENGINE_API UINT                                    Direct3DResourceBindFlag(const Buffer *buffer);
+FALCON_ENGINE_API UINT                                    Direct3DResourceBindFlag(const Texture *texture);
+FALCON_ENGINE_API extern const DXGI_FORMAT                Direct3DResourceFormat[int(TextureFormat::Count)];
+FALCON_ENGINE_API extern const D3D11_MAP                  Direct3DResourceMapMode[int(ResourceMapAccessMode::Count)];
 
 FALCON_ENGINE_API extern const D3D11_TEXTURE_ADDRESS_MODE Direct3DSamplerWrapMode[int(SamplerWrapMode::Count)];
 

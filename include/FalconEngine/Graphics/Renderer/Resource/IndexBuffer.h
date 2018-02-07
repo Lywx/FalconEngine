@@ -24,9 +24,9 @@ public:
     /************************************************************************/
     IndexBuffer(int indexNum,
                 IndexType indexType,
-                BufferStorageMode storageMode,
                 ResourceCreationAccessMode accessMode,
-                ResourceCreationAccessUsage accessUsage);
+                ResourceCreationAccessUsage accessUsage,
+                ResourceStorageMode storageMode);
     virtual ~IndexBuffer();
 
 public:

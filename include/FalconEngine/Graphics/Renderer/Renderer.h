@@ -175,17 +175,11 @@ public:
     /************************************************************************/
     /* Universal Buffer Management                                          */
     /************************************************************************/
-    void
-    Bind(const Buffer *buffer);
-
+    // NOTE(Wuxiang): The Bind / Enable / Disable interface is inconsistent for
+    // different buffer type. So the Renderer interface require buffer to use
+    // derived buffer class to access corresponding functionality.
     void
     Unbind(const Buffer *buffer);
-
-    void
-    Enable(const Buffer *buffer);
-
-    void
-    Disable(const Buffer *buffer);
 
     void *
     Map(const Buffer *buffer,
@@ -256,20 +250,20 @@ public:
     Disable(const IndexBuffer *indexBuffer);
 
     void *
-    Map(const IndexBuffer        *indexBuffer,
-        ResourceMapAccessMode          access,
-        ResourceMapFlushMode           flush,
-        ResourceMapSyncMode synchronization,
-        int64_t                   offset,
-        int64_t                   size);
+    Map(const IndexBuffer *indexBuffer,
+        ResourceMapAccessMode access,
+        ResourceMapFlushMode flush,
+        ResourceMapSyncMode sync,
+        int64_t offset,
+        int64_t size);
 
     void
     Unmap(const IndexBuffer *indexBuffer);
 
     void
     Flush(const IndexBuffer *indexBuffer,
-          int64_t            offset,
-          int64_t            size);
+          int64_t offset,
+          int64_t size);
 
     /************************************************************************/
     /* Vertex Buffer Management                                             */

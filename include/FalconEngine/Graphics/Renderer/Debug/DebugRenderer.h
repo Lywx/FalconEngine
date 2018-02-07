@@ -189,9 +189,9 @@ private:
         auto vertexBuffer = make_shared<VertexBuffer>(
                                 channelElementNum,
                                 sizeof(DebugVertex),
-                                BufferStorageMode::Device,
-                                ResourceCreationAccessMode::GpuRead_CpuWrite,
-                                ResourceCreationAccessUsage::Stream);
+                                ResourceCreationAccessMode::GpuReadCpuWrite,
+                                ResourceCreationAccessUsage::Stream,
+                                ResourceStorageMode::Device);
 
         auto vertexBufferAdaptor = make_shared<BufferCircular>(vertexBuffer, vertexBuffer->GetCapacitySize() / 4);
 

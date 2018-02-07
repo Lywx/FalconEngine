@@ -1,9 +1,9 @@
 #pragma once
 
-#include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
+#include <FalconEngine/Core/Macro.h>
 
 #if defined(FALCON_ENGINE_API_OPENGL)
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
+#include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLMapping.h>
 
 namespace FalconEngine

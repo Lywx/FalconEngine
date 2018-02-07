@@ -35,7 +35,7 @@ private:
     /* Private Members                                                      */
     /************************************************************************/
     void
-    Create();
+    CreateSampler();
 
 private:
     GLuint         mSamplerObj;

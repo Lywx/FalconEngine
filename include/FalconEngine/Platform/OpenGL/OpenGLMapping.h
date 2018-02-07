@@ -21,7 +21,7 @@ FALCON_ENGINE_API extern const GLuint OpenGLBufferAccessModeBit[int(ResourceMapA
 FALCON_ENGINE_API extern const GLuint OpenGLBufferFlushModeBit[int(ResourceMapFlushMode::Count)];
 FALCON_ENGINE_API extern const GLuint OpenGLBufferSynchronizationModeBit[int(ResourceMapSyncMode::Count)];
 
-FALCON_ENGINE_API GLuint OpenGLBufferUsage(ResourceCreationAccessMode mode, ResourceCreationAccessUsage usage);
+FALCON_ENGINE_API GLuint              OpenGLBufferUsage(ResourceCreationAccessMode mode, ResourceCreationAccessUsage usage);
 
 FALCON_ENGINE_API extern const GLuint OpenGLTextureType[int(TextureFormat::Count)];               // Texture element type
 FALCON_ENGINE_API extern const GLuint OpenGLTextureFormat[int(TextureFormat::Count)];             // Texture format

@@ -8,16 +8,16 @@ namespace FalconEngine
 /************************************************************************/
 IndexBuffer::IndexBuffer(int indexNum,
                          IndexType indexType,
-                         BufferStorageMode storageMode,
                          ResourceCreationAccessMode accessMode,
-                         ResourceCreationAccessUsage accessUsage) :
+                         ResourceCreationAccessUsage accessUsage,
+                         ResourceStorageMode storageMode) :
     // The index buffer doesn't need the vertex array information about index
     // channel dimension. So we pass 1 here.
     Buffer(indexNum,
            indexType == IndexType::UnsignedShort
            ? sizeof(unsigned short)
            : sizeof(unsigned int),
-           storageMode, BufferType::IndexBuffer, accessMode, accessUsage),
+           BufferType::IndexBuffer, accessMode, accessUsage, storageMode),
     mType(indexType)
 {
 }

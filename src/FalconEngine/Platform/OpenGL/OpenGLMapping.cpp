@@ -40,7 +40,7 @@ OpenGLBufferUsage(ResourceCreationAccessMode mode, ResourceCreationAccessUsage u
     {
         return GL_STATIC_DRAW;
     }
-    else if (mode == ResourceCreationAccessMode::GpuRead_CpuWrite)
+    else if (mode == ResourceCreationAccessMode::GpuReadCpuWrite)
     {
         if (usage == ResourceCreationAccessUsage::Static)
         {
@@ -78,7 +78,7 @@ OpenGLBufferUsage(ResourceCreationAccessMode mode, ResourceCreationAccessUsage u
             FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
         }
     }
-    else if (mode == ResourceCreationAccessMode::GpuWrite_CpuRead)
+    else if (mode == ResourceCreationAccessMode::GpuWriteCpuRead)
     {
         if (usage == ResourceCreationAccessUsage::Static)
         {

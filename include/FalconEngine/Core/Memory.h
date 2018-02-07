@@ -47,11 +47,11 @@ extern size_t __line__;
 
 #if defined(FALCON_ENGINE_DEBUG_MEMORY)
 // http://stackoverflow.com/questions/619467/macro-to-replace-c-operator-new
-#define New(memoryPool) (FalconEngine::__file__=__FILE__, FalconEngine::__line__=__LINE__) && 0 ? NULL : new(memoryPool)
-#define Delete(memoryPointer) (FalconEngine::__file__=__FILE__, FalconEngine::__line__=__LINE__) && 0 ? NULL : delete memoryPointer
+#define FALCON_ENGINE_NEW(memoryPool) (FalconEngine::__file__=__FILE__, FalconEngine::__line__=__LINE__) && 0 ? NULL : new(memoryPool)
+#define FALCON_ENGINE_DELETE(memoryPointer) (FalconEngine::__file__=__FILE__, FalconEngine::__line__=__LINE__) && 0 ? NULL : delete memoryPointer
 #else
-#define New(memoryPool) new(memoryPool)
-#define Delete(memoryPool) delete(memoryPool)
+#define FALCON_ENGINE_NEW(memoryPool) new(memoryPool)
+#define FALCON_ENGINE_DELETE(memoryPool) delete(memoryPool)
 #endif
 
 #define FALCON_ENGINE_DELETER_DECLARE(PlatformClass, PlatformDeleterClass) \

@@ -20,8 +20,8 @@ TextureArray::TextureArray(AssetSource assetSource,
     Texture(assetSource, fileName, filePath,
             // https://www.khronos.org/opengl/wiki/Array_Texture
             // An array texture is a Texture where each mipmap level contains an array of images of the same size.
-            width, height, depth, format, type, BufferStorageMode::Device,
-            accessMode, accessUsage, mipmapLevel)
+            width, height, depth, format, type,
+            accessMode, accessUsage, ResourceStorageMode::Device, mipmapLevel)
 {
 }
 

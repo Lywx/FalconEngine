@@ -16,7 +16,7 @@ PlatformSampler::PlatformSampler(Renderer *, const Sampler *sampler) :
     mSamplerObjPrevious(0),
     mSamplerPtr(sampler)
 {
-    Create();
+    CreateSampler();
 }
 
 PlatformSampler::~PlatformSampler()
@@ -43,7 +43,7 @@ PlatformSampler::Disable(Renderer *, int textureUnit)
 /* Private Members                                                      */
 /************************************************************************/
 void
-PlatformSampler::Create()
+PlatformSampler::CreateSampler()
 {
     // NEW(Wuxiang): Add support for GL_TEXTURE_BORDER_COLOR, GL_TEXTURE_MIN_LOD, GL_TEXTURE_MAX_LOD, GL_TEXTURE_LOD_BIAS, GL_TEXTURE_COMPARE_MODE, GL_TEXTURE_COMPARE_FUNC
     glGenSamplers(1, &mSamplerObj);

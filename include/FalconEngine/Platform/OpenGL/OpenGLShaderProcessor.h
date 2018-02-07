@@ -2,6 +2,7 @@
 
 #include <FalconEngine/Core/Macro.h>
 
+#if defined(FALCON_ENGINE_API_OPENGL)
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/trim.hpp>
 
@@ -9,8 +10,6 @@
 #include <FalconEngine/Core/GameEngineSettings.h>
 #include <FalconEngine/Core/Path.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderSource.h>
-
-using namespace std;
 
 namespace FalconEngine
 {
@@ -26,6 +25,7 @@ public:
         _IN_OUT_ size_t&            extensionBeginIndex)
     {
         using namespace boost;
+        using namespace std;
 
         static vector<string> shaderExtensionSymbols;
         shaderExtensionSymbols.clear();
@@ -78,6 +78,7 @@ public:
         _IN_OUT_ size_t&            extensionBeginIndex)
     {
         using namespace boost;
+        using namespace std;
 
         static vector<string> shaderExtensionLines;
         shaderExtensionLines.clear();
@@ -97,6 +98,7 @@ public:
     static void
     ProcessShaderExtension(ShaderSource *shaderSource)
     {
+        using namespace std;
         static const string extensionHeaderBeginString = "#fe_extension : enable";
         static const string extensionHeaderEndString = "#fe_extension : disable";
 
@@ -140,3 +142,5 @@ public:
 };
 
 }
+
+#endif

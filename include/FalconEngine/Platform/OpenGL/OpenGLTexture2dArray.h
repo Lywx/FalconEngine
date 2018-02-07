@@ -1,11 +1,12 @@
 #pragma once
 
-#include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
+#include <FalconEngine/Core/Macro.h>
 
 #if defined(FALCON_ENGINE_API_OPENGL)
 #include <vector>
 
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2dArray.h>
+#include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLTextureArray.h>
 
 namespace FalconEngine
@@ -19,7 +20,11 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
     explicit PlatformTexture2dArray(Renderer *, const Texture2dArray *textures);
-    ~PlatformTexture2dArray();
+    virtual ~PlatformTexture2dArray();
+
+private:
+    void
+    AllocateTexture();
 };
 #pragma warning(default: 4251)
 

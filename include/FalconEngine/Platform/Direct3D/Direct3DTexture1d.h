@@ -20,22 +20,14 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
     explicit PlatformTexture1d(Renderer * renderer, const Texture1d * texture);
-    ~PlatformTexture1d();
+    virtual ~PlatformTexture1d();
 
 public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
-    void *
-    Map(Renderer * renderer,
-        ResourceMapAccessMode access,
-        ResourceMapFlushMode flush,
-        ResourceMapSyncMode synchronization,
-        int64_t offset,
-        int64_t size);
-
-    void
-    Unmap(Renderer * renderer);
+    FALCON_ENGINE_RESOURCE_MAP_IMPLEMENT(mTextureObj, ID3D11Texture1D);
+    FALCON_ENGINE_RESOURCE_UNMAP_IMPLEMENT(mTextureObj, ID3D11Texture1D);
 
 private:
     /************************************************************************/
@@ -43,12 +35,6 @@ private:
     /************************************************************************/
     void
     CreateTexture(ID3D11Device4 * device);
-
-    void
-    CreateShaderResourceView(ID3D11Device4 * device);
-
-    void
-    CreateRenderTargetView(ID3D11Device4 * device);
 
 protected:
     ID3D11Texture1D *mTextureObj;

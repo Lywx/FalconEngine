@@ -108,9 +108,9 @@ private:
         auto indexBuffer = std::make_shared<IndexBuffer>(
                                indexNum,
                                indexType,
-                               BufferStorageMode::Device,
                                indexBufferAccessMode,
-                               indexBufferAccessUsage);
+                               indexBufferAccessUsage,
+                               ResourceStorageMode::Device);
         {
             auto indexData = reinterpret_cast<T *>(
                                  sMasterRenderer->Map(

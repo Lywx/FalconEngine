@@ -1,9 +1,10 @@
 #pragma once
 
-#include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
+#include <FalconEngine/Core/Macro.h>
 
 #if defined(FALCON_ENGINE_API_OPENGL)
 #include <FalconEngine/Graphics/Renderer/Resource/ShaderBuffer.h>
+#include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLBuffer.h>
 
 namespace FalconEngine
@@ -18,7 +19,7 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
     explicit PlatformShaderBuffer(Renderer *renderer, const ShaderBuffer *storageBuffer);
-    ~PlatformShaderBuffer();
+    virtual ~PlatformShaderBuffer();
 
 public:
     /************************************************************************/

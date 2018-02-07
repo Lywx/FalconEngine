@@ -21,8 +21,8 @@ Texture3d::Texture3d(AssetSource assetSource,
                      ResourceCreationAccessUsage accessUsage,
                      int mipmapLevel)
     : Texture(assetSource, fileName, filePath, width, height, depth, format,
-              TextureType::Texture3d, BufferStorageMode::Host, accessMode,
-              accessUsage, mipmapLevel)
+              TextureType::Texture3d, accessMode, accessUsage,
+              ResourceStorageMode::Host, mipmapLevel)
 {
 }
 

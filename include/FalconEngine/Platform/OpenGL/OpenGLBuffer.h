@@ -1,8 +1,9 @@
 #pragma once
 
-#include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
+#include <FalconEngine/Core/Macro.h>
 
 #if defined(FALCON_ENGINE_API_OPENGL)
+#include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLMapping.h>
 
 namespace FalconEngine
@@ -10,13 +11,13 @@ namespace FalconEngine
 
 class Renderer;
 
-class FALCON_ENGINE_API PlatformBuffer
+FALCON_ENGINE_CLASS_BEGIN PlatformBuffer
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformBuffer(Renderer *, GLuint target, const Buffer *buffer);
+    explicit PlatformBuffer(Renderer *, GLuint target, const Buffer * buffer);
     virtual ~PlatformBuffer();
 
 public:
@@ -58,13 +59,14 @@ private:
     /* Private Members                                                      */
     /************************************************************************/
     void
-    Create();
+    CreateBuffer();
 
 protected:
     GLuint        mBufferObj;
     const Buffer *mBufferPtr;
     GLuint        mBufferTarget;
 };
+FALCON_ENGINE_CLASS_END
 
 }
 #endif

@@ -1,8 +1,10 @@
 #pragma once
 
-#include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
+#include <FalconEngine/Core/Macro.h>
 
 #if defined(FALCON_ENGINE_API_OPENGL)
+#include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
+
 namespace FalconEngine
 {
 

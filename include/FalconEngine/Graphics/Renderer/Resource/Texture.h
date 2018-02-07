@@ -97,51 +97,69 @@ public:
             int depth,
             TextureFormat format,
             TextureType type,
-            BufferStorageMode storageMode,
             ResourceCreationAccessMode accessMode,
             ResourceCreationAccessUsage accessUsage,
+            ResourceStorageMode storageMode,
             int mipmapLevel);
     virtual ~Texture();
 
 public:
-    // Texture buffer usage, needed during construction.
-    ResourceCreationAccessMode        mAccessMode;
-    ResourceCreationAccessUsage       mAccessUsage;
+    // Texture runtime access usage, needed during construction.
+    ResourceCreationAccessMode mAccessMode;
+    ResourceCreationAccessUsage mAccessUsage;
+
+    // Texture runtime attachment usage.
+    bool mAttachColorBuffer;
+    bool mAttachDepthStencilBuffer;
+    bool mAttachImage;
+    bool mAttachTexture;
 
     // Texture RGBA color channel number.
-    int                       mChannel = 0;
+    int mChannel = 0;
 
     // Texture dimension (width, height, depth).
-    std::array<int, 3>        mDimension;
+    std::array<int, 3> mDimension;
 
     // Texture binary format, needed during construction.
-    TextureFormat             mFormat;
+    TextureFormat mFormat;
 
-    // Texture                mipmap level, needed during construction.
-    int                       mMipmapLevel;
+    // Texture mipmap level, needed during construction.
+    int mMipmapLevel;
 
     // Texture type, needed during construction.
-    TextureType               mType;
+    TextureType mType;
 
     // Texture buffer specific data.
-    unsigned char            *mData;
-    size_t                    mDataSize;
+    unsigned char *mData;
+    size_t mDataSize;
 
     // Texture buffer storage mode, currently only in Host mode.
-    BufferStorageMode         mStorageMode;
+    ResourceStorageMode mStorageMode;
 
     /************************************************************************/
     /* Asset Importing and Exporting                                        */
     /************************************************************************/
 public:
     friend class cereal::access;
-    template<class Archive>
-    void serialize(Archive & ar)
+    template <class Archive>
+    void save(Archive & ar) const
     {
         ar & cereal::base_class<Asset>(this);
 
-        ar & mAccessMode;
-        ar & mAccessUsage;
+        ar & mChannel;
+        ar & mDimension;
+        ar & mFormat;
+        ar & mMipmapLevel;
+        ar & mType;
+
+        // NOTE(Wuxiang): mData should be serialized in derived class.
+        ar & mDataSize;
+    }
+
+    template <class Archive>
+    void load(Archive & ar)
+    {
+        ar & cereal::base_class<Asset>(this);
 
         ar & mChannel;
         ar & mDimension;
@@ -152,12 +170,17 @@ public:
         // NOTE(Wuxiang): mData should be serialized in derived class.
         ar & mDataSize;
 
-        ar & mStorageMode;
+        // NOTE(Wuxiang): Those members are de-serialized with default value.
+        mAccessMode = ResourceCreationAccessMode::GpuRead;
+        mAccessUsage = ResourceCreationAccessUsage::Static;
+        mStorageMode = ResourceStorageMode::Host;
     }
 };
 FALCON_ENGINE_CLASS_END
 
 }
+
+CEREAL_SPECIALIZE_FOR_ALL_ARCHIVES(FalconEngine::Texture, cereal::specialization::member_load_save)
 
 #define FALCON_ENGINE_TEXTURE_DECLARE() \
 public: \

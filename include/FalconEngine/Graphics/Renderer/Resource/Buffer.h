@@ -8,25 +8,19 @@
 namespace FalconEngine
 {
 
-// @summary Indicate buffer storage resides on 1) RAM and VRAM or 2) VRAM only.
-enum class BufferStorageMode
-{
-    None,
-
-    Device, // Buffer resides on VRAM only, accessible by CPU only in pinned memory.
-    Host,   // Buffer resides on RAM, explicitly copied to VRAM.
-
-    Count
-};
-
+// @summary Used to dynamically switching code interface. This enum has nothing
+// to do with API.
 enum class BufferType
 {
     None,
-
-    VertexBuffer,
-    IndexBuffer,
-    ShaderBuffer,
-    UniformBuffer,
+//                     OpenGL                     / Direct3D
+    VertexBuffer,   // GL_ARRAY_BUFFER              D3D11_BIND_VERTEX_BUFFER
+    IndexBuffer,    // GL_ELEMENT_ARRAY_BUFFER      D3D11_BIND_INDEX_BUFFER
+    ShaderBuffer,   // GL_SHADER_STORAGE_BUFFER     D3D11_BIND_UNORDERED_ACCESS
+    UniformBuffer,  // GL_UNIFORM_BUFFER            D3D11_BIND_CONSTANT_BUFFER
+    TextureBuffer,  // GL_TEXTURE_BUFFER            D3D11_BIND_SHADER_RESOURCE
+    RenderBuffer,   // GL_RENDERBUFFER              D3D11_BIND_RENDER_TARGET
+    FeedbackBuffer, // GL_TRANSFORM_FEEDBACK_BUFFER D3D11_BIND_STREAM_OUTPUT
 
     Count,
 };
@@ -45,10 +39,10 @@ protected:
     /************************************************************************/
     Buffer(int elementNum,
            size_t elementSize,
-           BufferStorageMode storageMode,
            BufferType type,
            ResourceCreationAccessMode accessMode,
-           ResourceCreationAccessUsage accessUsage);
+           ResourceCreationAccessUsage accessUsage,
+           ResourceStorageMode storageMode);
     Buffer(const Buffer&) = delete;
     Buffer& operator=(const Buffer&) = delete;
 
@@ -96,7 +90,7 @@ public:
     int
     GetElementOffset() const;
 
-    BufferStorageMode
+    ResourceStorageMode
     GetStorageMode() const;
 
     BufferType
@@ -109,21 +103,21 @@ public:
     GetAccessUsage() const;
 
 private:
-    ResourceCreationAccessMode    mAccessMode;
-    ResourceCreationAccessUsage   mAccessUsage;
+    ResourceCreationAccessMode mAccessMode;
+    ResourceCreationAccessUsage mAccessUsage;
 
-    unsigned char        *mData;
-    size_t                mDataSize;            // Actual data size in bytes.
-    int64_t               mDataOffset;
+    unsigned char *mData;
+    size_t mDataSize; // Actual data size in bytes.
+    int64_t mDataOffset;
 
-    size_t                mCapacitySize;        // Maximum capacity size in bytes include space not used.
-    int                   mCapacityElementNum;  // Maximum capacity size in term of element number include space not used.
+    size_t mCapacitySize; // Maximum capacity size in bytes include space not used.
+    int mCapacityElementNum; // Maximum capacity size in term of element number include space not used.
 
-    int                   mElementNum;          // Actual data size in term of element number.
-    size_t                mElementSize;         // Each element's data size in bytes.
+    int mElementNum; // Actual data size in term of element number.
+    size_t mElementSize; // Each element's data size in bytes.
 
-    BufferStorageMode     mStorageMode;
-    BufferType            mType;
+    ResourceStorageMode mStorageMode;
+    BufferType mType;
 };
 FALCON_ENGINE_CLASS_END
 

@@ -8,7 +8,13 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PlatformResource::PlatformResource(Renderer *renderer)
+PlatformResource::PlatformResource(Renderer *renderer) :
+    mCpuFlag(0),
+    mMiscFlags(0),
+    mUsage(D3D11_USAGE_DEFAULT),
+    mRenderTargetView(nullptr),
+    mShaderResourceView(nullptr),
+    mUnorderedAccessView(nullptr)
 {
 }
 

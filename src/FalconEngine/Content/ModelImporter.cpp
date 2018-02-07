@@ -228,9 +228,9 @@ ModelImporter::CreateVertexGroup(
     // Position
     auto vertexBuffer = std::make_shared<VertexBuffer>(
                             vertexNum, sizeof(ModelVertex::mPosition),
-                            BufferStorageMode::Device,
                             vertexBufferAccess.mPositionMode,
-                            vertexBufferAccess.mPositionUsage);
+                            vertexBufferAccess.mPositionUsage,
+                            ResourceStorageMode::Device);
     {
         auto vertexData = reinterpret_cast<Vector3f *>(
                               sMasterRenderer->Map(
@@ -257,9 +257,9 @@ ModelImporter::CreateVertexGroup(
     auto normalBuffer = std::make_shared<VertexBuffer>(
                             vertexNum,
                             sizeof(ModelVertex::mNormal),
-                            BufferStorageMode::Device,
                             vertexBufferAccess.mNormalMode,
-                            vertexBufferAccess.mNormalUsage);
+                            vertexBufferAccess.mNormalUsage,
+                            ResourceStorageMode::Device);
     {
         auto normalData = reinterpret_cast<Vector3f *>(
                               sMasterRenderer->Map(
@@ -293,9 +293,9 @@ ModelImporter::CreateVertexGroup(
     auto texCoordBuffer = std::make_shared<VertexBuffer>(
                               vertexNum,
                               sizeof(ModelVertex::mTexCoord),
-                              BufferStorageMode::Device,
                               vertexBufferAccess.mTexCoordMode,
-                              vertexBufferAccess.mTexCoordUsage);
+                              vertexBufferAccess.mTexCoordUsage,
+                              ResourceStorageMode::Device);
     {
         auto texCoordData = reinterpret_cast<Vector2f *>(
                                 sMasterRenderer->Map(

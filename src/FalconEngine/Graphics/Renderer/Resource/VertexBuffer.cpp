@@ -11,10 +11,10 @@ namespace FalconEngine
 /************************************************************************/
 VertexBuffer::VertexBuffer(int vertexNum,
                            size_t vertexSize,
-                           BufferStorageMode storageMode,
                            ResourceCreationAccessMode accessMode,
-                           ResourceCreationAccessUsage accessUsage) :
-    Buffer(vertexNum, vertexSize, storageMode, BufferType::VertexBuffer, accessMode, accessUsage)
+                           ResourceCreationAccessUsage accessUsage,
+                           ResourceStorageMode storageMode) :
+    Buffer(vertexNum, vertexSize, BufferType::VertexBuffer, accessMode, accessUsage, storageMode)
 {
 }
 

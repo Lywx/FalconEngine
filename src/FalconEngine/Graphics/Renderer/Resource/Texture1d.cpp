@@ -20,7 +20,7 @@ Texture1d::Texture1d(AssetSource assetSource,
                      ResourceCreationAccessMode accessMode,
                      ResourceCreationAccessUsage accessUsage,
                      int mipmapLevel) :
-    Texture(assetSource, fileName, filePath, width, 1, 1, format, TextureType::Texture1d, BufferStorageMode::Host, accessMode, accessUsage, mipmapLevel)
+    Texture(assetSource, fileName, filePath, width, 1, 1, format, TextureType::Texture1d, accessMode, accessUsage, ResourceStorageMode::Host, mipmapLevel)
 {
 }
 

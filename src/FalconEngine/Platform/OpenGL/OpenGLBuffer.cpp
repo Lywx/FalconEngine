@@ -14,7 +14,7 @@ PlatformBuffer::PlatformBuffer(Renderer *, GLuint target, const Buffer *buffer) 
     mBufferPtr(buffer),
     mBufferTarget(target)
 {
-    Create();
+    CreateBuffer();
 }
 
 PlatformBuffer::~PlatformBuffer()
@@ -92,7 +92,7 @@ PlatformBuffer::PrintRange(const char *message, GLuint bufferTarget, int64_t off
 /* Private Members                                                      */
 /************************************************************************/
 void
-PlatformBuffer::Create()
+PlatformBuffer::CreateBuffer()
 {
     // Generate buffer.
     glGenBuffers(1, &mBufferObj);
@@ -104,11 +104,11 @@ PlatformBuffer::Create()
     glBindBuffer(mBufferTarget, 0);
 
     auto storageMode = mBufferPtr->GetStorageMode();
-    if (storageMode == BufferStorageMode::Device)
+    if (storageMode == ResourceStorageMode::Device)
     {
         // Do nothing.
     }
-    else if (storageMode == BufferStorageMode::Host)
+    else if (storageMode == ResourceStorageMode::Host)
     {
         glBindBuffer(mBufferTarget, mBufferObj);
 

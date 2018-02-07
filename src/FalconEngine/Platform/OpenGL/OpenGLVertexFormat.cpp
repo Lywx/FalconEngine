@@ -14,7 +14,7 @@ PlatformVertexFormat::PlatformVertexFormat(Renderer *, const VertexFormat *verte
     mVertexArrayObj(),
     mVertexFormatPtr(vertexFormat)
 {
-    Create();
+    CreateVertexArray();
 }
 
 PlatformVertexFormat::~PlatformVertexFormat()
@@ -41,7 +41,7 @@ PlatformVertexFormat::Disable(Renderer *)
 /* Private Members                                                      */
 /************************************************************************/
 void
-PlatformVertexFormat::Create()
+PlatformVertexFormat::CreateVertexArray()
 {
     // NOTE(Wuxiang): glCreateVertexArrays only available in OGL 4.5.
     glGenVertexArrays(1, &mVertexArrayObj);

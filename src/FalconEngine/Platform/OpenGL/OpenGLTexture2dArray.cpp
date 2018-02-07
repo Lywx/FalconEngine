@@ -15,6 +15,19 @@ namespace FalconEngine
 PlatformTexture2dArray::PlatformTexture2dArray(Renderer *renderer, const Texture2dArray *textureArray) :
     PlatformTextureArray(renderer, textureArray)
 {
+    AllocateTexture();
+}
+
+PlatformTexture2dArray::~PlatformTexture2dArray()
+{
+}
+
+/************************************************************************/
+/* Private Members                                                      */
+/************************************************************************/
+void
+PlatformTexture2dArray::AllocateTexture()
+{
     GLuint textureBindingPrevious = BindTexture(mTextureArrayPtr->mType, mTextureArrayObj);
 
     // Allocate texture storage.
@@ -39,11 +52,6 @@ PlatformTexture2dArray::PlatformTexture2dArray(Renderer *renderer, const Texture
     // Restore previous texture binding
     BindTexture(mTextureArrayPtr->mType, textureBindingPrevious);
 }
-
-PlatformTexture2dArray::~PlatformTexture2dArray()
-{
-}
-
 }
 
 #endif

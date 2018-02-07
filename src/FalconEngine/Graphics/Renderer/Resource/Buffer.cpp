@@ -12,10 +12,10 @@ namespace FalconEngine
 // @param elementSize - the element size in total.
 Buffer::Buffer(int elementNum,
                size_t elementSize,
-               BufferStorageMode storageMode,
                BufferType type,
                ResourceCreationAccessMode accessMode,
-               ResourceCreationAccessUsage accessUsage) :
+               ResourceCreationAccessUsage accessUsage,
+               ResourceStorageMode storageMode) :
     mAccessMode(accessMode),
     mAccessUsage(accessUsage),
     mDataOffset(0),
@@ -38,11 +38,11 @@ Buffer::Buffer(int elementNum,
     mElementNum = elementNum;
 
     // NOTE(Wuxiang): Only allocate memory when the buffer storage resides on RAM.
-    if (mStorageMode == BufferStorageMode::Device)
+    if (mStorageMode == ResourceStorageMode::Device)
     {
         mData = nullptr;
     }
-    else if (mStorageMode == BufferStorageMode::Host)
+    else if (mStorageMode == ResourceStorageMode::Host)
     {
         mData = new unsigned char[mDataSize];
     }
@@ -62,6 +62,18 @@ Buffer::~Buffer()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+ResourceCreationAccessMode
+Buffer::GetAccessMode() const
+{
+    return mAccessMode;
+}
+
+ResourceCreationAccessUsage
+Buffer::GetAccessUsage() const
+{
+    return mAccessUsage;
+}
+
 size_t
 Buffer::GetCapacitySize() const
 {
@@ -133,7 +145,7 @@ Buffer::GetElementOffset() const
     return int(mDataOffset / mElementSize);
 }
 
-BufferStorageMode
+ResourceStorageMode
 Buffer::GetStorageMode() const
 {
     return mStorageMode;
@@ -143,18 +155,6 @@ BufferType
 Buffer::GetType() const
 {
     return mType;
-}
-
-ResourceCreationAccessMode
-Buffer::GetAccessMode() const
-{
-    return mAccessMode;
-}
-
-ResourceCreationAccessUsage
-Buffer::GetAccessUsage() const
-{
-    return mAccessUsage;
 }
 
 }

@@ -11,8 +11,8 @@ namespace FalconEngine
 
 class VertexBufferBinding;
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API VertexBuffer : public Buffer
+FALCON_ENGINE_CLASS_BEGIN VertexBuffer :
+public Buffer
 {
 public:
     /************************************************************************/
@@ -20,9 +20,9 @@ public:
     /************************************************************************/
     VertexBuffer(int vertexNum,
                  size_t vertexSize,
-                 BufferStorageMode storageMode,
                  ResourceCreationAccessMode accessMode,
-                 ResourceCreationAccessUsage accessUsage);
+                 ResourceCreationAccessUsage accessUsage,
+                 ResourceStorageMode storageMode);
     virtual ~VertexBuffer();
 
 public:
@@ -34,7 +34,7 @@ public:
     // binding.
     // @remark Allow multiple binding per buffer for maximum buffer use.
     void
-    SetBinding(VertexBufferBinding *binding);
+    SetBinding(VertexBufferBinding * binding);
 
     std::list<VertexBufferBinding *>::const_iterator
     GetBindingBegin() const
@@ -67,6 +67,6 @@ public:
 private:
     std::list<VertexBufferBinding *> mBinding;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

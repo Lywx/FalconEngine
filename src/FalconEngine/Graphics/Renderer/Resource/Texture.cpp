@@ -14,16 +14,22 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
+// NOTE(Wuxiang): This default constructor is used in deserialization for texture
+// loading.
 Texture::Texture() :
     mAccessMode(ResourceCreationAccessMode::None),
     mAccessUsage(ResourceCreationAccessUsage::None),
+    mAttachColorBuffer(false),
+    mAttachDepthStencilBuffer(false),
+    mAttachImage(false),
+    mAttachTexture(true),
     mDimension(),
     mFormat(TextureFormat::None),
     mMipmapLevel(0),
     mType(TextureType::None),
     mData(nullptr),
     mDataSize(0),
-    mStorageMode(BufferStorageMode::None)
+    mStorageMode(ResourceStorageMode::None)
 {
 }
 
@@ -35,13 +41,17 @@ Texture::Texture(AssetSource assetSource,
                  int depth,
                  TextureFormat format,
                  TextureType type,
-                 BufferStorageMode storageMode,
                  ResourceCreationAccessMode accessMode,
                  ResourceCreationAccessUsage accessUsage,
+                 ResourceStorageMode storageMode,
                  int mipmapLevel) :
     Asset(assetSource, AssetType::Texture, fileName, filePath),
     mAccessMode(accessMode),
     mAccessUsage(accessUsage),
+    mAttachColorBuffer(false),
+    mAttachDepthStencilBuffer(false),
+    mAttachImage(false),
+    mAttachTexture(true),
     mFormat(format),
     mMipmapLevel(mipmapLevel),
     mType(type),
@@ -58,14 +68,15 @@ Texture::Texture(AssetSource assetSource,
     mDimension[2] = depth;
 
     // Allocate texture storage.
-    if (mStorageMode == BufferStorageMode::Device)
+    if (mStorageMode == ResourceStorageMode::Device)
     {
-        mData = nullptr;
         mDataSize = 0;
+        mData = nullptr;
     }
-    else if (mStorageMode == BufferStorageMode::Host)
+    else if (mStorageMode == ResourceStorageMode::Host)
     {
-        mDataSize = size_t(mDimension[0]) * size_t(mDimension[1]) * size_t(mDimension[2]) * TexelSize[int(mFormat)];
+        mDataSize = size_t(mDimension[0]) * size_t(mDimension[1])
+                    * size_t(mDimension[2]) * TexelSize[int(mFormat)];
         mData = new unsigned char[mDataSize];
     }
     else

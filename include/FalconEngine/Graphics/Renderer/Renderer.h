@@ -637,7 +637,7 @@ public:
     /* Draw                                                                 */
     /************************************************************************/
     void
-    DrawPrimitivePlatform(const Primitive *primitive, int instancingNum);
+    DrawPrimitivePlatform(const Primitive *primitive, int primitiveInstancingNum);
 
 // internal
 public:

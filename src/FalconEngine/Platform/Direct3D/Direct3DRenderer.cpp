@@ -5,6 +5,7 @@
 #include <FalconEngine/Core/GameEngineDebugger.h>
 #include <FalconEngine/Core/GameEnginePlatform.h>
 #include <FalconEngine/Graphics/Renderer/Primitive.h>
+#include <FalconEngine/Graphics/Renderer/Resource/IndexBuffer.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DGameEnginePlatformData.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DMapping.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DRendererData.h>
@@ -300,7 +301,7 @@ Renderer::SwapFrameBufferPlatform()
 }
 
 void
-Renderer::DrawPrimitivePlatform(const Primitive *primitive, int instancingNum)
+Renderer::DrawPrimitivePlatform(const Primitive *primitive, int primitiveInstancingNum)
 {
     FALCON_ENGINE_CHECK_NULLPTR(primitive);
 
@@ -309,26 +310,50 @@ Renderer::DrawPrimitivePlatform(const Primitive *primitive, int instancingNum)
     auto vertexNum = primitive->GetVertexNum();
     auto vertexOffset = primitive->GetVertexOffset();
 
-    auto context = mData->GetContext();
-    context->IASetPrimitiveTopology(primitiveMode);
-
     if (vertexNum < 1)
     {
         return;
     }
 
-    // Set the vertex input layout.
-    context->IASetInputLayout(m_layout);
+    auto context = mData->GetContext();
+    context->IASetPrimitiveTopology(primitiveMode);
 
-    // Set the vertex and pixel shaders that will be used to render this triangle.
-    context->VSSetShader(m_vertexShader, NULL, 0);
-    context->PSSetShader(m_pixelShader, NULL, 0);
+    if (primitiveType == PrimitiveType::Point)
+    {
+        context->DrawInstanced(vertexNum, primitiveInstancingNum, vertexOffset, 0);
+    }
+    else if (primitiveType == PrimitiveType::Line)
+    {
+        context->DrawInstanced(vertexNum, primitiveInstancingNum, vertexOffset, 0);
+    }
+    else if (primitiveType == PrimitiveType::LineStrip)
+    {
+        context->DrawInstanced(vertexNum, primitiveInstancingNum, vertexOffset, 0);
+    }
+    else if (primitiveType == PrimitiveType::Triangle)
+    {
+        // When use index buffer
+        auto indexBuffer = primitive->GetIndexBuffer();
+        if (indexBuffer)
+        {
+            auto indexNum = indexBuffer->GetElementNum();
+            if (indexNum < 1)
+            {
+                return;
+            }
 
-    // Set the sampler state in the pixel shader.
-    context->PSSetSamplers(0, 1, &m_sampleState);
-
-    // Render the triangle.
-    context->DrawIndexed(indexCount, 0, 0);
+            auto indexOffset = primitive->GetIndexOffset();
+            context->DrawIndexedInstanced(indexNum, primitiveInstancingNum, indexOffset, 0, 0);
+        }
+        else
+        {
+            context->DrawInstanced(vertexNum, primitiveInstancingNum, vertexOffset, 0);
+        }
+    }
+    else
+    {
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    }
 }
 
 }

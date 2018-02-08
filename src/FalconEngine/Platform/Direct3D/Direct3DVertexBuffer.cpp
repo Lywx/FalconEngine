@@ -11,7 +11,7 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 PlatformVertexBuffer::PlatformVertexBuffer(Renderer *renderer, const VertexBuffer *vertexBuffer) :
-    PlatformBuffer(renderer, D3D11_BIND_VERTEX_BUFFER, vertexBuffer)
+    PlatformBuffer(renderer, vertexBuffer)
 {
 }
 
@@ -20,9 +20,22 @@ PlatformVertexBuffer::~PlatformVertexBuffer()
 }
 
 /************************************************************************/
-/* Private Members                                                      */
+/* Public Members                                                       */
 /************************************************************************/
-// TODO(Wuxiang): 2018-02-07 22:47.
+void
+PlatformVertexBuffer::Enable(Renderer *renderer, unsigned bindingIndex, int64_t offset, int stride)
+{
+    auto stride_ = UINT(stride);
+    auto offset_ = UINT(offset);
+    renderer->mData->GetContext()->IASetVertexBuffers(bindingIndex, 1, &mBufferObj, &stride_, &offset_);
+}
+
+void
+PlatformVertexBuffer::Disable(Renderer *renderer, unsigned bindingIndex)
+{
+    renderer->mData->GetContext()->IASetVertexBuffers(bindingIndex, 1, nullptr, nullptr, nullptr);
+}
+
 }
 
 #endif

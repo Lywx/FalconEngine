@@ -17,7 +17,7 @@ PlatformVertexFormat::PlatformVertexFormat(Renderer *renderer, const VertexForma
     mInputLayout(nullptr),
     mVertexFormat(vertexFormat)
 {
-    Create(renderer->mData->GetDevice());
+    CreateInputLayout(renderer->mData->GetDevice());
 }
 
 PlatformVertexFormat::~PlatformVertexFormat()
@@ -45,7 +45,7 @@ PlatformVertexFormat::Disable(Renderer *renderer)
 /* Private Members                                                      */
 /************************************************************************/
 void
-PlatformVertexFormat::Create(ID3D11Device4 *device)
+PlatformVertexFormat::CreateInputLayout(ID3D11Device4 *device)
 {
     auto& vertexAttributeList = mVertexFormat->mVertexAttributeList;
 

@@ -31,6 +31,9 @@ public:
 
     void
     Disable(Renderer *);
+
+private:
+    DXGI_FORMAT mFormat;
 };
 FALCON_ENGINE_CLASS_END
 

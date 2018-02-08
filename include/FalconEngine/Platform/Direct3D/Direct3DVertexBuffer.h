@@ -27,15 +27,11 @@ public:
     /************************************************************************/
     // @Summar: Enable buffer in the renderer.
     void
-    Enable(Renderer *, unsigned int bindingIndex, int64_t offset, int stride);
+    Enable(Renderer *renderer, unsigned int bindingIndex, int64_t offset, int stride);
 
     // @Summar: Disable buffer in the renderer.
     void
-    Disable(Renderer *, unsigned int bindingIndex);
-
-private:
-    void
-    Create(ID3D11Device4 *device);
+    Disable(Renderer *renderer, unsigned int bindingIndex);
 };
 
 }

@@ -30,12 +30,14 @@ PlatformSampler::~PlatformSampler()
 void
 PlatformSampler::Enable(Renderer *renderer, int textureUnit)
 {
+    // TODO(Wuxiang): 2018-02-08 15:24 Multiple stage support
     renderer->mData->GetContext()->PSSetSamplers(textureUnit, 1, &mSampleState);
 }
 
 void
 PlatformSampler::Disable(Renderer *renderer, int textureUnit)
 {
+    // TODO(Wuxiang): 2018-02-08 15:24 Multiple stage support
     renderer->mData->GetContext()->PSSetSamplers(textureUnit, 1, nullptr);
 }
 

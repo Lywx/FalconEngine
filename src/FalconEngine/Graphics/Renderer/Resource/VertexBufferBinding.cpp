@@ -8,10 +8,10 @@ namespace FalconEngine
 /************************************************************************/
 VertexBufferBinding::VertexBufferBinding(
     const std::shared_ptr<VertexBuffer>& buffer,
-    unsigned int                         index,
-    int64_t                              offset,
-    int                                  stride,
-    const VertexGroup                   *group) :
+    unsigned int index,
+    int64_t offset,
+    int stride,
+    const VertexGroup *group) :
     mIndex(index),
     mOffset(offset),
     mStride(stride),

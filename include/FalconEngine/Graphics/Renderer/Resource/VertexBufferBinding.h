@@ -16,19 +16,18 @@ class VertexGroup;
 // represents an OpenGL vertex buffer binding point.
 // @remark Buffer binding is copyable. This is how would you share vertex buffer
 // information.
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API VertexBufferBinding
+FALCON_ENGINE_CLASS_BEGIN VertexBufferBinding
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
     VertexBufferBinding(const std::shared_ptr<VertexBuffer>& buffer,
-                        unsigned int                         index,
-                        int64_t                              offset,
-                        int                                  stride,
-                        const VertexGroup                   *group);
-    VertexBufferBinding(const VertexBufferBinding& rhs) = default;
+                        unsigned int index,
+                        int64_t offset,
+                        int stride,
+                        const VertexGroup * group);
+    VertexBufferBinding(const VertexBufferBinding & rhs) = default;
     ~VertexBufferBinding();
 
 public:
@@ -73,6 +72,6 @@ private:
     std::shared_ptr<VertexBuffer> mBuffer;
     const VertexGroup            *mGroup;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

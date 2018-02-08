@@ -12,6 +12,15 @@ namespace FalconEngine
 PlatformIndexBuffer::PlatformIndexBuffer(Renderer *renderer, const IndexBuffer *indexBuffer) :
     PlatformBuffer(renderer, indexBuffer)
 {
+    auto indexType = indexBuffer->GetIndexType();
+    if (indexType == IndexType::UnsignedShort)
+    {
+        mFormat = DXGI_FORMAT_B4G4R4A4_UNORM;
+    }
+    else if (indexType == IndexType::UnsignedInt)
+    {
+
+    }
 }
 
 PlatformIndexBuffer::~PlatformIndexBuffer()
@@ -22,8 +31,10 @@ PlatformIndexBuffer::~PlatformIndexBuffer()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PlatformIndexBuffer::Enable(Renderer *)
+PlatformIndexBuffer::Enable(Renderer *renderer)
 {
+    renderer->mData->GetContext()->IASetIndexBuffer(&mBufferObj, mFormat, 0);
+
     // TODO(Wuxiang): 2018-02-07 22:47.
 
 }

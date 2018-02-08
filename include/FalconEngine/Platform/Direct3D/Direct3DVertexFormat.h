@@ -35,7 +35,7 @@ public:
     /************************************************************************/
 private:
     void
-    Create(ID3D11Device4 *device);
+    CreateInputLayout(ID3D11Device4 *device);
 
 private:
     ID3D11InputLayout  *mInputLayout;

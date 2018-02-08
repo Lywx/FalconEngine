@@ -177,8 +177,8 @@ private:
     /************************************************************************/
     template <typename T>
     void
-    CreateChannel(int                          channel,
-                  int                          channelElementNum,
+    CreateChannel(int channel,
+                  int channelElementNum,
                   std::shared_ptr<DebugEffect> visualEffect)
     {
         using namespace std;
@@ -211,9 +211,9 @@ private:
 
 private:
     std::shared_ptr<BufferGroup<BufferChannel>> mDebugBufferGroup;
-    const Font                                      *mDebugFont;
-    std::shared_ptr<DebugEffectParams>               mDebugEffectParams;
-    std::shared_ptr<DebugRenderMessageManager>       mDebugMessageManager;
+    const Font *mDebugFont;
+    std::shared_ptr<DebugEffectParams> mDebugEffectParams;
+    std::shared_ptr<DebugRenderMessageManager> mDebugMessageManager;
 };
 #pragma warning(default: 4251)
 

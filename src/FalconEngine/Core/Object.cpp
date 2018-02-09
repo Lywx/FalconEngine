@@ -7,12 +7,12 @@ namespace FalconEngine
 /* Static Members                                                       */
 /************************************************************************/
 const Rtti
-Object::sType("Object", nullptr);
+Object::sRttiType("Object", nullptr);
 
 const Rtti&
-Object::GetType() const
+Object::GetStaticType()
 {
-    return sType;
+    return sRttiType;
 }
 
 /************************************************************************/
@@ -25,27 +25,33 @@ Object::~Object()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-bool
-Object::IsExactly(const Rtti& type) const
+const Rtti&
+Object::GetDynamicType() const
 {
-    return GetType().IsExactly(type);
+    return sRttiType;
 }
 
 bool
-Object::IsExactlyTypeOf(const Object *object) const
+Object::IsExactly(const Rtti& type) const
 {
-    return object && GetType().IsExactly(object->GetType());
+    return GetDynamicType().IsExactly(type);
 }
 
 bool
 Object::IsDerived(const Rtti& type) const
 {
-    return GetType().IsDerived(type);
+    return GetDynamicType().IsDerived(type);
 }
 
 bool
-Object::IsDerivedTypeOf(const Object *object) const
+Object::HasSameType(const Object *object) const
 {
-    return object && GetType().IsDerived(object->GetType());
+    return object && IsExactly(object->GetDynamicType());
+}
+
+bool
+Object::HasDerivedType(const Object *object) const
+{
+    return object && IsDerived(object->GetDynamicType());
 }
 }

@@ -14,20 +14,39 @@ enum class ShaderUniformType;
 
 // @remark The integer number is used to index into the shader source table, which
 // is referred as shader type index.
-enum class ShaderType
+enum class ShaderType : unsigned int
 {
-    VertexShader   = 0,
-    GeometryShader = 1,
-    FragmentShader = 2,
+//                                          Direct3D
+    VertexShader = 0x01,                 // Vertex Shader 0
+    TessellationControlShader = 0x02,    // Hull Shader 1
+    TessellationEvaluationShader = 0x04, // Domain Shader 2
+    GeometryShader = 0x08,               // Geometry Shader 3
+    FragmentShader = 0x10,               // Pixel Shader 4
+    ComputeShader = 0x20,                // Compute Shader 5
 
-    Count,
+    Count = 6,
 };
+
+inline unsigned int
+operator|(const ShaderType& lhs, const ShaderType& rhs)
+{
+    return unsigned int(lhs) | unsigned int(rhs);
+}
+
+inline bool
+ShaderTypeEnabled(unsigned int shaderMask, ShaderType shaderType)
+{
+    return bool(shaderMask & unsigned int(shaderType));
+}
 
 enum ShaderIndex
 {
-    VertexShaderIndex   = 0,
-    GeometryShaderIndex = 1,
-    FragmentShaderIndex = 2,
+    VertexShaderIndex,
+    TessellationControlShaderIndex,
+    TessellationEvaluationShaderIndex,
+    GeometryShaderIndex,
+    FragmentShaderIndex,
+    ComputeShaderIndex,
 };
 
 class ShaderSource;
@@ -38,8 +57,7 @@ class ShaderSource;
 // so that one should think about what is responsible for updating shader uniform
 // variable for each update (which is done by setting shader uniform in visual
 // effect instance).
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API Shader final
+FALCON_ENGINE_CLASS_BEGIN Shader final
 {
 public:
     /************************************************************************/
@@ -52,13 +70,13 @@ public:
     /* Uniform Management                                                   */
     /************************************************************************/
     bool
-    ContainUniform(const std::string& uniformName) const;
+    ContainUniform(const std::string & uniformName) const;
 
     int
     GetUniformNum() const;
 
     ShaderUniform&
-    GetUniform(const std::string& uniformName);
+    GetUniform(const std::string & uniformName);
 
     auto
     GetUniformBegin()
@@ -85,13 +103,13 @@ public:
     }
 
     int
-    GetUniformLocation(const std::string& uniformName) const;
+    GetUniformLocation(const std::string & uniformName) const;
 
     bool
-    IsUniformEnabled(const std::string& uniformName) const;
+    IsUniformEnabled(const std::string & uniformName) const;
 
     void
-    PushUniform(const std::string& uniformName, ShaderUniformType uniformType);
+    PushUniform(const std::string & uniformName, ShaderUniformType uniformType);
 
     /************************************************************************/
     /* Composition Management                                               */
@@ -130,12 +148,12 @@ public:
     GetShaderType(int shaderIndex) const;
 
     void
-    PushShaderFile(ShaderType shaderType, const std::string& shaderPath);
+    PushShaderFile(ShaderType shaderType, const std::string & shaderPath);
 
 private:
     std::unordered_map<int, std::shared_ptr<ShaderSource>> mSourceTable;
     std::unordered_map<std::string, ShaderUniform>         mUniformTable;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

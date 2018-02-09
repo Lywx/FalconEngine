@@ -92,7 +92,7 @@ public:
         if (iter != mTextureTable.end())
         {
             auto texture = iter->second;
-            if (texture->mType == GetTextureType<T>())
+            if (texture->GetTextureType() == GetTextureType<T>())
             {
                 return std::dynamic_pointer_cast<T>(iter->second);
             }

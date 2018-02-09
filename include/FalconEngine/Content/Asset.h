@@ -1,6 +1,7 @@
 #pragma once
 
 #include <FalconEngine/Core/Macro.h>
+#include <FalconEngine/Core/Object.h>
 
 #include <string>
 
@@ -29,8 +30,11 @@ enum class AssetType
     Texture = 5,
 };
 
-FALCON_ENGINE_CLASS_BEGIN Asset
+FALCON_ENGINE_CLASS_BEGIN Asset :
+public Object
 {
+    FALCON_ENGINE_RTTI_DECLARE;
+
 public:
     Asset();
     Asset(AssetSource assetSource, AssetType assetType, const std::string & fileName, const std::string & filePath);

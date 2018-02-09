@@ -18,7 +18,7 @@ PlatformBuffer::PlatformBuffer(Renderer *renderer, const Buffer *buffer) :
 {
     auto device = renderer->mData->GetDevice();
 
-    CreateBuffer(device);
+    CreateResource(device);
 }
 
 PlatformBuffer::~PlatformBuffer()
@@ -28,21 +28,6 @@ PlatformBuffer::~PlatformBuffer()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-void *
-PlatformBuffer::Map(Renderer *, ResourceMapAccessMode access, ResourceMapFlushMode flush,
-                    ResourceMapSyncMode sync, int64_t offset, int64_t size)
-{
-// TODO(Wuxiang): 2018-02-07 22:47.
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-}
-
-void
-PlatformBuffer::Unmap(Renderer *)
-{
-// TODO(Wuxiang): 2018-02-07 22:47.
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-}
-
 void
 PlatformBuffer::Flush(Renderer *, int64_t offset, int64_t size)
 {
@@ -102,6 +87,15 @@ PlatformBuffer::CreateBuffer(ID3D11Device4 *device)
 
     D3DCheckSuccess(device->CreateBuffer(&bufferDesc, &subresourceData, &mBufferObj));
 }
+
+void
+PlatformBuffer::CreateResource(ID3D11Device4 *device)
+{
+    CreateBuffer(device);
+
+    mResourceObj = mBufferObj;
+}
+
 }
 
 #endif

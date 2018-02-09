@@ -84,6 +84,10 @@ DebugRenderer::AddAabb(const Camera *camera,
         {
             AddAabb(camera, childNode, color, duration, depthEnabled);
         }
+        else
+        {
+            FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+        }
     }
 }
 

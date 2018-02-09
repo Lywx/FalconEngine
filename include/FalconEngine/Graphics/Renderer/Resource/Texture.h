@@ -56,10 +56,9 @@ template <typename T>
 TextureType
 GetTextureType()
 {
-    // Don't get mixed up with RTTI classes which use RTTI klass::sType static member also.
     static_assert(std::is_base_of<Texture, T>::value, "Invalid texture type parameter.");
 
-    return T::sType;
+    return T::sTextureType;
 }
 
 enum class TextureFormat
@@ -84,6 +83,8 @@ const size_t TexelSize[int(TextureFormat::Count)] =
 FALCON_ENGINE_CLASS_BEGIN Texture :
 public Asset
 {
+    FALCON_ENGINE_RTTI_DECLARE;
+
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -102,6 +103,13 @@ public:
             ResourceStorageMode storageMode,
             int mipmapLevel);
     virtual ~Texture();
+
+public:
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
+    TextureType
+    GetTextureType() const;
 
 public:
     // Texture runtime access usage, needed during construction.
@@ -126,15 +134,16 @@ public:
     // Texture mipmap level, needed during construction.
     int mMipmapLevel;
 
-    // Texture type, needed during construction.
-    TextureType mType;
-
     // Texture buffer specific data.
     unsigned char *mData;
     size_t mDataSize;
 
     // Texture buffer storage mode, currently only in Host mode.
     ResourceStorageMode mStorageMode;
+
+protected:
+    // Texture type, needed during construction.
+    TextureType mType;
 
     /************************************************************************/
     /* Asset Importing and Exporting                                        */
@@ -184,8 +193,8 @@ CEREAL_SPECIALIZE_FOR_ALL_ARCHIVES(FalconEngine::Texture, cereal::specialization
 
 #define FALCON_ENGINE_TEXTURE_DECLARE() \
 public: \
-    static const FalconEngine::TextureType sType;
+    static const FalconEngine::TextureType sTextureType;
 
 #define FALCON_ENGINE_TEXTURE_IMPLEMENT(textureKlass, textureType) \
-const FalconEngine::TextureType textureKlass::sType = textureType;
+const FalconEngine::TextureType textureKlass::sTextureType = textureType;
 

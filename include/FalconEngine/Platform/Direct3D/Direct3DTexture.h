@@ -40,17 +40,6 @@ public:
     Disable(Renderer * renderer, int textureUnit);
 
 protected:
-    /************************************************************************/
-    /* Protected Members                                                    */
-    /************************************************************************/
-    void
-    CreateShaderResourceView(ID3D11Device4 * device);
-
-    void
-    CreateRenderTargetView(ID3D11Device4 * device);
-
-protected:
-    DXGI_FORMAT mFormat;
     const Texture *mTexturePtr;
 };
 FALCON_ENGINE_CLASS_END

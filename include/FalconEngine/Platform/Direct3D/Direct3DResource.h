@@ -14,59 +14,76 @@ namespace FalconEngine
 
 class Renderer;
 
+// @summary Base class of all resource object in Direct3D.
+//
+// @remark The derived class is supposed to assign mResourceObj after the resource
+// creation is complete.
 FALCON_ENGINE_CLASS_BEGIN PlatformResource
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformResource(Renderer * renderer);
+    explicit PlatformResource(Renderer * renderer, const Object * resource);
     virtual ~PlatformResource();
 
-protected:
-    template <typename T>
+public:
     void *
     Map(Renderer * renderer,
-        T *        resource,
         ResourceMapAccessMode access,
         ResourceMapFlushMode flush,
         ResourceMapSyncMode sync,
         int64_t offset,
-        int64_t size)
-    {
-        _UNUSED(flush);
-        _UNUSED(sync);
-        _UNUSED(size);
+        int64_t size);
 
-        // TODO(Wuxiang): Add mipmap support.
-        D3D11_MAPPED_SUBRESOURCE mappedSubresource;
-        D3DCheckSuccess(renderer->mData->GetContext()->Map(
-                            resource,
-                            0,
-                            Direct3DResourceMapMode[int(access)],
-                            0,
-                            &mappedSubresource));
-        return mappedSubresource.pData + offset;
-    }
-
-    template <typename T>
     void
-    Unmap(Renderer * renderer,
-          T *        resource)
-    {
-        renderer->mData->GetContext()->Unmap(resource, 0);
-    }
+    Unmap(Renderer * renderer);
+
+protected:
+    /************************************************************************/
+    /* Protected Members                                                    */
+    /************************************************************************/
+    // @remark Implementer should initialize resource pointer in base class.
+    virtual void
+    CreateResource(ID3D11Device4 * device) = 0;
+
+    void
+    CreateResourceView(ID3D11Device4 * device);
+
+    void
+    CreateResourceViewAsTexture1d(ID3D11Device4 * device,
+                                  D3D11_RESOURCE_DIMENSION dimension,
+                                  const Texture * texture);
+
+    void
+    CreateResourceViewAsTexture2d(ID3D11Device4 * device, D3D11_RESOURCE_DIMENSION dimension,
+                                  const Texture * texture);
+
+    void
+    CreateDepthStencilView(ID3D11Device4 * device, D3D11_RESOURCE_DIMENSION dimension);
+
+    void
+    CreateShaderResourceView(ID3D11Device4 * device, D3D11_RESOURCE_DIMENSION dimension);
+
+    void
+    CreateRenderTargetView(ID3D11Device4 * device, D3D11_RESOURCE_DIMENSION dimension);
+
+    void
+    CreateUnorderedAccessView(ID3D11Device4 * device, D3D11_RESOURCE_DIMENSION dimension);
 
 protected:
     UINT mCpuFlag;
+    DXGI_FORMAT mFormat;
     UINT mMiscFlags;
     D3D11_USAGE mUsage;
 
+    ID3D11DepthStencilView *mDepthStencilView;
     ID3D11RenderTargetView *mRenderTargetView;
     ID3D11ShaderResourceView *mShaderResourceView;
     ID3D11UnorderedAccessView *mUnorderedAccessView;
 
     ID3D11Resource *mResourceObj;
+    const Object *mResourcePtr;
 };
 FALCON_ENGINE_CLASS_END
 

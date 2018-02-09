@@ -11,6 +11,8 @@
 namespace FalconEngine
 {
 
+FALCON_ENGINE_RTTI_IMPLEMENT(Texture, Asset);
+
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
@@ -26,10 +28,10 @@ Texture::Texture() :
     mDimension(),
     mFormat(TextureFormat::None),
     mMipmapLevel(0),
-    mType(TextureType::None),
     mData(nullptr),
     mDataSize(0),
-    mStorageMode(ResourceStorageMode::None)
+    mStorageMode(ResourceStorageMode::None),
+    mType(TextureType::None)
 {
 }
 
@@ -90,6 +92,15 @@ Texture::~Texture()
     FALCON_ENGINE_RENDERER_UNBIND(this);
 
     delete[] mData;
+}
+
+/************************************************************************/
+/* Public Members                                                       */
+/************************************************************************/
+TextureType
+Texture::GetTextureType() const
+{
+    return mType;
 }
 
 }

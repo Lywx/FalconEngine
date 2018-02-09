@@ -12,7 +12,10 @@ public:
     /************************************************************************/
     /* Static Members                                                       */
     /************************************************************************/
-    static const Rtti sType;
+    static const Rtti sRttiType;
+
+    static const Rtti&
+    GetStaticType();
 
 public:
     /************************************************************************/
@@ -25,19 +28,19 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     virtual const Rtti&
-    GetType() const;
+    GetDynamicType() const;
 
     bool
     IsExactly(const Rtti& type) const;
 
     bool
-    IsExactlyTypeOf(const Object *object) const;
-
-    bool
     IsDerived(const Rtti& type) const;
 
     bool
-    IsDerivedTypeOf(const Object *object) const;
+    HasSameType(const Object *object) const;
+
+    bool
+    HasDerivedType(const Object *object) const;
 };
 
 }

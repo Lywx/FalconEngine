@@ -22,12 +22,10 @@ public:
     explicit PlatformTexture1d(Renderer * renderer, const Texture1d * texture);
     virtual ~PlatformTexture1d();
 
-public:
-    /************************************************************************/
-    /* Public Members                                                       */
-    /************************************************************************/
-    FALCON_ENGINE_RESOURCE_MAP_IMPLEMENT(mTextureObj, ID3D11Texture1D);
-    FALCON_ENGINE_RESOURCE_UNMAP_IMPLEMENT(mTextureObj, ID3D11Texture1D);
+protected:
+    // @remark Implementer should initialize resource pointer in base class.
+    virtual void
+    CreateResource(ID3D11Device4 * device) override;
 
 private:
     /************************************************************************/

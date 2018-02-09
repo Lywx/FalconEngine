@@ -15,11 +15,11 @@ PlatformIndexBuffer::PlatformIndexBuffer(Renderer *renderer, const IndexBuffer *
     auto indexType = indexBuffer->GetIndexType();
     if (indexType == IndexType::UnsignedShort)
     {
-        mFormat = DXGI_FORMAT_B4G4R4A4_UNORM;
+        mFormat = DXGI_FORMAT_R16_UINT;
     }
     else if (indexType == IndexType::UnsignedInt)
     {
-
+        mFormat = DXGI_FORMAT_R32_UINT;
     }
 }
 

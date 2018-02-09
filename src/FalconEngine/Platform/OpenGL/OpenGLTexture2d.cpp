@@ -27,7 +27,7 @@ void
 PlatformTexture2d::AllocateTexture()
 {
     // Bind newly created texture
-    GLuint textureBindingPrevious = BindTexture(mTexturePtr->mType, mTextureObj);
+    GLuint textureBindingPrevious = BindTexture(mTexturePtr->GetTextureType(), mTextureObj);
 
     {
         glTexStorage2D(GL_TEXTURE_2D, 1, mFormatInternal, mDimension[0],
@@ -44,7 +44,7 @@ PlatformTexture2d::AllocateTexture()
     }
 
     // Restore previous texture binding
-    BindTexture(mTexturePtr->mType, textureBindingPrevious);
+    BindTexture(mTexturePtr->GetTextureType(), textureBindingPrevious);
 }
 }
 

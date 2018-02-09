@@ -19,8 +19,8 @@ class Node;
 class Visual;
 class VisualEffectInstance;
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API PhongEffectParams : public VisualEffectParams
+FALCON_ENGINE_CLASS_BEGIN PhongEffectParams :
+public VisualEffectParams
 {
 public:
     PhongEffectParams() = default;
@@ -67,6 +67,6 @@ protected:
                        _IN_     const std::shared_ptr<Material>&          material,
                        _IN_     const std::shared_ptr<PhongEffectParams>& params) const;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

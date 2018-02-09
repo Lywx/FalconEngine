@@ -2,6 +2,8 @@
 
 namespace FalconEngine
 {
+FALCON_ENGINE_RTTI_IMPLEMENT(Asset, Object);
+
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/

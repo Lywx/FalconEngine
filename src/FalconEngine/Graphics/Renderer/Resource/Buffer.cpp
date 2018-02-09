@@ -5,6 +5,9 @@
 
 namespace FalconEngine
 {
+
+FALCON_ENGINE_RTTI_IMPLEMENT(Buffer, Object);
+
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
@@ -152,7 +155,7 @@ Buffer::GetStorageMode() const
 }
 
 BufferType
-Buffer::GetType() const
+Buffer::GetBufferType() const
 {
     return mType;
 }

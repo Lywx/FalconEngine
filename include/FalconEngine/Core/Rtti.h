@@ -5,13 +5,14 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_API Rtti
+// @remark RTTI provide more functionality than C++ built-in RTTI.
+FALCON_ENGINE_CLASS_BEGIN Rtti
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Rtti(const char *name, const Rtti *baseType);
+    Rtti(const char *name, const Rtti * baseType);
     ~Rtti();
 
 public:
@@ -22,15 +23,16 @@ public:
     GetName() const;
 
     inline bool
-    IsExactly(const Rtti& type) const;
+    IsExactly(const Rtti & type) const;
 
     bool
-    IsDerived(const Rtti& type) const;
+    IsDerived(const Rtti & type) const;
 
 private:
     const char *mTypeName;
     const Rtti *mTypeBase;
 };
+FALCON_ENGINE_CLASS_END
 
 const char *
 Rtti::GetName() const
@@ -48,14 +50,14 @@ Rtti::IsExactly(const Rtti& type) const
 
 #define FALCON_ENGINE_RTTI_DECLARE \
 public: \
-    static const Rtti sType; \
+    static const Rtti sRttiType; \
     \
-    virtual const Rtti& GetType() const override;
+    virtual const Rtti& GetDynamicType() const override;
 
-#define FALCON_ENGINE_RTTI_IMPLEMENT(klass, baseklass) \
-    const Rtti klass::sType(#klass, &baseklass::sType); \
+#define FALCON_ENGINE_RTTI_IMPLEMENT(Klass, BaseKlass) \
+    const Rtti Klass::sRttiType(#Klass, &BaseKlass::sRttiType); \
     \
-    const Rtti& klass::GetType() const \
+    const Rtti& Klass::GetDynamicType() const \
     { \
-        return sType; \
+        return sRttiType; \
     }

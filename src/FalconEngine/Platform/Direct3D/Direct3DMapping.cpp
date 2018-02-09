@@ -38,10 +38,8 @@ Direct3DResourceBindFlag(const Buffer *buffer)
 {
     UINT bindFlag = 0;
 
-    switch (buffer->GetType())
+    switch (buffer->GetBufferType())
     {
-    case BufferType::None:
-        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION()
     case BufferType::VertexBuffer:
         bindFlag = D3D11_BIND_VERTEX_BUFFER;
         break;

@@ -22,13 +22,6 @@ public:
     explicit PlatformTexture2d(Renderer * renderer, const Texture2d * texture);
     virtual ~PlatformTexture2d();
 
-public:
-    /************************************************************************/
-    /* Public Members                                                       */
-    /************************************************************************/
-    FALCON_ENGINE_RESOURCE_MAP_IMPLEMENT(mTextureObj, ID3D11Texture2D);
-    FALCON_ENGINE_RESOURCE_UNMAP_IMPLEMENT(mTextureObj, ID3D11Texture2D);
-
 private:
     /************************************************************************/
     /* Private Members                                                      */

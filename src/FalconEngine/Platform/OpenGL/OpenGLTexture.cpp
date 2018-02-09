@@ -42,14 +42,14 @@ void
 PlatformTexture::Enable(Renderer *, int textureUnit)
 {
     glActiveTexture(GL_TEXTURE0 + textureUnit);
-    mTextureObjPrevious = BindTexture(mTexturePtr->mType, mTextureObj);
+    mTextureObjPrevious = BindTexture(mTexturePtr->GetTextureType(), mTextureObj);
 }
 
 void
 PlatformTexture::Disable(Renderer *, int textureUnit)
 {
     glActiveTexture(GL_TEXTURE0 + textureUnit);
-    BindTexture(mTexturePtr->mType, mTextureObjPrevious);
+    BindTexture(mTexturePtr->GetTextureType(), mTextureObjPrevious);
 }
 
 void *

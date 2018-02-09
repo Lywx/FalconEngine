@@ -16,14 +16,25 @@ PlatformTexture1d::PlatformTexture1d(Renderer *renderer, const Texture1d *textur
 {
     auto device = renderer->mData->GetDevice();
 
-    CreateTexture(device);
-    CreateShaderResourceView(device);
+    CreateResource(device);
+    CreateResourceView(device);
 }
 
 PlatformTexture1d::~PlatformTexture1d()
 {
-    mTextureObj->Release();
-    mShaderResourceView->Release();
+    // TODO(Wuxiang): 2018-02-08 19:08 ??
+    //mShaderResourceView->Release();
+}
+
+/************************************************************************/
+/* Protected Members                                                    */
+/************************************************************************/
+void
+PlatformTexture1d::CreateResource(ID3D11Device4 *device)
+{
+    CreateTexture(device);
+
+    mResourceObj = mTextureObj;
 }
 
 /************************************************************************/

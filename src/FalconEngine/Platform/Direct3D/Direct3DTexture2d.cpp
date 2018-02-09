@@ -25,12 +25,6 @@ PlatformTexture2d::~PlatformTexture2d()
 }
 
 /************************************************************************/
-/* Public Members                                                       */
-/************************************************************************/
-//FALCON_ENGINE_RESOURCE_MAP_IMPLEMENT(mTextureObj, PlatformTexture2d, ID3D11Texture2D);
-FALCON_ENGINE_RESOURCE_UNMAP_IMPLEMENT(mTextureObj, PlatformTexture2d, ID3D11Texture2D);
-
-/************************************************************************/
 /* Private Members                                                      */
 /************************************************************************/
 void

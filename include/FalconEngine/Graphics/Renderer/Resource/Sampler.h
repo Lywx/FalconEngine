@@ -42,7 +42,7 @@ enum class SamplerWrapMode
     Count,
 };
 
-class FALCON_ENGINE_API Sampler
+FALCON_ENGINE_CLASS_BEGIN Sampler
 {
 public:
     Sampler();
@@ -52,17 +52,17 @@ public:
             SamplerWrapMode wrapS,
             SamplerWrapMode wrapT,
             SamplerWrapMode wrapR);
-
     virtual ~Sampler();
 
 public:
     SamplerMagnificationFilter mMagnificationFilter;
-    SamplerMinificationFilter  mMinificationFilter;
-    bool                       mMipmapEnabled;
-    SamplerMipmapFilter        mMipmapFilter;
-    SamplerWrapMode            mWrapS;
-    SamplerWrapMode            mWrapT;
-    SamplerWrapMode            mWrapR;
+    SamplerMinificationFilter mMinificationFilter;
+    bool mMipmapEnabled;
+    SamplerMipmapFilter mMipmapFilter;
+    SamplerWrapMode mWrapS;
+    SamplerWrapMode mWrapT;
+    SamplerWrapMode mWrapR;
 };
+FALCON_ENGINE_CLASS_END
 
 }

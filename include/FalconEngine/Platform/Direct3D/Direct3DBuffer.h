@@ -22,12 +22,6 @@ public:
     virtual ~PlatformBuffer();
 
 public:
-    /************************************************************************/
-    /* Public Members                                                       */
-    /************************************************************************/
-    FALCON_ENGINE_RESOURCE_MAP_IMPLEMENT(mBufferObj, ID3D11Buffer);
-    FALCON_ENGINE_RESOURCE_UNMAP_IMPLEMENT(mBufferObj, ID3D11Buffer);
-
     void
     Flush(Renderer *, int64_t offset, int64_t size);
 
@@ -37,6 +31,9 @@ protected:
     /************************************************************************/
     void
     CreateBuffer(ID3D11Device4 *device);
+
+    virtual void
+    CreateResource(ID3D11Device4 *device) override;
 
 protected:
     ID3D11Buffer *mBufferObj;

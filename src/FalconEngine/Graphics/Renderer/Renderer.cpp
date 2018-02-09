@@ -237,10 +237,8 @@ Renderer::SetWindowData(int width, int height, float near, float far)
 void
 Renderer::Unbind(const Buffer *buffer)
 {
-    switch (buffer->GetType())
+    switch (buffer->GetBufferType())
     {
-    case BufferType::None:
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.");
     case BufferType::VertexBuffer:
         Unbind(reinterpret_cast<const VertexBuffer *>(buffer));
         break;
@@ -260,10 +258,8 @@ Renderer::Unbind(const Buffer *buffer)
 void *
 Renderer::Map(const Buffer *buffer, ResourceMapAccessMode access, ResourceMapFlushMode flush, ResourceMapSyncMode sync, int64_t offset, int64_t size)
 {
-    switch (buffer->GetType())
+    switch (buffer->GetBufferType())
     {
-    case BufferType::None:
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.");
     case BufferType::VertexBuffer:
         return Map(reinterpret_cast<const VertexBuffer *>(buffer), access, flush, sync, offset, size);
     case BufferType::IndexBuffer:
@@ -280,10 +276,8 @@ Renderer::Map(const Buffer *buffer, ResourceMapAccessMode access, ResourceMapFlu
 void
 Renderer::Unmap(const Buffer *buffer)
 {
-    switch (buffer->GetType())
+    switch (buffer->GetBufferType())
     {
-    case BufferType::None:
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.");
     case BufferType::VertexBuffer:
         Unmap(reinterpret_cast<const VertexBuffer *>(buffer));
         break;
@@ -303,10 +297,8 @@ Renderer::Unmap(const Buffer *buffer)
 void
 Renderer::Flush(const Buffer *buffer, int64_t offset, int64_t size)
 {
-    switch (buffer->GetType())
+    switch (buffer->GetBufferType())
     {
-    case BufferType::None:
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Cannot operate on an untyped buffer.");
     case BufferType::VertexBuffer:
         Flush(reinterpret_cast<const VertexBuffer *>(buffer), offset, size);
         break;
@@ -596,7 +588,7 @@ Renderer::Disable(const VertexGroup *vertexGroup)
 void
 Renderer::Bind(const Texture *texture)
 {
-    switch (texture->mType)
+    switch (texture->GetTextureType())
     {
     case TextureType::None:
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
@@ -622,7 +614,7 @@ Renderer::Bind(const Texture *texture)
 void
 Renderer::Unbind(const Texture *texture)
 {
-    switch (texture->mType)
+    switch (texture->GetTextureType())
     {
     case TextureType::None:
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
@@ -650,7 +642,7 @@ Renderer::Enable(int textureUnit, const Texture *texture)
 {
     FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_LAZY(texture, mTexturePrevious);
 
-    switch (texture->mType)
+    switch (texture->GetTextureType())
     {
     case TextureType::None:
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
@@ -678,7 +670,7 @@ Renderer::Disable(int textureUnit, const Texture *texture)
 {
     FALCON_ENGINE_CHECK_NULLPTR(texture);
 
-    switch (texture->mType)
+    switch (texture->GetTextureType())
     {
     case TextureType::None:
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();

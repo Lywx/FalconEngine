@@ -3,6 +3,7 @@
 #include <cstdint>
 
 #include <FalconEngine/Core/Macro.h>
+#include <FalconEngine/Core/Object.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Resource.h>
 
 namespace FalconEngine
@@ -16,7 +17,7 @@ enum class BufferType
 //                     OpenGL                     / Direct3D
     VertexBuffer,   // GL_ARRAY_BUFFER              D3D11_BIND_VERTEX_BUFFER
     IndexBuffer,    // GL_ELEMENT_ARRAY_BUFFER      D3D11_BIND_INDEX_BUFFER
-    ShaderBuffer,   // GL_SHADER_STORAGE_BUFFER     D3D11_BIND_UNORDERED_ACCESS
+    ShaderBuffer,   // GL_SHADER_STORAGE_BUFFER     D3D11_BIND_SHADER_RESOURCE, D3D11_BIND_UNORDERED_ACCESS
     UniformBuffer,  // GL_UNIFORM_BUFFER            D3D11_BIND_CONSTANT_BUFFER
     TextureBuffer,  // GL_TEXTURE_BUFFER            D3D11_BIND_SHADER_RESOURCE
     RenderBuffer,   // GL_RENDERBUFFER              D3D11_BIND_RENDER_TARGET
@@ -31,8 +32,11 @@ enum class BufferLayout
     Separated,
 };
 
-FALCON_ENGINE_CLASS_BEGIN Buffer
+FALCON_ENGINE_CLASS_BEGIN Buffer :
+public Object
 {
+    FALCON_ENGINE_RTTI_DECLARE;
+
 protected:
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -53,6 +57,15 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
+    ResourceCreationAccessMode
+    GetAccessMode() const;
+
+    ResourceCreationAccessUsage
+    GetAccessUsage() const;
+
+    BufferType
+    GetBufferType() const;
+
     size_t
     GetCapacitySize() const;
 
@@ -93,18 +106,10 @@ public:
     ResourceStorageMode
     GetStorageMode() const;
 
-    BufferType
-    GetType() const;
-
-    ResourceCreationAccessMode
-    GetAccessMode() const;
-
-    ResourceCreationAccessUsage
-    GetAccessUsage() const;
-
-private:
+protected:
     ResourceCreationAccessMode mAccessMode;
     ResourceCreationAccessUsage mAccessUsage;
+    BufferType mType;
 
     unsigned char *mData;
     size_t mDataSize; // Actual data size in bytes.
@@ -117,7 +122,6 @@ private:
     size_t mElementSize; // Each element's data size in bytes.
 
     ResourceStorageMode mStorageMode;
-    BufferType mType;
 };
 FALCON_ENGINE_CLASS_END
 

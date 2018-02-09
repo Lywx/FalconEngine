@@ -28,13 +28,13 @@ PlatformSampler::~PlatformSampler()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PlatformSampler::Enable(Renderer *, int textureUnit)
+PlatformSampler::Enable(Renderer *, int textureUnit, unsigned int)
 {
     mSamplerObjPrevious = BindSampler(textureUnit, mSamplerObj);
 }
 
 void
-PlatformSampler::Disable(Renderer *, int textureUnit)
+PlatformSampler::Disable(Renderer *, int textureUnit, unsigned int)
 {
     glBindSampler(textureUnit, mSamplerObjPrevious);
 }

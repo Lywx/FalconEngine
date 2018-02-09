@@ -117,8 +117,8 @@ FontEffect::InitializeInstance(
 
     // NOTE(Wuxiang): You don't need to set the texture sampler uniform because
     // they are predefined in the fe_Texture.glsl as #include extension.
-    instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Font), params->mFont->GetTexture());
-    instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Font), params->mFont->GetSampler());
+    instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Font), params->mFont->GetTexture(),);
+    instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Font), params->mFont->GetSampler(),);
 }
 
 }

@@ -334,11 +334,11 @@ public:
 
     // @summary Provide a uniform interface for all texture.
     void
-    Enable(int textureUnit, const Texture *texture);
+    Enable(int textureUnit, const Texture *texture, unsigned int shaderMask);
 
     // @summary Provide a uniform interface for all texture.
     void
-    Disable(int textureUnit, const Texture *texture);
+    Disable(int textureUnit, const Texture *texture, unsigned int shaderMask);
 
     // NEW(Wuxiang): Add the ability of reading back texture.
     // NOTE(Wuxiang): But I don't know why I need any function to update texture.
@@ -353,10 +353,10 @@ public:
     Unbind(const Texture1d *texture);
 
     void
-    Enable(int textureUnit, const Texture1d *texture);
+    Enable(int textureUnit, const Texture1d *texture, unsigned int shaderMask);
 
     void
-    Disable(int textureUnit, const Texture1d *texture);
+    Disable(int textureUnit, const Texture1d *texture, unsigned int shaderMask);
 
     void *
     Map(const Texture1d *texture,
@@ -380,10 +380,10 @@ public:
     Unbind(const Texture2d *texture);
 
     void
-    Enable(int textureUnit, const Texture2d *texture);
+    Enable(int textureUnit, const Texture2d *texture, unsigned int shaderMask);
 
     void
-    Disable(int textureUnit, const Texture2d *texture);
+    Disable(int textureUnit, const Texture2d *texture, unsigned int shaderMask);
 
     void *
     Map(const Texture2d          *texture,
@@ -407,12 +407,14 @@ public:
     Unbind(const Texture2dArray *textureArray);
 
     void
-    Enable(int                   textureUnit,
-           const Texture2dArray *textureArray);
+    Enable(int textureUnit,
+           const Texture2dArray *textureArray,
+           unsigned int shaderMask);
 
     void
-    Disable(int                   textureUnit,
-            const Texture2dArray *textureArray);
+    Disable(int textureUnit,
+            const Texture2dArray *textureArray,
+            unsigned int shaderMask);
 
     void *
     Map(const Texture2dArray *textureArray,
@@ -439,10 +441,10 @@ public:
     Unbind(const Texture3d *texture);
 
     void
-    Enable(int textureUnit, const Texture3d *texture);
+    Enable(int textureUnit, const Texture3d *texture, unsigned int shaderMask);
 
     void
-    Disable(int textureUnit, const Texture3d *texture);
+    Disable(int textureUnit, const Texture3d *texture, unsigned int shaderMask);
 
     /************************************************************************/
     /* Sampler Management                                                   */
@@ -454,10 +456,10 @@ public:
     Unbind(const Sampler *sampler);
 
     void
-    Enable(int textureUnit, const Sampler *sampler);
+    Enable(int textureUnit, const Sampler *sampler, unsigned int shaderMask);
 
     void
-    Disable(int textureUnit, const Sampler *sampler);
+    Disable(int textureUnit, const Sampler *sampler, unsigned int shaderMask);
 
     /************************************************************************/
     /* Shader Management                                                   */
@@ -776,7 +778,7 @@ else \
 { \
     if (texturePrevious[textureUnit]) \
     { \
-        Disable(textureUnit, texturePrevious[textureUnit]); \
+        Disable(textureUnit, texturePrevious[textureUnit], shaderMask); \
     } \
 \
     texturePrevious[textureUnit] = texture; \
@@ -797,7 +799,7 @@ else \
     textureTable[texture] = texture##Platform; \
 } \
 \
-texture##Platform->Enable(this, textureUnit);
+texture##Platform->Enable(this, textureUnit, shaderMask);
 
 #define FALCON_ENGINE_RENDERER_TEXTURE_DISABLE_IMPLEMENT(texture, textureTable) \
 FALCON_ENGINE_CHECK_NULLPTR(texture); \
@@ -806,7 +808,7 @@ auto iter = textureTable.find(texture); \
 if (iter != textureTable.end()) \
 { \
     auto texture##Platform = iter->second; \
-    texture##Platform->Disable(this, textureUnit); \
+    texture##Platform->Disable(this, textureUnit, shaderMask); \
 }
 
 #define FALCON_ENGINE_RENDERER_TEXTURE_MAP_IMPLEMENT(texture, textureTable, PlatformTextureKlass) \

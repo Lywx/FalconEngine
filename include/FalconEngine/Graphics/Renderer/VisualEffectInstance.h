@@ -70,16 +70,16 @@ public:
     GetShaderTexture(int passIndex, int textureUnit) const;
 
     void
-    SetShaderTexture(int passIndex, int textureUnit, const Texture *texture);
+    SetShaderTexture(int passIndex, int textureUnit, const Texture *texture, unsigned int shaderMask);
 
     const Sampler *
     GetShaderSampler(int passIndex, int textureUnit) const;
 
     void
-    SetShaderSampler(int passIndex, int textureUnit, const Sampler *sampler);
+    SetShaderSampler(int passIndex, int textureUnit, const Sampler *sampler, unsigned int shaderMask);
 
 protected:
-    std::shared_ptr<VisualEffect>                          mEffect;
+    std::shared_ptr<VisualEffect> mEffect;
     std::vector<std::unique_ptr<VisualEffectInstancePass>> mEffectInstancePassList; // Passes contained in this effect instance.
 };
 #pragma warning(default: 4251)

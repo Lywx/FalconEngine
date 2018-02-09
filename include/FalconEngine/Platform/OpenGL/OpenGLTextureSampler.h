@@ -25,10 +25,10 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Enable(Renderer *, int textureUnit);
+    Enable(Renderer *, int textureUnit, unsigned int);
 
     void
-    Disable(Renderer *, int textureUnit);
+    Disable(Renderer *, int textureUnit, unsigned int);
 
 private:
     /************************************************************************/

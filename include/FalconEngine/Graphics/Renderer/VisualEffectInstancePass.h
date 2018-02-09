@@ -11,9 +11,11 @@ namespace FalconEngine
 {
 
 class Sampler;
+class SamplerAttachment;
 class Shader;
 class ShaderUniform;
 class Texture;
+class TextureAttachment;
 
 FALCON_ENGINE_CLASS_BEGIN VisualEffectInstancePass final
 {
@@ -41,10 +43,10 @@ public:
     SetShaderUniform(std::shared_ptr<ShaderUniform> shaderUniform);
 
     void
-    SetShaderTexture(int textureUnit, const Texture * texture);
+    SetShaderTexture(int textureUnit, const Texture * texture, unsigned int shaderMask);
 
     void
-    SetShaderSampler(int textureUnit, const Sampler * sampler);
+    SetShaderSampler(int textureUnit, const Sampler * sampler, unsigned int shaderMask);
 
     Shader *
     GetShader() const;
@@ -131,8 +133,8 @@ private:
     // So there is no way for dangling pointer to affect this 'mShader' field.
     Shader                                     *mShader;
     int                                         mShaderInstancingNum;
-    std::map<int, const Sampler *>              mShaderSamplerTable;
-    std::map<int, const Texture *>              mShaderTextureTable;
+    std::map<int, SamplerAttachment>            mShaderSamplerTable;
+    std::map<int, TextureAttachment>            mShaderTextureTable;
     std::vector<std::shared_ptr<ShaderUniform>> mShaderUniformList;
 };
 FALCON_ENGINE_CLASS_END

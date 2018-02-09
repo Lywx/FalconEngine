@@ -11,8 +11,6 @@
 namespace FalconEngine
 {
 
-FALCON_ENGINE_RTTI_IMPLEMENT(Texture, Asset);
-
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
@@ -92,15 +90,6 @@ Texture::~Texture()
     FALCON_ENGINE_RENDERER_UNBIND(this);
 
     delete[] mData;
-}
-
-/************************************************************************/
-/* Public Members                                                       */
-/************************************************************************/
-TextureType
-Texture::GetTextureType() const
-{
-    return mType;
 }
 
 }

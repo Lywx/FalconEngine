@@ -74,14 +74,14 @@ PlatformTextureArray::~PlatformTextureArray()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PlatformTextureArray::Enable(Renderer *, int textureUnit)
+PlatformTextureArray::Enable(Renderer *, int textureUnit, unsigned int)
 {
     glActiveTexture(GL_TEXTURE0 + textureUnit);
     mTextureArrayObjPrevious = BindTexture(mTextureArrayPtr->GetTextureType(), mTextureArrayObj);
 }
 
 void
-PlatformTextureArray::Disable(Renderer *, int textureUnit)
+PlatformTextureArray::Disable(Renderer *, int textureUnit, unsigned int)
 {
     glActiveTexture(GL_TEXTURE0 + textureUnit);
     BindTexture(mTextureArrayPtr->GetTextureType(), mTextureArrayObjPrevious);

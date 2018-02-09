@@ -83,8 +83,6 @@ const size_t TexelSize[int(TextureFormat::Count)] =
 FALCON_ENGINE_CLASS_BEGIN Texture :
 public Asset
 {
-    FALCON_ENGINE_RTTI_DECLARE;
-
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -109,14 +107,19 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     TextureType
-    GetTextureType() const;
+    GetTextureType() const
+    {
+        return mType;
+    }
 
 public:
     // Texture runtime access usage, needed during construction.
     ResourceCreationAccessMode mAccessMode;
     ResourceCreationAccessUsage mAccessUsage;
 
-    // Texture runtime attachment usage.
+    // Texture runtime attachment usage, need for Direct3D resource view pipeline
+    // attachment. Each of attachment variable is bit mask created with one or
+    // multiple ShaderTypes.
     bool mAttachColorBuffer;
     bool mAttachDepthStencilBuffer;
     bool mAttachImage;
@@ -187,6 +190,28 @@ public:
 };
 FALCON_ENGINE_CLASS_END
 
+FALCON_ENGINE_CLASS_BEGIN TextureAttachment
+{
+public:
+    TextureAttachment():
+        mTexture(nullptr),
+        mShaderMask(0)
+    {
+    }
+
+    TextureAttachment(const Texture * texture, unsigned int shaderMask) :
+        mTexture(texture),
+        mShaderMask(shaderMask)
+    {
+    }
+
+public:
+    const Texture *mTexture;
+    unsigned int mShaderMask;
+};
+FALCON_ENGINE_CLASS_END
+
+
 }
 
 CEREAL_SPECIALIZE_FOR_ALL_ARCHIVES(FalconEngine::Texture, cereal::specialization::member_load_save)
@@ -197,4 +222,5 @@ public: \
 
 #define FALCON_ENGINE_TEXTURE_IMPLEMENT(textureKlass, textureType) \
 const FalconEngine::TextureType textureKlass::sTextureType = textureType;
+
 

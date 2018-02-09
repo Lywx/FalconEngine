@@ -3,6 +3,8 @@
 #include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
 
 namespace FalconEngine
 {
@@ -37,19 +39,19 @@ VisualEffectInstancePass::SetShaderUniform(std::shared_ptr<ShaderUniform> shader
 }
 
 void
-VisualEffectInstancePass::SetShaderTexture(int textureUnit, const Texture *texture)
+VisualEffectInstancePass::SetShaderTexture(int textureUnit, const Texture *texture, unsigned int shaderMask)
 {
     FALCON_ENGINE_CHECK_NULLPTR(texture);
 
-    mShaderTextureTable[textureUnit] = texture;
+    mShaderTextureTable[textureUnit] = TextureAttachment(texture, shaderMask);
 }
 
 void
-VisualEffectInstancePass::SetShaderSampler(int textureUnit, const Sampler *sampler)
+VisualEffectInstancePass::SetShaderSampler(int textureUnit, const Sampler *sampler, unsigned int shaderMask)
 {
     FALCON_ENGINE_CHECK_NULLPTR(sampler);
 
-    mShaderSamplerTable[textureUnit] = sampler;
+    mShaderSamplerTable[textureUnit] = SamplerAttachment(sampler, shaderMask);
 }
 
 Shader *
@@ -91,7 +93,7 @@ VisualEffectInstancePass::GetShaderTextureNum() const
 const Texture *
 VisualEffectInstancePass::GetShaderTexture(int textureUnit) const
 {
-    return mShaderTextureTable.at(textureUnit);
+    return mShaderTextureTable.at(textureUnit).mTexture;
 }
 
 int
@@ -103,6 +105,6 @@ VisualEffectInstancePass::GetShaderSamplerNum() const
 const Sampler *
 VisualEffectInstancePass::GetShaderSampler(int textureUnit)
 {
-    return mShaderSamplerTable.at(textureUnit);
+    return mShaderSamplerTable.at(textureUnit).mSampler;
 }
 }

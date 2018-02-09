@@ -10,8 +10,6 @@
 namespace FalconEngine
 {
 
-enum class ShaderUniformType;
-
 // @remark The integer number is used to index into the shader source table, which
 // is referred as shader type index.
 enum class ShaderType : unsigned int
@@ -27,16 +25,16 @@ enum class ShaderType : unsigned int
     Count = 6,
 };
 
-inline unsigned int
-operator|(const ShaderType& lhs, const ShaderType& rhs)
-{
-    return unsigned int(lhs) | unsigned int(rhs);
-}
-
 inline bool
 ShaderTypeEnabled(unsigned int shaderMask, ShaderType shaderType)
 {
     return bool(shaderMask & unsigned int(shaderType));
+}
+
+inline unsigned int
+operator|(ShaderType lhs, ShaderType rhs)
+{
+    return unsigned int(lhs) | unsigned int(rhs);
 }
 
 enum ShaderIndex
@@ -50,6 +48,7 @@ enum ShaderIndex
 };
 
 class ShaderSource;
+enum class ShaderUniformType;
 
 // @remark Shader contains information about input vertex variables, output
 // fragment variables and uniform variables. Sharing shaders for different

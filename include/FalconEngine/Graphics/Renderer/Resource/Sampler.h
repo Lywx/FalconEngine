@@ -65,4 +65,25 @@ public:
 };
 FALCON_ENGINE_CLASS_END
 
+FALCON_ENGINE_CLASS_BEGIN SamplerAttachment
+{
+public:
+    SamplerAttachment() :
+        mSampler(nullptr),
+        mShaderMask(0)
+    {
+    }
+
+    SamplerAttachment(const Sampler * sampler, unsigned int shaderMask) :
+        mSampler(sampler),
+        mShaderMask(shaderMask)
+    {
+    }
+
+public:
+    const Sampler *mSampler;
+    unsigned int mShaderMask;
+};
+FALCON_ENGINE_CLASS_END
+
 }

@@ -28,17 +28,75 @@ PlatformSampler::~PlatformSampler()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PlatformSampler::Enable(Renderer *renderer, int textureUnit)
+PlatformSampler::Enable(Renderer *renderer, int textureUnit, unsigned int shaderMask)
 {
-    // TODO(Wuxiang): 2018-02-08 15:24 Multiple stage support
-    renderer->mData->GetContext()->PSSetSamplers(textureUnit, 1, &mSampleState);
+    auto context = renderer->mData->GetContext();
+
+    if (ShaderTypeEnabled(shaderMask, ShaderType::VertexShader))
+    {
+        context->VSSetSamplers(textureUnit, 1, &mSampleState);
+    }
+
+    if (ShaderTypeEnabled(shaderMask, ShaderType::TessellationControlShader))
+    {
+        context->HSSetSamplers(textureUnit, 1, &mSampleState);
+    }
+
+    if (ShaderTypeEnabled(shaderMask, ShaderType::TessellationEvaluationShader))
+    {
+        context->DSSetSamplers(textureUnit, 1, &mSampleState);
+    }
+
+    if (ShaderTypeEnabled(shaderMask, ShaderType::GeometryShader))
+    {
+        context->GSSetSamplers(textureUnit, 1, &mSampleState);
+    }
+
+    if (ShaderTypeEnabled(shaderMask, ShaderType::FragmentShader))
+    {
+        context->PSSetSamplers(textureUnit, 1, &mSampleState);
+    }
+
+    if (ShaderTypeEnabled(shaderMask, ShaderType::ComputeShader))
+    {
+        context->CSSetSamplers(textureUnit, 1, &mSampleState);
+    }
 }
 
 void
-PlatformSampler::Disable(Renderer *renderer, int textureUnit)
+PlatformSampler::Disable(Renderer *renderer, int textureUnit, unsigned int shaderMask)
 {
-    // TODO(Wuxiang): 2018-02-08 15:24 Multiple stage support
-    renderer->mData->GetContext()->PSSetSamplers(textureUnit, 1, nullptr);
+    auto context = renderer->mData->GetContext();
+
+    if (ShaderTypeEnabled(shaderMask, ShaderType::VertexShader))
+    {
+        context->VSSetSamplers(textureUnit, 1, nullptr);
+    }
+
+    if (ShaderTypeEnabled(shaderMask, ShaderType::TessellationControlShader))
+    {
+        context->HSSetSamplers(textureUnit, 1, nullptr);
+    }
+
+    if (ShaderTypeEnabled(shaderMask, ShaderType::TessellationEvaluationShader))
+    {
+        context->DSSetSamplers(textureUnit, 1, nullptr);
+    }
+
+    if (ShaderTypeEnabled(shaderMask, ShaderType::GeometryShader))
+    {
+        context->GSSetSamplers(textureUnit, 1, nullptr);
+    }
+
+    if (ShaderTypeEnabled(shaderMask, ShaderType::FragmentShader))
+    {
+        context->PSSetSamplers(textureUnit, 1, nullptr);
+    }
+
+    if (ShaderTypeEnabled(shaderMask, ShaderType::ComputeShader))
+    {
+        context->CSSetSamplers(textureUnit, 1, nullptr);
+    }
 }
 
 /************************************************************************/

@@ -83,22 +83,22 @@ PlatformResource::Unmap(Renderer *renderer)
 void
 PlatformResource::CreateResourceViewAsTexture1d(ID3D11Device4 *device, D3D11_RESOURCE_DIMENSION dimension, const Texture *texture)
 {
-    if (texture->mAttachColorBuffer)
+    if (texture->mAttachment[int(TextureMode::Color)])
     {
         CreateRenderTargetView(device, dimension);
     }
 
-    if (texture->mAttachDepthStencilBuffer)
+    if (texture->mAttachment[int(TextureMode::DepthStencil)])
     {
         CreateDepthStencilView(device, dimension);
     }
 
-    if (texture->mAttachImage)
+    if (texture->mAttachment[int(TextureMode::Image)])
     {
         CreateUnorderedAccessView(device, dimension);
     }
 
-    if (texture->mAttachTexture)
+    if (texture->mAttachment[int(TextureMode::Texture)])
     {
         CreateShaderResourceView(device, dimension);
     }
@@ -107,22 +107,22 @@ PlatformResource::CreateResourceViewAsTexture1d(ID3D11Device4 *device, D3D11_RES
 void
 PlatformResource::CreateResourceViewAsTexture2d(ID3D11Device4 *device, D3D11_RESOURCE_DIMENSION dimension, const Texture *texture)
 {
-    if (texture->mAttachColorBuffer)
+    if (texture->mAttachment[int(TextureMode::Color)])
     {
         CreateRenderTargetView(device, dimension);
     }
 
-    if (texture->mAttachDepthStencilBuffer)
+    if (texture->mAttachment[int(TextureMode::DepthStencil)])
     {
         CreateDepthStencilView(device, dimension);
     }
 
-    if (texture->mAttachImage)
+    if (texture->mAttachment[int(TextureMode::Image)])
     {
         CreateUnorderedAccessView(device, dimension);
     }
 
-    if (texture->mAttachTexture)
+    if (texture->mAttachment[int(TextureMode::Texture)])
     {
         CreateShaderResourceView(device, dimension);
     }

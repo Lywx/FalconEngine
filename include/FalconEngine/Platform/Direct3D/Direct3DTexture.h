@@ -6,6 +6,7 @@
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
+#include <FalconEngine/Graphics/Renderer/Resource/TextureAttachment.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DLib.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DResource.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DMapping.h>
@@ -34,10 +35,14 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Enable(Renderer * renderer, int textureUnit);
+    Enable(Renderer * renderer,
+           int textureUnit,
+           const TextureShaderMaskList & textureShaderMaskList);
 
     void
-    Disable(Renderer * renderer, int textureUnit);
+    Disable(Renderer * renderer,
+            int textureUnit,
+            const TextureShaderMaskList & textureShaderMaskList);
 
 protected:
     const Texture *mTexturePtr;

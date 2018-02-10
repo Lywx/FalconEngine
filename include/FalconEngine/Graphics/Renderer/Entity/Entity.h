@@ -18,8 +18,8 @@ class Node;
 
 class Visual;
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API Entity : public Object
+FALCON_ENGINE_CLASS_BEGIN Entity :
+public Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
@@ -53,7 +53,7 @@ public:
     SetPosition(Vector3f position);
 
     virtual void
-    Update(GameEngineInput *input, double elapsed);
+    Update(GameEngineInput * input, double elapsed);
 
 protected:
     virtual void
@@ -77,6 +77,6 @@ protected:
     Vector3f      mLocalScale;
     bool          mLocalTransformIsCurrent;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

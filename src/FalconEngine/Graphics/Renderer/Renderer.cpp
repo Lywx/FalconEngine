@@ -28,11 +28,14 @@ using namespace std;
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture1d.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2dArray.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture3d.h>
+#include <FalconEngine/Graphics/Renderer/Resource/TextureAttachment.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>
+#include <FalconEngine/Graphics/Renderer/Resource/SamplerAttachment.h>
 
 #if defined(FALCON_ENGINE_API_OPENGL)
 #include <FalconEngine/Platform/OpenGL/OpenGLIndexBuffer.h>
@@ -638,25 +641,25 @@ Renderer::Unbind(const Texture *texture)
 }
 
 void
-Renderer::Enable(int textureUnit, const Texture *texture, unsigned int shaderMask)
+Renderer::Enable(int textureUnit, const Texture *texture, const TextureShaderMaskList& textureShaderMaskList)
 {
-    FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_LAZY(texture, mTexturePrevious);
+    FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_LAZY(texture, mTexturePrevious, textureShaderMaskList);
 
     switch (texture->GetTextureType())
     {
     case TextureType::None:
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     case TextureType::Texture1d:
-        Enable(textureUnit, reinterpret_cast<const Texture1d *>(texture), shaderMask);
+        Enable(textureUnit, reinterpret_cast<const Texture1d *>(texture), textureShaderMaskList);
         break;
     case TextureType::Texture2d:
-        Enable(textureUnit, reinterpret_cast<const Texture2d *>(texture), shaderMask);
+        Enable(textureUnit, reinterpret_cast<const Texture2d *>(texture), textureShaderMaskList);
         break;
     case TextureType::Texture2dArray:
-        Enable(textureUnit, reinterpret_cast<const Texture2dArray *>(texture), shaderMask);
+        Enable(textureUnit, reinterpret_cast<const Texture2dArray *>(texture), textureShaderMaskList);
         break;
     case TextureType::Texture3d:
-        Enable(textureUnit, reinterpret_cast<const Texture3d *>(texture), shaderMask);
+        Enable(textureUnit, reinterpret_cast<const Texture3d *>(texture), textureShaderMaskList);
         break;
     case TextureType::TextureCube:
         FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
@@ -666,7 +669,7 @@ Renderer::Enable(int textureUnit, const Texture *texture, unsigned int shaderMas
 }
 
 void
-Renderer::Disable(int textureUnit, const Texture *texture, unsigned int shaderMask)
+Renderer::Disable(int textureUnit, const Texture *texture, const TextureShaderMaskList& textureShaderMaskList)
 {
     FALCON_ENGINE_CHECK_NULLPTR(texture);
 
@@ -675,16 +678,16 @@ Renderer::Disable(int textureUnit, const Texture *texture, unsigned int shaderMa
     case TextureType::None:
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     case TextureType::Texture1d:
-        Disable(textureUnit, reinterpret_cast<const Texture1d *>(texture), shaderMask);
+        Disable(textureUnit, reinterpret_cast<const Texture1d *>(texture), textureShaderMaskList);
         break;
     case TextureType::Texture2d:
-        Disable(textureUnit, reinterpret_cast<const Texture2d *>(texture), shaderMask);
+        Disable(textureUnit, reinterpret_cast<const Texture2d *>(texture), textureShaderMaskList);
         break;
     case TextureType::Texture2dArray:
-        Disable(textureUnit, reinterpret_cast<const Texture2dArray *>(texture), shaderMask);
+        Disable(textureUnit, reinterpret_cast<const Texture2dArray *>(texture), textureShaderMaskList);
         break;
     case TextureType::Texture3d:
-        Disable(textureUnit, reinterpret_cast<const Texture3d *>(texture), shaderMask);
+        Disable(textureUnit, reinterpret_cast<const Texture3d *>(texture), textureShaderMaskList);
         break;
     case TextureType::TextureCube:
         FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
@@ -709,15 +712,15 @@ Renderer::Unbind(const Texture1d *texture)
 }
 
 void
-Renderer::Enable(int textureUnit, const Texture1d *texture, unsigned int shaderMask)
+Renderer::Enable(int textureUnit, const Texture1d *texture, const TextureShaderMaskList& textureShaderMaskList)
 {
-    FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_IMPLEMENT(texture, mTexture1dTable, PlatformTexture1d);
+    FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_IMPLEMENT(texture, mTexture1dTable, textureShaderMaskList, PlatformTexture1d);
 }
 
 void
-Renderer::Disable(int textureUnit, const Texture1d *texture, unsigned int shaderMask)
+Renderer::Disable(int textureUnit, const Texture1d *texture, const TextureShaderMaskList& textureShaderMaskList)
 {
-    FALCON_ENGINE_RENDERER_TEXTURE_DISABLE_IMPLEMENT(texture, mTexture1dTable);
+    FALCON_ENGINE_RENDERER_TEXTURE_DISABLE_IMPLEMENT(texture, mTexture1dTable, textureShaderMaskList);
 }
 
 void *
@@ -754,15 +757,15 @@ Renderer::Unbind(const Texture2d *texture)
 }
 
 void
-Renderer::Enable(int textureUnit, const Texture2d *texture, unsigned int shaderMask)
+Renderer::Enable(int textureUnit, const Texture2d *texture, const TextureShaderMaskList& textureShaderMaskList)
 {
-    FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_IMPLEMENT(texture, mTexture2dTable, PlatformTexture2d);
+    FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_IMPLEMENT(texture, mTexture2dTable, textureShaderMaskList, PlatformTexture2d);
 }
 
 void
-Renderer::Disable(int textureUnit, const Texture2d *texture, unsigned int shaderMask)
+Renderer::Disable(int textureUnit, const Texture2d *texture, const TextureShaderMaskList& textureShaderMaskList)
 {
-    FALCON_ENGINE_RENDERER_TEXTURE_DISABLE_IMPLEMENT(texture, mTexture2dTable);
+    FALCON_ENGINE_RENDERER_TEXTURE_DISABLE_IMPLEMENT(texture, mTexture2dTable, textureShaderMaskList);
 }
 
 void *
@@ -799,15 +802,19 @@ Renderer::Unbind(const Texture2dArray *textureArray)
 }
 
 void
-Renderer::Enable(int textureUnit, const Texture2dArray *textureArray, unsigned int shaderMask)
+Renderer::Enable(int textureUnit,
+                 const Texture2dArray *textureArray,
+                 const TextureShaderMaskList& textureShaderMaskList)
 {
-    FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_IMPLEMENT(textureArray, mTexture2dArrayTable, PlatformTexture2dArray);
+    FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_IMPLEMENT(textureArray, mTexture2dArrayTable, textureShaderMaskList, PlatformTexture2dArray);
 }
 
 void
-Renderer::Disable(int textureUnit, const Texture2dArray *textureArray, unsigned int shaderMask)
+Renderer::Disable(int textureUnit,
+                  const Texture2dArray *textureArray,
+                  const TextureShaderMaskList& textureShaderMaskList)
 {
-    FALCON_ENGINE_RENDERER_TEXTURE_DISABLE_IMPLEMENT(textureArray, mTexture2dArrayTable);
+    FALCON_ENGINE_RENDERER_TEXTURE_DISABLE_IMPLEMENT(textureArray, mTexture2dArrayTable, textureShaderMaskList);
 }
 
 void *
@@ -847,13 +854,13 @@ Renderer::Unbind(const Texture3d * /* texture */)
 }
 
 void
-Renderer::Enable(int /* textureUnit */, const Texture3d * /* texture */, unsigned int /*shaderMask*/)
+Renderer::Enable(int /* textureUnit */, const Texture3d * /* texture */, const TextureShaderMaskList& /*textureShaderMaskList */)
 {
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
-Renderer::Disable(int /* textureUnit */, const Texture3d * /* texture */, unsigned int /*shaderMask*/)
+Renderer::Disable(int /* textureUnit */, const Texture3d * /* texture */, const TextureShaderMaskList& /*textureShaderMaskList*/)
 {
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
@@ -874,16 +881,16 @@ Renderer::Unbind(const Sampler *sampler)
 }
 
 void
-Renderer::Enable(int textureUnit, const Sampler *sampler, unsigned int shaderMask)
+Renderer::Enable(int textureUnit, const Sampler *sampler, unsigned int sampleprShaderMask)
 {
-    FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_LAZY(sampler, mSamplerPrevious);
-    FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_IMPLEMENT(sampler, mSamplerTable, PlatformSampler);
+    FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_LAZY(sampler, mSamplerPrevious, sampleprShaderMask);
+    FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_IMPLEMENT(sampler, mSamplerTable, sampleprShaderMask, PlatformSampler);
 }
 
 void
-Renderer::Disable(int textureUnit, const Sampler *sampler, unsigned int shaderMask)
+Renderer::Disable(int textureUnit, const Sampler *sampler, unsigned int sampleprShaderMask)
 {
-    FALCON_ENGINE_RENDERER_TEXTURE_DISABLE_IMPLEMENT(sampler, mSamplerTable);
+    FALCON_ENGINE_RENDERER_TEXTURE_DISABLE_IMPLEMENT(sampler, mSamplerTable, sampleprShaderMask);
 }
 
 /************************************************************************/
@@ -951,7 +958,7 @@ Renderer::Enable(const VisualEffectInstancePass *pass, const Camera *camera, con
     {
         Enable(textureIter->first,
                textureIter->second.mTexture,
-               textureIter->second.mShaderMask);
+               textureIter->second.mTextureShaderMaskList);
     }
 
     // Enable required shader samplers.
@@ -959,7 +966,7 @@ Renderer::Enable(const VisualEffectInstancePass *pass, const Camera *camera, con
     {
         Enable(samplerIter->first,
                samplerIter->second.mSampler,
-               samplerIter->second.mShaderMask);
+               samplerIter->second.mSamplerShaderMask);
     }
 
     // Update required shader uniforms.

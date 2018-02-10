@@ -26,12 +26,12 @@ PlatformShader::PlatformShader(Renderer *, Shader *shader) :
     for (auto shaderIter = shader->GetShaderSourceBegin(); shaderIter != shader->GetShaderSourceEnd(); ++shaderIter)
     {
         auto shaderIndex = shaderIter->first;
-        auto shaderType = shader->GetShaderType(shaderIndex);
+        auto shaderType = ShaderTypeMap.at(shaderIndex);
         auto shaderSource = shaderIter->second.get();
         PlatformShaderProcessor::ProcessShaderExtension(shaderSource);
 
         // Compile for each part of shader
-        CreateFromString(shaderIndex, OpenGLShaderType[int(shaderType)], shaderSource->mSource);
+        CreateFromString(shaderIndex, OpenGLShaderType[ShaderIndexMap.at(shaderType)], shaderSource->mSource);
     }
 
     // Link all the part together.
@@ -84,20 +84,13 @@ PlatformShader::LinkProgram()
 {
     mProgram = glCreateProgram();
 
-    // Avoid attach empty shaders
-    if (mShaders[VertexShaderIndex] != 0)
+    // Attach the shader handle.
+    for (auto shaderIndex : ShaderIndexList)
     {
-        glAttachShader(mProgram, mShaders[VertexShaderIndex]);
-    }
-
-    if (mShaders[GeometryShaderIndex] != 0)
-    {
-        glAttachShader(mProgram, mShaders[GeometryShaderIndex]);
-    }
-
-    if (mShaders[FragmentShaderIndex] != 0)
-    {
-        glAttachShader(mProgram, mShaders[FragmentShaderIndex]);
+        if (mShaders[shaderIndex] != 0)
+        {
+            glAttachShader(mProgram, mShaders[shaderIndex]);
+        }
     }
 
     // Link and check whether the program links fine
@@ -117,20 +110,13 @@ PlatformShader::LinkProgram()
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Shader link error: " + infoLogString);
     }
 
-    // Remove the unnecessary shader handle.
-    if (mShaders[VertexShaderIndex] != 0)
+    // Remove the shader handle.
+    for (auto shaderIndex : ShaderIndexList)
     {
-        glDeleteShader(mShaders[VertexShaderIndex]);
-    }
-
-    if (mShaders[GeometryShaderIndex] != 0)
-    {
-        glDeleteShader(mShaders[GeometryShaderIndex]);
-    }
-
-    if (mShaders[FragmentShaderIndex] != 0)
-    {
-        glDeleteShader(mShaders[FragmentShaderIndex]);
+        if (mShaders[shaderIndex] != 0)
+        {
+            glDeleteShader(mShaders[shaderIndex]);
+        }
     }
 }
 

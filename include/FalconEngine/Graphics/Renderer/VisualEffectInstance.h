@@ -7,6 +7,7 @@
 
 #include <FalconEngine/Core/Object.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstancePass.h>
+#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
 
 namespace FalconEngine
 {
@@ -25,19 +26,18 @@ class VisualEffectInstancePass;
 // class. Once the scene is loaded then the instance is initialized and disposed when
 // the scene is disposed. So as the asset used in this effect instance, though the
 // asset is disposed by manually calling asset manager.
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API VisualEffectInstance : public Object
+FALCON_ENGINE_CLASS_BEGIN VisualEffectInstance final
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
     VisualEffectInstance(std::shared_ptr<VisualEffect> effect);
-    virtual ~VisualEffectInstance();
+    ~VisualEffectInstance();
 
     // NOTE(Wuxiang): unique_ptr is not allowed to copy.
-    VisualEffectInstance(const VisualEffectInstance& rhs) = delete;
-    VisualEffectInstance& operator=(const VisualEffectInstance& rhs) = delete;
+    VisualEffectInstance(const VisualEffectInstance & rhs) = delete;
+    VisualEffectInstance& operator=(const VisualEffectInstance & rhs) = delete;
 
 public:
     /************************************************************************/
@@ -70,19 +70,33 @@ public:
     GetShaderTexture(int passIndex, int textureUnit) const;
 
     void
-    SetShaderTexture(int passIndex, int textureUnit, const Texture *texture, unsigned int shaderMask);
+    SetShaderTexture(int passIndex,
+                     int textureUnit,
+                     const Texture * texture,
+                     TextureMode textureMode,
+                     ShaderType shaderType);
+
+    void
+    SetShaderTexture(int passIndex,
+                     int textureUnit,
+                     const Texture * texture,
+                     TextureMode textureMode,
+                     unsigned int shaderMask);
 
     const Sampler *
     GetShaderSampler(int passIndex, int textureUnit) const;
 
     void
-    SetShaderSampler(int passIndex, int textureUnit, const Sampler *sampler, unsigned int shaderMask);
+    SetShaderSampler(int passIndex, int textureUnit, const Sampler * sampler, ShaderType shaderType);
+
+    void
+    SetShaderSampler(int passIndex, int textureUnit, const Sampler * sampler, unsigned int shaderMask);
 
 protected:
     std::shared_ptr<VisualEffect> mEffect;
     std::vector<std::unique_ptr<VisualEffectInstancePass>> mEffectInstancePassList; // Passes contained in this effect instance.
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 template <typename T>
 ShaderUniformValue<T> *

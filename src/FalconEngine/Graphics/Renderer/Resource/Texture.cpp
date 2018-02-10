@@ -19,10 +19,7 @@ namespace FalconEngine
 Texture::Texture() :
     mAccessMode(ResourceCreationAccessMode::None),
     mAccessUsage(ResourceCreationAccessUsage::None),
-    mAttachColorBuffer(false),
-    mAttachDepthStencilBuffer(false),
-    mAttachImage(false),
-    mAttachTexture(true),
+    mAttachment(),
     mDimension(),
     mFormat(TextureFormat::None),
     mMipmapLevel(0),
@@ -48,14 +45,10 @@ Texture::Texture(AssetSource assetSource,
     Asset(assetSource, AssetType::Texture, fileName, filePath),
     mAccessMode(accessMode),
     mAccessUsage(accessUsage),
-    mAttachColorBuffer(false),
-    mAttachDepthStencilBuffer(false),
-    mAttachImage(false),
-    mAttachTexture(true),
     mFormat(format),
     mMipmapLevel(mipmapLevel),
-    mType(type),
-    mStorageMode(storageMode)
+    mStorageMode(storageMode),
+    mType(type)
 {
     // Test validity of dimension.
     if (width < 1 || height < 1 || depth < 1)

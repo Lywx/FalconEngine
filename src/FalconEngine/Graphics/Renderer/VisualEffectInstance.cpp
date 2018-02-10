@@ -63,20 +63,35 @@ VisualEffectInstance::GetShaderTexture(int passIndex, int textureUnit) const
 }
 
 void
+VisualEffectInstance::SetShaderTexture(int passIndex, int textureUnit, const Texture *texture,
+                                       TextureMode textureMode, ShaderType shaderType)
+{
+    SetShaderTexture(passIndex, textureUnit, texture, textureMode, GetShaderMask(shaderType));
+}
+
+void
 VisualEffectInstance::SetShaderTexture(int passIndex,
                                        int textureUnit,
                                        const Texture *texture,
+                                       TextureMode textureMode,
                                        unsigned int shaderMask)
 {
     FALCON_ENGINE_CHECK_NULLPTR(texture);
 
-    mEffectInstancePassList.at(passIndex)->SetShaderTexture(textureUnit, texture, shaderMask);
+    mEffectInstancePassList.at(passIndex)->SetShaderTexture(textureUnit, texture, textureMode, shaderMask);
 }
 
 const Sampler *
 VisualEffectInstance::GetShaderSampler(int passIndex, int textureUnit) const
 {
     return mEffectInstancePassList.at(passIndex)->GetShaderSampler(textureUnit);
+}
+
+void
+VisualEffectInstance::SetShaderSampler(int passIndex, int textureUnit, const Sampler *sampler,
+                                       ShaderType shaderType)
+{
+    SetShaderSampler(passIndex, textureUnit, sampler, GetShaderMask(shaderType));
 }
 
 void

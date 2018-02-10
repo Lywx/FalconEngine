@@ -15,26 +15,38 @@ namespace FalconEngine
 enum class ShaderType : unsigned int
 {
 //                                          Direct3D
-    VertexShader = 0x01,                 // Vertex Shader 0
-    TessellationControlShader = 0x02,    // Hull Shader 1
-    TessellationEvaluationShader = 0x04, // Domain Shader 2
-    GeometryShader = 0x08,               // Geometry Shader 3
-    FragmentShader = 0x10,               // Pixel Shader 4
-    ComputeShader = 0x20,                // Compute Shader 5
+    VertexShader = 0x01,                 // Vertex Shader   : 0
+    TessellationControlShader = 0x02,    // Hull Shader     : 1
+    TessellationEvaluationShader = 0x04, // Domain Shader   : 2
+    GeometryShader = 0x08,               // Geometry Shader : 3
+    FragmentShader = 0x10,               // Pixel Shader    : 4
+    ComputeShader = 0x20,                // Compute Shader  : 5
 
     Count = 6,
 };
 
+FALCON_ENGINE_API const extern ShaderType
+ShaderTypeList[int(ShaderType::Count)];
+
+FALCON_ENGINE_API const extern std::unordered_map<int, ShaderType>
+ShaderTypeMap;
+
 inline bool
-ShaderTypeEnabled(unsigned int shaderMask, ShaderType shaderType)
+GetShaderEnabled(unsigned int shaderMask, ShaderType shaderType)
 {
-    return bool(shaderMask & unsigned int(shaderType));
+    return (shaderMask & unsigned int(shaderType)) != 0u;
+}
+
+inline unsigned int
+GetShaderMask(ShaderType shaderType)
+{
+    return unsigned int(shaderType);
 }
 
 inline unsigned int
 operator|(ShaderType lhs, ShaderType rhs)
 {
-    return unsigned int(lhs) | unsigned int(rhs);
+    return GetShaderMask(lhs) | GetShaderMask(rhs);
 }
 
 enum ShaderIndex
@@ -46,6 +58,12 @@ enum ShaderIndex
     FragmentShaderIndex,
     ComputeShaderIndex,
 };
+
+FALCON_ENGINE_API const extern int
+ShaderIndexList[int(ShaderType::Count)];
+
+FALCON_ENGINE_API const extern std::unordered_map<ShaderType, int>
+ShaderIndexMap;
 
 class ShaderSource;
 enum class ShaderUniformType;
@@ -142,9 +160,6 @@ public:
     {
         return mSourceTable.end();
     }
-
-    ShaderType
-    GetShaderType(int shaderIndex) const;
 
     void
     PushShaderFile(ShaderType shaderType, const std::string & shaderPath);

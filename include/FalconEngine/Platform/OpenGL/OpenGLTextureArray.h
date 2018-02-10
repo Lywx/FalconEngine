@@ -6,6 +6,7 @@
 #include <array>
 #include <vector>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/TextureAttachment.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
 
 namespace FalconEngine
@@ -29,10 +30,10 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Enable(Renderer *, int textureUnit, unsigned int);
+    Enable(Renderer *, int textureUnit, const TextureShaderMaskList&);
 
     void
-    Disable(Renderer *, int textureUnit, unsigned int);
+    Disable(Renderer *, int textureUnit, const TextureShaderMaskList&);
 
     void *
     Map(Renderer *,

@@ -7,15 +7,17 @@
 #include <memory>
 #include <vector>
 
+#include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
+#include <FalconEngine/Graphics/Renderer/Resource/TextureAttachment.h>
+#include <FalconEngine/Graphics/Renderer/Resource/SamplerAttachment.h>
+
 namespace FalconEngine
 {
 
 class Sampler;
-class SamplerAttachment;
 class Shader;
 class ShaderUniform;
 class Texture;
-class TextureAttachment;
 
 FALCON_ENGINE_CLASS_BEGIN VisualEffectInstancePass final
 {
@@ -43,10 +45,15 @@ public:
     SetShaderUniform(std::shared_ptr<ShaderUniform> shaderUniform);
 
     void
-    SetShaderTexture(int textureUnit, const Texture * texture, unsigned int shaderMask);
+    SetShaderTexture(int textureUnit,
+                     const Texture * texture,
+                     TextureMode textureMode,
+                     unsigned textureShaderMask);
 
     void
-    SetShaderSampler(int textureUnit, const Sampler * sampler, unsigned int shaderMask);
+    SetShaderSampler(int textureUnit,
+                     const Sampler * sampler,
+                     unsigned int samplerShaderMask);
 
     Shader *
     GetShader() const;

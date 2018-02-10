@@ -11,6 +11,51 @@ using namespace std;
 
 namespace FalconEngine
 {
+
+FALCON_ENGINE_API const ShaderType
+ShaderTypeList [int(ShaderType::Count)] =
+{
+    ShaderType::VertexShader,
+    ShaderType::TessellationControlShader,
+    ShaderType::TessellationEvaluationShader,
+    ShaderType::GeometryShader,
+    ShaderType::FragmentShader,
+    ShaderType::ComputeShader,
+};
+
+FALCON_ENGINE_API const std::unordered_map<int, ShaderType>
+ShaderTypeMap =
+{
+    { VertexShaderIndex, ShaderType::VertexShader },
+    { TessellationControlShaderIndex, ShaderType::TessellationControlShader },
+    { TessellationEvaluationShaderIndex, ShaderType::TessellationEvaluationShader },
+    { GeometryShaderIndex, ShaderType::GeometryShader },
+    { FragmentShaderIndex, ShaderType::FragmentShader },
+    { ComputeShaderIndex, ShaderType::ComputeShader },
+};
+
+FALCON_ENGINE_API const int
+ShaderIndexList[int(ShaderType::Count)] =
+{
+    VertexShaderIndex,
+    TessellationControlShaderIndex,
+    TessellationEvaluationShaderIndex,
+    GeometryShaderIndex,
+    FragmentShaderIndex,
+    ComputeShaderIndex,
+};
+
+FALCON_ENGINE_API const std::unordered_map<ShaderType, int>
+ShaderIndexMap =
+{
+    { ShaderType::VertexShader, VertexShaderIndex },
+    { ShaderType::TessellationControlShader, TessellationControlShaderIndex },
+    { ShaderType::TessellationEvaluationShader, TessellationEvaluationShaderIndex },
+    { ShaderType::GeometryShader, GeometryShaderIndex },
+    { ShaderType::FragmentShader, FragmentShaderIndex },
+    { ShaderType::ComputeShader, ComputeShaderIndex },
+};
+
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
@@ -73,12 +118,6 @@ Shader::GetShaderSource(int shaderIndex) const
     return mSourceTable.at(shaderIndex).get();
 }
 
-ShaderType
-Shader::GetShaderType(int shaderIndex) const
-{
-    return ShaderType(shaderIndex);
-}
-
 void
 Shader::PushShaderFile(ShaderType shaderType, const std::string& shaderPath)
 {
@@ -87,7 +126,7 @@ Shader::PushShaderFile(ShaderType shaderType, const std::string& shaderPath)
 
     if (shaderSource)
     {
-        mSourceTable[int(shaderType)] = shaderSource;
+        mSourceTable[ShaderIndexMap.at(shaderType)] = shaderSource;
     }
     else
     {

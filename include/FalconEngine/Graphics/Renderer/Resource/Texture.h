@@ -18,6 +18,16 @@
 namespace FalconEngine
 {
 
+enum class TextureMode
+{
+    Color,
+    DepthStencil,
+    Image,
+    Texture,
+
+    Count,
+};
+
 enum class TextureUnit
 {
     Ambient   = 0,
@@ -118,12 +128,8 @@ public:
     ResourceCreationAccessUsage mAccessUsage;
 
     // Texture runtime attachment usage, need for Direct3D resource view pipeline
-    // attachment. Each of attachment variable is bit mask created with one or
-    // multiple ShaderTypes.
-    bool mAttachColorBuffer;
-    bool mAttachDepthStencilBuffer;
-    bool mAttachImage;
-    bool mAttachTexture;
+    // attachment.
+    bool mAttachment[int(TextureMode::Count)];
 
     // Texture RGBA color channel number.
     int mChannel = 0;
@@ -189,28 +195,6 @@ public:
     }
 };
 FALCON_ENGINE_CLASS_END
-
-FALCON_ENGINE_CLASS_BEGIN TextureAttachment
-{
-public:
-    TextureAttachment():
-        mTexture(nullptr),
-        mShaderMask(0)
-    {
-    }
-
-    TextureAttachment(const Texture * texture, unsigned int shaderMask) :
-        mTexture(texture),
-        mShaderMask(shaderMask)
-    {
-    }
-
-public:
-    const Texture *mTexture;
-    unsigned int mShaderMask;
-};
-FALCON_ENGINE_CLASS_END
-
 
 }
 

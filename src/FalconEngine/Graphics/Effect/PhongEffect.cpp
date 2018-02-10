@@ -137,11 +137,16 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
 
             if (material->mAmbientTexture != nullptr)
             {
-                instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Ambient), material->mAmbientTexture,);
+                instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Ambient),
+                                           material->mAmbientTexture,
+                                           TextureMode::Texture,
+                                           ShaderType::FragmentShader);
 
                 if (material->mAmbientSampler != nullptr)
                 {
-                    instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Ambient), material->mAmbientSampler,);
+                    instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Ambient),
+                                               material->mAmbientSampler,
+                                               ShaderType::FragmentShader);
                 }
             }
             else
@@ -164,11 +169,15 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
 
             if (material->mDiffuseTexture != nullptr)
             {
-                instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Diffuse), material->mDiffuseTexture,);
+                instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Diffuse),
+                                           material->mDiffuseTexture, TextureMode::Texture,
+                                           ShaderType::FragmentShader);
 
                 if (material->mDiffuseSampler != nullptr)
                 {
-                    instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Diffuse), material->mDiffuseSampler,);
+                    instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Diffuse),
+                                               material->mDiffuseSampler,
+                                               ShaderType::FragmentShader);
                 }
             }
             else
@@ -191,11 +200,15 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
 
             if (material->mEmissiveTexture != nullptr)
             {
-                instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Emissive), material->mEmissiveTexture,);
+                instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Emissive),
+                                           material->mEmissiveTexture, TextureMode::Texture,
+                                           ShaderType::FragmentShader);
 
                 if (material->mEmissiveSampler != nullptr)
                 {
-                    instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Emissive), material->mEmissiveSampler,);
+                    instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Emissive),
+                                               material->mEmissiveSampler,
+                                               ShaderType::FragmentShader);
                 }
             }
             else
@@ -218,11 +231,15 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
 
             if (material->mShininessTexture != nullptr)
             {
-                instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Shininess), material->mShininessTexture,);
+                instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Shininess),
+                                           material->mShininessTexture, TextureMode::Image,
+                                           ShaderType::FragmentShader);
 
                 if (material->mShininessSampler != nullptr)
                 {
-                    instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Shininess), material->mShininessSampler,);
+                    instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Shininess),
+                                               material->mShininessSampler,
+                                               ShaderType::FragmentShader);
                 }
             }
             else
@@ -245,11 +262,15 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
 
             if (material->mSpecularTexture != nullptr)
             {
-                instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Specular), material->mSpecularTexture,);
+                instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Specular),
+                                           material->mSpecularTexture, TextureMode::Image,
+                                           ShaderType::FragmentShader);
 
                 if (material->mSpecularSampler != nullptr)
                 {
-                    instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Specular), material->mSpecularSampler,);
+                    instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Specular),
+                                               material->mSpecularSampler,
+                                               ShaderType::FragmentShader);
                 }
             }
             else

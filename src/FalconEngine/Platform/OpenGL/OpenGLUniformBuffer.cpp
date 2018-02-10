@@ -25,6 +25,7 @@ PlatformUniformBuffer::~PlatformUniformBuffer()
 void
 PlatformUniformBuffer::Enable(Renderer *, unsigned bindingIndex)
 {
+    // TODO(Wuxiang): 2018-02-11 00:12.
     //glUniformBlockBinding()
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }

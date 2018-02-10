@@ -10,6 +10,7 @@
 #include <FalconEngine/Core/Memory.h>
 #include <FalconEngine/Graphics/Renderer/Viewport.h>
 #include <FalconEngine/Graphics/Renderer/Window.h>
+#include <FalconEngine/Graphics/Renderer/Resource/TextureAttachment.h>
 
 namespace FalconEngine
 {
@@ -334,11 +335,15 @@ public:
 
     // @summary Provide a uniform interface for all texture.
     void
-    Enable(int textureUnit, const Texture *texture, unsigned int shaderMask);
+    Enable(int textureUnit,
+           const Texture *texture,
+           const TextureShaderMaskList& textureShaderMaskList);
 
     // @summary Provide a uniform interface for all texture.
     void
-    Disable(int textureUnit, const Texture *texture, unsigned int shaderMask);
+    Disable(int textureUnit,
+            const Texture *texture,
+            const TextureShaderMaskList& textureShaderMaskList);
 
     // NEW(Wuxiang): Add the ability of reading back texture.
     // NOTE(Wuxiang): But I don't know why I need any function to update texture.
@@ -353,10 +358,14 @@ public:
     Unbind(const Texture1d *texture);
 
     void
-    Enable(int textureUnit, const Texture1d *texture, unsigned int shaderMask);
+    Enable(int textureUnit,
+           const Texture1d *texture,
+           const TextureShaderMaskList& textureShaderMaskList);
 
     void
-    Disable(int textureUnit, const Texture1d *texture, unsigned int shaderMask);
+    Disable(int textureUnit,
+            const Texture1d *texture,
+            const TextureShaderMaskList& textureShaderMaskList);
 
     void *
     Map(const Texture1d *texture,
@@ -380,19 +389,23 @@ public:
     Unbind(const Texture2d *texture);
 
     void
-    Enable(int textureUnit, const Texture2d *texture, unsigned int shaderMask);
+    Enable(int textureUnit,
+           const Texture2d *texture,
+           const TextureShaderMaskList& textureShaderMaskList);
 
     void
-    Disable(int textureUnit, const Texture2d *texture, unsigned int shaderMask);
+    Disable(int textureUnit,
+            const Texture2d *texture,
+            const TextureShaderMaskList& textureShaderMaskList);
 
     void *
-    Map(const Texture2d          *texture,
-        int                       mipmapLevel,
-        ResourceMapAccessMode          access,
-        ResourceMapFlushMode           flush,
-        ResourceMapSyncMode synchronization,
-        int64_t                   offset,
-        int64_t                   size);
+    Map(const Texture2d *texture,
+        int mipmapLevel,
+        ResourceMapAccessMode access,
+        ResourceMapFlushMode flush,
+        ResourceMapSyncMode sync,
+        int64_t offset,
+        int64_t size);
 
     void
     Unmap(const Texture2d *texture, int mipmapLevel);
@@ -409,12 +422,12 @@ public:
     void
     Enable(int textureUnit,
            const Texture2dArray *textureArray,
-           unsigned int shaderMask);
+           const TextureShaderMaskList& textureShaderMaskList);
 
     void
     Disable(int textureUnit,
             const Texture2dArray *textureArray,
-            unsigned int shaderMask);
+            const TextureShaderMaskList& textureShaderMaskList);
 
     void *
     Map(const Texture2dArray *textureArray,
@@ -428,8 +441,8 @@ public:
 
     void
     Unmap(const Texture2dArray *textureArray,
-          int                   textureIndex,
-          int                   mipmapLevel);
+          int textureIndex,
+          int mipmapLevel);
 
     /************************************************************************/
     /* Texture 3D Management                                                */
@@ -441,10 +454,14 @@ public:
     Unbind(const Texture3d *texture);
 
     void
-    Enable(int textureUnit, const Texture3d *texture, unsigned int shaderMask);
+    Enable(int textureUnit,
+           const Texture3d *texture,
+           const TextureShaderMaskList& textureShaderMaskList);
 
     void
-    Disable(int textureUnit, const Texture3d *texture, unsigned int shaderMask);
+    Disable(int textureUnit,
+            const Texture3d *texture,
+            const TextureShaderMaskList& textureShaderMaskList);
 
     /************************************************************************/
     /* Sampler Management                                                   */
@@ -456,10 +473,14 @@ public:
     Unbind(const Sampler *sampler);
 
     void
-    Enable(int textureUnit, const Sampler *sampler, unsigned int shaderMask);
+    Enable(int textureUnit,
+           const Sampler *sampler,
+           unsigned int samplerShaderMask);
 
     void
-    Disable(int textureUnit, const Sampler *sampler, unsigned int shaderMask);
+    Disable(int textureUnit,
+            const Sampler *sampler,
+            unsigned int samplerShaderMask);
 
     /************************************************************************/
     /* Shader Management                                                   */
@@ -767,7 +788,7 @@ else \
     FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(std::string("The ") + #resource + " is not mapped before."); \
 }
 
-#define FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_LAZY(texture, texturePrevious) \
+#define FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_LAZY(texture, texturePrevious, textureShaderMask) \
 FALCON_ENGINE_CHECK_NULLPTR(texture); \
 \
 if (texturePrevious[textureUnit] == texture) \
@@ -778,13 +799,13 @@ else \
 { \
     if (texturePrevious[textureUnit]) \
     { \
-        Disable(textureUnit, texturePrevious[textureUnit], shaderMask); \
+        Disable(textureUnit, texturePrevious[textureUnit], textureShaderMask); \
     } \
 \
     texturePrevious[textureUnit] = texture; \
 }
 
-#define FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_IMPLEMENT(texture, textureTable, PlatformTextureKlass) \
+#define FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_IMPLEMENT(texture, textureTable, textureShaderMask, PlatformTextureKlass) \
 FALCON_ENGINE_CHECK_NULLPTR(texture); \
 \
 auto iter = textureTable.find(texture); \
@@ -799,16 +820,16 @@ else \
     textureTable[texture] = texture##Platform; \
 } \
 \
-texture##Platform->Enable(this, textureUnit, shaderMask);
+texture##Platform->Enable(this, textureUnit, textureShaderMask);
 
-#define FALCON_ENGINE_RENDERER_TEXTURE_DISABLE_IMPLEMENT(texture, textureTable) \
+#define FALCON_ENGINE_RENDERER_TEXTURE_DISABLE_IMPLEMENT(texture, textureTable, textureShaderMask) \
 FALCON_ENGINE_CHECK_NULLPTR(texture); \
 \
 auto iter = textureTable.find(texture); \
 if (iter != textureTable.end()) \
 { \
     auto texture##Platform = iter->second; \
-    texture##Platform->Disable(this, textureUnit, shaderMask); \
+    texture##Platform->Disable(this, textureUnit, textureShaderMask); \
 }
 
 #define FALCON_ENGINE_RENDERER_TEXTURE_MAP_IMPLEMENT(texture, textureTable, PlatformTextureKlass) \

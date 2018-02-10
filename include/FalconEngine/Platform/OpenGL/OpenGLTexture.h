@@ -3,8 +3,8 @@
 #include <FalconEngine/Core/Macro.h>
 
 #if defined(FALCON_ENGINE_API_OPENGL)
+#include <FalconEngine/Graphics/Renderer/Resource/TextureAttachment.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
-#include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 
 namespace FalconEngine
 {
@@ -27,10 +27,14 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Enable(Renderer *, int textureUnit, unsigned int);
+    Enable(Renderer *,
+           int textureUnit,
+           const TextureShaderMaskList& textureShaderMaskList);
 
     void
-    Disable(Renderer *, int textureUnit, unsigned int);
+    Disable(Renderer *,
+            int textureUnit,
+            const TextureShaderMaskList& textureShaderMaskList);
 
     void *
     Map(Renderer *,

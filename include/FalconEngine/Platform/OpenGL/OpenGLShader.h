@@ -15,13 +15,13 @@ namespace FalconEngine
 
 class Renderer;
 
-class FALCON_ENGINE_API PlatformShader
+FALCON_ENGINE_CLASS_BEGIN PlatformShader final
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformShader(Renderer *, Shader *shader);
+    explicit PlatformShader(Renderer *, Shader * shader);
     ~PlatformShader();
 
 public:
@@ -29,7 +29,14 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    CreateFromString(int shaderIndex, GLenum shaderType, const std::string& shaderSource);
+    Enable(Renderer *) const;
+
+    void
+    Disable(Renderer *) const;
+
+private:
+    void
+    CreateShaderFromString(int shaderIndex, GLenum shaderType, const std::string & shaderSource);
 
     void
     LinkProgram();
@@ -40,29 +47,20 @@ public:
     GLuint
     GetProgram() const;
 
-    void
-    Enable(Renderer *) const;
-
-    void
-    Disable(Renderer *) const;
-
     // @remark This function is primarily used in debugging.
     void
     CollectUniformActive();
 
-protected:
-
     // @remark This function modify the shader rather than the platform shader.
     void
-    CollectUniformLocation(Shader *shader) const;
+    CollectUniformLocation(Shader * shader) const;
 
 private:
     GLuint mProgram;
-    int    mShaderNum;
     GLuint mShaders[int(ShaderType::Count)];
+    int    mShaderNum;
 };
-
-typedef std::shared_ptr<PlatformShader> PlatformShaderSharedPtr;
+FALCON_ENGINE_CLASS_END
 
 }
 

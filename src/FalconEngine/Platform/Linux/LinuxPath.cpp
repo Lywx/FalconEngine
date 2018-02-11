@@ -1,4 +1,4 @@
-#include <FalconEngine/Core/Path.h>
+#include <FalconEngine/Core/String.h>
 
 #if defined(FALCON_ENGINE_OS_LINUX)
 
@@ -8,7 +8,7 @@ namespace FalconEngine
 {
 
 wstring
-GetWString(const string& str)
+GetWideString(const string& str)
 {
     // NOTE(Wuxiang): Linux string works differently compared to Windows' counterpart.
     // Because default encoding in Linux is UTF-8, you could natively store UTF-8

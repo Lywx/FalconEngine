@@ -25,8 +25,18 @@ FALCON_ENGINE_EFFECT_IMPLEMENT(FontEffect);
 FontEffect::FontEffect()
 {
     auto shader = std::make_shared<Shader>();
-    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/Font.vert.glsl");
-    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shader/Font.frag.glsl");
+    shader->PushShaderFile(ShaderType::VertexShader,
+#if defined(FALCON_ENGINE_API_DIRECT3D)
+                           "Content/Shader/Font.vert.glsl");
+#elif defined(FALCON_ENGINE_API_OPENGL)
+                           "Content/Shader/Font.vert.hlsl");
+#endif
+    shader->PushShaderFile(ShaderType::FragmentShader,
+#if defined(FALCON_ENGINE_API_DIRECT3D)
+                           "Content/Shader/Font.frag.hlsl");
+#elif defined(FALCON_ENGINE_API_OPENGL)
+                           "Content/Shader/Font.frag.glsl");
+#endif
 
     auto pass = make_unique<VisualEffectPass>();
     pass->SetShader(shader);

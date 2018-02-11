@@ -29,7 +29,7 @@ public:
     {
         std::lock_guard<std::mutex> lock(sMutex);
 
-        Debug::Break();
+        Debug::InternalBreak();
     }
 
     static void
@@ -37,7 +37,7 @@ public:
     {
         std::lock_guard<std::mutex> lock(sMutex);
 
-        Debug::OutputString(str);
+        Debug::InternalOutputString(str);
     }
 
     static void
@@ -45,7 +45,7 @@ public:
     {
         std::lock_guard<std::mutex> lock(sMutex);
 
-        Debug::OutputString(str);
+        Debug::InternalOutputString(str);
     }
 
     template<class ... Args>
@@ -54,7 +54,7 @@ public:
     {
         std::lock_guard<std::mutex> lock(sMutex);
 
-        Debug::OutputStringFormat(format, std::forward<Args>(args)...);
+        Debug::InternalOutputStringFormat(format, std::forward<Args>(args)...);
     }
 
 

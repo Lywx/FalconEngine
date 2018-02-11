@@ -143,7 +143,7 @@ private:
     std::shared_ptr<Texture>
     LoadTextureInternal(const std::string& textureAssetPath, const TextureImportOption& textureImportOption, TextureType textureType)
     {
-        if (Exist(textureAssetPath))
+        if (GetFileExist(textureAssetPath))
         {
             std::ifstream textureAssetStream(textureAssetPath, std::ios::binary);
             cereal::PortableBinaryInputArchive textureAssetArchive(textureAssetStream);

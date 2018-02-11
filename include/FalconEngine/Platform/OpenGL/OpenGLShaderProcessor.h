@@ -47,7 +47,7 @@ public:
         // So that all shader files are in the same directory. No need to do this anymore.
         //
         // Search in shader root directory as last resort.
-        if (!Exist(includeFilePath))
+        if (!GetFileExist(includeFilePath))
         {
             static auto gameEngineSettings = GameEngineSettings::GetInstance();
             if (gameEngineSettings->mShaderDirectory.empty())
@@ -57,7 +57,7 @@ public:
             else
             {
                 auto includeFilePathGlobal = gameEngineSettings->mShaderDirectory + includeFileName;
-                if (Exist(includeFilePathGlobal))
+                if (GetFileExist(includeFilePathGlobal))
                 {
                     includeFilePath = includeFilePathGlobal;
                 }

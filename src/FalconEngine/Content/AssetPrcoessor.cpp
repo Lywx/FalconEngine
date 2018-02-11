@@ -13,9 +13,7 @@
 #include <cereal/archives/portable_binary.hpp>
 
 #pragma warning(disable : 4244)
-
 #include <stb/stb_image.h>
-
 #pragma warning(default : 4244)
 
 #include <FalconEngine/Core/Exception.h>
@@ -26,7 +24,6 @@
 #include <FalconEngine/Graphics/Renderer/Scene/Model.h>
 #include <FalconEngine/Math/Type.h>
 
-using namespace boost;
 using namespace std;
 
 namespace FalconEngine
@@ -67,6 +64,8 @@ AssetProcessor::BakeFont(std::shared_ptr<Font> font, const std::string& fontOutp
 pair<string, string>
 ReadFntPair(const string fntPair)
 {
+    using namespace boost;
+
     static vector<string> sLineElems;
     sLineElems.clear();
 
@@ -79,6 +78,8 @@ ReadFntPair(const string fntPair)
 void
 PushFntMetaLine(map<string, string>& fontSettingTable, vector<string>& fontSettingElems)
 {
+    using namespace boost;
+
     // Skip first element
     for (size_t i = 1; i < fontSettingElems.size(); ++i)
     {
@@ -100,6 +101,8 @@ LoadFntGlyphLine(
     int          /* fontGlyphPB */,
     int             fontGlyphPL)
 {
+    using namespace boost;
+
     // NOTE(Wuxiang): Using preallocated map to improved performance. There is no
     // need to clear the map because all the data is overwritten by new glyph.
     static map<string, string> sFontGlyphKeyValuePairTable;
@@ -152,6 +155,8 @@ LoadFntGlyphLine(
 void
 LoadFntPageLine(Font& font, vector<string>& fontPageElems)
 {
+    using namespace boost;
+
     // NOTE(Wuxiang): Using preallocated map to improved performance. There is no
     // need to clear the map because all the data is overwritten by new page.
     static map<string, string> sFontPagePairs;
@@ -176,6 +181,8 @@ LoadFntPageLine(Font& font, vector<string>& fontPageElems)
 std::shared_ptr<Font>
 LoadFntFile(const std::string& fntFilePath)
 {
+    using namespace boost;
+
     static vector<string> sFntElems;
     static string         sFntLine;
     ifstream              fntStream(fntFilePath);
@@ -309,7 +316,7 @@ LoadFntFile(const std::string& fntFilePath)
 std::shared_ptr<Font>
 AssetProcessor::LoadRawFont(const std::string& fntFilePath)
 {
-    if (Exist(fntFilePath))
+    if (GetFileExist(fntFilePath))
     {
         auto font = LoadFntFile(fntFilePath);
         return font;
@@ -337,7 +344,7 @@ AssetProcessor::BakeTexture2d(const std::string& textureFilePath)
 std::shared_ptr<Texture1d>
 AssetProcessor::LoadRawTexture1d(const std::string& textureFilePath)
 {
-    if (Exist(textureFilePath))
+    if (GetFileExist(textureFilePath))
     {
         // NOTE(Wuxiang): Since the stb_image default loading format goes from top-left to bottom-right,
         // it is necessary to flip to make it compatible for OpenGL.
@@ -368,7 +375,7 @@ AssetProcessor::LoadRawTexture1d(const std::string& textureFilePath)
 std::shared_ptr<Texture2d>
 AssetProcessor::LoadRawTexture2d(const std::string& textureFilePath)
 {
-    if (Exist(textureFilePath))
+    if (GetFileExist(textureFilePath))
     {
         // NOTE(Wuxiang): Since the stb_image default loading format goes from top-left to bottom-right,
         // it is necessary to flip to make it compatible for OpenGL.
@@ -398,9 +405,9 @@ AssetProcessor::LoadRawTexture2d(const std::string& textureFilePath)
 
 void
 BakeMaterial(
-    _IN_     const string&             modelDirectoryPath,
-    _IN_     aiMaterial               *material,
-    _IN_     aiTextureType             textureType,
+    _IN_     const string& modelDirectoryPath,
+    _IN_     aiMaterial *material,
+    _IN_     aiTextureType textureType,
     _IN_OUT_ std::vector<std::string>& texturePathsBaked)
 {
     for (unsigned int textureIndex = 0; textureIndex < material->GetTextureCount(textureType); ++textureIndex)
@@ -426,7 +433,7 @@ BakeMaterial(
 void
 AssetProcessor::BakeModel(const std::string& modelFilePath)
 {
-    if (Exist(modelFilePath))
+    if (GetFileExist(modelFilePath))
     {
         // Load model using Assimp
         static Assimp::Importer modelImporter;

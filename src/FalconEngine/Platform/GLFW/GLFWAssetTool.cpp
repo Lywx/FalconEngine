@@ -19,7 +19,7 @@ namespace FalconEngine
 /* Public Members                                                       */
 /************************************************************************/
 void
-AssetTool::InitializeContextPlatform()
+AssetTool::OGLInitializeContextPlatform()
 {
     glfwInit();
 

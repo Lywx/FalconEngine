@@ -9,12 +9,6 @@ using namespace std;
 namespace FalconEngine
 {
 
-bool
-Exist(const string& relativePath)
-{
-    return filesystem::exists(GetCurrentPath() + relativePath);
-}
-
 string
 GetCurrentPath()
 {
@@ -27,6 +21,12 @@ GetFileDirectory(const string& path)
     return filesystem::path(path).parent_path().string() + FALCON_ENGINE_DIRECTORY_SEPARATOR;
 }
 
+bool
+GetFileExist(const string& relativePath)
+{
+    return filesystem::exists(GetCurrentPath() + relativePath);
+}
+
 string
 GetFileName(const string& path)
 {
@@ -34,7 +34,22 @@ GetFileName(const string& path)
     return filesystem::path(path).filename().string();
 }
 
-std::string GetFileStem(const std::string& path)
+// ReSharper disable once CppNotAllPathsReturnValue
+ifstream::pos_type
+GetFileSize(const string& relativePath)
+{
+    // http://stackoverflow.com/questions/5840148/how-can-i-get-a-files-size-in-c
+    if (GetFileExist(relativePath))
+    {
+        ifstream fileStream(relativePath, ifstream::ate | ifstream::binary);
+        return fileStream.tellg();
+    }
+
+    FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("File not found.");
+}
+
+std::string
+GetFileStem(const std::string& path)
 {
     return filesystem::path(path).stem().string();
 }
@@ -44,20 +59,6 @@ GetFileExtension(const std::string& path)
 {
     // http://stackoverflow.com/questions/959837/how-can-i-know-the-type-of-a-file-using-boost-filesystem
     return filesystem::path(path).extension().string();
-}
-
-// ReSharper disable once CppNotAllPathsReturnValue
-ifstream::pos_type
-GetFileSize(const string& relativePath)
-{
-    // http://stackoverflow.com/questions/5840148/how-can-i-get-a-files-size-in-c
-    if (Exist(relativePath))
-    {
-        ifstream fileStream(relativePath, ifstream::ate | ifstream::binary);
-        return fileStream.tellg();
-    }
-
-    FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("File not found.");
 }
 
 string
@@ -70,12 +71,6 @@ std::string
 RemoveFileExtension(const std::string& path)
 {
     return filesystem::path(path).replace_extension("").string();
-}
-
-bool
-IsFileExtensionSupported(const string& extension, const vector<string>& extensionSupportedList)
-{
-    return find(extensionSupportedList.begin(), extensionSupportedList.end(), extension) != extensionSupportedList.end();
 }
 
 // Return true if successful.

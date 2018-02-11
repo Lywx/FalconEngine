@@ -13,39 +13,40 @@ namespace FalconEngine
 {
 class Font;
 
+class Shader;
 class Texture;
 class Texture1d;
 class Texture2d;
 
-class FALCON_ENGINE_API AssetProcessor
+FALCON_ENGINE_CLASS_BEGIN AssetProcessor
 {
 public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
     static void
-    BakeFont(const std::string& fntFilePath);
+    BakeFont(const std::string & fntFilePath);
 
     static void
-    BakeModel(const std::string& modelFilePath);
+    BakeModel(const std::string & modelFilePath);
 
     static void
-    BakeTexture1d(const std::string& textureFilePath);
+    BakeTexture1d(const std::string & textureFilePath);
 
     static void
-    BakeTexture2d(const std::string& textureFilePath);
+    BakeTexture2d(const std::string & textureFilePath);
 
 private:
     static void
-    BakeFont(std::shared_ptr<Font> font, const std::string& fontOutputPath);
+    BakeFont(std::shared_ptr<Font> font, const std::string & fontOutputPath);
 
     // @summary Load font without optimization.
     static std::shared_ptr<Font>
-    LoadRawFont(const std::string& fntFilePath);
+    LoadRawFont(const std::string & fntFilePath);
 
     template <typename T>
     static void
-    BakeTexture(std::shared_ptr<T> texture, const std::string& textureOutputPath)
+    BakeTexture(std::shared_ptr<T> texture, const std::string & textureOutputPath)
     {
         static_assert(std::is_base_of<Texture, T>::value, "Invalid texture type parameter.");
 
@@ -56,9 +57,11 @@ private:
     }
 
     static std::shared_ptr<Texture1d>
-    LoadRawTexture1d(const std::string& textureFilePath);
+    LoadRawTexture1d(const std::string & textureFilePath);
 
     static std::shared_ptr<Texture2d>
-    LoadRawTexture2d(const std::string& textureFilePath);
+    LoadRawTexture2d(const std::string & textureFilePath);
 };
+FALCON_ENGINE_CLASS_END
+
 }

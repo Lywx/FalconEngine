@@ -135,7 +135,7 @@ AssetManager::LoadShaderSource(const std::string& shaderFilePath)
 void
 AssetManager::CheckFileExists(const std::string& assetPath)
 {
-    if (!Exist(assetPath))
+    if (!GetFileExist(assetPath))
     {
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(string("File\'") + assetPath + "\' was not found.");
     }

@@ -2,6 +2,7 @@
 
 #include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Core/Memory.h>
+#include <FalconEngine/Core/String.h>
 #include <FalconEngine/Graphics/Effect/FontEffect.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveQuads.h>
@@ -56,7 +57,7 @@ FontRenderer::AddText(const Font *font,
 {
     FALCON_ENGINE_CHECK_NULLPTR(font);
 
-    BatchText(font, fontSize, GetWString(text), textPosition, textColor, textLineWidth);
+    BatchText(font, fontSize, GetWideString(text), textPosition, textColor, textLineWidth);
 }
 
 void

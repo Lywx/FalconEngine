@@ -9,7 +9,7 @@
 #define NOMINMAX
 
 #define NODRAWTEXT
-#define NOGDI
+// #define NOGDI
 #define NOBITMAP
 
 // Include <mcx.h> if you need this
@@ -21,7 +21,7 @@
 // WinHelp is deprecated
 #define NOHELP
 
-#define WIN32_LEAN_AND_MEAN
+// #define WIN32_LEAN_AND_MEAN
 #include <comdef.h>
 #include <windows.h>
 #include <Windowsx.h>

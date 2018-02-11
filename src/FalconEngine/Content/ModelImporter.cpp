@@ -1,4 +1,5 @@
 #include <FalconEngine/Content/ModelImporter.h>
+#include <FalconEngine/Core/String.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 
 namespace FalconEngine

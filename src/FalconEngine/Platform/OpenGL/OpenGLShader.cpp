@@ -17,9 +17,9 @@ namespace FalconEngine
 /************************************************************************/
 PlatformShader::PlatformShader(Renderer *, Shader *shader) :
     mProgram(0),
+    mShaders(),
     mShaderNum(0)
 {
-    // Initialize to zero.
     std::fill_n(mShaders, int(ShaderType::Count), 0);
 
     // Compile all shader source.
@@ -31,7 +31,7 @@ PlatformShader::PlatformShader(Renderer *, Shader *shader) :
         PlatformShaderProcessor::ProcessShaderExtension(shaderSource);
 
         // Compile for each part of shader
-        CreateFromString(shaderIndex, OpenGLShaderType[ShaderIndexMap.at(shaderType)], shaderSource->mSource);
+        CreateShaderFromString(shaderIndex, OpenGLShaderType[ShaderIndexMap.at(shaderType)], shaderSource->mSource);
     }
 
     // Link all the part together.
@@ -43,14 +43,29 @@ PlatformShader::PlatformShader(Renderer *, Shader *shader) :
 
 PlatformShader::~PlatformShader()
 {
-    glDeleteProgram(mProgram);
+    DeleteProgram();
 }
 
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
 void
-PlatformShader::CreateFromString(int shaderIndex, GLenum shaderType, const string& shaderSource)
+PlatformShader::Enable(Renderer *) const
+{
+    glUseProgram(mProgram);
+}
+
+void
+PlatformShader::Disable(Renderer *) const
+{
+    glUseProgram(0);
+}
+
+/************************************************************************/
+/* Private Members                                                      */
+/************************************************************************/
+void
+PlatformShader::CreateShaderFromString(int shaderIndex, GLenum shaderType, const string& shaderSource)
 {
     GLuint shader = glCreateShader(shaderType);
 
@@ -132,21 +147,6 @@ PlatformShader::GetProgram() const
     return mProgram;
 }
 
-void
-PlatformShader::Enable(Renderer *) const
-{
-    glUseProgram(mProgram);
-}
-
-void
-PlatformShader::Disable(Renderer *) const
-{
-    glUseProgram(0);
-}
-
-/************************************************************************/
-/* Private Members                                                      */
-/************************************************************************/
 void
 PlatformShader::CollectUniformActive()
 {

@@ -62,7 +62,6 @@ PlatformShader::CreateShaderFromString(ID3D11Device4 *device, int shaderIndex, S
     case ShaderType::VertexShader:
     {
         ID3D11VertexShader *shader;
-        D3DCompile(shaderSource.data(), shaderSource.size(), nullptr, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, )
         device->CreateVertexShader(shaderSource.data(), shaderSource.size(), nullptr, &shader);
         SetShader(shaderIndex, shader);
     }

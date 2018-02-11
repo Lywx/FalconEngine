@@ -257,7 +257,7 @@ StartProcess(const std::wstring& processCmdWideString)
 
     // NOTE(Wuxiang): This must be big. Otherwise the script process would hang
     // when the buffer is fully filled.
-    size_t processStdOutBufferSize = 1024 * 1024 * 16;
+    DWORD processStdOutBufferSize = 1024 * 1024 * 16;
 
     // Create a pipe for the child process's STDOUT.
     if (!CreatePipe(&processStdOutReadHandle, &processStdOutWriteHandle, &securityAttributes, processStdOutBufferSize))

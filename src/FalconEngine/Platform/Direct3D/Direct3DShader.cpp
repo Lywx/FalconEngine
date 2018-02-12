@@ -16,7 +16,7 @@ PlatformShader::PlatformShader(Renderer *renderer, Shader *shader) :
     mShaderNum(),
     mShaders()
 {
-    std::fill_n(mShaders, int(ShaderType::Count), 0);
+    std::fill_n(mShaders, int(ShaderType::Count), nullptr);
 
     ID3D11DeviceContext4 *context = renderer->mData->GetContext();
     ID3D11Device4 *device = renderer->mData->GetDevice();
@@ -34,6 +34,13 @@ PlatformShader::PlatformShader(Renderer *renderer, Shader *shader) :
 
 PlatformShader::~PlatformShader()
 {
+    for (auto shader : mShaders)
+    {
+        if (shader)
+        {
+            shader->Release();
+        }
+    }
 }
 
 /************************************************************************/
@@ -43,12 +50,24 @@ void
 PlatformShader::Enable(Renderer *renderer) const
 {
     ID3D11DeviceContext4 *context = renderer->mData->GetContext();
-    context->CSSetShader();
+    context->VSSetShader(dynamic_cast<ID3D11VertexShader *>(mShaders[VertexShaderIndex]), nullptr, 0);
+    context->HSSetShader(dynamic_cast<ID3D11HullShader *>(mShaders[TessellationControlShaderIndex]), nullptr, 0);
+    context->DSSetShader(dynamic_cast<ID3D11DomainShader *>(mShaders[TessellationEvaluationShaderIndex]), nullptr, 0);
+    context->GSSetShader(dynamic_cast<ID3D11GeometryShader *>(mShaders[GeometryShaderIndex]), nullptr, 0);
+    context->PSSetShader(dynamic_cast<ID3D11PixelShader *>(mShaders[FragmentShaderIndex]), nullptr, 0);
+    context->CSSetShader(dynamic_cast<ID3D11ComputeShader *>(mShaders[ComputeShaderIndex]), nullptr, 0);
 }
 
 void
 PlatformShader::Disable(Renderer *renderer) const
 {
+    ID3D11DeviceContext4 *context = renderer->mData->GetContext();
+    context->VSSetShader(nullptr, nullptr, 0);
+    context->HSSetShader(nullptr, nullptr, 0);
+    context->DSSetShader(nullptr, nullptr, 0);
+    context->GSSetShader(nullptr, nullptr, 0);
+    context->PSSetShader(nullptr, nullptr, 0);
+    context->CSSetShader(nullptr, nullptr, 0);
 }
 
 /************************************************************************/

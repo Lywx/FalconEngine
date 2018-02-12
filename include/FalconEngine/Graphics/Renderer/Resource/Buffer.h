@@ -32,7 +32,8 @@ enum class BufferLayout
     Separated,
 };
 
-FALCON_ENGINE_CLASS_BEGIN Buffer
+FALCON_ENGINE_CLASS_BEGIN Buffer :
+public Object
 {
 protected:
     /************************************************************************/

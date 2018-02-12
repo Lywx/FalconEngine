@@ -85,4 +85,11 @@ Texture::~Texture()
     delete[] mData;
 }
 
+/************************************************************************/
+/* Public Members                                                       */
+/************************************************************************/
+TextureType Texture::GetTextureType() const
+{
+    return mType;
+}
 }

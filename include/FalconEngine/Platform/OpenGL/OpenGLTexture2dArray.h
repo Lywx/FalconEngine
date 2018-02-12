@@ -12,21 +12,21 @@
 namespace FalconEngine
 {
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API PlatformTexture2dArray : public PlatformTextureArray
+FALCON_ENGINE_CLASS_BEGIN PlatformTexture2dArray :
+public PlatformTextureArray
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformTexture2dArray(Renderer *, const Texture2dArray *textures);
+    explicit PlatformTexture2dArray(Renderer *, const Texture2dArray * textureArray);
     virtual ~PlatformTexture2dArray();
 
 private:
     void
     AllocateTexture();
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }
 

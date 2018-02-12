@@ -12,9 +12,10 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 PlatformTextureArray::PlatformTextureArray(Renderer *renderer, const TextureArray *textureArray) :
-    mTextureArrayObj(0),
-    mTextureArrayObjPrevious(0),
     mTextureArrayPtr(textureArray),
+    mTextureObj(0),
+    mTextureObjPrevious(0),
+    mDimension(),
     mFormatInternal(0),
     mFormat(0),
     mType(0),
@@ -31,43 +32,17 @@ PlatformTextureArray::PlatformTextureArray(Renderer *renderer, const TextureArra
     // Initialize buffer object list.
     mBufferObjList.assign(mDimension[2], 0);
 
-    // Allocate and setup buffer and dimension.
-    glGenBuffers(mDimension[2], mBufferObjList.data());
-    for (int textureIndex = 0; textureIndex < mDimension[2]; ++textureIndex)
-    {
-        auto texture = mTextureArrayPtr->GetTextureSlice(textureIndex);
-
-        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBufferObjList[textureIndex]);
-        glBufferData(GL_PIXEL_UNPACK_BUFFER, texture->mDataSize, nullptr, mUsage);
-        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-    }
-
-    // Fill in the texture data
-    for (int textureIndex = 0; textureIndex < mDimension[2]; ++textureIndex)
-    {
-        auto texture = mTextureArrayPtr->GetTextureSlice(textureIndex);
-        auto textureData = Map(renderer, textureIndex,
-                               ResourceMapAccessMode::WriteBuffer,
-                               ResourceMapFlushMode::Automatic,
-                               ResourceMapSyncMode::Unsynchronized, 0,
-                               texture->mDataSize);
-        memcpy(textureData, texture->mData, texture->mDataSize);
-        Unmap(renderer, textureIndex);
-    }
-
-    // Generate texture object.
-    glGenTextures(1, &mTextureArrayObj);
+    CreateBuffer();
+    CreateTexture();
 
     // NOTE(Wuxiang): Derived texture class should only bind specific texture type
     // and allocate texture storage.
-
-    // NEW(Wuxiang): Add mipmap support.
 }
 
 PlatformTextureArray::~PlatformTextureArray()
 {
     glDeleteBuffers(mDimension[2], mBufferObjList.data());
-    glDeleteTextures(1, &mTextureArrayObj);
+    glDeleteTextures(1, &mTextureObj);
 }
 
 /************************************************************************/
@@ -77,14 +52,14 @@ void
 PlatformTextureArray::Enable(Renderer *, int textureUnit, const TextureShaderMaskList&)
 {
     glActiveTexture(GL_TEXTURE0 + textureUnit);
-    mTextureArrayObjPrevious = BindTexture(mTextureArrayPtr->GetTextureType(), mTextureArrayObj);
+    mTextureObjPrevious = BindTexture(mTextureArrayPtr->GetTextureType(), mTextureObj);
 }
 
 void
 PlatformTextureArray::Disable(Renderer *, int textureUnit, const TextureShaderMaskList&)
 {
     glActiveTexture(GL_TEXTURE0 + textureUnit);
-    BindTexture(mTextureArrayPtr->GetTextureType(), mTextureArrayObjPrevious);
+    BindTexture(mTextureArrayPtr->GetTextureType(), mTextureObjPrevious);
 }
 
 void *
@@ -115,6 +90,42 @@ PlatformTextureArray::Unmap(Renderer *, int textureIndex)
     glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 }
+
+/************************************************************************/
+/* Private Members                                                      */
+/************************************************************************/
+void
+PlatformTextureArray::CreateBuffer()
+{
+    glGenBuffers(mDimension[2], mBufferObjList.data());
+    for (int textureIndex = 0; textureIndex < mDimension[2]; ++textureIndex)
+    {
+        auto texture = mTextureArrayPtr->GetTextureSlice(textureIndex);
+
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBufferObjList[textureIndex]);
+        glBufferData(GL_PIXEL_UNPACK_BUFFER, texture->mDataSize, nullptr, mUsage);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    }
+}
+
+void
+PlatformTextureArray::CreateTexture()
+{
+    for (int textureIndex = 0; textureIndex < mDimension[2]; ++textureIndex)
+    {
+        auto texture = mTextureArrayPtr->GetTextureSlice(textureIndex);
+        auto textureData = Map(nullptr, textureIndex,
+                               ResourceMapAccessMode::WriteBuffer,
+                               ResourceMapFlushMode::Automatic,
+                               ResourceMapSyncMode::Unsynchronized, 0,
+                               texture->mDataSize);
+        memcpy(textureData, texture->mData, texture->mDataSize);
+        Unmap(nullptr, textureIndex);
+    }
+
+    glGenTextures(1, &mTextureObj);
+}
+
 
 }
 

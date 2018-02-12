@@ -33,9 +33,11 @@ protected:
     CreateBuffer(ID3D11Device4 *device);
 
     virtual void
-    CreateResource(ID3D11Device4 *device) override;
+    CreateResource(ID3D11Device4 *device) override final;
 
 protected:
+    // NOTE(Wuxiang): mBufferObj doesn't need to be release in destructor, because
+    // its base pointer is released in PlatformResource.
     ID3D11Buffer *mBufferObj;
     const Buffer *mBufferPtr;
 };

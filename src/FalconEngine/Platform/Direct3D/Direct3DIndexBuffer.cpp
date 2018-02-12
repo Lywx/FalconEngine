@@ -33,16 +33,13 @@ PlatformIndexBuffer::~PlatformIndexBuffer()
 void
 PlatformIndexBuffer::Enable(Renderer *renderer)
 {
-    renderer->mData->GetContext()->IASetIndexBuffer(&mBufferObj, mFormat, 0);
-
-    // TODO(Wuxiang): 2018-02-07 22:47.
-
+    renderer->mData->GetContext()->IASetIndexBuffer(mBufferObj, mFormat, 0);
 }
 
 void
-PlatformIndexBuffer::Disable(Renderer *)
+PlatformIndexBuffer::Disable(Renderer *renderer)
 {
-// TODO(Wuxiang): 2018-02-07 22:47.
+    renderer->mData->GetContext()->IASetIndexBuffer(nullptr, mFormat, 0);
 }
 
 }

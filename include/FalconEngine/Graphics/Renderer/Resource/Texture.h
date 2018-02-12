@@ -117,10 +117,7 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     TextureType
-    GetTextureType() const
-    {
-        return mType;
-    }
+    GetTextureType() const;
 
 public:
     // Texture runtime access usage, needed during construction.

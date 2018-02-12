@@ -45,6 +45,7 @@ public:
             const TextureShaderMaskList & textureShaderMaskList);
 
 protected:
+    std::array<int, 3> mDimension;
     const Texture *mTexturePtr;
 };
 FALCON_ENGINE_CLASS_END

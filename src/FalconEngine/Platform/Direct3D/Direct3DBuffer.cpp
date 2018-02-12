@@ -12,13 +12,14 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 PlatformBuffer::PlatformBuffer(Renderer *renderer, const Buffer *buffer) :
-    PlatformResource(renderer),
+    PlatformResource(renderer, buffer),
     mBufferObj(nullptr),
     mBufferPtr(buffer)
 {
     auto device = renderer->mData->GetDevice();
 
     CreateResource(device);
+    CreateResourceView(device);
 }
 
 PlatformBuffer::~PlatformBuffer()
@@ -42,11 +43,11 @@ void
 PlatformBuffer::CreateBuffer(ID3D11Device4 *device)
 {
     D3D11_BUFFER_DESC bufferDesc;
+    bufferDesc.Usage = mUsage;;
+
     bufferDesc.BindFlags = Direct3DResourceBindFlag(mBufferPtr);
     bufferDesc.CPUAccessFlags = Direct3DResourceAccessFlag(mBufferPtr->GetAccessMode());
-    bufferDesc.Usage = Direct3DResourceAccessUsage[int(mBufferPtr->GetAccessMode())];
 
-    // TODO(Wuxiang): Add cubemap support.
     // TODO(Wuxiang): Add mipmap support.
     // TODO(Wuxiang): Add byte address buffer support.
     // TODO(Wuxiang): Add structured buffer support.

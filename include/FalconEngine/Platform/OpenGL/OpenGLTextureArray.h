@@ -47,13 +47,23 @@ public:
     void
     Unmap(Renderer *, int textureIndex);
 
+private:
+    /************************************************************************/
+    /* Private Members                                                      */
+    /************************************************************************/
+    void
+    CreateBuffer();
+
+    void
+    CreateTexture();
+
 protected:
     // The buffer object for each slice of texture
     std::vector<GLuint>             mBufferObjList;
 
-    GLuint                          mTextureArrayObj;
-    GLuint                          mTextureArrayObjPrevious;
     const TextureArray             *mTextureArrayPtr;
+    GLuint                          mTextureObj;
+    GLuint                          mTextureObjPrevious;
 
     // The dimension array for each slice of texture
     std::array<int, 3>              mDimension;

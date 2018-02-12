@@ -5,16 +5,16 @@
 namespace FalconEngine
 {
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API TextureArray : public Texture
+FALCON_ENGINE_CLASS_BEGIN TextureArray :
+public Texture
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
     TextureArray(AssetSource assetSource,
-                 const std::string& fileName,
-                 const std::string& filePath,
+                 const std::string & fileName,
+                 const std::string & filePath,
                  int width,
                  int height,
                  int depth,
@@ -29,6 +29,6 @@ public:
     virtual const Texture *
     GetTextureSlice(int textureIndex) const = 0;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

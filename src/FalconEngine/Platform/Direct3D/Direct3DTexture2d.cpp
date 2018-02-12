@@ -16,12 +16,23 @@ PlatformTexture2d::PlatformTexture2d(Renderer *renderer, const Texture2d *textur
 {
     auto device = renderer->mData->GetDevice();
 
-    CreateTexture(device);
-    CreateShaderResourceView(device);
+    CreateResource(device);
+    CreateResourceView(device);
 }
 
 PlatformTexture2d::~PlatformTexture2d()
 {
+}
+
+/************************************************************************/
+/* Protected Members                                                    */
+/************************************************************************/
+void
+PlatformTexture2d::CreateResource(ID3D11Device4 *device)
+{
+    CreateTexture(device);
+
+    mResourceObj = mTextureObj;
 }
 
 /************************************************************************/
@@ -31,20 +42,18 @@ void
 PlatformTexture2d::CreateTexture(ID3D11Device4 *device)
 {
     D3D11_TEXTURE2D_DESC textureDesc;
-    textureDesc.Width = mTexturePtr->mDimension[0];
-    textureDesc.Height = mTexturePtr->mDimension[1];
+    textureDesc.Format = mFormat;
+    textureDesc.Usage = mUsage;
+
+    textureDesc.BindFlags = Direct3DResourceBindFlag(mTexturePtr);
+    textureDesc.CPUAccessFlags = Direct3DResourceAccessFlag(mTexturePtr->mAccessMode);
+
+    textureDesc.Width = mDimension[0];
+    textureDesc.Height = mDimension[1];
 
     // TODO(Wuxiang): Add mipmap support.
-    textureDesc.MipLevels = 1;
     textureDesc.ArraySize = 1;
-    textureDesc.Format = Direct3DResourceFormat[int(mTexturePtr->mFormat)];
-    textureDesc.Usage = Direct3DResourceAccessUsage[int(mTexturePtr->mAccessMode)];
-
-    // TODO(Wuxiang): Add vertex stream output support.
-    textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-
-    // TODO(Wuxiang): Add flexible CPU access support.
-    textureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    textureDesc.MipLevels = 1;
 
     // TODO(Wuxiang): Add mipmap support.
     textureDesc.MiscFlags = 0;

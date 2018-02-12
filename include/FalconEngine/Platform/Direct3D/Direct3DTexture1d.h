@@ -25,7 +25,7 @@ public:
 protected:
     // @remark Implementer should initialize resource pointer in base class.
     virtual void
-    CreateResource(ID3D11Device4 * device) override;
+    CreateResource(ID3D11Device4 * device) override final;
 
 private:
     /************************************************************************/

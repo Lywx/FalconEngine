@@ -22,8 +22,6 @@ PlatformTexture1d::PlatformTexture1d(Renderer *renderer, const Texture1d *textur
 
 PlatformTexture1d::~PlatformTexture1d()
 {
-    // TODO(Wuxiang): 2018-02-08 19:08 ??
-    //mShaderResourceView->Release();
 }
 
 /************************************************************************/
@@ -46,16 +44,19 @@ PlatformTexture1d::CreateTexture(ID3D11Device4 *device)
     D3D11_TEXTURE1D_DESC textureDesc;
     textureDesc.Format = mFormat;
     textureDesc.Usage = mUsage;
+
     textureDesc.BindFlags = Direct3DResourceBindFlag(mTexturePtr);
     textureDesc.CPUAccessFlags = Direct3DResourceAccessFlag(mTexturePtr->mAccessMode);
+
+    textureDesc.Width = mDimension[0];
 
     textureDesc.ArraySize = 1;
 
     // TODO(Wuxiang): Add mipmap support.
-    textureDesc.MiscFlags = 0;
     textureDesc.MipLevels = 1;
 
-    textureDesc.Width = mTexturePtr->mDimension[0];
+    // TODO(Wuxiang): Add mipmap support.
+    textureDesc.MiscFlags = 0;
 
     D3D11_SUBRESOURCE_DATA subresourceData;
     subresourceData.pSysMem = mTexturePtr->mData;

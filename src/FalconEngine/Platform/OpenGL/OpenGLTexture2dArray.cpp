@@ -28,7 +28,7 @@ PlatformTexture2dArray::~PlatformTexture2dArray()
 void
 PlatformTexture2dArray::AllocateTexture()
 {
-    GLuint textureBindingPrevious = BindTexture(mTextureArrayPtr->GetTextureType(), mTextureArrayObj);
+    GLuint textureBindingPrevious = BindTexture(mTextureArrayPtr->GetTextureType(), mTextureObj);
 
     // Allocate texture storage.
     {

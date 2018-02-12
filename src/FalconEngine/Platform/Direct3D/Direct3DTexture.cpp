@@ -15,6 +15,7 @@ PlatformTexture::PlatformTexture(Renderer *renderer, const Texture *texture) :
     PlatformResource(renderer, texture),
     mTexturePtr(texture)
 {
+    mDimension = texture->mDimension;
     mFormat = Direct3DResourceFormat[int(texture->mFormat)];
     mUsage = Direct3DResourceAccessUsage[int(texture->mAccessMode)];
 }

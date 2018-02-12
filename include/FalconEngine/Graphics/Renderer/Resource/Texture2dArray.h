@@ -13,8 +13,8 @@ namespace FalconEngine
 
 class Texture2d;
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API Texture2dArray : public TextureArray
+FALCON_ENGINE_CLASS_BEGIN Texture2dArray :
+public TextureArray
 {
     FALCON_ENGINE_TEXTURE_DECLARE();
 
@@ -23,8 +23,8 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
     Texture2dArray(AssetSource assetSource,
-                   const std::string& fileName,
-                   const std::string& filePath,
+                   const std::string & fileName,
+                   const std::string & filePath,
                    int width,
                    int height,
                    int depth,
@@ -46,6 +46,6 @@ protected:
     // being released.
     std::vector<std::shared_ptr<Texture2d>> mTextureList;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

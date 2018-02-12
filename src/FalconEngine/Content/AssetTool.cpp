@@ -40,6 +40,11 @@ AssetTool::~AssetTool()
 void
 AssetTool::D3DBakeShader(const std::string& shaderFilePath)
 {
+    if (mFxcCompilerPath.empty())
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("FXC compiler path is not set.");
+    }
+
     auto shaderType = GetShaderType(shaderFilePath);
     auto shaderOutputPath = AddAssetExtension(shaderFilePath);
 
@@ -68,7 +73,7 @@ AssetTool::D3DBakeShader(const std::string& shaderFilePath)
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
 
-    auto cmd = GetStringFormat("%s /T %s /Fo %s /Zi %s", mFxcCompilerPath.c_str(), shaderProfile.c_str(), shaderOutputPath.c_str(), shaderFilePath.c_str());
+    auto cmd = GetFormatString("%s /T %s /Fo %s /Zi %s", mFxcCompilerPath.c_str(), shaderProfile.c_str(), shaderOutputPath.c_str(), shaderFilePath.c_str());
     auto output = StartProcess(cmd);
     if (output.first != 0)
     {
@@ -117,7 +122,7 @@ AssetTool::GetShaderType(const std::string& shaderFilePath)
     }
 
     FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(
-        GetStringFormat("Unidentified shader type: '%s'.", shaderExtension));
+        GetFormatString("Unidentified shader type: '%s'.", shaderExtension));
 }
 
 void

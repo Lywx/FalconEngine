@@ -27,6 +27,9 @@ PlatformTexture::PlatformTexture(Renderer *, const Texture *texture) :
 
     CreateBuffer();
     CreateTexture();
+
+    // NOTE(Wuxiang): Derived texture class should only bind specific texture type
+    // and allocate texture storage.
 }
 
 PlatformTexture::~PlatformTexture()
@@ -103,11 +106,7 @@ PlatformTexture::CreateTexture()
     memcpy(textureData, mTexturePtr->mData, mTexturePtr->mDataSize);
     Unmap(nullptr);
 
-    // Generate texture object.
     glGenTextures(1, &mTextureObj);
-
-    // NOTE(Wuxiang): Derived texture class should only bind specific texture type
-    // and allocate texture storage.
 }
 
 }

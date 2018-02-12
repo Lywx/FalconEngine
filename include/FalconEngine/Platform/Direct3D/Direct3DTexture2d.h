@@ -4,7 +4,7 @@
 
 #if defined(FALCON_ENGINE_API_DIRECT3D)
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
-#include <FalconEngine/Platform/Direct3D/Direct3DTexture1d.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DTexture.h>
 
 namespace FalconEngine
 {
@@ -12,7 +12,7 @@ namespace FalconEngine
 class Renderer;
 class Texture2d;
 
-FALCON_ENGINE_CLASS_BEGIN PlatformTexture2d final :
+FALCON_ENGINE_CLASS_BEGIN PlatformTexture2d:
 public PlatformTexture
 {
 public:
@@ -21,6 +21,13 @@ public:
     /************************************************************************/
     explicit PlatformTexture2d(Renderer * renderer, const Texture2d * texture);
     virtual ~PlatformTexture2d();
+
+protected:
+    /************************************************************************/
+    /* Protected Members                                                    */
+    /************************************************************************/
+    virtual void
+    CreateResource(ID3D11Device4 * device) override final;
 
 private:
     /************************************************************************/

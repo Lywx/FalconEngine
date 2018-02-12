@@ -16,7 +16,8 @@ enum class IndexType
     UnsignedInt
 };
 
-class FALCON_ENGINE_API IndexBuffer : public Buffer
+FALCON_ENGINE_CLASS_BEGIN IndexBuffer :
+public Buffer
 {
 public:
     /************************************************************************/
@@ -36,5 +37,6 @@ public:
 private:
     IndexType mType;
 };
+FALCON_ENGINE_CLASS_END
 
 }

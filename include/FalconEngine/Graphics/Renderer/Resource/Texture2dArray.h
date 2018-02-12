@@ -5,18 +5,15 @@
 #include <memory>
 #include <vector>
 
-#include <FalconEngine/Graphics/Renderer/Resource/TextureArray.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
 
 namespace FalconEngine
 {
 
-class Texture2d;
-
 FALCON_ENGINE_CLASS_BEGIN Texture2dArray :
-public TextureArray
+public Texture2d
 {
-    FALCON_ENGINE_TEXTURE_DECLARE();
+    FALCON_ENGINE_TEXTURE_DECLARE;
 
 public:
     /************************************************************************/
@@ -36,10 +33,10 @@ public:
 
 public:
     virtual const Texture2d *
-    GetTextureSlice(int index) const override;
+    GetTextureSlice(int index) const override final;
 
     void
-    PushTextureSlice(std::shared_ptr<Texture2d> texture);
+    PushTextureSlice(const std::shared_ptr<Texture2d>& texture);
 
 protected:
     // NOTE(Wuxiang): The Texture2D should not be released before owner of them

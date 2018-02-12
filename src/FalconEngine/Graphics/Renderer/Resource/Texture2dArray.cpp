@@ -19,8 +19,12 @@ Texture2dArray::Texture2dArray(AssetSource assetSource,
                                ResourceCreationAccessMode accessMode,
                                ResourceCreationAccessUsage accessUsage,
                                int mipmapLevel) :
-    TextureArray(assetSource, fileName, filePath, width, height, depth, format,
-                 TextureType::Texture2dArray, accessMode, accessUsage, mipmapLevel)
+    Texture2d(assetSource, fileName, filePath,
+              // An array texture is a Texture where each mipmap level contains
+              // an array of images of the same size.
+              width, height, depth, format,
+              TextureType::Texture2dArray, accessMode, accessUsage,
+              ResourceStorageMode::Device, mipmapLevel)
 {
 }
 
@@ -38,7 +42,7 @@ Texture2dArray::GetTextureSlice(int index) const
 }
 
 void
-Texture2dArray::PushTextureSlice(std::shared_ptr<Texture2d> texture)
+Texture2dArray::PushTextureSlice(const std::shared_ptr<Texture2d>& texture)
 {
     mTextureList.push_back(texture);
 }

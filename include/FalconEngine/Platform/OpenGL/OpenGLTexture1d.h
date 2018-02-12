@@ -11,21 +11,22 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_API PlatformTexture1d : public PlatformTexture
+FALCON_ENGINE_CLASS_BEGIN PlatformTexture1d :
+public PlatformTexture
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformTexture1d(Renderer *renderer, const Texture1d *texture);
+    explicit PlatformTexture1d(Renderer * renderer, const Texture1d * texture);
     virtual ~PlatformTexture1d();
 
 private:
     /************************************************************************/
-    /* Private Members                                                      */
+    /* Protected Members                                                    */
     /************************************************************************/
-    void
-    AllocateTexture();
+    virtual void
+    AllocateTexture() override final;
 };
 
 }

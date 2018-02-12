@@ -12,14 +12,13 @@ namespace FalconEngine
 class Renderer;
 class Texture;
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API PlatformTexture
+FALCON_ENGINE_CLASS_BEGIN PlatformTexture
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformTexture(Renderer *renderer, const Texture *texture);
+    explicit PlatformTexture(Renderer * renderer, const Texture * texture);
     virtual ~PlatformTexture();
 
 public:
@@ -29,45 +28,69 @@ public:
     void
     Enable(Renderer *,
            int textureUnit,
-           const TextureShaderMaskList& textureShaderMaskList);
+           const TextureShaderMaskList & textureShaderMaskList);
 
     void
     Disable(Renderer *,
             int textureUnit,
-            const TextureShaderMaskList& textureShaderMaskList);
+            const TextureShaderMaskList & textureShaderMaskList);
 
     void *
     Map(Renderer *,
         ResourceMapAccessMode access,
         ResourceMapFlushMode flush,
-        ResourceMapSyncMode synchronization,
+        ResourceMapSyncMode sync,
+        int64_t offset,
+        int64_t size);
+
+    void *
+    Map(Renderer *,
+        int textureIndex,
+        ResourceMapAccessMode access,
+        ResourceMapFlushMode flush,
+        ResourceMapSyncMode sync,
         int64_t offset,
         int64_t size);
 
     void
-    Unmap(Renderer *);
+    Unmap(Renderer * renderer);
 
-private:
+    void
+    Unmap(Renderer * renderer, int textureIndex);
+
+protected:
+    /************************************************************************/
+    /* Protected Members                                                    */
+    /************************************************************************/
+    void
+    AllocateBuffer();
+
+    virtual void
+    AllocateTexture() = 0;
+
     void
     CreateBuffer();
 
     void
     CreateTexture();
 
-protected:
-    GLuint         mBufferObj;
+    void
+    FillBuffer();
 
-    GLuint         mTextureObj;
-    GLuint         mTextureObjPrevious;
+protected:
+    std::vector<GLuint> mBufferObjList;
+
+    GLuint mTextureObj;
+    GLuint mTextureObjPrevious;
     const Texture *mTexturePtr;
 
-    GLuint         mDimension[3];
-    GLuint         mFormat;
-    GLuint         mFormatInternal;
-    GLuint         mType;
-    GLuint         mUsage;
+    std::array<int, 3> mDimension;
+    GLuint mFormat;
+    GLuint mFormatInternal;
+    GLuint mType;
+    GLuint mUsage;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }
 

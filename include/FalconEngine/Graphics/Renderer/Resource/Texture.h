@@ -116,6 +116,9 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
+    virtual const Texture *
+    GetTextureSlice(int textureIndex) const = 0;
+
     TextureType
     GetTextureType() const;
 
@@ -197,7 +200,7 @@ FALCON_ENGINE_CLASS_END
 
 CEREAL_SPECIALIZE_FOR_ALL_ARCHIVES(FalconEngine::Texture, cereal::specialization::member_load_save)
 
-#define FALCON_ENGINE_TEXTURE_DECLARE() \
+#define FALCON_ENGINE_TEXTURE_DECLARE \
 public: \
     static const FalconEngine::TextureType sTextureType;
 

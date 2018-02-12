@@ -2,6 +2,7 @@
 
 #if defined(FALCON_ENGINE_API_OPENGL)
 #include <cstring>
+
 #include <FalconEngine/Platform/OpenGL/OpenGLUtility.h>
 
 namespace FalconEngine
@@ -29,11 +30,12 @@ PlatformTexture2d::AllocateTexture()
     // Bind newly created texture
     GLuint textureBindingPrevious = BindTexture(mTexturePtr->GetTextureType(), mTextureObj);
 
+    // Allocate texture storage.
     {
         glTexStorage2D(GL_TEXTURE_2D, 1, mFormatInternal, mDimension[0],
                        mDimension[1]);
 
-        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBufferObj);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBufferObjList[0]);
 
         {
             glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, mDimension[0], mDimension[1],

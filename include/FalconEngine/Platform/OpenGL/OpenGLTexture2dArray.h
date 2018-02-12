@@ -7,13 +7,13 @@
 
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2dArray.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
-#include <FalconEngine/Platform/OpenGL/OpenGLTextureArray.h>
+#include <FalconEngine/Platform/OpenGL/OpenGLTexture.h>
 
 namespace FalconEngine
 {
 
 FALCON_ENGINE_CLASS_BEGIN PlatformTexture2dArray :
-public PlatformTextureArray
+public PlatformTexture
 {
 public:
     /************************************************************************/
@@ -23,8 +23,8 @@ public:
     virtual ~PlatformTexture2dArray();
 
 private:
-    void
-    AllocateTexture();
+    virtual void
+    AllocateTexture() override final;
 };
 FALCON_ENGINE_CLASS_END
 

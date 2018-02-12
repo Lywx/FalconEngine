@@ -27,9 +27,9 @@ FontEffect::FontEffect()
     auto shader = std::make_shared<Shader>();
     shader->PushShaderFile(ShaderType::VertexShader,
 #if defined(FALCON_ENGINE_API_DIRECT3D)
-                           "Content/Shader/Font.vert.glsl");
-#elif defined(FALCON_ENGINE_API_OPENGL)
                            "Content/Shader/Font.vert.hlsl");
+#elif defined(FALCON_ENGINE_API_OPENGL)
+                           "Content/Shader/Font.vert.glsl");
 #endif
     shader->PushShaderFile(ShaderType::FragmentShader,
 #if defined(FALCON_ENGINE_API_DIRECT3D)

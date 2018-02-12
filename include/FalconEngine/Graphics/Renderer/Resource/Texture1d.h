@@ -12,7 +12,7 @@ namespace FalconEngine
 
 class FALCON_ENGINE_API Texture1d : public Texture
 {
-    FALCON_ENGINE_TEXTURE_DECLARE();
+    FALCON_ENGINE_TEXTURE_DECLARE;
 
 public:
     /************************************************************************/
@@ -28,6 +28,13 @@ public:
               ResourceCreationAccessUsage accessUsage = ResourceCreationAccessUsage::Static,
               int mipmapLevel = 0);
     virtual ~Texture1d();
+
+public:
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
+    virtual const Texture1d *
+    GetTextureSlice(int textureIndex) const override final;
 
 public:
     /************************************************************************/

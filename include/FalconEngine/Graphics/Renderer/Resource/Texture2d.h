@@ -11,9 +11,10 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_API Texture2d : public Texture
+FALCON_ENGINE_CLASS_BEGIN Texture2d :
+public Texture
 {
-    FALCON_ENGINE_TEXTURE_DECLARE();
+    FALCON_ENGINE_TEXTURE_DECLARE;
 
 public:
     /************************************************************************/
@@ -21,8 +22,8 @@ public:
     /************************************************************************/
     Texture2d();
     Texture2d(AssetSource assetSource,
-              const std::string& fileName,
-              const std::string& filePath,
+              const std::string & fileName,
+              const std::string & filePath,
               int width,
               int height,
               TextureFormat format,
@@ -30,6 +31,27 @@ public:
               ResourceCreationAccessUsage accessUsage = ResourceCreationAccessUsage::Static,
               int mipmapLevel = 0);
     virtual ~Texture2d();
+
+protected:
+    Texture2d(AssetSource assetSource,
+              const std::string & fileName,
+              const std::string & filePath,
+              int width,
+              int height,
+              int depth,
+              TextureFormat format,
+              TextureType type,
+              ResourceCreationAccessMode accessMode,
+              ResourceCreationAccessUsage accessUsage,
+              ResourceStorageMode storageMode,
+              int mipmapLevel);
+
+public:
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
+    virtual const Texture2d *
+    GetTextureSlice(int textureIndex) const override;
 
 public:
     /************************************************************************/
@@ -59,6 +81,7 @@ public:
         ar & cereal::binary_data(mData, mDataSize);
     }
 };
+FALCON_ENGINE_CLASS_END
 
 }
 

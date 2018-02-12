@@ -1,7 +1,6 @@
 #include <FalconEngine/Platform/OpenGL/OpenGLTexture2dArray.h>
 
 #if defined(FALCON_ENGINE_API_OPENGL)
-
 #include <cstring>
 
 #include <FalconEngine/Platform/OpenGL/OpenGLUtility.h>
@@ -13,7 +12,7 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 PlatformTexture2dArray::PlatformTexture2dArray(Renderer *renderer, const Texture2dArray *textureArray) :
-    PlatformTextureArray(renderer, textureArray)
+    PlatformTexture(renderer, textureArray)
 {
     AllocateTexture();
 }
@@ -28,7 +27,8 @@ PlatformTexture2dArray::~PlatformTexture2dArray()
 void
 PlatformTexture2dArray::AllocateTexture()
 {
-    GLuint textureBindingPrevious = BindTexture(mTextureArrayPtr->GetTextureType(), mTextureObj);
+    // Bind newly created texture
+    GLuint textureBindingPrevious = BindTexture(mTexturePtr->GetTextureType(), mTextureObj);
 
     // Allocate texture storage.
     {
@@ -50,7 +50,7 @@ PlatformTexture2dArray::AllocateTexture()
     }
 
     // Restore previous texture binding
-    BindTexture(mTextureArrayPtr->GetTextureType(), textureBindingPrevious);
+    BindTexture(mTexturePtr->GetTextureType(), textureBindingPrevious);
 }
 }
 

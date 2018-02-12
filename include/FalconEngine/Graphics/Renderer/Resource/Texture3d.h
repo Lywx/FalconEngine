@@ -11,7 +11,7 @@ namespace FalconEngine
 
 class FALCON_ENGINE_API Texture3d : public Texture
 {
-    FALCON_ENGINE_TEXTURE_DECLARE();
+    FALCON_ENGINE_TEXTURE_DECLARE;
 
 public:
     /************************************************************************/

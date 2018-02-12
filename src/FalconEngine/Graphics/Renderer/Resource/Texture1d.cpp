@@ -1,4 +1,5 @@
 #include <FalconEngine/Graphics/Renderer/Resource/Texture1d.h>
+#include <FalconEngine/Core/Exception.h>
 
 namespace FalconEngine
 {
@@ -26,6 +27,20 @@ Texture1d::Texture1d(AssetSource assetSource,
 
 Texture1d::~Texture1d()
 {
+}
+
+/************************************************************************/
+/* Public Members                                                       */
+/************************************************************************/
+const Texture1d *
+Texture1d::GetTextureSlice(int textureIndex) const
+{
+    if (textureIndex != 0)
+    {
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+    }
+
+    return this;
 }
 
 }

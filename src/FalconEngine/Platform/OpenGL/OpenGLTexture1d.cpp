@@ -22,7 +22,7 @@ PlatformTexture1d::~PlatformTexture1d()
 }
 
 /************************************************************************/
-/* Private Members                                                      */
+/* Protected Members                                                    */
 /************************************************************************/
 void
 PlatformTexture1d::AllocateTexture()
@@ -30,10 +30,11 @@ PlatformTexture1d::AllocateTexture()
     // Bind newly created texture
     GLuint textureBindingPrevious = BindTexture(mTexturePtr->GetTextureType(), mTextureObj);
 
+    // Allocate texture storage.
     {
         glTexStorage1D(GL_TEXTURE_1D, 1, mFormatInternal, mDimension[0]);
 
-        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBufferObj);
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBufferObjList[0]);
 
         {
             glTexSubImage1D(GL_TEXTURE_1D, 0, 0, mDimension[0], mFormat, mType, nullptr);

@@ -29,6 +29,9 @@ protected:
     virtual void
     CreateResource(ID3D11Device4 * device) override final;
 
+    virtual void
+    CreateResourceView(ID3D11Device4 * device) override final;
+
 private:
     /************************************************************************/
     /* Private Members                                                      */

@@ -1,8 +1,10 @@
 #include <FalconEngine/Core/Debug.h>
 #include <FalconEngine/Core/Macro.h>
+
 #if defined(FALCON_ENGINE_OS_WINDOWS)
 #include <string>
-#include <FalconEngine/Platform/Win32/Win32Lib.h>
+
+#include <Windows.h>
 namespace FalconEngine
 {
 

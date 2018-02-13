@@ -43,24 +43,17 @@ protected:
     /************************************************************************/
     /* Protected Members                                                    */
     /************************************************************************/
+    D3D11_RESOURCE_DIMENSION
+    GetDimension() const;
+
     // @remark Implementer should initialize resource pointer in base class.
     virtual void
     CreateResource(ID3D11Device4 * device) = 0;
 
     // @remark This method is assumed to be called after all the filed is set
     // correctly, like mBindFlag, mFormat etc.
-    void
-    CreateResourceView(ID3D11Device4 * device);
-
-    void
-    CreateResourceViewAsTexture1d(ID3D11Device4 * device,
-                                  D3D11_RESOURCE_DIMENSION dimension,
-                                  const Texture * texture);
-
-    void
-    CreateResourceViewAsTexture2d(ID3D11Device4 * device,
-                                  D3D11_RESOURCE_DIMENSION dimension,
-                                  const Texture * texture);
+    virtual void
+    CreateResourceView(ID3D11Device4 * device) = 0;
 
     void
     CreateDepthStencilView(ID3D11Device4 * device, D3D11_RESOURCE_DIMENSION dimension);

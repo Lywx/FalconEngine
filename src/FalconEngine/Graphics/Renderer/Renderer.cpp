@@ -81,6 +81,10 @@ using namespace std;
 #if defined(FALCON_ENGINE_WINDOW_WIN32)
 #endif
 
+#if defined(FALCON_ENGINE_OS_WINDOWS)
+#include <FalconEngine/Platform/Win32/Win32LibCleanEnd.h>
+#endif
+
 namespace FalconEngine
 {
 /************************************************************************/

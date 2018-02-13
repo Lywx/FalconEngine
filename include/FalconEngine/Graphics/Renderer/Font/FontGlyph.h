@@ -2,6 +2,7 @@
 
 #include <FalconEngine/Core/Macro.h>
 
+#include <FalconEngine/Content/CerealLibGuardBegin.h>
 #include <cereal/access.hpp>
 
 namespace FalconEngine

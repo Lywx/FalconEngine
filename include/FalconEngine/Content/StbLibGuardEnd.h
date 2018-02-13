@@ -1,0 +1,1 @@
+#pragma warning(default : 4244)

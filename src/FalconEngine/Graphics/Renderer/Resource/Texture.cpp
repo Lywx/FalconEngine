@@ -3,10 +3,10 @@
 #include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 
-#pragma warning(disable : 4244)
+#include <FalconEngine/Content/StbLibGuardBegin.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
-#pragma warning(default : 4244)
+#include <FalconEngine/Content/StbLibGuardEnd.h>
 
 namespace FalconEngine
 {

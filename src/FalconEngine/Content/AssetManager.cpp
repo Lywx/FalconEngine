@@ -3,6 +3,7 @@
 #include <fstream>
 #include <stdexcept>
 
+#include <FalconEngine/Content/CerealLibGuardBegin.h>
 #include <cereal/archives/portable_binary.hpp>
 
 #include <FalconEngine/Content/AssetImporter.h>

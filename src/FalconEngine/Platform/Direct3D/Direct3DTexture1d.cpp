@@ -35,6 +35,32 @@ PlatformTexture1d::CreateResource(ID3D11Device4 *device)
     mResourceObj = mTextureObj;
 }
 
+void
+PlatformTexture1d::CreateResourceView(ID3D11Device4 *device)
+{
+    auto dimension = GetDimension();
+
+    if (mTexturePtr->mAttachment[int(TextureMode::Color)])
+    {
+        CreateRenderTargetView(device, dimension);
+    }
+
+    if (mTexturePtr->mAttachment[int(TextureMode::DepthStencil)])
+    {
+        CreateDepthStencilView(device, dimension);
+    }
+
+    if (mTexturePtr->mAttachment[int(TextureMode::Image)])
+    {
+        CreateUnorderedAccessView(device, dimension);
+    }
+
+    if (mTexturePtr->mAttachment[int(TextureMode::Texture)])
+    {
+        CreateShaderResourceView(device, dimension);
+    }
+}
+
 /************************************************************************/
 /* Private Members                                                      */
 /************************************************************************/
@@ -49,14 +75,14 @@ PlatformTexture1d::CreateTexture(ID3D11Device4 *device)
 
     textureDesc.Width = mDimension[0];
     textureDesc.ArraySize = mDimension[2];
+    textureDesc.MipLevels = mMipmapLevel;
 
     // TODO(Wuxiang): Add mipmap support.
-    textureDesc.MipLevels = 1;
     textureDesc.MiscFlags = 0;
 
     D3D11_SUBRESOURCE_DATA subresourceData;
     subresourceData.pSysMem = mTexturePtr->mData;
-    subresourceData.SysMemPitch = mTexturePtr->mDataSize;
+    subresourceData.SysMemPitch = UINT(mTexturePtr->mDataSize);
     subresourceData.SysMemSlicePitch = 0;
     D3DCheckSuccess(device->CreateTexture1D(&textureDesc, &subresourceData, &mTextureObj));
 }

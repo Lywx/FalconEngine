@@ -2,8 +2,6 @@
 
 #include <FalconEngine/Core/Macro.h>
 
-#include <unordered_map>
-
 #include <FalconEngine/Content/Asset.h>
 
 namespace FalconEngine
@@ -11,8 +9,8 @@ namespace FalconEngine
 
 class ShaderSource;
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API ShaderSource : public Asset
+FALCON_ENGINE_CLASS_BEGIN ShaderSource :
+public Asset
 {
 public:
     ShaderSource(AssetSource assetSource, std::string fileName, std::string filePath);
@@ -21,6 +19,6 @@ public:
 public:
     std::string mSource;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

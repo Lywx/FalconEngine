@@ -4,7 +4,8 @@
 
 #if defined(FALCON_ENGINE_WINDOW_WIN32)
 #include <FalconEngine/Input/MouseButton.h>
-#include <FalconEngine/Platform/Win32/Win32Lib.h>
+
+#include <Windows.h>
 
 namespace FalconEngine
 {

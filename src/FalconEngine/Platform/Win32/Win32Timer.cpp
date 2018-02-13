@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <string>
 
-#include <FalconEngine/Platform/Win32/Win32Lib.h>
+#include <Windows.h>
 
 namespace FalconEngine
 {

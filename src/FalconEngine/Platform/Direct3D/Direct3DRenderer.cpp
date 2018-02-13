@@ -13,6 +13,10 @@
 #include <FalconEngine/Platform/Win32/Win32Exception.h>
 #include <FalconEngine/Platform/Win32/Win32GameEngineWindow.h>
 
+#if defined(FALCON_ENGINE_OS_WINDOWS)
+#include <FalconEngine/Platform/Win32/Win32LibCleanEnd.h>
+#endif
+
 using namespace Microsoft::WRL;
 
 namespace FalconEngine
@@ -253,19 +257,19 @@ Renderer::ClearDepthBufferPlatform(float depth)
 }
 
 void
-Renderer::ClearStencilBufferPlatform(unsigned stencil)
+Renderer::ClearStencilBufferPlatform(unsigned int stencil)
 {
     auto context = mData->GetContext();
-    context->ClearDepthStencilView(mData->m_depthStencilView.Get(), D3D11_CLEAR_STENCIL, 1.0f, stencil);
+    context->ClearDepthStencilView(mData->m_depthStencilView.Get(), D3D11_CLEAR_STENCIL, 1.0f, UINT8(stencil));
     context->OMSetRenderTargets(1, mData->m_renderTargetView.GetAddressOf(), mData->m_depthStencilView.Get());
 }
 
 void
-Renderer::ClearFrameBufferPlatform(const Vector4f& color, float depth, unsigned stencil)
+Renderer::ClearFrameBufferPlatform(const Vector4f& color, float depth, unsigned int stencil)
 {
     auto context = mData->GetContext();
     context->ClearRenderTargetView(mData->m_renderTargetView.Get(), color.Data());
-    context->ClearDepthStencilView(mData->m_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, depth, stencil);
+    context->ClearDepthStencilView(mData->m_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, depth, UINT8(stencil));
     context->OMSetRenderTargets(1, mData->m_renderTargetView.GetAddressOf(), mData->m_depthStencilView.Get());
 }
 

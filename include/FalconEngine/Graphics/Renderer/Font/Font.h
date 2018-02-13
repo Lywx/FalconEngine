@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include <FalconEngine/Content/CerealLibGuardBegin.h>
 #include <cereal/access.hpp>
 #include <cereal/types/base_class.hpp>
 // https://github.com/USCiLab/cereal/issues/286

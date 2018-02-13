@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 
+#include <FalconEngine/Content/CerealLibGuardBegin.h>
 #include <cereal/access.hpp>
 #include <cereal/types/array.hpp>
 #include <cereal/types/base_class.hpp>

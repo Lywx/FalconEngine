@@ -4,6 +4,7 @@
 
 #include <memory>
 
+#include <FalconEngine/Content/CerealLibGuardBegin.h>
 #include <cereal/cereal.hpp>
 
 #include <FalconEngine/Graphics/Renderer/Resource/Texture.h>

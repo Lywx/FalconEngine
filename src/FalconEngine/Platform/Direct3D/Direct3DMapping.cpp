@@ -70,24 +70,24 @@ Direct3DResourceBindFlag(const Texture *texture)
 {
     UINT bindFlag = 0;
 
-    if (texture->mAttachColorBuffer)
+    if (texture->mAttachment[int(TextureMode::Color)])
     {
         bindFlag += D3D11_BIND_RENDER_TARGET;
     }
 
-    if (texture->mAttachDepthStencilBuffer)
+    if (texture->mAttachment[int(TextureMode::DepthStencil)])
     {
         bindFlag += D3D11_BIND_DEPTH_STENCIL;
     }
 
-    if (texture->mAttachImage)
+    if (texture->mAttachment[int(TextureMode::Image)])
     {
         bindFlag += D3D11_BIND_UNORDERED_ACCESS;
     }
 
-    if (texture->mAttachTexture)
+    if (texture->mAttachment[int(TextureMode::Texture)])
     {
-        bindFlag = D3D11_BIND_SHADER_RESOURCE;
+        bindFlag += D3D11_BIND_SHADER_RESOURCE;
     }
 
     return bindFlag;

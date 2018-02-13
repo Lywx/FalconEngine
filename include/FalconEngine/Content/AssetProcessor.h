@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include <FalconEngine/Content/CerealLibGuardBegin.h>
 #include <cereal/archives/portable_binary.hpp>
 
 namespace FalconEngine

@@ -1,6 +1,7 @@
 #include <FalconEngine/Platform/Direct3D/Direct3DResource.h>
 
 #if defined(FALCON_ENGINE_API_DIRECT3D)
+#include <FalconEngine/Core/Exception.h>
 
 namespace FalconEngine
 {
@@ -80,120 +81,15 @@ PlatformResource::Unmap(Renderer *renderer)
     renderer->mData->GetContext()->Unmap(mResourceObj, 0);
 }
 
-void
-PlatformResource::CreateResourceViewAsTexture1d(ID3D11Device4 *device, D3D11_RESOURCE_DIMENSION dimension, const Texture *texture)
-{
-    if (texture->mAttachment[int(TextureMode::Color)])
-    {
-        CreateRenderTargetView(device, dimension);
-    }
-
-    if (texture->mAttachment[int(TextureMode::DepthStencil)])
-    {
-        CreateDepthStencilView(device, dimension);
-    }
-
-    if (texture->mAttachment[int(TextureMode::Image)])
-    {
-        CreateUnorderedAccessView(device, dimension);
-    }
-
-    if (texture->mAttachment[int(TextureMode::Texture)])
-    {
-        CreateShaderResourceView(device, dimension);
-    }
-}
-
-void
-PlatformResource::CreateResourceViewAsTexture2d(ID3D11Device4 *device, D3D11_RESOURCE_DIMENSION dimension, const Texture *texture)
-{
-    if (texture->mAttachment[int(TextureMode::Color)])
-    {
-        CreateRenderTargetView(device, dimension);
-    }
-
-    if (texture->mAttachment[int(TextureMode::DepthStencil)])
-    {
-        CreateDepthStencilView(device, dimension);
-    }
-
-    if (texture->mAttachment[int(TextureMode::Image)])
-    {
-        CreateUnorderedAccessView(device, dimension);
-    }
-
-    if (texture->mAttachment[int(TextureMode::Texture)])
-    {
-        CreateShaderResourceView(device, dimension);
-    }
-}
-
 /************************************************************************/
 /* Protected Members                                                    */
 /************************************************************************/
-void
-PlatformResource::CreateResourceView(ID3D11Device4 *device)
+D3D11_RESOURCE_DIMENSION
+PlatformResource::GetDimension() const
 {
     D3D11_RESOURCE_DIMENSION dimension;
     mResourceObj->GetType(&dimension);
-
-    // TODO(Wuxiang): Add support for multiple resource view of same type. But
-    // remember that unordered access view is not supported for two of those view.
-    if (auto buffer = dynamic_cast<const Buffer *>(mResourcePtr))
-    {
-        auto bufferType = buffer->GetBufferType();
-        switch (bufferType)
-        {
-        case BufferType::VertexBuffer:
-            return;
-        case BufferType::IndexBuffer:
-            return;
-        case BufferType::ShaderBuffer:
-            FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-            break;
-        case BufferType::UniformBuffer:
-            return;
-        case BufferType::TextureBuffer:
-            FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-            break;
-        case BufferType::FeedbackBuffer:
-            FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-            break;
-        default:
-            FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
-        }
-    }
-    else if (auto texture = dynamic_cast<const Texture *>(mResourcePtr))
-    {
-        auto textureType = texture->GetTextureType();
-        switch (textureType)
-        {
-        case TextureType::Texture1d:
-            CreateResourceViewAsTexture1d(device, dimension, texture);
-            break;
-        case TextureType::Texture1dArray:
-            FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-            break;
-        case TextureType::Texture2d:
-            CreateResourceViewAsTexture2d(device, dimension, texture);
-            break;
-        case TextureType::Texture2dArray:
-            CreateResourceViewAsTexture2dArray(device, dimension, texture);
-            break;
-        case TextureType::Texture3d:
-            FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-            break;
-        case TextureType::TextureCube:
-            FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-            break;
-        default:
-            FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
-        }
-    }
-    else
-    {
-        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
-    }
+    return dimension;
 }
 
 void
@@ -426,6 +322,9 @@ PlatformResource::CreateRenderTargetView(ID3D11Device4 *device, D3D11_RESOURCE_D
 void
 PlatformResource::CreateUnorderedAccessView(ID3D11Device4 *device, D3D11_RESOURCE_DIMENSION dimension)
 {
+    _UNUSED(device);
+    _UNUSED(dimension);
+
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 

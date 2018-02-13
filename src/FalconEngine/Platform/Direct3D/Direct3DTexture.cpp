@@ -1,6 +1,7 @@
 #include <FalconEngine/Platform/Direct3D/Direct3DTexture.h>
 
 #if defined(FALCON_ENGINE_API_DIRECT3D)
+#include <FalconEngine/Core/Exception.h>
 
 using namespace std;
 using namespace placeholders;

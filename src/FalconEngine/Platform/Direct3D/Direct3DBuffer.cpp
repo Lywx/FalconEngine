@@ -1,6 +1,7 @@
 #include <FalconEngine/Platform/Direct3D/Direct3DBuffer.h>
 
 #if defined(FALCON_ENGINE_API_DIRECT3D)
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DRendererData.h>
 #include <FalconEngine/Platform/Win32/Win32Exception.h>
@@ -56,7 +57,7 @@ PlatformBuffer::CreateBuffer(ID3D11Device4 *device)
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ff476203(v=vs.85).aspx
     bufferDesc.MiscFlags = 0;
 
-    bufferDesc.ByteWidth = mBufferPtr->GetCapacitySize();
+    bufferDesc.ByteWidth = UINT(mBufferPtr->GetCapacitySize());
 
     // TODO(Wuxiang): Add structured buffer support.
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ff476203(v=vs.85).aspx
@@ -97,6 +98,34 @@ PlatformBuffer::CreateResource(ID3D11Device4 *device)
     CreateBuffer(device);
 
     mResourceObj = mBufferObj;
+}
+
+void
+PlatformBuffer::CreateResourceView(ID3D11Device4 *device)
+{
+    _UNUSED(device);
+
+    auto bufferType = mBufferPtr->GetBufferType();
+    switch (bufferType)
+    {
+    case BufferType::VertexBuffer:
+        return;
+    case BufferType::IndexBuffer:
+        return;
+    case BufferType::ShaderBuffer:
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+        break;
+    case BufferType::UniformBuffer:
+        return;
+    case BufferType::TextureBuffer:
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+        break;
+    case BufferType::FeedbackBuffer:
+        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+        break;
+    default:
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+    }
 }
 
 }

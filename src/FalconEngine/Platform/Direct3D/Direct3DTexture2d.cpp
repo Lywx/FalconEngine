@@ -35,6 +35,32 @@ PlatformTexture2d::CreateResource(ID3D11Device4 *device)
     mResourceObj = mTextureObj;
 }
 
+void
+PlatformTexture2d::CreateResourceView(ID3D11Device4 *device)
+{
+    auto dimension = GetDimension();
+
+    if (mTexturePtr->mAttachment[int(TextureMode::Color)])
+    {
+        CreateRenderTargetView(device, dimension);
+    }
+
+    if (mTexturePtr->mAttachment[int(TextureMode::DepthStencil)])
+    {
+        CreateDepthStencilView(device, dimension);
+    }
+
+    if (mTexturePtr->mAttachment[int(TextureMode::Image)])
+    {
+        CreateUnorderedAccessView(device, dimension);
+    }
+
+    if (mTexturePtr->mAttachment[int(TextureMode::Texture)])
+    {
+        CreateShaderResourceView(device, dimension);
+    }
+}
+
 /************************************************************************/
 /* Private Members                                                      */
 /************************************************************************/
@@ -58,7 +84,7 @@ PlatformTexture2d::CreateTexture(ID3D11Device4 *device)
 
     D3D11_SUBRESOURCE_DATA subresourceData;
     subresourceData.pSysMem = mTexturePtr->mData;
-    subresourceData.SysMemPitch = mTexturePtr->mDataSize;
+    subresourceData.SysMemPitch = UINT(mTexturePtr->mDataSize);
     subresourceData.SysMemSlicePitch = 0;
     D3DCheckSuccess(device->CreateTexture2D(&textureDesc, &subresourceData, &mTextureObj));
 }

@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include <FalconEngine/Content/CerealLibGuardBegin.h>
 #include <cereal/access.hpp>
 
 #include <FalconEngine/Core/Macro.h>

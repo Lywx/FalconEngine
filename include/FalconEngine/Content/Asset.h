@@ -5,6 +5,7 @@
 
 #include <string>
 
+#include <FalconEngine/Content/CerealLibGuardBegin.h>
 #include <cereal/access.hpp>
 #include <cereal/types/string.hpp>
 

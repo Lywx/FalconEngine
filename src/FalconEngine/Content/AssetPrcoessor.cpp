@@ -10,11 +10,12 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/regex.hpp>
 
+#include <FalconEngine/Content/CerealLibGuardBegin.h>
 #include <cereal/archives/portable_binary.hpp>
 
-#pragma warning(disable : 4244)
+#include <FalconEngine/Content/StbLibGuardBegin.h>
 #include <stb/stb_image.h>
-#pragma warning(default : 4244)
+#include <FalconEngine/Content/StbLibGuardEnd.h>
 
 #include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Core/Path.h>

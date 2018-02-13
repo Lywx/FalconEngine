@@ -3,8 +3,10 @@
 #if defined(FALCON_ENGINE_OS_WINDOWS)
 #include <algorithm>
 
+#include <Windows.h>
+#include <FalconEngine/Platform/Win32/Win32LibCleanEnd.h>
+
 #include <FalconEngine/Core/Exception.h>
-#include <FalconEngine/Platform/Win32/Win32Lib.h>
 
 using namespace std;
 

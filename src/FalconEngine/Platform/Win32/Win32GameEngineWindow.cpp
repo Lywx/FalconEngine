@@ -8,7 +8,9 @@
 #include <FalconEngine/Input/KeyboardState.h>
 #include <FalconEngine/Input/KeyState.h>
 #include <FalconEngine/Input/MouseState.h>
-#include <FalconEngine/Platform/Win32/Win32Lib.h>
+
+#include <Windows.h>
+#include <Windowsx.h>
 
 namespace FalconEngine
 {

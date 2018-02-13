@@ -18,7 +18,6 @@ PlatformShader::PlatformShader(Renderer *renderer, Shader *shader) :
 {
     std::fill_n(mShaders, int(ShaderType::Count), nullptr);
 
-    ID3D11DeviceContext4 *context = renderer->mData->GetContext();
     ID3D11Device4 *device = renderer->mData->GetDevice();
 
     for (auto shaderIter = shader->GetShaderSourceBegin(); shaderIter != shader->GetShaderSourceEnd(); ++shaderIter)

@@ -7,6 +7,7 @@
 
 #include <boost/filesystem.hpp>
 
+#include <FalconEngine/Content/CerealLibGuardBegin.h>
 #include <cereal/archives/portable_binary.hpp>
 
 #include <FalconEngine/Content/ModelImportOption.h>

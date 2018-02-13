@@ -6,22 +6,22 @@
 #include <vector>
 
 #include <FalconEngine/Platform/Direct3D/Direct3DLib.h>
-#include <FalconEngine/Platform/Direct3D/Direct3DTexture2d.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DTexture1d.h>
 
 namespace FalconEngine
 {
 
 class Renderer;
 
-FALCON_ENGINE_CLASS_BEGIN PlatformTexture2dArray :
-public PlatformTexture2d
+FALCON_ENGINE_CLASS_BEGIN PlatformTexture1dArray :
+public PlatformTexture1d
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformTexture2dArray(Renderer *, const Texture2dArray * textureArray);
-    virtual ~PlatformTexture2dArray();
+    explicit PlatformTexture1dArray(Renderer *, const Texture1dArray * textureArray);
+    virtual ~PlatformTexture1dArray();
 };
 FALCON_ENGINE_CLASS_END
 

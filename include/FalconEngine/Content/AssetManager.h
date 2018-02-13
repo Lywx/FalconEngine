@@ -162,6 +162,12 @@ private:
             }
             break;
 
+            case TextureType::Texture1dArray:
+            {
+                FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+            }
+            break;
+
             case TextureType::Texture2d:
             {
                 return LoadTexture2dInternal(textureImportOption, textureAssetArchive);

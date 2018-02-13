@@ -52,12 +52,13 @@ enum class TextureType
     None,
 
     Texture1d,
+    Texture1dArray,
     Texture2d,
     Texture2dArray,
     Texture3d,
     TextureCube,
 
-    Count
+    Count,
 };
 
 class Texture;
@@ -116,15 +117,20 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
+    ResourceCreationAccessMode
+    GetAccessMode() const;
+
     virtual const Texture *
     GetTextureSlice(int textureIndex) const = 0;
 
     TextureType
     GetTextureType() const;
 
-public:
+protected:
     // Texture runtime access usage, needed during construction.
     ResourceCreationAccessMode mAccessMode;
+
+public:
     ResourceCreationAccessUsage mAccessUsage;
 
     // Texture runtime attachment usage, need for Direct3D resource view pipeline

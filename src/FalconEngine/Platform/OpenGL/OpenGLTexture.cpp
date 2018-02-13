@@ -14,7 +14,8 @@ PlatformTexture::PlatformTexture(Renderer *, const Texture *texture) :
     mTextureObj(0),
     mTextureObjPrevious(0),
     mTexturePtr(texture),
-    mDimension(),
+    mDimension(texture->mDimension),
+    mMipmapLevel(texture->mMipmapLevel),
     mFormat(0),
     mFormatInternal(0),
     mType(0),
@@ -23,9 +24,8 @@ PlatformTexture::PlatformTexture(Renderer *, const Texture *texture) :
     mType = OpenGLTextureType[int(texture->mFormat)];
     mFormat = OpenGLTextureFormat[int(texture->mFormat)];
     mFormatInternal = OpenGLTextureInternalFormat[int(texture->mFormat)];
-    mUsage = OpenGLBufferUsage(texture->mAccessMode, texture->mAccessUsage);
+    mUsage = OpenGLBufferUsage(texture->GetAccessMode(), texture->mAccessUsage);
 
-    mDimension = texture->mDimension;
     mBufferObjList.assign(mDimension[2], 0);
 
     CreateBuffer();

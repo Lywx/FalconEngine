@@ -13,11 +13,14 @@ namespace FalconEngine
 /************************************************************************/
 PlatformTexture::PlatformTexture(Renderer *renderer, const Texture *texture) :
     PlatformResource(renderer, texture),
+    mDimension(texture->mDimension),
+    mMipmapLevel(texture->mMipmapLevel),
     mTexturePtr(texture)
 {
-    mDimension = texture->mDimension;
-    mFormat = Direct3DResourceFormat[int(texture->mFormat)];
-    mUsage = Direct3DResourceAccessUsage[int(texture->mAccessMode)];
+    mBindFlag = Direct3DResourceBindFlag(mTexturePtr);
+    mCpuFlag = Direct3DResourceAccessFlag(mTexturePtr->GetAccessMode());
+    mFormat = Direct3DResourceFormat[int(mTexturePtr->mFormat)];
+    mUsage = Direct3DResourceAccessUsage[int(mTexturePtr->GetAccessMode())];
 }
 
 PlatformTexture::~PlatformTexture()
@@ -136,6 +139,61 @@ PlatformTexture::Disable(Renderer *renderer,
         // NEW(Wuxiang): Add Append / Consume Buffer counter support.
         context->CSSetUnorderedAccessViews(textureUnit, 1, nullptr, nullptr);
     }
+}
+
+void *
+PlatformTexture::Map(Renderer *renderer,
+                     int textureIndex,
+                     ResourceMapAccessMode access,
+                     ResourceMapFlushMode flush,
+                     ResourceMapSyncMode sync,
+                     int64_t offset,
+                     int64_t size)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(mResourceObj);
+
+    _UNUSED(flush);
+    _UNUSED(sync);
+    _UNUSED(size);
+
+    D3D11_MAPPED_SUBRESOURCE mappedSubresource;
+
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/ff476183(v=vs.85).aspx
+    UINT mapFlags = 0;
+    D3DCheckSuccess(renderer->mData->GetContext()->Map(
+                        mResourceObj,
+                        // NEW(Wuxiang): Add mipmap mapping support.
+                        GetSubresourceIndex(0, textureIndex),
+                        Direct3DResourceMapMode[int(access)],
+                        mapFlags,
+                        &mappedSubresource));
+    auto data = reinterpret_cast<unsigned char *>(mappedSubresource.pData);
+    return data + offset;
+}
+
+void
+PlatformTexture::Unmap(Renderer *renderer,
+                       int textureIndex)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(mResourceObj);
+
+    renderer->mData->GetContext()->Unmap(mResourceObj, GetSubresourceIndex(0, textureIndex));
+}
+
+/************************************************************************/
+/* Protected Members                                                    */
+/************************************************************************/
+int
+PlatformTexture::GetSubresourceIndex(int mipmapIndex, int mipmapLevel, int textureIndex)
+{
+    // NEW(Wuxiang): Add mipmap mapping support.
+    return (mipmapLevel + 1) * textureIndex + mipmapIndex;
+}
+
+int
+PlatformTexture::GetSubresourceIndex(int mipmapIndex, int textureIndex)
+{
+    return GetSubresourceIndex(mipmapIndex, mMipmapLevel, textureIndex);
 }
 
 }

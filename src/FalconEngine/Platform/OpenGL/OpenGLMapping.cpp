@@ -126,6 +126,7 @@ const GLuint OpenGLTextureTarget[int(TextureType::Count)] =
     GL_INVALID_ENUM,     // None
 
     GL_TEXTURE_1D,       // 1d
+    GL_TEXTURE_1D_ARRAY, // 1d array
     GL_TEXTURE_2D,       // 2d
     GL_TEXTURE_2D_ARRAY, // 2d array
     GL_TEXTURE_3D,       // 3d
@@ -137,6 +138,7 @@ const GLuint OpenGLTextureTargetBinding[int(TextureType::Count)] =
     GL_INVALID_ENUM,             // None
 
     GL_TEXTURE_BINDING_1D,       // 1d
+    GL_TEXTURE_BINDING_1D_ARRAY, // 1d array
     GL_TEXTURE_BINDING_2D,       // 2d
     GL_TEXTURE_BINDING_2D_ARRAY, // 2d array
     GL_TEXTURE_BINDING_3D,       // 3d

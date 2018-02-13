@@ -47,6 +47,8 @@ protected:
     virtual void
     CreateResource(ID3D11Device4 * device) = 0;
 
+    // @remark This method is assumed to be called after all the filed is set
+    // correctly, like mBindFlag, mFormat etc.
     void
     CreateResourceView(ID3D11Device4 * device);
 
@@ -56,7 +58,8 @@ protected:
                                   const Texture * texture);
 
     void
-    CreateResourceViewAsTexture2d(ID3D11Device4 * device, D3D11_RESOURCE_DIMENSION dimension,
+    CreateResourceViewAsTexture2d(ID3D11Device4 * device,
+                                  D3D11_RESOURCE_DIMENSION dimension,
                                   const Texture * texture);
 
     void
@@ -72,6 +75,7 @@ protected:
     CreateUnorderedAccessView(ID3D11Device4 * device, D3D11_RESOURCE_DIMENSION dimension);
 
 protected:
+    UINT mBindFlag;
     UINT mCpuFlag;
     DXGI_FORMAT mFormat;
     UINT mMiscFlags;

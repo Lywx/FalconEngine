@@ -88,6 +88,12 @@ Texture::~Texture()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+ResourceCreationAccessMode
+Texture::GetAccessMode() const
+{
+    return mAccessMode;
+}
+
 TextureType Texture::GetTextureType() const
 {
     return mType;

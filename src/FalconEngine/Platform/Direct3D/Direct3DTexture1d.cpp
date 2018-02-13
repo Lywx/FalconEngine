@@ -44,18 +44,14 @@ PlatformTexture1d::CreateTexture(ID3D11Device4 *device)
     D3D11_TEXTURE1D_DESC textureDesc;
     textureDesc.Format = mFormat;
     textureDesc.Usage = mUsage;
-
-    textureDesc.BindFlags = Direct3DResourceBindFlag(mTexturePtr);
-    textureDesc.CPUAccessFlags = Direct3DResourceAccessFlag(mTexturePtr->mAccessMode);
+    textureDesc.BindFlags = mBindFlag;
+    textureDesc.CPUAccessFlags = mCpuFlag;
 
     textureDesc.Width = mDimension[0];
-
-    textureDesc.ArraySize = 1;
+    textureDesc.ArraySize = mDimension[2];
 
     // TODO(Wuxiang): Add mipmap support.
     textureDesc.MipLevels = 1;
-
-    // TODO(Wuxiang): Add mipmap support.
     textureDesc.MiscFlags = 0;
 
     D3D11_SUBRESOURCE_DATA subresourceData;

@@ -50,6 +50,7 @@ class VertexGroup;
 
 class Texture;
 class Texture1d;
+class Texture1dArray;
 class Texture2d;
 class Texture2dArray;
 class Texture3d;
@@ -75,6 +76,7 @@ class PlatformIndexBuffer;
 class PlatformVertexBuffer;
 class PlatformVertexFormat;
 class PlatformTexture1d;
+class PlatformTexture1dArray;
 class PlatformTexture2d;
 class PlatformTexture2dArray;
 class PlatformTexture3d;
@@ -380,6 +382,40 @@ public:
     Unmap(const Texture1d *texture, int mipmapLevel);
 
     /************************************************************************/
+    /* Texture 1D Array Management                                          */
+    /************************************************************************/
+    void
+    Bind(const Texture1dArray *textureArray);
+
+    void
+    Unbind(const Texture1dArray *textureArray);
+
+    void
+    Enable(int textureUnit,
+           const Texture1dArray *textureArray,
+           const TextureShaderMaskList& textureShaderMaskList);
+
+    void
+    Disable(int textureUnit,
+            const Texture1dArray *textureArray,
+            const TextureShaderMaskList& textureShaderMaskList);
+
+    void *
+    Map(const Texture1dArray *textureArray,
+        int textureIndex,
+        int mipmapLevel,
+        ResourceMapAccessMode access,
+        ResourceMapFlushMode flush,
+        ResourceMapSyncMode sync,
+        int64_t offset,
+        int64_t size);
+
+    void
+    Unmap(const Texture1dArray *textureArray,
+          int textureIndex,
+          int mipmapLevel);
+
+    /************************************************************************/
     /* Texture 2D Management                                                */
     /************************************************************************/
     void
@@ -536,6 +572,7 @@ private:
     std::map<const Shader *, PlatformShader *>                 mShaderTable;
     std::map<const Sampler *, PlatformSampler *>               mSamplerTable;
     std::map<const Texture1d *, PlatformTexture1d *>           mTexture1dTable;
+    std::map<const Texture1dArray *, PlatformTexture1dArray *> mTexture1dArrayTable;
     std::map<const Texture2d *, PlatformTexture2d *>           mTexture2dTable;
     std::map<const Texture2dArray *, PlatformTexture2dArray *> mTexture2dArrayTable;
 
@@ -859,29 +896,29 @@ if (iter != textureTable.end()) \
     texturePlatform->Unmap(this); \
 }
 
-#define FALCON_ENGINE_RENDERER_TEXTURE_ARRAY_MAP_IMPLEMENT(textureArray, textureArrayTable, PlatformTextureArrayKlass) \
+#define FALCON_ENGINE_RENDERER_TEXTURE_ARRAY_MAP_IMPLEMENT(textureArray, textureArrayTable, textureIndex, PlatformTextureArrayKlass) \
 FALCON_ENGINE_CHECK_NULLPTR(textureArray); \
 \
 auto iter = textureArrayTable.find(textureArray); \
-PlatformTextureArrayKlass *texturePlatform; \
+PlatformTextureArrayKlass *textureArrayPlatform; \
 if (iter != textureArrayTable.end()) \
 { \
-    texturePlatform = iter->second; \
+    textureArrayPlatform = iter->second; \
 } \
 else \
 { \
-    texturePlatform = new PlatformTextureArrayKlass(this, textureArray); \
-    textureArrayTable[textureArray] = texturePlatform; \
+    textureArrayPlatform = new PlatformTextureArrayKlass(this, textureArray); \
+    textureArrayTable[textureArray] = textureArrayPlatform; \
 } \
 \
-return texturePlatform->Map(this, textureIndex, access, flush, sync, offset, size);
+return textureArrayPlatform->Map(this, textureIndex, access, flush, sync, offset, size);
 
-#define FALCON_ENGINE_RENDERER_TEXTURE_ARRAY_UNMAP_IMPLEMENT(textureArray, textureArrayTable) \
+#define FALCON_ENGINE_RENDERER_TEXTURE_ARRAY_UNMAP_IMPLEMENT(textureArray, textureArrayTable, textureIndex) \
 FALCON_ENGINE_CHECK_NULLPTR(textureArray); \
 \
 auto iter = textureArrayTable.find(textureArray); \
 if (iter != textureArrayTable.end()) \
 { \
-    auto texturePlatform = iter->second; \
-    texturePlatform->Unmap(this, textureIndex); \
+    auto textureArrayPlatform = iter->second; \
+    textureArrayPlatform->Unmap(this, textureIndex); \
 }

@@ -12,7 +12,7 @@ namespace FalconEngine
 class Renderer;
 class Texture1d;
 
-FALCON_ENGINE_CLASS_BEGIN PlatformTexture1d final :
+FALCON_ENGINE_CLASS_BEGIN PlatformTexture1d :
 public PlatformTexture
 {
 public:

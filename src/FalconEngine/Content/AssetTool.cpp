@@ -9,6 +9,7 @@
 
 #ifndef FALCON_ENGINE_API_OPENGL
 #define FALCON_ENGINE_API_OPENGL
+#define FALCON_ENGINE_API_OPENGL_GLEW
 #endif
 #include <FalconEngine/Platform/OpenGL/OpenGLShader.h>
 

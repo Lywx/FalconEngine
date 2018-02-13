@@ -29,12 +29,25 @@ public:
               int mipmapLevel = 0);
     virtual ~Texture1d();
 
+protected:
+    Texture1d(AssetSource assetSource,
+              const std::string & fileName,
+              const std::string & filePath,
+              int width,
+              int depth,
+              TextureFormat format,
+              TextureType type,
+              ResourceCreationAccessMode accessMode,
+              ResourceCreationAccessUsage accessUsage,
+              ResourceStorageMode storageMode,
+              int mipmapLevel);
+
 public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
     virtual const Texture1d *
-    GetTextureSlice(int textureIndex) const override final;
+    GetTextureSlice(int textureIndex) const override;
 
 public:
     /************************************************************************/

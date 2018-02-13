@@ -44,13 +44,40 @@ public:
             int textureUnit,
             const TextureShaderMaskList & textureShaderMaskList);
 
+    using PlatformResource::Map;
+
+    void *
+    Map(Renderer * renderer,
+        int textureIndex,
+        ResourceMapAccessMode access,
+        ResourceMapFlushMode flush,
+        ResourceMapSyncMode sync,
+        int64_t offset,
+        int64_t size);
+
+    using PlatformResource::Unmap;
+
+    void
+    Unmap(Renderer * renderer,
+          int textureIndex);
+
+protected:
+    /************************************************************************/
+    /* Protected Members                                                    */
+    /************************************************************************/
+    int
+    GetSubresourceIndex(int mipmapIndex, int mipmapLevel, int textureIndex);
+
+    int
+    GetSubresourceIndex(int mipmapIndex, int textureIndex);
+
 protected:
     std::array<int, 3> mDimension;
+    int mMipmapLevel;
     const Texture *mTexturePtr;
 };
 FALCON_ENGINE_CLASS_END
 
 }
-
 
 #endif

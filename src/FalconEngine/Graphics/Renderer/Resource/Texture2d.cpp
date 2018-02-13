@@ -43,6 +43,7 @@ Texture2d::Texture2d(AssetSource assetSource,
                      ResourceStorageMode storageMode,
                      int mipmapLevel) :
     Texture(assetSource, fileName, filePath,
+
             // https://www.khronos.org/opengl/wiki/Array_Texture
             // An array texture is a Texture where each mipmap level contains an array of images of the same size.
             width, height, depth, format, type,

@@ -55,9 +55,6 @@ Direct3DResourceBindFlag(const Buffer *buffer)
     case BufferType::TextureBuffer:
         FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
         break;
-    case BufferType::RenderBuffer:
-        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-        break;
     case BufferType::FeedbackBuffer:
         bindFlag = D3D11_BIND_STREAM_OUTPUT;
         break;

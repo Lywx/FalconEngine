@@ -16,6 +16,9 @@ PlatformBuffer::PlatformBuffer(Renderer *renderer, const Buffer *buffer) :
     mBufferObj(nullptr),
     mBufferPtr(buffer)
 {
+    mBindFlag = Direct3DResourceBindFlag(mBufferPtr);
+    mCpuFlag = Direct3DResourceAccessFlag(mBufferPtr->GetAccessMode());
+
     auto device = renderer->mData->GetDevice();
 
     CreateResource(device);
@@ -44,9 +47,8 @@ PlatformBuffer::CreateBuffer(ID3D11Device4 *device)
 {
     D3D11_BUFFER_DESC bufferDesc;
     bufferDesc.Usage = mUsage;;
-
-    bufferDesc.BindFlags = Direct3DResourceBindFlag(mBufferPtr);
-    bufferDesc.CPUAccessFlags = Direct3DResourceAccessFlag(mBufferPtr->GetAccessMode());
+    bufferDesc.BindFlags = mBindFlag;
+    bufferDesc.CPUAccessFlags = mCpuFlag;
 
     // TODO(Wuxiang): Add mipmap support.
     // TODO(Wuxiang): Add byte address buffer support.

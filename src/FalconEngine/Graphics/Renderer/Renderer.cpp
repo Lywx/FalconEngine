@@ -30,6 +30,7 @@ using namespace std;
 #include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture1d.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture1dArray.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2dArray.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture3d.h>
@@ -42,6 +43,7 @@ using namespace std;
 #include <FalconEngine/Platform/OpenGL/OpenGLVertexBuffer.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLVertexFormat.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLTexture1d.h>
+#include <FalconEngine/Platform/OpenGL/OpenGLTexture1dArray.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLTexture2d.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLTexture2dArray.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLTexture3d.h>
@@ -56,6 +58,7 @@ using namespace std;
 #include <FalconEngine/Platform/Direct3D/Direct3DVertexBuffer.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DVertexFormat.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DTexture1d.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DTexture1dArray.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DTexture2d.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DTexture2dArray.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DTexture3d.h>
@@ -598,6 +601,9 @@ Renderer::Bind(const Texture *texture)
     case TextureType::Texture1d:
         Bind(reinterpret_cast<const Texture1d *>(texture));
         break;
+    case TextureType::Texture1dArray:
+        Bind(reinterpret_cast<const Texture1dArray *>(texture));
+        break;
     case TextureType::Texture2d:
         Bind(reinterpret_cast<const Texture2d *>(texture));
         break;
@@ -623,6 +629,9 @@ Renderer::Unbind(const Texture *texture)
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     case TextureType::Texture1d:
         Unbind(reinterpret_cast<const Texture1d *>(texture));
+        break;
+    case TextureType::Texture1dArray:
+        Unbind(reinterpret_cast<const Texture1dArray *>(texture));
         break;
     case TextureType::Texture2d:
         Unbind(reinterpret_cast<const Texture2d *>(texture));
@@ -652,6 +661,9 @@ Renderer::Enable(int textureUnit, const Texture *texture, const TextureShaderMas
     case TextureType::Texture1d:
         Enable(textureUnit, reinterpret_cast<const Texture1d *>(texture), textureShaderMaskList);
         break;
+    case TextureType::Texture1dArray:
+        Enable(textureUnit, reinterpret_cast<const Texture1dArray *>(texture), textureShaderMaskList);
+        break;
     case TextureType::Texture2d:
         Enable(textureUnit, reinterpret_cast<const Texture2d *>(texture), textureShaderMaskList);
         break;
@@ -679,6 +691,9 @@ Renderer::Disable(int textureUnit, const Texture *texture, const TextureShaderMa
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     case TextureType::Texture1d:
         Disable(textureUnit, reinterpret_cast<const Texture1d *>(texture), textureShaderMaskList);
+        break;
+    case TextureType::Texture1dArray:
+        Disable(textureUnit, reinterpret_cast<const Texture1dArray *>(texture), textureShaderMaskList);
         break;
     case TextureType::Texture2d:
         Disable(textureUnit, reinterpret_cast<const Texture2d *>(texture), textureShaderMaskList);
@@ -739,6 +754,58 @@ void
 Renderer::Unmap(const Texture1d *texture, int /* mipmapLevel */)
 {
     FALCON_ENGINE_RENDERER_TEXTURE_UNMAP_IMPLEMENT(texture, mTexture1dTable);
+}
+
+/************************************************************************/
+/* Texture 1D Array Management                                          */
+/************************************************************************/
+void
+Renderer::Bind(const Texture1dArray *textureArray)
+{
+    FALCON_ENGINE_RENDERER_BIND_IMPLEMENT(textureArray, mTexture1dArrayTable, PlatformTexture1dArray);
+}
+
+void
+Renderer::Unbind(const Texture1dArray *textureArray)
+{
+    FALCON_ENGINE_RENDERER_UNBIND_IMPLEMENT(textureArray, mTexture1dArrayTable);
+}
+
+void
+Renderer::Enable(int textureUnit,
+                 const Texture1dArray *textureArray,
+                 const TextureShaderMaskList& textureShaderMaskList)
+{
+    FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_IMPLEMENT(textureArray, mTexture1dArrayTable, textureShaderMaskList, PlatformTexture1dArray);
+}
+
+void
+Renderer::Disable(int textureUnit,
+                  const Texture1dArray *textureArray,
+                  const TextureShaderMaskList& textureShaderMaskList)
+{
+    FALCON_ENGINE_RENDERER_TEXTURE_DISABLE_IMPLEMENT(textureArray, mTexture1dArrayTable, textureShaderMaskList);
+}
+
+void *
+Renderer::Map(const Texture1dArray *textureArray,
+              int textureIndex,
+              int /* mipmapLevel */,
+              ResourceMapAccessMode access,
+              ResourceMapFlushMode flush,
+              ResourceMapSyncMode sync,
+              int64_t offset,
+              int64_t size)
+{
+    FALCON_ENGINE_RENDERER_TEXTURE_ARRAY_MAP_IMPLEMENT(textureArray, mTexture1dArrayTable, textureIndex, PlatformTexture1dArray);
+}
+
+void
+Renderer::Unmap(const Texture1dArray *textureArray,
+                int                   textureIndex,
+                int                /* mipmapLevel */)
+{
+    FALCON_ENGINE_RENDERER_TEXTURE_ARRAY_UNMAP_IMPLEMENT(textureArray, mTexture1dArrayTable, textureIndex);
 }
 
 /************************************************************************/
@@ -827,7 +894,7 @@ Renderer::Map(const Texture2dArray *textureArray,
               int64_t offset,
               int64_t size)
 {
-    FALCON_ENGINE_RENDERER_TEXTURE_ARRAY_MAP_IMPLEMENT(textureArray, mTexture2dArrayTable, PlatformTexture2dArray);
+    FALCON_ENGINE_RENDERER_TEXTURE_ARRAY_MAP_IMPLEMENT(textureArray, mTexture2dArrayTable, textureIndex, PlatformTexture2dArray);
 }
 
 void
@@ -835,7 +902,7 @@ Renderer::Unmap(const Texture2dArray *textureArray,
                 int                   textureIndex,
                 int                /* mipmapLevel */)
 {
-    FALCON_ENGINE_RENDERER_TEXTURE_ARRAY_UNMAP_IMPLEMENT(textureArray, mTexture2dArrayTable);
+    FALCON_ENGINE_RENDERER_TEXTURE_ARRAY_UNMAP_IMPLEMENT(textureArray, mTexture2dArrayTable, textureIndex);
 }
 
 /************************************************************************/

@@ -9,6 +9,7 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 PlatformResource::PlatformResource(Renderer *, const Object *resource) :
+    mBindFlag(0),
     mCpuFlag(0),
     mFormat(DXGI_FORMAT_UNKNOWN),
     mMiscFlags(0),
@@ -60,7 +61,6 @@ PlatformResource::Map(Renderer *renderer, ResourceMapAccessMode access, Resource
     _UNUSED(sync);
     _UNUSED(size);
 
-    // TODO(Wuxiang): Add mipmap support.
     D3D11_MAPPED_SUBRESOURCE mappedSubresource;
     D3DCheckSuccess(renderer->mData->GetContext()->Map(
                         mResourceObj,
@@ -156,9 +156,6 @@ PlatformResource::CreateResourceView(ID3D11Device4 *device)
         case BufferType::TextureBuffer:
             FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
             break;
-        case BufferType::RenderBuffer:
-            FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-            break;
         case BufferType::FeedbackBuffer:
             FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
             break;
@@ -174,11 +171,14 @@ PlatformResource::CreateResourceView(ID3D11Device4 *device)
         case TextureType::Texture1d:
             CreateResourceViewAsTexture1d(device, dimension, texture);
             break;
+        case TextureType::Texture1dArray:
+            FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+            break;
         case TextureType::Texture2d:
             CreateResourceViewAsTexture2d(device, dimension, texture);
             break;
         case TextureType::Texture2dArray:
-            FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+            CreateResourceViewAsTexture2dArray(device, dimension, texture);
             break;
         case TextureType::Texture3d:
             FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
@@ -208,7 +208,7 @@ PlatformResource::CreateDepthStencilView(ID3D11Device4 *device, D3D11_RESOURCE_D
     FALCON_ENGINE_CHECK_NULLPTR(texture);
 
     D3D11_DEPTH_STENCIL_VIEW_DESC viewDesc;
-    viewDesc.Format = Direct3DResourceFormat[int(mFormat)];
+    viewDesc.Format = mFormat;
 
     // TODO(Wuxiang): Add read-only support.
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ff476116(v=vs.85).aspx
@@ -219,45 +219,41 @@ PlatformResource::CreateDepthStencilView(ID3D11Device4 *device, D3D11_RESOURCE_D
     case TextureType::Texture1d:
     {
         viewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE1D;
-
-        // TODO(Wuxiang): Add mipmap support.
-        viewDesc.Texture1D.MipSlice = 1;
+        viewDesc.Texture1D.MipSlice = 0;
     }
     break;
-
+    case TextureType::Texture1dArray:
+    {
+        viewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE1DARRAY;
+        viewDesc.Texture1DArray.ArraySize = texture->mDimension[2];
+        viewDesc.Texture1DArray.FirstArraySlice = 0;
+        viewDesc.Texture1DArray.MipSlice = 0;
+    }
+    break;
     case TextureType::Texture2d:
     {
         viewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-
-        // TODO(Wuxiang): Add mipmap support.
-        viewDesc.Texture2D.MipSlice = 1;
+        viewDesc.Texture2D.MipSlice = 0;
     }
     break;
-
     case TextureType::Texture2dArray:
     {
-        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-
-        // TODO(Wuxiang): Add texture 2d array support.
-        // viewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
-        // viewDesc.Texture2DArray.ArraySize;
-        // viewDesc.Texture2DArray.FirstArraySlice;
-        // viewDesc.Texture2DArray.MipSlice;
+        viewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
+        viewDesc.Texture2DArray.ArraySize = texture->mDimension[2];
+        viewDesc.Texture2DArray.FirstArraySlice = 0;
+        viewDesc.Texture2DArray.MipSlice = 0;
     }
     break;
-
     case TextureType::Texture3d:
     {
         FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
     }
     break;
-
     case TextureType::TextureCube:
     {
         FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
     }
     break;
-
     default:
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
@@ -276,53 +272,70 @@ PlatformResource::CreateShaderResourceView(ID3D11Device4 *device, D3D11_RESOURCE
     FALCON_ENGINE_CHECK_NULLPTR(mResourceObj);
 
     D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;
-    viewDesc.Format = Direct3DResourceFormat[int(mFormat)];
+    viewDesc.Format = mFormat;
 
-    switch (mTexturePtr->mType)
+    if (dimension == D3D11_RESOURCE_DIMENSION_BUFFER)
     {
-    case TextureType::None:
-        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+        auto buffer = dynamic_cast<const Buffer *>(mResourceObj);
+        FALCON_ENGINE_CHECK_NULLPTR(buffer);
 
-    case TextureType::Texture1d:
-    {
-        viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE1D;
-
-        // TODO(Wuxiang): Add mipmap support.
-        viewDesc.Texture1D.MipLevels = 1;
-        viewDesc.Texture1D.MostDetailedMip = 1;
-    }
-    break;
-
-    case TextureType::Texture2d:
-    {
-        viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-
-        // TODO(Wuxiang): Add mipmap support.
-        viewDesc.Texture2D.MipLevels = 1;
-        viewDesc.Texture2D.MostDetailedMip = 1;
-    }
-    break;
-
-    case TextureType::Texture2dArray:
-    {
+        // NEW(Wuxiang): Add Append / Consume Buffer support.
+        // NEW(Wuxiang): Add Buffer / Structured Buffer support.
+        // NEW(Wuxiang): Add Byte Address Buffer support.
         FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
     }
-    break;
-
-    case TextureType::Texture3d:
+    else
     {
-        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-    }
-    break;
+        auto texture = dynamic_cast<const Texture *>(mResourceObj);
+        FALCON_ENGINE_CHECK_NULLPTR(texture);
 
-    case TextureType::TextureCube:
-    {
-        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-    }
-    break;
-
-    default:
-        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+        switch (texture->GetTextureType())
+        {
+        case TextureType::Texture1d:
+        {
+            viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE1D;
+            viewDesc.Texture1D.MipLevels = texture->mMipmapLevel;
+            viewDesc.Texture1D.MostDetailedMip = 0;
+        }
+        break;
+        case TextureType::Texture1dArray:
+        {
+            viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE1D;
+            viewDesc.Texture1DArray.ArraySize = texture->mDimension[2];
+            viewDesc.Texture1DArray.FirstArraySlice = 0;
+            viewDesc.Texture1DArray.MipLevels = texture->mMipmapLevel;
+            viewDesc.Texture1DArray.MostDetailedMip = 0;
+        }
+        break;
+        case TextureType::Texture2d:
+        {
+            viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+            viewDesc.Texture2D.MipLevels = texture->mMipmapLevel;
+            viewDesc.Texture2D.MostDetailedMip = 0;
+        }
+        break;
+        case TextureType::Texture2dArray:
+        {
+            viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+            viewDesc.Texture2DArray.ArraySize = texture->mDimension[2];
+            viewDesc.Texture2DArray.FirstArraySlice = 0;
+            viewDesc.Texture2DArray.MipLevels = texture->mMipmapLevel;
+            viewDesc.Texture2DArray.MostDetailedMip = 0;
+        }
+        break;
+        case TextureType::Texture3d:
+        {
+            FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+        }
+        break;
+        case TextureType::TextureCube:
+        {
+            FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+        }
+        break;
+        default:
+            FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+        }
     }
 
     D3DCheckSuccess(
@@ -341,49 +354,66 @@ PlatformResource::CreateRenderTargetView(ID3D11Device4 *device, D3D11_RESOURCE_D
     D3D11_RENDER_TARGET_VIEW_DESC viewDesc;
     viewDesc.Format = Direct3DResourceFormat[int(mFormat)];
 
-    switch (mTexturePtr->mType)
+    if (dimension == D3D11_RESOURCE_DIMENSION_BUFFER)
     {
-    case TextureType::None:
-        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+        auto buffer = dynamic_cast<const Buffer *>(mResourceObj);
+        FALCON_ENGINE_CHECK_NULLPTR(buffer);
 
-    case TextureType::Texture1d:
-    {
-        viewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE1D;
-
-        // TODO(Wuxiang): Add mipmap support.
-        viewDesc.Texture1D.MipSlice = 0;
-    }
-    break;
-
-    case TextureType::Texture2d:
-    {
-        viewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-
-        // TODO(Wuxiang): Add mipmap support.
-        viewDesc.Texture2D.MipSlice = 0;
-    }
-    break;
-
-    case TextureType::Texture2dArray:
-    {
+        // NEW(Wuxiang): Add Buffer support.
         FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
     }
-    break;
-
-    case TextureType::Texture3d:
+    else
     {
-        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-    }
-    break;
+        auto texture = dynamic_cast<const Texture *>(mResourceObj);
+        FALCON_ENGINE_CHECK_NULLPTR(texture);
 
-    case TextureType::TextureCube:
-    {
-        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-    }
-    break;
-
-    default:
-        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+        switch (texture->GetTextureType())
+        {
+        case TextureType::Texture1d:
+        {
+            viewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE1D;
+            // NEW(Wuxiang): Add MRT support.
+            viewDesc.Texture1D.MipSlice = 0;
+        }
+        break;
+        case TextureType::Texture1dArray:
+        {
+            viewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE1DARRAY;
+            viewDesc.Texture1DArray.ArraySize = texture->mDimension[2];
+            viewDesc.Texture1DArray.FirstArraySlice = 0;
+            // NEW(Wuxiang): Add MRT support.
+            viewDesc.Texture1DArray.MipSlice = 0;
+        }
+        break;
+        case TextureType::Texture2d:
+        {
+            viewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+            // NEW(Wuxiang): Add MRT support.
+            viewDesc.Texture2D.MipSlice = 0;
+        }
+        break;
+        case TextureType::Texture2dArray:
+        {
+            viewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
+            viewDesc.Texture2DArray.ArraySize = texture->mDimension[2];
+            viewDesc.Texture2DArray.FirstArraySlice = 0;
+            // NEW(Wuxiang): Add MRT support.
+            viewDesc.Texture2DArray.MipSlice = 0;
+        }
+        break;
+        case TextureType::Texture3d:
+        {
+            FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+        }
+        break;
+        case TextureType::TextureCube:
+        {
+            FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+        }
+        break;
+        default:
+            FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+        }
     }
 
     D3DCheckSuccess(

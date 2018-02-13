@@ -85,6 +85,8 @@ protected:
     const Texture *mTexturePtr;
 
     std::array<int, 3> mDimension;
+    int mMipmapLevel;
+
     GLuint mFormat;
     GLuint mFormatInternal;
     GLuint mType;

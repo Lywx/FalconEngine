@@ -28,6 +28,7 @@ PlatformBuffer::PlatformBuffer(Renderer *renderer, const Buffer *buffer) :
 
 PlatformBuffer::~PlatformBuffer()
 {
+    mBufferObj.Reset();
 }
 
 /************************************************************************/
@@ -89,7 +90,7 @@ PlatformBuffer::CreateBuffer(ID3D11Device4 *device)
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
 
-    D3DCheckSuccess(device->CreateBuffer(&bufferDesc, &subresourceData, &mBufferObj));
+    D3DCheckSuccess(device->CreateBuffer(&bufferDesc, &subresourceData, mBufferObj.ReleaseAndGetAddressOf()));
 }
 
 void
@@ -97,7 +98,7 @@ PlatformBuffer::CreateResource(ID3D11Device4 *device)
 {
     CreateBuffer(device);
 
-    mResourceObj = mBufferObj;
+    mResourceObj = mBufferObj.Get();
 }
 
 void

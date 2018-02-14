@@ -11,13 +11,13 @@ namespace FalconEngine
 
 class Renderer;
 
-class FALCON_ENGINE_API PlatformSampler
+FALCON_ENGINE_CLASS_BEGIN PlatformSampler final
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformSampler(Renderer *renderer, const Sampler *sampler);
+    explicit PlatformSampler(Renderer * renderer, const Sampler * sampler);
     ~PlatformSampler();
 
 public:
@@ -25,22 +25,23 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Enable(Renderer *renderer, int textureUnit, unsigned int shaderMask);
+    Enable(Renderer * renderer, int textureUnit, unsigned int shaderMask);
 
     void
-    Disable(Renderer *renderer, int textureUnit, unsigned int shaderMask);
+    Disable(Renderer * renderer, int textureUnit, unsigned int shaderMask);
 
 private:
     /************************************************************************/
     /* Private Members                                                      */
     /************************************************************************/
     void
-    Create(ID3D11Device4 *device);
+    Create(ID3D11Device4 * device);
 
 private:
-    const Sampler      *mSampler;
-    ID3D11SamplerState *mSampleState;
+    const Sampler *mSampler;
+    Microsoft::WRL::ComPtr<ID3D11SamplerState> mSampleState;
 };
+FALCON_ENGINE_CLASS_END
 
 }
 

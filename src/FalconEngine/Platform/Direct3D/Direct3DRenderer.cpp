@@ -4,12 +4,15 @@
 #include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Core/GameEngineDebugger.h>
 #include <FalconEngine/Core/GameEnginePlatform.h>
+#include <FalconEngine/Core/Utility.h>
 #include <FalconEngine/Graphics/Renderer/Primitive.h>
 #include <FalconEngine/Graphics/Renderer/Resource/IndexBuffer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DGameEnginePlatformData.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DMapping.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DRendererData.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DRendererState.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DTexture2d.h>
 #include <FalconEngine/Platform/Win32/Win32Exception.h>
 #include <FalconEngine/Platform/Win32/Win32GameEngineWindow.h>
 
@@ -45,14 +48,12 @@ Renderer::InitializeDataPlatform()
                 PlatformRendererDataDeleter());
 
     // Fetch context and device.
-    auto context = mData->GetContextCp();
+    auto context = mData->GetContext();
     auto device = mData->GetDeviceCp();
 
     // Clear the previous window size specific context.
     ID3D11RenderTargetView *nullViews[] = { nullptr };
-    context->OMSetRenderTargets(_countof(nullViews), nullViews, nullptr);
-    mData->m_renderTargetView.Reset();
-    mData->m_depthStencilView.Reset();
+    context->OMSetRenderTargets(ArraySize(nullViews), nullViews, nullptr);
     context->Flush();
 
     UINT backBufferWidth = static_cast<UINT>(mWindow.mWidth);
@@ -117,7 +118,7 @@ Renderer::InitializeDataPlatform()
                         &swapChainDesc,
                         &fsSwapChainDesc,
                         nullptr,
-                        mData->m_swapChain.ReleaseAndGetAddressOf()
+                        mData->mSwapChain.ReleaseAndGetAddressOf()
                     ));
 
     // This template does not support exclusive fullscreen mode and prevents DXGI from responding to the ALT+ENTER shortcut.
@@ -126,21 +127,22 @@ Renderer::InitializeDataPlatform()
 
     // Obtain the backbuffer for this window which will be the final 3D rendertarget.
     ComPtr<ID3D11Texture2D> backBuffer;
-    D3DCheckSuccess(mData->m_swapChain->GetBuffer(0, IID_PPV_ARGS(backBuffer.GetAddressOf())));
+    D3DCheckSuccess(mData->mSwapChain->GetBuffer(0, IID_PPV_ARGS(backBuffer.GetAddressOf())));
 
     // Create a view interface on the rendertarget to use on bind.
-    D3DCheckSuccess(device->CreateRenderTargetView(backBuffer.Get(), nullptr, mData->m_renderTargetView.ReleaseAndGetAddressOf()));
+    D3DCheckSuccess(device->CreateRenderTargetView(backBuffer.Get(), nullptr, mData->mRenderTargetView.ReleaseAndGetAddressOf()));
 
-    // Allocate a 2-D surface as the depth/stencil buffer and
-    // create a DepthStencil view on this surface to use on bind.
-    DXGI_FORMAT depthBufferFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    CD3D11_TEXTURE2D_DESC depthStencilDesc(depthBufferFormat, backBufferWidth, backBufferHeight, 1, 1, D3D11_BIND_DEPTH_STENCIL);
+    auto depthStencilTexture = std::make_shared<Texture2d>(
+                                   backBufferWidth,
+                                   backBufferHeight,
+                                   TextureFormat::D24_UNORM_S8_UINT,
+                                   ResourceCreationAccessMode::GpuReadWrite,
+                                   ResourceCreationAccessUsage::Dynamic);
+    depthStencilTexture->SetAttachmentEnabled(TextureMode::DepthStencil);
+    mData->mDepthStencilTexture = depthStencilTexture;
 
-    ComPtr<ID3D11Texture2D> depthStencil;
-    D3DCheckSuccess(device->CreateTexture2D(&depthStencilDesc, nullptr, depthStencil.GetAddressOf()));
-
-    CD3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc(D3D11_DSV_DIMENSION_TEXTURE2D);
-    D3DCheckSuccess(device->CreateDepthStencilView(depthStencil.Get(), &depthStencilViewDesc, mData->m_depthStencilView.ReleaseAndGetAddressOf()));
+    Bind(depthStencilTexture.get());
+    mData->mDepthStencilView = Get(depthStencilTexture.get())->GetDepthStencilView();
 
     SetViewportPlatform(mViewport.mLeft, mViewport.mBottom, mViewport.GetWidth(), mViewport.GetHeight(), mViewport.mNear, mViewport.mFar);
 }
@@ -153,22 +155,16 @@ Renderer::InitializeStatePlatform()
                  new PlatformRendererState(),
                  PlatformRendererStateDeleter());
 
+    auto context = mData->GetContext();
     auto device = mData->GetDevice();
 
-    mState->Initialize(device,
+    mState->Initialize(context, device,
                        mBlendStateDefault.get(),
                        mCullStateDefault.get(),
                        mDepthTestStateDefault.get(),
                        mOffsetStateDefault.get(),
                        mStencilTestStateDefault.get(),
                        mWireframeStateDefault.get());
-
-    auto m_context = mData->GetContextCp();
-    m_context->OMSetBlendState(m_blendState, nullptr, 0xffffffff);
-    m_context->OMSetDepthStencilState(m_depthStencilState, 0);
-    m_context->RSSetState(m_rasterizerState);
-
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 void
@@ -244,33 +240,33 @@ void
 Renderer::ClearColorBufferPlatform(const Vector4f& color)
 {
     auto context = mData->GetContext();
-    context->ClearRenderTargetView(mData->m_renderTargetView.Get(), color.Data());
-    context->OMSetRenderTargets(1, mData->m_renderTargetView.GetAddressOf(), mData->m_depthStencilView.Get());
+    context->ClearRenderTargetView(mData->mRenderTargetView.Get(), color.Data());
+    context->OMSetRenderTargets(1, mData->mRenderTargetView.GetAddressOf(), mData->mDepthStencilView.Get());
 }
 
 void
 Renderer::ClearDepthBufferPlatform(float depth)
 {
     auto context = mData->GetContext();
-    context->ClearDepthStencilView(mData->m_depthStencilView.Get(), D3D11_CLEAR_DEPTH, depth, 0);
-    context->OMSetRenderTargets(1, mData->m_renderTargetView.GetAddressOf(), mData->m_depthStencilView.Get());
+    context->ClearDepthStencilView(mData->mDepthStencilView.Get(), D3D11_CLEAR_DEPTH, depth, 0);
+    context->OMSetRenderTargets(1, mData->mRenderTargetView.GetAddressOf(), mData->mDepthStencilView.Get());
 }
 
 void
 Renderer::ClearStencilBufferPlatform(unsigned int stencil)
 {
     auto context = mData->GetContext();
-    context->ClearDepthStencilView(mData->m_depthStencilView.Get(), D3D11_CLEAR_STENCIL, 1.0f, UINT8(stencil));
-    context->OMSetRenderTargets(1, mData->m_renderTargetView.GetAddressOf(), mData->m_depthStencilView.Get());
+    context->ClearDepthStencilView(mData->mDepthStencilView.Get(), D3D11_CLEAR_STENCIL, 1.0f, UINT8(stencil));
+    context->OMSetRenderTargets(1, mData->mRenderTargetView.GetAddressOf(), mData->mDepthStencilView.Get());
 }
 
 void
 Renderer::ClearFrameBufferPlatform(const Vector4f& color, float depth, unsigned int stencil)
 {
     auto context = mData->GetContext();
-    context->ClearRenderTargetView(mData->m_renderTargetView.Get(), color.Data());
-    context->ClearDepthStencilView(mData->m_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, depth, UINT8(stencil));
-    context->OMSetRenderTargets(1, mData->m_renderTargetView.GetAddressOf(), mData->m_depthStencilView.Get());
+    context->ClearRenderTargetView(mData->mRenderTargetView.Get(), color.Data());
+    context->ClearDepthStencilView(mData->mDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, depth, UINT8(stencil));
+    context->OMSetRenderTargets(1, mData->mRenderTargetView.GetAddressOf(), mData->mDepthStencilView.Get());
 }
 
 void
@@ -285,7 +281,7 @@ void
 Renderer::SwapFrameBufferPlatform()
 {
     // https://msdn.microsoft.com/en-us/library/windows/desktop/bb174576(v=vs.85).aspx
-    HRESULT result = mData->m_swapChain->Present(1, 0);
+    HRESULT result = mData->mSwapChain->Present(1, 0);
     // If the device was reset we must completely reinitialize the renderer.
     if (result == DXGI_ERROR_DEVICE_REMOVED || result == DXGI_ERROR_DEVICE_RESET)
     {

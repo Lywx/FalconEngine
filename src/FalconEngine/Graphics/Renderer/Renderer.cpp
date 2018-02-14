@@ -718,6 +718,12 @@ Renderer::Disable(int textureUnit, const Texture *texture, const TextureShaderMa
 /************************************************************************/
 /* Texture 1D Management                                                */
 /************************************************************************/
+PlatformTexture1d *
+Renderer::Get(const Texture1d *texture)
+{
+    return mTexture1dTable.at(texture);
+}
+
 void
 Renderer::Bind(const Texture1d *texture)
 {
@@ -763,6 +769,12 @@ Renderer::Unmap(const Texture1d *texture, int /* mipmapLevel */)
 /************************************************************************/
 /* Texture 1D Array Management                                          */
 /************************************************************************/
+PlatformTexture1dArray *
+Renderer::Get(const Texture1dArray *textureArray)
+{
+    return mTexture1dArrayTable.at(textureArray);
+}
+
 void
 Renderer::Bind(const Texture1dArray *textureArray)
 {
@@ -815,6 +827,12 @@ Renderer::Unmap(const Texture1dArray *textureArray,
 /************************************************************************/
 /* Texture 2D Management                                                */
 /************************************************************************/
+PlatformTexture2d *
+Renderer::Get(const Texture2d *texture)
+{
+    return mTexture2dTable.at(texture);
+}
+
 void
 Renderer::Bind(const Texture2d *texture)
 {
@@ -860,6 +878,12 @@ Renderer::Unmap(const Texture2d *texture, int /* mipmapLevel */)
 /************************************************************************/
 /* Texture 2D Array Management                                          */
 /************************************************************************/
+PlatformTexture2dArray *
+Renderer::Get(const Texture2dArray *textureArray)
+{
+    return mTexture2dArrayTable.at(textureArray);
+}
+
 void
 Renderer::Bind(const Texture2dArray *textureArray)
 {
@@ -912,6 +936,12 @@ Renderer::Unmap(const Texture2dArray *textureArray,
 /************************************************************************/
 /* Texture 3D Management                                                */
 /************************************************************************/
+PlatformTexture3d *
+Renderer::Get(const Texture3d * /*texture*/)
+{
+    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+}
+
 void
 Renderer::Bind(const Texture3d * /* texture */)
 {

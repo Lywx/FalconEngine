@@ -16,7 +16,8 @@ PlatformRendererState::PlatformRendererState()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PlatformRendererState::Initialize(ID3D11Device4 *device,
+PlatformRendererState::Initialize(ID3D11DeviceContext4 *context,
+                                  ID3D11Device4 *device,
                                   const BlendState *blendState,
                                   const CullState *cullState,
                                   const DepthTestState *depthTestState,
@@ -33,7 +34,8 @@ PlatformRendererState::Initialize(ID3D11Device4 *device,
     ZeroMemory(&blendDescRt, sizeof blendDescRt);
     blendDescRt.BlendEnable = false;
     blendDesc.RenderTarget[0] = blendDescRt;
-    device->CreateBlendState1(&blendDesc, &m_blendState);
+    device->CreateBlendState1(&blendDesc, mBlendState.ReleaseAndGetAddressOf());
+    context->OMSetBlendState(mBlendState.Get(), nullptr, 0xffffffff);
 
     // Depth Stencil State
     D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
@@ -52,7 +54,8 @@ PlatformRendererState::Initialize(ID3D11Device4 *device,
     depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
     depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
     depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-    device->CreateDepthStencilState(&depthStencilDesc, &m_depthStencilState);
+    device->CreateDepthStencilState(&depthStencilDesc, mDepthStencilState.ReleaseAndGetAddressOf());
+    context->OMSetDepthStencilState(mDepthStencilState.Get(), 0);
 
     // Rasterizer State
     D3D11_RASTERIZER_DESC rasterizerDesc;
@@ -66,7 +69,8 @@ PlatformRendererState::Initialize(ID3D11Device4 *device,
     rasterizerDesc.DepthClipEnable = true;
     rasterizerDesc.ScissorEnable = false;
     rasterizerDesc.MultisampleEnable = false;
-    device->CreateRasterizerState(&rasterizerDesc, &m_rasterizerState);
+    device->CreateRasterizerState(&rasterizerDesc, mRasterizerState.ReleaseAndGetAddressOf());
+    context->RSSetState(mRasterizerState.Get());
 }
 
 }

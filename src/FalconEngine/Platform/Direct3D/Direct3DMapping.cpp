@@ -70,22 +70,22 @@ Direct3DResourceBindFlag(const Texture *texture)
 {
     UINT bindFlag = 0;
 
-    if (texture->mAttachment[int(TextureMode::Color)])
+    if (texture->GetAttachmentEnabled(TextureMode::Color))
     {
         bindFlag += D3D11_BIND_RENDER_TARGET;
     }
 
-    if (texture->mAttachment[int(TextureMode::DepthStencil)])
+    if (texture->GetAttachmentEnabled(TextureMode::DepthStencil))
     {
         bindFlag += D3D11_BIND_DEPTH_STENCIL;
     }
 
-    if (texture->mAttachment[int(TextureMode::Image)])
+    if (texture->GetAttachmentEnabled(TextureMode::Image))
     {
         bindFlag += D3D11_BIND_UNORDERED_ACCESS;
     }
 
-    if (texture->mAttachment[int(TextureMode::Texture)])
+    if (texture->GetAttachmentEnabled(TextureMode::Texture))
     {
         bindFlag += D3D11_BIND_SHADER_RESOURCE;
     }
@@ -95,9 +95,11 @@ Direct3DResourceBindFlag(const Texture *texture)
 
 const DXGI_FORMAT Direct3DResourceFormat[int(TextureFormat::Count)] =
 {
-    DXGI_FORMAT_UNKNOWN,       // None
+    DXGI_FORMAT_UNKNOWN,           // None
 
-    DXGI_FORMAT_R8G8B8A8_UINT, // R8G8B8A8
+    DXGI_FORMAT_D16_UNORM,         // D16_UNORM
+    DXGI_FORMAT_D24_UNORM_S8_UINT, // D24_UNORM_S8_UINT
+    DXGI_FORMAT_R8G8B8A8_UINT,     // R8G8B8A8_UINT
 };
 
 const D3D11_MAP Direct3DResourceMapMode[int(ResourceMapAccessMode::Count)] =

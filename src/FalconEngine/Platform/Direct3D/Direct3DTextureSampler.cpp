@@ -21,7 +21,7 @@ PlatformSampler::PlatformSampler(Renderer *renderer, const Sampler *sampler) :
 
 PlatformSampler::~PlatformSampler()
 {
-    mSampleState->Release();
+    mSampleState.Reset();
 }
 
 /************************************************************************/
@@ -34,32 +34,32 @@ PlatformSampler::Enable(Renderer *renderer, int textureUnit, unsigned int shader
 
     if (GetShaderEnabled(shaderMask, ShaderType::VertexShader))
     {
-        context->VSSetSamplers(textureUnit, 1, &mSampleState);
+        context->VSSetSamplers(textureUnit, 1, mSampleState.GetAddressOf());
     }
 
     if (GetShaderEnabled(shaderMask, ShaderType::TessellationControlShader))
     {
-        context->HSSetSamplers(textureUnit, 1, &mSampleState);
+        context->HSSetSamplers(textureUnit, 1, mSampleState.GetAddressOf());
     }
 
     if (GetShaderEnabled(shaderMask, ShaderType::TessellationEvaluationShader))
     {
-        context->DSSetSamplers(textureUnit, 1, &mSampleState);
+        context->DSSetSamplers(textureUnit, 1, mSampleState.GetAddressOf());
     }
 
     if (GetShaderEnabled(shaderMask, ShaderType::GeometryShader))
     {
-        context->GSSetSamplers(textureUnit, 1, &mSampleState);
+        context->GSSetSamplers(textureUnit, 1, mSampleState.GetAddressOf());
     }
 
     if (GetShaderEnabled(shaderMask, ShaderType::FragmentShader))
     {
-        context->PSSetSamplers(textureUnit, 1, &mSampleState);
+        context->PSSetSamplers(textureUnit, 1, mSampleState.GetAddressOf());
     }
 
     if (GetShaderEnabled(shaderMask, ShaderType::ComputeShader))
     {
-        context->CSSetSamplers(textureUnit, 1, &mSampleState);
+        context->CSSetSamplers(textureUnit, 1, mSampleState.GetAddressOf());
     }
 }
 
@@ -153,7 +153,7 @@ PlatformSampler::Create(ID3D11Device4 *device)
     samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
     // Create the texture sampler state.
-    auto result = device->CreateSamplerState(&samplerDesc, &mSampleState);
+    auto result = device->CreateSamplerState(&samplerDesc, mSampleState.ReleaseAndGetAddressOf());
     D3DCheckSuccess(result);
 }
 

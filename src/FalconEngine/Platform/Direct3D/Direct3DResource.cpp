@@ -26,32 +26,39 @@ PlatformResource::PlatformResource(Renderer *, const Object *resource) :
 
 PlatformResource::~PlatformResource()
 {
-    mResourceObj->Release();
-
-    if (mDepthStencilView)
-    {
-        mDepthStencilView->Release();
-    }
-
-    if (mRenderTargetView)
-    {
-        mRenderTargetView->Release();
-    }
-
-    if (mShaderResourceView)
-    {
-        mShaderResourceView->Release();
-    }
-
-    if (mUnorderedAccessView)
-    {
-        mUnorderedAccessView->Release();
-    }
+    mDepthStencilView.Reset();
+    mRenderTargetView.Reset();
+    mShaderResourceView.Reset();
+    mUnorderedAccessView.Reset();
 }
 
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+Microsoft::WRL::ComPtr<ID3D11DepthStencilView>
+PlatformResource::GetDepthStencilView()
+{
+    return mDepthStencilView;
+}
+
+Microsoft::WRL::ComPtr<ID3D11RenderTargetView>
+PlatformResource::GetRenderTargetView()
+{
+    return mRenderTargetView;
+}
+
+Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>
+PlatformResource::GetShaderResourceView()
+{
+    return mShaderResourceView;
+}
+
+Microsoft::WRL::ComPtr<ID3D11UnorderedAccessView>
+PlatformResource::GetUnorderedAccessView()
+{
+    return mUnorderedAccessView;
+}
+
 void *
 PlatformResource::Map(Renderer *renderer, ResourceMapAccessMode access, ResourceMapFlushMode flush,
                       ResourceMapSyncMode sync, int64_t offset, int64_t size)
@@ -158,7 +165,7 @@ PlatformResource::CreateDepthStencilView(ID3D11Device4 *device, D3D11_RESOURCE_D
         device->CreateDepthStencilView(
             mResourceObj,
             &viewDesc,
-            &mDepthStencilView));
+            mDepthStencilView.ReleaseAndGetAddressOf()));
 }
 
 void
@@ -238,7 +245,7 @@ PlatformResource::CreateShaderResourceView(ID3D11Device4 *device, D3D11_RESOURCE
         device->CreateShaderResourceView(
             mResourceObj,
             &viewDesc,
-            &mShaderResourceView));
+            mShaderResourceView.ReleaseAndGetAddressOf()));
 }
 
 void
@@ -248,7 +255,7 @@ PlatformResource::CreateRenderTargetView(ID3D11Device4 *device, D3D11_RESOURCE_D
     FALCON_ENGINE_CHECK_NULLPTR(mResourceObj);
 
     D3D11_RENDER_TARGET_VIEW_DESC viewDesc;
-    viewDesc.Format = Direct3DResourceFormat[int(mFormat)];
+    viewDesc.Format = Direct3DResourceFormat[TextureFormatIndex(mFormat)];
 
     if (dimension == D3D11_RESOURCE_DIMENSION_BUFFER)
     {
@@ -316,7 +323,7 @@ PlatformResource::CreateRenderTargetView(ID3D11Device4 *device, D3D11_RESOURCE_D
         device->CreateRenderTargetView(
             mResourceObj,
             &viewDesc,
-            &mRenderTargetView));
+            mRenderTargetView.ReleaseAndGetAddressOf()));
 }
 
 void

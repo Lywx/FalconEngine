@@ -20,6 +20,11 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
     Texture1d();
+    Texture1d(int width,
+              TextureFormat format,
+              ResourceCreationAccessMode accessMode = ResourceCreationAccessMode::GpuRead,
+              ResourceCreationAccessUsage accessUsage = ResourceCreationAccessUsage::Static,
+              int mipmapLevel = 0);
     Texture1d(AssetSource assetSource,
               const std::string& fileName,
               const std::string& filePath,
@@ -48,7 +53,7 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     virtual const Texture1d *
-    GetTextureSlice(int textureIndex) const override;
+    GetSlice(int textureIndex) const override;
 
 public:
     /************************************************************************/

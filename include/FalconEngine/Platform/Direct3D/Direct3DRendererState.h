@@ -30,7 +30,8 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Initialize(ID3D11Device4 * device,
+    Initialize(ID3D11DeviceContext4 * context,
+               ID3D11Device4 * device,
                const BlendState * blendState,
                const CullState * cullState,
                const DepthTestState * depthTestState,
@@ -38,9 +39,9 @@ public:
                const StencilTestState * stencilTestState, const WireframeState * wireframeState);
 
 public:
-    ID3D11RasterizerState   *m_rasterizerState = nullptr;
-    ID3D11DepthStencilState *m_depthStencilState = nullptr;
-    ID3D11BlendState1       *m_blendState = nullptr;
+    Microsoft::WRL::ComPtr<ID3D11BlendState1> mBlendState;
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mDepthStencilState;
+    Microsoft::WRL::ComPtr<ID3D11RasterizerState> mRasterizerState;
 };
 
 FALCON_ENGINE_CLASS_END

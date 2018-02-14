@@ -9,7 +9,7 @@ namespace FalconEngine
 
 #if defined(FALCON_ENGINE_COMPILER_GCC)
 void
-Debug::InternalBreak()
+Debug::BreakInternal()
 {
     // Generate an interrupt
     std::raise(SIGINT);
@@ -17,13 +17,13 @@ Debug::InternalBreak()
 #endif
 
 /* static */ void
-Debug::InternalOutputString(const std::string& str)
+Debug::OutputStringInternal(const std::string& str)
 {
-    InternalOutputString(str.c_str());
+    OutputStringInternal(str.c_str());
 }
 
 /* static */ void
-Debug::InternalOutputString(const char *str)
+Debug::OutputStringInternal(const char *str)
 {
     std::cout << str << std::flush;
 }

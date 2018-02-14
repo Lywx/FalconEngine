@@ -13,6 +13,14 @@ Texture1d::Texture1d()
 {
 }
 
+Texture1d::Texture1d(int width, TextureFormat format, ResourceCreationAccessMode accessMode,
+                     ResourceCreationAccessUsage accessUsage, int mipmapLevel) :
+    Texture1d(AssetSource::Virtual, "None", "None", width, 1, format,
+              TextureType::Texture1d, accessMode, accessUsage,
+              ResourceStorageMode::Device, mipmapLevel)
+{
+}
+
 Texture1d::Texture1d(AssetSource assetSource,
                      const std::string& fileName,
                      const std::string& filePath,
@@ -21,7 +29,9 @@ Texture1d::Texture1d(AssetSource assetSource,
                      ResourceCreationAccessMode accessMode,
                      ResourceCreationAccessUsage accessUsage,
                      int mipmapLevel) :
-    Texture(assetSource, fileName, filePath, width, 1, 1, format, TextureType::Texture1d, accessMode, accessUsage, ResourceStorageMode::Host, mipmapLevel)
+    Texture(assetSource, fileName, filePath, width, 1, 1, format,
+            TextureType::Texture1d, accessMode, accessUsage,
+            ResourceStorageMode::Host, mipmapLevel)
 {
 }
 
@@ -53,7 +63,7 @@ Texture1d::~Texture1d()
 /* Public Members                                                       */
 /************************************************************************/
 const Texture1d *
-Texture1d::GetTextureSlice(int textureIndex) const
+Texture1d::GetSlice(int textureIndex) const
 {
     if (textureIndex != 0)
     {

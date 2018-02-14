@@ -45,6 +45,8 @@ Texture::Texture(AssetSource assetSource,
     Asset(assetSource, AssetType::Texture, fileName, filePath),
     mAccessMode(accessMode),
     mAccessUsage(accessUsage),
+    mAttachment(),
+    mDimension(),
     mFormat(format),
     mMipmapLevel(mipmapLevel),
     mStorageMode(storageMode),
@@ -69,7 +71,7 @@ Texture::Texture(AssetSource assetSource,
     else if (mStorageMode == ResourceStorageMode::Host)
     {
         mDataSize = size_t(mDimension[0]) * size_t(mDimension[1])
-                    * size_t(mDimension[2]) * TexelSize[int(mFormat)];
+                    * size_t(mDimension[2]) * TexelSize[TextureFormatIndex(mFormat)];
         mData = new unsigned char[mDataSize];
     }
     else
@@ -94,8 +96,89 @@ Texture::GetAccessMode() const
     return mAccessMode;
 }
 
+void
+Texture::SetAccessModeInternal(ResourceCreationAccessMode accessMode)
+{
+    mAccessMode = accessMode;
+}
+
+ResourceCreationAccessUsage
+Texture::GetAccessUsage() const
+{
+    return mAccessUsage;
+}
+
+void
+Texture::SetAccessUsageInternal(ResourceCreationAccessUsage accessUsage)
+{
+    mAccessUsage = accessUsage;
+}
+
+bool
+Texture::GetAttachmentEnabled(TextureMode textureMode) const
+{
+    return mAttachment[TextureModeIndex(textureMode)];
+}
+
+void
+Texture::SetAttachmentEnabled(TextureMode textureMode)
+{
+    mAttachment[TextureModeIndex(textureMode)] = true;
+}
+
+void
+Texture::ResetAttachmentEnabled(TextureMode textureMode)
+{
+    mAttachment.fill(false);
+
+    SetAttachmentEnabled(textureMode);
+}
+
+unsigned char *
+Texture::GetData()
+{
+    return mData;
+}
+
+const unsigned char *
+Texture::GetData() const
+{
+    return mData;
+}
+
+size_t
+Texture::GetDataSize() const
+{
+    return mDataSize;
+}
+
+std::array<int, 3>
+Texture::GetDimension() const
+{
+    return mDimension;
+}
+
+int
+Texture::GetDimension(int dimensionIndex) const
+{
+    return mDimension[dimensionIndex];
+}
+
+TextureFormat
+Texture::GetFormat() const
+{
+    return mFormat;
+}
+
+int
+Texture::GetMipmapLevel() const
+{
+    return mMipmapLevel;
+}
+
 TextureType Texture::GetTextureType() const
 {
     return mType;
 }
+
 }

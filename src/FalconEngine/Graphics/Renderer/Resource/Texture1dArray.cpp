@@ -9,6 +9,17 @@ FALCON_ENGINE_TEXTURE_IMPLEMENT(Texture1dArray, TextureType::Texture1dArray);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
+Texture1dArray::Texture1dArray(int width,
+                               int depth,
+                               TextureFormat format,
+                               ResourceCreationAccessMode accessMode,
+                               ResourceCreationAccessUsage accessUsage,
+                               int mipmapLevel) :
+    Texture1dArray(AssetSource::Virtual, "None", "None",
+                   width, depth, format, accessMode, accessUsage, mipmapLevel)
+{
+}
+
 Texture1dArray::Texture1dArray(AssetSource assetSource,
                                const std::string& fileName,
                                const std::string& filePath,
@@ -35,7 +46,7 @@ Texture1dArray::~Texture1dArray()
 /* Public Members                                                       */
 /************************************************************************/
 const Texture1d *
-Texture1dArray::GetTextureSlice(int index) const
+Texture1dArray::GetSlice(int index) const
 {
     return mTextureList.at(index).get();
 }

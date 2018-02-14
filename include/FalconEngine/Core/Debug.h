@@ -9,21 +9,21 @@ class Debug
 {
 public:
     static void
-    InternalBreak();
+    BreakInternal();
 
     static void
-    InternalOutputString(const char *str);
+    OutputStringInternal(const char *str);
 
     static void
-    InternalOutputString(const std::string& str);
+    OutputStringInternal(const std::string& str);
 
     template<class ... Args>
     static void
-    InternalOutputStringFormat(const char *format, Args && ... args)
+    OutputStringFormatInternal(const char *format, Args && ... args)
     {
         char buffer[256];
         snprintf(buffer, sizeof(buffer), format, std::forward<Args>(args)...);
-        InternalOutputString(buffer);
+        OutputStringInternal(buffer);
     }
 };
 

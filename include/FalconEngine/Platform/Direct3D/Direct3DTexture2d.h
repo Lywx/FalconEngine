@@ -40,7 +40,7 @@ private:
     CreateTexture(ID3D11Device4 * device);
 
 protected:
-    ID3D11Texture2D *mTextureObj;
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> mTextureObj;
     const Texture2d *mTexturePtr;
 };
 FALCON_ENGINE_CLASS_END

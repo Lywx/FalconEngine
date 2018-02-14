@@ -19,6 +19,13 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
+    Texture2dArray(int width,
+                   int height,
+                   int depth,
+                   TextureFormat format,
+                   ResourceCreationAccessMode accessMode = ResourceCreationAccessMode::GpuRead,
+                   ResourceCreationAccessUsage accessUsage = ResourceCreationAccessUsage::Static,
+                   int mipmapLevel = 0);
     Texture2dArray(AssetSource assetSource,
                    const std::string & fileName,
                    const std::string & filePath,
@@ -36,10 +43,10 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     virtual const Texture2d *
-    GetTextureSlice(int index) const override final;
+    GetSlice(int index) const override final;
 
     void
-    PushTextureSlice(const std::shared_ptr<Texture2d>& texture);
+    PushSlice(const std::shared_ptr<Texture2d>& texture);
 
 protected:
     // NOTE(Wuxiang): The Texture2D should not be released before owner of them

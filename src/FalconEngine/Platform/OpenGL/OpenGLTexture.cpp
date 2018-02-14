@@ -14,17 +14,17 @@ PlatformTexture::PlatformTexture(Renderer *, const Texture *texture) :
     mTextureObj(0),
     mTextureObjPrevious(0),
     mTexturePtr(texture),
-    mDimension(texture->mDimension),
-    mMipmapLevel(texture->mMipmapLevel),
+    mDimension(texture->GetDimension()),
+    mMipmapLevel(texture->GetMipmapLevel()),
     mFormat(0),
     mFormatInternal(0),
     mType(0),
     mUsage(0)
 {
-    mType = OpenGLTextureType[int(texture->mFormat)];
-    mFormat = OpenGLTextureFormat[int(texture->mFormat)];
-    mFormatInternal = OpenGLTextureInternalFormat[int(texture->mFormat)];
-    mUsage = OpenGLBufferUsage(texture->GetAccessMode(), texture->mAccessUsage);
+    mType = OpenGLTextureType[TextureFormatIndex(texture->GetFormat())];
+    mFormat = OpenGLTextureFormat[TextureFormatIndex(texture->GetFormat())];
+    mFormatInternal = OpenGLTextureInternalFormat[TextureFormatIndex(texture->GetFormat())];
+    mUsage = OpenGLBufferUsage(texture->GetAccessMode(), texture->GetAccessUsage());
 
     mBufferObjList.assign(mDimension[2], 0);
 
@@ -108,10 +108,10 @@ PlatformTexture::AllocateBuffer()
 {
     for (int textureIndex = 0; textureIndex < mDimension[2]; ++textureIndex)
     {
-        auto texture = mTexturePtr->GetTextureSlice(textureIndex);
+        auto texture = mTexturePtr->GetSlice(textureIndex);
 
         glBindBuffer(GL_PIXEL_UNPACK_BUFFER, mBufferObjList[textureIndex]);
-        glBufferData(GL_PIXEL_UNPACK_BUFFER, texture->mDataSize, nullptr, mUsage);
+        glBufferData(GL_PIXEL_UNPACK_BUFFER, texture->GetDataSize(), nullptr, mUsage);
         glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
     }
 }
@@ -133,13 +133,13 @@ PlatformTexture::FillBuffer()
 {
     for (int textureIndex = 0; textureIndex < mDimension[2]; ++textureIndex)
     {
-        auto texture = mTexturePtr->GetTextureSlice(textureIndex);
+        auto texture = mTexturePtr->GetSlice(textureIndex);
         auto textureData = Map(nullptr, textureIndex,
                                ResourceMapAccessMode::WriteBuffer,
                                ResourceMapFlushMode::Automatic,
                                ResourceMapSyncMode::Unsynchronized, 0,
-                               texture->mDataSize);
-        memcpy(textureData, texture->mData, texture->mDataSize);
+                               texture->GetDataSize());
+        memcpy(textureData, texture->GetData(), texture->GetDataSize());
         Unmap(nullptr, textureIndex);
     }
 }

@@ -25,9 +25,9 @@ PlatformVertexBuffer::~PlatformVertexBuffer()
 void
 PlatformVertexBuffer::Enable(Renderer *renderer, unsigned bindingIndex, int64_t offset, int stride)
 {
-    auto stride_ = UINT(stride);
-    auto offset_ = UINT(offset);
-    renderer->mData->GetContext()->IASetVertexBuffers(bindingIndex, 1, &mBufferObj, &stride_, &offset_);
+    auto strideD3D = UINT(stride);
+    auto offsetD3D = UINT(offset);
+    renderer->mData->GetContext()->IASetVertexBuffers(bindingIndex, 1, mBufferObj.GetAddressOf(), &strideD3D, &offsetD3D);
 }
 
 void

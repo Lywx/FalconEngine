@@ -33,7 +33,7 @@ PlatformIndexBuffer::~PlatformIndexBuffer()
 void
 PlatformIndexBuffer::Enable(Renderer *renderer)
 {
-    renderer->mData->GetContext()->IASetIndexBuffer(mBufferObj, mFormat, 0);
+    renderer->mData->GetContext()->IASetIndexBuffer(mBufferObj.Get(), mFormat, 0);
 }
 
 void

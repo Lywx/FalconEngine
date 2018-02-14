@@ -22,6 +22,12 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
     Texture2d();
+    Texture2d(int width,
+              int height,
+              TextureFormat format,
+              ResourceCreationAccessMode accessMode = ResourceCreationAccessMode::GpuRead,
+              ResourceCreationAccessUsage accessUsage = ResourceCreationAccessUsage::Static,
+              int mipmapLevel = 0);
     Texture2d(AssetSource assetSource,
               const std::string & fileName,
               const std::string & filePath,
@@ -52,7 +58,7 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     virtual const Texture2d *
-    GetTextureSlice(int textureIndex) const override;
+    GetSlice(int textureIndex) const override;
 
 public:
     /************************************************************************/

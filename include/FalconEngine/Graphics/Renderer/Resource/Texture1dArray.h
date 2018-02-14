@@ -19,6 +19,12 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
+    Texture1dArray(int width,
+                   int depth,
+                   TextureFormat format,
+                   ResourceCreationAccessMode accessMode = ResourceCreationAccessMode::GpuRead,
+                   ResourceCreationAccessUsage accessUsage = ResourceCreationAccessUsage::Static,
+                   int mipmapLevel = 0);
     Texture1dArray(AssetSource assetSource,
                    const std::string & fileName,
                    const std::string & filePath,
@@ -32,7 +38,7 @@ public:
 
 public:
     virtual const Texture1d *
-    GetTextureSlice(int index) const override final;
+    GetSlice(int index) const override final;
 
     void
     PushTextureSlice(const std::shared_ptr<Texture1d>& texture);

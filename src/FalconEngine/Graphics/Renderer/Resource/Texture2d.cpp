@@ -15,6 +15,14 @@ Texture2d::Texture2d()
 {
 }
 
+Texture2d::Texture2d(int width, int height, TextureFormat format, ResourceCreationAccessMode accessMode,
+                     ResourceCreationAccessUsage accessUsage, int mipmapLevel) :
+    Texture2d(AssetSource::Virtual, "None", "None", width, height, 1, format,
+              TextureType::Texture2d, accessMode, accessUsage,
+              ResourceStorageMode::Device, mipmapLevel)
+{
+}
+
 Texture2d::Texture2d(AssetSource assetSource,
                      const std::string& fileName,
                      const std::string& filePath,
@@ -59,7 +67,7 @@ Texture2d::~Texture2d()
 /* Public Members                                                       */
 /************************************************************************/
 const Texture2d *
-Texture2d::GetTextureSlice(int textureIndex) const
+Texture2d::GetSlice(int textureIndex) const
 {
     if (textureIndex != 0)
     {

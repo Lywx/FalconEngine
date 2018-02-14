@@ -29,6 +29,12 @@ enum class TextureMode
     Count,
 };
 
+inline int
+TextureModeIndex(TextureMode textureMode)
+{
+    return int(textureMode);
+}
+
 enum class TextureUnit
 {
     Ambient   = 0,
@@ -77,16 +83,26 @@ enum class TextureFormat
 {
     None,
 
-    R8G8B8A8,
+    D16_UNORM,
+    D24_UNORM_S8_UINT,
+    R8G8B8A8_UINT,
 
     Count
 };
+
+inline int
+TextureFormatIndex(TextureFormat format)
+{
+    return int(format);
+}
 
 const size_t TexelSize[int(TextureFormat::Count)] =
 {
     0, // None
 
-    4, // R8G8B8A8
+    2, // D16_UNORM
+    4, // D24_UNORM_S8_UINT
+    4, // R8G8B8A8_UINT
 };
 
 // @summary Thin layer describing what the most basic texture consists of. A texture
@@ -121,8 +137,47 @@ public:
     ResourceCreationAccessMode
     GetAccessMode() const;
 
+    void
+    SetAccessModeInternal(ResourceCreationAccessMode accessMode);
+
+    ResourceCreationAccessUsage
+    GetAccessUsage() const;
+
+    void
+    SetAccessUsageInternal(ResourceCreationAccessUsage accessUsage);
+
+    bool
+    GetAttachmentEnabled(TextureMode textureMode) const;
+
+    void
+    SetAttachmentEnabled(TextureMode textureMode);
+
+    void
+    ResetAttachmentEnabled(TextureMode textureMode);
+
+    unsigned char *
+    GetData();
+
+    const unsigned char *
+    GetData() const;
+
+    size_t
+    GetDataSize() const;
+
+    std::array<int, 3>
+    GetDimension() const;
+
+    int
+    GetDimension(int dimensionIndex) const;
+
+    TextureFormat
+    GetFormat() const;
+
+    int
+    GetMipmapLevel() const;
+
     virtual const Texture *
-    GetTextureSlice(int textureIndex) const = 0;
+    GetSlice(int textureIndex) const = 0;
 
     TextureType
     GetTextureType() const;
@@ -130,13 +185,11 @@ public:
 protected:
     // Texture runtime access usage, needed during construction.
     ResourceCreationAccessMode mAccessMode;
-
-public:
     ResourceCreationAccessUsage mAccessUsage;
 
     // Texture runtime attachment usage, need for Direct3D resource view pipeline
     // attachment.
-    bool mAttachment[int(TextureMode::Count)];
+    std::array<bool, int(TextureMode::Count)> mAttachment;
 
     // Texture RGBA color channel number.
     int mChannel = 0;
@@ -157,7 +210,6 @@ public:
     // Texture buffer storage mode, currently only in Host mode.
     ResourceStorageMode mStorageMode;
 
-protected:
     // Texture type, needed during construction.
     TextureType mType;
 

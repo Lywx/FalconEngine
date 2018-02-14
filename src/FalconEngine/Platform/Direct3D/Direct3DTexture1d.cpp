@@ -32,7 +32,7 @@ PlatformTexture1d::CreateResource(ID3D11Device4 *device)
 {
     CreateTexture(device);
 
-    mResourceObj = mTextureObj;
+    mResourceObj = mTextureObj.Get();
 }
 
 void
@@ -40,22 +40,22 @@ PlatformTexture1d::CreateResourceView(ID3D11Device4 *device)
 {
     auto dimension = GetDimension();
 
-    if (mTexturePtr->mAttachment[int(TextureMode::Color)])
+    if (mTexturePtr->GetAttachmentEnabled(TextureMode::Color))
     {
         CreateRenderTargetView(device, dimension);
     }
 
-    if (mTexturePtr->mAttachment[int(TextureMode::DepthStencil)])
+    if (mTexturePtr->GetAttachmentEnabled(TextureMode::DepthStencil))
     {
         CreateDepthStencilView(device, dimension);
     }
 
-    if (mTexturePtr->mAttachment[int(TextureMode::Image)])
+    if (mTexturePtr->GetAttachmentEnabled(TextureMode::Image))
     {
         CreateUnorderedAccessView(device, dimension);
     }
 
-    if (mTexturePtr->mAttachment[int(TextureMode::Texture)])
+    if (mTexturePtr->GetAttachmentEnabled(TextureMode::Texture))
     {
         CreateShaderResourceView(device, dimension);
     }
@@ -84,7 +84,7 @@ PlatformTexture1d::CreateTexture(ID3D11Device4 *device)
     subresourceData.pSysMem = mTexturePtr->mData;
     subresourceData.SysMemPitch = UINT(mTexturePtr->mDataSize);
     subresourceData.SysMemSlicePitch = 0;
-    D3DCheckSuccess(device->CreateTexture1D(&textureDesc, &subresourceData, &mTextureObj));
+    D3DCheckSuccess(device->CreateTexture1D(&textureDesc, &subresourceData, mTextureObj.ReleaseAndGetAddressOf()));
 }
 
 }

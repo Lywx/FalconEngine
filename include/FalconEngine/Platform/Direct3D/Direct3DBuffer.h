@@ -12,13 +12,14 @@ namespace FalconEngine
 
 class Renderer;
 
-class FALCON_ENGINE_API PlatformBuffer : public PlatformResource
+FALCON_ENGINE_CLASS_BEGIN PlatformBuffer :
+public PlatformResource
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformBuffer(Renderer *renderer, const Buffer *buffer);
+    explicit PlatformBuffer(Renderer * renderer, const Buffer * buffer);
     virtual ~PlatformBuffer();
 
 public:
@@ -30,20 +31,21 @@ protected:
     /* Protected Members                                                    */
     /************************************************************************/
     void
-    CreateBuffer(ID3D11Device4 *device);
+    CreateBuffer(ID3D11Device4 * device);
 
     virtual void
-    CreateResource(ID3D11Device4 *device) override final;
+    CreateResource(ID3D11Device4 * device) override final;
 
     virtual void
-    CreateResourceView(ID3D11Device4 *device) override final;
+    CreateResourceView(ID3D11Device4 * device) override final;
 
 protected:
     // NOTE(Wuxiang): mBufferObj doesn't need to be release in destructor, because
     // its base pointer is released in PlatformResource.
-    ID3D11Buffer *mBufferObj;
+    Microsoft::WRL::ComPtr<ID3D11Buffer> mBufferObj;
     const Buffer *mBufferPtr;
 };
+FALCON_ENGINE_CLASS_END
 
 }
 #endif

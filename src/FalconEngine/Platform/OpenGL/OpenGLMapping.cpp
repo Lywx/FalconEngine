@@ -105,20 +105,26 @@ OpenGLBufferUsage(ResourceCreationAccessMode mode, ResourceCreationAccessUsage u
 
 const GLuint OpenGLTextureType[int(TextureFormat::Count)] =
 {
-    GL_INVALID_ENUM,  // None
-    GL_UNSIGNED_BYTE, // R8G8B8A8
+    GL_INVALID_ENUM,      // None
+    GL_UNSIGNED_INT,      // D16_UNORM
+    GL_UNSIGNED_INT_24_8, // D24_UNORM_S8_UINT
+    GL_UNSIGNED_BYTE,     // R8G8B8A8_UINT
 };
 
 const GLuint OpenGLTextureFormat[int(TextureFormat::Count)] =
 {
-    GL_INVALID_ENUM, // None
-    GL_RGBA,         // R8G8B8A8
+    GL_INVALID_ENUM,     // None
+    GL_DEPTH_COMPONENT,  // D16_UNORM
+    GL_DEPTH_STENCIL,    // D24_UNORM_S8_UINT
+    GL_RGBA,             // R8G8B8A8_UINT
 };
 
 const GLuint OpenGLTextureInternalFormat[int(TextureFormat::Count)] =
 {
-    GL_INVALID_ENUM, // None
-    GL_RGBA8,        // R8G8B8A8
+    GL_INVALID_ENUM,      // None
+    GL_DEPTH_COMPONENT16, // D16_UNORM
+    GL_DEPTH24_STENCIL8,  // D24_UNORM_S8_UINT
+    GL_RGBA8,             // R8G8B8A8_UINT
 };
 
 const GLuint OpenGLTextureTarget[int(TextureType::Count)] =

@@ -28,6 +28,18 @@ public:
     virtual ~PlatformResource();
 
 public:
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilView>
+    GetDepthStencilView();
+
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView>
+    GetRenderTargetView();
+
+    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>
+    GetShaderResourceView();
+
+    Microsoft::WRL::ComPtr<ID3D11UnorderedAccessView>
+    GetUnorderedAccessView();
+
     void *
     Map(Renderer * renderer,
         ResourceMapAccessMode access,
@@ -74,11 +86,14 @@ protected:
     UINT mMiscFlags;
     D3D11_USAGE mUsage;
 
-    ID3D11DepthStencilView *mDepthStencilView;
-    ID3D11RenderTargetView *mRenderTargetView;
-    ID3D11ShaderResourceView *mShaderResourceView;
-    ID3D11UnorderedAccessView *mUnorderedAccessView;
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDepthStencilView;
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mRenderTargetView;
+    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mShaderResourceView;
+    Microsoft::WRL::ComPtr<ID3D11UnorderedAccessView> mUnorderedAccessView;
 
+    // NOTE(Wuxiang): Base class doesn't manage the lifetime of the resource.
+    // The direct creator of the resource should be responsible for resource
+    // lifetime management.
     ID3D11Resource *mResourceObj;
     const Object *mResourcePtr;
 };

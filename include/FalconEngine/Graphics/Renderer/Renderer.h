@@ -353,6 +353,9 @@ public:
     /************************************************************************/
     /* Texture 1D Management                                                */
     /************************************************************************/
+    PlatformTexture1d *
+    Get(const Texture1d *texture);
+
     void
     Bind(const Texture1d *texture);
 
@@ -384,6 +387,9 @@ public:
     /************************************************************************/
     /* Texture 1D Array Management                                          */
     /************************************************************************/
+    PlatformTexture1dArray *
+    Get(const Texture1dArray *textureArray);
+
     void
     Bind(const Texture1dArray *textureArray);
 
@@ -418,6 +424,9 @@ public:
     /************************************************************************/
     /* Texture 2D Management                                                */
     /************************************************************************/
+    PlatformTexture2d *
+    Get(const Texture2d *texture);
+
     void
     Bind(const Texture2d *texture);
 
@@ -449,6 +458,9 @@ public:
     /************************************************************************/
     /* Texture 2D Array Management                                          */
     /************************************************************************/
+    PlatformTexture2dArray *
+    Get(const Texture2dArray *textureArray);
+
     void
     Bind(const Texture2dArray *textureArray);
 
@@ -483,6 +495,9 @@ public:
     /************************************************************************/
     /* Texture 3D Management                                                */
     /************************************************************************/
+    PlatformTexture3d *
+    Get(const Texture3d *texture);
+
     void
     Bind(const Texture3d *texture);
 

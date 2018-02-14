@@ -171,10 +171,11 @@ AssetManager::LoadFontInternal(const std::string& fontAssetPath)
             auto fontPage0Texture = LoadTexture<Texture2d>(fontPage0TextureAssetPath);
 
             // NEW(Wuxiang): Add mipmap support.
-            fontPageTextureArray = std::make_shared<Texture2dArray>(AssetSource::Virtual,
-                                   "None", "None", fontPage0Texture->mDimension[0],
-                                   fontPage0Texture->mDimension[1], font->mTexturePages,
-                                   TextureFormat::R8G8B8A8);
+            fontPageTextureArray = std::make_shared<Texture2dArray>(
+                                       fontPage0Texture->GetDimension(0),
+                                       fontPage0Texture->GetDimension(1),
+                                       font->mTexturePages,
+                                       TextureFormat::R8G8B8A8_UINT);
         }
 
         // Load the other textures.
@@ -184,7 +185,7 @@ AssetManager::LoadFontInternal(const std::string& fontAssetPath)
             auto textureAssetPath = fontAssetDirPath + textureAssetName;
 
             auto fontPageTexture = LoadTexture<Texture2d>(textureAssetPath);
-            fontPageTextureArray->PushTextureSlice(fontPageTexture);
+            fontPageTextureArray->PushSlice(fontPageTexture);
         }
         font->SetTexture(fontPageTextureArray);
     }
@@ -245,13 +246,14 @@ AssetManager::LoadTexture1dInternal(const TextureImportOption& textureImportOpti
     std::shared_ptr<Texture1d> texture;
     textureAssetArchive(texture);
 
-    if (texture->mData == nullptr)
+    if (texture->GetData() == nullptr)
     {
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Failed to load texture asset.");
     }
 
     texture->mAssetSource = AssetSource::Stream;
-    texture->mAccessUsage = textureImportOption.mTextureUsage;
+    texture->SetAccessUsageInternal(textureImportOption.mTextureUsage);
+    texture->SetAttachmentEnabled(TextureMode::Texture);
 
     return texture;
 }
@@ -264,13 +266,14 @@ AssetManager::LoadTexture2dInternal(const TextureImportOption& textureImportOpti
     std::shared_ptr<Texture2d> texture;
     textureAssetArchive(texture);
 
-    if (texture->mData == nullptr)
+    if (texture->GetData() == nullptr)
     {
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Failed to load texture asset.");
     }
 
     texture->mAssetSource = AssetSource::Stream;
-    texture->mAccessUsage = textureImportOption.mTextureUsage;
+    texture->SetAccessUsageInternal(textureImportOption.mTextureUsage);
+    texture->SetAttachmentEnabled(TextureMode::Texture);
 
     return texture;
 }

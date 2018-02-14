@@ -38,7 +38,7 @@ private:
     CreateTexture(ID3D11Device4 * device);
 
 protected:
-    ID3D11Texture1D *mTextureObj;
+    Microsoft::WRL::ComPtr<ID3D11Texture1D> mTextureObj;
     const Texture1d *mTexturePtr;
 };
 FALCON_ENGINE_CLASS_END

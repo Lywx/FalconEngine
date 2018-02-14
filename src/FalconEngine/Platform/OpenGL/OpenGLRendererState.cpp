@@ -20,14 +20,22 @@ FALCON_ENGINE_DELETER_IMPLEMENT(PlatformRendererState, PlatformRendererStateDele
 /* Constructors and Destructor                                          */
 /************************************************************************/
 PlatformRendererState::PlatformRendererState() :
-    mBlendEnabled(false), mBlendSourceFactor(0), mBlendDestinationFactor(0),
+    mBlendEnabled(false), mBlendSourceFactor(0), mBlendSourceFactorAlpha(0),
+    mBlendDestinationFactor(0), mBlendDestinationFactorAlpha(0), mBlendOperator(0),
+    mBlendOperatorAlpha(0), mLogicEnabled(false), mLogicOperator(0),
+
     mCullEnabled(false), mCullCounterClockwise(false), mDepthTestEnabled(false),
-    mDepthWriteEnabled(false), mDepthCompareFunction(0), mOffsetFillEnabled(false),
+    mDepthWriteEnabled(false), mDepthCompareFunction(0),
+
+    mOffsetFillEnabled(false),
     mOffsetLineEnabled(false), mOffsetPointEnabled(false), mOffsetFactor(0),
-    mOffsetUnit(0), mStencilTestEnabled(false), mStencilCompareFunction(0),
+    mOffsetUnit(0),
+
+    mStencilTestEnabled(false), mStencilCompareFunction(0),
     mStencilCompareReference(0), mStencilCompareMask(0), mStencilWriteMask(0),
-    mStencilOnStencilTestFail(0), mStencilOnDepthTestFail(0),
-    mStencilOnDepthTestPass(0), mWireframeEnabled(false)
+    mStencilOnStencilTestFail(0), mStencilOnDepthTestFail(0), mStencilOnDepthTestPass(0),
+
+    mWireframeEnabled(false)
 {
     // Initialization must be deferred until an OpenGL context has been
     // created.
@@ -44,18 +52,25 @@ PlatformRendererState::Initialize(const BlendState *blendState,
                                   const StencilTestState *stencilTestState,
                                   const WireframeState *wireframeState)
 {
-    // NOTE(Wuxiang): Alpha Test is deprecated after OpenGL 3.0
-
     // Blending
     mBlendEnabled = blendState->mEnabled;
-    mBlendSourceFactor = OpenGLBlendFactorSource[int(blendState->mSourceFactor)];
-    mBlendDestinationFactor = OpenGLBlendFactorDestination[int(blendState->mDestinationFactor)];
+    mBlendSourceFactorAlpha = OpenGLBlendFactor[BlendFactorIndex(blendState->mSourceFactorAlpha)];
+    mBlendSourceFactor = OpenGLBlendFactor[BlendFactorIndex(blendState->mSourceFactor)];
+    mBlendDestinationFactorAlpha = OpenGLBlendFactor[BlendFactorIndex(blendState->mDestinationFactorAlpha)];
+    mBlendDestinationFactor = OpenGLBlendFactor[BlendFactorIndex(blendState->mDestinationFactor)];
     mBlendConstantFactor = blendState->mConstantFactor;
+    mBlendOperator = OpenGLBlendOperator[BlendOperatorIndex(blendState->mOperator)];
+    mLogicEnabled = blendState->mLogicEnabled;
+    mLogicOperator = OpenGLLogicOperator[LogicOperatorIndex(blendState->mLogicOperator)];
 
     mBlendEnabled ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
-    glBlendFunc(mBlendSourceFactor, mBlendDestinationFactor);
     glBlendColor(mBlendConstantFactor[0], mBlendConstantFactor[1], mBlendConstantFactor[2],
                  mBlendConstantFactor[3]);
+    glBlendFuncSeparate(mBlendSourceFactor, mBlendDestinationFactor,
+                        mBlendSourceFactorAlpha, mBlendDestinationFactorAlpha);
+    glBlendEquation(mBlendOperator);
+    mLogicEnabled ? glEnable(GL_COLOR_LOGIC_OP) : glDisable(GL_COLOR_LOGIC_OP);
+    glLogicOp(mLogicOperator);
 
     // Culling
     mCullEnabled = cullState->mEnabled;

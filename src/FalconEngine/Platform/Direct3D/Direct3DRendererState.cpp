@@ -1,6 +1,13 @@
 #include <FalconEngine/Platform/Direct3D/Direct3DRendererState.h>
 
 #if defined(FALCON_ENGINE_API_DIRECT3D)
+#include <FalconEngine/Graphics/Renderer/State/BlendState.h>
+#include <FalconEngine/Graphics/Renderer/State/CullState.h>
+#include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
+#include <FalconEngine/Graphics/Renderer/State/OffsetState.h>
+#include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
+#include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DMapping.h>
 
 namespace FalconEngine
 {
@@ -29,10 +36,22 @@ PlatformRendererState::Initialize(ID3D11DeviceContext4 *context,
     D3D11_BLEND_DESC1 blendDesc;
     ZeroMemory(&blendDesc, sizeof blendDesc);
     blendDesc.AlphaToCoverageEnable = false;
+
+    // NEW(Wuxiang): Support MRT blending.
     blendDesc.IndependentBlendEnable = false;
     D3D11_RENDER_TARGET_BLEND_DESC1 blendDescRt;
     ZeroMemory(&blendDescRt, sizeof blendDescRt);
-    blendDescRt.BlendEnable = false;
+    blendDescRt.BlendEnable = blendState->mEnabled;
+    blendDescRt.LogicOpEnable = false;
+    blendDescRt.SrcBlend = Direct3DBlendFactor[BlendFactorIndex(blendState->mSourceFactor)];
+    blendDescRt.DestBlend = Direct3DBlendFactor[BlendFactorIndex(blendState->mDestinationFactor)];
+    blendDescRt.BlendOp = Direct3DBlendOperator[BlendOperatorIndex(blendState->mOperator)];
+    blendDescRt.SrcBlendAlpha = Direct3DBlendFactor[BlendFactorIndex(blendState->mSourceFactorAlpha)];;
+    blendDescRt.DestBlendAlpha = Direct3DBlendFactor[BlendFactorIndex(blendState->mDestinationFactorAlpha)];
+    blendDescRt.BlendOpAlpha = Direct3DBlendOperator[BlendOperatorIndex(blendState->mOperatorAlpha)];;
+    blendDescRt.LogicOp;
+    UINT8          RenderTargetWriteMask;
+
     blendDesc.RenderTarget[0] = blendDescRt;
     device->CreateBlendState1(&blendDesc, mBlendState.ReleaseAndGetAddressOf());
     context->OMSetBlendState(mBlendState.Get(), nullptr, 0xffffffff);

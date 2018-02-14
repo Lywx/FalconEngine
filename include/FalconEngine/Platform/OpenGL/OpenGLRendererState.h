@@ -43,8 +43,15 @@ public:
     /************************************************************************/
     bool     mBlendEnabled;
     GLenum   mBlendSourceFactor;
+    GLenum   mBlendSourceFactorAlpha;
     GLenum   mBlendDestinationFactor;
+    GLenum   mBlendDestinationFactorAlpha;
     Vector4f mBlendConstantFactor;
+    GLenum   mBlendOperator;
+    GLenum   mBlendOperatorAlpha;
+
+    bool     mLogicEnabled;
+    GLenum   mLogicOperator;
 
     /************************************************************************/
     /* Culling                                                              */

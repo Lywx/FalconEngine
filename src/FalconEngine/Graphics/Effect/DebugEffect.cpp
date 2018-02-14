@@ -102,8 +102,8 @@ DebugEffect::DebugEffect(bool depthTestEnabled)
 
     auto blendState = make_unique<BlendState>();
     blendState->mEnabled = false;
-    blendState->mSourceFactor = BlendSourceFactor::SRC_ALPHA;
-    blendState->mDestinationFactor = BlendDestinationFactor::ONE_MINUS_SRC_ALPHA;
+    blendState->mSourceFactor = BlendFactor::SRC_ALPHA;
+    blendState->mDestinationFactor = BlendFactor::ONE_MINUS_SRC_ALPHA;
     pass->SetBlendState(move(blendState));
 
     auto cullState = make_unique<CullState>();

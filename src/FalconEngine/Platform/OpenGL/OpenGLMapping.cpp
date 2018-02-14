@@ -173,50 +173,59 @@ const GLint OpenGLSamplerWrapMode[int(SamplerWrapMode::Count)] =
     GL_MIRRORED_REPEAT,  // RepeatMirrored
 };
 
-const GLenum OpenGLBlendFactorSource[int(BlendSourceFactor::Count)] =
+const GLenum OpenGLBlendFactor[int(BlendFactor::Count)] =
 {
-    GL_ZERO,
-    GL_ONE,
-    GL_SRC_COLOR,
-    GL_ONE_MINUS_SRC_COLOR,
-    GL_DST_COLOR,
-    GL_ONE_MINUS_DST_COLOR,
-    GL_SRC_ALPHA,
-    GL_ONE_MINUS_SRC_ALPHA,
-    GL_DST_ALPHA,
-    GL_ONE_MINUS_DST_ALPHA,
-    GL_CONSTANT_COLOR,
-    GL_ONE_MINUS_CONSTANT_COLOR,
-    GL_CONSTANT_ALPHA,
-    GL_ONE_MINUS_CONSTANT_ALPHA,
-    GL_SRC_ALPHA_SATURATE,
-    GL_SRC1_COLOR,
-    GL_ONE_MINUS_SRC1_COLOR,
-    GL_SRC1_ALPHA,
-    GL_ONE_MINUS_SRC1_ALPHA,
+    GL_ZERO,                     // ZERO
+    GL_ONE,                      // ONE
+    GL_SRC_COLOR,                // SRC_COLOR
+    GL_ONE_MINUS_SRC_COLOR,      // ONE_MINUS_SRC_COLOR
+    GL_DST_COLOR,                // DST_COLOR
+    GL_ONE_MINUS_DST_COLOR,      // ONE_MINUS_DST_COLOR
+    GL_SRC_ALPHA,                // SRC_ALPHA
+    GL_ONE_MINUS_SRC_ALPHA,      // ONE_MINUS_SRC_ALPHA
+    GL_DST_ALPHA,                // DST_ALPHA
+    GL_ONE_MINUS_DST_ALPHA,      // ONE_MINUS_DST_ALPHA
+    GL_CONSTANT_COLOR,           // CONSTANT_COLOR
+    GL_ONE_MINUS_CONSTANT_COLOR, // ONE_MINUS_CONSTANT_COLOR
+
+    // NOTE(Wuxiang): Not supported in Direct3D.
+    // GL_CONSTANT_ALPHA,           // CONSTANT_ALPHA
+    // GL_ONE_MINUS_CONSTANT_ALPHA, // ONE_MINUS_CONSTANT_ALPHA
+
+    GL_SRC_ALPHA_SATURATE,       // SRC_ALPHA_SATURATE
+    GL_SRC1_COLOR,               // SRC1_COLOR
+    GL_ONE_MINUS_SRC1_COLOR,     // ONE_MINUS_SRC1_COLOR
+    GL_SRC1_ALPHA,               // SRC1_ALPHA
+    GL_ONE_MINUS_SRC1_ALPHA,     // ONE_MINUS_SRC1_ALPHA
 };
 
-const GLenum OpenGLBlendFactorDestination[int(BlendDestinationFactor::Count)] =
+const GLenum OpenGLBlendOperator[int(BlendOperator::Count)] =
 {
-    GL_ZERO,
-    GL_ONE,
-    GL_SRC_COLOR,
-    GL_ONE_MINUS_SRC_COLOR,
-    GL_DST_COLOR,
-    GL_ONE_MINUS_DST_COLOR,
-    GL_SRC_ALPHA,
-    GL_ONE_MINUS_SRC_ALPHA,
-    GL_DST_ALPHA,
-    GL_ONE_MINUS_DST_ALPHA,
-    GL_CONSTANT_COLOR,
-    GL_ONE_MINUS_CONSTANT_COLOR,
-    GL_CONSTANT_ALPHA,
-    GL_ONE_MINUS_CONSTANT_ALPHA,
-    GL_SRC_ALPHA_SATURATE,
-    GL_SRC1_COLOR,
-    GL_ONE_MINUS_SRC1_COLOR,
-    GL_SRC1_ALPHA,
-    GL_ONE_MINUS_SRC1_ALPHA,
+    GL_FUNC_ADD,              // Add
+    GL_FUNC_SUBTRACT,         // Subtract
+    GL_FUNC_REVERSE_SUBTRACT, // ReverseSubtract
+    GL_MIN,                   // Min
+    GL_MAX,                   // Max
+};
+
+const GLenum OpenGLLogicOperator[int(LogicOperator::Count)] =
+{
+    GL_CLEAR,         // Clear
+    GL_SET,           // Set
+    GL_COPY,          // Copy
+    GL_COPY_INVERTED, // CopyInverted
+    GL_NOOP,          // Noop
+    GL_INVERT,        // Invert
+    GL_AND,           // And
+    GL_NAND,          // Nand
+    GL_OR,            // Or
+    GL_NOR,           // Nor
+    GL_XOR,           // Xor
+    GL_EQUIV,         // Equiv
+    GL_AND_REVERSE,   // AndReverse
+    GL_AND_INVERTED,  // AndInverted
+    GL_OR_REVERSE,    // OrReverse
+    GL_OR_INVERTED,   // OrInverted
 };
 
 const GLenum OpenGLDepthFunction[int(DepthFunction::Count)] =

@@ -36,14 +36,20 @@ Renderer::SetBlendStatePlatform(const BlendState *blendState)
             glEnable(GL_BLEND);
         }
 
-        GLenum sourceFactor = OpenGLBlendFactorSource[int(mBlendStateCurrent->mSourceFactor)];
-        GLenum destinationFactor = OpenGLBlendFactorDestination[int(mBlendStateCurrent->mDestinationFactor)];
+        GLenum sourceFactorAlpha = OpenGLBlendFactor[BlendFactorIndex(mBlendStateCurrent->mSourceFactorAlpha)];
+        GLenum sourceFactor = OpenGLBlendFactor[BlendFactorIndex(mBlendStateCurrent->mSourceFactor)];
+        GLenum destinationFactor = OpenGLBlendFactor[BlendFactorIndex(mBlendStateCurrent->mDestinationFactor)];
+        GLenum destinationFactorAlpha = OpenGLBlendFactor[BlendFactorIndex(mBlendStateCurrent->mDestinationFactorAlpha)];
         if (sourceFactor != mState->mBlendSourceFactor
-                || destinationFactor != mState->mBlendDestinationFactor)
+                || sourceFactorAlpha != mState->mBlendSourceFactorAlpha
+                || destinationFactor != mState->mBlendDestinationFactor
+                || destinationFactorAlpha != mState->mBlendDestinationFactorAlpha)
         {
             mState->mBlendSourceFactor = sourceFactor;
+            mState->mBlendSourceFactorAlpha = sourceFactorAlpha;
             mState->mBlendDestinationFactor = destinationFactor;
-            glBlendFunc(sourceFactor, destinationFactor);
+            mState->mBlendDestinationFactorAlpha = destinationFactorAlpha;
+            glBlendFuncSeparate(sourceFactor, destinationFactor, sourceFactorAlpha, destinationFactorAlpha);
         }
 
         if (mBlendStateCurrent->mConstantFactor != mState->mBlendConstantFactor)
@@ -55,14 +61,42 @@ Renderer::SetBlendStatePlatform(const BlendState *blendState)
                 mState->mBlendConstantFactor[2],
                 mState->mBlendConstantFactor[3]);
         }
-    }
-    else
-    {
-        if (mState->mBlendEnabled)
+
+        auto blendOperator = OpenGLBlendOperator[BlendOperatorIndex(mBlendStateCurrent->mOperator)];
+        auto blendOperatorAlpha = OpenGLBlendOperator[BlendOperatorIndex(mBlendStateCurrent->mOperatorAlpha)];
+        if (blendOperator != mState->mBlendOperator
+                || blendOperatorAlpha != mState->mBlendOperatorAlpha)
         {
-            mState->mBlendEnabled = false;
-            glDisable(GL_BLEND);
+            mState->mBlendOperator = blendOperator;
+            mState->mBlendOperatorAlpha = blendOperatorAlpha;
+            glBlendEquationSeparate(blendOperator, blendOperatorAlpha);
         }
+
+        if (mBlendStateCurrent->mLogicEnabled)
+        {
+            if (!mState->mLogicEnabled)
+            {
+                mState->mLogicEnabled = true;
+                glEnable(GL_COLOR_LOGIC_OP);
+            }
+
+            auto logicOperator = OpenGLLogicOperator[LogicOperatorIndex(mBlendStateCurrent->mLogicOperator)];
+            if (logicOperator != mState->mLogicOperator)
+            {
+                mState->mLogicOperator = logicOperator;
+                glLogicOp(logicOperator);
+            }
+        }
+        else if (mState->mLogicEnabled)
+        {
+            mState->mLogicEnabled = false;
+            glDisable(GL_COLOR_LOGIC_OP);
+        }
+    }
+    else if (mState->mBlendEnabled)
+    {
+        mState->mBlendEnabled = false;
+        glDisable(GL_BLEND);
     }
 }
 
@@ -97,13 +131,10 @@ Renderer::SetCullStatePlatform(const CullState *cullState)
             }
         }
     }
-    else
+    else if (mState->mCullEnabled)
     {
-        if (mState->mCullEnabled)
-        {
-            mState->mCullEnabled = false;
-            glDisable(GL_CULL_FACE);
-        }
+        mState->mCullEnabled = false;
+        glDisable(GL_CULL_FACE);
     }
 }
 
@@ -129,13 +160,10 @@ Renderer::SetDepthTestStatePlatform(const DepthTestState *depthTestState)
             glDepthFunc(compareFunction);
         }
     }
-    else
+    else if (mState->mDepthTestEnabled)
     {
-        if (mState->mDepthTestEnabled)
-        {
-            mState->mDepthTestEnabled = false;
-            glDisable(GL_DEPTH_TEST);
-        }
+        mState->mDepthTestEnabled = false;
+        glDisable(GL_DEPTH_TEST);
     }
 
     if (mDepthTestStateCurrent->mWriteEnabled)
@@ -146,13 +174,10 @@ Renderer::SetDepthTestStatePlatform(const DepthTestState *depthTestState)
             glDepthMask(GL_TRUE);
         }
     }
-    else
+    else if (mState->mDepthWriteEnabled)
     {
-        if (mState->mDepthWriteEnabled)
-        {
-            mState->mDepthWriteEnabled = false;
-            glDepthMask(GL_FALSE);
-        }
+        mState->mDepthWriteEnabled = false;
+        glDepthMask(GL_FALSE);
     }
 }
 
@@ -171,13 +196,10 @@ Renderer::SetOffsetStatePlatform(const OffsetState *offsetState)
             glEnable(GL_POLYGON_OFFSET_FILL);
         }
     }
-    else
+    else if (mState->mOffsetFillEnabled)
     {
-        if (mState->mOffsetFillEnabled)
-        {
-            mState->mOffsetFillEnabled = false;
-            glDisable(GL_POLYGON_OFFSET_FILL);
-        }
+        mState->mOffsetFillEnabled = false;
+        glDisable(GL_POLYGON_OFFSET_FILL);
     }
 
     if (mOffsetStateCurrent->mLineEnabled)
@@ -188,13 +210,10 @@ Renderer::SetOffsetStatePlatform(const OffsetState *offsetState)
             glEnable(GL_POLYGON_OFFSET_LINE);
         }
     }
-    else
+    else if (mState->mOffsetLineEnabled)
     {
-        if (mState->mOffsetLineEnabled)
-        {
-            mState->mOffsetLineEnabled = false;
-            glDisable(GL_POLYGON_OFFSET_LINE);
-        }
+        mState->mOffsetLineEnabled = false;
+        glDisable(GL_POLYGON_OFFSET_LINE);
     }
 
     if (mOffsetStateCurrent->mPointEnabled)
@@ -205,13 +224,10 @@ Renderer::SetOffsetStatePlatform(const OffsetState *offsetState)
             glEnable(GL_POLYGON_OFFSET_POINT);
         }
     }
-    else
+    else if (mState->mOffsetPointEnabled)
     {
-        if (mState->mOffsetPointEnabled)
-        {
-            mState->mOffsetPointEnabled = false;
-            glDisable(GL_POLYGON_OFFSET_POINT);
-        }
+        mState->mOffsetPointEnabled = false;
+        glDisable(GL_POLYGON_OFFSET_POINT);
     }
 
     if (mOffsetStateCurrent->mFactor != mState->mOffsetFactor
@@ -269,13 +285,10 @@ Renderer::SetStencilTestStatePlatform(const StencilTestState *stencilTestState)
             glStencilOp(onStencilTestFail, onDepthTestFail, onDepthTestPass);
         }
     }
-    else
+    else if (mState->mStencilTestEnabled)
     {
-        if (mState->mStencilTestEnabled)
-        {
-            mState->mStencilTestEnabled = false;
-            glDisable(GL_STENCIL_TEST);
-        }
+        mState->mStencilTestEnabled = false;
+        glDisable(GL_STENCIL_TEST);
     }
 }
 
@@ -294,13 +307,10 @@ Renderer::SetWireframeStatePlatform(const WireframeState *wireframeState)
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         }
     }
-    else
+    else if (mState->mWireframeEnabled)
     {
-        if (mState->mWireframeEnabled)
-        {
-            mState->mWireframeEnabled = false;
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        }
+        mState->mWireframeEnabled = false;
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 }
 

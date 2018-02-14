@@ -33,8 +33,9 @@ FALCON_ENGINE_API extern const GLint  OpenGLSamplerFilterMode[int(SamplerMinific
 FALCON_ENGINE_API extern const int    OpenGLSamplerMipmapMode[4];
 FALCON_ENGINE_API extern const GLint  OpenGLSamplerWrapMode[int(SamplerWrapMode::Count)];
 
-FALCON_ENGINE_API extern const GLenum OpenGLBlendFactorSource[int(BlendSourceFactor::Count)];
-FALCON_ENGINE_API extern const GLenum OpenGLBlendFactorDestination[int(BlendDestinationFactor::Count)];
+FALCON_ENGINE_API extern const GLenum OpenGLBlendFactor[int(BlendFactor::Count)];
+FALCON_ENGINE_API extern const GLenum OpenGLBlendOperator[int(BlendOperator::Count)];
+FALCON_ENGINE_API extern const GLenum OpenGLLogicOperator[int(LogicOperator::Count)];
 
 FALCON_ENGINE_API extern const GLenum OpenGLDepthFunction[int(DepthFunction::Count)];
 

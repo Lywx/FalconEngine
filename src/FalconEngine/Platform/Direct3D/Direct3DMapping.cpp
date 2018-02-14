@@ -131,6 +131,61 @@ const D3D11_TEXTURE_ADDRESS_MODE Direct3DSamplerWrapMode[int(SamplerWrapMode::Co
     // TODO(Wuxiang): Add one more option to SamplerWrapMode to support D3D11_TEXTURE_ADDRESS_MIRROR_ONCE.
 };
 
+const D3D11_BLEND Direct3DBlendFactor[int(BlendFactor::Count)] =
+{
+    D3D11_BLEND_ZERO,             // ZERO
+    D3D11_BLEND_ONE,              // ONE
+    D3D11_BLEND_SRC_COLOR,        // SRC_COLOR
+    D3D11_BLEND_INV_SRC_COLOR,    // ONE_MINUS_SRC_COLOR
+    D3D11_BLEND_DEST_COLOR,       // DST_COLOR
+    D3D11_BLEND_INV_DEST_COLOR,   // ONE_MINUS_DST_COLOR
+    D3D11_BLEND_SRC_ALPHA,        // SRC_ALPHA
+    D3D11_BLEND_INV_SRC_ALPHA,    // ONE_MINUS_SRC_ALPHA
+    D3D11_BLEND_DEST_ALPHA,       // DST_ALPHA
+    D3D11_BLEND_INV_DEST_ALPHA,   // ONE_MINUS_DST_ALPHA
+    D3D11_BLEND_BLEND_FACTOR,     // CONSTANT_COLOR
+    D3D11_BLEND_INV_BLEND_FACTOR, // ONE_MINUS_CONSTANT_COLOR
+
+    // NOTE(Wuxiang): Not supported in Direct3D.
+    // D3D11_BLEND(0),               // CONSTANT_ALPHA
+    // D3D11_BLEND(0),               // ONE_MINUS_CONSTANT_ALPHA
+
+    D3D11_BLEND_SRC_ALPHA_SAT,    // SRC_ALPHA_SATURATE
+    D3D11_BLEND_SRC1_COLOR,       // SRC1_COLOR
+    D3D11_BLEND_INV_SRC1_COLOR,   // ONE_MINUS_SRC1_COLOR
+    D3D11_BLEND_SRC1_ALPHA,       // SRC1_ALPHA
+    D3D11_BLEND_INV_SRC1_ALPHA,   // ONE_MINUS_SRC1_ALPHA
+};
+
+const D3D11_BLEND_OP Direct3DBlendOperator[int(BlendOperator::Count)] =
+{
+    D3D11_BLEND_OP_ADD,          // Add
+    D3D11_BLEND_OP_SUBTRACT,     // Subtract
+    D3D11_BLEND_OP_REV_SUBTRACT, // ReverseSubtract
+    D3D11_BLEND_OP_MIN,          // Min
+    D3D11_BLEND_OP_MAX           // Max
+};
+
+const D3D11_LOGIC_OP Direct3DLogicOperator[int(LogicOperator::Count)] =
+{
+    D3D11_LOGIC_OP_CLEAR,         // Clear
+    D3D11_LOGIC_OP_SET,           // Set
+    D3D11_LOGIC_OP_COPY,          // Copy
+    D3D11_LOGIC_OP_COPY_INVERTED, // CopyInverted
+    D3D11_LOGIC_OP_NOOP,          // Noop
+    D3D11_LOGIC_OP_INVERT,        // Invert
+    D3D11_LOGIC_OP_AND,           // And
+    D3D11_LOGIC_OP_NAND,          // Nand
+    D3D11_LOGIC_OP_OR,            // Or
+    D3D11_LOGIC_OP_NOR,           // Nor
+    D3D11_LOGIC_OP_XOR,           // Xor
+    D3D11_LOGIC_OP_EQUIV,         // Equiv
+    D3D11_LOGIC_OP_AND_REVERSE,   // AndReverse
+    D3D11_LOGIC_OP_AND_INVERTED,  // AndInverted
+    D3D11_LOGIC_OP_OR_REVERSE,    // OrReverse
+    D3D11_LOGIC_OP_OR_INVERTED,   // OrInverted
+};
+
 // https://msdn.microsoft.com/en-us/library/windows/desktop/bb173059(v=vs.85).aspx
 const DXGI_FORMAT Direct3DShaderAttributeFormat[int(VertexAttributeType::Count)] =
 {

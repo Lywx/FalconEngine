@@ -26,8 +26,9 @@ FALCON_ENGINE_API extern const D3D11_MAP                  Direct3DResourceMapMod
 
 FALCON_ENGINE_API extern const D3D11_TEXTURE_ADDRESS_MODE Direct3DSamplerWrapMode[int(SamplerWrapMode::Count)];
 
-FALCON_ENGINE_API extern const int                        Direct3DBlendFactorSource[int(BlendSourceFactor::Count)];
-FALCON_ENGINE_API extern const int                        Direct3DBlendFactorDestination[int(BlendDestinationFactor::Count)];
+FALCON_ENGINE_API extern const D3D11_BLEND                Direct3DBlendFactor[int(BlendFactor::Count)];
+FALCON_ENGINE_API extern const D3D11_BLEND_OP             Direct3DBlendOperator[int(BlendOperator::Count)];
+FALCON_ENGINE_API extern const D3D11_LOGIC_OP             Direct3DLogicOperator[int(LogicOperator::Count)];
 
 FALCON_ENGINE_API extern const int                        Direct3DDepthFunction[int(DepthFunction::Count)];
 

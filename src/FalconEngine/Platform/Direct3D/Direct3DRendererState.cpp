@@ -35,26 +35,29 @@ PlatformRendererState::Initialize(ID3D11DeviceContext4 *context,
     // Blend State
     D3D11_BLEND_DESC1 blendDesc;
     ZeroMemory(&blendDesc, sizeof blendDesc);
-    blendDesc.AlphaToCoverageEnable = false;
 
+    // NEW(Wuxiang): Add alpha to coverage support.
+    blendDesc.AlphaToCoverageEnable = false;
     // NEW(Wuxiang): Support MRT blending.
     blendDesc.IndependentBlendEnable = false;
+
     D3D11_RENDER_TARGET_BLEND_DESC1 blendDescRt;
     ZeroMemory(&blendDescRt, sizeof blendDescRt);
     blendDescRt.BlendEnable = blendState->mEnabled;
-    blendDescRt.LogicOpEnable = false;
-    blendDescRt.SrcBlend = Direct3DBlendFactor[BlendFactorIndex(blendState->mSourceFactor)];
-    blendDescRt.DestBlend = Direct3DBlendFactor[BlendFactorIndex(blendState->mDestinationFactor)];
     blendDescRt.BlendOp = Direct3DBlendOperator[BlendOperatorIndex(blendState->mOperator)];
+    blendDescRt.SrcBlend = Direct3DBlendFactor[BlendFactorIndex(blendState->mSourceFactor)];
     blendDescRt.SrcBlendAlpha = Direct3DBlendFactor[BlendFactorIndex(blendState->mSourceFactorAlpha)];;
+    blendDescRt.DestBlend = Direct3DBlendFactor[BlendFactorIndex(blendState->mDestinationFactor)];
     blendDescRt.DestBlendAlpha = Direct3DBlendFactor[BlendFactorIndex(blendState->mDestinationFactorAlpha)];
     blendDescRt.BlendOpAlpha = Direct3DBlendOperator[BlendOperatorIndex(blendState->mOperatorAlpha)];;
-    blendDescRt.LogicOp;
-    UINT8          RenderTargetWriteMask;
-
+    blendDescRt.LogicOpEnable = blendState->mLogicEnabled;
+    blendDescRt.LogicOp = Direct3DLogicOperator[LogicOperatorIndex(blendState->mLogicOperator)];
+    blendDescRt.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
     blendDesc.RenderTarget[0] = blendDescRt;
     device->CreateBlendState1(&blendDesc, mBlendState.ReleaseAndGetAddressOf());
-    context->OMSetBlendState(mBlendState.Get(), nullptr, 0xffffffff);
+
+    // NEW(Wuxiang): Add alpha to coverage support.
+    context->OMSetBlendState(mBlendState.Get(), blendState->mConstantFactor.Data(), 0xffffffff);
 
     // Depth Stencil State
     D3D11_DEPTH_STENCIL_DESC depthStencilDesc;

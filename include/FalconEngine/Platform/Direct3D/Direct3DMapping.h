@@ -30,10 +30,10 @@ FALCON_ENGINE_API extern const D3D11_BLEND                Direct3DBlendFactor[in
 FALCON_ENGINE_API extern const D3D11_BLEND_OP             Direct3DBlendOperator[int(BlendOperator::Count)];
 FALCON_ENGINE_API extern const D3D11_LOGIC_OP             Direct3DLogicOperator[int(LogicOperator::Count)];
 
-FALCON_ENGINE_API extern const int                        Direct3DDepthFunction[int(DepthFunction::Count)];
+FALCON_ENGINE_API extern const D3D11_COMPARISON_FUNC      Direct3DDepthFunction[int(DepthFunction::Count)];
 
-FALCON_ENGINE_API extern const int                        Direct3DStencilFunction[int(StencilFunction::Count)];
-FALCON_ENGINE_API extern const int                        Direct3DStencilOperation[int(StencilOperation::Count)];
+FALCON_ENGINE_API extern const D3D11_COMPARISON_FUNC      Direct3DStencilFunction[int(StencilFunction::Count)];
+FALCON_ENGINE_API extern const D3D11_STENCIL_OP           Direct3DStencilOperation[int(StencilOperation::Count)];
 
 FALCON_ENGINE_API extern const DXGI_FORMAT                Direct3DShaderAttributeFormat[int(VertexAttributeType::Count)];
 FALCON_ENGINE_API extern const int                        Direct3DShaderType[int(ShaderType::Count)];

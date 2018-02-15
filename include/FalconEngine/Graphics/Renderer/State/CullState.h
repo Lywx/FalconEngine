@@ -5,11 +5,11 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_API CullState final
+FALCON_ENGINE_CLASS_BEGIN CullState final
 {
 public:
-    CullState ();
-    ~CullState ();
+    CullState();
+    ~CullState();
 
 public:
     // Which face to cull
@@ -18,5 +18,6 @@ public:
     // Whether enable face culling
     bool mEnabled = true;
 };
+FALCON_ENGINE_CLASS_END
 
 }

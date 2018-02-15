@@ -111,7 +111,7 @@ DebugEffect::DebugEffect(bool depthTestEnabled)
     pass->SetCullState(move(cullState));
 
     auto depthTestState = make_unique<DepthTestState>();
-    depthTestState->mTestEnabled = depthTestEnabled;
+    depthTestState->mEnabled = depthTestEnabled;
     pass->SetDepthTestState(move(depthTestState));
 
     pass->SetOffsetState(make_unique<OffsetState>());

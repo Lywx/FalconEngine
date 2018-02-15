@@ -42,11 +42,11 @@ BlendFactorIndex(BlendFactor blendFactor)
 
 enum class BlendOperator
 {
-    Add,
-    Subtract,
-    ReverseSubtract,
-    Min,
-    Max,
+    ADD,
+    SUBTRACT,
+    REVERSE_SUBTRACT,
+    MIN,
+    MAX,
 
     Count,
 };
@@ -59,22 +59,22 @@ BlendOperatorIndex(BlendOperator blendOperator)
 
 enum class LogicOperator
 {
-    Clear,
-    Set,
-    Copy,
-    CopyInverted,
-    Noop,
-    Invert,
-    And,
-    Nand,
-    Or,
-    Nor,
-    Xor,
-    Equiv,
-    AndReverse,
-    AndInverted,
-    OrReverse,
-    OrInverted,
+    CLEAR,
+    SET,
+    COPY,
+    COPY_INVERTED,
+    NOOP,
+    INVERT,
+    AND,
+    NAND,
+    OR,
+    NOR,
+    XOR,
+    EQUIV,
+    AND_REVERSE,
+    AND_INVERTED,
+    OR_REVERSE,
+    OR_INVERTEd,
 
     Count
 };
@@ -96,8 +96,8 @@ public:
 
 public:
     bool mEnabled = false;
-    BlendOperator mOperator = BlendOperator::Add;
-    BlendOperator mOperatorAlpha = BlendOperator::Add;
+    BlendOperator mOperator = BlendOperator::ADD;
+    BlendOperator mOperatorAlpha = BlendOperator::ADD;
     BlendFactor mSourceFactor = BlendFactor::ONE;
     BlendFactor mSourceFactorAlpha = BlendFactor::ONE;
     BlendFactor mDestinationFactor = BlendFactor::ZERO;
@@ -105,7 +105,7 @@ public:
     Vector4f mConstantFactor = Vector4f::Zero;
 
     bool mLogicEnabled = false;
-    LogicOperator mLogicOperator = LogicOperator::Copy;
+    LogicOperator mLogicOperator = LogicOperator::COPY;
 };
 FALCON_ENGINE_CLASS_END
 

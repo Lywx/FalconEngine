@@ -19,6 +19,15 @@ FALCON_ENGINE_DELETER_IMPLEMENT(PlatformRendererState, PlatformRendererStateDele
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
+PlatformStencilTestFaceState::PlatformStencilTestFaceState() :
+    mDepthTestFailOperation(0), mDepthTestPassOperation(0),
+    mStencilTestFailOperation(0), mStencilCompareFunction(0)
+{
+}
+
+/************************************************************************/
+/* Constructors and Destructor                                          */
+/************************************************************************/
 PlatformRendererState::PlatformRendererState() :
     mBlendEnabled(false), mBlendSourceFactor(0), mBlendSourceFactorAlpha(0),
     mBlendDestinationFactor(0), mBlendDestinationFactorAlpha(0), mBlendOperator(0),
@@ -31,9 +40,8 @@ PlatformRendererState::PlatformRendererState() :
     mOffsetLineEnabled(false), mOffsetPointEnabled(false), mOffsetFactor(0),
     mOffsetUnit(0),
 
-    mStencilTestEnabled(false), mStencilCompareFunction(0),
-    mStencilCompareReference(0), mStencilCompareMask(0), mStencilWriteMask(0),
-    mStencilOnStencilTestFail(0), mStencilOnDepthTestFail(0), mStencilOnDepthTestPass(0),
+    mStencilTestEnabled(false), mStencilCompareReference(0), mStencilCompareMask(0),
+    mStencilWriteMask(0), mStencilFrontFace(), mStencilBackFace(),
 
     mWireframeEnabled(false)
 {
@@ -52,7 +60,24 @@ PlatformRendererState::Initialize(const BlendState *blendState,
                                   const StencilTestState *stencilTestState,
                                   const WireframeState *wireframeState)
 {
-    // Blending
+    InitializeBlendState(blendState);
+    InitializeCullState(cullState);
+    InitializeDepthTestState(depthTestState);
+    InitializeOffsetState(offsetState);
+    InitializeStencilTestState(stencilTestState);
+
+    // Wireframe Mode
+    mWireframeEnabled = wireframeState->mEnabled;
+
+    glPolygonMode(GL_FRONT_AND_BACK, mWireframeEnabled ? GL_LINE : GL_FILL);
+}
+
+/************************************************************************/
+/* Private Members                                                      */
+/************************************************************************/
+void
+PlatformRendererState::InitializeBlendState(const BlendState *blendState)
+{
     mBlendEnabled = blendState->mEnabled;
     mBlendSourceFactorAlpha = OpenGLBlendFactor[BlendFactorIndex(blendState->mSourceFactorAlpha)];
     mBlendSourceFactor = OpenGLBlendFactor[BlendFactorIndex(blendState->mSourceFactor)];
@@ -71,17 +96,23 @@ PlatformRendererState::Initialize(const BlendState *blendState,
     glBlendEquation(mBlendOperator);
     mLogicEnabled ? glEnable(GL_COLOR_LOGIC_OP) : glDisable(GL_COLOR_LOGIC_OP);
     glLogicOp(mLogicOperator);
+}
 
-    // Culling
+void
+PlatformRendererState::InitializeCullState(const CullState *cullState)
+{
     mCullEnabled = cullState->mEnabled;
     mCullCounterClockwise = cullState->mCounterClockwise;
 
     mCullEnabled ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
     glFrontFace(GL_CCW);
     glCullFace(mCullCounterClockwise ? GL_FRONT : GL_BACK);
+}
 
-    // Depth Test
-    mDepthTestEnabled = depthTestState->mTestEnabled;
+void
+PlatformRendererState::InitializeDepthTestState(const DepthTestState *depthTestState)
+{
+    mDepthTestEnabled = depthTestState->mEnabled;
     mDepthWriteEnabled = depthTestState->mWriteEnabled;
     mDepthCompareFunction = OpenGLDepthFunction[int(depthTestState->mCompareFunction)];
 
@@ -90,8 +121,11 @@ PlatformRendererState::Initialize(const BlendState *blendState,
     // You still need to have to enable depth test to enable writing to depth buffer
     glDepthMask(mDepthWriteEnabled ? GL_TRUE : GL_FALSE);
     glDepthFunc(mDepthCompareFunction);
+}
 
-    // Offset State
+void
+PlatformRendererState::InitializeOffsetState(const OffsetState *offsetState)
+{
     mOffsetFillEnabled = offsetState->mFillEnabled;
     mOffsetLineEnabled = offsetState->mLineEnabled;
     mOffsetPointEnabled = offsetState->mPointEnabled;
@@ -102,26 +136,40 @@ PlatformRendererState::Initialize(const BlendState *blendState,
     mOffsetLineEnabled ? glEnable(GL_POLYGON_OFFSET_LINE) : glDisable(GL_POLYGON_OFFSET_LINE);
     mOffsetPointEnabled ? glEnable(GL_POLYGON_OFFSET_POINT) : glDisable(GL_POLYGON_OFFSET_POINT);
     glPolygonOffset(mOffsetFactor, mOffsetUnit);
+}
 
-    // Stencil Test
-    mStencilTestEnabled = stencilTestState->mTestEnabled;
-    mStencilCompareFunction = OpenGLStencilFunction[int(stencilTestState->mCompareFunction)];
+void
+InitializeStencilTestFaceStatePlatform(PlatformStencilTestFaceState& stencilTestFaceStatePlatform, const StencilTestFaceState &stencilTestFaceState)
+{
+    stencilTestFaceStatePlatform.mStencilCompareFunction = OpenGLStencilFunction[int(stencilTestFaceState.mStencilCompareFunction)];
+    stencilTestFaceStatePlatform.mStencilTestFailOperation = OpenGLStencilOperation[int(stencilTestFaceState.mStencilTestFailOperation)];
+    stencilTestFaceStatePlatform.mDepthTestFailOperation = OpenGLStencilOperation[int(stencilTestFaceState.mDepthTestFailOperation)];
+    stencilTestFaceStatePlatform.mDepthTestPassOperation = OpenGLStencilOperation[int(stencilTestFaceState.mDepthTestPassOperation)];
+
+    glStencilOpSeparate(GL_FRONT,
+                        stencilTestFaceStatePlatform.mStencilTestFailOperation,
+                        stencilTestFaceStatePlatform.mDepthTestFailOperation,
+                        stencilTestFaceStatePlatform.mDepthTestPassOperation);
+
+}
+
+void
+PlatformRendererState::InitializeStencilTestState(const StencilTestState *stencilTestState)
+{
+    mStencilTestEnabled = stencilTestState->mEnabled;
     mStencilCompareReference = stencilTestState->mCompareReference;
     mStencilCompareMask = stencilTestState->mCompareMask;
     mStencilWriteMask = stencilTestState->mWriteMask;
-    mStencilOnStencilTestFail = OpenGLStencilOperation[int(stencilTestState->OnStencilTestFail)];
-    mStencilOnDepthTestFail = OpenGLStencilOperation[int(stencilTestState->OnDepthTestFail)];
-    mStencilOnDepthTestPass = OpenGLStencilOperation[int(stencilTestState->OnDepthTestPass)];
+
+    InitializeStencilTestFaceStatePlatform(mStencilFrontFace, stencilTestState->mFrontFace);
+    InitializeStencilTestFaceStatePlatform(mStencilBackFace, stencilTestState->mBackFace);
 
     mStencilTestEnabled ? glEnable(GL_STENCIL_TEST) : glDisable(GL_STENCIL_TEST);
-    glStencilFunc(mStencilCompareFunction, mStencilCompareReference, mStencilCompareMask);
+    glStencilFuncSeparate(GL_FRONT, mStencilFrontFace.mStencilCompareFunction, mStencilCompareReference, mStencilCompareMask);
+    glStencilOpSeparate(GL_FRONT, mStencilFrontFace.mStencilTestFailOperation, mStencilFrontFace.mDepthTestFailOperation, mStencilFrontFace.mDepthTestPassOperation);
+    glStencilFuncSeparate(GL_BACK, mStencilBackFace.mStencilCompareFunction, mStencilCompareReference, mStencilCompareMask);
+    glStencilOpSeparate(GL_BACK, mStencilBackFace.mStencilTestFailOperation, mStencilBackFace.mDepthTestFailOperation, mStencilBackFace.mDepthTestPassOperation);
     glStencilMask(mStencilWriteMask);
-    glStencilOp(mStencilOnStencilTestFail, mStencilOnDepthTestFail, mStencilOnDepthTestPass);
-
-    // Wireframe Mode
-    mWireframeEnabled = wireframeState->mEnabled;
-
-    glPolygonMode(GL_FRONT_AND_BACK, mWireframeEnabled ? GL_LINE : GL_FILL);
 }
 
 }

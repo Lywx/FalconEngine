@@ -145,7 +145,7 @@ Renderer::SetDepthTestStatePlatform(const DepthTestState *depthTestState)
 
     mDepthTestStateCurrent = depthTestState;
 
-    if (mDepthTestStateCurrent->mTestEnabled)
+    if (mDepthTestStateCurrent->mEnabled)
     {
         if (!mState->mDepthTestEnabled)
         {
@@ -240,13 +240,51 @@ Renderer::SetOffsetStatePlatform(const OffsetState *offsetState)
 }
 
 void
+SetStencilTestFaceStatePlatform(_IN_ const PlatformRendererState *rendererState,
+                                _IN_ GLenum face,
+                                _IN_ const StencilTestFaceState& faceStateCurrent,
+                                _IN_OUT_ PlatformStencilTestFaceState& faceStatePlatform,
+                                _IN_ bool compareMaskChanged,
+                                _IN_ bool compareReferenceChanged)
+{
+    GLenum compareFunction = OpenGLStencilFunction[StencilFunctionIndex(
+                                 faceStateCurrent.mStencilCompareFunction)];
+    if (compareFunction != faceStatePlatform.mStencilCompareFunction
+            || compareMaskChanged
+            || compareReferenceChanged)
+    {
+        faceStatePlatform.mStencilCompareFunction = compareFunction;
+        glStencilFuncSeparate(face,
+                              compareFunction,
+                              rendererState->mStencilCompareReference,
+                              rendererState->mStencilCompareMask);
+    }
+
+    GLenum stencilTestFailOperation = OpenGLStencilOperation[StencilOperationIndex(faceStateCurrent.mStencilTestFailOperation)];
+    GLenum depthTestFailOperation = OpenGLStencilOperation[StencilOperationIndex(faceStateCurrent.mDepthTestFailOperation)];
+    GLenum depthTestPassOperation = OpenGLStencilOperation[StencilOperationIndex(faceStateCurrent.mDepthTestPassOperation)];
+    if (stencilTestFailOperation != faceStatePlatform.mStencilTestFailOperation
+            || depthTestFailOperation != faceStatePlatform.mDepthTestFailOperation
+            || depthTestPassOperation != faceStatePlatform.mDepthTestPassOperation)
+    {
+        faceStatePlatform.mStencilTestFailOperation = stencilTestFailOperation;
+        faceStatePlatform.mDepthTestFailOperation = depthTestFailOperation;
+        faceStatePlatform.mDepthTestPassOperation = depthTestPassOperation;
+        glStencilOpSeparate(face,
+                            stencilTestFailOperation,
+                            depthTestFailOperation,
+                            depthTestPassOperation);
+    }
+}
+
+void
 Renderer::SetStencilTestStatePlatform(const StencilTestState *stencilTestState)
 {
     FALCON_ENGINE_CHECK_NULLPTR(stencilTestState);
 
     mStencilTestStateCurrent = stencilTestState;
 
-    if (mStencilTestStateCurrent->mTestEnabled)
+    if (mStencilTestStateCurrent->mEnabled)
     {
         if (!mState->mStencilTestEnabled)
         {
@@ -254,36 +292,39 @@ Renderer::SetStencilTestStatePlatform(const StencilTestState *stencilTestState)
             glEnable(GL_STENCIL_TEST);
         }
 
-        GLenum compareFunction = OpenGLStencilFunction[int(mStencilTestStateCurrent->mCompareFunction)];
-        if (compareFunction != mState->mStencilCompareFunction
-                || mStencilTestStateCurrent->mCompareReference != mState->mStencilCompareReference
-                || mStencilTestStateCurrent->mCompareMask != mState->mStencilCompareMask)
+        if (unsigned int(mStencilTestStateCurrent->mWriteMask) != mState->mStencilWriteMask)
         {
-            mState->mStencilCompareFunction = compareFunction;
-            mState->mStencilCompareReference = mStencilTestStateCurrent->mCompareReference;
-            mState->mStencilCompareMask = mStencilTestStateCurrent->mCompareMask;
-            glStencilFunc(compareFunction, mStencilTestStateCurrent->mCompareReference,
-                          mStencilTestStateCurrent->mCompareMask);
-        }
-
-        if (mStencilTestStateCurrent->mWriteMask != mState->mStencilWriteMask)
-        {
-            mState->mStencilWriteMask = mStencilTestStateCurrent->mWriteMask;
+            mState->mStencilWriteMask = unsigned int(mStencilTestStateCurrent->mWriteMask);
             glStencilMask(mStencilTestStateCurrent->mWriteMask);
         }
 
-        GLenum onStencilTestFail = OpenGLStencilOperation[int(mStencilTestStateCurrent->OnStencilTestFail)];
-        GLenum onDepthTestFail = OpenGLStencilOperation[int(mStencilTestStateCurrent->OnDepthTestFail)];
-        GLenum onDepthTestPass = OpenGLStencilOperation[int(mStencilTestStateCurrent->OnDepthTestPass)];
-        if (onStencilTestFail != mState->mStencilOnStencilTestFail
-                || onDepthTestFail != mState->mStencilOnDepthTestFail
-                || onDepthTestPass != mState->mStencilOnDepthTestPass)
+        bool compareMaskChanged = false;
+        if (unsigned int(mStencilTestStateCurrent->mCompareMask) != mState->mStencilCompareMask)
         {
-            mState->mStencilOnStencilTestFail = onStencilTestFail;
-            mState->mStencilOnDepthTestFail = onDepthTestFail;
-            mState->mStencilOnDepthTestPass = onDepthTestPass;
-            glStencilOp(onStencilTestFail, onDepthTestFail, onDepthTestPass);
+            mState->mStencilCompareMask = unsigned int(mStencilTestStateCurrent->mCompareMask);
+            compareMaskChanged = true;
         }
+
+        bool compareReferenceChanged = false;
+        if (mStencilTestStateCurrent->mCompareReference != mState->mStencilCompareReference)
+        {
+            mState->mStencilCompareReference = mStencilTestStateCurrent->mCompareReference;
+            compareReferenceChanged = true;
+        }
+
+        SetStencilTestFaceStatePlatform(mState.get(),
+                                        GL_FRONT,
+                                        mStencilTestStateCurrent->mFrontFace,
+                                        mState->mStencilFrontFace,
+                                        compareMaskChanged,
+                                        compareReferenceChanged);
+
+        SetStencilTestFaceStatePlatform(mState.get(),
+                                        GL_BACK,
+                                        mStencilTestStateCurrent->mBackFace,
+                                        mState->mStencilBackFace,
+                                        compareMaskChanged,
+                                        compareReferenceChanged);
     }
     else if (mState->mStencilTestEnabled)
     {

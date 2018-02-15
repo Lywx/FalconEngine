@@ -36,7 +36,20 @@ public:
                const CullState * cullState,
                const DepthTestState * depthTestState,
                const OffsetState * offsetState,
-               const StencilTestState * stencilTestState, const WireframeState * wireframeState);
+               const StencilTestState * stencilTestState,
+               const WireframeState * wireframeState);
+
+    void
+    CreateBlendState(ID3D11Device4 * device,
+                     const BlendState * blendState);
+
+    void
+    CreateDepthStencilState(ID3D11Device4 * device,
+                            const DepthTestState * depthTestState,
+                            const StencilTestState * stencilTestState);
+
+    void
+    CreateRasterizerState(ID3D11Device4 * device);
 
 public:
     Microsoft::WRL::ComPtr<ID3D11BlendState1> mBlendState;

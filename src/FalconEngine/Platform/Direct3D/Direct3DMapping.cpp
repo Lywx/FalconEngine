@@ -159,31 +159,67 @@ const D3D11_BLEND Direct3DBlendFactor[int(BlendFactor::Count)] =
 
 const D3D11_BLEND_OP Direct3DBlendOperator[int(BlendOperator::Count)] =
 {
-    D3D11_BLEND_OP_ADD,          // Add
-    D3D11_BLEND_OP_SUBTRACT,     // Subtract
-    D3D11_BLEND_OP_REV_SUBTRACT, // ReverseSubtract
-    D3D11_BLEND_OP_MIN,          // Min
-    D3D11_BLEND_OP_MAX           // Max
+    D3D11_BLEND_OP_ADD,          // ADD
+    D3D11_BLEND_OP_SUBTRACT,     // SUBTRACT
+    D3D11_BLEND_OP_REV_SUBTRACT, // REVERSE_SUBTRACT
+    D3D11_BLEND_OP_MIN,          // MIN
+    D3D11_BLEND_OP_MAX           // MAX
 };
 
 const D3D11_LOGIC_OP Direct3DLogicOperator[int(LogicOperator::Count)] =
 {
-    D3D11_LOGIC_OP_CLEAR,         // Clear
-    D3D11_LOGIC_OP_SET,           // Set
-    D3D11_LOGIC_OP_COPY,          // Copy
-    D3D11_LOGIC_OP_COPY_INVERTED, // CopyInverted
-    D3D11_LOGIC_OP_NOOP,          // Noop
-    D3D11_LOGIC_OP_INVERT,        // Invert
-    D3D11_LOGIC_OP_AND,           // And
-    D3D11_LOGIC_OP_NAND,          // Nand
-    D3D11_LOGIC_OP_OR,            // Or
-    D3D11_LOGIC_OP_NOR,           // Nor
-    D3D11_LOGIC_OP_XOR,           // Xor
-    D3D11_LOGIC_OP_EQUIV,         // Equiv
-    D3D11_LOGIC_OP_AND_REVERSE,   // AndReverse
-    D3D11_LOGIC_OP_AND_INVERTED,  // AndInverted
-    D3D11_LOGIC_OP_OR_REVERSE,    // OrReverse
-    D3D11_LOGIC_OP_OR_INVERTED,   // OrInverted
+    D3D11_LOGIC_OP_CLEAR,         // CLEAR
+    D3D11_LOGIC_OP_SET,           // SET
+    D3D11_LOGIC_OP_COPY,          // COPY
+    D3D11_LOGIC_OP_COPY_INVERTED, // COPY_INVERTED
+    D3D11_LOGIC_OP_NOOP,          // NOOP
+    D3D11_LOGIC_OP_INVERT,        // INVERT
+    D3D11_LOGIC_OP_AND,           // AND
+    D3D11_LOGIC_OP_NAND,          // NAND
+    D3D11_LOGIC_OP_OR,            // OR
+    D3D11_LOGIC_OP_NOR,           // NOR
+    D3D11_LOGIC_OP_XOR,           // XOR
+    D3D11_LOGIC_OP_EQUIV,         // EQUIV
+    D3D11_LOGIC_OP_AND_REVERSE,   // AND_REVERSE
+    D3D11_LOGIC_OP_AND_INVERTED,  // AND_INVERTED
+    D3D11_LOGIC_OP_OR_REVERSE,    // OR_REVERSE
+    D3D11_LOGIC_OP_OR_INVERTED,   // OR_INVERTED
+};
+
+const D3D11_COMPARISON_FUNC Direct3DDepthFunction[int(DepthFunction::Count)] =
+{
+    D3D11_COMPARISON_NEVER,         // NEVER
+    D3D11_COMPARISON_LESS,          // LESS
+    D3D11_COMPARISON_EQUAL,         // EQUAL
+    D3D11_COMPARISON_LESS_EQUAL,    // LESS_EQUAL
+    D3D11_COMPARISON_GREATER,       // GREATER
+    D3D11_COMPARISON_NOT_EQUAL,     // NOT_EQUAL
+    D3D11_COMPARISON_GREATER_EQUAL, // GREATER_EQUAL
+    D3D11_COMPARISON_ALWAYS,        // ALWAYs
+};
+
+const D3D11_COMPARISON_FUNC Direct3DStencilFunction[int(StencilFunction::Count)] =
+{
+    D3D11_COMPARISON_NEVER,         // NEVER
+    D3D11_COMPARISON_ALWAYS,        // ALWAYS
+    D3D11_COMPARISON_LESS,          // LESS
+    D3D11_COMPARISON_LESS_EQUAL,    // LESS_EQUAL
+    D3D11_COMPARISON_EQUAL,         // EQUAL
+    D3D11_COMPARISON_GREATER,       // GREATER_EQUAL
+    D3D11_COMPARISON_GREATER_EQUAL, // GREATER
+    D3D11_COMPARISON_NOT_EQUAL,     // NOT_EQUAL
+};
+
+const D3D11_STENCIL_OP Direct3DStencilOperation[int(StencilOperation::Count)] =
+{
+    D3D11_STENCIL_OP_KEEP,     // KEEP
+    D3D11_STENCIL_OP_ZERO,     // ZERO
+    D3D11_STENCIL_OP_REPLACE,  // REPLACE
+    D3D11_STENCIL_OP_INCR_SAT, // INCREMENT
+    D3D11_STENCIL_OP_DECR_SAT, // DECREMENT
+    D3D11_STENCIL_OP_INVERT,   // INVERT
+    D3D11_STENCIL_OP_INCR,     // INCREMENT_WRAP
+    D3D11_STENCIL_OP_DECR,     // DECREMENT_WRAP
 };
 
 // https://msdn.microsoft.com/en-us/library/windows/desktop/bb173059(v=vs.85).aspx

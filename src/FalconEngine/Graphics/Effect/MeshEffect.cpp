@@ -41,7 +41,7 @@ MeshEffect::MeshEffect()
     pass->SetCullState(move(cullState));
 
     auto depthTestState = make_unique<DepthTestState>();
-    depthTestState->mTestEnabled = true;
+    depthTestState->mEnabled = true;
     pass->SetDepthTestState(move(depthTestState));
 
     pass->SetOffsetState(make_unique<OffsetState>());

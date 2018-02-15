@@ -1,39 +1,30 @@
 #pragma once
 
 #include <FalconEngine/Core/Macro.h>
+#include <FalconEngine/Math/Type.h>
 
 namespace FalconEngine
 {
-
-enum class StencilCompareFunctoin
-{
-    NEVER,
-    LESS,
-    EQUAL,
-    LEQUAL,
-    GREATER,
-    NOTEQUAL,
-    GEQUAL,
-    ALWAYS,
-
-    Count
-};
 
 enum class StencilFunction
 {
     NEVER,
     ALWAYS,
     LESS,
-    LEQUAL,
-
+    LESS_EQUAL,
     EQUAL,
-    GEQUAL,
-
+    GREATER_EQUAL,
     GREATER,
-    NOTEQUAL,
+    NOT_EQUAL,
 
     Count
 };
+
+inline int
+StencilFunctionIndex(StencilFunction stencilFunction)
+{
+    return int(stencilFunction);
+}
 
 enum class StencilOperation
 {
@@ -49,22 +40,63 @@ enum class StencilOperation
     Count,
 };
 
-class FALCON_ENGINE_API StencilTestState final
+inline int
+StencilOperationIndex(StencilOperation stencilOperation)
+{
+    return int(stencilOperation);
+}
+
+FALCON_ENGINE_CLASS_BEGIN
+StencilTestFaceState
 {
 public:
-    StencilTestState ();
-    ~StencilTestState ();
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
+    StencilTestFaceState() = default;
+    ~StencilTestFaceState() = default;
 
 public:
-    bool            mTestEnabled      = false;
-    StencilFunction mCompareFunction  = StencilFunction::NEVER;
-    unsigned int    mCompareReference = 0;
-    unsigned int    mCompareMask      = UINT_MAX; // 0xFFFFFFFF
-    unsigned int    mWriteMask        = UINT_MAX; // 0xFFFFFFFF
+    // When stencil test passes, depth test fails.
+    StencilOperation mDepthTestFailOperation = StencilOperation::KEEP;
 
-    StencilOperation OnStencilTestFail = StencilOperation::KEEP;
-    StencilOperation OnDepthTestFail   = StencilOperation::KEEP;
-    StencilOperation OnDepthTestPass   = StencilOperation::KEEP;
+    // When stencil test passes depth test passes.
+    StencilOperation mDepthTestPassOperation = StencilOperation::KEEP;
+
+    // When stencil test fails.
+    StencilOperation mStencilTestFailOperation = StencilOperation::KEEP;
+
+    StencilFunction mStencilCompareFunction = StencilFunction::NEVER;
 };
+FALCON_ENGINE_CLASS_END
+
+FALCON_ENGINE_CLASS_BEGIN StencilTestState final
+{
+public:
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
+    StencilTestState();
+    ~StencilTestState();
+
+public:
+    bool mEnabled = false;
+
+    // NOTE(Wuxiang): OpenGL use 32 bit int but Direct3D 11 use 32 bit
+    // unsigned int here. So we have to accommodate for both by using 31 bit
+    // unsigned int, which is not possible so that you have to carefully use this
+    // parameter.
+    unsigned int mCompareReference = 0;
+
+    // NOTE(Wuxiang): Although OpenGL support separate compare and write mask for
+    // both face, Direct3D 11 doesn't support this. So we are taking GCD here.
+    // OpenGL supports 32 bit mask, but Direct3D 11 only supports 8 bit mask.
+    Uint8 mCompareMask = UINT8_MAX; // 0xFF
+    Uint8 mWriteMask = UINT8_MAX; // 0xFF
+
+    StencilTestFaceState mFrontFace;
+    StencilTestFaceState mBackFace;
+};
+FALCON_ENGINE_CLASS_END
 
 }

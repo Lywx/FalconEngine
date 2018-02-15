@@ -49,7 +49,7 @@ PaintEffect::PaintEffect()
     pass->SetCullState(move(cullState));
 
     auto depthTestState = make_unique<DepthTestState>();
-    depthTestState->mTestEnabled = false;
+    depthTestState->mEnabled = false;
     pass->SetDepthTestState(move(depthTestState));
 
     pass->SetOffsetState(make_unique<OffsetState>());

@@ -15,6 +15,20 @@ class OffsetState;
 class StencilTestState;
 class WireframeState;
 
+FALCON_ENGINE_CLASS_BEGIN PlatformStencilTestFaceState
+{
+public:
+    PlatformStencilTestFaceState();
+    ~PlatformStencilTestFaceState() = default;
+
+public:
+    GLenum mDepthTestFailOperation;
+    GLenum mDepthTestPassOperation;
+    GLenum mStencilTestFailOperation;
+    GLenum mStencilCompareFunction;
+};
+FALCON_ENGINE_CLASS_END
+
 // @summary Render state information to avoid redundant state changes.
 FALCON_ENGINE_CLASS_BEGIN PlatformRendererState
 {
@@ -36,6 +50,22 @@ public:
                const OffsetState * offsetState,
                const StencilTestState * stencilTestState,
                const WireframeState * wireframeState);
+
+private:
+    void
+    InitializeBlendState(const BlendState * blendState);
+
+    void
+    InitializeCullState(const CullState * cullState);
+
+    void
+    InitializeDepthTestState(const DepthTestState * depthTestState);
+
+    void
+    InitializeOffsetState(const OffsetState * offsetState);
+
+    void
+    InitializeStencilTestState(const StencilTestState * stencilTestState);
 
 public:
     /************************************************************************/
@@ -79,15 +109,17 @@ public:
     /* Stencil Test                                                         */
     /************************************************************************/
     bool   mStencilTestEnabled;
-    GLenum mStencilCompareFunction;
+
     GLuint mStencilCompareReference;
     GLuint mStencilCompareMask;
     GLuint mStencilWriteMask;
-    GLenum mStencilOnStencilTestFail;
-    GLenum mStencilOnDepthTestFail;
-    GLenum mStencilOnDepthTestPass;
 
-    // Wireframe Mode
+    PlatformStencilTestFaceState mStencilFrontFace;
+    PlatformStencilTestFaceState mStencilBackFace;
+
+    /************************************************************************/
+    /* Wireframe                                                            */
+    /************************************************************************/
     bool mWireframeEnabled;
 };
 FALCON_ENGINE_CLASS_END

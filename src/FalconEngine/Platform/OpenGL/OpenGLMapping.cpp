@@ -202,42 +202,42 @@ const GLenum OpenGLBlendFactor[int(BlendFactor::Count)] =
 const GLenum OpenGLBlendOperator[int(BlendOperator::Count)] =
 {
     GL_FUNC_ADD,              // Add
-    GL_FUNC_SUBTRACT,         // Subtract
-    GL_FUNC_REVERSE_SUBTRACT, // ReverseSubtract
-    GL_MIN,                   // Min
-    GL_MAX,                   // Max
+    GL_FUNC_SUBTRACT,         // SUBTRACT
+    GL_FUNC_REVERSE_SUBTRACT, // REVERSE_SUBTRACT
+    GL_MIN,                   // MIN
+    GL_MAX,                   // MAX
 };
 
 const GLenum OpenGLLogicOperator[int(LogicOperator::Count)] =
 {
-    GL_CLEAR,         // Clear
-    GL_SET,           // Set
-    GL_COPY,          // Copy
-    GL_COPY_INVERTED, // CopyInverted
-    GL_NOOP,          // Noop
-    GL_INVERT,        // Invert
-    GL_AND,           // And
-    GL_NAND,          // Nand
-    GL_OR,            // Or
-    GL_NOR,           // Nor
-    GL_XOR,           // Xor
-    GL_EQUIV,         // Equiv
-    GL_AND_REVERSE,   // AndReverse
-    GL_AND_INVERTED,  // AndInverted
-    GL_OR_REVERSE,    // OrReverse
-    GL_OR_INVERTED,   // OrInverted
+    GL_CLEAR,         // CLEAR
+    GL_SET,           // SET
+    GL_COPY,          // COPY
+    GL_COPY_INVERTED, // COPY_INVERTED
+    GL_NOOP,          // NOOP
+    GL_INVERT,        // INVERT
+    GL_AND,           // AND
+    GL_NAND,          // NAND
+    GL_OR,            // OR
+    GL_NOR,           // NOR
+    GL_XOR,           // XOR
+    GL_EQUIV,         // EQUIV
+    GL_AND_REVERSE,   // AND_REVERSE
+    GL_AND_INVERTED,  // AND_INVERTED
+    GL_OR_REVERSE,    // OR_REVERSE
+    GL_OR_INVERTED,   // OR_INVERTEd
 };
 
 const GLenum OpenGLDepthFunction[int(DepthFunction::Count)] =
 {
-    GL_NEVER,    // Never passes.
-    GL_LESS,     // Passes if the incoming depth value is less than the stored depth value.
-    GL_EQUAL,    // Passes if the incoming depth value is equal to the stored depth value.
-    GL_LEQUAL,   // Passes if the incoming depth value is less than or equal to the stored depth value.
-    GL_GREATER,  // Passes if the incoming depth value is greater than the stored depth value.
-    GL_NOTEQUAL, // Passes if the incoming depth value is not equal to the stored depth value.
-    GL_GEQUAL,   // Passes if the incoming depth value is greater than or equal to the stored depth value.
-    GL_ALWAYS,
+    GL_NEVER,    // NEVER
+    GL_LESS,     // LESS
+    GL_EQUAL,    // EQUAL
+    GL_LEQUAL,   // LESS_EQUAL
+    GL_GREATER,  // GREATER
+    GL_NOTEQUAL, // NOT_EQUAL
+    GL_GEQUAL,   // GREATER_EQUAL
+    GL_ALWAYS,   // ALWAYS
 };
 
 const GLenum OpenGLStencilFunction[int(StencilFunction::Count)] =

@@ -25,7 +25,6 @@ Renderer::InitializePlatform()
 void
 Renderer::InitializeDataPlatform()
 {
-    // Initialize platform renderer data.
     mData = std::unique_ptr<PlatformRendererData, PlatformRendererDataDeleter>(
                 new PlatformRendererData(GameEnginePlatform::GetInstance()->mWindow->mHandle),
                 PlatformRendererDataDeleter());
@@ -34,7 +33,6 @@ Renderer::InitializeDataPlatform()
 void
 Renderer::InitializeStatePlatform()
 {
-    // Initialize platform renderer state.
     mState = std::unique_ptr<PlatformRendererState, PlatformRendererStateDeleter>(
                  new PlatformRendererState(),
                  PlatformRendererStateDeleter());

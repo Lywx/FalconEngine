@@ -25,334 +25,55 @@ void
 Renderer::SetBlendStatePlatform(const BlendState *blendState)
 {
     FALCON_ENGINE_CHECK_NULLPTR(blendState);
-
     mBlendStateCurrent = blendState;
 
-    if (mBlendStateCurrent->mEnabled)
-    {
-        if (!mState->mBlendEnabled)
-        {
-            mState->mBlendEnabled = true;
-            glEnable(GL_BLEND);
-        }
-
-        GLenum sourceFactorAlpha = OpenGLBlendFactor[BlendFactorIndex(mBlendStateCurrent->mSourceFactorAlpha)];
-        GLenum sourceFactor = OpenGLBlendFactor[BlendFactorIndex(mBlendStateCurrent->mSourceFactor)];
-        GLenum destinationFactor = OpenGLBlendFactor[BlendFactorIndex(mBlendStateCurrent->mDestinationFactor)];
-        GLenum destinationFactorAlpha = OpenGLBlendFactor[BlendFactorIndex(mBlendStateCurrent->mDestinationFactorAlpha)];
-        if (sourceFactor != mState->mBlendSourceFactor
-                || sourceFactorAlpha != mState->mBlendSourceFactorAlpha
-                || destinationFactor != mState->mBlendDestinationFactor
-                || destinationFactorAlpha != mState->mBlendDestinationFactorAlpha)
-        {
-            mState->mBlendSourceFactor = sourceFactor;
-            mState->mBlendSourceFactorAlpha = sourceFactorAlpha;
-            mState->mBlendDestinationFactor = destinationFactor;
-            mState->mBlendDestinationFactorAlpha = destinationFactorAlpha;
-            glBlendFuncSeparate(sourceFactor, destinationFactor, sourceFactorAlpha, destinationFactorAlpha);
-        }
-
-        if (mBlendStateCurrent->mConstantFactor != mState->mBlendConstantFactor)
-        {
-            mState->mBlendConstantFactor = mBlendStateCurrent->mConstantFactor;
-            glBlendColor(
-                mState->mBlendConstantFactor[0],
-                mState->mBlendConstantFactor[1],
-                mState->mBlendConstantFactor[2],
-                mState->mBlendConstantFactor[3]);
-        }
-
-        auto blendOperator = OpenGLBlendOperator[BlendOperatorIndex(mBlendStateCurrent->mOperator)];
-        auto blendOperatorAlpha = OpenGLBlendOperator[BlendOperatorIndex(mBlendStateCurrent->mOperatorAlpha)];
-        if (blendOperator != mState->mBlendOperator
-                || blendOperatorAlpha != mState->mBlendOperatorAlpha)
-        {
-            mState->mBlendOperator = blendOperator;
-            mState->mBlendOperatorAlpha = blendOperatorAlpha;
-            glBlendEquationSeparate(blendOperator, blendOperatorAlpha);
-        }
-
-        if (mBlendStateCurrent->mLogicEnabled)
-        {
-            if (!mState->mLogicEnabled)
-            {
-                mState->mLogicEnabled = true;
-                glEnable(GL_COLOR_LOGIC_OP);
-            }
-
-            auto logicOperator = OpenGLLogicOperator[LogicOperatorIndex(mBlendStateCurrent->mLogicOperator)];
-            if (logicOperator != mState->mLogicOperator)
-            {
-                mState->mLogicOperator = logicOperator;
-                glLogicOp(logicOperator);
-            }
-        }
-        else if (mState->mLogicEnabled)
-        {
-            mState->mLogicEnabled = false;
-            glDisable(GL_COLOR_LOGIC_OP);
-        }
-    }
-    else if (mState->mBlendEnabled)
-    {
-        mState->mBlendEnabled = false;
-        glDisable(GL_BLEND);
-    }
+    mState->mBlendState.Set(mBlendStateCurrent);
 }
 
 void
 Renderer::SetCullStatePlatform(const CullState *cullState)
 {
     FALCON_ENGINE_CHECK_NULLPTR(cullState);
-
     mCullStateCurrent = cullState;
 
-    if (mCullStateCurrent->mEnabled)
-    {
-        if (!mState->mCullEnabled)
-        {
-            mState->mCullEnabled = true;
-            glEnable(GL_CULL_FACE);
-            glFrontFace(GL_CCW);
-            glCullFace(GL_BACK);
-        }
-
-        bool cullCounterClockwise = mCullStateCurrent->mCounterClockwise;
-        if (cullCounterClockwise != mState->mCullCounterClockwise)
-        {
-            mState->mCullCounterClockwise = cullCounterClockwise;
-            if (mState->mCullCounterClockwise)
-            {
-                glCullFace(GL_FRONT);
-            }
-            else
-            {
-                glCullFace(GL_BACK);
-            }
-        }
-    }
-    else if (mState->mCullEnabled)
-    {
-        mState->mCullEnabled = false;
-        glDisable(GL_CULL_FACE);
-    }
+    mState->mCullState.Set(mCullStateCurrent);
 }
 
 void
 Renderer::SetDepthTestStatePlatform(const DepthTestState *depthTestState)
 {
     FALCON_ENGINE_CHECK_NULLPTR(depthTestState);
-
     mDepthTestStateCurrent = depthTestState;
 
-    if (mDepthTestStateCurrent->mEnabled)
-    {
-        if (!mState->mDepthTestEnabled)
-        {
-            mState->mDepthTestEnabled = true;
-            glEnable(GL_DEPTH_TEST);
-        }
-
-        GLenum compareFunction = OpenGLDepthFunction[int(mDepthTestStateCurrent->mCompareFunction)];
-        if (compareFunction != mState->mDepthCompareFunction)
-        {
-            mState->mDepthCompareFunction = compareFunction;
-            glDepthFunc(compareFunction);
-        }
-    }
-    else if (mState->mDepthTestEnabled)
-    {
-        mState->mDepthTestEnabled = false;
-        glDisable(GL_DEPTH_TEST);
-    }
-
-    if (mDepthTestStateCurrent->mWriteEnabled)
-    {
-        if (!mState->mDepthWriteEnabled)
-        {
-            mState->mDepthWriteEnabled = true;
-            glDepthMask(GL_TRUE);
-        }
-    }
-    else if (mState->mDepthWriteEnabled)
-    {
-        mState->mDepthWriteEnabled = false;
-        glDepthMask(GL_FALSE);
-    }
+    mState->mDepthTestState.Set(mDepthTestStateCurrent);
 }
 
 void
 Renderer::SetOffsetStatePlatform(const OffsetState *offsetState)
 {
     FALCON_ENGINE_CHECK_NULLPTR(offsetState);
-
     mOffsetStateCurrent = offsetState;
 
-    if (mOffsetStateCurrent->mFillEnabled)
-    {
-        if (!mState->mOffsetFillEnabled)
-        {
-            mState->mOffsetFillEnabled = true;
-            glEnable(GL_POLYGON_OFFSET_FILL);
-        }
-    }
-    else if (mState->mOffsetFillEnabled)
-    {
-        mState->mOffsetFillEnabled = false;
-        glDisable(GL_POLYGON_OFFSET_FILL);
-    }
+    mState->mOffsetState.Set(mOffsetStateCurrent);
 
-    if (mOffsetStateCurrent->mLineEnabled)
-    {
-        if (!mState->mOffsetLineEnabled)
-        {
-            mState->mOffsetLineEnabled = true;
-            glEnable(GL_POLYGON_OFFSET_LINE);
-        }
-    }
-    else if (mState->mOffsetLineEnabled)
-    {
-        mState->mOffsetLineEnabled = false;
-        glDisable(GL_POLYGON_OFFSET_LINE);
-    }
-
-    if (mOffsetStateCurrent->mPointEnabled)
-    {
-        if (!mState->mOffsetPointEnabled)
-        {
-            mState->mOffsetPointEnabled = true;
-            glEnable(GL_POLYGON_OFFSET_POINT);
-        }
-    }
-    else if (mState->mOffsetPointEnabled)
-    {
-        mState->mOffsetPointEnabled = false;
-        glDisable(GL_POLYGON_OFFSET_POINT);
-    }
-
-    if (mOffsetStateCurrent->mFactor != mState->mOffsetFactor
-            || mOffsetStateCurrent->mUnit != mState->mOffsetUnit)
-    {
-        mState->mOffsetFactor = mOffsetStateCurrent->mFactor;
-        mState->mOffsetUnit = mOffsetStateCurrent->mUnit;
-        glPolygonOffset(mOffsetStateCurrent->mFactor, mOffsetStateCurrent->mUnit);
-    }
-}
-
-void
-SetStencilTestFaceStatePlatform(_IN_ const PlatformRendererState *rendererState,
-                                _IN_ GLenum face,
-                                _IN_ const StencilTestFaceState& faceStateCurrent,
-                                _IN_OUT_ PlatformStencilTestFaceState& faceStatePlatform,
-                                _IN_ bool compareMaskChanged,
-                                _IN_ bool compareReferenceChanged)
-{
-    GLenum compareFunction = OpenGLStencilFunction[StencilFunctionIndex(
-                                 faceStateCurrent.mStencilCompareFunction)];
-    if (compareFunction != faceStatePlatform.mStencilCompareFunction
-            || compareMaskChanged
-            || compareReferenceChanged)
-    {
-        faceStatePlatform.mStencilCompareFunction = compareFunction;
-        glStencilFuncSeparate(face,
-                              compareFunction,
-                              rendererState->mStencilCompareReference,
-                              rendererState->mStencilCompareMask);
-    }
-
-    GLenum stencilTestFailOperation = OpenGLStencilOperation[StencilOperationIndex(faceStateCurrent.mStencilTestFailOperation)];
-    GLenum depthTestFailOperation = OpenGLStencilOperation[StencilOperationIndex(faceStateCurrent.mDepthTestFailOperation)];
-    GLenum depthTestPassOperation = OpenGLStencilOperation[StencilOperationIndex(faceStateCurrent.mDepthTestPassOperation)];
-    if (stencilTestFailOperation != faceStatePlatform.mStencilTestFailOperation
-            || depthTestFailOperation != faceStatePlatform.mDepthTestFailOperation
-            || depthTestPassOperation != faceStatePlatform.mDepthTestPassOperation)
-    {
-        faceStatePlatform.mStencilTestFailOperation = stencilTestFailOperation;
-        faceStatePlatform.mDepthTestFailOperation = depthTestFailOperation;
-        faceStatePlatform.mDepthTestPassOperation = depthTestPassOperation;
-        glStencilOpSeparate(face,
-                            stencilTestFailOperation,
-                            depthTestFailOperation,
-                            depthTestPassOperation);
-    }
 }
 
 void
 Renderer::SetStencilTestStatePlatform(const StencilTestState *stencilTestState)
 {
     FALCON_ENGINE_CHECK_NULLPTR(stencilTestState);
-
     mStencilTestStateCurrent = stencilTestState;
 
-    if (mStencilTestStateCurrent->mEnabled)
-    {
-        if (!mState->mStencilTestEnabled)
-        {
-            mState->mStencilTestEnabled = true;
-            glEnable(GL_STENCIL_TEST);
-        }
-
-        if (unsigned int(mStencilTestStateCurrent->mWriteMask) != mState->mStencilWriteMask)
-        {
-            mState->mStencilWriteMask = unsigned int(mStencilTestStateCurrent->mWriteMask);
-            glStencilMask(mStencilTestStateCurrent->mWriteMask);
-        }
-
-        bool compareMaskChanged = false;
-        if (unsigned int(mStencilTestStateCurrent->mCompareMask) != mState->mStencilCompareMask)
-        {
-            mState->mStencilCompareMask = unsigned int(mStencilTestStateCurrent->mCompareMask);
-            compareMaskChanged = true;
-        }
-
-        bool compareReferenceChanged = false;
-        if (mStencilTestStateCurrent->mCompareReference != mState->mStencilCompareReference)
-        {
-            mState->mStencilCompareReference = mStencilTestStateCurrent->mCompareReference;
-            compareReferenceChanged = true;
-        }
-
-        SetStencilTestFaceStatePlatform(mState.get(),
-                                        GL_FRONT,
-                                        mStencilTestStateCurrent->mFrontFace,
-                                        mState->mStencilFrontFace,
-                                        compareMaskChanged,
-                                        compareReferenceChanged);
-
-        SetStencilTestFaceStatePlatform(mState.get(),
-                                        GL_BACK,
-                                        mStencilTestStateCurrent->mBackFace,
-                                        mState->mStencilBackFace,
-                                        compareMaskChanged,
-                                        compareReferenceChanged);
-    }
-    else if (mState->mStencilTestEnabled)
-    {
-        mState->mStencilTestEnabled = false;
-        glDisable(GL_STENCIL_TEST);
-    }
+    mState->mStencilTestState.Set(mStencilTestStateCurrent);
 }
 
 void
 Renderer::SetWireframeStatePlatform(const WireframeState *wireframeState)
 {
     FALCON_ENGINE_CHECK_NULLPTR(wireframeState);
-
     mWireframeStateCurrent = wireframeState;
 
-    if (mWireframeStateCurrent->mEnabled)
-    {
-        if (!mState->mWireframeEnabled)
-        {
-            mState->mWireframeEnabled = true;
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        }
-    }
-    else if (mState->mWireframeEnabled)
-    {
-        mState->mWireframeEnabled = false;
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }
+    mState->mWireframeState.Set(wireframeState);
 }
 
 /************************************************************************/

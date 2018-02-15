@@ -11,11 +11,11 @@ namespace FalconEngine
 // resolvable depth difference (OpenGL implementation specific). Negative
 // values move polygons closer to the eye.
 // @ref Dave Shreiner, etc OpenGL Programming Guide, 8th, 2013, P164
-class FALCON_ENGINE_API OffsetState final
+FALCON_ENGINE_CLASS_BEGIN OffsetState final
 {
 public:
     OffsetState();
-    ~OffsetState();
+    ~OffsetState() = default;
 
 public:
     bool  mFillEnabled  = false;
@@ -25,5 +25,6 @@ public:
     float mFactor = 0.0f; // Offset factor, positive or negative
     float mUnit   = 0.0f; // Offset unit, positive or negative
 };
+FALCON_ENGINE_CLASS_END
 
 }

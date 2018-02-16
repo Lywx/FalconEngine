@@ -49,7 +49,10 @@ public:
                             const StencilTestState * stencilTestState);
 
     void
-    CreateRasterizerState(ID3D11Device4 * device);
+    CreateRasterizerState(ID3D11Device4 * device,
+                          const CullState * cullState,
+                          const OffsetState * offsetState,
+                          const WireframeState * wireframeState);
 
 public:
     Microsoft::WRL::ComPtr<ID3D11BlendState1> mBlendState;

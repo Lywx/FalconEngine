@@ -18,12 +18,12 @@ public:
     ~OffsetState() = default;
 
 public:
-    bool  mFillEnabled  = false;
-    bool  mLineEnabled  = false;
-    bool  mPointEnabled = false;
+    bool mFillEnabled  = false;
+    bool mLineEnabled  = false;
+    bool mPointEnabled = false;
 
-    float mFactor = 0.0f; // Offset factor, positive or negative
-    float mUnit   = 0.0f; // Offset unit, positive or negative
+    float mBiasFactor = 0.0f; // Offset factor in term of gradient operator of depth, positive or negative.
+    float mBiasUnit = 0.0f; // Offset unit in term of smallest depth value difference, positive or negative.
 };
 FALCON_ENGINE_CLASS_END
 

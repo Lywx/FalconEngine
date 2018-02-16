@@ -34,29 +34,15 @@ PlatformRendererState::Initialize(ID3D11DeviceContext4 *context,
 {
     // Blend State
     CreateBlendState(device, blendState);
-
     // NEW(Wuxiang): Add alpha to coverage support.
     context->OMSetBlendState(mBlendState.Get(), blendState->mConstantFactor.Data(), 0xffffffff);
 
     // Depth Stencil State
     CreateDepthStencilState(device, depthTestState, stencilTestState);
-
     context->OMSetDepthStencilState(mDepthStencilState.Get(), stencilTestState->mCompareReference);
 
     // Rasterizer State
-
-    D3D11_RASTERIZER_DESC rasterizerDesc;
-    ZeroMemory(&rasterizerDesc, sizeof rasterizerDesc);
-    rasterizerDesc.AntialiasedLineEnable = false;
-    rasterizerDesc.CullMode = D3D11_CULL_BACK;
-    rasterizerDesc.FillMode = D3D11_FILL_SOLID;
-    rasterizerDesc.FrontCounterClockwise = false;
-    rasterizerDesc.DepthBias = 0;
-    rasterizerDesc.DepthBiasClamp = 0.0f;
-    rasterizerDesc.DepthClipEnable = true;
-    rasterizerDesc.ScissorEnable = false;
-    rasterizerDesc.MultisampleEnable = false;
-    device->CreateRasterizerState(&rasterizerDesc, mRasterizerState.ReleaseAndGetAddressOf());
+    CreateRasterizerState(device, cullState, offsetState, wireframeState);
     context->RSSetState(mRasterizerState.Get());
 }
 
@@ -121,6 +107,61 @@ PlatformRendererState::CreateDepthStencilState(
     SetStencilTestFaceStatePlatform(stencilTestState->mBackFace, depthStencilDesc.BackFace);
 
     device->CreateDepthStencilState(&depthStencilDesc, mDepthStencilState.ReleaseAndGetAddressOf());
+}
+
+void
+PlatformRendererState::CreateRasterizerState(
+    ID3D11Device4 *device,
+    const CullState *cullState,
+    const OffsetState *offsetState,
+    const WireframeState *wireframeState)
+{
+    D3D11_RASTERIZER_DESC rasterizerDesc;
+    ZeroMemory(&rasterizerDesc, sizeof rasterizerDesc);
+
+    // NEW(Wuxiang): Add line anti-aliasing support.
+    rasterizerDesc.AntialiasedLineEnable = false;
+
+    if (wireframeState->mEnabled)
+    {
+        rasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
+    }
+    else
+    {
+        rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+    }
+
+    if (cullState->mEnabled)
+    {
+        if (cullState->mCounterClockwise)
+        {
+            rasterizerDesc.CullMode = D3D11_CULL_FRONT;
+        }
+        else
+        {
+            rasterizerDesc.CullMode = D3D11_CULL_BACK;
+        }
+    }
+    else
+    {
+        rasterizerDesc.CullMode = D3D11_CULL_NONE;
+    }
+
+    rasterizerDesc.FrontCounterClockwise = true;
+
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/cc308048(v=vs.85).aspx
+    rasterizerDesc.DepthBias = offsetState->mBiasUnit;
+    rasterizerDesc.DepthBiasClamp = 0.0f;
+    rasterizerDesc.SlopeScaledDepthBias = offsetState->mBiasFactor;
+
+    rasterizerDesc.DepthClipEnable = true;
+
+    // NEW(Wuxiang): Added scissor test support.
+    rasterizerDesc.ScissorEnable = false;
+
+    // NEW(Wuxiang): Added multisample support.
+    rasterizerDesc.MultisampleEnable = false;
+    device->CreateRasterizerState(&rasterizerDesc, mRasterizerState.ReleaseAndGetAddressOf());
 }
 
 }

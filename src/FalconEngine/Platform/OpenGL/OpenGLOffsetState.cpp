@@ -26,8 +26,8 @@ PlatformOffsetState::Initialize(const OffsetState *offsetState)
     mOffsetFillEnabled = offsetState->mFillEnabled;
     mOffsetLineEnabled = offsetState->mLineEnabled;
     mOffsetPointEnabled = offsetState->mPointEnabled;
-    mOffsetFactor = offsetState->mFactor;
-    mOffsetUnit = offsetState->mUnit;
+    mOffsetFactor = offsetState->mBiasFactor;
+    mOffsetUnit = offsetState->mBiasUnit;
 
     mOffsetFillEnabled ? glEnable(GL_POLYGON_OFFSET_FILL) : glDisable(GL_POLYGON_OFFSET_FILL);
     mOffsetLineEnabled ? glEnable(GL_POLYGON_OFFSET_LINE) : glDisable(GL_POLYGON_OFFSET_LINE);
@@ -80,12 +80,12 @@ PlatformOffsetState::Set(const OffsetState *offsetState)
         glDisable(GL_POLYGON_OFFSET_POINT);
     }
 
-    if (offsetState->mFactor != mOffsetFactor
-            || offsetState->mUnit != mOffsetUnit)
+    if (offsetState->mBiasFactor != mOffsetFactor
+            || offsetState->mBiasUnit != mOffsetUnit)
     {
-        mOffsetFactor = offsetState->mFactor;
-        mOffsetUnit = offsetState->mUnit;
-        glPolygonOffset(offsetState->mFactor, offsetState->mUnit);
+        mOffsetFactor = offsetState->mBiasFactor;
+        mOffsetUnit = offsetState->mBiasUnit;
+        glPolygonOffset(offsetState->mBiasFactor, offsetState->mBiasUnit);
     }
 }
 

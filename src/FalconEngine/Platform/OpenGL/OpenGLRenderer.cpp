@@ -19,64 +19,6 @@ namespace FalconEngine
 {
 
 /************************************************************************/
-/* State Management                                                     */
-/************************************************************************/
-void
-Renderer::SetBlendStatePlatform(const BlendState *blendState)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(blendState);
-    mBlendStateCurrent = blendState;
-
-    mState->mBlendState.Set(mBlendStateCurrent);
-}
-
-void
-Renderer::SetCullStatePlatform(const CullState *cullState)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(cullState);
-    mCullStateCurrent = cullState;
-
-    mState->mCullState.Set(mCullStateCurrent);
-}
-
-void
-Renderer::SetDepthTestStatePlatform(const DepthTestState *depthTestState)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(depthTestState);
-    mDepthTestStateCurrent = depthTestState;
-
-    mState->mDepthTestState.Set(mDepthTestStateCurrent);
-}
-
-void
-Renderer::SetOffsetStatePlatform(const OffsetState *offsetState)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(offsetState);
-    mOffsetStateCurrent = offsetState;
-
-    mState->mOffsetState.Set(mOffsetStateCurrent);
-
-}
-
-void
-Renderer::SetStencilTestStatePlatform(const StencilTestState *stencilTestState)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(stencilTestState);
-    mStencilTestStateCurrent = stencilTestState;
-
-    mState->mStencilTestState.Set(mStencilTestStateCurrent);
-}
-
-void
-Renderer::SetWireframeStatePlatform(const WireframeState *wireframeState)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(wireframeState);
-    mWireframeStateCurrent = wireframeState;
-
-    mState->mWireframeState.Set(wireframeState);
-}
-
-/************************************************************************/
 /* Viewport Management                                                  */
 /************************************************************************/
 void

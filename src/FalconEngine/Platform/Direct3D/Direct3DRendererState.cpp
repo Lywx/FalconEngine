@@ -32,16 +32,16 @@ PlatformRendererState::Initialize(ID3D11DeviceContext4 *context,
                                   const StencilTestState *stencilTestState,
                                   const WireframeState *wireframeState)
 {
-    // Blend State
+    // NOTE(Wuxiang): D3D Blend State consists of FE Blend State.
     CreateBlendState(device, blendState);
     // NEW(Wuxiang): Add alpha to coverage support.
     context->OMSetBlendState(mBlendState.Get(), blendState->mConstantFactor.Data(), 0xffffffff);
 
-    // Depth Stencil State
+    // NOTE(Wuxiang): D3D Depth Stencil State consists of FE Depth Test State and Stencil Test State.
     CreateDepthStencilState(device, depthTestState, stencilTestState);
     context->OMSetDepthStencilState(mDepthStencilState.Get(), stencilTestState->mCompareReference);
 
-    // Rasterizer State
+    // NOTE(Wuxiang): D3D Rasterizer State consists of FE Cull State, Offset State and Wireframe State.
     CreateRasterizerState(device, cullState, offsetState, wireframeState);
     context->RSSetState(mRasterizerState.Get());
 }
@@ -162,6 +162,36 @@ PlatformRendererState::CreateRasterizerState(
     // NEW(Wuxiang): Added multisample support.
     rasterizerDesc.MultisampleEnable = false;
     device->CreateRasterizerState(&rasterizerDesc, mRasterizerState.ReleaseAndGetAddressOf());
+}
+
+void
+PlatformRendererState::Set(const BlendState *blendState)
+{
+}
+
+void
+PlatformRendererState::Set(const CullState *cullState)
+{
+}
+
+void
+PlatformRendererState::Set(const DepthTestState *depthTestState)
+{
+}
+
+void
+PlatformRendererState::Set(const OffsetState *offsetState)
+{
+}
+
+void
+PlatformRendererState::Set(const StencilTestState *stencilTestState)
+{
+}
+
+void
+PlatformRendererState::Set(const WireframeState *wireframeState)
+{
 }
 
 }

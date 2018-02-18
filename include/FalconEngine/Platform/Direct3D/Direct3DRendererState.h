@@ -16,6 +16,7 @@ class StencilTestState;
 class WireframeState;
 
 // @summary Render state information to avoid redundant state changes.
+// @remark Basically, all the draw call's state should be tracked here.
 FALCON_ENGINE_CLASS_BEGIN PlatformRendererState
 {
 public:
@@ -40,6 +41,25 @@ public:
                const WireframeState * wireframeState);
 
     void
+    Set(const BlendState * blendState);
+
+    void
+    Set(const CullState * cullState);
+
+    void
+    Set(const DepthTestState * depthTestState);
+
+    void
+    Set(const OffsetState * offsetState);
+
+    void
+    Set(const StencilTestState * stencilTestState);
+
+    void
+    Set(const WireframeState * wireframeState);
+
+private:
+    void
     CreateBlendState(ID3D11Device4 * device,
                      const BlendState * blendState);
 
@@ -54,12 +74,11 @@ public:
                           const OffsetState * offsetState,
                           const WireframeState * wireframeState);
 
-public:
+private:
     Microsoft::WRL::ComPtr<ID3D11BlendState1> mBlendState;
     Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mDepthStencilState;
     Microsoft::WRL::ComPtr<ID3D11RasterizerState> mRasterizerState;
 };
-
 FALCON_ENGINE_CLASS_END
 
 }

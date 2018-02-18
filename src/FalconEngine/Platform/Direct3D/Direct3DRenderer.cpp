@@ -174,45 +174,6 @@ Renderer::DestroyPlatform()
 }
 
 /************************************************************************/
-/* State Management                                                     */
-/************************************************************************/
-void
-Renderer::SetBlendStatePlatform(const BlendState *blendState)
-{
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-}
-
-void
-Renderer::SetCullStatePlatform(const CullState *cullState)
-{
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-}
-
-void
-Renderer::SetDepthTestStatePlatform(const DepthTestState *depthTestState)
-{
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-}
-
-void
-Renderer::SetOffsetStatePlatform(const OffsetState *offsetState)
-{
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-}
-
-void
-Renderer::SetStencilTestStatePlatform(const StencilTestState *stencilTestState)
-{
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-}
-
-void
-Renderer::SetWireframeStatePlatform(const WireframeState *wireframeState)
-{
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-}
-
-/************************************************************************/
 /* Viewport Management                                                  */
 /************************************************************************/
 void

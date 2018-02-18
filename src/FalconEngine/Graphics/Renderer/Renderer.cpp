@@ -42,32 +42,33 @@ using namespace std;
 #include <FalconEngine/Platform/OpenGL/OpenGLIndexBuffer.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLVertexBuffer.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLVertexFormat.h>
+#include <FalconEngine/Platform/OpenGL/OpenGLRendererState.h>
+#include <FalconEngine/Platform/OpenGL/OpenGLShader.h>
+#include <FalconEngine/Platform/OpenGL/OpenGLShaderBuffer.h>
+#include <FalconEngine/Platform/OpenGL/OpenGLShaderUniform.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLTexture1d.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLTexture1dArray.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLTexture2d.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLTexture2dArray.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLTexture3d.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLTextureSampler.h>
-#include <FalconEngine/Platform/OpenGL/OpenGLShader.h>
-#include <FalconEngine/Platform/OpenGL/OpenGLShaderBuffer.h>
-#include <FalconEngine/Platform/OpenGL/OpenGLShaderUniform.h>
 #endif
 
 #if defined(FALCON_ENGINE_API_DIRECT3D)
 #include <FalconEngine/Platform/Direct3D/Direct3DIndexBuffer.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DVertexBuffer.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DVertexFormat.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DRendererData.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DRendererState.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DShader.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DShaderBuffer.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DShaderUniform.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DTexture1d.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DTexture1dArray.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DTexture2d.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DTexture2dArray.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DTexture3d.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DTextureSampler.h>
-#include <FalconEngine/Platform/Direct3D/Direct3DRendererData.h>
-#include <FalconEngine/Platform/Direct3D/Direct3DRendererState.h>
-#include <FalconEngine/Platform/Direct3D/Direct3DShader.h>
-#include <FalconEngine/Platform/Direct3D/Direct3DShaderBuffer.h>
-#include <FalconEngine/Platform/Direct3D/Direct3DShaderUniform.h>
 #endif
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
@@ -1038,12 +1039,13 @@ Renderer::Enable(const VisualEffectPass *pass)
     }
 
     // Set pass' render states.
-    SetBlendStatePlatform(pass->GetBlendState());
-    SetCullStatePlatform(pass->GetCullState());
-    SetDepthTestStatePlatform(pass->GetDepthTestState());
-    SetOffsetStatePlatform(pass->GetOffsetState());
-    SetStencilTestStatePlatform(pass->GetStencilTestState());
-    SetWireframeStatePlatform(pass->GetWireframeState());
+    SetBlendState(pass->GetBlendState());
+    SetCullState(pass->GetCullState());
+    SetDepthTestState(pass->GetDepthTestState());
+    SetOffsetState(pass->GetOffsetState());
+    SetStencilTestState(pass->GetStencilTestState());
+    SetWireframeState(pass->GetWireframeState());
+    ValidateStatePlatform();
 }
 
 void
@@ -1117,6 +1119,63 @@ Renderer::Update(const VisualEffectInstancePass *pass, ShaderUniform *uniform, c
         // arbitrarily.
         PlatformShaderUniform::UpdateContext(uniform);
     }
+}
+
+/************************************************************************/
+/* State Management                                                     */
+/************************************************************************/
+void
+Renderer::SetBlendState(const BlendState *blendState)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(blendState);
+    mBlendStateCurrent = blendState;
+
+    mState->Set(mBlendStateCurrent);
+}
+
+void
+Renderer::SetCullState(const CullState *cullState)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(cullState);
+    mCullStateCurrent = cullState;
+
+    mState->Set(mCullStateCurrent);
+}
+
+void
+Renderer::SetDepthTestState(const DepthTestState *depthTestState)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(depthTestState);
+    mDepthTestStateCurrent = depthTestState;
+
+    mState->Set(mDepthTestStateCurrent);
+}
+
+void
+Renderer::SetOffsetState(const OffsetState *offsetState)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(offsetState);
+    mOffsetStateCurrent = offsetState;
+
+    mState->Set(mOffsetStateCurrent);
+}
+
+void
+Renderer::SetStencilTestState(const StencilTestState *stencilTestState)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(stencilTestState);
+    mStencilTestStateCurrent = stencilTestState;
+
+    mState->Set(mStencilTestStateCurrent);
+}
+
+void
+Renderer::SetWireframeState(const WireframeState *wireframeState)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(wireframeState);
+    mWireframeStateCurrent = wireframeState;
+
+    mState->Set(mWireframeStateCurrent);
 }
 
 /************************************************************************/

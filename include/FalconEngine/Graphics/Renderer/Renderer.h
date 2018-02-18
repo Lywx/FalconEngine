@@ -562,6 +562,27 @@ public:
     Update(const VisualEffectInstancePass *pass, ShaderUniform *uniform, const Camera *camera, const Visual *visual);
 
     /************************************************************************/
+    /* State Management                                                     */
+    /************************************************************************/
+    void
+    SetBlendState(const BlendState *blendState);
+
+    void
+    SetCullState(const CullState *cullState);
+
+    void
+    SetDepthTestState(const DepthTestState *depthTestState);
+
+    void
+    SetOffsetState(const OffsetState *offsetState);
+
+    void
+    SetStencilTestState(const StencilTestState *stencilTestState);
+
+    void
+    SetWireframeState(const WireframeState *wireframeState);
+
+    /************************************************************************/
     /* Draw                                                                 */
     /************************************************************************/
     // @summary Draw single instance of visual.
@@ -579,29 +600,26 @@ private:
     // NOTE(Wuxiang): The reason I choose to use std::map here is that the element
     // number is relatively small to a point that the performance gain is not
     // significant.
-    std::map<const IndexBuffer *, PlatformIndexBuffer *>       mIndexBufferTable;
-    std::map<const ShaderBuffer *, PlatformShaderBuffer *>     mShaderBufferTable;
-    std::map<const VertexBuffer *, PlatformVertexBuffer *>     mVertexBufferTable;
-    std::map<const VertexFormat *, PlatformVertexFormat *>     mVertexFormatTable;
-
-    std::map<const Shader *, PlatformShader *>                 mShaderTable;
-    std::map<const Sampler *, PlatformSampler *>               mSamplerTable;
-    std::map<const Texture1d *, PlatformTexture1d *>           mTexture1dTable;
+    std::map<const IndexBuffer *, PlatformIndexBuffer *> mIndexBufferTable;
+    std::map<const ShaderBuffer *, PlatformShaderBuffer *> mShaderBufferTable;
+    std::map<const VertexBuffer *, PlatformVertexBuffer *> mVertexBufferTable;
+    std::map<const VertexFormat *, PlatformVertexFormat *> mVertexFormatTable;
+    std::map<const Shader *, PlatformShader *> mShaderTable;
+    std::map<const Sampler *, PlatformSampler *> mSamplerTable;
+    std::map<const Texture1d *, PlatformTexture1d *> mTexture1dTable;
     std::map<const Texture1dArray *, PlatformTexture1dArray *> mTexture1dArrayTable;
-    std::map<const Texture2d *, PlatformTexture2d *>           mTexture2dTable;
+    std::map<const Texture2d *, PlatformTexture2d *> mTexture2dTable;
     std::map<const Texture2dArray *, PlatformTexture2dArray *> mTexture2dArrayTable;
 
     /************************************************************************/
     /* Dirty Flags                                                          */
     /************************************************************************/
-    const IndexBuffer             *mIndexBufferPrevious;
-    const ShaderBuffer            *mShaderBufferPrevious;
-    const VertexGroup             *mVertexGroupPrevious;
-    const VertexFormat            *mVertexFormatPrevious;
-
-    const VisualEffectPass        *mPassPrevious;
-
-    Shader                        *mShaderPrevious;
+    const IndexBuffer *mIndexBufferPrevious;
+    const ShaderBuffer *mShaderBufferPrevious;
+    const VertexGroup *mVertexGroupPrevious;
+    const VertexFormat *mVertexFormatPrevious;
+    const VisualEffectPass *mPassPrevious;
+    Shader *mShaderPrevious;
 
     // Sampler table indexed by texture binding index.
     std::map<int, const Sampler *> mSamplerPrevious;
@@ -612,23 +630,36 @@ private:
     /************************************************************************/
     /* Renderer State                                                       */
     /************************************************************************/
-    std::unique_ptr<BlendState>       mBlendStateDefault;
-    std::unique_ptr<CullState>        mCullStateDefault;
-    std::unique_ptr<DepthTestState>   mDepthTestStateDefault;
-    std::unique_ptr<OffsetState>      mOffsetStateDefault;
+    std::unique_ptr<BlendState> mBlendStateDefault;
+    std::unique_ptr<CullState> mCullStateDefault;
+    std::unique_ptr<DepthTestState> mDepthTestStateDefault;
+    std::unique_ptr<OffsetState> mOffsetStateDefault;
     std::unique_ptr<StencilTestState> mStencilTestStateDefault;
-    std::unique_ptr<WireframeState>   mWireframeStateDefault;
+    std::unique_ptr<WireframeState> mWireframeStateDefault;
 
-    const BlendState                 *mBlendStateCurrent;
-    const CullState                  *mCullStateCurrent;
-    const DepthTestState             *mDepthTestStateCurrent;
-    const OffsetState                *mOffsetStateCurrent;
-    const StencilTestState           *mStencilTestStateCurrent;
-    const WireframeState             *mWireframeStateCurrent;
+    // NEW(Wuxiang): The dirty flag pattern here is not very effective. Because
+    // most of draw call require different states. Ideally, you should be able to
+    // semantically group all the draw call that share the same states into sub
+    // render group. This requires some kind of draw command organization.
 
-    Viewport                          mViewport;
-    Window                            mWindow;
-    bool                              mWindowInitialized = false;
+    // NEW(Wuxiang): You should read "Jason Zink, Matt Pettineo, Jack Hoxley
+    // Practical Rendering and Computation with Direct3D 11, 2011" to learn more
+    // about the draw state encapsulation (3.3.4 Draw State).
+
+    // NEW(Wuxiang): You should consider implementing the tactics in "Christer
+    // Ericson Order Your Graphics Draw Calls Around, 2008".
+
+    const BlendState *mBlendStateCurrent;
+    const CullState *mCullStateCurrent;
+    const DepthTestState *mDepthTestStateCurrent;
+    const OffsetState *mOffsetStateCurrent;
+    const StencilTestState *mStencilTestStateCurrent;
+    const WireframeState *mWireframeStateCurrent;
+
+    Viewport mViewport;
+    Window mWindow;
+    bool mWindowInitialized = false;
+
 private:
     /************************************************************************/
     /* Platform Dependent Members                                           */
@@ -648,27 +679,6 @@ private:
 
     void
     DestroyPlatform();
-
-    /************************************************************************/
-    /* State Management                                                     */
-    /************************************************************************/
-    void
-    SetBlendStatePlatform(const BlendState *blendState);
-
-    void
-    SetCullStatePlatform(const CullState *cullState);
-
-    void
-    SetDepthTestStatePlatform(const DepthTestState *depthTestState);
-
-    void
-    SetOffsetStatePlatform(const OffsetState *offsetState);
-
-    void
-    SetStencilTestStatePlatform(const StencilTestState *stencilTestState);
-
-    void
-    SetWireframeStatePlatform(const WireframeState *wireframeState);
 
 public:
     /************************************************************************/

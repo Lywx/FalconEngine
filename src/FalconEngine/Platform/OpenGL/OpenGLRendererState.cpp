@@ -43,6 +43,42 @@ PlatformRendererState::Initialize(const BlendState *blendState,
     mWireframeState.Initialize(wireframeState);
 }
 
+void
+PlatformRendererState::Set(const BlendState *blendState)
+{
+    mBlendState.Set(blendState);
+}
+
+void
+PlatformRendererState::Set(const CullState *cullState)
+{
+    mCullState.Set(cullState);
+}
+
+void
+PlatformRendererState::Set(const DepthTestState *depthTestState)
+{
+    mDepthTestState.Set(depthTestState);
+}
+
+void
+PlatformRendererState::Set(const OffsetState *offsetState)
+{
+    mOffsetState.Set(offsetState);
+}
+
+void
+PlatformRendererState::Set(const StencilTestState *stencilTestState)
+{
+    mStencilTestState.Set(stencilTestState);
+}
+
+void
+PlatformRendererState::Set(const WireframeState *wireframeState)
+{
+    mWireframeState.Set(wireframeState);
+}
+
 }
 
 #endif

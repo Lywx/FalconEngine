@@ -12,6 +12,7 @@
 
 namespace FalconEngine
 {
+class Renderer;
 
 class BlendState;
 class CullState;
@@ -40,7 +41,8 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Initialize(const BlendState * blendState,
+    Initialize(Renderer * renderer,
+               const BlendState * blendState,
                const CullState * cullState,
                const DepthTestState * depthTestState,
                const OffsetState * offsetState,
@@ -48,22 +50,16 @@ public:
                const WireframeState * wireframeState);
 
     void
-    Set(const BlendState * blendState);
+    Set(Renderer * renderer,
+        const BlendState * blendState,
+        const CullState * cullState,
+        const DepthTestState * depthTestState,
+        const OffsetState * offsetState,
+        const StencilTestState * stencilTestState,
+        const WireframeState * wireframeState);
 
     void
-    Set(const CullState * cullState);
-
-    void
-    Set(const DepthTestState * depthTestState);
-
-    void
-    Set(const OffsetState * offsetState);
-
-    void
-    Set(const StencilTestState * stencilTestState);
-
-    void
-    Set(const WireframeState * wireframeState);
+    Validate(Renderer * renderer);
 
 private:
     PlatformBlendState mBlendState;

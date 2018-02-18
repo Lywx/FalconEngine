@@ -155,10 +155,7 @@ Renderer::InitializeStatePlatform()
                  new PlatformRendererState(),
                  PlatformRendererStateDeleter());
 
-    auto context = mData->GetContext();
-    auto device = mData->GetDevice();
-
-    mState->Initialize(context, device,
+    mState->Initialize(this,
                        mBlendStateDefault.get(),
                        mCullStateDefault.get(),
                        mDepthTestStateDefault.get(),

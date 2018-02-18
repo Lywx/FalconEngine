@@ -128,7 +128,7 @@ PlatformResource::CreateDepthStencilView(ID3D11Device4 *device, D3D11_RESOURCE_D
     case TextureType::Texture1dArray:
     {
         viewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE1DARRAY;
-        viewDesc.Texture1DArray.ArraySize = texture->mDimension[2];
+        viewDesc.Texture1DArray.ArraySize = texture->GetDimension(2);
         viewDesc.Texture1DArray.FirstArraySlice = 0;
         viewDesc.Texture1DArray.MipSlice = 0;
     }
@@ -142,7 +142,7 @@ PlatformResource::CreateDepthStencilView(ID3D11Device4 *device, D3D11_RESOURCE_D
     case TextureType::Texture2dArray:
     {
         viewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
-        viewDesc.Texture2DArray.ArraySize = texture->mDimension[2];
+        viewDesc.Texture2DArray.ArraySize = texture->GetDimension(2);
         viewDesc.Texture2DArray.FirstArraySlice = 0;
         viewDesc.Texture2DArray.MipSlice = 0;
     }
@@ -197,32 +197,32 @@ PlatformResource::CreateShaderResourceView(ID3D11Device4 *device, D3D11_RESOURCE
         case TextureType::Texture1d:
         {
             viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE1D;
-            viewDesc.Texture1D.MipLevels = texture->mMipmapLevel;
+            viewDesc.Texture1D.MipLevels = texture->GetMipmapLevel();
             viewDesc.Texture1D.MostDetailedMip = 0;
         }
         break;
         case TextureType::Texture1dArray:
         {
             viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE1D;
-            viewDesc.Texture1DArray.ArraySize = texture->mDimension[2];
+            viewDesc.Texture1DArray.ArraySize = texture->GetDimension(2);
             viewDesc.Texture1DArray.FirstArraySlice = 0;
-            viewDesc.Texture1DArray.MipLevels = texture->mMipmapLevel;
+            viewDesc.Texture1DArray.MipLevels = texture->GetMipmapLevel();
             viewDesc.Texture1DArray.MostDetailedMip = 0;
         }
         break;
         case TextureType::Texture2d:
         {
             viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-            viewDesc.Texture2D.MipLevels = texture->mMipmapLevel;
+            viewDesc.Texture2D.MipLevels = texture->GetMipmapLevel();
             viewDesc.Texture2D.MostDetailedMip = 0;
         }
         break;
         case TextureType::Texture2dArray:
         {
             viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
-            viewDesc.Texture2DArray.ArraySize = texture->mDimension[2];
+            viewDesc.Texture2DArray.ArraySize = texture->GetDimension(2);
             viewDesc.Texture2DArray.FirstArraySlice = 0;
-            viewDesc.Texture2DArray.MipLevels = texture->mMipmapLevel;
+            viewDesc.Texture2DArray.MipLevels = texture->GetMipmapLevel();
             viewDesc.Texture2DArray.MostDetailedMip = 0;
         }
         break;
@@ -255,7 +255,7 @@ PlatformResource::CreateRenderTargetView(ID3D11Device4 *device, D3D11_RESOURCE_D
     FALCON_ENGINE_CHECK_NULLPTR(mResourceObj);
 
     D3D11_RENDER_TARGET_VIEW_DESC viewDesc;
-    viewDesc.Format = Direct3DResourceFormat[TextureFormatIndex(mFormat)];
+    viewDesc.Format = mFormat;
 
     if (dimension == D3D11_RESOURCE_DIMENSION_BUFFER)
     {
@@ -282,7 +282,7 @@ PlatformResource::CreateRenderTargetView(ID3D11Device4 *device, D3D11_RESOURCE_D
         case TextureType::Texture1dArray:
         {
             viewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE1DARRAY;
-            viewDesc.Texture1DArray.ArraySize = texture->mDimension[2];
+            viewDesc.Texture1DArray.ArraySize = texture->GetDimension(2);
             viewDesc.Texture1DArray.FirstArraySlice = 0;
             // NEW(Wuxiang): Add MRT support.
             viewDesc.Texture1DArray.MipSlice = 0;
@@ -298,7 +298,7 @@ PlatformResource::CreateRenderTargetView(ID3D11Device4 *device, D3D11_RESOURCE_D
         case TextureType::Texture2dArray:
         {
             viewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
-            viewDesc.Texture2DArray.ArraySize = texture->mDimension[2];
+            viewDesc.Texture2DArray.ArraySize = texture->GetDimension(2);
             viewDesc.Texture2DArray.FirstArraySlice = 0;
             // NEW(Wuxiang): Add MRT support.
             viewDesc.Texture2DArray.MipSlice = 0;

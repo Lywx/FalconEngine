@@ -1,12 +1,14 @@
 #pragma once
 
 #include <FalconEngine/Core/Macro.h>
+#include <unordered_map>
 
 #if defined(FALCON_ENGINE_API_DIRECT3D)
 #include <FalconEngine/Platform/Direct3D/Direct3DLib.h>
 
 namespace FalconEngine
 {
+class Renderer;
 
 class BlendState;
 class CullState;
@@ -31,8 +33,7 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Initialize(ID3D11DeviceContext4 * context,
-               ID3D11Device4 * device,
+    Initialize(Renderer * renderer,
                const BlendState * blendState,
                const CullState * cullState,
                const DepthTestState * depthTestState,
@@ -41,43 +42,43 @@ public:
                const WireframeState * wireframeState);
 
     void
-    Set(const BlendState * blendState);
-
-    void
-    Set(const CullState * cullState);
-
-    void
-    Set(const DepthTestState * depthTestState);
-
-    void
-    Set(const OffsetState * offsetState);
-
-    void
-    Set(const StencilTestState * stencilTestState);
-
-    void
-    Set(const WireframeState * wireframeState);
+    Set(Renderer * renderer,
+        const BlendState * blendState,
+        const CullState * cullState,
+        const DepthTestState * depthTestState,
+        const OffsetState * offsetState,
+        const StencilTestState * stencilTestState,
+        const WireframeState * wireframeState);
 
 private:
-    void
+    /************************************************************************/
+    /* Private Members                                                      */
+    /************************************************************************/
+    Microsoft::WRL::ComPtr<ID3D11BlendState1>
     CreateBlendState(ID3D11Device4 * device,
                      const BlendState * blendState);
 
-    void
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilState>
     CreateDepthStencilState(ID3D11Device4 * device,
                             const DepthTestState * depthTestState,
                             const StencilTestState * stencilTestState);
 
-    void
+    Microsoft::WRL::ComPtr<ID3D11RasterizerState>
     CreateRasterizerState(ID3D11Device4 * device,
                           const CullState * cullState,
                           const OffsetState * offsetState,
                           const WireframeState * wireframeState);
 
+    void
+    Validate(Renderer * renderer);
+
 private:
-    Microsoft::WRL::ComPtr<ID3D11BlendState1> mBlendState;
-    Microsoft::WRL::ComPtr<ID3D11DepthStencilState> mDepthStencilState;
-    Microsoft::WRL::ComPtr<ID3D11RasterizerState> mRasterizerState;
+    std::unordered_map<const BlendState *, Microsoft::WRL::ComPtr<ID3D11BlendState1>> mBlendStateTable;
+    std::unordered_map<const CullState *, Microsoft::WRL::ComPtr<ID3D11RasterizerState>> mCullStateTable;
+    std::unordered_map<const DepthTestState *, Microsoft::WRL::ComPtr<ID3D11DepthStencilState>> mDepthTestStateTable;
+    std::unordered_map<const OffsetState *, Microsoft::WRL::ComPtr<ID3D11RasterizerState>> mOffsetStateTable;
+    std::unordered_map<const StencilTestState *, Microsoft::WRL::ComPtr<ID3D11DepthStencilState>> mStencilTestStateTable;
+    std::unordered_map<const WireframeState *, Microsoft::WRL::ComPtr<ID3D11RasterizerState>> mWireframeStateTable;
 };
 FALCON_ENGINE_CLASS_END
 

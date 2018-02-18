@@ -14,13 +14,13 @@ namespace FalconEngine
 /************************************************************************/
 PlatformTexture::PlatformTexture(Renderer *renderer, const Texture *texture) :
     PlatformResource(renderer, texture),
-    mDimension(texture->mDimension),
-    mMipmapLevel(texture->mMipmapLevel),
+    mDimension(texture->GetDimension()),
+    mMipmapLevel(texture->GetMipmapLevel()),
     mTexturePtr(texture)
 {
     mBindFlag = Direct3DResourceBindFlag(mTexturePtr);
     mCpuFlag = Direct3DResourceAccessFlag(mTexturePtr->GetAccessMode());
-    mFormat = Direct3DResourceFormat[int(mTexturePtr->mFormat)];
+    mFormat = Direct3DResourceFormat[int(mTexturePtr->GetFormat())];
     mUsage = Direct3DResourceAccessUsage[int(mTexturePtr->GetAccessMode())];
 }
 

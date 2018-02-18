@@ -1038,14 +1038,13 @@ Renderer::Enable(const VisualEffectPass *pass)
         mPassPrevious = pass;
     }
 
-    // Set pass' render states.
-    SetBlendState(pass->GetBlendState());
-    SetCullState(pass->GetCullState());
-    SetDepthTestState(pass->GetDepthTestState());
-    SetOffsetState(pass->GetOffsetState());
-    SetStencilTestState(pass->GetStencilTestState());
-    SetWireframeState(pass->GetWireframeState());
-    ValidateStatePlatform();
+    mState->Set(this,
+                pass->GetBlendState(),
+                pass->GetCullState(),
+                pass->GetDepthTestState(),
+                pass->GetOffsetState(),
+                pass->GetStencilTestState(),
+                pass->GetWireframeState());
 }
 
 void
@@ -1119,63 +1118,6 @@ Renderer::Update(const VisualEffectInstancePass *pass, ShaderUniform *uniform, c
         // arbitrarily.
         PlatformShaderUniform::UpdateContext(uniform);
     }
-}
-
-/************************************************************************/
-/* State Management                                                     */
-/************************************************************************/
-void
-Renderer::SetBlendState(const BlendState *blendState)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(blendState);
-    mBlendStateCurrent = blendState;
-
-    mState->Set(mBlendStateCurrent);
-}
-
-void
-Renderer::SetCullState(const CullState *cullState)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(cullState);
-    mCullStateCurrent = cullState;
-
-    mState->Set(mCullStateCurrent);
-}
-
-void
-Renderer::SetDepthTestState(const DepthTestState *depthTestState)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(depthTestState);
-    mDepthTestStateCurrent = depthTestState;
-
-    mState->Set(mDepthTestStateCurrent);
-}
-
-void
-Renderer::SetOffsetState(const OffsetState *offsetState)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(offsetState);
-    mOffsetStateCurrent = offsetState;
-
-    mState->Set(mOffsetStateCurrent);
-}
-
-void
-Renderer::SetStencilTestState(const StencilTestState *stencilTestState)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(stencilTestState);
-    mStencilTestStateCurrent = stencilTestState;
-
-    mState->Set(mStencilTestStateCurrent);
-}
-
-void
-Renderer::SetWireframeState(const WireframeState *wireframeState)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(wireframeState);
-    mWireframeStateCurrent = wireframeState;
-
-    mState->Set(mWireframeStateCurrent);
 }
 
 /************************************************************************/

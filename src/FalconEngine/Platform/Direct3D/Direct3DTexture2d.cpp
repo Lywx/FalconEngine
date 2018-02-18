@@ -83,8 +83,8 @@ PlatformTexture2d::CreateTexture(ID3D11Device4 *device)
     textureDesc.MiscFlags = 0;
 
     D3D11_SUBRESOURCE_DATA subresourceData;
-    subresourceData.pSysMem = mTexturePtr->mData;
-    subresourceData.SysMemPitch = UINT(mTexturePtr->mDataSize);
+    subresourceData.pSysMem = mTexturePtr->GetData();
+    subresourceData.SysMemPitch = UINT(mTexturePtr->GetDataSize());
     subresourceData.SysMemSlicePitch = 0;
     D3DCheckSuccess(device->CreateTexture2D(&textureDesc, &subresourceData, mTextureObj.ReleaseAndGetAddressOf()));
 }

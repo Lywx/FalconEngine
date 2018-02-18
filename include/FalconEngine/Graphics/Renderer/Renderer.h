@@ -562,27 +562,6 @@ public:
     Update(const VisualEffectInstancePass *pass, ShaderUniform *uniform, const Camera *camera, const Visual *visual);
 
     /************************************************************************/
-    /* State Management                                                     */
-    /************************************************************************/
-    void
-    SetBlendState(const BlendState *blendState);
-
-    void
-    SetCullState(const CullState *cullState);
-
-    void
-    SetDepthTestState(const DepthTestState *depthTestState);
-
-    void
-    SetOffsetState(const OffsetState *offsetState);
-
-    void
-    SetStencilTestState(const StencilTestState *stencilTestState);
-
-    void
-    SetWireframeState(const WireframeState *wireframeState);
-
-    /************************************************************************/
     /* Draw                                                                 */
     /************************************************************************/
     // @summary Draw single instance of visual.
@@ -849,6 +828,11 @@ else \
 { \
     FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(std::string("The ") + #resource + " is not mapped before."); \
 }
+
+#define FALCON_ENGINE_RENDERER_SET_IMPLEMEN(stateRenderer, state, stateCurrent) \
+    FALCON_ENGINE_CHECK_NULLPTR(state); \
+    stateCurrent = state; \
+    stateRenderer->Set(stateCurrent);
 
 #define FALCON_ENGINE_RENDERER_TEXTURE_ENABLE_LAZY(texture, texturePrevious, textureShaderMask) \
 FALCON_ENGINE_CHECK_NULLPTR(texture); \

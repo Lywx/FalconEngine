@@ -37,6 +37,7 @@ Renderer::InitializeStatePlatform()
                  new PlatformRendererState(),
                  PlatformRendererStateDeleter());
     mState->Initialize(
+        this,
         mBlendStateDefault.get(),
         mCullStateDefault.get(),
         mDepthTestStateDefault.get(),

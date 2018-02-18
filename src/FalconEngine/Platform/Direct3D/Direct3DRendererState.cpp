@@ -1,6 +1,7 @@
 #include <FalconEngine/Platform/Direct3D/Direct3DRendererState.h>
 
 #if defined(FALCON_ENGINE_API_DIRECT3D)
+#include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/State/BlendState.h>
 #include <FalconEngine/Graphics/Renderer/State/CullState.h>
 #include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
@@ -8,6 +9,7 @@
 #include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
 #include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DMapping.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DRendererData.h>
 
 namespace FalconEngine
 {
@@ -23,8 +25,7 @@ PlatformRendererState::PlatformRendererState()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PlatformRendererState::Initialize(ID3D11DeviceContext4 *context,
-                                  ID3D11Device4 *device,
+PlatformRendererState::Initialize(Renderer *renderer,
                                   const BlendState *blendState,
                                   const CullState *cullState,
                                   const DepthTestState *depthTestState,
@@ -32,21 +33,78 @@ PlatformRendererState::Initialize(ID3D11DeviceContext4 *context,
                                   const StencilTestState *stencilTestState,
                                   const WireframeState *wireframeState)
 {
-    // NOTE(Wuxiang): D3D Blend State consists of FE Blend State.
-    CreateBlendState(device, blendState);
-    // NEW(Wuxiang): Add alpha to coverage support.
-    context->OMSetBlendState(mBlendState.Get(), blendState->mConstantFactor.Data(), 0xffffffff);
-
-    // NOTE(Wuxiang): D3D Depth Stencil State consists of FE Depth Test State and Stencil Test State.
-    CreateDepthStencilState(device, depthTestState, stencilTestState);
-    context->OMSetDepthStencilState(mDepthStencilState.Get(), stencilTestState->mCompareReference);
-
-    // NOTE(Wuxiang): D3D Rasterizer State consists of FE Cull State, Offset State and Wireframe State.
-    CreateRasterizerState(device, cullState, offsetState, wireframeState);
-    context->RSSetState(mRasterizerState.Get());
+    Set(renderer, blendState, cullState, depthTestState, offsetState, stencilTestState, wireframeState);
 }
 
 void
+PlatformRendererState::Set(Renderer *renderer,
+                           const BlendState *blendState,
+                           const CullState *cullState,
+                           const DepthTestState *depthTestState,
+                           const OffsetState *offsetState,
+                           const StencilTestState *stencilTestState,
+                           const WireframeState *wireframeState)
+{
+    auto context = renderer->mData->GetContext();
+    auto device = renderer->mData->GetDevice();
+
+    Microsoft::WRL::ComPtr<ID3D11BlendState1> blendStatePlatform;
+    {
+        auto iter = mBlendStateTable.find(blendState);
+        if (iter != mBlendStateTable.end())
+        {
+            blendStatePlatform = iter->second;
+        }
+        else
+        {
+            // NOTE(Wuxiang): D3D Blend State consists of FE Blend State.
+            blendStatePlatform = CreateBlendState(device, blendState);
+            mBlendStateTable[blendState] = blendStatePlatform;
+        }
+    }
+    // NEW(Wuxiang): Add alpha to coverage support.
+    context->OMSetBlendState(blendStatePlatform.Get(), blendState->mConstantFactor.Data(), 0xffffffff);
+
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilStatePlatform;
+    {
+        auto iter = mDepthTestStateTable.find(depthTestState);
+        if (iter != mDepthTestStateTable.end())
+        {
+            depthStencilStatePlatform = iter->second;
+        }
+        else
+        {
+            // NOTE(Wuxiang): D3D Depth Stencil State consists of FE Depth Test State and Stencil Test State.
+            depthStencilStatePlatform = CreateDepthStencilState(device, depthTestState, stencilTestState);
+            mDepthTestStateTable[depthTestState] = depthStencilStatePlatform;
+            mStencilTestStateTable[stencilTestState] = depthStencilStatePlatform;
+        }
+    }
+    context->OMSetDepthStencilState(depthStencilStatePlatform.Get(), stencilTestState->mCompareReference);
+
+    Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerStatePlatform;
+    {
+        auto iter = mCullStateTable.find(cullState);
+        if (iter != mCullStateTable.end())
+        {
+            rasterizerStatePlatform = iter->second;
+        }
+        else
+        {
+            // NOTE(Wuxiang): D3D Rasterizer State consists of FE Cull State, Offset State and Wireframe State.
+            rasterizerStatePlatform = CreateRasterizerState(device, cullState, offsetState, wireframeState);
+            mCullStateTable[cullState] = rasterizerStatePlatform;
+            mOffsetStateTable[offsetState] = rasterizerStatePlatform;
+            mWireframeStateTable[wireframeState] = rasterizerStatePlatform;
+        }
+    }
+    context->RSSetState(rasterizerStatePlatform.Get());
+}
+
+/************************************************************************/
+/* Private Members                                                      */
+/************************************************************************/
+Microsoft::WRL::ComPtr<ID3D11BlendState1>
 PlatformRendererState::CreateBlendState(
     ID3D11Device4 *device,
     const BlendState *blendState)
@@ -75,7 +133,10 @@ PlatformRendererState::CreateBlendState(
     blendDescRt.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
     blendDesc.RenderTarget[0] = blendDescRt;
-    device->CreateBlendState1(&blendDesc, mBlendState.ReleaseAndGetAddressOf());
+
+    Microsoft::WRL::ComPtr<ID3D11BlendState1> blendStatePlatform;
+    device->CreateBlendState1(&blendDesc, blendStatePlatform.ReleaseAndGetAddressOf());
+    return blendStatePlatform;
 }
 
 void
@@ -88,7 +149,7 @@ SetStencilTestFaceStatePlatform(_IN_ const StencilTestFaceState& faceStateCurren
     faceStatePlatform.StencilFunc = Direct3DStencilFunction[StencilFunctionIndex(faceStateCurrent.mStencilCompareFunction)];
 }
 
-void
+Microsoft::WRL::ComPtr<ID3D11DepthStencilState>
 PlatformRendererState::CreateDepthStencilState(
     ID3D11Device4 *device,
     const DepthTestState *depthTestState,
@@ -106,10 +167,12 @@ PlatformRendererState::CreateDepthStencilState(
     SetStencilTestFaceStatePlatform(stencilTestState->mFrontFace, depthStencilDesc.FrontFace);
     SetStencilTestFaceStatePlatform(stencilTestState->mBackFace, depthStencilDesc.BackFace);
 
-    device->CreateDepthStencilState(&depthStencilDesc, mDepthStencilState.ReleaseAndGetAddressOf());
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
+    device->CreateDepthStencilState(&depthStencilDesc, depthStencilState.ReleaseAndGetAddressOf());
+    return depthStencilState;
 }
 
-void
+Microsoft::WRL::ComPtr<ID3D11RasterizerState>
 PlatformRendererState::CreateRasterizerState(
     ID3D11Device4 *device,
     const CullState *cullState,
@@ -161,36 +224,14 @@ PlatformRendererState::CreateRasterizerState(
 
     // NEW(Wuxiang): Added multisample support.
     rasterizerDesc.MultisampleEnable = false;
-    device->CreateRasterizerState(&rasterizerDesc, mRasterizerState.ReleaseAndGetAddressOf());
+
+    Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerState;
+    device->CreateRasterizerState(&rasterizerDesc, rasterizerState.ReleaseAndGetAddressOf());
+    return rasterizerState;
 }
 
 void
-PlatformRendererState::Set(const BlendState *blendState)
-{
-}
-
-void
-PlatformRendererState::Set(const CullState *cullState)
-{
-}
-
-void
-PlatformRendererState::Set(const DepthTestState *depthTestState)
-{
-}
-
-void
-PlatformRendererState::Set(const OffsetState *offsetState)
-{
-}
-
-void
-PlatformRendererState::Set(const StencilTestState *stencilTestState)
-{
-}
-
-void
-PlatformRendererState::Set(const WireframeState *wireframeState)
+PlatformRendererState::Validate(Renderer *)
 {
 }
 

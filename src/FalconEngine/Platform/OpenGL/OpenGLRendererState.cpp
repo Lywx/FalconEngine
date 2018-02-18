@@ -28,7 +28,8 @@ PlatformRendererState::PlatformRendererState()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PlatformRendererState::Initialize(const BlendState *blendState,
+PlatformRendererState::Initialize(Renderer *,
+                                  const BlendState *blendState,
                                   const CullState *cullState,
                                   const DepthTestState *depthTestState,
                                   const OffsetState *offsetState,
@@ -44,39 +45,25 @@ PlatformRendererState::Initialize(const BlendState *blendState,
 }
 
 void
-PlatformRendererState::Set(const BlendState *blendState)
+PlatformRendererState::Set(Renderer *,
+                           const BlendState *blendState,
+                           const CullState *cullState,
+                           const DepthTestState *depthTestState,
+                           const OffsetState *offsetState,
+                           const StencilTestState *stencilTestState,
+                           const WireframeState *wireframeState)
 {
     mBlendState.Set(blendState);
-}
-
-void
-PlatformRendererState::Set(const CullState *cullState)
-{
     mCullState.Set(cullState);
-}
-
-void
-PlatformRendererState::Set(const DepthTestState *depthTestState)
-{
     mDepthTestState.Set(depthTestState);
-}
-
-void
-PlatformRendererState::Set(const OffsetState *offsetState)
-{
     mOffsetState.Set(offsetState);
-}
-
-void
-PlatformRendererState::Set(const StencilTestState *stencilTestState)
-{
     mStencilTestState.Set(stencilTestState);
+    mWireframeState.Set(wireframeState);
 }
 
 void
-PlatformRendererState::Set(const WireframeState *wireframeState)
+PlatformRendererState::Validate(Renderer *)
 {
-    mWireframeState.Set(wireframeState);
 }
 
 }

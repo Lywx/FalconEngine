@@ -45,6 +45,9 @@ public:
     SetShaderUniform(std::shared_ptr<ShaderUniform> shaderUniform);
 
     void
+    SetShaderUniformBuffer(int shaderUniform);
+
+    void
     SetShaderTexture(int textureUnit,
                      const Texture * texture,
                      TextureMode textureMode,

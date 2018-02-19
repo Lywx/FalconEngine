@@ -5,7 +5,7 @@
 namespace FalconEngine
 {
 
-#pragma warning(disable: 4251)
+FALCON_ENGINE_PROGMA_BEGIN
 template <typename T>
 class ShaderUniformAutomatic : public ShaderUniformValue<T>
 {
@@ -17,7 +17,7 @@ public:
     /* Constructors and Destructor                                          */
     /************************************************************************/
     using ShaderUniformValue<T>::ShaderUniformValue;
-    ShaderUniformAutomatic(const std::string& name, const ShaderUniformUpdateFunction<T> updateFunction);
+    ShaderUniformAutomatic(const std::string& name, const ShaderUniformUpdateFunction<T>& updateFunction);
 
 public:
     /************************************************************************/
@@ -44,9 +44,10 @@ public:
 protected:
     ShaderUniformUpdateFunction<T> mUpdateFunction;
 };
+FALCON_ENGINE_PROGMA_END
 
 template <typename T>
-ShaderUniformAutomatic<T>::ShaderUniformAutomatic(const std::string& name, const ShaderUniformUpdateFunction<T> updateFunction) :
+ShaderUniformAutomatic<T>::ShaderUniformAutomatic(const std::string& name, const ShaderUniformUpdateFunction<T>& updateFunction) :
     ShaderUniformValue<T>(name, T()),
     mUpdateFunction(updateFunction)
 {
@@ -66,7 +67,6 @@ ShaderUniformAutomatic<T>::GetUpdateFunction() const
 {
     return mUpdateFunction;
 }
-#pragma warning(default: 4251)
 
 template <typename T>
 void

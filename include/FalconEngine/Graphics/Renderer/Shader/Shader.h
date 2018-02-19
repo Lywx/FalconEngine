@@ -6,6 +6,7 @@
 #include <unordered_map>
 
 #include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
+#include <FalconEngine/Graphics/Renderer/Resource/UniformBuffer.h>
 
 namespace FalconEngine
 {
@@ -129,6 +130,40 @@ public:
     PushUniform(const std::string & uniformName, ShaderUniformType uniformType);
 
     /************************************************************************/
+    /* Uniform Buffer Management                                            */
+    /************************************************************************/
+    bool
+    ContainUniformBuffer(const std::string & uniformBufferName) const;
+
+    void
+    PushUniformBuffer(const std::string & uniformBufferName,
+                      size_t uniformBufferSize);
+
+    auto
+    GetUniformBufferBegin()
+    {
+        return mUniformBufferTable.begin();
+    }
+
+    auto
+    GetUniformBufferEnd()
+    {
+        return mUniformBufferTable.end();
+    }
+
+    auto
+    GetUniformBufferBegin() const
+    {
+        return mUniformBufferTable.cbegin();
+    }
+
+    auto
+    GetUniformBufferEnd() const
+    {
+        return mUniformBufferTable.cend();
+    }
+
+    /************************************************************************/
     /* Composition Management                                               */
     /************************************************************************/
     int
@@ -170,6 +205,7 @@ public:
 private:
     std::unordered_map<int, std::shared_ptr<ShaderSource>> mSourceTable;
     std::unordered_map<std::string, ShaderUniform> mUniformTable;
+    std::unordered_map<std::string, std::shared_ptr<UniformBuffer>> mUniformBufferTable;
 };
 FALCON_ENGINE_CLASS_END
 

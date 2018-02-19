@@ -27,6 +27,15 @@ public:
 };
 #pragma pack(pop)
 
+#pragma pack(push, 1)
+// Constant Buffer or Shader Uniform Block name as TransformBuffer
+class FontUniformBuffer
+{
+public:
+    Matrix4f mProjectionTransform;
+};
+#pragma pack(pop)
+
 class FALCON_ENGINE_API FontEffectParams : public VisualEffectParams
 {
 public:
@@ -42,7 +51,8 @@ public:
 };
 
 // @summary Implements a signed distanced field based bitmap font rendering effect.
-class FALCON_ENGINE_API FontEffect : public VisualEffect
+FALCON_ENGINE_CLASS_BEGIN FontEffect :
+public VisualEffect
 {
     FALCON_ENGINE_EFFECT_DECLARE(FontEffect);
 
@@ -58,14 +68,15 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    CreateInstance(_IN_OUT_ Visual                                  *visual,
+    CreateInstance(_IN_OUT_ Visual                                  * visual,
                    _IN_     const std::shared_ptr<FontEffectParams>& params);
 
 protected:
     // @summary Add required parameters to the existing visual effect instance.
     void
-    InitializeInstance(_IN_OUT_ VisualEffectInstance             *instance,
+    InitializeInstance(_IN_OUT_ VisualEffectInstance             * instance,
                        _IN_     std::shared_ptr<FontEffectParams> params) const;
 };
+FALCON_ENGINE_CLASS_END
 
 }

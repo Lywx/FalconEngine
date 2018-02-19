@@ -19,6 +19,8 @@ Buffer::Buffer(int elementNum,
                ResourceStorageMode storageMode) :
     mAccessMode(accessMode),
     mAccessUsage(accessUsage),
+    mBindingIndex(),
+    mBlockIndex(),
     mDataOffset(0),
     mElementSize(elementSize),
     mStorageMode(storageMode),
@@ -73,6 +75,25 @@ ResourceCreationAccessUsage
 Buffer::GetAccessUsage() const
 {
     return mAccessUsage;
+}
+
+int
+Buffer::GetBlockIndex() const
+{
+    return mBlockIndex;
+}
+
+void
+Buffer::SetBlockIndex(int blockIndex)
+{
+    mBlockIndex = blockIndex;
+}
+
+
+BufferType
+Buffer::GetBufferType() const
+{
+    return mType;
 }
 
 size_t
@@ -146,16 +167,16 @@ Buffer::GetElementOffset() const
     return int(mDataOffset / mElementSize);
 }
 
+std::string
+Buffer::GetName() const
+{
+    return mName;
+}
+
 ResourceStorageMode
 Buffer::GetStorageMode() const
 {
     return mStorageMode;
-}
-
-BufferType
-Buffer::GetBufferType() const
-{
-    return mType;
 }
 
 }

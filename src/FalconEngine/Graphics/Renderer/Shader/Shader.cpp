@@ -107,7 +107,26 @@ Shader::PushUniform(const string& uniformName, ShaderUniformType uniformType)
     mUniformTable.insert({ uniformName, ShaderUniform(uniformName, uniformType) });
 }
 
-int Shader::GetShaderNum() const
+/************************************************************************/
+/* Uniform Buffer Management                                            */
+/************************************************************************/
+bool
+Shader::ContainUniformBuffer(const std::string& uniformBufferName) const
+{
+    return mUniformBufferTable.find(uniformBufferName) != mUniformBufferTable.end();
+}
+
+void
+Shader::PushUniformBuffer(const std::string& uniformBufferName, size_t uniformBufferSize)
+{
+    mUniformBufferTable.insert({ uniformBufferName, std::make_shared<UniformBuffer>(uniformBufferName, uniformBufferSize) });
+}
+
+/************************************************************************/
+/* Composition Management                                               */
+/************************************************************************/
+int
+Shader::GetShaderNum() const
 {
     return int(mSourceTable.size());
 }

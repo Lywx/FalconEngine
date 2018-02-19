@@ -9,8 +9,8 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 ShaderUniform::ShaderUniform(const std::string& name, ShaderUniformType type) :
-    mName(name),
     mEnabled(true),
+    mName(name),
     mInitialized(false),
     // NOTE(Wuxiang): Because 0 is a valid value for uniform in OpenGL. You got
     // to have a invalid value for initialization.

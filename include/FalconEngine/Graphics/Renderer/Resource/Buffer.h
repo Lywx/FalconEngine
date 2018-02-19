@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 
 #include <FalconEngine/Core/Macro.h>
 #include <FalconEngine/Core/Object.h>
@@ -60,6 +61,12 @@ public:
     ResourceCreationAccessUsage
     GetAccessUsage() const;
 
+    int
+    GetBlockIndex() const;
+
+    void
+    SetBlockIndex(int blockIndex);
+
     BufferType
     GetBufferType() const;
 
@@ -100,25 +107,47 @@ public:
     int
     GetElementOffset() const;
 
+    std::string
+    GetName() const;
+
     ResourceStorageMode
     GetStorageMode() const;
 
 protected:
     ResourceCreationAccessMode mAccessMode;
     ResourceCreationAccessUsage mAccessUsage;
-    BufferType mType;
+
+    // NOTE(Wuxiang): Only used in OpenGL for Uniform Block Buffer. The binding
+    // point for Uniform Block Buffer.
+    int mBindingIndex;
+
+    // NOTE(Wuxiang): Only used in OpenGL for Uniform Block Buffer. The Uniform
+    // Block index.
+    int mBlockIndex;
 
     unsigned char *mData;
-    size_t mDataSize; // Actual data size in bytes.
+
+    // Actual data size in bytes.
+    size_t mDataSize;
     int64_t mDataOffset;
 
-    size_t mCapacitySize; // Maximum capacity size in bytes include space not used.
-    int mCapacityElementNum; // Maximum capacity size in term of element number include space not used.
+    // Maximum capacity size in bytes include space not used.
+    size_t mCapacitySize;
 
-    int mElementNum; // Actual data size in term of element number.
-    size_t mElementSize; // Each element's data size in bytes.
+    // Maximum capacity size in term of element number include space not used.
+    int mCapacityElementNum;
+
+    // Actual data size in term of element number.
+    int mElementNum;
+
+    // Each element's data size in bytes.
+    size_t mElementSize;
+
+    // Uniform Block name in OpenGL or Constant Buffer name in Direct3D.
+    std::string mName;
 
     ResourceStorageMode mStorageMode;
+    BufferType mType;
 };
 FALCON_ENGINE_CLASS_END
 

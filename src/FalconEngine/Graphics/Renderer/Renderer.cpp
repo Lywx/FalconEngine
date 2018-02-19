@@ -998,6 +998,12 @@ Renderer::Disable(int textureUnit, const Sampler *sampler, unsigned int samplepr
 /************************************************************************/
 /* Shader Management                                                   */
 /************************************************************************/
+PlatformShader *
+Renderer::Get(const Shader *shader)
+{
+    return mShaderTable.at(shader);
+}
+
 void
 Renderer::Bind(Shader *shader)
 {

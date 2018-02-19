@@ -48,14 +48,15 @@ using ShaderUniformUpdatePrototype = T(const Visual *, const Camera *);
 template <typename T>
 using ShaderUniformUpdateFunction = std::function<ShaderUniformUpdatePrototype<T>>;
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API ShaderUniform
+// NTOE(Wuxiang): Shader uniform is only supported in OpenGL. Direct3D can only
+// use Uniform Buffer, or in another name, Constant Buffer.
+FALCON_ENGINE_CLASS_BEGIN ShaderUniform
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    ShaderUniform(const std::string& name, ShaderUniformType type);
+    ShaderUniform(const std::string & name, ShaderUniformType type);
     virtual ~ShaderUniform();
 
 public:
@@ -65,19 +66,19 @@ public:
     IsUpdateNeeded() const;
 
     virtual void
-    Update(const Camera *camera, const Visual *visual);
+    Update(const Camera * camera, const Visual * visual);
 
 public:
-    std::string       mName;
-    bool              mEnabled;
-    bool              mInitialized;
-    int               mLocation;
+    bool mEnabled;
+    std::string mName;
+    bool mInitialized;
+    int mLocation;
     ShaderUniformType mType;
 
 protected:
-    bool              mValueIsCurrent;
+    bool mValueIsCurrent;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 template<typename T>
 class ShaderUniformValue : public ShaderUniform

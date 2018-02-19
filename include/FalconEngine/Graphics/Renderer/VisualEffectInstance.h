@@ -67,7 +67,14 @@ public:
 
     template <typename T>
     void
-    SetShaderUniform(int passIndex, std::shared_ptr<ShaderUniformValue<T>> uniform);
+    SetShaderUniform(int passIndex,
+                     std::shared_ptr<ShaderUniformValue<T>> uniform);
+
+    template <typename T>
+    void
+    SetShaderUniformBuffer(int passIndex,
+                           const std::string & uniformBufferName,
+                           size_t uniformBufferSize);
 
     const Texture *
     GetShaderTexture(int passIndex, int textureUnit) const;
@@ -110,7 +117,8 @@ VisualEffectInstance::GetShaderUniform(int passIndex, int uniformIndex)
 
 template <typename T>
 void
-VisualEffectInstance::SetShaderUniform(int passIndex, std::shared_ptr<ShaderUniformValue<T>> uniform)
+VisualEffectInstance::SetShaderUniform(int passIndex,
+                                       std::shared_ptr<ShaderUniformValue<T>> uniform)
 {
     FALCON_ENGINE_CHECK_NULLPTR(uniform);
 

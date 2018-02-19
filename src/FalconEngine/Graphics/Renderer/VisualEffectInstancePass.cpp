@@ -32,7 +32,11 @@ VisualEffectInstancePass::SetShaderUniform(std::shared_ptr<ShaderUniform> shader
 {
     FALCON_ENGINE_CHECK_NULLPTR(shaderUniform);
 
-    if (!mShader->ContainUniform(shaderUniform->mName))
+    if (mShader->ContainUniform(shaderUniform->mName))
+    {
+        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Shader uniform is set multiple time.\n");
+    }
+    else
     {
         mShader->PushUniform(shaderUniform->mName, shaderUniform->mType);
     }

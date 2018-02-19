@@ -55,6 +55,9 @@ private:
     void
     CollectUniformLocation(Shader * shader) const;
 
+    void
+    CollectUniformBufferIndex(Shader * shader) const;
+
 private:
     GLuint mProgram;
     GLuint mShaders[int(ShaderType::Count)];

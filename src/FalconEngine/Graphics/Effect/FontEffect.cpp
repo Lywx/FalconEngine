@@ -104,6 +104,7 @@ FontEffect::InitializeInstance(
     FALCON_ENGINE_CHECK_NULLPTR(params->mFont);
     FALCON_ENGINE_CHECK_NULLPTR(params->mHandedness);
 
+    instance->SetShaderUniformBuffer<int>(0, "TransformBuffer", sizeof FontUniformBuffer);
     instance->SetShaderUniform(0, ShareAutomatic<Matrix4f>("ProjectionTransform",
                                std::bind([ = ](const Visual * /* visual */, const Camera * /* camera */)
     {
@@ -116,8 +117,7 @@ FontEffect::InitializeInstance(
 
     // NOTE(Wuxiang): You don't need to set the texture sampler uniform because
     // they are predefined in the fe_Texture.glsl as #include extension.
-    instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Font),
-                               params->mFont->GetTexture(),
+    instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Font), params->mFont->GetTexture(),
                                TextureMode::Texture, ShaderType::FragmentShader);
     instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Font),
                                params->mFont->GetSampler(), ShaderType::FragmentShader);

@@ -53,7 +53,7 @@ Renderer::InitializeDataPlatform()
 
     // Clear the previous window size specific context.
     ID3D11RenderTargetView *nullViews[] = { nullptr };
-    context->OMSetRenderTargets(ArraySize(nullViews), nullViews, nullptr);
+    context->OMSetRenderTargets(1, nullViews, nullptr);
     context->Flush();
 
     UINT backBufferWidth = static_cast<UINT>(mWindow.mWidth);

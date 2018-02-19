@@ -66,7 +66,7 @@ PlatformBuffer::Flush(Renderer *, int64_t offset, int64_t size)
 /* Protected Members                                                    */
 /************************************************************************/
 void
-PlatformBuffer::CheckRangeValid(int64_t offset, int64_t size)
+PlatformBuffer::CheckRange(int64_t offset, int64_t size)
 {
 #if defined(FALCON_ENGINE_DEBUG_GRAPHICS)
     glBindBuffer(mBufferTarget, mBufferObj);

@@ -3,7 +3,6 @@
 #if defined(FALCON_ENGINE_API_OPENGL)
 #include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Core/GameEngineDebugger.h>
-#include <FalconEngine/Core/Path.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLMapping.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLShaderProcessor.h>
 
@@ -38,6 +37,7 @@ PlatformShader::PlatformShader(Renderer *, Shader *shader) :
     LinkProgram();
 
     // Look up all the declared uniform location.
+    CollectUniformBufferIndex(shader);
     CollectUniformLocation(shader);
 }
 
@@ -204,6 +204,42 @@ PlatformShader::CollectUniformLocation(Shader *shader) const
         uniform.mLocation = uniformLocation;
         uniform.mInitialized = true;
     }
+}
+
+void
+PlatformShader::CollectUniformBufferIndex(Shader *shader) const
+{
+    for (auto uniformIter = shader->GetUniformBufferBegin();
+            uniformIter != shader->GetUniformBufferEnd();
+            ++uniformIter)
+    {
+        auto const& uniformBuffer = uniformIter->second;
+        auto const uniformBlockName = uniformBuffer->GetName();
+        const GLuint uniformBlockIndex = glGetUniformBlockIndex(mProgram, uniformBlockName.c_str());
+        if (uniformBlockIndex == GL_INVALID_INDEX)
+        {
+            GameEngineDebugger::OutputStringFormat(
+                "Failed to find shader uniform buffer \"%s\"'s location.\n",
+                uniformBlockName.c_str());
+        }
+        else
+        {
+            uniformBuffer->SetBlockIndex(uniformBlockIndex);
+
+            GLint uniformBlockSize;
+            glGetActiveUniformBlockiv(mProgram, uniformBlockIndex,
+                                      GL_UNIFORM_BLOCK_DATA_SIZE, &uniformBlockSize);
+
+            auto uniformBlockSizeExpected = int(uniformBuffer->GetCapacitySize());
+            if (uniformBlockSize != uniformBlockSizeExpected)
+            {
+                GameEngineDebugger::OutputStringFormat(
+                    "Failed to match shader uniform buffer size for uniform block '%s'. Expected: %d, Allocated: %d.\n",
+                    uniformBlockName.c_str(), uniformBlockSizeExpected, uniformBlockSize);
+            }
+        }
+    }
+
 }
 
 }

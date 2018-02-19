@@ -48,8 +48,13 @@ protected:
     /************************************************************************/
     /* Protected Members                                                    */
     /************************************************************************/
+
+    /************************************************************************/
+    /* Utility Members                                                      */
+    /************************************************************************/
+    // @summary Check range is valid in the buffer.
     void
-    CheckRangeValid(int64_t offset, int64_t size);
+    CheckRange(int64_t offset, int64_t size);
 
     void
     PrintRange(const char *message, GLuint bufferTarget, int64_t offset, int64_t size);

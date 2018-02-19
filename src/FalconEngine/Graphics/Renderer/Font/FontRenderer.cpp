@@ -5,6 +5,7 @@
 #include <FalconEngine/Core/String.h>
 #include <FalconEngine/Graphics/Effect/FontEffect.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveQuads.h>
 #include <FalconEngine/Graphics/Renderer/Font/Font.h>
 #include <FalconEngine/Graphics/Renderer/Font/FontLine.h>
@@ -179,7 +180,7 @@ FontRenderer::FindChannel(const Font *font)
                                    vertexBuffer,
                                    vertexBuffer->GetCapacitySize() / 4);
 
-    auto vertexFormat = sVisualEffect->GetVertexFormatSp();
+    auto vertexFormat = sVisualEffect->GetPass(0)->GetShaderVertexFormatSp();
     auto vertexGroup = make_shared<VertexGroup>();
     vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, vertexFormat->GetVertexBufferStride(0));
 

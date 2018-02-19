@@ -24,6 +24,25 @@ AabbEffect::AabbEffect()
     auto pass = make_unique<VisualEffectPass>();
     pass->SetShader(shader);
 
+    auto shaderVertexFormat = std::make_shared<VertexFormat>();
+
+    // NOTE(Wuxiang): Fixed vertex data. No instancing.
+    shaderVertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
+
+    // NOTE(Wuxiang): Each bounding box has only one color, used with instancing.
+    shaderVertexFormat->PushVertexAttribute(1, "Color", VertexAttributeType::FloatVec4, false, 1, 1);
+
+    // NOTE(Wuxiang): Transform matrix would use instancing. Different transformation
+    // buffer would be used to provide the matrix data.
+    shaderVertexFormat->PushVertexAttribute(2, "ModelViewProjectionTransform", VertexAttributeType::FloatVec4, false, 1, 1);
+
+    // NOTE(Wuxiang): The name is not meant to be valid for mat4.
+    shaderVertexFormat->PushVertexAttribute(3, "", VertexAttributeType::FloatVec4, false, 1, 1);
+    shaderVertexFormat->PushVertexAttribute(4, "", VertexAttributeType::FloatVec4, false, 1, 1);
+    shaderVertexFormat->PushVertexAttribute(5, "", VertexAttributeType::FloatVec4, false, 1, 1);
+    shaderVertexFormat->FinishVertexAttribute();
+    pass->SetShaderVertexFormat(shaderVertexFormat);
+
     auto blendState = make_unique<BlendState>();
     blendState->mEnabled = true;
     blendState->mSourceFactor = BlendFactor::SRC_ALPHA;
@@ -65,39 +84,4 @@ AabbEffect::CreateInstance(Visual *visual, const std::shared_ptr<AabbEffectParam
 
     return instance;
 }
-
-/************************************************************************/
-/* Protected Members                                                    */
-/************************************************************************/
-std::shared_ptr<VertexFormat>
-AabbEffect::CreateVertexFormat() const
-{
-    auto vertexFormat = std::make_shared<VertexFormat>();
-
-    // NOTE(Wuxiang): Fixed vertex data. No instancing.
-    vertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
-
-    // NOTE(Wuxiang): Each bounding box has only one color, used with instancing.
-    vertexFormat->PushVertexAttribute(1, "Color", VertexAttributeType::FloatVec4, false, 1, 1);
-
-    // NOTE(Wuxiang): Transform matrix would use instancing. Different transformation
-    // buffer would be used to provide the matrix data.
-    vertexFormat->PushVertexAttribute(2, "ModelViewProjectionTransform", VertexAttributeType::FloatVec4, false, 1, 1);
-
-    // NOTE(Wuxiang): The name is not meant to be valid for mat4.
-    vertexFormat->PushVertexAttribute(3, "", VertexAttributeType::FloatVec4, false, 1, 1);
-    vertexFormat->PushVertexAttribute(4, "", VertexAttributeType::FloatVec4, false, 1, 1);
-    vertexFormat->PushVertexAttribute(5, "", VertexAttributeType::FloatVec4, false, 1, 1);
-    vertexFormat->FinishVertexAttribute();
-
-    return vertexFormat;
-}
-
-std::shared_ptr<VertexFormat>
-AabbEffect::GetVertexFormatSp() const
-{
-    static shared_ptr<VertexFormat> sVertexFormat = CreateVertexFormat();
-    return sVertexFormat;
-}
-
 }

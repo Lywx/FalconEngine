@@ -31,6 +31,13 @@ MeshEffect::MeshEffect()
     auto pass = make_unique<VisualEffectPass>();
     pass->SetShader(shader);
 
+    auto shaderVertexFormat = std::make_shared<VertexFormat>();
+    shaderVertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
+    shaderVertexFormat->PushVertexAttribute(1, "Normal", VertexAttributeType::FloatVec3, false, 1);
+    shaderVertexFormat->PushVertexAttribute(2, "TexCoord", VertexAttributeType::FloatVec2, false, 2);
+    shaderVertexFormat->FinishVertexAttribute();
+    pass->SetShaderVertexFormat(shaderVertexFormat);
+
     auto blendState = make_unique<BlendState>();
     blendState->mEnabled = false;
     pass->SetBlendState(move(blendState));
@@ -76,24 +83,6 @@ MeshEffect::CreateInstance(Node *node, const std::shared_ptr<MeshEffectParams>& 
 /************************************************************************/
 /* Protected Members                                                    */
 /************************************************************************/
-std::shared_ptr<VertexFormat>
-MeshEffect::CreateVertexFormat() const
-{
-    auto vertexFormat = std::make_shared<VertexFormat>();
-    vertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
-    vertexFormat->PushVertexAttribute(1, "Normal", VertexAttributeType::FloatVec3, false, 1);
-    vertexFormat->PushVertexAttribute(2, "TexCoord", VertexAttributeType::FloatVec2, false, 2);
-    vertexFormat->FinishVertexAttribute();
-    return vertexFormat;
-}
-
-std::shared_ptr<VertexFormat>
-MeshEffect::GetVertexFormatSp() const
-{
-    static shared_ptr<VertexFormat> sVertexFormat = CreateVertexFormat();
-    return sVertexFormat;
-}
-
 void
 MeshEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                    *instance,
                                _IN_     const std::shared_ptr<Material>&         material,

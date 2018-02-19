@@ -41,6 +41,16 @@ FontEffect::FontEffect()
     auto pass = make_unique<VisualEffectPass>();
     pass->SetShader(shader);
 
+    auto shaderVertexFormat = std::make_shared<VertexFormat>(shader);
+    shaderVertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec2, false, 0);
+    shaderVertexFormat->PushVertexAttribute(1, "TexCoord", VertexAttributeType::FloatVec2, false, 0);
+    shaderVertexFormat->PushVertexAttribute(2, "FontColor", VertexAttributeType::FloatVec4, false, 0);
+    shaderVertexFormat->PushVertexAttribute(3, "FontWidth", VertexAttributeType::Float, false, 0);
+    shaderVertexFormat->PushVertexAttribute(4, "FontEdge", VertexAttributeType::Float, false, 0);
+    shaderVertexFormat->PushVertexAttribute(5, "FontPage", VertexAttributeType::Float, false, 0);
+    shaderVertexFormat->FinishVertexAttribute();
+    pass->SetShaderVertexFormat(shaderVertexFormat);
+
     auto blendState = make_unique<BlendState>();
     blendState->mEnabled = true;
     blendState->mSourceFactor = BlendFactor::SRC_ALPHA;
@@ -83,30 +93,9 @@ FontEffect::CreateInstance(Visual *visual, const std::shared_ptr<FontEffectParam
 /************************************************************************/
 /* Protected Members                                                    */
 /************************************************************************/
-std::shared_ptr<VertexFormat>
-FontEffect::CreateVertexFormat() const
-{
-    auto vertexFormat = std::make_shared<VertexFormat>();
-    vertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec2, false, 0);
-    vertexFormat->PushVertexAttribute(1, "TexCoord", VertexAttributeType::FloatVec2, false, 0);
-    vertexFormat->PushVertexAttribute(2, "FontColor", VertexAttributeType::FloatVec4, false, 0);
-    vertexFormat->PushVertexAttribute(3, "FontWidth", VertexAttributeType::Float, false, 0);
-    vertexFormat->PushVertexAttribute(4, "FontEdge", VertexAttributeType::Float, false, 0);
-    vertexFormat->PushVertexAttribute(5, "FontPage", VertexAttributeType::Float, false, 0);
-    vertexFormat->FinishVertexAttribute();
-    return vertexFormat;
-}
-
-std::shared_ptr<VertexFormat>
-FontEffect::GetVertexFormatSp() const
-{
-    static shared_ptr<VertexFormat> sVertexFormat = CreateVertexFormat();
-    return sVertexFormat;
-}
-
 void
 FontEffect::InitializeInstance(
-    _IN_OUT_ VisualEffectInstance             *instance,
+    _IN_OUT_ VisualEffectInstance *instance,
     _IN_     std::shared_ptr<FontEffectParams> params) const
 {
     using namespace std;

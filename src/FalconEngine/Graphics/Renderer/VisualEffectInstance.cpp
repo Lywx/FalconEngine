@@ -10,7 +10,7 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-VisualEffectInstance::VisualEffectInstance(std::shared_ptr<VisualEffect> effect) :
+VisualEffectInstance::VisualEffectInstance(const std::shared_ptr<VisualEffect>& effect) :
     mEffect(effect)
 {
     for (int i = 0; i < mEffect->GetPassNum(); ++i)
@@ -28,6 +28,12 @@ VisualEffectInstance::~VisualEffectInstance()
 /************************************************************************/
 const VisualEffect *
 VisualEffectInstance::GetEffect() const
+{
+    return mEffect.get();
+}
+
+VisualEffect *
+VisualEffectInstance::GetEffect()
 {
     return mEffect.get();
 }

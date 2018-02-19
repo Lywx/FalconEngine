@@ -27,64 +27,8 @@ VisualEffectPass::~VisualEffectPass()
 }
 
 /************************************************************************/
-/* Public Members                                                       */
+/* Shader Management                                                    */
 /************************************************************************/
-void
-VisualEffectPass::SetShader(const std::shared_ptr<Shader>& shader)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(shader);
-
-    mShader = shader;
-}
-
-void
-VisualEffectPass::SetBlendState(std::unique_ptr<BlendState> blendStateHandle)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(blendStateHandle);
-
-    mBlendState.reset(blendStateHandle.release());
-}
-
-void
-VisualEffectPass::SetCullState(std::unique_ptr<CullState> cullStateHandle)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(cullStateHandle);
-
-    mCullState.reset(cullStateHandle.release());
-}
-
-void
-VisualEffectPass::SetDepthTestState(std::unique_ptr<DepthTestState> depthTestStateHandle)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(depthTestStateHandle);
-
-    mDepthTestState.reset(depthTestStateHandle.release());
-}
-
-void
-VisualEffectPass::SetOffsetState(std::unique_ptr<OffsetState> offsetStateHandle)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(offsetStateHandle);
-
-    mOffsetState.reset(offsetStateHandle.release());
-}
-
-void
-VisualEffectPass::SetStencilTestState(std::unique_ptr<StencilTestState> stencilTestStateHandle)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(stencilTestStateHandle);
-
-    mStencilTestState.reset(stencilTestStateHandle.release());
-}
-
-void
-VisualEffectPass::SetWireframeState(std::unique_ptr<WireframeState> wireframeStateHandle)
-{
-    FALCON_ENGINE_CHECK_NULLPTR(wireframeStateHandle);
-
-    mWireframeState.reset(wireframeStateHandle.release());
-}
-
 const Shader *
 VisualEffectPass::GetShader() const
 {
@@ -97,6 +41,43 @@ VisualEffectPass::GetShader()
     return mShader.get();
 }
 
+void
+VisualEffectPass::SetShader(std::shared_ptr<Shader> shader)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(shader);
+
+    mShader = std::move(shader);
+}
+
+const VertexFormat *
+VisualEffectPass::GetShaderVertexFormat() const
+{
+    return mShaderVertexFormat.get();
+}
+
+VertexFormat *
+VisualEffectPass::GetShaderVertexFormat()
+{
+    return mShaderVertexFormat.get();
+}
+
+std::shared_ptr<VertexFormat>
+VisualEffectPass::GetShaderVertexFormatSp()
+{
+    return mShaderVertexFormat;
+}
+
+void
+VisualEffectPass::SetShaderVertexFormat(std::shared_ptr<VertexFormat> shaderVertexFormat)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(shaderVertexFormat);
+
+    mShaderVertexFormat = std::move(shaderVertexFormat);
+}
+
+/************************************************************************/
+/* State Management                                                     */
+/************************************************************************/
 BlendState *
 VisualEffectPass::GetBlendState()
 {
@@ -107,6 +88,14 @@ const BlendState *
 VisualEffectPass::GetBlendState() const
 {
     return mBlendState.get();
+}
+
+void
+VisualEffectPass::SetBlendState(std::unique_ptr<BlendState> blendStateHandle)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(blendStateHandle);
+
+    mBlendState.reset(blendStateHandle.release());
 }
 
 const CullState *
@@ -121,6 +110,14 @@ VisualEffectPass::GetCullState()
     return mCullState.get();
 }
 
+void
+VisualEffectPass::SetCullState(std::unique_ptr<CullState> cullStateHandle)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(cullStateHandle);
+
+    mCullState.reset(cullStateHandle.release());
+}
+
 const DepthTestState *
 VisualEffectPass::GetDepthTestState() const
 {
@@ -131,6 +128,14 @@ DepthTestState *
 VisualEffectPass::GetDepthTestState()
 {
     return mDepthTestState.get();
+}
+
+void
+VisualEffectPass::SetDepthTestState(std::unique_ptr<DepthTestState> depthTestStateHandle)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(depthTestStateHandle);
+
+    mDepthTestState.reset(depthTestStateHandle.release());
 }
 
 const OffsetState *
@@ -145,6 +150,14 @@ VisualEffectPass::GetOffsetState()
     return mOffsetState.get();
 }
 
+void
+VisualEffectPass::SetOffsetState(std::unique_ptr<OffsetState> offsetStateHandle)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(offsetStateHandle);
+
+    mOffsetState.reset(offsetStateHandle.release());
+}
+
 const StencilTestState *
 VisualEffectPass::GetStencilTestState() const
 {
@@ -155,6 +168,14 @@ StencilTestState *
 VisualEffectPass::GetStencilTestState()
 {
     return mStencilTestState.get();
+}
+
+void
+VisualEffectPass::SetStencilTestState(std::unique_ptr<StencilTestState> stencilTestStateHandle)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(stencilTestStateHandle);
+
+    mStencilTestState.reset(stencilTestStateHandle.release());
 }
 
 const WireframeState *
@@ -168,4 +189,13 @@ VisualEffectPass::GetWireframeState()
 {
     return mWireframeState.get();
 }
+
+void
+VisualEffectPass::SetWireframeState(std::unique_ptr<WireframeState> wireframeStateHandle)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(wireframeStateHandle);
+
+    mWireframeState.reset(wireframeStateHandle.release());
+}
+
 }

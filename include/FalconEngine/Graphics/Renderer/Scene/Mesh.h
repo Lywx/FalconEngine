@@ -18,8 +18,8 @@ class VertexFormat;
 class VertexGroup;
 
 // @summary Represents bundle of geometry and all the metadata used in rendering.
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API Mesh : public Object
+FALCON_ENGINE_CLASS_BEGIN Mesh :
+public Object
 {
     FALCON_ENGINE_RTTI_DECLARE;
 
@@ -62,15 +62,15 @@ public:
     /* Deep and Shallow Copy                                                */
     /************************************************************************/
     virtual void
-    CopyTo(Mesh *lhs) const;
+    CopyTo(Mesh * lhs) const;
 
     virtual Mesh *
     GetClone() const;
 
 protected:
-    std::shared_ptr<Material>  mMaterial;
+    std::shared_ptr<Material> mMaterial;
     std::shared_ptr<Primitive> mPrimitive;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

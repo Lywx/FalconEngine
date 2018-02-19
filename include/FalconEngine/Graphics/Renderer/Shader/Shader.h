@@ -137,6 +137,9 @@ public:
     ShaderSource *
     GetShaderSource(int shaderIndex) const;
 
+    ShaderSource *
+    GetShaderSource(ShaderType shaderType) const;
+
     auto
     GetShaderSourceBegin() const
     {
@@ -166,7 +169,7 @@ public:
 
 private:
     std::unordered_map<int, std::shared_ptr<ShaderSource>> mSourceTable;
-    std::unordered_map<std::string, ShaderUniform>         mUniformTable;
+    std::unordered_map<std::string, ShaderUniform> mUniformTable;
 };
 FALCON_ENGINE_CLASS_END
 

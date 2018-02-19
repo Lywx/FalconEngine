@@ -123,7 +123,7 @@ AssetTool::GetShaderType(const std::string& shaderFilePath)
     }
 
     FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(
-        GetFormatString("Unidentified shader type: '%s'.", shaderExtension));
+        GetFormatString("Unidentified shader type: '%s'.", shaderExtension.c_str()));
 }
 
 void

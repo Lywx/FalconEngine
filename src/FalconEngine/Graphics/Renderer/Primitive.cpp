@@ -3,6 +3,8 @@
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
 
+using namespace std;
+
 namespace FalconEngine
 {
 
@@ -15,15 +17,14 @@ Primitive::Primitive(PrimitiveType type) :
 }
 
 Primitive::Primitive(PrimitiveType type,
-                     const std::shared_ptr<VertexFormat>& vertexFormat,
-                     const std::shared_ptr<VertexGroup>& vertexGroup,
-                     const std::shared_ptr<IndexBuffer>& indexBuffer) :
+                     std::shared_ptr<VertexFormat> vertexFormat,
+                     std::shared_ptr<VertexGroup> vertexGroup,
+                     std::shared_ptr<IndexBuffer> indexBuffer) :
     mType(type),
-    mAabb(),
-    mVertexFormat(vertexFormat),
-    mVertexGroup(vertexGroup),
+    mVertexFormat(move(vertexFormat)),
+    mVertexGroup(move(vertexGroup)),
     mVertexOffset(0),
-    mIndexBuffer(indexBuffer),
+    mIndexBuffer(move(indexBuffer)),
     mIndexOffset(0)
 {
     // NOTE(Wuxiang): All vertex format, vertex group and index buffer is allowed to be null

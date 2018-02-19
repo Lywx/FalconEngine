@@ -100,6 +100,13 @@ DebugEffect::DebugEffect(bool depthTestEnabled)
     auto pass = make_unique<VisualEffectPass>();
     pass->SetShader(shader);
 
+    auto shaderVertexFormat = std::make_shared<VertexFormat>();
+    shaderVertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
+    shaderVertexFormat->PushVertexAttribute(1, "Color", VertexAttributeType::FloatVec4, false, 0);
+    shaderVertexFormat->PushVertexAttribute(2, "Camera", VertexAttributeType::Int, false, 0);
+    shaderVertexFormat->FinishVertexAttribute();
+    pass->SetShaderVertexFormat(shaderVertexFormat);
+
     auto blendState = make_unique<BlendState>();
     blendState->mEnabled = false;
     blendState->mSourceFactor = BlendFactor::SRC_ALPHA;
@@ -138,27 +145,9 @@ DebugEffect::CreateInstance(Visual *visual, const std::shared_ptr<DebugEffectPar
     InitializeInstance(instance.get(), params);
 }
 
-std::shared_ptr<VertexFormat>
-DebugEffect::GetVertexFormatSp() const
-{
-    static shared_ptr<VertexFormat> sVertexFormat = CreateVertexFormat();
-    return sVertexFormat;
-}
-
 /************************************************************************/
 /* Protected Members                                                    */
 /************************************************************************/
-std::shared_ptr<VertexFormat>
-DebugEffect::CreateVertexFormat() const
-{
-    auto vertexFormat = std::make_shared<VertexFormat>();
-    vertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
-    vertexFormat->PushVertexAttribute(1, "Color", VertexAttributeType::FloatVec4, false, 0);
-    vertexFormat->PushVertexAttribute(2, "Camera", VertexAttributeType::Int, false, 0);
-    vertexFormat->FinishVertexAttribute();
-    return vertexFormat;
-}
-
 void
 DebugEffect::InitializeInstance(
     VisualEffectInstance              *instance,

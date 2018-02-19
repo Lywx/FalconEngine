@@ -39,8 +39,8 @@ public:
 };
 
 // @summary Implements material coloring with mesh visualization.
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API MeshEffect : public VisualEffect
+FALCON_ENGINE_CLASS_BEGIN MeshEffect :
+public VisualEffect
 {
     FALCON_ENGINE_EFFECT_DECLARE(MeshEffect);
 
@@ -56,24 +56,18 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    CreateInstance(_IN_ Node                                    *node,
+    CreateInstance(_IN_ Node                                    * node,
                    _IN_ const std::shared_ptr<MeshEffectParams>& params);
 protected:
     /************************************************************************/
     /* Protected Members                                                    */
     /************************************************************************/
-    virtual std::shared_ptr<VertexFormat>
-    CreateVertexFormat() const override;
-
-    virtual std::shared_ptr<VertexFormat>
-    GetVertexFormatSp() const override;
-
     void
-    InitializeInstance(_IN_OUT_ VisualEffectInstance                    *instance,
+    InitializeInstance(_IN_OUT_ VisualEffectInstance                    * instance,
                        _IN_     const std::shared_ptr<Material>&         material,
                        _IN_     const std::shared_ptr<MeshEffectParams>& params) const;
 
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

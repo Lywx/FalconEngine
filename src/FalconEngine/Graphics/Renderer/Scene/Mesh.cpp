@@ -1,5 +1,7 @@
 #include <FalconEngine/Graphics/Renderer/Scene/Mesh.h>
 
+#include <utility>
+
 #include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Model.h>
@@ -14,15 +16,13 @@ FALCON_ENGINE_RTTI_IMPLEMENT(Mesh, Object);
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-Mesh::Mesh(std::shared_ptr<Primitive> primitives, std::shared_ptr<Material> material) :
-    mMaterial(material),
-    mPrimitive(primitives)
+Mesh::Mesh(std::shared_ptr<Primitive> primitive, std::shared_ptr<Material> material) :
+    mMaterial(std::move(material)),
+    mPrimitive(std::move(primitive))
 {
 }
 
-Mesh::Mesh() :
-    mMaterial(),
-    mPrimitive()
+Mesh::Mesh()
 {
 }
 

@@ -49,6 +49,9 @@ VisualEffect::~VisualEffect()
 void
 VisualEffect::InsertPass(std::unique_ptr<VisualEffectPass> pass)
 {
+    FALCON_ENGINE_CHECK_NULLPTR(pass->GetShader());
+    FALCON_ENGINE_CHECK_NULLPTR(pass->GetShaderVertexFormat());
+
     mEffectPassList.push_back(move(pass));
 }
 
@@ -135,9 +138,9 @@ VisualEffect::CreateInstance()
 }
 
 void
-VisualEffect::CheckVertexFormatCompatible(Visual *visual) const
+VisualEffect::CheckVertexFormatCompatible(const Visual *visual) const
 {
-    auto vertexFormat = visual->GetVertexFormat();
+    auto const vertexFormat = visual->GetVertexFormat();
     if (vertexFormat)
     {
         // NOTE(Wuxiang): Allow users to provide their own vertex format as
@@ -146,40 +149,21 @@ VisualEffect::CheckVertexFormatCompatible(Visual *visual) const
         // they provide visual to use that shader effect. The user should be able
         // to customize the binding index of vertex format and use much more
         // flexible buffer arrangement if they need that benefit.
-        if (vertexFormat->IsVertexAttributeCompatible(GetVertexFormatSp()))
-        {
-            return;
-        }
 
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Vertex format is not compatible.");
+        auto const passNum = GetPassNum();
+        for (auto passIndex = 0; passIndex < passNum; ++passIndex)
+        {
+            auto const passVertexFormat = GetPass(passIndex)->GetShaderVertexFormat();
+            if (!vertexFormat->IsVertexAttributeCompatible(passVertexFormat))
+            {
+                FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Vertex format is not compatible.");
+            }
+        }
     }
     else
     {
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Visual is not correctly initialized.");
     }
-}
-
-std::shared_ptr<VertexFormat>
-VisualEffect::CreateVertexFormat() const
-{
-    shared_ptr<VertexFormat> vertexFormat = make_shared<VertexFormat>();
-    vertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
-    vertexFormat->PushVertexAttribute(1, "Normal", VertexAttributeType::FloatVec3, false, 0);
-    vertexFormat->PushVertexAttribute(2, "TexCoord", VertexAttributeType::FloatVec2, false, 0);
-    vertexFormat->FinishVertexAttribute();
-    return vertexFormat;
-}
-
-std::shared_ptr<VertexFormat>
-VisualEffect::GetVertexFormatSp() const
-{
-    // NOTE(Wuxiang): Because the static qualifier here would only evaluate the
-    // first time using dynamic typing to get the correct vertex format you could
-    // expect that it only return the initialized value called for the first time.
-    // So it is necessary to re-implement this class in derived classes so that
-    // you could get a static variable for each derived class.
-    static shared_ptr<VertexFormat> sVertexFormat = CreateVertexFormat();
-    return sVertexFormat;
 }
 
 void
@@ -188,13 +172,15 @@ VisualEffect::CheckVertexGroupCompatible(Visual *visual) const
     auto vertexGroup = visual->GetVertexGroup();
     if (vertexGroup)
     {
-        auto vertexFormat = GetVertexFormatSp();
-        if (vertexFormat->IsVertexBindingCompatible(vertexGroup))
+        auto const passNum = GetPassNum();
+        for (auto passIndex = 0; passIndex < passNum; ++passIndex)
         {
-            return;
+            auto const passVertexFormat = GetPass(passIndex)->GetShaderVertexFormat();
+            if (!passVertexFormat->IsVertexBindingCompatible(vertexGroup))
+            {
+                FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Vertex group is not compatible.");
+            }
         }
-
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Vertex group is not compatible.");
     }
     else
     {

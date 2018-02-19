@@ -4,8 +4,10 @@
 #include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
+#include <FalconEngine/Graphics/Renderer/Shader/ShaderSource.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DMapping.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DRendererData.h>
+#include <FalconEngine/Platform/Win32/Win32Exception.h>
 
 namespace FalconEngine
 {
@@ -22,7 +24,7 @@ PlatformVertexFormat::PlatformVertexFormat(Renderer *renderer, const VertexForma
 
 PlatformVertexFormat::~PlatformVertexFormat()
 {
-    mInputLayout->Release();
+    mInputLayout.Reset();
 }
 
 /************************************************************************/
@@ -31,7 +33,7 @@ PlatformVertexFormat::~PlatformVertexFormat()
 void
 PlatformVertexFormat::Enable(Renderer *renderer)
 {
-    renderer->mData->GetContext()->IASetInputLayout(mInputLayout);
+    renderer->mData->GetContext()->IASetInputLayout(mInputLayout.Get());
 }
 
 
@@ -47,32 +49,32 @@ PlatformVertexFormat::Disable(Renderer *renderer)
 void
 PlatformVertexFormat::CreateInputLayout(ID3D11Device4 *device)
 {
-    auto& vertexAttributeList = mVertexFormat->mVertexAttributeList;
-
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementList;
-    inputElementList.assign(vertexAttributeList.size(), D3D11_INPUT_ELEMENT_DESC());
+    inputElementList.assign(mVertexFormat->GetVertexAttributeNum(), D3D11_INPUT_ELEMENT_DESC());
 
-    for (size_t vertexAttribIndex = 0; vertexAttribIndex < vertexAttributeList.size(); ++vertexAttribIndex)
+    int vertexAttribNum = mVertexFormat->GetVertexAttributeNum();
+    for (int vertexAttribIndex = 0; vertexAttribIndex < vertexAttribNum; ++vertexAttribIndex)
     {
-        auto& vertexAttribute = vertexAttributeList[vertexAttribIndex];
-        inputElementList[vertexAttribIndex].SemanticName = vertexAttribute.mName.c_str();
-        inputElementList[vertexAttribIndex].SemanticIndex = vertexAttribute.mLocation;
-        inputElementList[vertexAttribIndex].Format = Direct3DShaderAttributeFormat[int(vertexAttribute.mType)];
-        inputElementList[vertexAttribIndex].InputSlot = vertexAttribute.mBindingIndex;
-        inputElementList[vertexAttribIndex].AlignedByteOffset = vertexAttribute.mStride;
-        inputElementList[vertexAttribIndex].InputSlotClass = vertexAttribute.mDivision == 0 ? D3D11_INPUT_PER_VERTEX_DATA : D3D11_INPUT_PER_INSTANCE_DATA;
-        inputElementList[vertexAttribIndex].InstanceDataStepRate = vertexAttribute.mDivision;
+        auto const& vertexAttrib = mVertexFormat->GetVertexAttribute(vertexAttribIndex);
+
+        inputElementList[vertexAttribIndex].SemanticName = vertexAttrib.mName.c_str();
+        inputElementList[vertexAttribIndex].SemanticIndex = vertexAttrib.mLocation;
+        inputElementList[vertexAttribIndex].Format = Direct3DShaderAttributeFormat[int(vertexAttrib.mType)];
+        inputElementList[vertexAttribIndex].InputSlot = vertexAttrib.mBindingIndex;
+        inputElementList[vertexAttribIndex].AlignedByteOffset = vertexAttrib.mStride;
+        inputElementList[vertexAttribIndex].InputSlotClass = vertexAttrib.mDivision == 0 ? D3D11_INPUT_PER_VERTEX_DATA : D3D11_INPUT_PER_INSTANCE_DATA;
+        inputElementList[vertexAttribIndex].InstanceDataStepRate = vertexAttrib.mDivision;
     }
 
     // Create the vertex input layout.
-    auto result = device->CreateInputLayout(
-                      inputElementList.data(),
-                      inputElementList.size(),
-                      vertexShaderBuffer->GetBufferPointer(),
-                      vertexShaderBuffer->GetBufferSize(),
-                      &mInputLayout);
-
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+    ShaderSource *vertexShader = mVertexFormat->GetVertexShader();
+    D3DCheckSuccess(
+        device->CreateInputLayout(
+            inputElementList.data(),
+            inputElementList.size(),
+            vertexShader->mSource.data(),
+            vertexShader->mSource.size(),
+            mInputLayout.ReleaseAndGetAddressOf()));
 }
 
 }

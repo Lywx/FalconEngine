@@ -3,6 +3,7 @@
 #include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
+#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
 
 namespace FalconEngine
 {
@@ -10,6 +11,11 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
+VertexFormat::VertexFormat(const std::shared_ptr<Shader>& shader) :
+    mShader(shader)
+{
+}
+
 VertexFormat::VertexFormat()
 {
 }
@@ -51,6 +57,12 @@ int
 VertexFormat::GetVertexAttributeNum() const
 {
     return int(mVertexAttributeList.size());
+}
+
+const VertexAttribute&
+VertexFormat::GetVertexAttribute(int attributeIndex) const
+{
+    return mVertexAttributeList.at(attributeIndex);
 }
 
 VertexAttribute&
@@ -117,9 +129,9 @@ VertexFormat::IsVertexBindingCompatible(const VertexGroup *rhs) const
 
     // NOTE(Wuxiang): Allow the rhs vertex group has more vertex buffer binding
     // than this vertex format.
-    for (size_t attributeIndex = 0; attributeIndex < mVertexAttributeList.size(); ++attributeIndex)
+    for (const auto & attributeIndex : mVertexAttributeList)
     {
-        if (!rhs->IsVertexBufferBindingAvailable(mVertexAttributeList[attributeIndex].mBindingIndex))
+        if (!rhs->IsVertexBufferBindingAvailable(attributeIndex.mBindingIndex))
         {
             return false;
         }
@@ -139,6 +151,12 @@ VertexFormat::GetVertexBufferStride(int attributeBindingIndex) const
     {
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Vertex attribute has not finished initialization.");
     }
+}
+
+ShaderSource *
+VertexFormat::GetVertexShader() const
+{
+    return mShader->GetShaderSource(ShaderType::VertexShader);
 }
 
 }

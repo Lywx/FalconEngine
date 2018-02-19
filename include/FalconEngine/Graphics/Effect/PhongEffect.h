@@ -55,12 +55,6 @@ public:
                    _IN_     const std::shared_ptr<PhongEffectParams>& params);
 
 protected:
-    virtual std::shared_ptr<VertexFormat>
-    CreateVertexFormat() const override;
-
-    virtual std::shared_ptr<VertexFormat>
-    GetVertexFormatSp() const override;
-
     // @summary Add required parameters to the existing visual effect instance.
     void
     InitializeInstance(_IN_OUT_ VisualEffectInstance                     *instance,

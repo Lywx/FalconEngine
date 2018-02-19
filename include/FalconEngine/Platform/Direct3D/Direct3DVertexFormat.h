@@ -11,13 +11,13 @@ namespace FalconEngine
 class Renderer;
 class VertexFormat;
 
-class FALCON_ENGINE_API PlatformVertexFormat final
+FALCON_ENGINE_CLASS_BEGIN PlatformVertexFormat final
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformVertexFormat(Renderer *, const VertexFormat *vertexFormat);
+    explicit PlatformVertexFormat(Renderer *, const VertexFormat * vertexFormat);
     ~PlatformVertexFormat();
 
 public:
@@ -25,22 +25,24 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Enable(Renderer *renderer);
+    Enable(Renderer * renderer);
 
     void
-    Disable(Renderer *renderer);
+    Disable(Renderer * renderer);
 
     /************************************************************************/
     /* Private Members                                                      */
     /************************************************************************/
 private:
     void
-    CreateInputLayout(ID3D11Device4 *device);
+    CreateInputLayout(ID3D11Device4 * device);
 
 private:
-    ID3D11InputLayout  *mInputLayout;
+    Microsoft::WRL::ComPtr<ID3D11InputLayout> mInputLayout;
     const VertexFormat *mVertexFormat;
 };
+FALCON_ENGINE_CLASS_END
+
 }
 
 #endif

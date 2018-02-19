@@ -19,7 +19,9 @@ Visual::Visual(const std::shared_ptr<Mesh>& mesh) :
 {
     // NOTE(Wuxiang): By default Visual "inherit" from Primitives' vertex
     // information. You could override those vertex information by using the
-    // setter in Visual API.
+    // setter in Visual API. The vertex format is used in runtime
+    // for Visual Effect to check whether the Primitive vertex format is compatible
+    // with Visual Effect's shader.
     auto primitive = mesh->GetPrimitive();
 
     mVertexFormat = primitive->GetVertexFormat();
@@ -50,7 +52,6 @@ Visual::GetEffectInstanceNum() const
 void
 Visual::PushEffectInstance(const std::shared_ptr<VisualEffectInstance>& effectInstance)
 {
-    // NOTE(Wuxiang): Don't allow
     FALCON_ENGINE_CHECK_NULLPTR(effectInstance);
 
     mEffectInstances.push_back(effectInstance);

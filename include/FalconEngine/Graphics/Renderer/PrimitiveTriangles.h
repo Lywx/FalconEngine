@@ -7,7 +7,8 @@ namespace FalconEngine
 
 // @summary Represents triangle primitives, which includes triangle
 // strips, triangle fans.
-class FALCON_ENGINE_API PrimitiveTriangles : public Primitive
+FALCON_ENGINE_CLASS_BEGIN PrimitiveTriangles :
+public Primitive
 {
 public:
     /************************************************************************/
@@ -25,5 +26,6 @@ public:
     virtual size_t
     GetTriangleNum() const;
 };
+FALCON_ENGINE_CLASS_END
 
 }

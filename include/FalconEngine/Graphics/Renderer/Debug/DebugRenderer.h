@@ -8,6 +8,7 @@
 #include <FalconEngine/Graphics/Renderer/PrimitiveLines.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveTriangles.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveQuads.h>
+#include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/Debug/DebugRenderMessageManager.h>
 #include <FalconEngine/Graphics/Renderer/Debug/DebugRendererHelper.h>
 #include <FalconEngine/Graphics/Renderer/Resource/BufferCircular.h>
@@ -197,7 +198,7 @@ private:
 
         // NOTE(Wuxiang): Even two effect have different depth test state, they
         // can still share vertex format.
-        auto vertexFormat = visualEffect->GetVertexFormatSp();
+        auto vertexFormat = visualEffect->GetPass(0)->GetShaderVertexFormatSp();
         auto vertexGroup = make_shared<VertexGroup>();
         vertexGroup->SetVertexBuffer(0, vertexBuffer, 0, vertexFormat->GetVertexBufferStride(0));
 

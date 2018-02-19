@@ -55,6 +55,7 @@ public:
            _IN_     const std::string& assetFilePath,
            _IN_     const T&           assetImportOption)
     {
+        // NEW(Wuxiang): Unified asset importing.
         switch (asset->mAssetType)
         {
         case AssetType::None:

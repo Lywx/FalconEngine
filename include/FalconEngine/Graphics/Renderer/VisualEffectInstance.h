@@ -32,7 +32,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    VisualEffectInstance(std::shared_ptr<VisualEffect> effect);
+    VisualEffectInstance(const std::shared_ptr<VisualEffect>& effect);
     ~VisualEffectInstance();
 
     // NOTE(Wuxiang): unique_ptr is not allowed to copy.
@@ -45,6 +45,9 @@ public:
     /************************************************************************/
     const VisualEffect *
     GetEffect() const;
+
+    VisualEffect *
+    GetEffect();
 
     int
     GetPassNum() const;

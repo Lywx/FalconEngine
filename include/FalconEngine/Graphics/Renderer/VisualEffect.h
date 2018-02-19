@@ -42,8 +42,8 @@ class WireframeState;
 // with. This way you could also avoid some mess for effect memory management,
 // because you could guarantee the effect params is kept safely when it is binded
 // to the visual by using std::shared_ptr.
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API VisualEffect : public std::enable_shared_from_this<VisualEffect>
+FALCON_ENGINE_CLASS_BEGIN VisualEffect :
+public std::enable_shared_from_this<VisualEffect>
 {
 protected:
     /************************************************************************/
@@ -112,22 +112,16 @@ protected:
     CreateInstance();
 
     void
-    CheckVertexFormatCompatible(Visual *visual) const;
-
-    virtual std::shared_ptr<VertexFormat>
-    CreateVertexFormat() const = 0;
-
-    virtual std::shared_ptr<VertexFormat>
-    GetVertexFormatSp() const = 0;
+    CheckVertexFormatCompatible(const Visual * visual) const;
 
     void
-    CheckVertexGroupCompatible(Visual *visual) const;
+    CheckVertexGroupCompatible(Visual * visual) const;
 
     // @remark You don't need to worry about the lifetime of returned visual effect
     // instance. It is managed by the Visual class using shared_ptr.
     template <typename T>
     std::shared_ptr<VisualEffectInstance>
-    InstallInstance(Visual *visual, const std::shared_ptr<T>& params)
+    InstallInstance(Visual * visual, const std::shared_ptr<T>& params)
     {
         static_assert(std::is_base_of<VisualEffectParams, T>::value, "Params must derive from VisualEffectParams");
 
@@ -136,11 +130,6 @@ protected:
         // NOTE(Wuxiang): Must check the vertex format is compatible or the vertex
         // data might be passed unexpectedly.
         CheckVertexFormatCompatible(visual);
-
-        // NOTE(Wuxiang): After checking the vertex format is compatible, it is
-        // necessary to replace visual's default vertex format so that all
-        // needed vertex attributes are enabled when rendered.
-        visual->SetVertexFormat(GetVertexFormatSp());
 
         // NOTE(Wuxiang): Must check the user have correctly set up vertex
         // group that is compatible with newly inserted vertex format.
@@ -154,33 +143,34 @@ protected:
     }
 
     void
-    TraverseLevelOrder(Node *node, std::function<void(Visual *visual)> visit) const;
+    TraverseLevelOrder(Node * node, std::function<void(Visual *visual)> visit) const;
 
     /************************************************************************/
     /* Shader Uniform Utility                                               */
     /************************************************************************/
     void
-    SetShaderUniformAutomaticModelTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const;
+    SetShaderUniformAutomaticModelTransform(VisualEffectInstance * visualEffectInstance, int passIndex, const std::string & uniformName) const;
 
     void
-    SetShaderUniformAutomaticModelViewTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const;
+    SetShaderUniformAutomaticModelViewTransform(VisualEffectInstance * visualEffectInstance, int passIndex, const std::string & uniformName) const;
 
     void
-    SetShaderUniformAutomaticModelViewProjectionTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const;
+    SetShaderUniformAutomaticModelViewProjectionTransform(VisualEffectInstance * visualEffectInstance, int passIndex, const std::string & uniformName) const;
 
     void
-    SetShaderUniformAutomaticViewProjectionTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const;
+    SetShaderUniformAutomaticViewProjectionTransform(VisualEffectInstance * visualEffectInstance, int passIndex, const std::string & uniformName) const;
 
     void
-    SetShaderUniformAutomaticNormalTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const;
+    SetShaderUniformAutomaticNormalTransform(VisualEffectInstance * visualEffectInstance, int passIndex, const std::string & uniformName) const;
 
     void
-    SetShaderUniformAutomaticScreenTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const;
+    SetShaderUniformAutomaticScreenTransform(VisualEffectInstance * visualEffectInstance, int passIndex, const std::string & uniformName) const;
 
 protected:
-    std::vector<std::unique_ptr<VisualEffectPass>> mEffectPassList; // Passes contained in this effect.
+    // Passes contained in this effect.
+    std::vector<std::unique_ptr<VisualEffectPass>> mEffectPassList;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 #define FALCON_ENGINE_EFFECT_DECLARE(klass)
 #define FALCON_ENGINE_EFFECT_IMPLEMENT(klass)

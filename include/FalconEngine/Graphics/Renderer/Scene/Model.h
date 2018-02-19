@@ -15,14 +15,14 @@ class Sampler;
 
 class Node;
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API Model : public Asset
+FALCON_ENGINE_CLASS_BEGIN Model :
+public Asset
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    Model(AssetSource assetSource, const std::string& fileName, const std::string& filePath);
+    Model(AssetSource assetSource, const std::string & fileName, const std::string & filePath);
     virtual ~Model();
 
 public:
@@ -48,16 +48,19 @@ public:
     /************************************************************************/
     /* Model Metadata                                                       */
     /************************************************************************/
-    int                      mIndexNum;
-    int                      mVertexNum;
+    int mIndexNum;
+    int mVertexNum;
 
 private:
     /************************************************************************/
     /* Model Runtime Data                                                   */
     /************************************************************************/
-    std::shared_ptr<Node>    mNode;                                          // Model root node.
-    std::shared_ptr<Sampler> mSampler;                                       // Model texture sampler.
+    // Model root node.
+    std::shared_ptr<Node> mNode;
+
+    // Model texture sampler.
+    std::shared_ptr<Sampler> mSampler;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

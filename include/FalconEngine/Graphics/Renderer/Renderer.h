@@ -552,7 +552,7 @@ public:
     /* Pass Management                                                      */
     /************************************************************************/
     void
-    Enable(const VisualEffectPass *pass);
+    Enable(VisualEffectPass *pass);
 
     void
     Enable(const VisualEffectInstancePass *pass, const Camera *camera, const Visual *visual);

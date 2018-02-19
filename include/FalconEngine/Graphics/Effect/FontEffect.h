@@ -61,13 +61,7 @@ public:
     CreateInstance(_IN_OUT_ Visual                                  *visual,
                    _IN_     const std::shared_ptr<FontEffectParams>& params);
 
-    virtual std::shared_ptr<VertexFormat>
-    GetVertexFormatSp() const override;
-
 protected:
-    virtual std::shared_ptr<VertexFormat>
-    CreateVertexFormat() const override;
-
     // @summary Add required parameters to the existing visual effect instance.
     void
     InitializeInstance(_IN_OUT_ VisualEffectInstance             *instance,

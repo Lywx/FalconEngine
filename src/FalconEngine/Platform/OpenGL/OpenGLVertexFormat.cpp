@@ -47,8 +47,11 @@ PlatformVertexFormat::CreateVertexArray()
     glGenVertexArrays(1, &mVertexArrayObj);
     glBindVertexArray(mVertexArrayObj);
 
-    for (auto& vertexAttrib : mVertexFormatPtr->mVertexAttributeList)
+    int vertexAttribNum = mVertexFormatPtr->GetVertexAttributeNum();
+    for (int vertexAttribIndex = 0; vertexAttribIndex < vertexAttribNum; ++vertexAttribIndex)
     {
+        auto const& vertexAttrib = mVertexFormatPtr->GetVertexAttribute(vertexAttribIndex);
+
         glEnableVertexAttribArray(vertexAttrib.mLocation);
 
         glVertexAttribBinding(vertexAttrib.mLocation,

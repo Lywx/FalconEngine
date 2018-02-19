@@ -118,6 +118,12 @@ Shader::GetShaderSource(int shaderIndex) const
     return mSourceTable.at(shaderIndex).get();
 }
 
+ShaderSource *
+Shader::GetShaderSource(ShaderType shaderType) const
+{
+    return GetShaderSource(ShaderIndexMap.at(shaderType));
+}
+
 void
 Shader::PushShaderFile(ShaderType shaderType, const std::string& shaderPath)
 {

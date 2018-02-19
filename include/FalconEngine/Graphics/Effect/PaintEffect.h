@@ -50,12 +50,9 @@ public:
         _IN_     const std::shared_ptr<PaintEffectParams>& params);
 
 protected:
-    virtual std::shared_ptr<VertexFormat>
-    CreateVertexFormat() const override;
-
-    virtual std::shared_ptr<VertexFormat>
-    GetVertexFormatSp() const override;
-
+    /************************************************************************/
+    /* Protected Members                                                    */
+    /************************************************************************/
     void
     InitializeInstance(
         _IN_OUT_ VisualEffectInstance                     *instance,

@@ -30,8 +30,7 @@ class VertexGroup;
 
 // @summary Primitive represents all the resource and metadata that defines a
 // geometry primitive that could be rendered into a scene.
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API Primitive
+FALCON_ENGINE_CLASS_BEGIN Primitive
 {
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -39,9 +38,9 @@ class FALCON_ENGINE_API Primitive
 protected:
     explicit Primitive(PrimitiveType type);
     Primitive(PrimitiveType type,
-              const std::shared_ptr<VertexFormat>& vertexFormat,
-              const std::shared_ptr<VertexGroup>& vertexGroup,
-              const std::shared_ptr<IndexBuffer>& indexBuffer);
+              std::shared_ptr<VertexFormat> vertexFormat,
+              std::shared_ptr<VertexGroup> vertexGroup,
+              std::shared_ptr<IndexBuffer> indexBuffer);
 
 public:
     virtual ~Primitive();
@@ -62,7 +61,7 @@ public:
     GetAabb() const;
 
     void
-    SetAabb(const Aabb& aabb);
+    SetAabb(const Aabb & aabb);
 
     /************************************************************************/
     /* Vertex Format Management                                             */
@@ -122,7 +121,7 @@ public:
     /* Deep and Shallow Copy                                                */
     /************************************************************************/
     void
-    CopyTo(Primitive *rhs);
+    CopyTo(Primitive * rhs);
 
 protected:
     // NOTE(Wuxiang): Notice that both Primitive and Visual class contain vertex
@@ -134,18 +133,17 @@ protected:
     // different buffer into the vertex group you could set the vertex group in
     // in Visual class so that you retain the vertex information in the Primitive
     // class, which is necessary when creating special use vertex format.
-    PrimitiveType                   mType;
+    PrimitiveType mType;
 
-    std::shared_ptr<Aabb>           mAabb;
+    std::shared_ptr<Aabb> mAabb;
 
-    std::shared_ptr<VertexFormat>   mVertexFormat;
-    std::shared_ptr<VertexGroup>    mVertexGroup;
-    int                             mVertexOffset;
+    std::shared_ptr<VertexFormat> mVertexFormat;
+    std::shared_ptr<VertexGroup> mVertexGroup;
+    int mVertexOffset;
 
-    std::shared_ptr<IndexBuffer>    mIndexBuffer;
-    int                             mIndexOffset;
-
+    std::shared_ptr<IndexBuffer> mIndexBuffer;
+    int mIndexOffset;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

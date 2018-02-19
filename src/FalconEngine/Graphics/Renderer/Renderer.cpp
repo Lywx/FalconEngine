@@ -1027,7 +1027,7 @@ Renderer::Disable(const Shader *shader)
 /* Pass Management                                                      */
 /************************************************************************/
 void
-Renderer::Enable(const VisualEffectPass *pass)
+Renderer::Enable(VisualEffectPass *pass)
 {
     if (pass == mPassPrevious)
     {
@@ -1038,6 +1038,10 @@ Renderer::Enable(const VisualEffectPass *pass)
         mPassPrevious = pass;
     }
 
+    Enable(pass->GetShader());
+    Enable(pass->GetShaderVertexFormat());
+
+    // Enable pass's renderer state.
     mState->Set(this,
                 pass->GetBlendState(),
                 pass->GetCullState(),
@@ -1051,9 +1055,6 @@ void
 Renderer::Enable(const VisualEffectInstancePass *pass, const Camera *camera, const Visual *visual)
 {
     FALCON_ENGINE_CHECK_NULLPTR(pass);
-
-    // Enable required shader.
-    Enable(pass->GetShader());
 
     // Enable required shader textures.
     for (auto textureIter = pass->GetShaderTextureBegin(); textureIter != pass->GetShaderTextureEnd(); ++textureIter)
@@ -1161,43 +1162,38 @@ Renderer::Draw(
     // NOTE(Wuxiang): The order of enabling resource depends on the how fast
     // context would switch those resources.
 
-    // NOTE(Wuxiang): Currently this function assume that all passes are using
-    // same vertex attribute array, so that we don't switch vertex format between
-    // different shader.
-
     auto visualEffect = visualEffectInstance->GetEffect();
-
-    // Enable vertex attribute array.
-    auto vertexFormat = visual->GetVertexFormat();
-    Enable(vertexFormat);
-
-    // Enable vertex group and consequently vertex buffer.
-    auto vertexGroup = visual->GetVertexGroup();
-    Enable(vertexGroup);
 
     // Fetch primitive in Visual.
     auto primitive = visual->GetMesh()->GetPrimitive();
 
-    auto indexBuffer = primitive->GetIndexBuffer();
-    if (indexBuffer)
-    {
-        // Enable index buffer.
-        Enable(indexBuffer);
-    }
-
-    const int passNum = visualEffectInstance->GetPassNum();
+    const int passNum = visualEffect->GetPassNum();
     for (int passIndex = 0; passIndex < passNum; ++passIndex)
     {
-        auto visualEffectInstancePass = visualEffectInstance->GetPass(passIndex);
-
-        // Enable effect pass.
         auto visualEffectPass = visualEffect->GetPass(passIndex);
         Enable(visualEffectPass);
 
-        // Enable effect instance pass.
+        auto visualEffectInstancePass = visualEffectInstance->GetPass(passIndex);
         Enable(visualEffectInstancePass, camera, visual);
 
-        // Draw primitive.
+        // NOTE(Wuxiang): OpenGL require VAO is bound before vertex
+        // buffer is bound. Direct3D doesn't require this.
+
+        // Enable vertex group and consequently vertex buffer.
+        auto vertexGroup = visual->GetVertexGroup();
+        Enable(vertexGroup);
+
+        // NOTE(Wuxiang): OpenGL also stores index buffer binding in VAO.
+        // https://stackoverflow.com/questions/33863426/vaos-and-element-buffer-objects
+        // https://www.khronos.org/opengl/wiki/Vertex_Specification#Index_buffers
+        // If no VAO is bound, then you cannot bind a buffer object to GL_ELEMENT_ARRAY_BUFFER.
+
+        auto indexBuffer = primitive->GetIndexBuffer();
+        if (indexBuffer)
+        {
+            Enable(indexBuffer);
+        }
+
         auto primitiveInstancingNum = visualEffectInstancePass->GetShaderInstancingNum();
         DrawPrimitivePlatform(primitive, primitiveInstancingNum);
     }

@@ -32,8 +32,8 @@ public:
 };
 #pragma pack(pop)
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API DebugEffectParams : public VisualEffectParams
+FALCON_ENGINE_CLASS_BEGIN DebugEffectParams :
+public VisualEffectParams
 {
 public:
     /************************************************************************/
@@ -43,10 +43,10 @@ public:
 
 public:
     void
-    AddCamera(const Camera *camera);
+    AddCamera(const Camera * camera);
 
     void
-    RemoveCamera(const Camera *camera);
+    RemoveCamera(const Camera * camera);
 
 public:
     // Store if the index slot is used by a camera.
@@ -77,21 +77,15 @@ public:
     CreateInstance(_IN_OUT_ Visual                                   *visual,
                    _IN_     const std::shared_ptr<DebugEffectParams>& params);
 
-    virtual std::shared_ptr<VertexFormat>
-    GetVertexFormatSp() const override;
-
+protected:
     /************************************************************************/
     /* Protected Members                                                    */
     /************************************************************************/
-protected:
-    virtual std::shared_ptr<VertexFormat>
-    CreateVertexFormat() const override;
-
     void
     InitializeInstance(
         _IN_OUT_ VisualEffectInstance              *instance,
         _IN_     std::shared_ptr<DebugEffectParams> params) const;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

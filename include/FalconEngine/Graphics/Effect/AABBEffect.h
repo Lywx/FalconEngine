@@ -56,16 +56,6 @@ public:
     std::shared_ptr<VisualEffectInstance>
     CreateInstance(_IN_OUT_ Visual                                  *visual,
                    _IN_     const std::shared_ptr<AabbEffectParams>& params);
-
-    virtual std::shared_ptr<VertexFormat>
-    GetVertexFormatSp() const override;
-
-protected:
-    /************************************************************************/
-    /* Protected Members                                                    */
-    /************************************************************************/
-    virtual std::shared_ptr<VertexFormat>
-    CreateVertexFormat() const override;
 };
 
 }

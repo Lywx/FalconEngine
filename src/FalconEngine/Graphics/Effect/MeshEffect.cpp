@@ -3,13 +3,13 @@
 #include <FalconEngine/Core/GameEngineGraphics.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformAutomatic.h>
+#include <FalconEngine/Graphics/Renderer/Resource/UniformAutomatic.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexAttribute.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Light.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Material.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
-#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
 
 using namespace std;
 
@@ -91,43 +91,43 @@ MeshEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                    
     using namespace placeholders;
 
     // Transform
-    SetShaderUniformAutomaticModelViewProjectionTransform(instance, 0, "ModelViewProjectionTransform");
-    SetShaderUniformAutomaticModelViewTransform(instance, 0, "ModelViewTransform");
-    SetShaderUniformAutomaticNormalTransform(instance, 0, "NormalTransform");
-    SetShaderUniformAutomaticScreenTransform(instance, 0, "ScreenTransform");
+    SetUniformAutomaticModelViewProjectionTransform(instance, 0, "ModelViewProjectionTransform");
+    SetUniformAutomaticModelViewTransform(instance, 0, "ModelViewTransform");
+    SetUniformAutomaticNormalTransform(instance, 0, "NormalTransform");
+    SetUniformAutomaticScreenTransform(instance, 0, "ScreenTransform");
 
     // Material
     {
         // Ambient
-        instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("fe_Material.Ambient",
+        instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("fe_Material.Ambient",
                                    std::bind([ = ](const Visual *, const Camera *)
         {
             return Vector3f(material->mAmbientColor);
         }, _1, _2)));
 
         // Diffuse
-        instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("fe_Material.Diffuse",
+        instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("fe_Material.Diffuse",
                                    std::bind([ = ](const Visual *, const Camera *)
         {
             return Vector3f(material->mDiffuseColor);
         }, _1, _2)));
 
         // Emissive
-        instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("fe_Material.Emissive",
+        instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("fe_Material.Emissive",
                                    std::bind([ = ](const Visual *, const Camera *)
         {
             return Vector3f(material->mEmissiveColor);
         }, _1, _2)));
 
         // Shininess
-        instance->SetShaderUniform(0, ShareAutomatic<float>("fe_Material.Shininess",
+        instance->SetUniform(0, ShareUniformAutomatic<float>("fe_Material.Shininess",
                                    std::bind([ = ](const Visual *, const Camera *)
         {
             return material->mShininess;
         }, _1, _2)));
 
         // Specular
-        instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("fe_Material.Specular",
+        instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("fe_Material.Specular",
                                    std::bind([ = ](const Visual *, const Camera *)
         {
             return Vector3f(material->mSpecularColor);
@@ -136,13 +136,13 @@ MeshEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                    
 
     // Light
     {
-        instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("AmbientColor",
+        instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("AmbientColor",
                                    std::bind([ = ](const Visual *, const Camera *)
         {
             return Vector3f(params->mAmbientColor);
         }, _1, _2)));
 
-        instance->SetShaderUniform(0, ShareAutomatic<bool>("TextureEnabled",
+        instance->SetUniform(0, ShareUniformAutomatic<bool>("TextureEnabled",
                                    std::bind([ = ](const Visual *, const Camera *)
         {
             return params->mTextureEnabled;
@@ -151,13 +151,13 @@ MeshEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                    
 
     // Line
     {
-        instance->SetShaderUniform(0, ShareAutomatic<Vector4f>("Line.Color",
+        instance->SetUniform(0, ShareUniformAutomatic<Vector4f>("Line.Color",
                                    std::bind([ = ](const Visual *, const Camera *)
         {
             return Vector4f(params->mLineColor);
         }, _1, _2)));
 
-        instance->SetShaderUniform(0, ShareAutomatic<float>("Line.Width",
+        instance->SetUniform(0, ShareUniformAutomatic<float>("Line.Width",
                                    std::bind([ = ](const Visual *, const Camera *)
         {
             return params->mLineWidth;

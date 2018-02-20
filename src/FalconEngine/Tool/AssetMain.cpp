@@ -1,6 +1,6 @@
 #include <FalconEngine/Content/AssetTool.h>
 #include <FalconEngine/Content/AssetProcessor.h>
-#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
 
 using namespace std;
 using namespace FalconEngine;

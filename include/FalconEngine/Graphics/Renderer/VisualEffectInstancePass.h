@@ -16,7 +16,8 @@ namespace FalconEngine
 
 class Sampler;
 class Shader;
-class ShaderUniform;
+class Uniform;
+class UniformBuffer;
 class Texture;
 
 FALCON_ENGINE_CLASS_BEGIN VisualEffectInstancePass final
@@ -34,6 +35,84 @@ public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
+    int
+    GetInstancingNum() const;
+
+    void
+    SetInstancingNum(int instancingNum);
+
+    auto GetSamplerBegin() const
+    {
+        return mSamplerTable.cbegin();
+    }
+
+    auto GetSamplerEnd() const
+    {
+        return mSamplerTable.cend();
+    }
+
+    auto GetSamplerBegin()
+    {
+        return mSamplerTable.begin();
+    }
+
+    auto GetSamplerEnd()
+    {
+        return mSamplerTable.end();
+    }
+
+    int
+    GetSamplerNum() const;
+
+    const Sampler *
+    GetSampler(int textureUnit);
+
+    void
+    SetSampler(int textureUnit,
+               const Sampler * sampler,
+               unsigned int samplerShaderMask);
+
+    Shader *
+    GetShader() const;
+
+    auto GetTextureBegin() const
+    {
+        return mTextureTable.cbegin();
+    }
+
+    auto GetTextureEnd() const
+    {
+        return mTextureTable.cend();
+    }
+
+    auto GetTextureBegin()
+    {
+        return mTextureTable.begin();
+    }
+
+    auto GetTextureEnd()
+    {
+        return mTextureTable.end();
+    }
+
+    int
+    GetTextureNum() const;
+
+    const Texture *
+    GetTexture(int textureUnit) const;
+
+    void
+    SetTexture(int textureUnit,
+               const Texture * texture,
+               TextureMode textureMode,
+               unsigned textureShaderMask);
+
+    Uniform *
+    GetUniform(int uniformIndex);
+
+    int
+    GetUniformNum() const;
+
     // @summary The shader uniform table that consists of all the needed update
     // uniform value.
     //
@@ -42,88 +121,16 @@ public:
     // actually drawing so that sharing uniform table might overwrite previously
     // unsynchronized value.
     void
-    SetShaderUniform(std::shared_ptr<ShaderUniform> shaderUniform);
+    SetUniform(std::shared_ptr<Uniform> uniform);
 
     void
-    SetShaderUniformBuffer(int shaderUniform);
+    SetUniformBuffer(std::shared_ptr<UniformBuffer> uniformBuffer);
 
-    void
-    SetShaderTexture(int textureUnit,
-                     const Texture * texture,
-                     TextureMode textureMode,
-                     unsigned textureShaderMask);
-
-    void
-    SetShaderSampler(int textureUnit,
-                     const Sampler * sampler,
-                     unsigned int samplerShaderMask);
-
-    Shader *
-    GetShader() const;
+    UniformBuffer *
+    GetUniformBuffer(int uniformBufferIndex);
 
     int
-    GetShaderInstancingNum() const;
-
-    void
-    SetShaderInstancingNum(int instancingNum);
-
-    int
-    GetShaderUniformNum() const;
-
-    ShaderUniform *
-    GetShaderUniform(int uniformIndex) const;
-
-    auto GetShaderTextureBegin() const
-    {
-        return mShaderTextureTable.cbegin();
-    }
-
-    auto GetShaderTextureEnd() const
-    {
-        return mShaderTextureTable.cend();
-    }
-
-    auto GetShaderTextureBegin()
-    {
-        return mShaderTextureTable.begin();
-    }
-
-    auto GetShaderTextureEnd()
-    {
-        return mShaderTextureTable.end();
-    }
-
-    int
-    GetShaderTextureNum() const;
-
-    const Texture *
-    GetShaderTexture(int textureUnit) const;
-
-    auto GetShaderSamplerBegin() const
-    {
-        return mShaderSamplerTable.cbegin();
-    }
-
-    auto GetShaderSamplerEnd() const
-    {
-        return mShaderSamplerTable.cend();
-    }
-
-    auto GetShaderSamplerBegin()
-    {
-        return mShaderSamplerTable.begin();
-    }
-
-    auto GetShaderSamplerEnd()
-    {
-        return mShaderSamplerTable.end();
-    }
-
-    int
-    GetShaderSamplerNum() const;
-
-    const Sampler *
-    GetShaderSampler(int textureUnit);
+    GetUniformBufferNum() const;
 
 private:
     // NOTE(Wuxiang): The instance pass will not manage the lifetime of the shader.
@@ -141,11 +148,12 @@ private:
     // VisualEffectInstancePass must be disposed before.
     //
     // So there is no way for dangling pointer to affect this 'mShader' field.
-    Shader                                     *mShader;
-    int                                         mShaderInstancingNum;
-    std::map<int, SamplerAttachment>            mShaderSamplerTable;
-    std::map<int, TextureAttachment>            mShaderTextureTable;
-    std::vector<std::shared_ptr<ShaderUniform>> mShaderUniformList;
+    int mInstancingNum;
+    Shader *mShader;
+    std::map<int, SamplerAttachment> mSamplerTable;
+    std::map<int, TextureAttachment> mTextureTable;
+    std::vector<std::shared_ptr<Uniform>> mUniformList;
+    std::vector<std::shared_ptr<UniformBuffer>> mUniformBufferList;
 };
 FALCON_ENGINE_CLASS_END
 

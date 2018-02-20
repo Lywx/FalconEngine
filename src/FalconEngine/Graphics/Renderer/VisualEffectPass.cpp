@@ -9,8 +9,8 @@
 #include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>
-#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Uniform.h>
 
 namespace FalconEngine
 {

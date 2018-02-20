@@ -65,9 +65,9 @@ PlatformResource::Map(Renderer *renderer, ResourceMapAccessMode access, Resource
 {
     FALCON_ENGINE_CHECK_NULLPTR(mResourceObj);
 
-    _UNUSED(flush);
-    _UNUSED(sync);
-    _UNUSED(size);
+    FALCON_ENGINE_UNUSE(flush);
+    FALCON_ENGINE_UNUSE(sync);
+    FALCON_ENGINE_UNUSE(size);
 
     D3D11_MAPPED_SUBRESOURCE mappedSubresource;
     D3DCheckSuccess(renderer->mData->GetContext()->Map(
@@ -329,8 +329,8 @@ PlatformResource::CreateRenderTargetView(ID3D11Device4 *device, D3D11_RESOURCE_D
 void
 PlatformResource::CreateUnorderedAccessView(ID3D11Device4 *device, D3D11_RESOURCE_DIMENSION dimension)
 {
-    _UNUSED(device);
-    _UNUSED(dimension);
+    FALCON_ENGINE_UNUSE(device);
+    FALCON_ENGINE_UNUSE(dimension);
 
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }

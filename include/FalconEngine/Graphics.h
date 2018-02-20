@@ -30,23 +30,26 @@
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/IndexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
 #include <FalconEngine/Graphics/Renderer/Resource/ShaderBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture1d.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture3d.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2dArray.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Uniform.h>
+#include <FalconEngine/Graphics/Renderer/Resource/UniformAutomatic.h>
+#include <FalconEngine/Graphics/Renderer/Resource/UniformBuffer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/UniformBufferAutomatic.h>
+#include <FalconEngine/Graphics/Renderer/Resource/UniformBufferConstant.h>
+#include <FalconEngine/Graphics/Renderer/Resource/UniformBufferManual.h>
+#include <FalconEngine/Graphics/Renderer/Resource/UniformConstant.h>
+#include <FalconEngine/Graphics/Renderer/Resource/UniformManual.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexAttribute.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBufferBinding.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexGroup.h>
-
-#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformAutomatic.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformConstant.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformManual.h>
 
 #include <FalconEngine/Graphics/Renderer/Scene/Light.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Material.h>

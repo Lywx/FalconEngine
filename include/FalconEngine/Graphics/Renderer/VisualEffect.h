@@ -149,22 +149,22 @@ protected:
     /* Shader Uniform Utility                                               */
     /************************************************************************/
     void
-    SetShaderUniformAutomaticModelTransform(VisualEffectInstance * visualEffectInstance, int passIndex, const std::string & uniformName) const;
+    SetUniformAutomaticModelTransform(VisualEffectInstance * visualEffectInstance, int passIndex, const std::string & uniformName) const;
 
     void
-    SetShaderUniformAutomaticModelViewTransform(VisualEffectInstance * visualEffectInstance, int passIndex, const std::string & uniformName) const;
+    SetUniformAutomaticModelViewTransform(VisualEffectInstance * visualEffectInstance, int passIndex, const std::string & uniformName) const;
 
     void
-    SetShaderUniformAutomaticModelViewProjectionTransform(VisualEffectInstance * visualEffectInstance, int passIndex, const std::string & uniformName) const;
+    SetUniformAutomaticModelViewProjectionTransform(VisualEffectInstance * visualEffectInstance, int passIndex, const std::string & uniformName) const;
 
     void
-    SetShaderUniformAutomaticViewProjectionTransform(VisualEffectInstance * visualEffectInstance, int passIndex, const std::string & uniformName) const;
+    SetUniformAutomaticViewProjectionTransform(VisualEffectInstance * visualEffectInstance, int passIndex, const std::string & uniformName) const;
 
     void
-    SetShaderUniformAutomaticNormalTransform(VisualEffectInstance * visualEffectInstance, int passIndex, const std::string & uniformName) const;
+    SetUniformAutomaticNormalTransform(VisualEffectInstance * visualEffectInstance, int passIndex, const std::string & uniformName) const;
 
     void
-    SetShaderUniformAutomaticScreenTransform(VisualEffectInstance * visualEffectInstance, int passIndex, const std::string & uniformName) const;
+    SetUniformAutomaticScreenTransform(VisualEffectInstance * visualEffectInstance, int passIndex, const std::string & uniformName) const;
 
 protected:
     // Passes contained in this effect.

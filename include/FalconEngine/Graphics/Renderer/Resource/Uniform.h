@@ -17,7 +17,7 @@
 namespace FalconEngine
 {
 
-enum class ShaderUniformType
+enum class UniformType
 {
     None,
 
@@ -43,21 +43,36 @@ class Camera;
 class Visual;
 
 template <typename T>
-using ShaderUniformUpdatePrototype = T(const Visual *, const Camera *);
+using UniformUpdatePrototype = T(const Visual *, const Camera *);
 
 template <typename T>
-using ShaderUniformUpdateFunction = std::function<ShaderUniformUpdatePrototype<T>>;
+using UniformUpdateFunction = std::function<UniformUpdatePrototype<T>>;
+
+FALCON_ENGINE_CLASS_BEGIN UniformMetadata final
+{
+public:
+    UniformMetadata(const std::string & name) : mEnabled(true),
+        mName(name), mLocation(-1)
+    {
+    }
+
+public:
+    bool mEnabled;
+    std::string mName;
+    int mLocation;
+};
+FALCON_ENGINE_CLASS_END
 
 // NTOE(Wuxiang): Shader uniform is only supported in OpenGL. Direct3D can only
 // use Uniform Buffer, or in another name, Constant Buffer.
-FALCON_ENGINE_CLASS_BEGIN ShaderUniform
+FALCON_ENGINE_CLASS_BEGIN Uniform
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    ShaderUniform(const std::string & name, ShaderUniformType type);
-    virtual ~ShaderUniform();
+    Uniform(const std::string & name, UniformType type);
+    virtual ~Uniform();
 
 public:
     // @remark If the value is not current, renderer would call Update member
@@ -73,7 +88,7 @@ public:
     std::string mName;
     bool mInitialized;
     int mLocation;
-    ShaderUniformType mType;
+    UniformType mType;
 
 protected:
     bool mValueIsCurrent;
@@ -81,14 +96,14 @@ protected:
 FALCON_ENGINE_CLASS_END
 
 template<typename T>
-class ShaderUniformValue : public ShaderUniform
+class UniformValue : public Uniform
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    ShaderUniformValue(const std::string& name, const T& value);
-    virtual ~ShaderUniformValue();
+    UniformValue(const std::string& name, const T& value);
+    virtual ~UniformValue();
 
     /************************************************************************/
     /* Public Members                                                       */
@@ -104,10 +119,10 @@ protected:
 };
 
 template <typename T, typename U, typename ... Args>
-std::shared_ptr<ShaderUniformValue<T>>
-                                    ShareUniform(Args&& ... args)
+std::shared_ptr<UniformValue<T>>
+                              ShareUniform(Args&& ... args)
 {
-    return std::static_pointer_cast<ShaderUniformValue<T>>(
+    return std::static_pointer_cast<UniformValue<T>>(
                std::make_shared<U>(args ...));
 }
 
@@ -115,84 +130,84 @@ std::shared_ptr<ShaderUniformValue<T>>
 /* Constructors and Destructor                                          */
 /************************************************************************/
 template <>
-inline ShaderUniformValue<bool>::ShaderUniformValue(const std::string& name, const bool& value) :
-    ShaderUniform(name, ShaderUniformType::Bool),
+inline UniformValue<bool>::UniformValue(const std::string& name, const bool& value) :
+    Uniform(name, UniformType::Bool),
     mValue(value)
 {
 }
 
 template <>
-inline ShaderUniformValue<int>::ShaderUniformValue(const std::string& name, const int& value) :
-    ShaderUniform(name, ShaderUniformType::Int),
+inline UniformValue<int>::UniformValue(const std::string& name, const int& value) :
+    Uniform(name, UniformType::Int),
     mValue(value)
 {
 }
 
 template <>
-inline ShaderUniformValue<Vector2i>::ShaderUniformValue(const std::string& name, const Vector2i& value) :
-    ShaderUniform(name, ShaderUniformType::IntVec2),
+inline UniformValue<Vector2i>::UniformValue(const std::string& name, const Vector2i& value) :
+    Uniform(name, UniformType::IntVec2),
     mValue(value)
 {
 }
 
 template <>
-inline ShaderUniformValue<Vector3i>::ShaderUniformValue(const std::string& name, const Vector3i& value) :
-    ShaderUniform(name, ShaderUniformType::IntVec3),
+inline UniformValue<Vector3i>::UniformValue(const std::string& name, const Vector3i& value) :
+    Uniform(name, UniformType::IntVec3),
     mValue(value)
 {
 }
 
 template <>
-inline ShaderUniformValue<Vector4i>::ShaderUniformValue(const std::string& name, const Vector4i& value) :
-    ShaderUniform(name, ShaderUniformType::IntVec4),
+inline UniformValue<Vector4i>::UniformValue(const std::string& name, const Vector4i& value) :
+    Uniform(name, UniformType::IntVec4),
     mValue(value)
 {
 }
 
 template <>
-inline ShaderUniformValue<float>::ShaderUniformValue(const std::string& name, const float& value) :
-    ShaderUniform(name, ShaderUniformType::Float),
+inline UniformValue<float>::UniformValue(const std::string& name, const float& value) :
+    Uniform(name, UniformType::Float),
     mValue(value)
 {
 }
 
 template <>
-inline ShaderUniformValue<Vector2f>::ShaderUniformValue(const std::string& name, const Vector2f& value) :
-    ShaderUniform(name, ShaderUniformType::FloatVec2),
+inline UniformValue<Vector2f>::UniformValue(const std::string& name, const Vector2f& value) :
+    Uniform(name, UniformType::FloatVec2),
     mValue(value)
 {
 }
 
 template <>
-inline ShaderUniformValue<Vector3f>::ShaderUniformValue(const std::string& name, const Vector3f& value) :
-    ShaderUniform(name, ShaderUniformType::FloatVec3),
+inline UniformValue<Vector3f>::UniformValue(const std::string& name, const Vector3f& value) :
+    Uniform(name, UniformType::FloatVec3),
     mValue(value)
 {
 }
 
 template <>
-inline ShaderUniformValue<Vector4f>::ShaderUniformValue(const std::string& name, const Vector4f& value) :
-    ShaderUniform(name, ShaderUniformType::FloatVec4),
+inline UniformValue<Vector4f>::UniformValue(const std::string& name, const Vector4f& value) :
+    Uniform(name, UniformType::FloatVec4),
     mValue(value)
 {
 }
 
 template <>
-inline ShaderUniformValue<Matrix3f>::ShaderUniformValue(const std::string& name, const Matrix3f& value) :
-    ShaderUniform(name, ShaderUniformType::FloatMat3),
+inline UniformValue<Matrix3f>::UniformValue(const std::string& name, const Matrix3f& value) :
+    Uniform(name, UniformType::FloatMat3),
     mValue(value)
 {
 }
 
 template <>
-inline ShaderUniformValue<Matrix4f>::ShaderUniformValue(const std::string& name, const Matrix4f& value) :
-    ShaderUniform(name, ShaderUniformType::FloatMat4),
+inline UniformValue<Matrix4f>::UniformValue(const std::string& name, const Matrix4f& value) :
+    Uniform(name, UniformType::FloatMat4),
     mValue(value)
 {
 }
 
 template <typename T>
-ShaderUniformValue<T>::~ShaderUniformValue()
+UniformValue<T>::~UniformValue()
 {
 }
 
@@ -201,18 +216,24 @@ ShaderUniformValue<T>::~ShaderUniformValue()
 /************************************************************************/
 template <typename T>
 const T&
-ShaderUniformValue<T>::GetValue() const
+UniformValue<T>::GetValue() const
 {
     return mValue;
 }
 
 template <typename T>
 void
-ShaderUniformValue<T>::SetValue(const T& value)
+UniformValue<T>::SetValue(const T& value)
 {
     mValue = value;
 }
 
 template <typename T>
-using ShaderUniformValueSp = std::shared_ptr<ShaderUniformValue<T>>;
+using UniformValueSp = std::shared_ptr<UniformValue<T>>;
+
 }
+
+#define FALCON_ENGINE_UNIFORM_FUNC_BEGIN(captureList) \
+    std::bind([captureList](const FalconEngine::Visual * visual, const FalconEngine::Camera *camera)
+
+#define FALCON_ENGINE_UNIFORM_FUNC_END , std::placeholders::_1, std::placeholders::_2)

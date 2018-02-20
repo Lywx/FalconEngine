@@ -22,10 +22,10 @@
 #include <FalconEngine/Graphics/Renderer/State/OffsetState.h>
 #include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
 #include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
-#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformAutomatic.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformManual.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Uniform.h>
+#include <FalconEngine/Graphics/Renderer/Resource/UniformAutomatic.h>
+#include <FalconEngine/Graphics/Renderer/Resource/UniformManual.h>
 
 using namespace std;
 
@@ -244,12 +244,12 @@ VisualEffect::TraverseLevelOrder(Node *node, std::function<void(Visual *visual)>
 /* Shader Uniform Utility                                               */
 /************************************************************************/
 void
-VisualEffect::SetShaderUniformAutomaticModelTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const
+VisualEffect::SetUniformAutomaticModelTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const
 {
     using namespace std;
     using namespace std::placeholders;
 
-    visualEffectInstance->SetShaderUniform(passIndex, ShareAutomatic<Matrix4f>(uniformName,
+    visualEffectInstance->SetUniform(passIndex, ShareUniformAutomatic<Matrix4f>(uniformName,
                                            std::bind([](const Visual * visual, const Camera * /* camera */)
     {
         return visual->mWorldTransform;
@@ -257,12 +257,12 @@ VisualEffect::SetShaderUniformAutomaticModelTransform(VisualEffectInstance *visu
 }
 
 void
-VisualEffect::SetShaderUniformAutomaticModelViewTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const
+VisualEffect::SetUniformAutomaticModelViewTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const
 {
     using namespace std;
     using namespace std::placeholders;
 
-    visualEffectInstance->SetShaderUniform(passIndex, ShareAutomatic<Matrix4f>(uniformName,
+    visualEffectInstance->SetUniform(passIndex, ShareUniformAutomatic<Matrix4f>(uniformName,
                                            std::bind([](const Visual * visual, const Camera * camera)
     {
         return camera->GetView() * visual->mWorldTransform;
@@ -270,36 +270,36 @@ VisualEffect::SetShaderUniformAutomaticModelViewTransform(VisualEffectInstance *
 }
 
 void
-VisualEffect::SetShaderUniformAutomaticModelViewProjectionTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const
+VisualEffect::SetUniformAutomaticModelViewProjectionTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const
 {
     using namespace std;
     using namespace std::placeholders;
 
-    visualEffectInstance->SetShaderUniform(passIndex, ShareAutomatic<Matrix4f>(uniformName, std::bind([](const Visual * visual, const Camera * camera)
+    visualEffectInstance->SetUniform(passIndex, ShareUniformAutomatic<Matrix4f>(uniformName, std::bind([](const Visual * visual, const Camera * camera)
     {
         return camera->GetViewProjection() * visual->mWorldTransform;
     }, _1, _2)));
 }
 
 void
-VisualEffect::SetShaderUniformAutomaticViewProjectionTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const
+VisualEffect::SetUniformAutomaticViewProjectionTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const
 {
     using namespace std;
     using namespace std::placeholders;
 
-    visualEffectInstance->SetShaderUniform(passIndex, ShareAutomatic<Matrix4f>(uniformName, std::bind([](const Visual * /* visual */, const Camera * camera)
+    visualEffectInstance->SetUniform(passIndex, ShareUniformAutomatic<Matrix4f>(uniformName, std::bind([](const Visual * /* visual */, const Camera * camera)
     {
         return camera->GetViewProjection();
     }, _1, _2)));
 }
 
 void
-VisualEffect::SetShaderUniformAutomaticNormalTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const
+VisualEffect::SetUniformAutomaticNormalTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const
 {
     using namespace std;
     using namespace std::placeholders;
 
-    visualEffectInstance->SetShaderUniform(passIndex, ShareAutomatic<Matrix3f>(uniformName,
+    visualEffectInstance->SetUniform(passIndex, ShareUniformAutomatic<Matrix3f>(uniformName,
                                            std::bind([](const Visual * visual, const Camera * camera)
     {
         auto normalTransform = Matrix4f::Transpose(Matrix4f::Inverse(camera->GetView() * visual->mWorldTransform));
@@ -308,12 +308,12 @@ VisualEffect::SetShaderUniformAutomaticNormalTransform(VisualEffectInstance *vis
 }
 
 void
-VisualEffect::SetShaderUniformAutomaticScreenTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const
+VisualEffect::SetUniformAutomaticScreenTransform(VisualEffectInstance *visualEffectInstance, int passIndex, const std::string& uniformName) const
 {
     using namespace std;
     using namespace std::placeholders;
 
-    visualEffectInstance->SetShaderUniform(passIndex, ShareAutomatic<Matrix4f>(uniformName,
+    visualEffectInstance->SetUniform(passIndex, ShareUniformAutomatic<Matrix4f>(uniformName,
                                            std::bind([](const Visual *, const Camera *)
     {
         static auto sMasterRenderer = Renderer::GetInstance();

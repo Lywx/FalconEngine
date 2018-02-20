@@ -107,7 +107,7 @@ public:
     int
     GetElementOffset() const;
 
-    std::string
+    const std::string&
     GetName() const;
 
     ResourceStorageMode

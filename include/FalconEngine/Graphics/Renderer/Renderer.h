@@ -14,7 +14,6 @@
 
 namespace FalconEngine
 {
-
 /************************************************************************/
 /* Engine Resource                                                      */
 /************************************************************************/
@@ -29,7 +28,8 @@ class Font;
 class FontText;
 class Primitive;
 class Shader;
-class ShaderUniform;
+class Uniform;
+class UniformBuffer;
 class Visual;
 class VisualEffectInstance;
 class VisualEffectInstancePass;
@@ -73,6 +73,7 @@ class WireframeState;
 /************************************************************************/
 class PlatformShaderBuffer;
 class PlatformIndexBuffer;
+class PlatformUniformBuffer;
 class PlatformVertexBuffer;
 class PlatformVertexFormat;
 class PlatformTexture1d;
@@ -207,6 +208,37 @@ public:
            ResourceMapSyncMode sync);
 
     /************************************************************************/
+    /* Index Buffer Management                                              */
+    /************************************************************************/
+    void
+    Bind(const IndexBuffer *indexBuffer);
+
+    void
+    Unbind(const IndexBuffer *indexBuffer);
+
+    void
+    Enable(const IndexBuffer *indexBuffer);
+
+    void
+    Disable(const IndexBuffer *indexBuffer);
+
+    void *
+    Map(const IndexBuffer *indexBuffer,
+        ResourceMapAccessMode access,
+        ResourceMapFlushMode flush,
+        ResourceMapSyncMode sync,
+        int64_t offset,
+        int64_t size);
+
+    void
+    Unmap(const IndexBuffer *indexBuffer);
+
+    void
+    Flush(const IndexBuffer *indexBuffer,
+          int64_t offset,
+          int64_t size);
+
+    /************************************************************************/
     /* Shader Buffer Management                                             */
     /************************************************************************/
     void
@@ -238,35 +270,25 @@ public:
           int64_t size);
 
     /************************************************************************/
-    /* Index Buffer Management                                              */
+    /* Uniform Buffer Management                                            */
     /************************************************************************/
     void
-    Bind(const IndexBuffer *indexBuffer);
+    Bind(const UniformBuffer *uniformBuffer);
 
     void
-    Unbind(const IndexBuffer *indexBuffer);
+    Unbind(const UniformBuffer *uniformBuffer);
 
     void
-    Enable(const IndexBuffer *indexBuffer);
+    Enable(const UniformBuffer *uniformBuffer);
 
     void
-    Disable(const IndexBuffer *indexBuffer);
+    Disable(const UniformBuffer *uniformBuffer);
 
     void *
-    Map(const IndexBuffer *indexBuffer,
-        ResourceMapAccessMode access,
-        ResourceMapFlushMode flush,
-        ResourceMapSyncMode sync,
-        int64_t offset,
-        int64_t size);
+    Map(const UniformBuffer *uniformBuffer);
 
     void
-    Unmap(const IndexBuffer *indexBuffer);
-
-    void
-    Flush(const IndexBuffer *indexBuffer,
-          int64_t offset,
-          int64_t size);
+    Unmap(const UniformBuffer *uniformBuffer);
 
     /************************************************************************/
     /* Vertex Buffer Management                                             */
@@ -558,11 +580,14 @@ public:
     Enable(VisualEffectPass *pass);
 
     void
-    Enable(const VisualEffectInstancePass *pass, const Camera *camera, const Visual *visual);
+    Enable(VisualEffectInstancePass *pass, const Camera *camera, const Visual *visual);
 
     // @summary Update effect instance's uniform.
     void
-    Update(const VisualEffectInstancePass *pass, ShaderUniform *uniform, const Camera *camera, const Visual *visual);
+    Update(const VisualEffectInstancePass *pass, Uniform *uniform, const Camera *camera, const Visual *visual);
+
+    void
+    Update(const VisualEffectInstancePass *pass, UniformBuffer *uniformBuffer, const Camera *camera, const Visual *visual);
 
     /************************************************************************/
     /* Draw                                                                 */
@@ -584,6 +609,7 @@ private:
     // significant.
     std::map<const IndexBuffer *, PlatformIndexBuffer *> mIndexBufferTable;
     std::map<const ShaderBuffer *, PlatformShaderBuffer *> mShaderBufferTable;
+    std::map<const UniformBuffer *, PlatformUniformBuffer *> mUniformBufferTable;
     std::map<const VertexBuffer *, PlatformVertexBuffer *> mVertexBufferTable;
     std::map<const VertexFormat *, PlatformVertexFormat *> mVertexFormatTable;
     std::map<const Shader *, PlatformShader *> mShaderTable;
@@ -736,6 +762,21 @@ if (resourceTable.find(resource) == resourceTable.end()) \
 { \
     resourceTable[resource] = new PlatformResourceKlass(this, resource); \
 }
+
+#define FALCON_ENGINE_RENDERER_BIND_FIND(resource, resourceTable, PlatformResourceKlass) \
+FALCON_ENGINE_CHECK_NULLPTR(resource); \
+\
+auto iter = resourceTable.find(resource); \
+PlatformResourceKlass *resource##Platform; \
+if (iter != resourceTable.end()) \
+{ \
+    resource##Platform = iter->second; \
+} \
+else \
+{ \
+    resource##Platform = new PlatformResourceKlass(this, resource); \
+    resourceTable[resource] = resource##Platform; \
+} \
 
 #define FALCON_ENGINE_RENDERER_UNBIND_IMPLEMENT(resource, resourceTable) \
 FALCON_ENGINE_CHECK_NULLPTR(resource); \

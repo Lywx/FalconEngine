@@ -5,7 +5,7 @@
 #include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Core/Path.h>
 #include <FalconEngine/Core/String.h>
-#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
 
 #ifndef FALCON_ENGINE_API_OPENGL
 #define FALCON_ENGINE_API_OPENGL

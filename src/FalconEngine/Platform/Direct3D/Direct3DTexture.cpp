@@ -153,9 +153,9 @@ PlatformTexture::Map(Renderer *renderer,
 {
     FALCON_ENGINE_CHECK_NULLPTR(mResourceObj);
 
-    _UNUSED(flush);
-    _UNUSED(sync);
-    _UNUSED(size);
+    FALCON_ENGINE_UNUSE(flush);
+    FALCON_ENGINE_UNUSE(sync);
+    FALCON_ENGINE_UNUSE(size);
 
     D3D11_MAPPED_SUBRESOURCE mappedSubresource;
 

@@ -1,4 +1,5 @@
 #include <FalconEngine/Graphics/Renderer/Resource/UniformBuffer.h>
+#include <FalconEngine/Core/Exception.h>
 
 namespace FalconEngine
 {
@@ -6,13 +7,17 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-UniformBuffer::UniformBuffer(const std::string & name, size_t storageSize) :
+UniformBuffer::UniformBuffer(const std::string & name,
+                             size_t storageSize,
+                             ResourceStorageMode storageMode) :
     Buffer(1,
            storageSize,
            BufferType::UniformBuffer,
            ResourceCreationAccessMode::GpuReadCpuWrite,
            ResourceCreationAccessUsage::Dynamic,
-           ResourceStorageMode::Device),
+           storageMode),
+    mEnabled(true),
+    mInitialized(false),
     mValueIsCurrent(true)
 {
     mName = name;
@@ -32,7 +37,8 @@ UniformBuffer::IsUpdateNeeded() const
 }
 
 void
-UniformBuffer::Update(const Camera *camera, const Visual *visual)
+UniformBuffer::UpdateContext(const Camera *, const Visual *, void *)
 {
+    FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
 }
 }

@@ -33,7 +33,7 @@ public:
     void
     Disable(Renderer *);
 
-    void
+    void *
     Map(Renderer *);
 };
 FALCON_ENGINE_CLASS_END

@@ -1,8 +1,8 @@
 #include <FalconEngine/Graphics/Effect/DebugEffect.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
-#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformManual.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
+#include <FalconEngine/Graphics/Renderer/Resource/UniformManual.h>
 #include <FalconEngine/Graphics/Renderer/State/BlendState.h>
 #include <FalconEngine/Graphics/Renderer/State/CullState.h>
 #include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
@@ -22,7 +22,7 @@ DebugEffectParams::DebugEffectParams()
     // Set camera projection parameter for each taken camera slot.
     for (int cameraIndex = 0; cameraIndex < DebugEffect::CameraNumMax; ++cameraIndex)
     {
-        auto cameraUniform = ShareManual<Matrix4f>(
+        auto cameraUniform = ShareUniformManual<Matrix4f>(
                                  string("ViewProjectionTransformArray[")
                                  + std::to_string(cameraIndex) + "]",
                                  Matrix4f::Identity);
@@ -158,7 +158,7 @@ DebugEffect::InitializeInstance(
 
     for (int cameraIndex = 0; cameraIndex < CameraNumMax; ++cameraIndex)
     {
-        instance->SetShaderUniform(0, params->mCameraSlotUniform[cameraIndex]);
+        instance->SetUniform(0, params->mCameraSlotUniform[cameraIndex]);
     }
 }
 

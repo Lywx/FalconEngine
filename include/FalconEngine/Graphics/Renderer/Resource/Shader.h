@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <unordered_map>
 
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Uniform.h>
 #include <FalconEngine/Graphics/Renderer/Resource/UniformBuffer.h>
 
 namespace FalconEngine
@@ -67,14 +67,24 @@ FALCON_ENGINE_API const extern std::unordered_map<ShaderType, int>
 ShaderIndexMap;
 
 class ShaderSource;
-enum class ShaderUniformType;
+enum class UniformType;
 
-// @remark Shader contains information about input vertex variables, output
+// NOTE(Wuxiang): Shader contains information about input vertex variables, output
 // fragment variables and uniform variables. Sharing shaders for different
 // primitive set is allowed (which is done by setting shader in the visual effect),
 // so that one should think about what is responsible for updating shader uniform
 // variable for each update (which is done by setting shader uniform in visual
 // effect instance).
+//
+// NOTE(Wuxiang): Shader has one-to-one relation with Visual Effect Pass in
+// rendering pipeline. Visual Effect Pass is responsible for holding anything related to
+// states for a pass in Visual Effect. In that case, shader uniform and shader
+// uniform buffer might be stored in the Visual Effect Pass. But considering the
+// possibility of sharing Shader cross different Visual Effects and cross different
+// Visual Effect Passes, you could avoid redundant uniform and uniform buffer
+// data updating in OpenGL. The that is specific to OpenGL, Direct3D doesn't have
+// this concept. So the uniform, uniform buffer binding is only relevant to specific
+// API. It is usually not good to encapsulate API specific concept into interface class.
 FALCON_ENGINE_CLASS_BEGIN Shader final
 {
 public:
@@ -88,36 +98,39 @@ public:
     /* Uniform Management                                                   */
     /************************************************************************/
     bool
-    ContainUniform(const std::string & uniformName) const;
+    ContainUniformMeta(const std::string & uniformName) const;
 
     int
-    GetUniformNum() const;
+    GetUniformMetaNum() const;
 
-    ShaderUniform&
-    GetUniform(const std::string & uniformName);
+    UniformMetadata
+    GetUniformMeta(const std::string & uniformName);
+
+    void
+    SetUniformMeta(const std::string & uniformName);
 
     auto
-    GetUniformBegin()
+    GetUniformMetaBegin()
     {
-        return mUniformTable.begin();
+        return mUniformMetadataTable.begin();
     }
 
     auto
-    GetUniformEnd()
+    GetUniformMetaEnd()
     {
-        return mUniformTable.end();
+        return mUniformMetadataTable.end();
     }
 
     auto
-    GetUniformBegin() const
+    GetUniformMetaBegin() const
     {
-        return mUniformTable.cbegin();
+        return mUniformMetadataTable.cbegin();
     }
 
     auto
-    GetUniformEnd() const
+    GetUniformMetaEnd() const
     {
-        return mUniformTable.cend();
+        return mUniformMetadataTable.cend();
     }
 
     int
@@ -126,42 +139,44 @@ public:
     bool
     IsUniformEnabled(const std::string & uniformName) const;
 
-    void
-    PushUniform(const std::string & uniformName, ShaderUniformType uniformType);
-
     /************************************************************************/
     /* Uniform Buffer Management                                            */
     /************************************************************************/
     bool
-    ContainUniformBuffer(const std::string & uniformBufferName) const;
+    ContainUniformBufferMeta(const std::string & uniformBufferName) const;
 
     void
-    PushUniformBuffer(const std::string & uniformBufferName,
-                      size_t uniformBufferSize);
+    SetUniformBufferMeta(const std::string & uniformBufferName, size_t uniformBufferSize);
 
     auto
-    GetUniformBufferBegin()
+    GetUniformBufferMetaBegin()
     {
-        return mUniformBufferTable.begin();
+        return mUniformBufferMetadataTable.begin();
     }
 
     auto
-    GetUniformBufferEnd()
+    GetUniformBufferMetaEnd()
     {
-        return mUniformBufferTable.end();
+        return mUniformBufferMetadataTable.end();
     }
 
     auto
-    GetUniformBufferBegin() const
+    GetUniformBufferMetaBegin() const
     {
-        return mUniformBufferTable.cbegin();
+        return mUniformBufferMetadataTable.cbegin();
     }
 
     auto
-    GetUniformBufferEnd() const
+    GetUniformBufferMetaEnd() const
     {
-        return mUniformBufferTable.cend();
+        return mUniformBufferMetadataTable.cend();
     }
+
+    int
+    GetUniformBufferBlockIndex(const std::string & uniformBufferName) const;
+
+    bool
+    IsUniformBufferEnabled(const std::string & uniformBufferName) const;
 
     /************************************************************************/
     /* Composition Management                                               */
@@ -204,8 +219,9 @@ public:
 
 private:
     std::unordered_map<int, std::shared_ptr<ShaderSource>> mSourceTable;
-    std::unordered_map<std::string, ShaderUniform> mUniformTable;
-    std::unordered_map<std::string, std::shared_ptr<UniformBuffer>> mUniformBufferTable;
+
+    std::unordered_map<std::string, UniformMetadata> mUniformMetadataTable;
+    std::unordered_map<std::string, UniformBufferMetadata> mUniformBufferMetadataTable;
 };
 FALCON_ENGINE_CLASS_END
 

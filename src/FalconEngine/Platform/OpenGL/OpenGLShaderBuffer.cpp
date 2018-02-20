@@ -24,14 +24,13 @@ PlatformShaderBuffer::~PlatformShaderBuffer()
 void
 PlatformShaderBuffer::Enable(Renderer *, unsigned int bindingIndex)
 {
-    glBindBuffer(mBufferTarget, mBufferObj);
     glBindBufferBase(mBufferTarget, bindingIndex, mBufferObj);
 }
 
 void
 PlatformShaderBuffer::Disable(Renderer *)
 {
-    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    glBindBuffer(mBufferTarget, 0);
 }
 
 }

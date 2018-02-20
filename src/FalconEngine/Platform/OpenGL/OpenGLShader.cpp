@@ -171,23 +171,21 @@ PlatformShader::CollectUniformActive()
 void
 PlatformShader::CollectUniformLocation(Shader *shader) const
 {
-    for (auto uniformIter = shader->GetUniformBegin();
-            uniformIter != shader->GetUniformEnd();
+    for (auto uniformIter = shader->GetUniformMetaBegin();
+            uniformIter != shader->GetUniformMetaEnd();
             ++uniformIter)
     {
-        ShaderUniform& uniform = uniformIter->second;
-        GLint uniformLocation = glGetUniformLocation(mProgram, uniform.mName.c_str());
+        UniformMetadata& uniformMeta = uniformIter->second;
+        GLint uniformLocation = glGetUniformLocation(mProgram, uniformMeta.mName.c_str());
 
         if (uniformLocation == -1)
         {
-            GameEngineDebugger::OutputStringFormat("Failed to find shader uniform \"%s\"'s location.\n",
-                                                   uniform.mName.c_str());
+            FALCON_ENGINE_DEBUG_WARNING(
+                "Failed to find shader uniform \"%s\"'s location.\n",
+                uniformMeta.mName.c_str());
 
-            uniform.mEnabled = false;
-        }
-        else
-        {
-            uniform.mEnabled = true;
+            // NOTE(Wuxiang): Default value is true.
+            uniformMeta.mEnabled = false;
         }
 
         // NOTE(Wuxiang): If the uniform is not found, the uniform location
@@ -201,39 +199,41 @@ PlatformShader::CollectUniformLocation(Shader *shader) const
         // uniform variable storage of the current program object.
         // If location is equal to -1, the data passed in will be silently
         // ignored and the specified uniform variable will not be changed.
-        uniform.mLocation = uniformLocation;
-        uniform.mInitialized = true;
+        uniformMeta.mLocation = uniformLocation;
     }
 }
 
 void
 PlatformShader::CollectUniformBufferIndex(Shader *shader) const
 {
-    for (auto uniformIter = shader->GetUniformBufferBegin();
-            uniformIter != shader->GetUniformBufferEnd();
+    for (auto uniformIter = shader->GetUniformBufferMetaBegin();
+            uniformIter != shader->GetUniformBufferMetaEnd();
             ++uniformIter)
     {
-        auto const& uniformBuffer = uniformIter->second;
-        auto const uniformBlockName = uniformBuffer->GetName();
+        UniformBufferMetadata& uniformBufferMeta = uniformIter->second;
+        auto const uniformBlockName = uniformBufferMeta.mName;
         const GLuint uniformBlockIndex = glGetUniformBlockIndex(mProgram, uniformBlockName.c_str());
         if (uniformBlockIndex == GL_INVALID_INDEX)
         {
-            GameEngineDebugger::OutputStringFormat(
+            FALCON_ENGINE_DEBUG_WARNING(
                 "Failed to find shader uniform buffer \"%s\"'s location.\n",
                 uniformBlockName.c_str());
+
+            // NOTE(Wuxiang): Default value is true.
+            uniformBufferMeta.mEnabled = false;
         }
         else
         {
-            uniformBuffer->SetBlockIndex(uniformBlockIndex);
+            uniformBufferMeta.mBlockIndex = uniformBlockIndex;
 
             GLint uniformBlockSize;
             glGetActiveUniformBlockiv(mProgram, uniformBlockIndex,
                                       GL_UNIFORM_BLOCK_DATA_SIZE, &uniformBlockSize);
 
-            auto uniformBlockSizeExpected = int(uniformBuffer->GetCapacitySize());
+            auto uniformBlockSizeExpected = int(uniformBufferMeta.mCapacitySize);
             if (uniformBlockSize != uniformBlockSizeExpected)
             {
-                GameEngineDebugger::OutputStringFormat(
+                FALCON_ENGINE_DEBUG_WARNING(
                     "Failed to match shader uniform buffer size for uniform block '%s'. Expected: %d, Allocated: %d.\n",
                     uniformBlockName.c_str(), uniformBlockSizeExpected, uniformBlockSize);
             }

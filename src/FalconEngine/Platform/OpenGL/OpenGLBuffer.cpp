@@ -85,7 +85,7 @@ PlatformBuffer::CheckRange(int64_t offset, int64_t size)
 void
 PlatformBuffer::PrintRange(const char *message, GLuint bufferTarget, int64_t offset, int64_t size)
 {
-    GameEngineDebugger::OutputStringFormat("Buffer %s %s from %llu to %llu\n", std::to_string(bufferTarget).c_str(), message, offset, size);
+    FALCON_ENGINE_DEBUG_INFO("Buffer %s %s from %llu to %llu\n", std::to_string(bufferTarget).c_str(), message, offset, size);
 }
 
 /************************************************************************/

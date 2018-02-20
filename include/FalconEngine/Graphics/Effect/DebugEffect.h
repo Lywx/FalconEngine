@@ -10,7 +10,7 @@
 #include <FalconEngine/Graphics/Renderer/VisualEffectParams.h>
 #include <FalconEngine/Math/Color.h>
 #include <FalconEngine/Math/Vector2.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Uniform.h>
 
 namespace FalconEngine
 {
@@ -50,9 +50,9 @@ public:
 
 public:
     // Store if the index slot is used by a camera.
-    std::vector<bool>                           mCameraSlot;
-    std::map<const Camera *, int>               mCameraSlotTable;
-    std::vector<ShaderUniformValueSp<Matrix4f>> mCameraSlotUniform;
+    std::vector<bool> mCameraSlot;
+    std::map<const Camera *, int> mCameraSlotTable;
+    std::vector<UniformValueSp<Matrix4f>> mCameraSlotUniform;
 };
 
 class FALCON_ENGINE_API DebugEffect : public VisualEffect
@@ -87,5 +87,4 @@ protected:
         _IN_     std::shared_ptr<DebugEffectParams> params) const;
 };
 FALCON_ENGINE_CLASS_END
-
 }

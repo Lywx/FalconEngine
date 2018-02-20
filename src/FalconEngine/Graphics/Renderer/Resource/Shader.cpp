@@ -1,11 +1,11 @@
-#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
 
 #include <fstream>
 #include <iostream>
 
 #include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Uniform.h>
 
 using namespace std;
 
@@ -72,54 +72,66 @@ Shader::~Shader()
 /* Public Members                                                       */
 /************************************************************************/
 bool
-Shader::ContainUniform(const std::string& uniformName) const
+Shader::ContainUniformMeta(const std::string& uniformName) const
 {
-    return mUniformTable.find(uniformName) != mUniformTable.end();
+    return mUniformMetadataTable.find(uniformName) != mUniformMetadataTable.end();
 }
 
 int
-Shader::GetUniformNum() const
+Shader::GetUniformMetaNum() const
 {
-    return int(mUniformTable.size());
+    return int(mUniformMetadataTable.size());
 }
 
-ShaderUniform&
-Shader::GetUniform(const string& uniformName)
+UniformMetadata
+Shader::GetUniformMeta(const string& uniformName)
 {
-    return mUniformTable.at(uniformName);
+    return mUniformMetadataTable.at(uniformName);
+}
+
+void
+Shader::SetUniformMeta(const string& uniformName)
+{
+    mUniformMetadataTable.insert({ uniformName, UniformMetadata(uniformName) });
 }
 
 int
 Shader::GetUniformLocation(const string& uniformName) const
 {
-    return mUniformTable.at(uniformName).mLocation;
+    return mUniformMetadataTable.at(uniformName).mLocation;
 }
 
 bool
 Shader::IsUniformEnabled(const string& uniformName) const
 {
-    return mUniformTable.at(uniformName).mEnabled;
-}
-
-void
-Shader::PushUniform(const string& uniformName, ShaderUniformType uniformType)
-{
-    mUniformTable.insert({ uniformName, ShaderUniform(uniformName, uniformType) });
+    return mUniformMetadataTable.at(uniformName).mEnabled;
 }
 
 /************************************************************************/
 /* Uniform Buffer Management                                            */
 /************************************************************************/
 bool
-Shader::ContainUniformBuffer(const std::string& uniformBufferName) const
+Shader::ContainUniformBufferMeta(const std::string& uniformBufferName) const
 {
-    return mUniformBufferTable.find(uniformBufferName) != mUniformBufferTable.end();
+    return mUniformBufferMetadataTable.find(uniformBufferName) != mUniformBufferMetadataTable.end();
 }
 
 void
-Shader::PushUniformBuffer(const std::string& uniformBufferName, size_t uniformBufferSize)
+Shader::SetUniformBufferMeta(const std::string & uniformBufferName, size_t uniformBufferSize)
 {
-    mUniformBufferTable.insert({ uniformBufferName, std::make_shared<UniformBuffer>(uniformBufferName, uniformBufferSize) });
+    mUniformBufferMetadataTable.insert({ uniformBufferName, UniformBufferMetadata(uniformBufferName, uniformBufferSize) });
+}
+
+int
+Shader::GetUniformBufferBlockIndex(const std::string& uniformBufferName) const
+{
+    return mUniformBufferMetadataTable.at(uniformBufferName).mBlockIndex;
+}
+
+bool
+Shader::IsUniformBufferEnabled(const std::string& uniformBufferName) const
+{
+    return mUniformBufferMetadataTable.at(uniformBufferName).mEnabled;
 }
 
 /************************************************************************/

@@ -1,8 +1,8 @@
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstancePass.h>
 
 #include <FalconEngine/Core/Exception.h>
-#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Uniform.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>
 #include <FalconEngine/Graphics/Renderer/Resource/SamplerAttachment.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
@@ -16,7 +16,7 @@ namespace FalconEngine
 /************************************************************************/
 VisualEffectInstancePass::VisualEffectInstancePass(Shader *shader) :
     mShader(shader),
-    mShaderInstancingNum(1)
+    mInstancingNum(1)
 {
 }
 
@@ -27,51 +27,40 @@ VisualEffectInstancePass::~VisualEffectInstancePass()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-void
-VisualEffectInstancePass::SetShaderUniform(std::shared_ptr<ShaderUniform> shaderUniform)
+int
+VisualEffectInstancePass::GetInstancingNum() const
 {
-    FALCON_ENGINE_CHECK_NULLPTR(shaderUniform);
-
-    if (mShader->ContainUniform(shaderUniform->mName))
-    {
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Shader uniform is set multiple time.\n");
-    }
-    else
-    {
-        mShader->PushUniform(shaderUniform->mName, shaderUniform->mType);
-    }
-
-    mShaderUniformList.push_back(shaderUniform);
+    return mInstancingNum;
 }
 
 void
-VisualEffectInstancePass::SetShaderTexture(
-    int textureUnit,
-    const Texture *texture,
-    TextureMode textureMode,
-    unsigned int textureShaderMask)
+VisualEffectInstancePass::SetInstancingNum(int instancingNum)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(texture);
+    mInstancingNum = instancingNum;
+}
 
-    if (mShaderTextureTable.find(textureUnit) != mShaderTextureTable.end())
-    {
-        mShaderTextureTable.at(textureUnit).mTextureShaderMaskList[int(textureMode)] = textureShaderMask;
-    }
-    else
-    {
-        mShaderTextureTable[textureUnit] = TextureAttachment(texture, textureMode, textureShaderMask);
-    }
+int
+VisualEffectInstancePass::GetSamplerNum() const
+{
+    return int(mSamplerTable.size());
+}
+
+const Sampler *
+VisualEffectInstancePass::GetSampler(int textureUnit)
+{
+    return mSamplerTable.at(textureUnit).mSampler;
 }
 
 void
-VisualEffectInstancePass::SetShaderSampler(int textureUnit,
-        const Sampler *sampler,
-        unsigned int samplerShaderMask)
+VisualEffectInstancePass::SetSampler(int textureUnit,
+                                     const Sampler *sampler,
+                                     unsigned int samplerShaderMask)
 {
     FALCON_ENGINE_CHECK_NULLPTR(sampler);
 
-    mShaderSamplerTable[textureUnit] = SamplerAttachment(sampler, samplerShaderMask);
+    mSamplerTable[textureUnit] = SamplerAttachment(sampler, samplerShaderMask);
 }
+
 
 Shader *
 VisualEffectInstancePass::GetShader() const
@@ -80,50 +69,84 @@ VisualEffectInstancePass::GetShader() const
 }
 
 int
-VisualEffectInstancePass::GetShaderInstancingNum() const
+VisualEffectInstancePass::GetTextureNum() const
 {
-    return mShaderInstancingNum;
-}
-
-void
-VisualEffectInstancePass::SetShaderInstancingNum(int instancingNum)
-{
-    mShaderInstancingNum = instancingNum;
-}
-
-int
-VisualEffectInstancePass::GetShaderUniformNum() const
-{
-    return int(mShaderUniformList.size());
-}
-
-ShaderUniform *
-VisualEffectInstancePass::GetShaderUniform(int uniformIndex) const
-{
-    return mShaderUniformList.at(uniformIndex).get();
-}
-
-int
-VisualEffectInstancePass::GetShaderTextureNum() const
-{
-    return int(mShaderTextureTable.size());
+    return int(mTextureTable.size());
 }
 
 const Texture *
-VisualEffectInstancePass::GetShaderTexture(int textureUnit) const
+VisualEffectInstancePass::GetTexture(int textureUnit) const
 {
-    return mShaderTextureTable.at(textureUnit).mTexture;
+    return mTextureTable.at(textureUnit).mTexture;
+}
+
+void
+VisualEffectInstancePass::SetTexture(
+    int textureUnit,
+    const Texture *texture,
+    TextureMode textureMode,
+    unsigned int textureShaderMask)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(texture);
+
+    if (mTextureTable.find(textureUnit) != mTextureTable.end())
+    {
+        mTextureTable.at(textureUnit).mTextureShaderMaskList[int(textureMode)] = textureShaderMask;
+    }
+    else
+    {
+        mTextureTable[textureUnit] = TextureAttachment(texture, textureMode, textureShaderMask);
+    }
+}
+
+Uniform *
+VisualEffectInstancePass::GetUniform(int uniformIndex)
+{
+    return mUniformList.at(uniformIndex).get();
+}
+
+void
+VisualEffectInstancePass::SetUniform(std::shared_ptr<Uniform> uniform)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(uniform);
+
+    if (!mShader->ContainUniformMeta(uniform->mName))
+    {
+        mShader->SetUniformMeta(uniform->mName);
+    }
+
+    mUniformList.push_back(std::move(uniform));
 }
 
 int
-VisualEffectInstancePass::GetShaderSamplerNum() const
+VisualEffectInstancePass::GetUniformNum() const
 {
-    return int(mShaderSamplerTable.size());
+    return int(mUniformList.size());
 }
 
-const Sampler *
-VisualEffectInstancePass::GetShaderSampler(int textureUnit)
+UniformBuffer *
+VisualEffectInstancePass::GetUniformBuffer(int uniformBufferIndex)
 {
-    return mShaderSamplerTable.at(textureUnit).mSampler;
+    return mUniformBufferList.at(uniformBufferIndex).get();
 }
+
+void
+VisualEffectInstancePass::SetUniformBuffer(std::shared_ptr<UniformBuffer> uniformBuffer)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(uniformBuffer);
+
+    if (!mShader->ContainUniformBufferMeta(uniformBuffer->GetName()))
+    {
+        mShader->SetUniformBufferMeta(uniformBuffer->GetName(), uniformBuffer->GetCapacitySize());
+    }
+
+    mUniformBufferList.push_back(std::move(uniformBuffer));
+}
+
+int
+VisualEffectInstancePass::GetUniformBufferNum() const
+{
+    return int(mUniformBufferList.size());
+}
+
 }

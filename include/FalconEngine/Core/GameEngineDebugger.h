@@ -57,7 +57,6 @@ public:
         Debug::OutputStringFormatInternal(format, std::forward<Args>(args)...);
     }
 
-
 private:
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -73,8 +72,11 @@ public:
 
 private:
     static std::mutex sMutex;
-    bool              mInitialized = false;
+    bool mInitialized = false;
 };
 FALCON_ENGINE_CLASS_END
 
 }
+
+#define FALCON_ENGINE_DEBUG_INFO(format, ...) FalconEngine::GameEngineDebugger::OutputStringFormat(format, __VA_ARGS__ )
+#define FALCON_ENGINE_DEBUG_WARNING(format, ...) FalconEngine::GameEngineDebugger::OutputStringFormat(format, __VA_ARGS__ )

@@ -1,7 +1,7 @@
 #include <FalconEngine/Graphics/Effect/BlinnEffect.h>
 
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
-#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
 
 using namespace std;
 

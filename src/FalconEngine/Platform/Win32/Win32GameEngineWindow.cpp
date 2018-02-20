@@ -342,8 +342,8 @@ PlatformGameEngineWindow::OnResuming()
 void
 PlatformGameEngineWindow::OnSizeChanged(int width, int height)
 {
-    _UNUSED(width);
-    _UNUSED(height);
+    FALCON_ENGINE_UNUSE(width);
+    FALCON_ENGINE_UNUSE(height);
 }
 
 void

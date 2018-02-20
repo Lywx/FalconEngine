@@ -167,7 +167,7 @@ Buffer::GetElementOffset() const
     return int(mDataOffset / mElementSize);
 }
 
-std::string
+const std::string&
 Buffer::GetName() const
 {
     return mName;

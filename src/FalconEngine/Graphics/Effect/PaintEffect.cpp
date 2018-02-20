@@ -4,8 +4,8 @@
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
-#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformAutomatic.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
+#include <FalconEngine/Graphics/Renderer/Resource/UniformAutomatic.h>
 #include <FalconEngine/Graphics/Renderer/State/BlendState.h>
 #include <FalconEngine/Graphics/Renderer/State/CullState.h>
 #include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
@@ -100,10 +100,10 @@ PaintEffect::InitializeInstance(
     _IN_     const std::shared_ptr<PaintEffectParams>& params) const
 {
     // Transform
-    SetShaderUniformAutomaticModelViewProjectionTransform(instance, 0, "ModelViewProjectionTransform");
+    SetUniformAutomaticModelViewProjectionTransform(instance, 0, "ModelViewProjectionTransform");
 
     // Color
-    instance->SetShaderUniform(0, ShareAutomatic<Vector4f>("Color", bind([ = ]
+    instance->SetUniform(0, ShareUniformAutomatic<Vector4f>("Color", bind([ = ]
     {
         return Vector4f(params->mColor);
     })));

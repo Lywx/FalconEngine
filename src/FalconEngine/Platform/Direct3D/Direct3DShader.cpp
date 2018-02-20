@@ -3,7 +3,7 @@
 #if defined(FALCON_ENGINE_API_DIRECT3D)
 #include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderSource.h>
+#include <FalconEngine/Graphics/Renderer/Resource/ShaderSource.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DRendererData.h>
 
 namespace FalconEngine

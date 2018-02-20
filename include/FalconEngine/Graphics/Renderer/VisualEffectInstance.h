@@ -7,7 +7,7 @@
 
 #include <FalconEngine/Core/Object.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstancePass.h>
-#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
 
 namespace FalconEngine
 {
@@ -16,7 +16,7 @@ class Sampler;
 class Texture;
 
 template <typename T>
-class ShaderUniformValue;
+class UniformValue;
 
 class VisualEffect;
 class VisualEffectInstancePass;
@@ -62,19 +62,18 @@ public:
     SetShaderInstancingNum(int passIndex, int instancingNum);
 
     template <typename T>
-    ShaderUniformValue<T> *
-    GetShaderUniform(int passIndex, int uniformIndex);
+    UniformValue<T> *
+    GetUniform(int passIndex, int uniformIndex);
 
     template <typename T>
     void
-    SetShaderUniform(int passIndex,
-                     std::shared_ptr<ShaderUniformValue<T>> uniform);
+    SetUniform(int passIndex,
+               std::shared_ptr<UniformValue<T>> uniform);
 
     template <typename T>
     void
-    SetShaderUniformBuffer(int passIndex,
-                           const std::string & uniformBufferName,
-                           size_t uniformBufferSize);
+    SetUniformBuffer(int passIndex,
+                     std::shared_ptr<UniformBufferTemplate<T>> uniformBuffer);
 
     const Texture *
     GetShaderTexture(int passIndex, int textureUnit) const;
@@ -109,20 +108,45 @@ protected:
 FALCON_ENGINE_CLASS_END
 
 template <typename T>
-ShaderUniformValue<T> *
-VisualEffectInstance::GetShaderUniform(int passIndex, int uniformIndex)
+UniformValue<T> *
+VisualEffectInstance::GetUniform(int passIndex, int uniformIndex)
 {
-    return mEffectInstancePassList.at(passIndex)->GetShaderUniform(uniformIndex);
+    return dynamic_cast<UniformValue<T>*>(
+               mEffectInstancePassList.at(passIndex)->GetUniform(uniformIndex));
 }
 
 template <typename T>
 void
-VisualEffectInstance::SetShaderUniform(int passIndex,
-                                       std::shared_ptr<ShaderUniformValue<T>> uniform)
+VisualEffectInstance::SetUniform(int passIndex,
+                                 std::shared_ptr<UniformValue<T>> uniform)
 {
     FALCON_ENGINE_CHECK_NULLPTR(uniform);
 
-    mEffectInstancePassList.at(passIndex)->SetShaderUniform(uniform);
+    mEffectInstancePassList.at(passIndex)->SetUniform(std::move(uniform));
+}
+
+template <typename T>
+void
+VisualEffectInstance::SetUniformBuffer(int passIndex,
+                                       std::shared_ptr<UniformBufferTemplate<T>> uniformBuffer)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(uniformBuffer);
+
+    mEffectInstancePassList.at(passIndex)->SetUniformBuffer(std::move(uniformBuffer));
 }
 
 }
+
+#define FALCON_ENGINE_UNIFORM_1_SET_BEGIN(instance, pass, DataKlass, uniformNameString, captureList) \
+instance->SetUniform(pass,  \
+    FalconEngine::ShareUniformAutomatic<DataKlass>( \
+        uniformNameString, FALCON_ENGINE_UNIFORM_FUNC_BEGIN(captureList, DataKlass)
+
+#define FALCON_ENGINE_UNIFORM_1_SET_END FALCON_ENGINE_UNIFORM_FUNC_END))
+
+#define FALCON_ENGINE_UNIFORM_BUFFER_1_SET_BEGIN(instance, pass, DataKlass, uniformBufferNameString, captureList) \
+instance->SetUniformBuffer(pass,  \
+    FalconEngine::ShareUniformBufferAutomatic<DataKlass>( \
+        uniformBufferNameString, FALCON_ENGINE_UNIFORM_BUFFER_FUNC_BEGIN(captureList, DataKlass)
+
+#define FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END FALCON_ENGINE_UNIFORM_BUFFER_FUNC_END))

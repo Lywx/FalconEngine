@@ -4,8 +4,8 @@
 #include <FalconEngine/Graphics/Renderer/Scene/Light.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Material.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Mesh.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformAutomatic.h>
-#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
+#include <FalconEngine/Graphics/Renderer/Resource/UniformAutomatic.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
@@ -106,9 +106,9 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
     using namespace placeholders;
 
     // Transform
-    SetShaderUniformAutomaticModelViewProjectionTransform(instance, 0, "ModelViewProjectionTransform");
-    SetShaderUniformAutomaticModelViewTransform(instance, 0, "ModelViewTransform");
-    SetShaderUniformAutomaticNormalTransform(instance, 0, "NormalTransform");
+    SetUniformAutomaticModelViewProjectionTransform(instance, 0, "ModelViewProjectionTransform");
+    SetUniformAutomaticModelViewTransform(instance, 0, "ModelViewTransform");
+    SetUniformAutomaticNormalTransform(instance, 0, "NormalTransform");
 
     // Material
     {
@@ -118,7 +118,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
 
         // Ambient
         {
-            instance->SetShaderUniform(0, ShareAutomatic<bool>("fe_TextureAmbientExist",
+            instance->SetUniform(0, ShareUniformAutomatic<bool>("fe_TextureAmbientExist",
                                        std::bind([ = ](const Visual *, const Camera *)
             {
                 return material->mAmbientTexture != nullptr;
@@ -140,7 +140,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
             }
             else
             {
-                instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("fe_Material.Ambient",
+                instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("fe_Material.Ambient",
                                            std::bind([ = ](const Visual *, const Camera *)
                 {
                     return Vector3f(material->mAmbientColor);
@@ -150,7 +150,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
 
         // Diffuse
         {
-            instance->SetShaderUniform(0, ShareAutomatic<bool>("fe_TextureDiffuseExist",
+            instance->SetUniform(0, ShareUniformAutomatic<bool>("fe_TextureDiffuseExist",
                                        std::bind([ = ](const Visual *, const Camera *)
             {
                 return material->mDiffuseTexture != nullptr;
@@ -171,7 +171,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
             }
             else
             {
-                instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("fe_Material.Diffuse",
+                instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("fe_Material.Diffuse",
                                            std::bind([ = ](const Visual *, const Camera *)
                 {
                     return Vector3f(material->mDiffuseColor);
@@ -181,7 +181,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
 
         // Emissive
         {
-            instance->SetShaderUniform(0, ShareAutomatic<bool>("fe_TextureEmissiveExist",
+            instance->SetUniform(0, ShareUniformAutomatic<bool>("fe_TextureEmissiveExist",
                                        std::bind([ = ](const Visual *, const Camera *)
             {
                 return material->mEmissiveTexture != nullptr;
@@ -202,7 +202,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
             }
             else
             {
-                instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("fe_Material.Emissive",
+                instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("fe_Material.Emissive",
                                            std::bind([ = ](const Visual *, const Camera *)
                 {
                     return Vector3f(material->mEmissiveColor);
@@ -212,7 +212,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
 
         // Shininess
         {
-            instance->SetShaderUniform(0, ShareAutomatic<bool>("fe_TextureShininessExist",
+            instance->SetUniform(0, ShareUniformAutomatic<bool>("fe_TextureShininessExist",
                                        std::bind([ = ](const Visual *, const Camera *)
             {
                 return material->mShininessTexture != nullptr;
@@ -233,7 +233,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
             }
             else
             {
-                instance->SetShaderUniform(0, ShareAutomatic<float>("fe_Material.Shininess",
+                instance->SetUniform(0, ShareUniformAutomatic<float>("fe_Material.Shininess",
                                            std::bind([ = ](const Visual *, const Camera *)
                 {
                     return material->mShininess;
@@ -243,7 +243,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
 
         // Specular
         {
-            instance->SetShaderUniform(0, ShareAutomatic<bool>("fe_TextureSpecularExist",
+            instance->SetUniform(0, ShareUniformAutomatic<bool>("fe_TextureSpecularExist",
                                        std::bind([ = ](const Visual *, const Camera *)
             {
                 return material->mSpecularTexture != nullptr;
@@ -264,7 +264,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
             }
             else
             {
-                instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("fe_Material.Specular",
+                instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("fe_Material.Specular",
                                            std::bind([ = ](const Visual *, const Camera *)
                 {
                     return Vector3f(material->mSpecularColor);
@@ -277,7 +277,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
     {
         // Directional light
         {
-            instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Ambient",
+            instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("DirectionalLight.Ambient",
                                        std::bind([ = ](const Visual *, const Camera *)
             {
                 if (params->mDirectionalLight == nullptr)
@@ -288,7 +288,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
                 return Vector3f(params->mDirectionalLight->mAmbient);
             }, _1, _2)));
 
-            instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Diffuse",
+            instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("DirectionalLight.Diffuse",
                                        std::bind([ = ](const Visual *, const Camera *)
             {
                 if (params->mDirectionalLight == nullptr)
@@ -299,7 +299,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
                 return Vector3f(params->mDirectionalLight->mDiffuse);
             }, _1, _2)));
 
-            instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.Specular",
+            instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("DirectionalLight.Specular",
                                        std::bind([ = ](const Visual *, const Camera *)
             {
                 if (params->mDirectionalLight == nullptr)
@@ -310,7 +310,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
                 return Vector3f(params->mDirectionalLight->mSpecular);
             }, _1, _2)));
 
-            instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("DirectionalLight.EyeDirection",
+            instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("DirectionalLight.EyeDirection",
                                        std::bind([ = ](const Visual *, const Camera * camera)
             {
                 if (params->mDirectionalLight == nullptr)
@@ -325,7 +325,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
 
         // Point light
         {
-            instance->SetShaderUniform(0, ShareAutomatic<int>("PointLightNum",
+            instance->SetUniform(0, ShareUniformAutomatic<int>("PointLightNum",
                                        std::bind([ = ](const Visual *, const Camera *)
             {
                 return int(params->mPointLightList.size());
@@ -333,7 +333,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
 
             for (int i = 0; i < PointLightNumMax; ++i)
             {
-                instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].Ambient",
+                instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].Ambient",
                                            std::bind([ = ](const Visual *, const Camera *)
                 {
                     if (i < int(params->mPointLightList.size()))
@@ -344,7 +344,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
                     return Vector3f::Zero;
                 }, _1, _2)));
 
-                instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].Diffuse",
+                instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].Diffuse",
                                            std::bind([ = ](const Visual *, const Camera *)
                 {
                     if (i < int(params->mPointLightList.size()))
@@ -355,7 +355,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
                     return Vector3f::Zero;
                 }, _1, _2)));
 
-                instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].Specular",
+                instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].Specular",
                                            std::bind([ = ](const Visual *, const Camera *)
                 {
                     if (i < int(params->mPointLightList.size()))
@@ -366,7 +366,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
                     return Vector3f::Zero;
                 }, _1, _2)));
 
-                instance->SetShaderUniform(0, ShareAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].EyePosition",
+                instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].EyePosition",
                                            std::bind([ = ](const Visual *, const Camera * camera)
                 {
                     if (i < int(params->mPointLightList.size()))
@@ -377,7 +377,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
                     return Vector3f::Zero;
                 }, _1, _2)));
 
-                instance->SetShaderUniform(0, ShareAutomatic<float>("PointLightArray[" + std::to_string(i) + "].Constant",
+                instance->SetUniform(0, ShareUniformAutomatic<float>("PointLightArray[" + std::to_string(i) + "].Constant",
                                            std::bind([ = ](const Visual *, const Camera *)
                 {
                     if (i < int(params->mPointLightList.size()))
@@ -388,7 +388,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
                     return 0.0f;
                 }, _1, _2)));
 
-                instance->SetShaderUniform(0, ShareAutomatic<float>("PointLightArray[" + std::to_string(i) + "].Linear",
+                instance->SetUniform(0, ShareUniformAutomatic<float>("PointLightArray[" + std::to_string(i) + "].Linear",
                                            std::bind([ = ](const Visual *, const Camera *)
                 {
                     if (i < int(params->mPointLightList.size()))
@@ -399,7 +399,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
                     return 0.0f;
                 }, _1, _2)));
 
-                instance->SetShaderUniform(0, ShareAutomatic<float>("PointLightArray[" + std::to_string(i) + "].Quadratic",
+                instance->SetUniform(0, ShareUniformAutomatic<float>("PointLightArray[" + std::to_string(i) + "].Quadratic",
                                            std::bind([ = ](const Visual *, const Camera *)
                 {
                     if (i < int(params->mPointLightList.size()))

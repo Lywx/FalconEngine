@@ -9,7 +9,7 @@
 #include <FalconEngine/Content/AssetManager.h>
 #include <FalconEngine/Core/GameEngineSettings.h>
 #include <FalconEngine/Core/Path.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderSource.h>
+#include <FalconEngine/Graphics/Renderer/Resource/ShaderSource.h>
 
 namespace FalconEngine
 {

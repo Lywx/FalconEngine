@@ -7,7 +7,7 @@
 #include <memory>
 #include <string>
 
-#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
 
 namespace FalconEngine

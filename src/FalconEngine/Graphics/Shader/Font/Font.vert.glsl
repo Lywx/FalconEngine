@@ -14,7 +14,10 @@ layout (location = 4) in float FontEdge;
 // integer vertex attribute is so not lossless. The result would be unexpected.
 layout (location = 5) in float FontPage;
 
-uniform mat4 ProjectionTransform;
+layout(std140) uniform TransformBuffer
+{
+    mat4 ProjectionTransform;
+};
 
 out Vout
 {

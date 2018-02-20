@@ -15,7 +15,7 @@
 #include <FalconEngine/Graphics/Renderer/Resource/Texture1d.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2dArray.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderSource.h>
+#include <FalconEngine/Graphics/Renderer/Resource/ShaderSource.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Model.h>
 
 using namespace std;

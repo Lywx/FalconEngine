@@ -4,7 +4,7 @@
 #include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderSource.h>
+#include <FalconEngine/Graphics/Renderer/Resource/ShaderSource.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DMapping.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DRendererData.h>
 #include <FalconEngine/Platform/Win32/Win32Exception.h>

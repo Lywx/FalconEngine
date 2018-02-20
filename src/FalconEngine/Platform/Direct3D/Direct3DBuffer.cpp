@@ -37,8 +37,8 @@ PlatformBuffer::~PlatformBuffer()
 void
 PlatformBuffer::Flush(Renderer *, int64_t offset, int64_t size)
 {
-    _UNUSED(offset);
-    _UNUSED(size);
+    FALCON_ENGINE_UNUSE(offset);
+    FALCON_ENGINE_UNUSE(size);
 }
 
 /************************************************************************/
@@ -104,7 +104,7 @@ PlatformBuffer::CreateResource(ID3D11Device4 *device)
 void
 PlatformBuffer::CreateResourceView(ID3D11Device4 *device)
 {
-    _UNUSED(device);
+    FALCON_ENGINE_UNUSE(device);
 
     auto bufferType = mBufferPtr->GetBufferType();
     switch (bufferType)

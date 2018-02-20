@@ -103,7 +103,7 @@ PlatformGameEngineWindow::MouseButtonCallback(GLFWwindow * /* window */, int but
 void
 PlatformGameEngineWindow::MousePositionCallback(GLFWwindow *window, double x, double y)
 {
-    _UNUSED(window);
+    FALCON_ENGINE_UNUSE(window);
 
     // NOTE(Wuxiang): I invert the Y coordinate of screen space so that (0, 0)
     // as left lower corner to be consistent with the OpenGL NDC convention.
@@ -119,7 +119,7 @@ PlatformGameEngineWindow::ScrollCallback(GLFWwindow * /* window */, double /* xo
 void
 PlatformGameEngineWindow::WindowCloseCallback(GLFWwindow *window)
 {
-    _UNUSED(window);
+    FALCON_ENGINE_UNUSE(window);
 
     mData->mRunning = false;
 }

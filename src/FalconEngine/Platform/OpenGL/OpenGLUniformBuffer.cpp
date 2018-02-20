@@ -13,12 +13,10 @@ namespace FalconEngine
 PlatformUniformBuffer::PlatformUniformBuffer(Renderer *renderer, const UniformBuffer *uniformBuffer) :
     PlatformBuffer(renderer, GL_UNIFORM_BUFFER, uniformBuffer)
 {
-    // TODO(Wuxiang): 2018-02-20 01:46.
 }
 
 PlatformUniformBuffer::~PlatformUniformBuffer()
 {
-    // TODO(Wuxiang): 2018-02-20 01:46.
 }
 
 /************************************************************************/
@@ -33,17 +31,17 @@ PlatformUniformBuffer::Enable(Renderer *)
 void
 PlatformUniformBuffer::Disable(Renderer *)
 {
-    // TODO(Wuxiang): 2018-02-20 01:46.
+    glBindBuffer(mBufferTarget, 0);
 }
 
-void
+void *
 PlatformUniformBuffer::Map(Renderer *renderer)
 {
-    // TODO(Wuxiang): 2018-02-20 01:46.
-    PlatformBuffer::Map(renderer,
-                        ResourceMapAccessMode::WriteBuffer,
-                        ResourceMapFlushMode::Automatic,
-                        ResourceMapSyncMode::Unsynchronized, 0, size);
+    return PlatformBuffer::Map(renderer,
+                               ResourceMapAccessMode::WriteBuffer,
+                               ResourceMapFlushMode::Automatic,
+                               ResourceMapSyncMode::Unsynchronized, 0,
+                               mBufferPtr->GetCapacitySize());
 }
 
 }

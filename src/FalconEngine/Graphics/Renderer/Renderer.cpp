@@ -16,7 +16,6 @@ using namespace std;
 #include <FalconEngine/Graphics/Renderer/Font/FontRenderer.h>
 #include <FalconEngine/Graphics/Renderer/Font/FontText.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Visual.h>
-#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
 #include <FalconEngine/Graphics/Renderer/State/BlendState.h>
 #include <FalconEngine/Graphics/Renderer/State/CullState.h>
 #include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
@@ -24,6 +23,7 @@ using namespace std;
 #include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
 #include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
 #include <FalconEngine/Graphics/Renderer/Resource/IndexBuffer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
 #include <FalconEngine/Graphics/Renderer/Resource/ShaderBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
@@ -45,13 +45,14 @@ using namespace std;
 #include <FalconEngine/Platform/OpenGL/OpenGLRendererState.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLShader.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLShaderBuffer.h>
-#include <FalconEngine/Platform/OpenGL/OpenGLShaderUniform.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLTexture1d.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLTexture1dArray.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLTexture2d.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLTexture2dArray.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLTexture3d.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLTextureSampler.h>
+#include <FalconEngine/Platform/OpenGL/OpenGLUniform.h>
+#include <FalconEngine/Platform/OpenGL/OpenGLUniformBuffer.h>
 #endif
 
 #if defined(FALCON_ENGINE_API_DIRECT3D)
@@ -62,13 +63,14 @@ using namespace std;
 #include <FalconEngine/Platform/Direct3D/Direct3DRendererState.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DShader.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DShaderBuffer.h>
-#include <FalconEngine/Platform/Direct3D/Direct3DShaderUniform.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DUniform.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DTexture1d.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DTexture1dArray.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DTexture2d.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DTexture2dArray.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DTexture3d.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DTextureSampler.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DUniformBuffer.h>
 #endif
 
 #if defined(FALCON_ENGINE_WINDOW_GLFW)
@@ -260,7 +262,8 @@ Renderer::Unbind(const Buffer *buffer)
         Unbind(reinterpret_cast<const ShaderBuffer *>(buffer));
         break;
     case BufferType::UniformBuffer:
-        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+        Unbind(reinterpret_cast<const UniformBuffer *>(buffer));
+        break;
     default:
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
@@ -343,65 +346,6 @@ Renderer::Update(const Buffer *buffer,
 }
 
 /************************************************************************/
-/* Shader Buffer Management                                             */
-/************************************************************************/
-void
-Renderer::Bind(const ShaderBuffer *shaderBuffer)
-{
-    FALCON_ENGINE_RENDERER_BIND_IMPLEMENT(shaderBuffer, mShaderBufferTable, PlatformShaderBuffer);
-}
-
-void
-Renderer::Unbind(const ShaderBuffer *shaderBuffer)
-{
-    FALCON_ENGINE_RENDERER_UNBIND_IMPLEMENT(shaderBuffer, mShaderBufferTable);
-}
-
-void
-Renderer::Enable(const ShaderBuffer *shaderBuffer, unsigned int bindingIndex)
-{
-    FALCON_ENGINE_RENDERER_ENABLE_LAZY(shaderBuffer, mShaderBufferPrevious);
-    FALCON_ENGINE_CHECK_NULLPTR(shaderBuffer);
-
-    auto iter = mShaderBufferTable.find(shaderBuffer);
-    PlatformShaderBuffer *shaderBufferPlatform;
-    if (iter != mShaderBufferTable.end())
-    {
-        shaderBufferPlatform = iter->second;
-    }
-    else
-    {
-        shaderBufferPlatform = new PlatformShaderBuffer(this, shaderBuffer);
-        mShaderBufferTable[shaderBuffer] = shaderBufferPlatform;
-    }
-    shaderBufferPlatform->Enable(this, bindingIndex);
-}
-
-void
-Renderer::Disable(const ShaderBuffer *shaderBuffer)
-{
-    FALCON_ENGINE_RENDERER_DISABLE_IMPLEMENT(shaderBuffer, mShaderBufferTable);
-}
-
-void *
-Renderer::Map(const ShaderBuffer *shaderBuffer, ResourceMapAccessMode access, ResourceMapFlushMode flush, ResourceMapSyncMode sync, int64_t offset, int64_t size)
-{
-    FALCON_ENGINE_RENDERER_MAP_IMPLEMENT(shaderBuffer, mShaderBufferTable, PlatformShaderBuffer);
-}
-
-void
-Renderer::Unmap(const ShaderBuffer *shaderBuffer)
-{
-    FALCON_ENGINE_RENDERER_UNMAP_IMPLEMENT(shaderBuffer, mShaderBufferTable);
-}
-
-void
-Renderer::Flush(const ShaderBuffer *shaderBuffer, int64_t offset, int64_t size)
-{
-    FALCON_ENGINE_RENDERER_FLUSH_IMPLEMENT(shaderBuffer, mShaderBufferTable);
-}
-
-/************************************************************************/
 /* Index Buffer Management                                              */
 /************************************************************************/
 void
@@ -453,6 +397,106 @@ Renderer::Flush(const IndexBuffer *indexBuffer, int64_t offset, int64_t size)
 }
 
 /************************************************************************/
+/* Shader Buffer Management                                             */
+/************************************************************************/
+void
+Renderer::Bind(const ShaderBuffer *shaderBuffer)
+{
+    FALCON_ENGINE_RENDERER_BIND_IMPLEMENT(shaderBuffer, mShaderBufferTable, PlatformShaderBuffer);
+}
+
+void
+Renderer::Unbind(const ShaderBuffer *shaderBuffer)
+{
+    FALCON_ENGINE_RENDERER_UNBIND_IMPLEMENT(shaderBuffer, mShaderBufferTable);
+}
+
+void
+Renderer::Enable(const ShaderBuffer *shaderBuffer, unsigned int bindingIndex)
+{
+    FALCON_ENGINE_RENDERER_ENABLE_LAZY(shaderBuffer, mShaderBufferPrevious);
+    FALCON_ENGINE_RENDERER_BIND_FIND(shaderBuffer, mShaderBufferTable, PlatformShaderBuffer);
+
+    shaderBufferPlatform->Enable(this, bindingIndex);
+}
+
+void
+Renderer::Disable(const ShaderBuffer *shaderBuffer)
+{
+    FALCON_ENGINE_RENDERER_DISABLE_IMPLEMENT(shaderBuffer, mShaderBufferTable);
+}
+
+void *
+Renderer::Map(const ShaderBuffer *shaderBuffer, ResourceMapAccessMode access, ResourceMapFlushMode flush, ResourceMapSyncMode sync, int64_t offset, int64_t size)
+{
+    FALCON_ENGINE_RENDERER_MAP_IMPLEMENT(shaderBuffer, mShaderBufferTable, PlatformShaderBuffer);
+}
+
+void
+Renderer::Unmap(const ShaderBuffer *shaderBuffer)
+{
+    FALCON_ENGINE_RENDERER_UNMAP_IMPLEMENT(shaderBuffer, mShaderBufferTable);
+}
+
+void
+Renderer::Flush(const ShaderBuffer *shaderBuffer, int64_t offset, int64_t size)
+{
+    FALCON_ENGINE_RENDERER_FLUSH_IMPLEMENT(shaderBuffer, mShaderBufferTable);
+}
+
+/************************************************************************/
+/* Uniform Buffer Management                                            */
+/************************************************************************/
+void
+Renderer::Bind(const UniformBuffer *uniformBuffer)
+{
+    FALCON_ENGINE_RENDERER_BIND_IMPLEMENT(uniformBuffer, mUniformBufferTable, PlatformUniformBuffer);
+}
+
+void
+Renderer::Unbind(const UniformBuffer *uniformBuffer)
+{
+    FALCON_ENGINE_RENDERER_UNBIND_IMPLEMENT(uniformBuffer, mUniformBufferTable);
+}
+
+void
+Renderer::Enable(const UniformBuffer *uniformBuffer)
+{
+    FALCON_ENGINE_RENDERER_BIND_FIND(uniformBuffer, mUniformBufferTable, PlatformUniformBuffer);
+
+    uniformBufferPlatform->Enable(this);
+}
+
+void
+Renderer::Disable(const UniformBuffer *uniformBuffer)
+{
+    FALCON_ENGINE_CHECK_NULLPTR(uniformBuffer);
+
+    auto iter = mUniformBufferTable.find(uniformBuffer);
+    if (iter != mUniformBufferTable.end())
+    {
+        auto uniformBufferPlatform = iter->second;
+        uniformBufferPlatform->Disable(this);
+    }
+}
+
+void *
+Renderer::Map(const UniformBuffer *uniformBuffer)
+{
+    FALCON_ENGINE_RENDERER_BIND_FIND(uniformBuffer, mUniformBufferTable, PlatformUniformBuffer);
+
+    return uniformBufferPlatform->Map(this);
+}
+
+void
+Renderer::Unmap(const UniformBuffer *uniformBuffer)
+{
+    FALCON_ENGINE_RENDERER_BIND_FIND(uniformBuffer, mUniformBufferTable, PlatformUniformBuffer);
+
+    return uniformBufferPlatform->Unmap(this);
+}
+
+/************************************************************************/
 /* Vertex Buffer Management                                             */
 /************************************************************************/
 void
@@ -473,19 +517,7 @@ Renderer::Enable(const VertexBuffer *vertexBuffer,
                  int64_t             offset,
                  int                 stride)
 {
-    FALCON_ENGINE_CHECK_NULLPTR(vertexBuffer);
-
-    auto iter = mVertexBufferTable.find(vertexBuffer);
-    PlatformVertexBuffer *vertexBufferPlatform;
-    if (iter != mVertexBufferTable.end())
-    {
-        vertexBufferPlatform = iter->second;
-    }
-    else
-    {
-        vertexBufferPlatform = new PlatformVertexBuffer(this, vertexBuffer);
-        mVertexBufferTable[vertexBuffer] = vertexBufferPlatform;
-    }
+    FALCON_ENGINE_RENDERER_BIND_FIND(vertexBuffer, mVertexBufferTable, PlatformVertexBuffer);
 
     vertexBufferPlatform->Enable(this, bindingIndex, offset, stride);
 }
@@ -1058,12 +1090,12 @@ Renderer::Enable(VisualEffectPass *pass)
 }
 
 void
-Renderer::Enable(const VisualEffectInstancePass *pass, const Camera *camera, const Visual *visual)
+Renderer::Enable(VisualEffectInstancePass *pass, const Camera *camera, const Visual *visual)
 {
     FALCON_ENGINE_CHECK_NULLPTR(pass);
 
     // Enable required shader textures.
-    for (auto textureIter = pass->GetShaderTextureBegin(); textureIter != pass->GetShaderTextureEnd(); ++textureIter)
+    for (auto textureIter = pass->GetTextureBegin(); textureIter != pass->GetTextureEnd(); ++textureIter)
     {
         Enable(textureIter->first,
                textureIter->second.mTexture,
@@ -1071,7 +1103,7 @@ Renderer::Enable(const VisualEffectInstancePass *pass, const Camera *camera, con
     }
 
     // Enable required shader samplers.
-    for (auto samplerIter = pass->GetShaderSamplerBegin(); samplerIter != pass->GetShaderSamplerEnd(); ++samplerIter)
+    for (auto samplerIter = pass->GetSamplerBegin(); samplerIter != pass->GetSamplerEnd(); ++samplerIter)
     {
         Enable(samplerIter->first,
                samplerIter->second.mSampler,
@@ -1079,7 +1111,7 @@ Renderer::Enable(const VisualEffectInstancePass *pass, const Camera *camera, con
     }
 
     // Update required shader uniforms.
-    for (int uniformIndex = 0; uniformIndex < pass->GetShaderUniformNum(); ++uniformIndex)
+    for (int uniformIndex = 0; uniformIndex < pass->GetUniformNum(); ++uniformIndex)
     {
         // NOTE(Wuxiang): At this point you are supposed to have uniform location
         // for each uniform. In principle, you should finish declaring all shader
@@ -1088,13 +1120,22 @@ Renderer::Enable(const VisualEffectInstancePass *pass, const Camera *camera, con
 
         // NOTE(Wuxiang): The location of the shader uniform would be stored in
         // shader's uniform table after the binding of the shader.
-        auto uniform = pass->GetShaderUniform(uniformIndex);
+        auto uniform = pass->GetUniform(uniformIndex);
         Update(pass, uniform, camera, visual);
+    }
+
+    for (int uniformBufferIndex = 0; uniformBufferIndex < pass->GetUniformBufferNum(); ++uniformBufferIndex)
+    {
+        auto uniformBuffer = pass->GetUniformBuffer(uniformBufferIndex);
+        Update(pass, uniformBuffer, camera, visual);
     }
 }
 
 void
-Renderer::Update(const VisualEffectInstancePass *pass, ShaderUniform *uniform, const Camera *camera, const Visual *visual)
+Renderer::Update(const VisualEffectInstancePass *pass,
+                 Uniform *uniform,
+                 const Camera *camera,
+                 const Visual *visual)
 {
     // NOTE(Wuxiang): Note that uniform comes from the instance pass. This
     // means there would be user modification.
@@ -1123,7 +1164,38 @@ Renderer::Update(const VisualEffectInstancePass *pass, ShaderUniform *uniform, c
         // NOTE(Wuxiang): You have to update a uniform value regardless whether it
         // has been updated or not because the shader program is changed
         // arbitrarily.
-        PlatformShaderUniform::UpdateContext(uniform);
+        PlatformUniform::UpdateContext(uniform);
+    }
+}
+
+void
+Renderer::Update(const VisualEffectInstancePass *pass,
+                 UniformBuffer *uniformBuffer,
+                 const Camera *camera,
+                 const Visual *visual)
+{
+    if (!uniformBuffer->mInitialized)
+    {
+        // NOTE(Wuxiang): This is necessary because the uniform buffer in instance
+        // pass is different entity from uniform in shader.
+        auto shader = pass->GetShader();
+        uniformBuffer->mEnabled = shader->IsUniformBufferEnabled(uniformBuffer->GetName());
+        uniformBuffer->SetBlockIndex(shader->GetUniformBufferBlockIndex(uniformBuffer->GetName()));
+        uniformBuffer->mInitialized = true;
+    }
+
+    if (uniformBuffer->mEnabled)
+    {
+        if (uniformBuffer->IsUpdateNeeded())
+        {
+            Enable(uniformBuffer);
+
+            void *data = Map(uniformBuffer);
+            uniformBuffer->UpdateContext(camera, visual, data);
+            Unmap(uniformBuffer);
+
+            Disable(uniformBuffer);
+        }
     }
 }
 
@@ -1200,7 +1272,7 @@ Renderer::Draw(
             Enable(indexBuffer);
         }
 
-        auto primitiveInstancingNum = visualEffectInstancePass->GetShaderInstancingNum();
+        auto primitiveInstancingNum = visualEffectInstancePass->GetInstancingNum();
         DrawPrimitivePlatform(primitive, primitiveInstancingNum);
     }
 }

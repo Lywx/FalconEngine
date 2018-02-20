@@ -1,4 +1,4 @@
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniform.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Uniform.h>
 
 #include <FalconEngine/Core/Exception.h>
 
@@ -8,7 +8,7 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-ShaderUniform::ShaderUniform(const std::string& name, ShaderUniformType type) :
+Uniform::Uniform(const std::string& name, UniformType type) :
     mEnabled(true),
     mName(name),
     mInitialized(false),
@@ -20,7 +20,7 @@ ShaderUniform::ShaderUniform(const std::string& name, ShaderUniformType type) :
 {
 }
 
-ShaderUniform::~ShaderUniform()
+Uniform::~Uniform()
 {
 }
 
@@ -28,13 +28,13 @@ ShaderUniform::~ShaderUniform()
 /* Public Members                                                       */
 /************************************************************************/
 bool
-ShaderUniform::IsUpdateNeeded() const
+Uniform::IsUpdateNeeded() const
 {
     return !mValueIsCurrent;
 }
 
 void
-ShaderUniform::Update(const Camera * /* camera */, const Visual * /* visual */)
+Uniform::Update(const Camera * /* camera */, const Visual * /* visual */)
 {
     FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
 }

@@ -126,7 +126,7 @@ public:
     void
     SetWireframeState(std::unique_ptr<WireframeState> wireframeStateHandle);
 
-protected:
+private:
     std::shared_ptr<Shader> mShader;
     std::shared_ptr<VertexFormat> mShaderVertexFormat;
 

@@ -1,4 +1,4 @@
-#include <FalconEngine/Platform/OpenGL/OpenGLShaderUniform.h>
+#include <FalconEngine/Platform/OpenGL/OpenGLUniform.h>
 
 #if defined(FALCON_ENGINE_API_OPENGL)
 #include <FalconEngine/Core/Exception.h>
@@ -7,47 +7,45 @@ namespace FalconEngine
 {
 
 void
-PlatformShaderUniform::UpdateContext(ShaderUniform *shaderUniform)
+PlatformUniform::UpdateContext(Uniform *uniform)
 {
-    switch (shaderUniform->mType)
+    switch (uniform->mType)
     {
-    case ShaderUniformType::None:
-        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
-    case ShaderUniformType::Bool:
-        Update(Cast<bool>(shaderUniform));
+    case UniformType::Bool:
+        Update(Cast<bool>(uniform));
         break;
-    case ShaderUniformType::Float:
-        Update(Cast<float>(shaderUniform));
+    case UniformType::Float:
+        Update(Cast<float>(uniform));
         break;
-    case ShaderUniformType::FloatVec2:
-        Update(Cast<Vector2f>(shaderUniform));
+    case UniformType::FloatVec2:
+        Update(Cast<Vector2f>(uniform));
         break;
-    case ShaderUniformType::FloatVec3:
-        Update(Cast<Vector3f>(shaderUniform));
+    case UniformType::FloatVec3:
+        Update(Cast<Vector3f>(uniform));
         break;
-    case ShaderUniformType::FloatVec4:
-        Update(Cast<Vector4f>(shaderUniform));
+    case UniformType::FloatVec4:
+        Update(Cast<Vector4f>(uniform));
         break;
-    case ShaderUniformType::FloatMat2:
+    case UniformType::FloatMat2:
         FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
         break;
-    case ShaderUniformType::FloatMat3:
-        Update(Cast<Matrix3f>(shaderUniform));
+    case UniformType::FloatMat3:
+        Update(Cast<Matrix3f>(uniform));
         break;
-    case ShaderUniformType::FloatMat4:
-        Update(Cast<Matrix4f>(shaderUniform));
+    case UniformType::FloatMat4:
+        Update(Cast<Matrix4f>(uniform));
         break;
-    case ShaderUniformType::Int:
-        Update(Cast<int>(shaderUniform));
+    case UniformType::Int:
+        Update(Cast<int>(uniform));
         break;
-    case ShaderUniformType::IntVec2:
-        Update(Cast<Vector2i>(shaderUniform));
+    case UniformType::IntVec2:
+        Update(Cast<Vector2i>(uniform));
         break;
-    case ShaderUniformType::IntVec3:
-        Update(Cast<Vector3i>(shaderUniform));
+    case UniformType::IntVec3:
+        Update(Cast<Vector3i>(uniform));
         break;
-    case ShaderUniformType::IntVec4:
-        Update(Cast<Vector4i>(shaderUniform));
+    case UniformType::IntVec4:
+        Update(Cast<Vector4i>(uniform));
         break;
     default:
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();

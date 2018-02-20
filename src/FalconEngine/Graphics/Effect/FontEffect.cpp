@@ -9,8 +9,9 @@
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2dArray.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexAttribute.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
-#include <FalconEngine/Graphics/Renderer/Shader/Shader.h>
-#include <FalconEngine/Graphics/Renderer/Shader/ShaderUniformAutomatic.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
+#include <FalconEngine/Graphics/Renderer/Resource/UniformAutomatic.h>
+#include <FalconEngine/Graphics/Renderer/Resource/UniformBufferAutomatic.h>
 
 using namespace std;
 
@@ -104,16 +105,18 @@ FontEffect::InitializeInstance(
     FALCON_ENGINE_CHECK_NULLPTR(params->mFont);
     FALCON_ENGINE_CHECK_NULLPTR(params->mHandedness);
 
-    instance->SetShaderUniformBuffer<int>(0, "TransformBuffer", sizeof FontUniformBuffer);
-    instance->SetShaderUniform(0, ShareAutomatic<Matrix4f>("ProjectionTransform",
-                               std::bind([ = ](const Visual * /* visual */, const Camera * /* camera */)
+    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_BEGIN(instance, 0, FontUniformBuffer, "TransformBuffer", = )
     {
+        FALCON_ENGINE_UNUSE(camera);
+        FALCON_ENGINE_UNUSE(visual);
+
         auto gameEngineSettings = GameEngineSettings::GetInstance();
-        return params->mHandedness->CreateOrthogonal(
-                   0, float(gameEngineSettings->mWindowWidth),
-                   0, float(gameEngineSettings->mWindowHeight),
-                   -1.0f, 1.0f);
-    }, _1, _2)));
+        data->mProjectionTransform = params->mHandedness->CreateOrthogonal(
+                                         0, float(gameEngineSettings->mWindowWidth),
+                                         0, float(gameEngineSettings->mWindowHeight),
+                                         -1.0f, 1.0f);
+    }
+    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END;
 
     // NOTE(Wuxiang): You don't need to set the texture sampler uniform because
     // they are predefined in the fe_Texture.glsl as #include extension.

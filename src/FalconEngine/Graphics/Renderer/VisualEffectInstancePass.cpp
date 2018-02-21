@@ -1,12 +1,15 @@
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstancePass.h>
 
 #include <FalconEngine/Core/Exception.h>
-#include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
-#include <FalconEngine/Graphics/Renderer/Resource/Uniform.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>
-#include <FalconEngine/Graphics/Renderer/Resource/SamplerAttachment.h>
+#include <FalconEngine/Graphics/Renderer/Resource/SamplerBinding.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
-#include <FalconEngine/Graphics/Renderer/Resource/TextureAttachment.h>
+#include <FalconEngine/Graphics/Renderer/Resource/TextureBinding.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Uniform.h>
+#include <FalconEngine/Graphics/Renderer/Resource/UniformBufferBinding.h>
+
+using namespace std;
 
 namespace FalconEngine
 {
@@ -15,8 +18,10 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 VisualEffectInstancePass::VisualEffectInstancePass(Shader *shader) :
+    mInstancingNum(1),
     mShader(shader),
-    mInstancingNum(1)
+    mTextureUnitCount(0),
+    mUniformBufferBindingIndexCount(0)
 {
 }
 
@@ -42,13 +47,13 @@ VisualEffectInstancePass::SetInstancingNum(int instancingNum)
 int
 VisualEffectInstancePass::GetSamplerNum() const
 {
-    return int(mSamplerTable.size());
+    return int(mSamplerBindingTable.size());
 }
 
 const Sampler *
 VisualEffectInstancePass::GetSampler(int textureUnit)
 {
-    return mSamplerTable.at(textureUnit).mSampler;
+    return mSamplerBindingTable.at(textureUnit).mSampler;
 }
 
 void
@@ -58,7 +63,7 @@ VisualEffectInstancePass::SetSampler(int textureUnit,
 {
     FALCON_ENGINE_CHECK_NULLPTR(sampler);
 
-    mSamplerTable[textureUnit] = SamplerAttachment(sampler, samplerShaderMask);
+    mSamplerBindingTable[textureUnit] = SamplerBinding(sampler, samplerShaderMask);
 }
 
 
@@ -71,13 +76,13 @@ VisualEffectInstancePass::GetShader() const
 int
 VisualEffectInstancePass::GetTextureNum() const
 {
-    return int(mTextureTable.size());
+    return int(mTextureBindingTable.size());
 }
 
 const Texture *
 VisualEffectInstancePass::GetTexture(int textureUnit) const
 {
-    return mTextureTable.at(textureUnit).mTexture;
+    return mTextureBindingTable.at(textureUnit).mTexture;
 }
 
 void
@@ -89,13 +94,13 @@ VisualEffectInstancePass::SetTexture(
 {
     FALCON_ENGINE_CHECK_NULLPTR(texture);
 
-    if (mTextureTable.find(textureUnit) != mTextureTable.end())
+    if (mTextureBindingTable.find(textureUnit) != mTextureBindingTable.end())
     {
-        mTextureTable.at(textureUnit).mTextureShaderMaskList[int(textureMode)] = textureShaderMask;
+        mTextureBindingTable.at(textureUnit).mTextureShaderMaskList[int(textureMode)] = textureShaderMask;
     }
     else
     {
-        mTextureTable[textureUnit] = TextureAttachment(texture, textureMode, textureShaderMask);
+        mTextureBindingTable[textureUnit] = TextureBinding(texture, textureMode, textureShaderMask);
     }
 }
 
@@ -106,7 +111,7 @@ VisualEffectInstancePass::GetUniform(int uniformIndex)
 }
 
 void
-VisualEffectInstancePass::SetUniform(std::shared_ptr<Uniform> uniform)
+VisualEffectInstancePass::PushUniform(std::shared_ptr<Uniform> uniform)
 {
     FALCON_ENGINE_CHECK_NULLPTR(uniform);
 
@@ -124,29 +129,21 @@ VisualEffectInstancePass::GetUniformNum() const
     return int(mUniformList.size());
 }
 
-UniformBuffer *
-VisualEffectInstancePass::GetUniformBuffer(int uniformBufferIndex)
-{
-    return mUniformBufferList.at(uniformBufferIndex).get();
-}
-
 void
-VisualEffectInstancePass::SetUniformBuffer(std::shared_ptr<UniformBuffer> uniformBuffer)
+VisualEffectInstancePass::PushUniformBuffer(std::shared_ptr<UniformBuffer> uniformBuffer, unsigned int shaderMask)
 {
     FALCON_ENGINE_CHECK_NULLPTR(uniformBuffer);
 
-    if (!mShader->ContainUniformBufferMeta(uniformBuffer->GetName()))
+    if (!mShader->ContainUniformBufferMeta(uniformBuffer->mName))
     {
-        mShader->SetUniformBufferMeta(uniformBuffer->GetName(), uniformBuffer->GetCapacitySize());
+        mShader->SetUniformBufferMeta(uniformBuffer->mName,
+                                      uniformBuffer->GetCapacitySize(),
+                                      mUniformBufferBindingIndexCount);
     }
 
-    mUniformBufferList.push_back(std::move(uniformBuffer));
-}
-
-int
-VisualEffectInstancePass::GetUniformBufferNum() const
-{
-    return int(mUniformBufferList.size());
+    auto uniformBufferBinding = make_shared<UniformBufferBinding>(std::move(uniformBuffer), shaderMask);
+    mUniformBufferBindingList.push_back(std::move(uniformBufferBinding));
+    mUniformBufferBindingIndexCount += 1;
 }
 
 }

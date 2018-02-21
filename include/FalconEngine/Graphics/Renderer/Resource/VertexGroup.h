@@ -17,15 +17,14 @@ namespace FalconEngine
 // @remark For any vertex group there is only one unique vertex format parameter
 // could support that vertex group. But inverse proposition is not true because
 // binding index could be used to bind different vertex buffers.
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API VertexGroup
+FALCON_ENGINE_CLASS_BEGIN VertexGroup final
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
     VertexGroup();
-    virtual ~VertexGroup();
+    ~VertexGroup();
 
 public:
     /************************************************************************/
@@ -50,7 +49,7 @@ public:
                     int                                  stride);
 
     std::shared_ptr<VertexBufferBinding>
-    FindVertexBufferBinding(const VertexBuffer *vertexBuffer) const;
+    FindVertexBufferBinding(const VertexBuffer * vertexBuffer) const;
 
     std::shared_ptr<VertexBufferBinding>
     GetVertexBufferBinding(unsigned int bindingIndex) const;
@@ -89,6 +88,6 @@ private:
 private:
     std::map<unsigned int, std::shared_ptr<VertexBufferBinding>> mVertexBufferBindingTable;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

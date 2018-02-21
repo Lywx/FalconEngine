@@ -5,7 +5,7 @@
 #if defined(FALCON_ENGINE_API_DIRECT3D)
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/ShaderBuffer.h>
-#include <FalconEngine/Platform/Direct3D/Direct3DTexture1d.h>
+#include <FalconEngine/Platform/Direct3D/Direct3DBuffer.h>
 
 namespace FalconEngine
 {
@@ -18,7 +18,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformShaderBuffer(Renderer *renderer, const ShaderBuffer *storageBuffer);
+    explicit PlatformShaderBuffer(Renderer *renderer, const ShaderBuffer *shaderBuffer);
     virtual ~PlatformShaderBuffer();
 
 public:

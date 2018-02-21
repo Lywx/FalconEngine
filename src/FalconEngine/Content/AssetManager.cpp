@@ -163,15 +163,16 @@ AssetManager::LoadFontInternal(const std::string& fontAssetPath)
     // Load font texture array.
     auto fontAssetDirPath = GetFileDirectory(fontAssetPath);
     {
+        std::unique_ptr<Texture2dArray> fontPageTextureArray;
+
         // Load the first texture, then, use the texture metadata to create texture array.
-        std::shared_ptr<Texture2dArray> fontPageTextureArray;
         {
             auto fontPage0TextureAssetName = font->mTextureArchiveNameList[0];
             auto fontPage0TextureAssetPath = fontAssetDirPath + fontPage0TextureAssetName;
             auto fontPage0Texture = LoadTexture<Texture2d>(fontPage0TextureAssetPath);
 
             // NEW(Wuxiang): Add mipmap support.
-            fontPageTextureArray = std::make_shared<Texture2dArray>(
+            fontPageTextureArray = std::make_unique<Texture2dArray>(
                                        fontPage0Texture->GetDimension(0),
                                        fontPage0Texture->GetDimension(1),
                                        font->mTexturePages,
@@ -187,15 +188,16 @@ AssetManager::LoadFontInternal(const std::string& fontAssetPath)
             auto fontPageTexture = LoadTexture<Texture2d>(textureAssetPath);
             fontPageTextureArray->PushSlice(fontPageTexture);
         }
-        font->SetTexture(fontPageTextureArray);
+
+        font->SetTexture(std::move(fontPageTextureArray));
     }
 
     // Set font texture sampler.
-    auto sampler = std::make_shared<Sampler>();
+    auto sampler = std::make_unique<Sampler>();
     sampler->mMagnificationFilter = SamplerMagnificationFilter::Linear;
     sampler->mMinificationFilter = SamplerMinificationFilter::Linear;
     sampler->mMipmapFilter = SamplerMipmapFilter::Linear;
-    font->SetSampler(sampler);
+    font->SetSampler(std::move(sampler));
 
     return font;
 }

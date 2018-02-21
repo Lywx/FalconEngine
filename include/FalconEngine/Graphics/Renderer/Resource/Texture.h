@@ -179,6 +179,9 @@ public:
     virtual const Texture *
     GetSlice(int textureIndex) const = 0;
 
+    ResourceStorageMode
+    GetStorageMode() const;
+
     TextureType
     GetTextureType() const;
 

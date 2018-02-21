@@ -3,7 +3,7 @@
 #include <FalconEngine/Core/Macro.h>
 
 #if defined(FALCON_ENGINE_API_OPENGL)
-#include <FalconEngine/Graphics/Renderer/Resource/TextureAttachment.h>
+#include <FalconEngine/Graphics/Renderer/Resource/TextureBinding.h>
 #include <FalconEngine/Platform/OpenGL/OpenGLLib.h>
 
 namespace FalconEngine

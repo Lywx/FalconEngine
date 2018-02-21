@@ -23,15 +23,15 @@ PlatformUniformBuffer::~PlatformUniformBuffer()
 /* Public Members                                                       */
 /************************************************************************/
 void
-PlatformUniformBuffer::Enable(Renderer *)
+PlatformUniformBuffer::Enable(Renderer *, unsigned int bindingIndex, unsigned int)
 {
-    glBindBufferBase(mBufferTarget, mBufferPtr->GetBlockIndex(), mBufferObj);
+    glBindBufferBase(mBufferTarget, bindingIndex, mBufferObj);
 }
 
 void
-PlatformUniformBuffer::Disable(Renderer *)
+PlatformUniformBuffer::Disable(Renderer *, unsigned int bindingIndex, unsigned int)
 {
-    glBindBuffer(mBufferTarget, 0);
+    glBindBufferBase(mBufferTarget, bindingIndex, 0);
 }
 
 void *

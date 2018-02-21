@@ -6,7 +6,6 @@
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Buffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
-#include <FalconEngine/Graphics/Renderer/Resource/TextureAttachment.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DLib.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DResource.h>
 #include <FalconEngine/Platform/Direct3D/Direct3DMapping.h>

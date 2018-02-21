@@ -6,6 +6,7 @@
 #include <FalconEngine/Core/GameEngineSettings.h>
 #include <FalconEngine/Core/GameEngineDebugger.h>
 #include <FalconEngine/Platform/Win32/Win32GameEngineWindow.h>
+#include <FalconEngine/Platform/Win32/Win32Utility.h>
 
 #include <Windows.h>
 
@@ -36,6 +37,7 @@ GameEnginePlatform::InitializeWindowPlatform()
     HMODULE moduleHandle = GetModuleHandle(nullptr);
 
     // Register window class.
+    auto windowClassName = "FalconEngineGameWindowClass";
     {
         WNDCLASSEX wcex;
         wcex.cbSize = sizeof(WNDCLASSEX);
@@ -56,12 +58,12 @@ GameEnginePlatform::InitializeWindowPlatform()
         wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
         wcex.hbrBackground = HBRUSH(COLOR_WINDOW + 1);
         wcex.lpszMenuName = nullptr;
-        wcex.lpszClassName = nullptr;
+        wcex.lpszClassName = windowClassName;
         wcex.hIconSm = nullptr;
 
         if (!RegisterClassEx(&wcex))
         {
-            FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Window class register failed.");
+            FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Window class register failed: " + GetLastErrorString());
         }
     }
 
@@ -79,7 +81,7 @@ GameEnginePlatform::InitializeWindowPlatform()
         // to default to fullscreen.
         windowHandle = CreateWindowEx(
                            0,                                        //_In_     DWORD     dwExStyle,
-                           nullptr,                                  //_In_opt_ LPCTSTR   lpClassName,
+                           windowClassName,                          //_In_opt_ LPCTSTR   lpClassName,
                            gameEngineSettings->mWindowTitle.c_str(), //_In_opt_ LPCTSTR   lpWindowName,
                            WS_OVERLAPPEDWINDOW,                      //_In_     DWORD     dwStyle,
                            CW_USEDEFAULT,                            //_In_     int       x,
@@ -94,7 +96,7 @@ GameEnginePlatform::InitializeWindowPlatform()
 
         if (!windowHandle)
         {
-            FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Window creation failed.");
+            FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Window creation failed: " + GetLastErrorString());
         }
 
         // TODO: Change nCmdShow to SW_SHOWMAXIMIZED to default to fullscreen.

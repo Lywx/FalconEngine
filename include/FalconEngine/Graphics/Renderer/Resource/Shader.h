@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <unordered_map>
 
+#include <FalconEngine/Graphics/Renderer/Resource/ShaderMetadata.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Uniform.h>
 #include <FalconEngine/Graphics/Renderer/Resource/UniformBuffer.h>
 
@@ -100,10 +101,7 @@ public:
     bool
     ContainUniformMeta(const std::string & uniformName) const;
 
-    int
-    GetUniformMetaNum() const;
-
-    UniformMetadata
+    const UniformMetadata&
     GetUniformMeta(const std::string & uniformName);
 
     void
@@ -133,12 +131,6 @@ public:
         return mUniformMetadataTable.cend();
     }
 
-    int
-    GetUniformLocation(const std::string & uniformName) const;
-
-    bool
-    IsUniformEnabled(const std::string & uniformName) const;
-
     /************************************************************************/
     /* Uniform Buffer Management                                            */
     /************************************************************************/
@@ -146,7 +138,9 @@ public:
     ContainUniformBufferMeta(const std::string & uniformBufferName) const;
 
     void
-    SetUniformBufferMeta(const std::string & uniformBufferName, size_t uniformBufferSize);
+    SetUniformBufferMeta(const std::string & uniformBufferName,
+                         size_t uniformBufferSize,
+                         int uniformBufferBindingIndex);
 
     auto
     GetUniformBufferMetaBegin()
@@ -172,11 +166,8 @@ public:
         return mUniformBufferMetadataTable.cend();
     }
 
-    int
-    GetUniformBufferBlockIndex(const std::string & uniformBufferName) const;
-
-    bool
-    IsUniformBufferEnabled(const std::string & uniformBufferName) const;
+    const UniformBufferMetadata&
+    GetUniformBufferMeta(const std::string & uniformBufferName) const;
 
     /************************************************************************/
     /* Composition Management                                               */
@@ -218,8 +209,14 @@ public:
     PushShaderFile(ShaderType shaderType, const std::string & shaderPath);
 
 private:
+    /************************************************************************/
+    /* Source Members                                                       */
+    /************************************************************************/
     std::unordered_map<int, std::shared_ptr<ShaderSource>> mSourceTable;
 
+    /************************************************************************/
+    /* Metadata Members                                                     */
+    /************************************************************************/
     std::unordered_map<std::string, UniformMetadata> mUniformMetadataTable;
     std::unordered_map<std::string, UniformBufferMetadata> mUniformBufferMetadataTable;
 };

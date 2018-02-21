@@ -1,7 +1,5 @@
 #pragma once
 
-#pragma once
-
 #include <FalconEngine/Core/Macro.h>
 
 #if defined(FALCON_ENGINE_API_DIRECT3D)
@@ -14,13 +12,14 @@ namespace FalconEngine
 class Renderer;
 class UniformBuffer;
 
-class FALCON_ENGINE_API PlatformUniformBuffer : public PlatformBuffer
+FALCON_ENGINE_CLASS_BEGIN PlatformUniformBuffer :
+public PlatformBuffer
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformUniformBuffer(Renderer *renderer, const UniformBuffer *uniformBuffer);
+    explicit PlatformUniformBuffer(Renderer * renderer, const UniformBuffer * uniformBuffer);
     virtual ~PlatformUniformBuffer();
 
 public:
@@ -28,11 +27,15 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Enable(Renderer *, unsigned int bindingIndex);
+    Enable(Renderer * renderer, unsigned int bindingIndex, unsigned int shaderMask);
 
     void
-    Disable(Renderer *);
+    Disable(Renderer * renderer, unsigned int bindingIndex, unsigned int shaderMask);
+
+    void *
+    Map(Renderer *);
 };
+FALCON_ENGINE_CLASS_END
 
 }
 

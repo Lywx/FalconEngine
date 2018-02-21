@@ -7,12 +7,6 @@
 #include <FalconEngine/Core/String.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
 
-#ifndef FALCON_ENGINE_API_OPENGL
-#define FALCON_ENGINE_API_OPENGL
-#define FALCON_ENGINE_API_OPENGL_GLEW
-#endif
-#include <FalconEngine/Platform/OpenGL/OpenGLShader.h>
-
 #if defined(FALCON_ENGINE_OS_WINDOWS)
 #include <FalconEngine/Platform/Win32/Win32Utility.h>
 #endif
@@ -28,7 +22,9 @@ namespace FalconEngine
 /************************************************************************/
 AssetTool::AssetTool()
 {
+#if defined(FALCON_ENGINE_API_OPENGL)
     OGLInitializeContextPlatform();
+#endif
 }
 
 AssetTool::~AssetTool()
@@ -124,12 +120,6 @@ AssetTool::GetShaderType(const std::string& shaderFilePath)
 
     FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(
         GetFormatString("Unidentified shader type: '%s'.", shaderExtension.c_str()));
-}
-
-void
-AssetTool::OGLValidateShader(Shader& shader)
-{
-    PlatformShader shaderPlatform(nullptr, &shader);
 }
 
 }

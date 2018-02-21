@@ -118,7 +118,7 @@ const D3D11_MAP Direct3DResourceMapMode[int(ResourceMapAccessMode::Count)] =
 
     // TODO(Wuxiang): 2018-02-06 12:10 Add non overwrite support.
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ff476181(v=vs.85).aspx
-    D3D11_MAP_WRITE_NO_OVERWRITE
+    //D3D11_MAP_WRITE_NO_OVERWRITE
 };
 
 const D3D11_TEXTURE_ADDRESS_MODE Direct3DSamplerWrapMode[int(SamplerWrapMode::Count)] =

@@ -8,31 +8,39 @@
 namespace FalconEngine
 {
 
-class FALCON_ENGINE_API ModelAccessOption
+FALCON_ENGINE_CLASS_BEGIN ModelAccessOption
 {
 public:
-    ModelAccessOption() = default;
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
+    ModelAccessOption();
 
 public:
-    ResourceCreationAccessUsage mPositionUsage = ResourceCreationAccessUsage::Static;
-    ResourceCreationAccessUsage mNormalUsage   = ResourceCreationAccessUsage::Static;
-    ResourceCreationAccessUsage mTexCoordUsage = ResourceCreationAccessUsage::Static;
+    ResourceCreationAccessUsage mPositionUsage;
+    ResourceCreationAccessUsage mNormalUsage;
+    ResourceCreationAccessUsage mTexCoordUsage;
 
-    ResourceCreationAccessMode  mPositionMode = ResourceCreationAccessMode::GpuRead;
-    ResourceCreationAccessMode  mNormalMode   = ResourceCreationAccessMode::GpuRead;
-    ResourceCreationAccessMode  mTexCoordMode = ResourceCreationAccessMode::GpuRead;
+    ResourceCreationAccessMode mPositionMode;
+    ResourceCreationAccessMode mNormalMode;
+    ResourceCreationAccessMode mTexCoordMode;
 };
+FALCON_ENGINE_CLASS_END
 
-class FALCON_ENGINE_API ModelLayoutOption
+FALCON_ENGINE_CLASS_BEGIN ModelLayoutOption
 {
 public:
-    ModelLayoutOption() = default;
+    /************************************************************************/
+    /* Constructors and Destructor                                          */
+    /************************************************************************/
+    ModelLayoutOption();
 
 public:
-    const BufferLayout mPosition = BufferLayout::Separated;
-    const BufferLayout mNormal = BufferLayout::Separated;
-    const BufferLayout mTexCoord = BufferLayout::Separated;
+    BufferLayout mPosition;
+    BufferLayout mNormal;
+    BufferLayout mTexCoord;
 };
+FALCON_ENGINE_CLASS_END
 
 class FALCON_ENGINE_API ModelImportOption
 {
@@ -40,16 +48,8 @@ public:
     /************************************************************************/
     /* Static Members                                                       */
     /************************************************************************/
-    static ModelImportOption GetDefault()
-    {
-        static const ModelImportOption sDefault = ModelImportOption(
-                    ModelAccessOption(),
-                    ModelLayoutOption(),
-                    ResourceCreationAccessMode::GpuRead,
-                    ResourceCreationAccessUsage::Static,
-                    IndexType::UnsignedInt);
-        return sDefault;
-    }
+    static ModelImportOption
+    GetDefault();
 
 public:
     /************************************************************************/
@@ -57,8 +57,8 @@ public:
     /************************************************************************/
     ModelImportOption(ModelAccessOption vertexBufferAccess,
                       ModelLayoutOption vertexBufferLayout,
-                      ResourceCreationAccessMode indexBufferMode,
-                      ResourceCreationAccessUsage indexBufferUsage,
+                      ResourceCreationAccessMode indexBufferAccessMode,
+                      ResourceCreationAccessUsage indexBufferAccessUsage,
                       IndexType indexType);
 
 public:

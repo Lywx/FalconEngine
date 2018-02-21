@@ -56,7 +56,10 @@ private:
     CollectUniformLocation(Shader * shader) const;
 
     void
-    CollectUniformBufferIndex(Shader * shader) const;
+    CollectUniformBufferBlockIndex(Shader * shader) const;
+
+    void
+    RegisterUniformBufferBindingIndex(Shader * shader) const;
 
 private:
     GLuint mProgram;

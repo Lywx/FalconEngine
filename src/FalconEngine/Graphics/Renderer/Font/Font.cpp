@@ -37,11 +37,11 @@ Font::SetSize(double size)
 }
 
 void
-Font::SetSampler(std::shared_ptr<Sampler> sampler)
+Font::SetSampler(std::unique_ptr<Sampler> sampler)
 {
     FALCON_ENGINE_CHECK_NULLPTR(sampler);
 
-    mSampler = sampler;
+    mSampler = move(sampler);
 }
 
 const Sampler *
@@ -51,11 +51,11 @@ Font::GetSampler() const
 }
 
 void
-Font::SetTexture(std::shared_ptr<Texture2dArray> texture)
+Font::SetTexture(std::unique_ptr<Texture2dArray> texture)
 {
     FALCON_ENGINE_CHECK_NULLPTR(texture);
 
-    mTexture = texture;
+    mTexture = move(texture);
 }
 
 const Texture2dArray *

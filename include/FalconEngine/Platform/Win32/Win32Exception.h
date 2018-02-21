@@ -7,7 +7,7 @@
 
 namespace FalconEngine
 {
-inline void
+void
 D3DCheckSuccess(HRESULT hr);
 }
 

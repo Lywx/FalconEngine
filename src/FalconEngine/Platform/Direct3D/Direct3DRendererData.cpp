@@ -1,12 +1,16 @@
 #include <FalconEngine/Platform/Direct3D/Direct3DRendererData.h>
 
 #if defined(FALCON_ENGINE_API_DIRECT3D)
+#include <FalconEngine/Core/Memory.h>
 #include <FalconEngine/Platform/Win32/Win32Exception.h>
 
 using namespace Microsoft::WRL;
 
 namespace FalconEngine
 {
+
+FALCON_ENGINE_DELETER_DECLARE(PlatformRendererData, PlatformRendererDataDeleter);
+FALCON_ENGINE_DELETER_IMPLEMENT(PlatformRendererData, PlatformRendererDataDeleter);
 
 /************************************************************************/
 /* Constructors and Destructor                                          */

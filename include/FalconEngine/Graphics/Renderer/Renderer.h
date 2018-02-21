@@ -10,7 +10,7 @@
 #include <FalconEngine/Core/Memory.h>
 #include <FalconEngine/Graphics/Renderer/Viewport.h>
 #include <FalconEngine/Graphics/Renderer/Window.h>
-#include <FalconEngine/Graphics/Renderer/Resource/TextureAttachment.h>
+#include <FalconEngine/Graphics/Renderer/Resource/TextureBinding.h>
 
 namespace FalconEngine
 {
@@ -30,6 +30,7 @@ class Primitive;
 class Shader;
 class Uniform;
 class UniformBuffer;
+class UniformBufferBinding;
 class Visual;
 class VisualEffectInstance;
 class VisualEffectInstancePass;
@@ -92,8 +93,7 @@ FALCON_ENGINE_DELETER_DECLARE(PlatformRendererData, PlatformRendererDataDeleter)
 class PlatformRendererState;
 FALCON_ENGINE_DELETER_DECLARE(PlatformRendererState, PlatformRendererStateDeleter);
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API Renderer final
+FALCON_ENGINE_CLASS_BEGIN Renderer final
 {
 public:
     /************************************************************************/
@@ -134,7 +134,7 @@ public:
     /* Framebuffer Management                                               */
     /************************************************************************/
     void
-    ClearColorBuffer(const Vector4f& color);
+    ClearColorBuffer(const Vector4f & color);
 
     void
     ClearDepthBuffer(float depth);
@@ -143,7 +143,7 @@ public:
     ClearStencilBuffer(unsigned int stencil);
 
     void
-    ClearFrameBuffer(const Vector4f& color, float depth, unsigned int stencil);
+    ClearFrameBuffer(const Vector4f & color, float depth, unsigned int stencil);
 
     /************************************************************************/
     /* Viewport Management                                                  */
@@ -183,10 +183,10 @@ public:
     // different buffer type. So the Renderer interface require buffer to use
     // derived buffer class to access corresponding functionality.
     void
-    Unbind(const Buffer *buffer);
+    Unbind(const Buffer * buffer);
 
     void *
-    Map(const Buffer *buffer,
+    Map(const Buffer * buffer,
         ResourceMapAccessMode access,
         ResourceMapFlushMode flush,
         ResourceMapSyncMode sync,
@@ -194,15 +194,15 @@ public:
         int64_t size);
 
     void
-    Unmap(const Buffer *buffer);
+    Unmap(const Buffer * buffer);
 
     void
-    Flush(const Buffer *buffer,
+    Flush(const Buffer * buffer,
           int64_t offset,
           int64_t size);
 
     void
-    Update(const Buffer *buffer,
+    Update(const Buffer * buffer,
            ResourceMapAccessMode access,
            ResourceMapFlushMode flush,
            ResourceMapSyncMode sync);
@@ -211,19 +211,19 @@ public:
     /* Index Buffer Management                                              */
     /************************************************************************/
     void
-    Bind(const IndexBuffer *indexBuffer);
+    Bind(const IndexBuffer * indexBuffer);
 
     void
-    Unbind(const IndexBuffer *indexBuffer);
+    Unbind(const IndexBuffer * indexBuffer);
 
     void
-    Enable(const IndexBuffer *indexBuffer);
+    Enable(const IndexBuffer * indexBuffer);
 
     void
-    Disable(const IndexBuffer *indexBuffer);
+    Disable(const IndexBuffer * indexBuffer);
 
     void *
-    Map(const IndexBuffer *indexBuffer,
+    Map(const IndexBuffer * indexBuffer,
         ResourceMapAccessMode access,
         ResourceMapFlushMode flush,
         ResourceMapSyncMode sync,
@@ -231,10 +231,10 @@ public:
         int64_t size);
 
     void
-    Unmap(const IndexBuffer *indexBuffer);
+    Unmap(const IndexBuffer * indexBuffer);
 
     void
-    Flush(const IndexBuffer *indexBuffer,
+    Flush(const IndexBuffer * indexBuffer,
           int64_t offset,
           int64_t size);
 
@@ -242,19 +242,19 @@ public:
     /* Shader Buffer Management                                             */
     /************************************************************************/
     void
-    Bind(const ShaderBuffer *shaderBuffer);
+    Bind(const ShaderBuffer * shaderBuffer);
 
     void
-    Unbind(const ShaderBuffer *shaderBuffer);
+    Unbind(const ShaderBuffer * shaderBuffer);
 
     void
-    Enable(const ShaderBuffer *shaderBuffer, unsigned int bindingIndex);
+    Enable(const ShaderBuffer * shaderBuffer, unsigned int bindingIndex);
 
     void
-    Disable(const ShaderBuffer *shaderBuffer);
+    Disable(const ShaderBuffer * shaderBuffer);
 
     void *
-    Map(const ShaderBuffer *shaderBuffer,
+    Map(const ShaderBuffer * shaderBuffer,
         ResourceMapAccessMode access,
         ResourceMapFlushMode flush,
         ResourceMapSyncMode sync,
@@ -262,10 +262,10 @@ public:
         int64_t size);
 
     void
-    Unmap(const ShaderBuffer *shaderBuffer);
+    Unmap(const ShaderBuffer * shaderBuffer);
 
     void
-    Flush(const ShaderBuffer *shaderBuffer,
+    Flush(const ShaderBuffer * shaderBuffer,
           int64_t offset,
           int64_t size);
 
@@ -273,45 +273,45 @@ public:
     /* Uniform Buffer Management                                            */
     /************************************************************************/
     void
-    Bind(const UniformBuffer *uniformBuffer);
+    Bind(const UniformBuffer * uniformBuffer);
 
     void
-    Unbind(const UniformBuffer *uniformBuffer);
+    Unbind(const UniformBuffer * uniformBuffer);
 
     void
-    Enable(const UniformBuffer *uniformBuffer);
+    Enable(const UniformBuffer * uniformBuffer, unsigned int bindingIndex, unsigned int shaderMask);
 
     void
-    Disable(const UniformBuffer *uniformBuffer);
+    Disable(const UniformBuffer * uniformBuffer, unsigned int bindingIndex, unsigned int shaderMask);
 
     void *
-    Map(const UniformBuffer *uniformBuffer);
+    Map(const UniformBuffer * uniformBuffer);
 
     void
-    Unmap(const UniformBuffer *uniformBuffer);
+    Unmap(const UniformBuffer * uniformBuffer);
 
     /************************************************************************/
     /* Vertex Buffer Management                                             */
     /************************************************************************/
     void
-    Bind(const VertexBuffer *vertexBuffer);
+    Bind(const VertexBuffer * vertexBuffer);
 
     void
-    Unbind(const VertexBuffer *vertexBuffer);
+    Unbind(const VertexBuffer * vertexBuffer);
 
     // @param offset - offset into the first data in byte.
     // @param stride - stride between contiguous data in byte.
     void
-    Enable(const VertexBuffer *vertexBuffer,
+    Enable(const VertexBuffer * vertexBuffer,
            unsigned int        bindingIndex,
            int64_t             offset,
            int                 stride);
 
     void
-    Disable(const VertexBuffer *vertexBuffer, unsigned int bindingIndex);
+    Disable(const VertexBuffer * vertexBuffer, unsigned int bindingIndex);
 
     void *
-    Map(const VertexBuffer *vertexBuffer,
+    Map(const VertexBuffer * vertexBuffer,
         ResourceMapAccessMode access,
         ResourceMapFlushMode flush,
         ResourceMapSyncMode sync,
@@ -319,55 +319,55 @@ public:
         int64_t size);
 
     void
-    Unmap(const VertexBuffer *vertexBuffer);
+    Unmap(const VertexBuffer * vertexBuffer);
 
     void
-    Flush(const VertexBuffer *vertexBuffer, int64_t offset, int64_t size);
+    Flush(const VertexBuffer * vertexBuffer, int64_t offset, int64_t size);
 
     /************************************************************************/
     /* Vertex Format Management                                             */
     /************************************************************************/
     void
-    Bind(const VertexFormat *vertexFormat);
+    Bind(const VertexFormat * vertexFormat);
 
     void
-    Unbind(const VertexFormat *vertexFormat);
+    Unbind(const VertexFormat * vertexFormat);
 
     void
-    Enable(const VertexFormat *vertexFormat);
+    Enable(const VertexFormat * vertexFormat);
 
     void
-    Disable(const VertexFormat *vertexFormat);
+    Disable(const VertexFormat * vertexFormat);
 
     /************************************************************************/
     /* Vertex Group Management                                              */
     /************************************************************************/
     void
-    Enable(const VertexGroup *vertexGroup);
+    Enable(const VertexGroup * vertexGroup);
 
     void
-    Disable(const VertexGroup *vertexGroup);
+    Disable(const VertexGroup * vertexGroup);
 
     /************************************************************************/
     /* Universal Texture Management                                         */
     /************************************************************************/
     void
-    Bind(const Texture *texture);
+    Bind(const Texture * texture);
 
     void
-    Unbind(const Texture *texture);
+    Unbind(const Texture * texture);
 
     // @summary Provide a uniform interface for all texture.
     void
     Enable(int textureUnit,
-           const Texture *texture,
-           const TextureShaderMaskList& textureShaderMaskList);
+           const Texture * texture,
+           const TextureShaderMaskList & textureShaderMaskList);
 
     // @summary Provide a uniform interface for all texture.
     void
     Disable(int textureUnit,
-            const Texture *texture,
-            const TextureShaderMaskList& textureShaderMaskList);
+            const Texture * texture,
+            const TextureShaderMaskList & textureShaderMaskList);
 
     // NEW(Wuxiang): Add the ability of reading back texture.
     // NOTE(Wuxiang): But I don't know why I need any function to update texture.
@@ -376,26 +376,26 @@ public:
     /* Texture 1D Management                                                */
     /************************************************************************/
     PlatformTexture1d *
-    Get(const Texture1d *texture);
+    Get(const Texture1d * texture);
 
     void
-    Bind(const Texture1d *texture);
+    Bind(const Texture1d * texture);
 
     void
-    Unbind(const Texture1d *texture);
+    Unbind(const Texture1d * texture);
 
     void
     Enable(int textureUnit,
-           const Texture1d *texture,
-           const TextureShaderMaskList& textureShaderMaskList);
+           const Texture1d * texture,
+           const TextureShaderMaskList & textureShaderMaskList);
 
     void
     Disable(int textureUnit,
-            const Texture1d *texture,
-            const TextureShaderMaskList& textureShaderMaskList);
+            const Texture1d * texture,
+            const TextureShaderMaskList & textureShaderMaskList);
 
     void *
-    Map(const Texture1d *texture,
+    Map(const Texture1d * texture,
         int mipmapLevel,
         ResourceMapAccessMode access,
         ResourceMapFlushMode flush,
@@ -404,32 +404,32 @@ public:
         int64_t size);
 
     void
-    Unmap(const Texture1d *texture, int mipmapLevel);
+    Unmap(const Texture1d * texture, int mipmapLevel);
 
     /************************************************************************/
     /* Texture 1D Array Management                                          */
     /************************************************************************/
     PlatformTexture1dArray *
-    Get(const Texture1dArray *textureArray);
+    Get(const Texture1dArray * textureArray);
 
     void
-    Bind(const Texture1dArray *textureArray);
+    Bind(const Texture1dArray * textureArray);
 
     void
-    Unbind(const Texture1dArray *textureArray);
+    Unbind(const Texture1dArray * textureArray);
 
     void
     Enable(int textureUnit,
-           const Texture1dArray *textureArray,
-           const TextureShaderMaskList& textureShaderMaskList);
+           const Texture1dArray * textureArray,
+           const TextureShaderMaskList & textureShaderMaskList);
 
     void
     Disable(int textureUnit,
-            const Texture1dArray *textureArray,
-            const TextureShaderMaskList& textureShaderMaskList);
+            const Texture1dArray * textureArray,
+            const TextureShaderMaskList & textureShaderMaskList);
 
     void *
-    Map(const Texture1dArray *textureArray,
+    Map(const Texture1dArray * textureArray,
         int textureIndex,
         int mipmapLevel,
         ResourceMapAccessMode access,
@@ -439,7 +439,7 @@ public:
         int64_t size);
 
     void
-    Unmap(const Texture1dArray *textureArray,
+    Unmap(const Texture1dArray * textureArray,
           int textureIndex,
           int mipmapLevel);
 
@@ -447,26 +447,26 @@ public:
     /* Texture 2D Management                                                */
     /************************************************************************/
     PlatformTexture2d *
-    Get(const Texture2d *texture);
+    Get(const Texture2d * texture);
 
     void
-    Bind(const Texture2d *texture);
+    Bind(const Texture2d * texture);
 
     void
-    Unbind(const Texture2d *texture);
+    Unbind(const Texture2d * texture);
 
     void
     Enable(int textureUnit,
-           const Texture2d *texture,
-           const TextureShaderMaskList& textureShaderMaskList);
+           const Texture2d * texture,
+           const TextureShaderMaskList & textureShaderMaskList);
 
     void
     Disable(int textureUnit,
-            const Texture2d *texture,
-            const TextureShaderMaskList& textureShaderMaskList);
+            const Texture2d * texture,
+            const TextureShaderMaskList & textureShaderMaskList);
 
     void *
-    Map(const Texture2d *texture,
+    Map(const Texture2d * texture,
         int mipmapLevel,
         ResourceMapAccessMode access,
         ResourceMapFlushMode flush,
@@ -475,32 +475,32 @@ public:
         int64_t size);
 
     void
-    Unmap(const Texture2d *texture, int mipmapLevel);
+    Unmap(const Texture2d * texture, int mipmapLevel);
 
     /************************************************************************/
     /* Texture 2D Array Management                                          */
     /************************************************************************/
     PlatformTexture2dArray *
-    Get(const Texture2dArray *textureArray);
+    Get(const Texture2dArray * textureArray);
 
     void
-    Bind(const Texture2dArray *textureArray);
+    Bind(const Texture2dArray * textureArray);
 
     void
-    Unbind(const Texture2dArray *textureArray);
+    Unbind(const Texture2dArray * textureArray);
 
     void
     Enable(int textureUnit,
-           const Texture2dArray *textureArray,
-           const TextureShaderMaskList& textureShaderMaskList);
+           const Texture2dArray * textureArray,
+           const TextureShaderMaskList & textureShaderMaskList);
 
     void
     Disable(int textureUnit,
-            const Texture2dArray *textureArray,
-            const TextureShaderMaskList& textureShaderMaskList);
+            const Texture2dArray * textureArray,
+            const TextureShaderMaskList & textureShaderMaskList);
 
     void *
-    Map(const Texture2dArray *textureArray,
+    Map(const Texture2dArray * textureArray,
         int textureIndex,
         int mipmapLevel,
         ResourceMapAccessMode access,
@@ -510,7 +510,7 @@ public:
         int64_t size);
 
     void
-    Unmap(const Texture2dArray *textureArray,
+    Unmap(const Texture2dArray * textureArray,
           int textureIndex,
           int mipmapLevel);
 
@@ -518,87 +518,95 @@ public:
     /* Texture 3D Management                                                */
     /************************************************************************/
     PlatformTexture3d *
-    Get(const Texture3d *texture);
+    Get(const Texture3d * texture);
 
     void
-    Bind(const Texture3d *texture);
+    Bind(const Texture3d * texture);
 
     void
-    Unbind(const Texture3d *texture);
+    Unbind(const Texture3d * texture);
 
     void
     Enable(int textureUnit,
-           const Texture3d *texture,
-           const TextureShaderMaskList& textureShaderMaskList);
+           const Texture3d * texture,
+           const TextureShaderMaskList & textureShaderMaskList);
 
     void
     Disable(int textureUnit,
-            const Texture3d *texture,
-            const TextureShaderMaskList& textureShaderMaskList);
+            const Texture3d * texture,
+            const TextureShaderMaskList & textureShaderMaskList);
 
     /************************************************************************/
     /* Sampler Management                                                   */
     /************************************************************************/
     void
-    Bind(const Sampler *sampler);
+    Bind(const Sampler * sampler);
 
     void
-    Unbind(const Sampler *sampler);
+    Unbind(const Sampler * sampler);
 
     void
     Enable(int textureUnit,
-           const Sampler *sampler,
+           const Sampler * sampler,
            unsigned int samplerShaderMask);
 
     void
     Disable(int textureUnit,
-            const Sampler *sampler,
+            const Sampler * sampler,
             unsigned int samplerShaderMask);
 
     /************************************************************************/
     /* Shader Management                                                   */
     /************************************************************************/
     PlatformShader *
-    Get(const Shader *shader);
+    Get(const Shader * shader);
 
     void
-    Bind(Shader *shader);
+    Bind(Shader * shader);
 
     void
-    Unbind(const Shader *shader);
+    Unbind(const Shader * shader);
 
     void
-    Enable(Shader *shader);
+    Enable(Shader * shader);
 
     void
-    Disable(const Shader *shader);
+    Disable(const Shader * shader);
 
     /************************************************************************/
     /* Pass Management                                                      */
     /************************************************************************/
     void
-    Enable(VisualEffectPass *pass);
+    Enable(VisualEffectPass * pass);
 
     void
-    Enable(VisualEffectInstancePass *pass, const Camera *camera, const Visual *visual);
+    Enable(VisualEffectInstancePass * pass,
+           const Camera * camera,
+           const Visual * visual);
 
     // @summary Update effect instance's uniform.
     void
-    Update(const VisualEffectInstancePass *pass, Uniform *uniform, const Camera *camera, const Visual *visual);
+    Update(const VisualEffectInstancePass * pass,
+           Uniform * uniform,
+           const Camera * camera,
+           const Visual * visual);
 
     void
-    Update(const VisualEffectInstancePass *pass, UniformBuffer *uniformBuffer, const Camera *camera, const Visual *visual);
+    Update(const VisualEffectInstancePass * pass,
+           UniformBufferBinding * uniformBufferBinding,
+           const Camera * camera,
+           const Visual * visual);
 
     /************************************************************************/
     /* Draw                                                                 */
     /************************************************************************/
     // @summary Draw single instance of visual.
     void
-    Draw(const Camera *camera, const Visual *visual);
+    Draw(const Camera * camera, const Visual * visual);
 
     // @summary Draw single instance of visual.
     void
-    Draw(const Camera *camera, const Visual *visual, VisualEffectInstance *visualEffectInstance);
+    Draw(const Camera * camera, const Visual * visual, VisualEffectInstance * visualEffectInstance);
 
 private:
     /************************************************************************/
@@ -709,7 +717,7 @@ public:
     /* Framebuffer Management                                               */
     /************************************************************************/
     void
-    ClearColorBufferPlatform(const Vector4f& color);
+    ClearColorBufferPlatform(const Vector4f & color);
 
     void
     ClearDepthBufferPlatform(float depth);
@@ -718,7 +726,7 @@ public:
     ClearStencilBufferPlatform(unsigned int stencil);
 
     void
-    ClearFrameBufferPlatform(const Vector4f& color, float depth, unsigned int stencil);
+    ClearFrameBufferPlatform(const Vector4f & color, float depth, unsigned int stencil);
 
     void
     RecoverDeviceLostPlatform();
@@ -730,14 +738,14 @@ public:
     /* Draw                                                                 */
     /************************************************************************/
     void
-    DrawPrimitivePlatform(const Primitive *primitive, int primitiveInstancingNum);
+    DrawPrimitivePlatform(const Primitive * primitive, int primitiveInstancingNum);
 
 // internal
 public:
     std::unique_ptr<PlatformRendererData, PlatformRendererDataDeleter>   mData;
     std::unique_ptr<PlatformRendererState, PlatformRendererStateDeleter> mState;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }
 

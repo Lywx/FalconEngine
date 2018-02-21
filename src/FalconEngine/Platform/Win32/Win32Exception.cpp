@@ -8,7 +8,9 @@
 
 namespace FalconEngine
 {
-void D3DCheckSuccess(HRESULT hr)
+
+void
+D3DCheckSuccess(HRESULT hr)
 {
     if (FAILED(hr))
     {
@@ -17,6 +19,7 @@ void D3DCheckSuccess(HRESULT hr)
         FALCON_ENGINE_THROW_RUNTIME_EXCEPTION(err.ErrorMessage());
     }
 }
+
 }
 
 #endif

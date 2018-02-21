@@ -19,8 +19,7 @@ using MouseStateSharedPtr = std::shared_ptr<MouseState>;
 
 class PlatformGameEngineWindow;
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API GameEngineInput
+FALCON_ENGINE_CLASS_BEGIN GameEngineInput
 {
     friend class PlatformGameEngineWindow;
 
@@ -63,7 +62,7 @@ public:
 
 private:
     void
-    PollEvent();
+    PollEventPlatform();
 
     void
     UpdateEvent(double elapsed);
@@ -72,6 +71,6 @@ private:
     KeyboardStateSharedPtr mKeyboardState;
     MouseStateSharedPtr    mMouseState;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

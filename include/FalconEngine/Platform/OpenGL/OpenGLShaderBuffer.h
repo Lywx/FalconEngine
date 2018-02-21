@@ -18,7 +18,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    explicit PlatformShaderBuffer(Renderer *renderer, const ShaderBuffer *storageBuffer);
+    explicit PlatformShaderBuffer(Renderer *renderer, const ShaderBuffer *shaderBuffer);
     virtual ~PlatformShaderBuffer();
 
 public:

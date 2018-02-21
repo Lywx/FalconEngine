@@ -107,7 +107,8 @@ PlatformResource::CreateDepthStencilView(ID3D11Device4 *device, D3D11_RESOURCE_D
         dimension == D3D11_RESOURCE_DIMENSION_TEXTURE1D
         || dimension == D3D11_RESOURCE_DIMENSION_TEXTURE2D);
     FALCON_ENGINE_CHECK_NULLPTR(mResourceObj);
-    auto texture = dynamic_cast<const Texture *>(mResourceObj);
+    FALCON_ENGINE_CHECK_NULLPTR(mResourcePtr);
+    auto texture = dynamic_cast<const Texture *>(mResourcePtr);
     FALCON_ENGINE_CHECK_NULLPTR(texture);
 
     D3D11_DEPTH_STENCIL_VIEW_DESC viewDesc;
@@ -173,13 +174,14 @@ PlatformResource::CreateShaderResourceView(ID3D11Device4 *device, D3D11_RESOURCE
 {
     FALCON_ENGINE_CHECK_ASSERTION(!mShaderResourceView);
     FALCON_ENGINE_CHECK_NULLPTR(mResourceObj);
+    FALCON_ENGINE_CHECK_NULLPTR(mResourcePtr);
 
     D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;
     viewDesc.Format = mFormat;
 
     if (dimension == D3D11_RESOURCE_DIMENSION_BUFFER)
     {
-        auto buffer = dynamic_cast<const Buffer *>(mResourceObj);
+        auto buffer = dynamic_cast<const Buffer *>(mResourcePtr);
         FALCON_ENGINE_CHECK_NULLPTR(buffer);
 
         // NEW(Wuxiang): Add Append / Consume Buffer support.
@@ -189,7 +191,7 @@ PlatformResource::CreateShaderResourceView(ID3D11Device4 *device, D3D11_RESOURCE
     }
     else
     {
-        auto texture = dynamic_cast<const Texture *>(mResourceObj);
+        auto texture = dynamic_cast<const Texture *>(mResourcePtr);
         FALCON_ENGINE_CHECK_NULLPTR(texture);
 
         switch (texture->GetTextureType())
@@ -253,13 +255,14 @@ PlatformResource::CreateRenderTargetView(ID3D11Device4 *device, D3D11_RESOURCE_D
 {
     FALCON_ENGINE_CHECK_ASSERTION(!mRenderTargetView);
     FALCON_ENGINE_CHECK_NULLPTR(mResourceObj);
+    FALCON_ENGINE_CHECK_NULLPTR(mResourcePtr);
 
     D3D11_RENDER_TARGET_VIEW_DESC viewDesc;
     viewDesc.Format = mFormat;
 
     if (dimension == D3D11_RESOURCE_DIMENSION_BUFFER)
     {
-        auto buffer = dynamic_cast<const Buffer *>(mResourceObj);
+        auto buffer = dynamic_cast<const Buffer *>(mResourcePtr);
         FALCON_ENGINE_CHECK_NULLPTR(buffer);
 
         // NEW(Wuxiang): Add Buffer support.
@@ -267,7 +270,7 @@ PlatformResource::CreateRenderTargetView(ID3D11Device4 *device, D3D11_RESOURCE_D
     }
     else
     {
-        auto texture = dynamic_cast<const Texture *>(mResourceObj);
+        auto texture = dynamic_cast<const Texture *>(mResourcePtr);
         FALCON_ENGINE_CHECK_NULLPTR(texture);
 
         switch (texture->GetTextureType())

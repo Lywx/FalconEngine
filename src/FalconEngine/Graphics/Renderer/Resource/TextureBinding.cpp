@@ -1,16 +1,16 @@
-#include <FalconEngine/Graphics/Renderer/Resource/TextureAttachment.h>
+#include <FalconEngine/Graphics/Renderer/Resource/TextureBinding.h>
 
 namespace FalconEngine
 {
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-TextureAttachment::TextureAttachment():
+TextureBinding::TextureBinding():
     mTexture(nullptr)
 {
 }
 
-TextureAttachment::TextureAttachment(const Texture *texture, TextureMode textureMode, unsigned shaderMask):
+TextureBinding::TextureBinding(const Texture *texture, TextureMode textureMode, unsigned shaderMask):
     mTexture(texture)
 {
     mTextureShaderMaskList[int(textureMode)] = shaderMask;

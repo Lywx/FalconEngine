@@ -127,9 +127,15 @@ public:
     SetWireframeState(std::unique_ptr<WireframeState> wireframeStateHandle);
 
 private:
+    /************************************************************************/
+    /* Shader Members                                                       */
+    /************************************************************************/
     std::shared_ptr<Shader> mShader;
     std::shared_ptr<VertexFormat> mShaderVertexFormat;
 
+    /************************************************************************/
+    /* State Members                                                        */
+    /************************************************************************/
     std::unique_ptr<BlendState> mBlendState;
     std::unique_ptr<CullState> mCullState;
     std::unique_ptr<DepthTestState> mDepthTestState;

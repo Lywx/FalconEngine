@@ -84,14 +84,18 @@ public:
     GetVertexShader() const;
 
 private:
+    // NOTE(Wuxiang): Vertex Format need to use Shader instance to get access to
+    // the vertex shader source in Direct3D. It is important not to create circular
+    // shared_ptr between Shader and Vertex Format.
+
     std::shared_ptr<Shader> mShader;
 
-    // NOTE(Wuxiang): The vertex attribute vector is assumed to be in order of
+    // NOTE(Wuxiang): The Vertex Attribute vector is assumed to be in order of
     // layout location in OpenGL. This rule is enforced by the PushAttribute
     // function.
     std::vector<VertexAttribute> mVertexAttributeList;
 
-    // NOTE(Wuxiang): Vertex attribute stride list. Each element counts
+    // NOTE(Wuxiang): Vertex Attribute stride list. Each element counts
     // buffer's data total stride in byte, at specific vertex buffer binding
     // index.
     std::vector<int> mVertexAttributeStrideList;

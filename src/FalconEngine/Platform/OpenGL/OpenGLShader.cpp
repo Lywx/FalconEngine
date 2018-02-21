@@ -37,8 +37,13 @@ PlatformShader::PlatformShader(Renderer *, Shader *shader) :
     LinkProgram();
 
     // Look up all the declared uniform location.
-    CollectUniformBufferIndex(shader);
     CollectUniformLocation(shader);
+
+    // Look up all uniform buffer block index.
+    CollectUniformBufferBlockIndex(shader);
+
+    // Register all uniform buffer binding index.
+    RegisterUniformBufferBindingIndex(shader);
 }
 
 PlatformShader::~PlatformShader()
@@ -204,7 +209,7 @@ PlatformShader::CollectUniformLocation(Shader *shader) const
 }
 
 void
-PlatformShader::CollectUniformBufferIndex(Shader *shader) const
+PlatformShader::CollectUniformBufferBlockIndex(Shader *shader) const
 {
     for (auto uniformIter = shader->GetUniformBufferMetaBegin();
             uniformIter != shader->GetUniformBufferMetaEnd();
@@ -240,6 +245,18 @@ PlatformShader::CollectUniformBufferIndex(Shader *shader) const
         }
     }
 
+}
+
+void
+PlatformShader::RegisterUniformBufferBindingIndex(Shader *shader) const
+{
+    for (auto uniformIter = shader->GetUniformBufferMetaBegin();
+            uniformIter != shader->GetUniformBufferMetaEnd();
+            ++uniformIter)
+    {
+        UniformBufferMetadata& uniformBufferMeta = uniformIter->second;
+        glUniformBlockBinding(mProgram, uniformBufferMeta.mBlockIndex, uniformBufferMeta.mBindingIndex);
+    }
 }
 
 }

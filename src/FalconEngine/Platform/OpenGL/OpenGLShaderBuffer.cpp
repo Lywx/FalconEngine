@@ -9,8 +9,8 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-PlatformShaderBuffer::PlatformShaderBuffer(Renderer *renderer, const ShaderBuffer *storageBuffer) :
-    PlatformBuffer(renderer, GL_SHADER_STORAGE_BUFFER, storageBuffer)
+PlatformShaderBuffer::PlatformShaderBuffer(Renderer *renderer, const ShaderBuffer *shaderBuffer) :
+    PlatformBuffer(renderer, GL_SHADER_STORAGE_BUFFER, shaderBuffer)
 {
 }
 

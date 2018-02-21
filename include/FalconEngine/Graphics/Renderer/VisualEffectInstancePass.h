@@ -8,8 +8,8 @@
 #include <vector>
 
 #include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
-#include <FalconEngine/Graphics/Renderer/Resource/TextureAttachment.h>
-#include <FalconEngine/Graphics/Renderer/Resource/SamplerAttachment.h>
+#include <FalconEngine/Graphics/Renderer/Resource/TextureBinding.h>
+#include <FalconEngine/Graphics/Renderer/Resource/SamplerBinding.h>
 
 namespace FalconEngine
 {
@@ -18,6 +18,7 @@ class Sampler;
 class Shader;
 class Uniform;
 class UniformBuffer;
+class UniformBufferBinding;
 class Texture;
 
 FALCON_ENGINE_CLASS_BEGIN VisualEffectInstancePass final
@@ -43,22 +44,22 @@ public:
 
     auto GetSamplerBegin() const
     {
-        return mSamplerTable.cbegin();
+        return mSamplerBindingTable.cbegin();
     }
 
     auto GetSamplerEnd() const
     {
-        return mSamplerTable.cend();
+        return mSamplerBindingTable.cend();
     }
 
     auto GetSamplerBegin()
     {
-        return mSamplerTable.begin();
+        return mSamplerBindingTable.begin();
     }
 
     auto GetSamplerEnd()
     {
-        return mSamplerTable.end();
+        return mSamplerBindingTable.end();
     }
 
     int
@@ -77,22 +78,22 @@ public:
 
     auto GetTextureBegin() const
     {
-        return mTextureTable.cbegin();
+        return mTextureBindingTable.cbegin();
     }
 
     auto GetTextureEnd() const
     {
-        return mTextureTable.cend();
+        return mTextureBindingTable.cend();
     }
 
     auto GetTextureBegin()
     {
-        return mTextureTable.begin();
+        return mTextureBindingTable.begin();
     }
 
     auto GetTextureEnd()
     {
-        return mTextureTable.end();
+        return mTextureBindingTable.end();
     }
 
     int
@@ -121,18 +122,38 @@ public:
     // actually drawing so that sharing uniform table might overwrite previously
     // unsynchronized value.
     void
-    SetUniform(std::shared_ptr<Uniform> uniform);
+    PushUniform(std::shared_ptr<Uniform> uniform);
 
     void
-    SetUniformBuffer(std::shared_ptr<UniformBuffer> uniformBuffer);
+    PushUniformBuffer(std::shared_ptr<UniformBuffer> uniformBuffer, unsigned int shaderMask);
 
-    UniformBuffer *
-    GetUniformBuffer(int uniformBufferIndex);
+    auto
+    GetUniformBufferBindingBegin() const
+    {
+        return mUniformBufferBindingList.cbegin();
+    }
 
-    int
-    GetUniformBufferNum() const;
+    auto
+    GetUniformBufferBindingEnd() const
+    {
+        return mUniformBufferBindingList.cend();
+    }
+
+    auto
+    GetUniformBufferBindingBegin()
+    {
+        return mUniformBufferBindingList.begin();
+    }
+
+    auto
+    GetUniformBufferBindingEnd()
+    {
+        return mUniformBufferBindingList.end();
+    }
 
 private:
+    int mInstancingNum;
+
     // NOTE(Wuxiang): The instance pass will not manage the lifetime of the shader.
     // Shader's lifetime is managed by the VisualPass class, which is further
     // managed by VisualEffect. So when VisualEffect is disposed the shader is
@@ -148,12 +169,18 @@ private:
     // VisualEffectInstancePass must be disposed before.
     //
     // So there is no way for dangling pointer to affect this 'mShader' field.
-    int mInstancingNum;
     Shader *mShader;
-    std::map<int, SamplerAttachment> mSamplerTable;
-    std::map<int, TextureAttachment> mTextureTable;
+
+    /************************************************************************/
+    /* Resource Members                                                     */
+    /************************************************************************/
+    std::map<int, SamplerBinding> mSamplerBindingTable;
+    std::map<int, TextureBinding> mTextureBindingTable;
+    int mTextureUnitCount;
+
     std::vector<std::shared_ptr<Uniform>> mUniformList;
-    std::vector<std::shared_ptr<UniformBuffer>> mUniformBufferList;
+    std::vector<std::shared_ptr<UniformBufferBinding>> mUniformBufferBindingList;
+    int mUniformBufferBindingIndexCount;
 };
 FALCON_ENGINE_CLASS_END
 

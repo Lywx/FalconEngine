@@ -19,6 +19,7 @@ PlatformBuffer::PlatformBuffer(Renderer *renderer, const Buffer *buffer) :
 {
     mBindFlag = Direct3DResourceBindFlag(mBufferPtr);
     mCpuFlag = Direct3DResourceAccessFlag(mBufferPtr->GetAccessMode());
+    mUsage = Direct3DResourceAccessUsage[int(mBufferPtr->GetAccessMode())];
 
     auto device = renderer->mData->GetDevice();
 
@@ -48,7 +49,7 @@ void
 PlatformBuffer::CreateBuffer(ID3D11Device4 *device)
 {
     D3D11_BUFFER_DESC bufferDesc;
-    bufferDesc.Usage = mUsage;;
+    bufferDesc.Usage = mUsage;
     bufferDesc.BindFlags = mBindFlag;
     bufferDesc.CPUAccessFlags = mCpuFlag;
 
@@ -64,33 +65,29 @@ PlatformBuffer::CreateBuffer(ID3D11Device4 *device)
     // https://msdn.microsoft.com/en-us/library/windows/desktop/ff476203(v=vs.85).aspx
     bufferDesc.StructureByteStride = 0;
 
+    struct D3D11_SUBRESOURCE_DATA *initialData = nullptr;
     D3D11_SUBRESOURCE_DATA subresourceData;
+    subresourceData.pSysMem = mBufferPtr->GetData();
+    // NOTE(Wuxiang): Not used in buffer.
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/ff476220(v=vs.85).aspx
+    subresourceData.SysMemPitch = 0;
+    subresourceData.SysMemSlicePitch = 0;
 
     auto storageMode = mBufferPtr->GetStorageMode();
     if (storageMode == ResourceStorageMode::Device)
     {
-        subresourceData.pSysMem = nullptr;
-
-        // NOTE(Wuxiang): Not used in buffer.
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ff476220(v=vs.85).aspx
-        subresourceData.SysMemPitch = 0;
-        subresourceData.SysMemSlicePitch = 0;
+        // Do nothing.
     }
     else if (storageMode == ResourceStorageMode::Host)
     {
-        subresourceData.pSysMem = mBufferPtr->GetData();
-
-        // NOTE(Wuxiang): Not used in buffer.
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/ff476220(v=vs.85).aspx
-        subresourceData.SysMemPitch = 0;
-        subresourceData.SysMemSlicePitch = 0;
+        initialData = &subresourceData;
     }
     else
     {
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
 
-    D3DCheckSuccess(device->CreateBuffer(&bufferDesc, &subresourceData, mBufferObj.ReleaseAndGetAddressOf()));
+    D3DCheckSuccess(device->CreateBuffer(&bufferDesc, initialData, mBufferObj.ReleaseAndGetAddressOf()));
 }
 
 void

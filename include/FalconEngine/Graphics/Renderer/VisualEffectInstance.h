@@ -73,7 +73,8 @@ public:
     template <typename T>
     void
     SetUniformBuffer(int passIndex,
-                     std::shared_ptr<UniformBufferTemplate<T>> uniformBuffer);
+                     std::shared_ptr<UniformBufferTemplate<T>> uniformBuffer,
+                     unsigned int shaderMask);
 
     const Texture *
     GetShaderTexture(int passIndex, int textureUnit) const;
@@ -122,17 +123,17 @@ VisualEffectInstance::SetUniform(int passIndex,
 {
     FALCON_ENGINE_CHECK_NULLPTR(uniform);
 
-    mEffectInstancePassList.at(passIndex)->SetUniform(std::move(uniform));
+    mEffectInstancePassList.at(passIndex)->PushUniform(std::move(uniform));
 }
 
 template <typename T>
 void
 VisualEffectInstance::SetUniformBuffer(int passIndex,
-                                       std::shared_ptr<UniformBufferTemplate<T>> uniformBuffer)
+                                       std::shared_ptr<UniformBufferTemplate<T>> uniformBuffer, unsigned int shaderMask)
 {
     FALCON_ENGINE_CHECK_NULLPTR(uniformBuffer);
 
-    mEffectInstancePassList.at(passIndex)->SetUniformBuffer(std::move(uniformBuffer));
+    mEffectInstancePassList.at(passIndex)->PushUniformBuffer(std::move(uniformBuffer), shaderMask);
 }
 
 }
@@ -149,4 +150,4 @@ instance->SetUniformBuffer(pass,  \
     FalconEngine::ShareUniformBufferAutomatic<DataKlass>( \
         uniformBufferNameString, FALCON_ENGINE_UNIFORM_BUFFER_FUNC_BEGIN(captureList, DataKlass)
 
-#define FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END FALCON_ENGINE_UNIFORM_BUFFER_FUNC_END))
+#define FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END(uniformBufferShaderMask) FALCON_ENGINE_UNIFORM_BUFFER_FUNC_END), uniformBufferShaderMask)

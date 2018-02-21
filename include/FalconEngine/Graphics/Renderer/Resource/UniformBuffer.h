@@ -15,8 +15,9 @@ namespace FalconEngine
 FALCON_ENGINE_CLASS_BEGIN UniformBufferMetadata
 {
 public:
-    UniformBufferMetadata(std::string name, size_t storageSize) :
-        mBlockIndex(),
+    UniformBufferMetadata(std::string name, size_t storageSize, int bindingIndex) :
+        mBindingIndex(bindingIndex),
+        mBlockIndex(-1),
         mCapacitySize(storageSize),
         mEnabled(true),
         mName(std::move(name))
@@ -24,7 +25,12 @@ public:
     }
 
 public:
+    // NOTE(Wuxiang): Used both in OpenGL and Direct3D.
+    int mBindingIndex;
+
+    // NOTE(Wuxiang): Specific to OpenGL.
     int mBlockIndex;
+
     size_t mCapacitySize;
     bool mEnabled;
     std::string mName;
@@ -56,8 +62,8 @@ public:
     UpdateContext(const Camera * camera, const Visual * visual, void *data);
 
 public:
-    bool mEnabled;
-    bool mInitialized;
+    // Uniform Block name in OpenGL or Constant Buffer name in Direct3D.
+    std::string mName;
 
 protected:
     bool mValueIsCurrent;

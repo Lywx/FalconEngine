@@ -23,6 +23,8 @@ using namespace std;
 #include <FalconEngine/Graphics/Renderer/State/StencilTestState.h>
 #include <FalconEngine/Graphics/Renderer/State/WireframeState.h>
 #include <FalconEngine/Graphics/Renderer/Resource/IndexBuffer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>
+#include <FalconEngine/Graphics/Renderer/Resource/SamplerBinding.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
 #include <FalconEngine/Graphics/Renderer/Resource/ShaderBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>
@@ -34,9 +36,8 @@ using namespace std;
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2dArray.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture3d.h>
-#include <FalconEngine/Graphics/Renderer/Resource/TextureAttachment.h>
-#include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>
-#include <FalconEngine/Graphics/Renderer/Resource/SamplerAttachment.h>
+#include <FalconEngine/Graphics/Renderer/Resource/TextureBinding.h>
+#include <FalconEngine/Graphics/Renderer/Resource/UniformBufferBinding.h>
 
 #if defined(FALCON_ENGINE_API_OPENGL)
 #include <FalconEngine/Platform/OpenGL/OpenGLIndexBuffer.h>
@@ -460,15 +461,15 @@ Renderer::Unbind(const UniformBuffer *uniformBuffer)
 }
 
 void
-Renderer::Enable(const UniformBuffer *uniformBuffer)
+Renderer::Enable(const UniformBuffer *uniformBuffer, unsigned int bindingIndex, unsigned int shaderMask)
 {
     FALCON_ENGINE_RENDERER_BIND_FIND(uniformBuffer, mUniformBufferTable, PlatformUniformBuffer);
 
-    uniformBufferPlatform->Enable(this);
+    uniformBufferPlatform->Enable(this, bindingIndex, shaderMask);
 }
 
 void
-Renderer::Disable(const UniformBuffer *uniformBuffer)
+Renderer::Disable(const UniformBuffer *uniformBuffer, unsigned int bindingIndex, unsigned int shaderMask)
 {
     FALCON_ENGINE_CHECK_NULLPTR(uniformBuffer);
 
@@ -476,7 +477,7 @@ Renderer::Disable(const UniformBuffer *uniformBuffer)
     if (iter != mUniformBufferTable.end())
     {
         auto uniformBufferPlatform = iter->second;
-        uniformBufferPlatform->Disable(this);
+        uniformBufferPlatform->Disable(this, bindingIndex, shaderMask);
     }
 }
 
@@ -1124,10 +1125,12 @@ Renderer::Enable(VisualEffectInstancePass *pass, const Camera *camera, const Vis
         Update(pass, uniform, camera, visual);
     }
 
-    for (int uniformBufferIndex = 0; uniformBufferIndex < pass->GetUniformBufferNum(); ++uniformBufferIndex)
+    for (auto uniformBufferBindingIter = pass->GetUniformBufferBindingBegin();
+            uniformBufferBindingIter != pass->GetUniformBufferBindingEnd();
+            ++uniformBufferBindingIter)
     {
-        auto uniformBuffer = pass->GetUniformBuffer(uniformBufferIndex);
-        Update(pass, uniformBuffer, camera, visual);
+        auto uniformBufferBinding = uniformBufferBindingIter->get();
+        Update(pass, uniformBufferBinding, camera, visual);
     }
 }
 
@@ -1146,8 +1149,9 @@ Renderer::Update(const VisualEffectInstancePass *pass,
         // NOTE(Wuxiang): This is necessary because the uniform in instance
         // pass is different entity from uniform in shader.
         auto shader = pass->GetShader();
-        uniform->mEnabled = shader->IsUniformEnabled(uniform->mName);
-        uniform->mLocation = shader->GetUniformLocation(uniform->mName);
+        auto const& uniformMeta = shader->GetUniformMeta(uniform->mName);
+        uniform->mEnabled = uniformMeta.mEnabled;
+        uniform->mLocation = uniformMeta.mLocation;
         uniform->mInitialized = true;
     }
 
@@ -1170,31 +1174,37 @@ Renderer::Update(const VisualEffectInstancePass *pass,
 
 void
 Renderer::Update(const VisualEffectInstancePass *pass,
-                 UniformBuffer *uniformBuffer,
+                 UniformBufferBinding *uniformBufferBinding,
                  const Camera *camera,
                  const Visual *visual)
 {
-    if (!uniformBuffer->mInitialized)
+    if (!uniformBufferBinding->mInitialized)
     {
         // NOTE(Wuxiang): This is necessary because the uniform buffer in instance
         // pass is different entity from uniform in shader.
         auto shader = pass->GetShader();
-        uniformBuffer->mEnabled = shader->IsUniformBufferEnabled(uniformBuffer->GetName());
-        uniformBuffer->SetBlockIndex(shader->GetUniformBufferBlockIndex(uniformBuffer->GetName()));
-        uniformBuffer->mInitialized = true;
+        auto const& UniformBufferMeta = shader->GetUniformBufferMeta(uniformBufferBinding->GetName());
+        uniformBufferBinding->mEnabled = UniformBufferMeta.mEnabled;
+        uniformBufferBinding->mBlockIndex = UniformBufferMeta.mBlockIndex;
+        uniformBufferBinding->mBindingIndex = UniformBufferMeta.mBindingIndex;
+        uniformBufferBinding->mInitialized = true;
     }
 
-    if (uniformBuffer->mEnabled)
+    if (uniformBufferBinding->mEnabled)
     {
+        auto uniformBuffer = uniformBufferBinding->GetBuffer();
         if (uniformBuffer->IsUpdateNeeded())
         {
-            Enable(uniformBuffer);
+            Enable(uniformBufferBinding->GetBuffer(),
+                   uniformBufferBinding->mBindingIndex,
+                   uniformBufferBinding->mShaderMask);
 
             void *data = Map(uniformBuffer);
             uniformBuffer->UpdateContext(camera, visual, data);
             Unmap(uniformBuffer);
 
-            Disable(uniformBuffer);
+            // NOTE(Wuxiang): Don't disable uniform buffer before drawing. That
+            // would make uniform buffer data invalid during drawing.
         }
     }
 }

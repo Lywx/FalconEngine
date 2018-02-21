@@ -176,6 +176,12 @@ Texture::GetMipmapLevel() const
     return mMipmapLevel;
 }
 
+ResourceStorageMode
+Texture::GetStorageMode() const
+{
+    return mStorageMode;
+}
+
 TextureType Texture::GetTextureType() const
 {
     return mType;

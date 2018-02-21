@@ -25,6 +25,13 @@ elseif(FALCON_ENGINE_PLATFORM_LINUX)
     set(BOOST_LIBRARY_FILE boost_filesystem boost_regex boost_system)
 endif()
 
+# D3D
+if(FALCON_ENGINE_PLATFORM_WINDOWS)
+    set(D3D11_LIBRARY_FILE D3D11)
+elseif(FALCON_ENGINE_PLATFORM_LINUX)
+    message(FATAL_ERROR "Direct3D won't build on Linux.")
+endif()
+
 # GL
 if(FALCON_ENGINE_PLATFORM_WINDOWS)
     set(GL_LIBRARY_FILE opengl32)

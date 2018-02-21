@@ -58,7 +58,7 @@ GetLastErrorString()
                              nullptr,
                              errorCode,
                              MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                             messageBuffer,
+                             LPSTR(&messageBuffer),
                              0,
                              nullptr);
 

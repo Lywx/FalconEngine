@@ -2,23 +2,25 @@
 
 #include <FalconEngine/Core/Macro.h>
 
+#include <string>
+#include <unordered_map>
+
 namespace FalconEngine
 {
-class Sampler;
 
-FALCON_ENGINE_CLASS_BEGIN SamplerAttachment final
+FALCON_ENGINE_CLASS_BEGIN ShaderMetadata final
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    SamplerAttachment();
-    SamplerAttachment(const Sampler * sampler, unsigned int shaderMask);
-    ~SamplerAttachment() = default;
+    ShaderMetadata();
+    ~ShaderMetadata() = default;
 
 public:
-    const Sampler *mSampler;
-    unsigned int mSamplerShaderMask;
+    // NEW(Wuxiang): Add OpenGL query like GL_MAX_UNIFORM_BUFFER_BINDINGS, etc
+    // (sampler, texture, uniform buffer etc) to check in runtime validity of binding
+    // index or texture unit.
 };
 FALCON_ENGINE_CLASS_END
 

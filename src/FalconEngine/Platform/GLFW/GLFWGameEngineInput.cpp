@@ -14,7 +14,7 @@ namespace FalconEngine
 /* Private Members                                                      */
 /************************************************************************/
 void
-GameEngineInput::PollEvent()
+GameEngineInput::PollEventPlatform()
 {
     glfwPollEvents();
 }

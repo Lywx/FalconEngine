@@ -115,7 +115,7 @@ private:
             auto indexData = reinterpret_cast<T *>(
                                  sMasterRenderer->Map(
                                      indexBuffer.get(),
-                                     ResourceMapAccessMode::WriteBuffer,
+                                     ResourceMapAccessMode::WriteBufferInvalidateBuffer,
                                      ResourceMapFlushMode::Automatic,
                                      ResourceMapSyncMode::Unsynchronized,
                                      indexBuffer->GetDataOffset(),

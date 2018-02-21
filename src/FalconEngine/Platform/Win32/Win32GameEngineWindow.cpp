@@ -157,7 +157,6 @@ GameEngineWindowProcess(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         if (s_in_sizemove && gameEngineWindow)
         {
             // TODO(Wuxiang): I think the game is not running 60 frames per second.
-            //game->Tick();
         }
         else
         {

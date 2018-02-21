@@ -1,6 +1,7 @@
 #include <FalconEngine/Platform/Direct3D/Direct3DTexture2d.h>
 
 #if defined(FALCON_ENGINE_API_DIRECT3D)
+#include <FalconEngine/Core/Exception.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture2d.h>
 
 namespace FalconEngine
@@ -82,11 +83,31 @@ PlatformTexture2d::CreateTexture(ID3D11Device4 *device)
     textureDesc.MipLevels = 1;
     textureDesc.MiscFlags = 0;
 
+    // TODO(Wuxiang): Add multisample support.
+    textureDesc.SampleDesc.Count = 1;
+    textureDesc.SampleDesc.Quality = 0;
+
+    struct D3D11_SUBRESOURCE_DATA *initialData = nullptr;
     D3D11_SUBRESOURCE_DATA subresourceData;
     subresourceData.pSysMem = mTexturePtr->GetData();
     subresourceData.SysMemPitch = UINT(mTexturePtr->GetDataSize());
     subresourceData.SysMemSlicePitch = 0;
-    D3DCheckSuccess(device->CreateTexture2D(&textureDesc, &subresourceData, mTextureObj.ReleaseAndGetAddressOf()));
+
+    auto storageMode = mTexturePtr->GetStorageMode();
+    if (storageMode == ResourceStorageMode::Device)
+    {
+        // Do nothing.
+    }
+    else if (storageMode == ResourceStorageMode::Host)
+    {
+        initialData = &subresourceData;
+    }
+    else
+    {
+        FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
+    }
+
+    D3DCheckSuccess(device->CreateTexture2D(&textureDesc, initialData, mTextureObj.ReleaseAndGetAddressOf()));
 }
 
 }

@@ -61,12 +61,6 @@ public:
     ResourceCreationAccessUsage
     GetAccessUsage() const;
 
-    int
-    GetBlockIndex() const;
-
-    void
-    SetBlockIndex(int blockIndex);
-
     BufferType
     GetBufferType() const;
 
@@ -107,23 +101,12 @@ public:
     int
     GetElementOffset() const;
 
-    const std::string&
-    GetName() const;
-
     ResourceStorageMode
     GetStorageMode() const;
 
 protected:
     ResourceCreationAccessMode mAccessMode;
     ResourceCreationAccessUsage mAccessUsage;
-
-    // NOTE(Wuxiang): Only used in OpenGL for Uniform Block Buffer. The binding
-    // point for Uniform Block Buffer.
-    int mBindingIndex;
-
-    // NOTE(Wuxiang): Only used in OpenGL for Uniform Block Buffer. The Uniform
-    // Block index.
-    int mBlockIndex;
 
     unsigned char *mData;
 
@@ -142,9 +125,6 @@ protected:
 
     // Each element's data size in bytes.
     size_t mElementSize;
-
-    // Uniform Block name in OpenGL or Constant Buffer name in Direct3D.
-    std::string mName;
 
     ResourceStorageMode mStorageMode;
     BufferType mType;

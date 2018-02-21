@@ -88,7 +88,7 @@ Renderer::InitializeDataPlatform()
     swapChainDesc.Format = backBufferFormat;
 
     // https://msdn.microsoft.com/en-us/library/windows/desktop/bb173076(v=vs.85).aspx
-    // swapChainDesc.SampleDesc.Count = 1;
+    swapChainDesc.SampleDesc.Count = 1;
     swapChainDesc.SampleDesc.Quality = 0;
 
     // https://msdn.microsoft.com/en-us/library/windows/desktop/hh404526(v=vs.85).aspx
@@ -185,7 +185,7 @@ Renderer::SetViewportPlatform(float x, float y, float width, float height, float
 /* Window Management                                                    */
 /************************************************************************/
 void
-Renderer::SetWindowPlatform(int width, int height)
+Renderer::SetWindowPlatform(int, int)
 {
     // TODO(Wuxiang): This would need to recreate all the resource on the fly. I should implement this later.
     FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();

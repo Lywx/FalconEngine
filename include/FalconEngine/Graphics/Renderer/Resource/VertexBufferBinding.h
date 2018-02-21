@@ -22,7 +22,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    VertexBufferBinding(const std::shared_ptr<VertexBuffer>& buffer,
+    VertexBufferBinding(std::shared_ptr<VertexBuffer> buffer,
                         unsigned int index,
                         int64_t offset,
                         int stride,
@@ -61,16 +61,16 @@ public:
 
 private:
     // Vertex array binding index.
-    unsigned int                  mIndex;
+    unsigned int mIndex;
 
     // Byte offset into the first element of the valid data in vertex buffer.
-    int64_t                       mOffset;
+    int64_t mOffset;
 
     // Byte stride between two valid attribute value.
-    int                           mStride;
+    int mStride;
 
     std::shared_ptr<VertexBuffer> mBuffer;
-    const VertexGroup            *mGroup;
+    const VertexGroup *mGroup;
 };
 FALCON_ENGINE_CLASS_END
 

@@ -77,13 +77,7 @@ Shader::ContainUniformMeta(const std::string& uniformName) const
     return mUniformMetadataTable.find(uniformName) != mUniformMetadataTable.end();
 }
 
-int
-Shader::GetUniformMetaNum() const
-{
-    return int(mUniformMetadataTable.size());
-}
-
-UniformMetadata
+const UniformMetadata&
 Shader::GetUniformMeta(const string& uniformName)
 {
     return mUniformMetadataTable.at(uniformName);
@@ -93,18 +87,6 @@ void
 Shader::SetUniformMeta(const string& uniformName)
 {
     mUniformMetadataTable.insert({ uniformName, UniformMetadata(uniformName) });
-}
-
-int
-Shader::GetUniformLocation(const string& uniformName) const
-{
-    return mUniformMetadataTable.at(uniformName).mLocation;
-}
-
-bool
-Shader::IsUniformEnabled(const string& uniformName) const
-{
-    return mUniformMetadataTable.at(uniformName).mEnabled;
 }
 
 /************************************************************************/
@@ -117,21 +99,22 @@ Shader::ContainUniformBufferMeta(const std::string& uniformBufferName) const
 }
 
 void
-Shader::SetUniformBufferMeta(const std::string & uniformBufferName, size_t uniformBufferSize)
+Shader::SetUniformBufferMeta(const std::string & uniformBufferName,
+                             size_t uniformBufferSize,
+                             int uniformBufferBindingIndex)
 {
-    mUniformBufferMetadataTable.insert({ uniformBufferName, UniformBufferMetadata(uniformBufferName, uniformBufferSize) });
+    mUniformBufferMetadataTable.insert({ uniformBufferName,
+                                         UniformBufferMetadata(
+                                                 uniformBufferName,
+                                                 uniformBufferSize,
+                                                 uniformBufferBindingIndex)
+                                       });
 }
 
-int
-Shader::GetUniformBufferBlockIndex(const std::string& uniformBufferName) const
+const UniformBufferMetadata&
+Shader::GetUniformBufferMeta(const std::string& uniformBufferName) const
 {
-    return mUniformBufferMetadataTable.at(uniformBufferName).mBlockIndex;
-}
-
-bool
-Shader::IsUniformBufferEnabled(const std::string& uniformBufferName) const
-{
-    return mUniformBufferMetadataTable.at(uniformBufferName).mEnabled;
+    return mUniformBufferMetadataTable.at(uniformBufferName);
 }
 
 /************************************************************************/

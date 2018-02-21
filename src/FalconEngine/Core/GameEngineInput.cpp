@@ -44,7 +44,7 @@ void
 GameEngineInput::UpdateFrame(double elapsed)
 {
     // NOTE(Wuxiang): Have to poll events before updating based on events.
-    PollEvent();
+    PollEventPlatform();
 
     // NOTE(Wuxiang): Update based on events pulled.
     UpdateEvent(elapsed);

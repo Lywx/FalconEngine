@@ -19,8 +19,6 @@ Buffer::Buffer(int elementNum,
                ResourceStorageMode storageMode) :
     mAccessMode(accessMode),
     mAccessUsage(accessUsage),
-    mBindingIndex(),
-    mBlockIndex(),
     mDataOffset(0),
     mElementSize(elementSize),
     mStorageMode(storageMode),
@@ -76,19 +74,6 @@ Buffer::GetAccessUsage() const
 {
     return mAccessUsage;
 }
-
-int
-Buffer::GetBlockIndex() const
-{
-    return mBlockIndex;
-}
-
-void
-Buffer::SetBlockIndex(int blockIndex)
-{
-    mBlockIndex = blockIndex;
-}
-
 
 BufferType
 Buffer::GetBufferType() const
@@ -165,12 +150,6 @@ Buffer::GetElementOffset() const
     // NOTE(Wuxiang): The division would not exceed the range of int. The
     // number is smaller than the total number of element.
     return int(mDataOffset / mElementSize);
-}
-
-const std::string&
-Buffer::GetName() const
-{
-    return mName;
 }
 
 ResourceStorageMode

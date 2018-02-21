@@ -9,15 +9,15 @@ namespace FalconEngine
 
 using TextureShaderMaskList = std::array<unsigned int, int(TextureMode::Count)>;
 
-FALCON_ENGINE_CLASS_BEGIN TextureAttachment final
+FALCON_ENGINE_CLASS_BEGIN TextureBinding final
 {
 public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    TextureAttachment();
-    TextureAttachment(const Texture * texture, TextureMode textureMode, unsigned int shaderMask);
-    ~TextureAttachment() = default;
+    TextureBinding();
+    TextureBinding(const Texture * texture, TextureMode textureMode, unsigned int shaderMask);
+    ~TextureBinding() = default;
 
 public:
     const Texture *mTexture;

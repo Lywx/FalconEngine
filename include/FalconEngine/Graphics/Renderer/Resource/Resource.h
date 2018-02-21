@@ -14,7 +14,7 @@ enum class ResourceCreationAccessMode
     //
     //                        // Direct3D                OpenGL
     GpuRead,                  // D3D11_USAGE_IMMUTABLE   GL_STATIC_DRAW
-    GpuReadCpuWrite,          // D3D11_USA6E_DYNAMIC     GL_STATIC_DRAW, GL_STREAM_DRAW, GL_DYNAMIC_DRAW
+    GpuReadCpuWrite,          // D3D11_USAGE_DYNAMIC     GL_STATIC_DRAW, GL_STREAM_DRAW, GL_DYNAMIC_DRAW
     GpuReadWrite,             // D3D11_USAGE_DEFAULT     GL_STATIC_COPY, GL_STREAM_COPY, GL_DYNAMIC_COPY
 //  GpuReadWriteCpuReadWrite, // D3D11_USAGE_STAGING     GL_STATIC_COPY, GL_STATIC_DRAW, GL_STATIC_READ, GL_DYNAMIC_COPY, GL_DYNAMIC_DRAW, GL_DYNAMIC_READ, GL_STREAM_COPY, GL_STREAM_DRAW, GL_STREAM_READ
     GpuWriteCpuRead,          // D3D11_USAGE_STAGING     GL_STATIC_READ, GL_STREAM_READ, GL_DYNAMIC_READ

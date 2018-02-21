@@ -16,8 +16,6 @@ UniformBuffer::UniformBuffer(const std::string & name,
            ResourceCreationAccessMode::GpuReadCpuWrite,
            ResourceCreationAccessUsage::Dynamic,
            storageMode),
-    mEnabled(true),
-    mInitialized(false),
     mValueIsCurrent(true)
 {
     mName = name;

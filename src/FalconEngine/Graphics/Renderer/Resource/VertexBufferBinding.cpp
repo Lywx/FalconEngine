@@ -1,4 +1,5 @@
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBufferBinding.h>
+#include <utility>
 
 namespace FalconEngine
 {
@@ -7,7 +8,7 @@ namespace FalconEngine
 /* Constructors and Destructor                                          */
 /************************************************************************/
 VertexBufferBinding::VertexBufferBinding(
-    const std::shared_ptr<VertexBuffer>& buffer,
+    std::shared_ptr<VertexBuffer> buffer,
     unsigned int index,
     int64_t offset,
     int stride,
@@ -15,7 +16,7 @@ VertexBufferBinding::VertexBufferBinding(
     mIndex(index),
     mOffset(offset),
     mStride(stride),
-    mBuffer(buffer),
+    mBuffer(std::move(buffer)),
     mGroup(group)
 {
 }

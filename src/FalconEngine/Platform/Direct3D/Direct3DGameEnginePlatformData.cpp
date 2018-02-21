@@ -4,6 +4,9 @@
 namespace FalconEngine
 {
 
+FALCON_ENGINE_DELETER_DECLARE(PlatformGameEnginePlatformData, PlatformGameEnginePlatformDataDeleter);
+FALCON_ENGINE_DELETER_IMPLEMENT(PlatformGameEnginePlatformData, PlatformGameEnginePlatformDataDeleter);
+
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/

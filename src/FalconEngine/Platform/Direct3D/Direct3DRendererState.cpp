@@ -14,6 +14,8 @@
 namespace FalconEngine
 {
 
+FALCON_ENGINE_DELETER_IMPLEMENT(PlatformRendererState, PlatformRendererStateDeleter);
+
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
@@ -213,7 +215,7 @@ PlatformRendererState::CreateRasterizerState(
     rasterizerDesc.FrontCounterClockwise = true;
 
     // https://msdn.microsoft.com/en-us/library/windows/desktop/cc308048(v=vs.85).aspx
-    rasterizerDesc.DepthBias = offsetState->mBiasUnit;
+    rasterizerDesc.DepthBias = INT(offsetState->mBiasUnit);
     rasterizerDesc.DepthBiasClamp = 0.0f;
     rasterizerDesc.SlopeScaledDepthBias = offsetState->mBiasFactor;
 

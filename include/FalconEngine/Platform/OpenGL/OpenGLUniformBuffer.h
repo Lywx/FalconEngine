@@ -28,10 +28,10 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    Enable(Renderer *);
+    Enable(Renderer *, unsigned int bindingIndex, unsigned int shaderMask);
 
     void
-    Disable(Renderer *);
+    Disable(Renderer *, unsigned int bindingIndex, unsigned int shaderMask);
 
     void *
     Map(Renderer *);

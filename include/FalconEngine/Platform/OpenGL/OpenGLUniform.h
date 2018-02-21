@@ -12,15 +12,14 @@ namespace FalconEngine
 template <typename T>
 class UniformValue;
 
-class FALCON_ENGINE_API PlatformUniform
+FALCON_ENGINE_CLASS_BEGIN PlatformUniform
 {
 public:
-
     // @remark The implementation of this method is platform dependent. Though the
     // template function definition would normally reside in the header files, it
     // is possible to define the it as explicit specialization.
     static void
-    UpdateContext(Uniform *uniform);
+    UpdateContext(Uniform * uniform);
 
 private:
     template <typename T>
@@ -29,8 +28,9 @@ private:
 
     template <typename T>
     static UniformValue<T> *
-    Cast(Uniform *uniform);
+    Cast(Uniform * uniform);
 };
+FALCON_ENGINE_CLASS_END
 
 template<>
 inline void

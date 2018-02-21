@@ -71,7 +71,7 @@ PlatformVertexFormat::CreateInputLayout(ID3D11Device4 *device)
     D3DCheckSuccess(
         device->CreateInputLayout(
             inputElementList.data(),
-            inputElementList.size(),
+            UINT(inputElementList.size()),
             vertexShader->mSource.data(),
             vertexShader->mSource.size(),
             mInputLayout.ReleaseAndGetAddressOf()));

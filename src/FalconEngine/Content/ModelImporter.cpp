@@ -236,7 +236,7 @@ ModelImporter::CreateVertexGroup(
         auto vertexData = reinterpret_cast<Vector3f *>(
                               sMasterRenderer->Map(
                                   vertexBuffer.get(),
-                                  ResourceMapAccessMode::WriteBuffer,
+                                  ResourceMapAccessMode::WriteBufferInvalidateBuffer,
                                   ResourceMapFlushMode::Automatic,
                                   ResourceMapSyncMode::Unsynchronized,
                                   vertexBuffer->GetDataOffset(),
@@ -265,7 +265,7 @@ ModelImporter::CreateVertexGroup(
         auto normalData = reinterpret_cast<Vector3f *>(
                               sMasterRenderer->Map(
                                   normalBuffer.get(),
-                                  ResourceMapAccessMode::WriteBuffer,
+                                  ResourceMapAccessMode::WriteBufferInvalidateBuffer,
                                   ResourceMapFlushMode::Automatic,
                                   ResourceMapSyncMode::Unsynchronized,
                                   normalBuffer->GetDataOffset(),
@@ -301,7 +301,7 @@ ModelImporter::CreateVertexGroup(
         auto texCoordData = reinterpret_cast<Vector2f *>(
                                 sMasterRenderer->Map(
                                     texCoordBuffer.get(),
-                                    ResourceMapAccessMode::WriteBuffer,
+                                    ResourceMapAccessMode::WriteBufferInvalidateBuffer,
                                     ResourceMapFlushMode::Automatic,
                                     ResourceMapSyncMode::Unsynchronized,
                                     texCoordBuffer->GetDataOffset(),

@@ -18,7 +18,7 @@ namespace FalconEngine
 namespace Detail
 {
 #pragma pack(push, 1)
-struct FALCON_ENGINE_API DebugVertex
+struct FALCON_ENGINE_API DebugVertexData
 {
     Vector2f mPosition;
     Vector4f mColor;

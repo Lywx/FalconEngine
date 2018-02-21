@@ -21,6 +21,7 @@ layout(std140) uniform TransformBuffer
 void 
 main()
 {      
+    // vout.EyeNormal = mat3(transpose(inverse(ModelViewTransform))) * Normal;
     vout.EyeNormal = normalize(NormalTransform * Normal);
     vout.EyePosition = (ModelViewTransform * vec4(Position, 1.0)).xyz;
     vout.TexCoord = TexCoord;

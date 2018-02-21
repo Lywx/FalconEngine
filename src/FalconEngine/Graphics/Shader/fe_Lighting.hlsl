@@ -120,7 +120,7 @@ CalcPhongLighting(
     in float3 sDiffuse, 
     in float3 sSpecular, 
 
-// @parameter Material Color.
+// @parameter Material.
     in MaterialColorData mColor,
     in MaterialTextureData mTexture,
 

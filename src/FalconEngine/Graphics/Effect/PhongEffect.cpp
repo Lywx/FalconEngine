@@ -105,7 +105,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
                                 _IN_     const std::shared_ptr<Material>&          material,
                                 _IN_     const std::shared_ptr<PhongEffectParams>& params) const
 {
-    // NEW(Wuxiang): 2017-05-24 12:35 Implement spot lights?
+    // NEW(Wuxiang): Implement spot lights?
 
     using namespace placeholders;
 
@@ -115,313 +115,154 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
         data->mModelViewProjectionTransform = camera->GetViewProjection() * visual->mWorldTransform;
         data->mModelViewTransform = camera->GetView() * visual->mWorldTransform;
 
-        auto normalTransform = Matrix4f::Transpose(Matrix4f::Inverse(camera->GetView() * visual->mWorldTransform));
-        data->mNormalTransform = Matrix3f(normalTransform);
+        auto normalTransform = Matrix3f(
+                                   Matrix4f::Transpose(
+                                       Matrix4f::Inverse(camera->GetView() * visual->mWorldTransform)));
+        data->mNormalTransform0 = normalTransform[0];
+        data->mNormalTransform1 = normalTransform[1];
+        data->mNormalTransform2 = normalTransform[2];
     }
     FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END(GetShaderMask(ShaderType::VertexShader));
 
     // Material
+    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_BEGIN(instance, 0, Detail::PhongMaterialBufferData, "MaterialBuffer", = )
     {
-        // NOTE(Wuxiang): Assume material is not nullptr, because if it is, that
-        // must be the case of the visual is being rendered is corrupted. If that
-        // happens, something worse must be happening.
+        FALCON_ENGINE_UNUSE(camera);
+        FALCON_ENGINE_UNUSE(visual);
 
-        // Ambient
+        data->mMaterialColor.mAmbient = Vector3f(material->mAmbientColor);
+        data->mMaterialTexture.mAmbientExist = material->mAmbientTexture != nullptr;
+        data->mMaterialColor.mDiffuse = Vector3f(material->mDiffuseColor);
+        data->mMaterialTexture.mDiffuseExist = material->mDiffuseTexture != nullptr;
+        data->mMaterialColor.mEmissive = Vector3f(material->mEmissiveColor);
+        data->mMaterialTexture.mEmissiveExist = material->mEmissiveTexture != nullptr;
+        data->mMaterialColor.mShininess = material->mShininess;
+        data->mMaterialTexture.ShininessExist = material->mShininessTexture != nullptr;
+        data->mMaterialColor.mSpecular = Vector3f(material->mSpecularColor);
+        data->mMaterialTexture.mSpecularExist = material->mSpecularTexture != nullptr;
+    }
+    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END(GetShaderMask(ShaderType::FragmentShader));
+
+    // Texture
+    if (material->mAmbientTexture != nullptr)
+    {
+        instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Ambient),
+                                   material->mAmbientTexture,
+                                   TextureMode::Texture,
+                                   ShaderType::FragmentShader);
+
+        if (material->mAmbientSampler != nullptr)
         {
-            instance->SetUniform(0, ShareUniformAutomatic<bool>("fe_TextureAmbientExist",
-                                 std::bind([ = ](const Visual *, const Camera *)
-            {
-                return material->mAmbientTexture != nullptr;
-            }, _1, _2)));
-
-            if (material->mAmbientTexture != nullptr)
-            {
-                instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Ambient),
-                                           material->mAmbientTexture,
-                                           TextureMode::Texture,
-                                           ShaderType::FragmentShader);
-
-                if (material->mAmbientSampler != nullptr)
-                {
-                    instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Ambient),
-                                               material->mAmbientSampler,
-                                               ShaderType::FragmentShader);
-                }
-            }
-            else
-            {
-                instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("fe_Material.Ambient",
-                                     std::bind([ = ](const Visual *, const Camera *)
-                {
-                    return Vector3f(material->mAmbientColor);
-                }, _1, _2)));
-            }
+            instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Ambient),
+                                       material->mAmbientSampler,
+                                       ShaderType::FragmentShader);
         }
+    }
 
-        // Diffuse
+    if (material->mDiffuseTexture != nullptr)
+    {
+        instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Diffuse),
+                                   material->mDiffuseTexture, TextureMode::Texture,
+                                   ShaderType::FragmentShader);
+
+        if (material->mDiffuseSampler != nullptr)
         {
-            instance->SetUniform(0, ShareUniformAutomatic<bool>("fe_TextureDiffuseExist",
-                                 std::bind([ = ](const Visual *, const Camera *)
-            {
-                return material->mDiffuseTexture != nullptr;
-            }, _1, _2)));
-
-            if (material->mDiffuseTexture != nullptr)
-            {
-                instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Diffuse),
-                                           material->mDiffuseTexture, TextureMode::Texture,
-                                           ShaderType::FragmentShader);
-
-                if (material->mDiffuseSampler != nullptr)
-                {
-                    instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Diffuse),
-                                               material->mDiffuseSampler,
-                                               ShaderType::FragmentShader);
-                }
-            }
-            else
-            {
-                instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("fe_Material.Diffuse",
-                                     std::bind([ = ](const Visual *, const Camera *)
-                {
-                    return Vector3f(material->mDiffuseColor);
-                }, _1, _2)));
-            }
+            instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Diffuse),
+                                       material->mDiffuseSampler,
+                                       ShaderType::FragmentShader);
         }
+    }
 
-        // Emissive
+    if (material->mEmissiveTexture != nullptr)
+    {
+        instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Emissive),
+                                   material->mEmissiveTexture, TextureMode::Texture,
+                                   ShaderType::FragmentShader);
+
+        if (material->mEmissiveSampler != nullptr)
         {
-            instance->SetUniform(0, ShareUniformAutomatic<bool>("fe_TextureEmissiveExist",
-                                 std::bind([ = ](const Visual *, const Camera *)
-            {
-                return material->mEmissiveTexture != nullptr;
-            }, _1, _2)));
-
-            if (material->mEmissiveTexture != nullptr)
-            {
-                instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Emissive),
-                                           material->mEmissiveTexture, TextureMode::Texture,
-                                           ShaderType::FragmentShader);
-
-                if (material->mEmissiveSampler != nullptr)
-                {
-                    instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Emissive),
-                                               material->mEmissiveSampler,
-                                               ShaderType::FragmentShader);
-                }
-            }
-            else
-            {
-                instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("fe_Material.Emissive",
-                                     std::bind([ = ](const Visual *, const Camera *)
-                {
-                    return Vector3f(material->mEmissiveColor);
-                }, _1, _2)));
-            }
+            instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Emissive),
+                                       material->mEmissiveSampler,
+                                       ShaderType::FragmentShader);
         }
+    }
 
-        // Shininess
+    if (material->mShininessTexture != nullptr)
+    {
+        instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Shininess),
+                                   material->mShininessTexture, TextureMode::Texture,
+                                   ShaderType::FragmentShader);
+
+        if (material->mShininessSampler != nullptr)
         {
-            instance->SetUniform(0, ShareUniformAutomatic<bool>("fe_TextureShininessExist",
-                                 std::bind([ = ](const Visual *, const Camera *)
-            {
-                return material->mShininessTexture != nullptr;
-            }, _1, _2)));
-
-            if (material->mShininessTexture != nullptr)
-            {
-                instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Shininess),
-                                           material->mShininessTexture, TextureMode::Image,
-                                           ShaderType::FragmentShader);
-
-                if (material->mShininessSampler != nullptr)
-                {
-                    instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Shininess),
-                                               material->mShininessSampler,
-                                               ShaderType::FragmentShader);
-                }
-            }
-            else
-            {
-                instance->SetUniform(0, ShareUniformAutomatic<float>("fe_Material.Shininess",
-                                     std::bind([ = ](const Visual *, const Camera *)
-                {
-                    return material->mShininess;
-                }, _1, _2)));
-            }
+            instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Shininess),
+                                       material->mShininessSampler,
+                                       ShaderType::FragmentShader);
         }
+    }
 
-        // Specular
+    if (material->mSpecularTexture != nullptr)
+    {
+        instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Specular),
+                                   material->mSpecularTexture, TextureMode::Texture,
+                                   ShaderType::FragmentShader);
+
+        if (material->mSpecularSampler != nullptr)
         {
-            instance->SetUniform(0, ShareUniformAutomatic<bool>("fe_TextureSpecularExist",
-                                 std::bind([ = ](const Visual *, const Camera *)
-            {
-                return material->mSpecularTexture != nullptr;
-            }, _1, _2)));
-
-            if (material->mSpecularTexture != nullptr)
-            {
-                instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Specular),
-                                           material->mSpecularTexture, TextureMode::Image,
-                                           ShaderType::FragmentShader);
-
-                if (material->mSpecularSampler != nullptr)
-                {
-                    instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Specular),
-                                               material->mSpecularSampler,
-                                               ShaderType::FragmentShader);
-                }
-            }
-            else
-            {
-                instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("fe_Material.Specular",
-                                     std::bind([ = ](const Visual *, const Camera *)
-                {
-                    return Vector3f(material->mSpecularColor);
-                }, _1, _2)));
-            }
+            instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Specular),
+                                       material->mSpecularSampler,
+                                       ShaderType::FragmentShader);
         }
     }
 
     // Light
+    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_BEGIN(instance, 0, Detail::PhongLightBufferData, "LightBuffer", = )
     {
+        FALCON_ENGINE_UNUSE(visual);
+
+
         // Directional light
-        {
-            instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("DirectionalLight.Ambient",
-                                 std::bind([ = ](const Visual *, const Camera *)
-            {
-                if (params->mDirectionalLight == nullptr)
-                {
-                    return Vector3f::Zero;
-                }
-
-                return Vector3f(params->mDirectionalLight->mAmbient);
-            }, _1, _2)));
-
-            instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("DirectionalLight.Diffuse",
-                                 std::bind([ = ](const Visual *, const Camera *)
-            {
-                if (params->mDirectionalLight == nullptr)
-                {
-                    return Vector3f::Zero;
-                }
-
-                return Vector3f(params->mDirectionalLight->mDiffuse);
-            }, _1, _2)));
-
-            instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("DirectionalLight.Specular",
-                                 std::bind([ = ](const Visual *, const Camera *)
-            {
-                if (params->mDirectionalLight == nullptr)
-                {
-                    return Vector3f::Zero;
-                }
-
-                return Vector3f(params->mDirectionalLight->mSpecular);
-            }, _1, _2)));
-
-            instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("DirectionalLight.EyeDirection",
-                                 std::bind([ = ](const Visual *, const Camera * camera)
-            {
-                if (params->mDirectionalLight == nullptr)
-                {
-                    return Vector3f::Zero;
-                }
-
-                return Vector3f(camera->GetView() * Vector4f(params->mDirectionalLight->mDirection, 0));
-            }, _1, _2)));
-
-        }
+        data->mDirectionalLight.mAmbient = params->mDirectionalLight == nullptr
+                                           ? Vector3f::Zero
+                                           : Vector3f(params->mDirectionalLight->mAmbient);
+        data->mDirectionalLight.mDiffuse = params->mDirectionalLight == nullptr
+                                           ? Vector3f::Zero
+                                           : Vector3f(params->mDirectionalLight->mDiffuse);
+        data->mDirectionalLight.mSpecular = params->mDirectionalLight == nullptr
+                                            ? Vector3f::Zero
+                                            : Vector3f(params->mDirectionalLight->mSpecular);
+        data->mDirectionalLight.mEyeDirection = params->mDirectionalLight == nullptr
+                                                ? Vector3f::Zero
+                                                : Vector3f(camera->GetView() * Vector4f(params->mDirectionalLight->mDirection, 0));
 
         // Point light
+        auto pointLightNum = int(params->mPointLightList.size());
+        data->mPointLightNum = pointLightNum;
+        for (int pointLightIndex = 0; pointLightIndex < PointLightNumMax; ++pointLightIndex)
         {
-            instance->SetUniform(0, ShareUniformAutomatic<int>("PointLightNum",
-                                 std::bind([ = ](const Visual *, const Camera *)
+            if (pointLightIndex < pointLightNum)
             {
-                return int(params->mPointLightList.size());
-            }, _1, _2)));
-
-            for (int i = 0; i < PointLightNumMax; ++i)
+                data->mPointLightArray[pointLightIndex].mAmbient = params->mPointLightList[pointLightIndex]->mAmbient;
+                data->mPointLightArray[pointLightIndex].mDiffuse = params->mPointLightList[pointLightIndex]->mDiffuse;
+                data->mPointLightArray[pointLightIndex].mSpecular = params->mPointLightList[pointLightIndex]->mSpecular;
+                data->mPointLightArray[pointLightIndex].mEyePosition = Vector3f(camera->GetView() * Vector4f(params->mPointLightList[pointLightIndex]->mPosition, 1));
+                data->mPointLightArray[pointLightIndex].mConstant = params->mPointLightList[pointLightIndex]->mConstant;
+                data->mPointLightArray[pointLightIndex].mLinear = params->mPointLightList[pointLightIndex]->mLinear;
+                data->mPointLightArray[pointLightIndex].mQuadratic = params->mPointLightList[pointLightIndex]->mQuadratic;
+            }
+            else
             {
-                instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].Ambient",
-                                     std::bind([ = ](const Visual *, const Camera *)
-                {
-                    if (i < int(params->mPointLightList.size()))
-                    {
-                        return Vector3f(params->mPointLightList[i]->mAmbient);
-                    }
-
-                    return Vector3f::Zero;
-                }, _1, _2)));
-
-                instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].Diffuse",
-                                     std::bind([ = ](const Visual *, const Camera *)
-                {
-                    if (i < int(params->mPointLightList.size()))
-                    {
-                        return Vector3f(params->mPointLightList[i]->mDiffuse);
-                    }
-
-                    return Vector3f::Zero;
-                }, _1, _2)));
-
-                instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].Specular",
-                                     std::bind([ = ](const Visual *, const Camera *)
-                {
-                    if (i < int(params->mPointLightList.size()))
-                    {
-                        return Vector3f(params->mPointLightList[i]->mSpecular);
-                    }
-
-                    return Vector3f::Zero;
-                }, _1, _2)));
-
-                instance->SetUniform(0, ShareUniformAutomatic<Vector3f>("PointLightArray[" + std::to_string(i) + "].EyePosition",
-                                     std::bind([ = ](const Visual *, const Camera * camera)
-                {
-                    if (i < int(params->mPointLightList.size()))
-                    {
-                        return Vector3f(camera->GetView() * Vector4f(params->mPointLightList[i]->mPosition, 1));
-                    }
-
-                    return Vector3f::Zero;
-                }, _1, _2)));
-
-                instance->SetUniform(0, ShareUniformAutomatic<float>("PointLightArray[" + std::to_string(i) + "].Constant",
-                                     std::bind([ = ](const Visual *, const Camera *)
-                {
-                    if (i < int(params->mPointLightList.size()))
-                    {
-                        return params->mPointLightList[i]->mConstant;
-                    }
-
-                    return 0.0f;
-                }, _1, _2)));
-
-                instance->SetUniform(0, ShareUniformAutomatic<float>("PointLightArray[" + std::to_string(i) + "].Linear",
-                                     std::bind([ = ](const Visual *, const Camera *)
-                {
-                    if (i < int(params->mPointLightList.size()))
-                    {
-                        return params->mPointLightList[i]->mLinear;
-                    }
-
-                    return 0.0f;
-                }, _1, _2)));
-
-                instance->SetUniform(0, ShareUniformAutomatic<float>("PointLightArray[" + std::to_string(i) + "].Quadratic",
-                                     std::bind([ = ](const Visual *, const Camera *)
-                {
-                    if (i < int(params->mPointLightList.size()))
-                    {
-                        return params->mPointLightList[i]->mQuadratic;
-                    }
-
-                    return 0.0f;
-                }, _1, _2)));
+                data->mPointLightArray[pointLightIndex].mAmbient = Vector3f::Zero;
+                data->mPointLightArray[pointLightIndex].mDiffuse = Vector3f::Zero;
+                data->mPointLightArray[pointLightIndex].mSpecular = Vector3f::Zero;
+                data->mPointLightArray[pointLightIndex].mEyePosition = Vector3f::Zero;
+                data->mPointLightArray[pointLightIndex].mConstant = 0.0f;
+                data->mPointLightArray[pointLightIndex].mLinear = 0.0f;
+                data->mPointLightArray[pointLightIndex].mQuadratic = 0.0f;
             }
         }
     }
+    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END(GetShaderMask(ShaderType::FragmentShader));
 }
 
 }

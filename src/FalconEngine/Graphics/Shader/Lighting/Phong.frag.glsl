@@ -11,22 +11,38 @@ layout(location = 0) out vec4 FragColor;
 
 #fe_extension : enable
 #include "fe_Material.glsl"
-#fe_extension : disable
-
-#fe_extension : enable
 #include "fe_Texture.glsl"
 #include "fe_Lighting.glsl"
 #fe_extension : disable
 
-uniform DirectionalLightData DirectionalLight;
-
 #define PointLightNumMax 6
-uniform int PointLightNum;
-uniform PointLightData[PointLightNumMax] PointLightArray;
-
 #define SpotLightNumMax 6
-uniform int SpotLightNum;
-uniform SpotLightData[SpotLightNumMax] SpotLightArray;
+
+layout(std140) uniform LightBuffer
+{
+    // 4 x float4.
+    DirectionalLightData DirectionalLight;
+
+    // 4 x float4 x PointLightNumMax
+    PointLightData PointLightArray[PointLightNumMax];
+
+//  SpotLightData SpotLightArray[SpotLightNumMax];
+
+    int PointLightNum;
+    int SpotLightNum;
+
+    int Pad0;
+    int Pad1;
+};
+
+layout(std140) uniform MaterialBuffer
+{
+    // 4 x float4
+    MaterialColorData MaterialColor;
+    
+    // 2 x float4
+    MaterialTextureData MaterialTexture;
+};
 
 // @status Finished.
 vec3 
@@ -43,17 +59,21 @@ CalcDirectionalLight(DirectionalLightData light, vec3 eyeN, vec3 eyeV)
     CalcPhongLighting(
         fin.TexCoord, 
 
-    // @parameter Transform.
+        // @parameter Transform.
         eyeN, 
         eyeV, 
         eyeL, 
 
-    // @parameter Light Source.
+        // @parameter Light Source.
         light.Ambient, 
         light.Diffuse, 
         light.Specular,
 
-    // @return Standard Phong lighting contribution.
+        // @parameter Material.
+        MaterialColor,
+        MaterialTexture,
+
+        // @return Standard Phong lighting contribution.
         cAmbient, 
         cDiffuse, 
         cEmissive,
@@ -77,17 +97,21 @@ CalcPointLight(PointLightData light, vec3 eyeN, vec3 eyeV, vec3 eyePosition)
     CalcPhongLighting(
         fin.TexCoord, 
 
-    // @parameter Transform.
+        // @parameter Transform.
         eyeN, 
         eyeV, 
         eyeL, 
 
-    // @parameter Light Source.
+        // @parameter Light Source.
         light.Ambient, 
         light.Diffuse, 
         light.Specular,
 
-    // @return Standard Phong lighting contribution.
+        // @parameter Material.
+        MaterialColor,
+        MaterialTexture,
+
+        // @return Standard Phong lighting contribution.
         cAmbient, 
         cDiffuse, 
         cEmissive,
@@ -129,6 +153,10 @@ CalcSpotLight(SpotLightData light, vec3 eyeN, vec3 eyeV, vec3 eyePosition)
         light.Ambient, 
         light.Diffuse, 
         light.Specular,
+
+        // @parameter Material.
+        MaterialColor,
+        MaterialTexture,
 
         // @return Standard Phong lighting contribution.
         cAmbient, 

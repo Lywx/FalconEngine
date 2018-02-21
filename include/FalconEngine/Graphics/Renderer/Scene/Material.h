@@ -14,34 +14,32 @@ namespace Detail
 struct FALCON_ENGINE_API MaterialColorData
 {
 public:
-    Vector3f Ambient;
-    float Shininess;
+    Vector3f mAmbient;
+    float mShininess;
 
-    Vector3f Diffuse;
-    float Pad0;
+    Vector3f mDiffuse;
+    float _Pad0;
 
-    Vector3f Emissive;
-    float Pad1;
+    Vector3f mEmissive;
+    float _Pad1;
 
-    Vector3f Specular;
-    float Pad2;
+    Vector3f mSpecular;
+    float _Pad2;
 };
 #pragma pack(pop)
 
 #pragma pack(push, 4)
 struct FALCON_ENGINE_API MaterialTextureData
 {
-    bool AmbientExist;
-    bool DiffuseExist;
-    bool EmissiveExist;
-    bool SpecularExist;
+    int mAmbientExist;
+    int mDiffuseExist;
+    int mEmissiveExist;
+    int mSpecularExist;
+    int ShininessExist;
 
-    bool ShininessExist;
-    bool Pad0;
-    bool Pad1;
-    bool Pad2;
-
-    Vector2f Pad3;
+    int _Pad0;
+    int _Pad1;
+    int _Pad2;
 };
 #pragma pack(pop)
 }

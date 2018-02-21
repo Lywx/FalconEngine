@@ -18,7 +18,8 @@ class Vector3i;
 
 // Assume vector are column vector
 #pragma pack(push, 1)
-class FALCON_ENGINE_API Vector3f : public glm::vec3
+FALCON_ENGINE_CLASS_BEGIN Vector3f :
+public glm::vec3
 {
 public:
     /************************************************************************/
@@ -33,13 +34,13 @@ public:
 
     // @summary Right handed cross product.
     static Vector3f
-    Cross(const Vector3f& v1, const Vector3f& v2);
+    Cross(const Vector3f & v1, const Vector3f & v2);
 
     static float
-    Dot(const Vector3f& v1, const Vector3f& v2);
+    Dot(const Vector3f & v1, const Vector3f & v2);
 
     static Vector3f
-    Normalize(const Vector3f& v);
+    Normalize(const Vector3f & v);
 
 public:
     /************************************************************************/
@@ -51,12 +52,13 @@ public:
     Vector3f(float x, float y, float z);
 
     // Implicit Conversion
-    Vector3f(const glm::vec3& v);
+    Vector3f(const glm::vec3 & v);
 
     // Explicit Conversion
     explicit operator glm::vec3() const;
     explicit operator Vector3i() const;
 };
+FALCON_ENGINE_CLASS_END
 #pragma pack(pop)
 
 FALCON_ENGINE_API std::string

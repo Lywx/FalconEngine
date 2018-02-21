@@ -63,8 +63,8 @@ public:
 protected:
     // @summary Add required parameters to the existing visual effect instance.
     void
-    InitializeInstance(_IN_OUT_ VisualEffectInstance                     * instance,
-                       _IN_     const std::shared_ptr<Material>&          material,
+    InitializeInstance(_IN_OUT_ VisualEffectInstance * instance,
+                       _IN_     const std::shared_ptr<Material>& material,
                        _IN_     const std::shared_ptr<PhongEffectParams>& params) const;
 };
 FALCON_ENGINE_CLASS_END
@@ -77,7 +77,12 @@ struct PhongTrasnformBufferData
 {
     Matrix4f mModelViewProjectionTransform;
     Matrix4f mModelViewTransform;
-    Matrix3f mNormalTransform;
+    Vector3f mNormalTransform0;
+    float _Pad0;
+    Vector3f mNormalTransform1;
+    float _Pad1;
+    Vector3f mNormalTransform2;
+    float _Pad2;
 };
 #pragma pack(pop)
 
@@ -90,20 +95,21 @@ struct PhongMaterialBufferData
 #pragma pack(pop)
 
 #pragma pack(push, 4)
-struct LightBuffer
+struct PhongLightBufferData
 {
     // 4 x float4.
-    DirectionalLightData DirectionalLight;
+    DirectionalLightData mDirectionalLight;
 
     // 4 x float4 x PointLightNumMax
-    PointLightData PointLightArray[PhongEffect::PointLightNumMax];
+    PointLightData mPointLightArray[PhongEffect::PointLightNumMax];
 
     // SpotLightData SpotLightArray[PhongEffect::SpotLightNumMax];
 
-    int PointLightNum;
-    int SpotLightNum;
-    int Pad0;
-    int Pad1;
+    int mPointLightNum;
+    int mSpotLightNum;
+
+    int _Pad0;
+    int _Pad1;
 };
 #pragma pack(pop)
 

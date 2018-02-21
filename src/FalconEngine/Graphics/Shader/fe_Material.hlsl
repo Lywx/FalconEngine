@@ -29,8 +29,6 @@ struct MaterialTextureData
     bool Pad0;
     bool Pad1;
     bool Pad2;
-
-    float2 Pad3;
 };
 
 #endif

@@ -15,18 +15,18 @@ namespace Detail
 struct DirectionalLightData
 {
     // Color
-    Vector3f Ambient;
-    float Pad0;
+    Vector3f mAmbient;
+    float _Pad0;
 
-    Vector3f Diffuse;
-    float Pad1;
+    Vector3f mDiffuse;
+    float _Pad1;
 
-    Vector3f Specular;
-    float Pad2;
+    Vector3f mSpecular;
+    float _Pad2;
 
     // Transform
-    Vector3f EyeDirection;
-    float Pad3;
+    Vector3f mEyeDirection;
+    float _Pad3;
 };
 #pragma pack(pop)
 
@@ -34,17 +34,17 @@ struct DirectionalLightData
 #pragma pack(push, 4)
 struct PointLightData
 {
-    Vector3f Ambient;
-    float Constant;
+    Vector3f mAmbient;
+    float mConstant;
 
-    Vector3f Diffuse;
-    float Linear;
+    Vector3f mDiffuse;
+    float mLinear;
 
-    Vector3f Specular;
-    float Quadratic;
+    Vector3f mSpecular;
+    float mQuadratic;
 
-    Vector3f EyePosition;
-    float Pad0;
+    Vector3f mEyePosition;
+    float _Pad0;
 };
 #pragma pack(pop)
 
@@ -55,20 +55,20 @@ struct PointLightData
 #pragma pack(push, 4)
 struct SpotLightData
 {
-    Vector3f Ambient;
-    float Constant;
+    Vector3f mAmbient;
+    float mConstant;
 
-    Vector3f Diffuse;
-    float CosAngleInner;
+    Vector3f mDiffuse;
+    float mCosAngleInner;
 
-    Vector3f Specular;
-    float CosAngleOuter;
+    Vector3f mSpecular;
+    float mCosAngleOuter;
 
-    Vector3f EyeDirection;
-    float Linear;
+    Vector3f mEyeDirection;
+    float mLinear;
 
-    Vector3f EyePosition;
-    float Quadratic;
+    Vector3f mEyePosition;
+    float mQuadratic;
 };
 #pragma pack(pop)
 

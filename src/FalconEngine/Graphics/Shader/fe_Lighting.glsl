@@ -1,48 +1,57 @@
+// 4 x float4.
 struct DirectionalLightData
 {
     // Color
     vec3 Ambient;
+    float Pad0;
+
     vec3 Diffuse;
+    float Pad1;
+
     vec3 Specular;
+    float Pad2;
 
     // Transform
     vec3 EyeDirection;
+    float Pad3;
 };
 
+// 4 x float4.
 struct PointLightData
 {
-    // Color
     vec3 Ambient;
-    vec3 Diffuse;
-    vec3 Specular;
-
-    // Constant
     float Constant;
+
+    vec3 Diffuse;
     float Linear;
+
+    vec3 Specular;
     float Quadratic;
 
-    // Transform
     vec3 EyePosition;
+    float Pad0;
 };
 
+// The layout is not ideal. According to:
+// https://msdn.microsoft.com/en-us/library/windows/desktop/bb509632(v=vs.85).aspx
+//
+// 5 x float4.
 struct SpotLightData
 {
-    // Color
     vec3 Ambient;
-    vec3 Diffuse;
-    vec3 Specular;
+    float Constant;
 
-    // Constant
+    vec3 Diffuse;
     float CosAngleInner;
+
+    vec3 Specular;
     float CosAngleOuter;
 
-    float Constant;
-    float Linear;
-    float Quadratic;
-
-    // Transform
     vec3 EyeDirection;
+    float Linear;
+
     vec3 EyePosition;
+    float Quadratic;
 };
 
 // @require None.
@@ -58,7 +67,7 @@ CalcPhongLighting(
     in vec3 sDiffuse, 
     in vec3 sSpecular, 
 
-// @parameter Material Color. 
+// @parameter Material. 
     in vec3 mAmbient,
     in vec3 mDiffuse,
     in vec3 mEmissive,
@@ -105,6 +114,10 @@ CalcPhongLighting(
     in vec3 sDiffuse, 
     in vec3 sSpecular, 
 
+// @parameter Material.
+    in MaterialColorData mColor,
+    in MaterialTextureData mTexture,
+
 // @return Standard Phong lighting contribution.
     out vec3 cAmbient,
     out vec3 cDiffuse,
@@ -112,53 +125,53 @@ CalcPhongLighting(
     out vec3 cSpecular)
 {
     vec3 mAmbient;
-    if (fe_TextureAmbientExist)
+    if (mTexture.AmbientExist)
     {
         mAmbient = vec3(texture(fe_TextureAmbient, texCoord));
     }
     else
     {
-        mAmbient = fe_Material.Ambient;
+        mAmbient = mColor.Ambient;
     }
 
     vec3 mDiffuse;
-    if (fe_TextureDiffuseExist)
+    if (mTexture.DiffuseExist)
     {
         mDiffuse = vec3(texture(fe_TextureDiffuse, texCoord));
     }
     else
     {
-        mDiffuse = fe_Material.Diffuse;
+        mDiffuse = mColor.Diffuse;
     }
 
     vec3 mEmissive;
-    if (fe_TextureEmissiveExist)
+    if (mTexture.EmissiveExist)
     {
         mEmissive = vec3(texture(fe_TextureEmissive, texCoord));
     }
     else
     {
-        mEmissive = fe_Material.Emissive;
+        mEmissive = mColor.Emissive;
     }
 
     float mShininess;
-    if (fe_TextureShininessExist)
+    if (mTexture.ShininessExist)
     {
         mShininess = texture(fe_TextureShininess, texCoord).a;
     }
     else
     {
-        mShininess = fe_Material.Shininess;
+        mShininess = mColor.Shininess;
     }
 
     vec3 mSpecular;
-    if (fe_TextureSpecularExist)
+    if (mTexture.SpecularExist)
     {
         mSpecular = vec3(texture(fe_TextureSpecular, texCoord));
     }
     else
     {
-        mSpecular = fe_Material.Specular;
+        mSpecular = mColor.Specular;
     }
 
     CalcPhongLighting(
@@ -246,6 +259,10 @@ CalcBlinnPhongLighting(
     in vec3 sDiffuse, 
     in vec3 sSpecular, 
 
+// @parameter Material Color.
+    in MaterialColorData mColor,
+    in MaterialTextureData mTexture,
+
 // @return Standard Phong lighting contribution.
     out vec3 cAmbient,
     out vec3 cDiffuse,
@@ -253,53 +270,53 @@ CalcBlinnPhongLighting(
     out vec3 cSpecular)
 {
     vec3 mAmbient;
-    if (fe_TextureAmbientExist)
+    if (mTexture.AmbientExist)
     {
         mAmbient = vec3(texture(fe_TextureAmbient, texCoord));
     }
     else
     {
-        mAmbient = fe_Material.Ambient;
+        mAmbient = mColor.Ambient;
     }
 
     vec3 mDiffuse;
-    if (fe_TextureDiffuseExist)
+    if (mTexture.DiffuseExist)
     {
         mDiffuse = vec3(texture(fe_TextureDiffuse, texCoord));
     }
     else
     {
-        mDiffuse = fe_Material.Diffuse;
+        mDiffuse = mColor.Diffuse;
     }
 
     vec3 mEmissive;
-    if (fe_TextureEmissiveExist)
+    if (mTexture.EmissiveExist)
     {
         mEmissive = vec3(texture(fe_TextureEmissive, texCoord));
     }
     else
     {
-        mEmissive = fe_Material.Emissive;
+        mEmissive = mColor.Emissive;
     }
 
     float mShininess;
-    if (fe_TextureShininessExist)
+    if (mTexture.ShininessExist)
     {
         mShininess = texture(fe_TextureShininess, texCoord).a;
     }
     else
     {
-        mShininess = fe_Material.Shininess;
+        mShininess = mColor.Shininess;
     }
 
     vec3 mSpecular;
-    if (fe_TextureSpecularExist)
+    if (mTexture.SpecularExist)
     {
         mSpecular = vec3(texture(fe_TextureSpecular, texCoord));
     }
     else
     {
-        mSpecular = fe_Material.Specular;
+        mSpecular = mColor.Specular;
     }
 
     CalcBlinnPhongLighting(

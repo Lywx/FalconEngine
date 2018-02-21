@@ -15,9 +15,8 @@ namespace FalconEngine
 class Font;
 
 #pragma pack(push, 1)
-class FontVertex
+struct FontVertexData
 {
-public:
     Vector2f mPosition;
     Vector2f mTexCoord;
     Vector4f mFontColor;
@@ -27,11 +26,10 @@ public:
 };
 #pragma pack(pop)
 
-#pragma pack(push, 1)
+#pragma pack(push, 4)
 // Constant Buffer or Shader Uniform Block name as TransformBuffer
-class FontUniformBuffer
+struct FontTrasnformBufferData
 {
-public:
     Matrix4f mProjectionTransform;
 };
 #pragma pack(pop)

@@ -11,12 +11,12 @@
 
 namespace FalconEngine
 {
-
+namespace Detail
+{
 // @summary Instancing buffer content unit.
 #pragma pack(push, 1)
-class AabbInstance
+struct FALCON_ENGINE_API AabbInstanceData
 {
-public:
     Vector4f mColor;
     Matrix4f mModelViewPrjectionTransform;
 };
@@ -24,12 +24,12 @@ public:
 
 // @summary Vertex buffer content unit.
 #pragma pack(push, 1)
-class AabbVertex
+struct FALCON_ENGINE_API AabbVertexData
 {
-public:
     Vector3f mPosition;
 };
 #pragma pack(pop)
+}
 
 class FALCON_ENGINE_API AabbEffectParams : public VisualEffectParams
 {

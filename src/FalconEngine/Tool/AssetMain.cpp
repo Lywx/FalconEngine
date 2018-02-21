@@ -8,7 +8,7 @@ using namespace FalconEngine;
 int
 main()
 {
-#if 1
+#if 0
     // Fonts
     AssetProcessor::BakeFont("Content/Font/LuciadaConsoleDistanceField.fnt");
     AssetProcessor::BakeFont("Content/Font/NSimSunDistanceField.fnt");
@@ -22,12 +22,14 @@ main()
     AssetProcessor::BakeTexture1d("Content/Texture/Engine/Gradiant 1d.png");
 #endif
 
-#if 0
+#if 1
     // Shader
     AssetTool assetTool;
     assetTool.D3DSetShaderCompiler("C:/Program Files (x86)/Windows Kits/10/bin/10.0.15063.0/x64/fxc.exe");
     assetTool.D3DBakeShader("Content/Shader/Font.vert.hlsl");
     assetTool.D3DBakeShader("Content/Shader/Font.frag.hlsl");
+    assetTool.D3DBakeShader("Content/Shader/Phong.vert.hlsl");
+    assetTool.D3DBakeShader("Content/Shader/Phong.frag.hlsl");
 #endif
 
     return 0;

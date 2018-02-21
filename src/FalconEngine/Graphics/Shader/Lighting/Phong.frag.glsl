@@ -161,13 +161,13 @@ main()
     vec3 eyeV = normalize(-fin.EyePosition); 
 
     vec3 frontColor = CalcDirectionalLight(DirectionalLight, eyeN, eyeV);
-    for(int i = 0; i < PointLightNum; ++i) 
+    for (int i = 0; i < PointLightNum; ++i) 
     {
         frontColor += CalcPointLight(PointLightArray[i], eyeN, eyeV, fin.EyePosition);
     }
 
     vec3 backColor = CalcDirectionalLight(DirectionalLight, -eyeN, eyeV);
-    for(int i = 0; i < PointLightNum; ++i) 
+    for (int i = 0; i < PointLightNum; ++i) 
     {
         backColor += CalcPointLight(PointLightArray[i], -eyeN, eyeV, fin.EyePosition);
     }
@@ -177,7 +177,7 @@ main()
     //     result += CalcSpotLight(SpotLightArray[i], eyeN, eyeV, fin.EyePosition);
     // }
 
-    if(gl_FrontFacing) 
+    if (gl_FrontFacing) 
     {
         FragColor = vec4(frontColor, 1.0);
     } 

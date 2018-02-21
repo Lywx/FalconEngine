@@ -1,7 +1,10 @@
 #include <FalconEngine/Platform/Direct3D/Direct3DVertexFormat.h>
 
 #if defined(FALCON_ENGINE_API_DIRECT3D)
+#include <locale>
+
 #include <FalconEngine/Core/Exception.h>
+#include <FalconEngine/Core/String.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 #include <FalconEngine/Graphics/Renderer/Resource/ShaderSource.h>
@@ -33,14 +36,16 @@ PlatformVertexFormat::~PlatformVertexFormat()
 void
 PlatformVertexFormat::Enable(Renderer *renderer)
 {
-    renderer->mData->GetContext()->IASetInputLayout(mInputLayout.Get());
+    auto context = renderer->mData->GetContext();
+    context->IASetInputLayout(mInputLayout.Get());
 }
 
 
 void
 PlatformVertexFormat::Disable(Renderer *renderer)
 {
-    renderer->mData->GetContext()->IASetInputLayout(nullptr);
+    auto context = renderer->mData->GetContext();
+    context->IASetInputLayout(nullptr);
 }
 
 /************************************************************************/
@@ -57,7 +62,7 @@ PlatformVertexFormat::CreateInputLayout(ID3D11Device4 *device)
     {
         auto const& vertexAttrib = mVertexFormat->GetVertexAttribute(vertexAttribIndex);
 
-        inputElementList[vertexAttribIndex].SemanticName = vertexAttrib.mName.c_str();
+        inputElementList[vertexAttribIndex].SemanticName = GetUppercaseString(vertexAttrib.mName).c_str();
         inputElementList[vertexAttribIndex].SemanticIndex = vertexAttrib.mLocation;
         inputElementList[vertexAttribIndex].Format = Direct3DShaderAttributeFormat[int(vertexAttrib.mType)];
         inputElementList[vertexAttribIndex].InputSlot = vertexAttrib.mBindingIndex;

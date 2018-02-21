@@ -1,3 +1,6 @@
+#ifndef FE_TEXTURE_HLSL
+#define FE_TEXTURE_HLSL
+
 Texture2D fe_TextureAmbient : register(t0);
 Texture2D fe_TextureDiffuse : register(t1);
 Texture2D fe_TextureEmissive : register(t2);
@@ -11,3 +14,5 @@ SamplerState fe_TextureEmissiveSampler : register(s2);
 SamplerState fe_TextureShininessSampler : register(s3);
 SamplerState fe_TextureSpecularSampler : register(s4);
 SamplerState fe_TextureFontSampler : register(s5);
+
+#endif

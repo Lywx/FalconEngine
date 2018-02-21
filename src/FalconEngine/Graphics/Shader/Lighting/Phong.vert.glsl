@@ -11,9 +11,12 @@ out Vout
     vec2               TexCoord;
 } vout;
  
-uniform mat4 ModelViewProjectionTransform;
-uniform mat4 ModelViewTransform;
-uniform mat3 NormalTransform;
+layout(std140) uniform TransformBuffer
+{
+   mat4 ModelViewProjectionTransform;
+   mat4 ModelViewTransform;
+   mat3 NormalTransform;
+};
 
 void 
 main()
@@ -22,6 +25,6 @@ main()
     vout.EyePosition = (ModelViewTransform * vec4(Position, 1.0)).xyz;
     vout.TexCoord = TexCoord;
 
-    gl_Position = ModelViewProjectionTransform * vec4(Position, 1); 
+    gl_Position = ModelViewProjectionTransform * vec4(Position, 1.0); 
 }
  

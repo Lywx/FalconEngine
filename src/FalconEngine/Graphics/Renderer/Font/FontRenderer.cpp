@@ -171,7 +171,7 @@ FontRenderer::FindChannel(const Font *font)
     // Take account for the buffer zone.
     int vertexBufferVertexNum = int(FrameGlyphNumMax * 6 * 1.25);
     auto vertexBuffer = make_shared<VertexBuffer>(
-                            vertexBufferVertexNum, sizeof(FontVertex),
+                            vertexBufferVertexNum, sizeof(FontVertexData),
                             ResourceCreationAccessMode::GpuReadCpuWrite,
                             ResourceCreationAccessUsage::Stream,
                             ResourceStorageMode::Device);

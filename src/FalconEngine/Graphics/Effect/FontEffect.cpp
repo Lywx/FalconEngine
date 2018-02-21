@@ -105,7 +105,7 @@ FontEffect::InitializeInstance(
     FALCON_ENGINE_CHECK_NULLPTR(params->mFont);
     FALCON_ENGINE_CHECK_NULLPTR(params->mHandedness);
 
-    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_BEGIN(instance, 0, FontUniformBuffer, "TransformBuffer", = )
+    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_BEGIN(instance, 0, FontTrasnformBufferData, "TransformBuffer", = )
     {
         FALCON_ENGINE_UNUSE(camera);
         FALCON_ENGINE_UNUSE(visual);

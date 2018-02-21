@@ -228,7 +228,7 @@ ModelImporter::CreateVertexGroup(
 
     // Position
     auto vertexBuffer = std::make_shared<VertexBuffer>(
-                            vertexNum, sizeof(ModelVertex::mPosition),
+                            vertexNum, sizeof(Detail::ModelVertexData::mPosition),
                             vertexBufferAccess.mPositionMode,
                             vertexBufferAccess.mPositionUsage,
                             ResourceStorageMode::Device);
@@ -257,7 +257,7 @@ ModelImporter::CreateVertexGroup(
     // Normal
     auto normalBuffer = std::make_shared<VertexBuffer>(
                             vertexNum,
-                            sizeof(ModelVertex::mNormal),
+                            sizeof(Detail::ModelVertexData::mNormal),
                             vertexBufferAccess.mNormalMode,
                             vertexBufferAccess.mNormalUsage,
                             ResourceStorageMode::Device);
@@ -293,7 +293,7 @@ ModelImporter::CreateVertexGroup(
     // Texture coordinate
     auto texCoordBuffer = std::make_shared<VertexBuffer>(
                               vertexNum,
-                              sizeof(ModelVertex::mTexCoord),
+                              sizeof(Detail::ModelVertexData::mTexCoord),
                               vertexBufferAccess.mTexCoordMode,
                               vertexBufferAccess.mTexCoordUsage,
                               ResourceStorageMode::Device);

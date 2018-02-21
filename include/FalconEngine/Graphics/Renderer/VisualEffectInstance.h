@@ -8,6 +8,7 @@
 #include <FalconEngine/Core/Object.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstancePass.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
+#include <FalconEngine/Graphics/Renderer/Resource/UniformBufferAutomatic.h>
 
 namespace FalconEngine
 {

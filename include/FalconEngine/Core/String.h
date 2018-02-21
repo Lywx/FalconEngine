@@ -19,6 +19,10 @@ GetFormatString(const char *format, Args && ... args)
     return std::string(buffer);
 }
 
+FALCON_ENGINE_API
+std::string
+GetUppercaseString(const std::string& str);
+
 // @param str must be in utf-8 format.
 FALCON_ENGINE_API std::wstring
 GetWideString(const std::string& str);

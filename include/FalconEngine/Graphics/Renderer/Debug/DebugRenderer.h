@@ -189,7 +189,7 @@ private:
 
         auto vertexBuffer = make_shared<VertexBuffer>(
                                 channelElementNum,
-                                sizeof(DebugVertex),
+                                sizeof(Detail::DebugVertex),
                                 ResourceCreationAccessMode::GpuReadCpuWrite,
                                 ResourceCreationAccessUsage::Stream,
                                 ResourceStorageMode::Device);

@@ -26,16 +26,17 @@ using namespace std;
 
 namespace FalconEngine
 {
-
-#pragma pack(push, 1)
-class FALCON_ENGINE_API ModelVertex
+namespace Detail
 {
-public:
+#pragma pack(push, 1)
+struct FALCON_ENGINE_API ModelVertexData
+{
     Vector3f mPosition;
     Vector3f mNormal;
     Vector2f mTexCoord;
 };
 #pragma pack(pop)
+}
 
 class ModelImporter
 {

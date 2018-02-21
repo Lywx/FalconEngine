@@ -8,21 +8,18 @@
 
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectParams.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Uniform.h>
 #include <FalconEngine/Math/Color.h>
 #include <FalconEngine/Math/Vector2.h>
-#include <FalconEngine/Graphics/Renderer/Resource/Uniform.h>
 
 namespace FalconEngine
 {
 
-class Visual;
-class Mesh;
-class Node;
-
-#pragma pack(push, 1)
-class FALCON_ENGINE_API DebugVertex
+namespace Detail
 {
-public:
+#pragma pack(push, 1)
+struct FALCON_ENGINE_API DebugVertex
+{
     Vector2f mPosition;
     Vector4f mColor;
 
@@ -31,6 +28,11 @@ public:
     int mCamera;
 };
 #pragma pack(pop)
+}
+
+class Visual;
+class Mesh;
+class Node;
 
 FALCON_ENGINE_CLASS_BEGIN DebugEffectParams :
 public VisualEffectParams

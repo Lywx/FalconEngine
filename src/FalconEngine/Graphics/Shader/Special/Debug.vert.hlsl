@@ -22,7 +22,7 @@ main(Vin vin)
     vout.Color = vin.Color;
 
     // Assume the position is in world space.
-    vout.Position = mul(float4(vin.Position, 1.0), ViewProjectionTransform);
+    vout.Position = mul(ViewProjectionTransform, float4(vin.Position, 1.0));
     
     return vout;
 }

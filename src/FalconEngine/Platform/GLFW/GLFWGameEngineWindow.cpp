@@ -72,14 +72,26 @@ public:
 /************************************************************************/
 PlatformGameEngineWindow::PlatformGameEngineWindow(GLFWwindow *handle) :
     mHandle(handle),
+    mData(nullptr),
     mInput(nullptr),
     mSettings(nullptr)
 {
 }
 
+PlatformGameEngineWindow::~PlatformGameEngineWindow()
+{
+    Destroy();
+}
+
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+void
+PlatformGameEngineWindow::Destroy()
+{
+    DestroyPlatform();
+}
+
 void
 PlatformGameEngineWindow::Initialize()
 {
@@ -127,6 +139,17 @@ PlatformGameEngineWindow::WindowCloseCallback(GLFWwindow *window)
 /************************************************************************/
 /* Private Members                                                      */
 /************************************************************************/
+void
+PlatformGameEngineWindow::DestroyPlatform()
+{
+    glfwSetKeyCallback(mHandle, nullptr);
+    glfwSetMouseButtonCallback(mHandle, nullptr);
+    glfwSetCursorPosCallback(mHandle, nullptr);
+    glfwSetScrollCallback(mHandle, nullptr);
+    glfwSetWindowCloseCallback(mHandle, nullptr);
+    glfwSetWindowUserPointer(mHandle, nullptr);
+}
+
 void
 PlatformGameEngineWindow::InitializeData()
 {

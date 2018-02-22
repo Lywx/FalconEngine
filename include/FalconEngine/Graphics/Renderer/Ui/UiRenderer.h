@@ -14,8 +14,7 @@ class Renderer;
 
 // @summary The font renderer is the class you would call to draw a string on
 // the screen.
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API UiRenderer final
+FALCON_ENGINE_CLASS_BEGIN UiRenderer final
 {
 public:
     /************************************************************************/
@@ -25,7 +24,13 @@ public:
     ~UiRenderer();
 
 public:
+    /************************************************************************/
+    /* Rendering Engine API                                                 */
+    /************************************************************************/
+    void
+    Destroy();
+
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

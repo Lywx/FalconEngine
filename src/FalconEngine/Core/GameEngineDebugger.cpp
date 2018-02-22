@@ -25,6 +25,11 @@ GameEngineDebugger::GameEngineDebugger()
 /* Public Members                                                       */
 /************************************************************************/
 void
+GameEngineDebugger::Destroy()
+{
+}
+
+void
 GameEngineDebugger::Initialize()
 {
 #if defined(FALCON_ENGINE_DEBUG_GRAPHICS)

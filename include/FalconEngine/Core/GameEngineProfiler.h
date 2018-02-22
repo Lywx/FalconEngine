@@ -5,6 +5,8 @@
 #include <memory>
 #include <vector>
 
+#include <FalconEngine/Core/Memory.h>
+
 namespace FalconEngine
 {
 
@@ -15,16 +17,7 @@ class FALCON_ENGINE_API GameEngineProfiler
 {
     friend class GameEngine;
 
-public:
-    /************************************************************************/
-    /* Static Members                                                       */
-    /************************************************************************/
-    static GameEngineProfiler *
-    GetInstance()
-    {
-        static GameEngineProfiler sInstance;
-        return &sInstance;
-    }
+    FALCON_ENGINE_SINGLETON_SAFE_DECLARE(GameEngineProfiler);
 
     /************************************************************************/
     /* Constructors and Destructor                                          */

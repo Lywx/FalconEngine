@@ -95,16 +95,11 @@ FALCON_ENGINE_DELETER_DECLARE(PlatformRendererState, PlatformRendererStateDelete
 
 FALCON_ENGINE_CLASS_BEGIN Renderer final
 {
-public:
     /************************************************************************/
     /* Platform Independent Members                                         */
     /************************************************************************/
-    static Renderer *
-    GetInstance()
-    {
-        static Renderer sInstance;
-        return &sInstance;
-    }
+
+    FALCON_ENGINE_SINGLETON_SAFE_DECLARE(Renderer);
 
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -124,10 +119,13 @@ public:
 
 private:
     void
-    InitializeData();
+    DestroyData();
 
     void
-    DestroyData();
+    DestroyResource();
+
+    void
+    InitializeData();
 
 public:
     /************************************************************************/
@@ -991,3 +989,12 @@ if (iter != textureArrayTable.end()) \
     auto textureArrayPlatform = iter->second; \
     textureArrayPlatform->Unmap(this, textureIndex); \
 }
+
+#define FALCON_ENGINE_RENDERER_UNBIND_EVERYTHING(resourceTable) \
+for (auto iter = resourceTable.begin(); iter != resourceTable.end(); ++iter) \
+{ \
+    auto resourcePlatform = iter->second; \
+    delete resourcePlatform; \
+} \
+\
+resourceTable.clear(); \

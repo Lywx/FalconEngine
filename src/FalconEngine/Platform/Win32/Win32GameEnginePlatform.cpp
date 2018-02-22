@@ -102,13 +102,14 @@ GameEnginePlatform::InitializeWindowPlatform()
         // TODO: Change nCmdShow to SW_SHOWMAXIMIZED to default to fullscreen.
         ShowWindow(windowHandle, SW_SHOW);
 
-        SetWindowLongPtr(windowHandle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 
         GetClientRect(windowHandle, &rect);
     }
 
     mWindow = std::make_shared<PlatformGameEngineWindow>(windowHandle);
     mWindow->Initialize();
+
+    SetWindowLongPtr(windowHandle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(mWindow.get()));
 }
 
 }

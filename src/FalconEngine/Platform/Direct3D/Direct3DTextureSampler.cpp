@@ -21,7 +21,6 @@ PlatformSampler::PlatformSampler(Renderer *renderer, const Sampler *sampler) :
 
 PlatformSampler::~PlatformSampler()
 {
-    mSampleState.Reset();
 }
 
 /************************************************************************/

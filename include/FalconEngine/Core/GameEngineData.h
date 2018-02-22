@@ -3,6 +3,7 @@
 #include <memory>
 
 #include <FalconEngine/Core/Macro.h>
+#include <FalconEngine/Core/Memory.h>
 
 namespace FalconEngine
 {
@@ -13,12 +14,7 @@ public:
     /************************************************************************/
     /* Static Members                                                       */
     /************************************************************************/
-    static GameEngineData *
-    GetInstance()
-    {
-        static GameEngineData sInstance;
-        return &sInstance;
-    }
+    FALCON_ENGINE_SINGLETON_LEAK_DECLARE(GameEngineData);
 
     /************************************************************************/
     /* Constructors and Destructor                                          */

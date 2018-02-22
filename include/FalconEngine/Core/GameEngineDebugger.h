@@ -7,23 +7,16 @@
 
 #include <FalconEngine/Core/Debug.h>
 #include <FalconEngine/Core/Trace.h>
+#include <FalconEngine/Core/Memory.h>
 
 namespace FalconEngine
 {
 
 FALCON_ENGINE_CLASS_BEGIN GameEngineDebugger
 {
-    /************************************************************************/
-    /* Static Members                                                       */
-    /************************************************************************/
-public:
-    static GameEngineDebugger *
-    GetInstance()
-    {
-        static GameEngineDebugger sInstance;
-        return &sInstance;
-    }
+    FALCON_ENGINE_SINGLETON_SAFE_DECLARE(GameEngineDebugger);
 
+public:
     static void
     Break()
     {

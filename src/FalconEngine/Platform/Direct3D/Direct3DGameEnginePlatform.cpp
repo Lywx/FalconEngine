@@ -58,8 +58,8 @@ void
 GameEnginePlatform::InitializeDataPlatform()
 {
     mData = std::unique_ptr<PlatformGameEnginePlatformData, PlatformGameEnginePlatformDataDeleter>(
-            new PlatformGameEnginePlatformData(),
-            PlatformGameEnginePlatformDataDeleter());
+                new PlatformGameEnginePlatformData(),
+                PlatformGameEnginePlatformDataDeleter());
 }
 
 void

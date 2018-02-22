@@ -132,10 +132,10 @@ GameEngine::Loop()
             // NOTE(Wuxiang): Elapsed time count from before last game update
             // to before current game update.
             mGame->Update(mGraphics, mInput, currentFrameUpdateTotalCount == 0
-                ? lastUpdateElapsedMillisecond
-                + lastRenderElapsedMillisecond
-                + currentFrameSensitiveUpdateElapsedMillisecond
-                : lastUpdateElapsedMillisecond);
+                          ? lastUpdateElapsedMillisecond
+                          + lastRenderElapsedMillisecond
+                          + currentFrameSensitiveUpdateElapsedMillisecond
+                          : lastUpdateElapsedMillisecond);
             ++currentFrameUpdateTotalCount;
 
             lastUpdateEndedMillisecond = Timer::GetMilliseconds();
@@ -175,10 +175,12 @@ GameEngine::Loop()
 void
 GameEngine::Destory()
 {
-    if (mGame != nullptr)
-    {
-        mGame->Destory();
-    }
+    mGame->Destory();
+    mProfiler->Destroy();
+
+    mGraphics->Destroy();
+    mInput->Destroy();
+    mPlatform->Destroy();
 }
 
 }

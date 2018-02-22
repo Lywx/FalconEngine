@@ -18,12 +18,15 @@ class FALCON_ENGINE_API PlatformGameEngineWindow
 {
 public:
     explicit PlatformGameEngineWindow(GLFWwindow *handle);
-    ~PlatformGameEngineWindow() = default;
+    ~PlatformGameEngineWindow();
 
 public:
     /************************************************************************/
     /* Public Members                                                       */
     /************************************************************************/
+    void
+    Destroy();
+
     void
     Initialize();
 
@@ -46,6 +49,9 @@ private:
     /************************************************************************/
     /* Private Members                                                      */
     /************************************************************************/
+    void
+    DestroyPlatform();
+
     void
     InitializeData();
 

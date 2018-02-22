@@ -18,6 +18,13 @@ GameEnginePlatform::~GameEnginePlatform()
 /* Public Members                                                       */
 /************************************************************************/
 void
+GameEnginePlatform::Destroy()
+{
+    mData.reset();
+    mWindow.reset();
+}
+
+void
 GameEnginePlatform::Initialize()
 {
     InitializeData();

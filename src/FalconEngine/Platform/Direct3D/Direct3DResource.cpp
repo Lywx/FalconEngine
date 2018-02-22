@@ -26,10 +26,6 @@ PlatformResource::PlatformResource(Renderer *, const Object *resource) :
 
 PlatformResource::~PlatformResource()
 {
-    mDepthStencilView.Reset();
-    mRenderTargetView.Reset();
-    mShaderResourceView.Reset();
-    mUnorderedAccessView.Reset();
 }
 
 /************************************************************************/

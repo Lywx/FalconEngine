@@ -15,18 +15,9 @@ class PlatformGameEngineWindow;
 class PlatformGameEnginePlatformData;
 FALCON_ENGINE_DELETER_DECLARE(PlatformGameEnginePlatformData, PlatformGameEnginePlatformDataDeleter);
 
-FALCON_ENGINE_CLASS_BEGIN GameEnginePlatform
+FALCON_ENGINE_CLASS_BEGIN GameEnginePlatform final
 {
-public:
-    /************************************************************************/
-    /* Static Members                                                       */
-    /************************************************************************/
-    static GameEnginePlatform *
-    GetInstance()
-    {
-        static GameEnginePlatform sInstance;
-        return &sInstance;
-    }
+    FALCON_ENGINE_SINGLETON_SAFE_DECLARE(GameEnginePlatform);
 
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -35,7 +26,7 @@ private:
     GameEnginePlatform();
 
 public:
-    virtual ~GameEnginePlatform();
+    ~GameEnginePlatform();
 
     /************************************************************************/
     /* Public Members                                                       */

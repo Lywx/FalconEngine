@@ -12,6 +12,7 @@
 
 #include <FalconEngine/Content/ModelImportOption.h>
 #include <FalconEngine/Content/TextureImportOption.h>
+#include <FalconEngine/Core/Memory.h>
 #include <FalconEngine/Core/Path.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Texture1d.h>
@@ -30,19 +31,10 @@ class Texture1d;
 class Texture2d;
 class ShaderSource;
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API AssetManager
+FALCON_ENGINE_CLASS_BEGIN AssetManager
 {
 public:
-    static AssetManager *
-    GetInstance()
-    {
-        // NOTE(Wuxiang): On concern about static method copy in different translation unit, read:
-        // http://stackoverflow.com/questions/5372091/are-static-member-functions-in-c-copied-in-multiple-translation-units
-        // http://stackoverflow.com/questions/12248747/singleton-with-multithreads
-        static AssetManager sInstance;
-        return &sInstance;
-    }
+    FALCON_ENGINE_SINGLETON_SAFE_DECLARE(AssetManager);
 
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -61,31 +53,31 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     std::shared_ptr<Font>
-    GetFontNamed(const std::string& fontName);
+    GetFontNamed(const std::string & fontName);
 
     std::shared_ptr<Font>
-    GetFont(const std::string& fontFilePath);
+    GetFont(const std::string & fontFilePath);
 
     std::shared_ptr<Font>
-    LoadFont(const std::string& fontAssetPath);
+    LoadFont(const std::string & fontAssetPath);
 
     std::shared_ptr<Model>
-    GetModel(const std::string& modelFilePath);
+    GetModel(const std::string & modelFilePath);
 
     std::shared_ptr<Model>
     LoadModel(
-        const std::string&       modelFilePath,
+        const std::string &       modelFilePath,
         const ModelImportOption& modelImportOption = ModelImportOption::GetDefault());
 
     std::shared_ptr<ShaderSource>
-    GetShaderSource(const std::string& shaderFilePath);
+    GetShaderSource(const std::string & shaderFilePath);
 
     std::shared_ptr<ShaderSource>
-    LoadShaderSource(const std::string& shaderFilePath);
+    LoadShaderSource(const std::string & shaderFilePath);
 
     template <typename T>
     std::shared_ptr<T>
-    GetTexture(const std::string& textureFilePath)
+    GetTexture(const std::string & textureFilePath)
     {
         static_assert(std::is_base_of<Texture, T>::value, "Invalid texture type parameter.");
 
@@ -111,7 +103,7 @@ public:
     template <typename T>
     std::shared_ptr<T>
     LoadTexture(
-        const std::string&         textureAssetPath,
+        const std::string &         textureAssetPath,
         const TextureImportOption& textureImportOption = TextureImportOption::GetDefault())
     {
         static_assert(std::is_base_of<Texture, T>::value, "Invalid texture type parameter.");
@@ -130,19 +122,19 @@ public:
 
 private:
     void
-    CheckFileExists(const std::string& assetPath);
+    CheckFileExists(const std::string & assetPath);
 
     std::shared_ptr<Font>
-    LoadFontInternal(const std::string& fontAssetPath);
+    LoadFontInternal(const std::string & fontAssetPath);
 
     std::shared_ptr<Model>
-    LoadModelInternal(const std::string& modelFilePath, const ModelImportOption& modelImportOption);
+    LoadModelInternal(const std::string & modelFilePath, const ModelImportOption & modelImportOption);
 
     std::shared_ptr<ShaderSource>
-    LoadShaderSourceInternal(const std::string& shaderFilePath);
+    LoadShaderSourceInternal(const std::string & shaderFilePath);
 
     std::shared_ptr<Texture>
-    LoadTextureInternal(const std::string& textureAssetPath, const TextureImportOption& textureImportOption, TextureType textureType)
+    LoadTextureInternal(const std::string & textureAssetPath, const TextureImportOption & textureImportOption, TextureType textureType)
     {
         if (GetFileExist(textureAssetPath))
         {
@@ -204,10 +196,10 @@ private:
     }
 
     std::shared_ptr<Texture1d>
-    LoadTexture1dInternal(const TextureImportOption& textureImportOption, cereal::PortableBinaryInputArchive& textureAssetArchive) const;
+    LoadTexture1dInternal(const TextureImportOption & textureImportOption, cereal::PortableBinaryInputArchive & textureAssetArchive) const;
 
     std::shared_ptr<Texture2d>
-    LoadTexture2dInternal(const TextureImportOption& textureImportOption, cereal::PortableBinaryInputArchive& textureAssetArchive) const;
+    LoadTexture2dInternal(const TextureImportOption & textureImportOption, cereal::PortableBinaryInputArchive & textureAssetArchive) const;
 
 private:
     AssetImporter                                       *mImporter;
@@ -217,6 +209,6 @@ private:
     std::map<std::string, std::shared_ptr<ShaderSource>> mShaderSourceTable;    // Index is file path.
     std::map<std::string, std::shared_ptr<Texture>>      mTextureTable;         // Index is file path.
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

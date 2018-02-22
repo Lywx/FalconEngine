@@ -4,9 +4,9 @@
 
 #include <limits>
 
+#include <FalconEngine/Core/Memory.h>
 #include <FalconEngine/Graphics/Renderer/Viewport.h>
 #include <FalconEngine/Graphics/Renderer/Window.h>
-
 #include <FalconEngine/Math/Color.h>
 #include <FalconEngine/Math/Vector2.h>
 #include <FalconEngine/Math/Vector4.h>
@@ -40,16 +40,7 @@ class GameEngineSettings;
 
 FALCON_ENGINE_CLASS_BEGIN GameEngineGraphics
 {
-public:
-    /************************************************************************/
-    /* Static Members                                                       */
-    /************************************************************************/
-    static GameEngineGraphics *
-    GetInstance()
-    {
-        static GameEngineGraphics sInstance;
-        return &sInstance;
-    }
+    FALCON_ENGINE_SINGLETON_SAFE_DECLARE(GameEngineGraphics);
 
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -82,10 +73,6 @@ public:
     void
     UpdateFrame(double elapsed);
 
-private:
-    void
-    Destroy();
-
 public:
     DebugRenderer *
     GetDebugRenderer() const
@@ -112,11 +99,11 @@ public:
     }
 
 private:
-    DebugRenderer      *mDebugRenderer;
-    EntityRenderer     *mEntityRenderer;
-    FontRenderer       *mFontRenderer;
-    Renderer           *mMasterRenderer;
-    UiRenderer         *mUiRenderer;
+    DebugRenderer *mDebugRenderer;
+    EntityRenderer *mEntityRenderer;
+    FontRenderer *mFontRenderer;
+    Renderer *mMasterRenderer;
+    UiRenderer *mUiRenderer;
 };
 FALCON_ENGINE_CLASS_END
 

@@ -35,6 +35,11 @@ EntityRenderer::Draw(const Camera *camera, const Entity *entity)
 }
 
 void
+EntityRenderer::Destroy()
+{
+}
+
+void
 EntityRenderer::Initialize()
 {
 }

@@ -75,6 +75,9 @@ public:
     /* Rendering Engine API                                                 */
     /************************************************************************/
     void
+    Destroy();
+
+    void
     Initialize();
 
     void

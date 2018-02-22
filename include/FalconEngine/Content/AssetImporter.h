@@ -5,6 +5,8 @@
 #include <list>
 #include <unordered_map>
 
+#include <FalconEngine/Core/Exception.h>
+#include <FalconEngine/Core/Memory.h>
 #include <FalconEngine/Content/Asset.h>
 #include <FalconEngine/Content/CustomImporter.h>
 #include <FalconEngine/Graphics/Renderer/Scene/Model.h>
@@ -19,21 +21,11 @@ class CustomImporter;
 class Mesh;
 class ModelImportOption;
 
-#pragma warning(disable: 4251)
 // NEW(Wuxiang): Support multi-threading asset importing.
 // @remark Represents a thread-safe asset importer.
-class FALCON_ENGINE_API AssetImporter final
+FALCON_ENGINE_CLASS_BEGIN AssetImporter final
 {
-public:
-    /************************************************************************/
-    /* Static Members                                                       */
-    /************************************************************************/
-    static AssetImporter *
-    GetInstance()
-    {
-        static AssetImporter sAssetImporter;
-        return &sAssetImporter;
-    }
+    FALCON_ENGINE_SINGLETON_LEAK_DECLARE(AssetImporter);
 
 private:
     /************************************************************************/
@@ -51,9 +43,9 @@ public:
 
     template <typename T>
     void
-    Import(_IN_OUT_ Asset             *asset,
-           _IN_     const std::string& assetFilePath,
-           _IN_     const T&           assetImportOption)
+    Import(_IN_OUT_ Asset             * asset,
+           _IN_     const std::string & assetFilePath,
+           _IN_     const T &           assetImportOption)
     {
         // NEW(Wuxiang): Unified asset importing.
         switch (asset->mAssetType)
@@ -79,9 +71,9 @@ public:
 private:
     template <typename U, typename V>
     void
-    ImportDispatch(_IN_OUT_ U                 *asset,
-                   _IN_     const std::string& assetFilePath,
-                   _IN_     const V&           assetImportOption)
+    ImportDispatch(_IN_OUT_ U                 * asset,
+                   _IN_     const std::string & assetFilePath,
+                   _IN_     const V &           assetImportOption)
     {
         // Find replacement importer.
         auto replacementImporterIter = mCustomImporterReplacementTable.find(int(asset->mAssetType));
@@ -132,12 +124,12 @@ private:
     }
 
     bool
-    ImportInternal(Model *model, const std::string& modelFilePath, const ModelImportOption& modelImportOption);
+    ImportInternal(Model * model, const std::string & modelFilePath, const ModelImportOption & modelImportOption);
 
 private:
     std::unordered_map<int, std::list<std::shared_ptr<CustomImporter>>> mCustomImporterReplacementTable;
     std::unordered_map<int, std::list<std::shared_ptr<CustomImporter>>> mCustomImporterSupplementTable;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

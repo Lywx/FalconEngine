@@ -167,7 +167,6 @@ Renderer::InitializeStatePlatform()
 void
 Renderer::DestroyPlatform()
 {
-    FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
 }
 
 /************************************************************************/

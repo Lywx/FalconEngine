@@ -9,8 +9,11 @@ out Vout
     vec4 Color;
 } vout;
  
-uniform mat4 ModelViewProjectionTransform;
-uniform vec4 Color;
+layout(std140) uniform PaintBuffer
+{
+    mat4 ModelViewProjectionTransform;
+    vec4 Color;
+};
 
 void 
 main()

@@ -215,6 +215,14 @@ DebugRenderer::SetCamera(const Camera *camera)
 /* Rendering Engine API                                                 */
 /************************************************************************/
 void
+DebugRenderer::Destroy()
+{
+    mDebugBufferGroup.reset();
+    mDebugEffectParams.reset();
+    mDebugMessageManager.reset();
+}
+
+void
 DebugRenderer::Initialize()
 {
     // Allocate necessary resource.
@@ -311,7 +319,7 @@ DebugRenderer::UpdateFrame(double elapsed)
     }
 
     mDebugBufferGroup->FillDataBegin(
-        ResourceMapAccessMode::WriteBuffer,
+        ResourceMapAccessMode::WriteRangeContinue,
         ResourceMapFlushMode::Automatic,
         ResourceMapSyncMode::Unsynchronized);
 

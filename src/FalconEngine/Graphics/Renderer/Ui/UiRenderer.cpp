@@ -3,12 +3,23 @@
 namespace FalconEngine
 {
 
+/************************************************************************/
+/* Constructors and Destructor                                          */
+/************************************************************************/
 UiRenderer::UiRenderer()
 {
-    // TODO(Wuxiang).
+    // TODO(Wuxiang): Add UI renderer.
 }
 
 UiRenderer::~UiRenderer()
+{
+}
+
+/************************************************************************/
+/* Rendering Engine API                                                 */
+/************************************************************************/
+void
+UiRenderer::Destroy()
 {
 }
 

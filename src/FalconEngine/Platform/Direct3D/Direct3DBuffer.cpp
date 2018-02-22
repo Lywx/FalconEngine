@@ -29,7 +29,6 @@ PlatformBuffer::PlatformBuffer(Renderer *renderer, const Buffer *buffer) :
 
 PlatformBuffer::~PlatformBuffer()
 {
-    mBufferObj.Reset();
 }
 
 /************************************************************************/

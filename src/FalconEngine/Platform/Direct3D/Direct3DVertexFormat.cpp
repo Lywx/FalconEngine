@@ -27,7 +27,6 @@ PlatformVertexFormat::PlatformVertexFormat(Renderer *renderer, const VertexForma
 
 PlatformVertexFormat::~PlatformVertexFormat()
 {
-    mInputLayout.Reset();
 }
 
 /************************************************************************/

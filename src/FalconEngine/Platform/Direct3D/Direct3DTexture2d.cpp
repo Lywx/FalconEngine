@@ -94,6 +94,7 @@ PlatformTexture2d::CreateTexture(ID3D11Device4 *device)
     auto storageMode = mTexturePtr->GetStorageMode();
     if (storageMode == ResourceStorageMode::Device)
     {
+        // Do nothing.
     }
     else if (storageMode == ResourceStorageMode::Host)
     {

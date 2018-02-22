@@ -128,10 +128,8 @@ public:
 class FALCON_ENGINE_API HandednessRight : public Handedness
 {
 public:
-    /************************************************************************/
-    /* Static Members                                                       */
-    /************************************************************************/
-    static Handedness *GetInstance()
+    static Handedness *
+    GetInstance()
     {
         static HandednessRight sHandedness;
         return &sHandedness;

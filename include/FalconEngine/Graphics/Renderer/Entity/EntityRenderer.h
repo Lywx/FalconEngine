@@ -6,6 +6,7 @@
 #include <map>
 #include <queue>
 
+#include <FalconEngine/Core/Memory.h>
 #include <FalconEngine/Math/Color.h>
 
 namespace FalconEngine
@@ -18,19 +19,9 @@ class Primitive;
 class Renderer;
 class Visual;
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API EntityRenderer final
+FALCON_ENGINE_CLASS_BEGIN EntityRenderer final
 {
-    /************************************************************************/
-    /* Static Members                                                       */
-    /************************************************************************/
-public:
-    static EntityRenderer *
-    GetInstance()
-    {
-        static EntityRenderer sInstance;
-        return &sInstance;
-    }
+    FALCON_ENGINE_SINGLETON_SAFE_DECLARE(EntityRenderer);
 
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -46,7 +37,7 @@ public:
     /* Rendering API                                                        */
     /************************************************************************/
     void
-    Draw(const Camera *camera, const Entity *entity);
+    Draw(const Camera * camera, const Entity * entity);
 
     /************************************************************************/
     /* Rendering Engine API                                                 */
@@ -65,8 +56,7 @@ public:
 
 private:
     std::map<const Camera *, std::vector<const Entity *>> mEntityListTable;
-
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

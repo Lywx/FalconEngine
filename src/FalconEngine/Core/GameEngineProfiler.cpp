@@ -7,6 +7,11 @@ namespace FalconEngine
 /* Public Members                                                       */
 /************************************************************************/
 void
+GameEngineProfiler::Destroy()
+{
+}
+
+void
 GameEngineProfiler::Initialize()
 {
 }

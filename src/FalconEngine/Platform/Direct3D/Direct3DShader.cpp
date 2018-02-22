@@ -36,13 +36,6 @@ PlatformShader::PlatformShader(Renderer *renderer, Shader *shader) :
 
 PlatformShader::~PlatformShader()
 {
-    for (auto shader : mShaders)
-    {
-        if (shader)
-        {
-            shader.Reset();
-        }
-    }
 }
 
 /************************************************************************/

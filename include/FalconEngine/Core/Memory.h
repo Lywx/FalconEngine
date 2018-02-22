@@ -67,3 +67,22 @@ PlatformDeleterClass::operator()(PlatformClass *platformClass) \
 { \
     delete platformClass; \
 }
+
+// NOTE(Wuxiang): On concern about static method copy in different translation unit, read:
+// http://stackoverflow.com/questions/5372091/are-static-member-functions-in-c-copied-in-multiple-translation-units
+// http://stackoverflow.com/questions/12248747/singleton-with-multithreads
+#define FALCON_ENGINE_SINGLETON_LEAK_DECLARE(SingletonClass) \
+public: \
+    static SingletonClass * \
+    GetInstance() \
+    { \
+        static SingletonClass sInstance; \
+        return &sInstance; \
+    } \
+
+#define FALCON_ENGINE_SINGLETON_SAFE_DECLARE(SingletonClass) \
+FALCON_ENGINE_SINGLETON_LEAK_DECLARE(SingletonClass) \
+public: \
+    void \
+    Destroy();
+

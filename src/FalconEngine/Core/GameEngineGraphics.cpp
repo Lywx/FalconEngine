@@ -4,6 +4,7 @@
 #include <FalconEngine/Graphics/Renderer/Debug/DebugRenderer.h>
 #include <FalconEngine/Graphics/Renderer/Entity/EntityRenderer.h>
 #include <FalconEngine/Graphics/Renderer/Font/FontRenderer.h>
+#include <FalconEngine/Graphics/Renderer/Ui/UiRenderer.h>
 
 namespace FalconEngine
 {
@@ -22,7 +23,6 @@ GameEngineGraphics::GameEngineGraphics() :
 
 GameEngineGraphics::~GameEngineGraphics()
 {
-    Destroy();
 }
 
 /************************************************************************/
@@ -49,6 +49,11 @@ GameEngineGraphics::Initialize()
 void
 GameEngineGraphics::Destroy()
 {
+    mDebugRenderer->Destroy();
+    mEntityRenderer->Destroy();
+    mFontRenderer->Destroy();
+    mMasterRenderer->Destroy();
+    mUiRenderer->Destroy();
 }
 
 void

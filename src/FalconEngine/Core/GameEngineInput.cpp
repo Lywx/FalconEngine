@@ -23,6 +23,11 @@ GameEngineInput::~GameEngineInput()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
+void
+GameEngineInput::Destroy()
+{
+}
+
 KeyboardState *
 GameEngineInput::GetKeyboardState() const
 {

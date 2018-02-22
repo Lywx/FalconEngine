@@ -112,18 +112,50 @@ Renderer::Renderer() :
 
 Renderer::~Renderer()
 {
-    DestroyData();
-    DestroyPlatform();
 }
 
 /************************************************************************/
 /* Initialization and Destroy                                           */
 /************************************************************************/
 void
+Renderer::Destroy()
+{
+    DestroyData();
+    DestroyPlatform();
+}
+
+void
 Renderer::Initialize()
 {
     InitializeData();
     InitializePlatform();
+}
+
+void
+Renderer::DestroyData()
+{
+    DestroyResource();
+
+    mData.reset();
+    mState.reset();
+}
+
+void
+Renderer::DestroyResource()
+{
+    FALCON_ENGINE_RENDERER_UNBIND_EVERYTHING(mIndexBufferTable);
+    FALCON_ENGINE_RENDERER_UNBIND_EVERYTHING(mShaderBufferTable);
+    FALCON_ENGINE_RENDERER_UNBIND_EVERYTHING(mUniformBufferTable);
+    FALCON_ENGINE_RENDERER_UNBIND_EVERYTHING(mVertexBufferTable);
+
+    FALCON_ENGINE_RENDERER_UNBIND_EVERYTHING(mTexture1dTable);
+    FALCON_ENGINE_RENDERER_UNBIND_EVERYTHING(mTexture1dArrayTable);
+    FALCON_ENGINE_RENDERER_UNBIND_EVERYTHING(mTexture2dTable);
+    FALCON_ENGINE_RENDERER_UNBIND_EVERYTHING(mTexture2dArrayTable);
+
+    FALCON_ENGINE_RENDERER_UNBIND_EVERYTHING(mShaderTable);
+    FALCON_ENGINE_RENDERER_UNBIND_EVERYTHING(mSamplerTable);
+    FALCON_ENGINE_RENDERER_UNBIND_EVERYTHING(mVertexFormatTable);
 }
 
 void
@@ -155,11 +187,6 @@ Renderer::InitializeData()
     mOffsetStateCurrent = mOffsetStateDefault.get();
     mStencilTestStateCurrent = mStencilTestStateDefault.get();
     mWireframeStateCurrent = mWireframeStateDefault.get();
-}
-
-void
-Renderer::DestroyData()
-{
 }
 
 /************************************************************************/

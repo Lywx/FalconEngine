@@ -1,8 +1,8 @@
 #pragma once
 
 #include <FalconEngine/Core/Macro.h>
-
 #include <FalconEngine/Core/Memory.h>
+
 // NOTE(Wuxiang): Necessary for template parameter checking.
 #include <FalconEngine/Graphics/Renderer/PrimitivePoints.h>
 #include <FalconEngine/Graphics/Renderer/PrimitiveLines.h>
@@ -30,19 +30,9 @@ class Node;
 
 class Renderer;
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API DebugRenderer final
+FALCON_ENGINE_CLASS_BEGIN DebugRenderer final
 {
-    /************************************************************************/
-    /* Static Members                                                       */
-    /************************************************************************/
-public:
-    static DebugRenderer *
-    GetInstance()
-    {
-        static DebugRenderer sInstance;
-        return &sInstance;
-    }
+    FALCON_ENGINE_SINGLETON_SAFE_DECLARE(DebugRenderer);
 
     /************************************************************************/
     /* Constructors and Destructor                                          */
@@ -58,54 +48,54 @@ public:
     /************************************************************************/
     // @summary Recursively draw AABB for the entity.
     void
-    AddAabb(const Entity *entity,
-            const Color&  color,
-            float         duration = 0.0f,
-            bool          depthEnabled = true);
+    AddAabb(const Entity * entity,
+            const Color & color,
+            float duration = 0.0f,
+            bool depthEnabled = true);
 
     // @summary Recursively draw AABB for the node.
     void
-    AddAabb(const Node   *node,
-            const Color&  color,
+    AddAabb(const Node   * node,
+            const Color &  color,
             float         duration = 0.0f,
             bool          depthEnabled = true);
 
     void
-    AddAabb(const Visual *visual,
-            const Color&  color,
+    AddAabb(const Visual * visual,
+            const Color &  color,
             float         duration = 0.0f,
             bool          depthEnabled = true);
 
     void
-    AddAabb(const Vector3f& min,
-            const Vector3f& max,
+    AddAabb(const Vector3f & min,
+            const Vector3f & max,
 
-            const Color&    color,
+            const Color &    color,
             float           duration = 0.0f,
             bool            depthEnabled = true);
 
     void
-    AddCircle(const Vector3f& center,
-              const Vector3f& normal,
+    AddCircle(const Vector3f & center,
+              const Vector3f & normal,
               float           radius,
 
-              const Color&    color,
+              const Color &    color,
               float           duration = 0.0f,
               bool            depthEnabled = true);
 
     void
-    AddCross(const Vector3f& center,
+    AddCross(const Vector3f & center,
              float           radius,
 
-             const Color&    color,
+             const Color &    color,
              float           duration = 0.0f,
              bool            depthEnabled = true);
 
     void
-    AddLine(const Vector3f& from,
-            const Vector3f& to,
+    AddLine(const Vector3f & from,
+            const Vector3f & to,
 
-            const Color&    color,
+            const Color &    color,
             float           duration = 0.0f,
             bool            depthEnabled = true);
 
@@ -118,10 +108,10 @@ public:
     //        bool            depthEnabled = true);
 
     void
-    AddSphere(const Vector3f& center,
+    AddSphere(const Vector3f & center,
               float           radius,
 
-              const Color&    color,
+              const Color &    color,
               float           duration = 0.0f,
               bool            depthEnabled = true);
 
@@ -129,8 +119,8 @@ public:
 
     // @summary Render 2d text on screen space.
     void
-    AddText(const std::string& text,
-            const Vector2f&    textPosition,
+    AddText(const std::string & text,
+            const Vector2f &    textPosition,
             float              fontSize = 16.0f,
             const Color&       color = ColorPalette::White,
             float              duration = 0.0f,
@@ -141,7 +131,7 @@ public:
     /* Camera API                                                           */
     /************************************************************************/
     void
-    SetCamera(const Camera *camera);
+    SetCamera(const Camera * camera);
 
     /************************************************************************/
     /* Rendering Engine API                                                 */
@@ -177,11 +167,11 @@ private:
                       "must be primitive type.");
 
         auto vertexBuffer = make_shared<VertexBuffer>(
-                                channelElementNum,
-                                sizeof(Detail::DebugVertexData),
-                                ResourceCreationAccessMode::GpuReadCpuWrite,
-                                ResourceCreationAccessUsage::Stream,
-                                ResourceStorageMode::Device);
+            channelElementNum,
+            sizeof(Detail::DebugVertexData),
+            ResourceCreationAccessMode::GpuReadCpuWrite,
+            ResourceCreationAccessUsage::Stream,
+            ResourceStorageMode::Device);
 
         auto vertexBufferAdaptor = make_shared<BufferCircular>(vertexBuffer, vertexBuffer->GetCapacitySize() / 4);
 
@@ -205,6 +195,6 @@ private:
     std::shared_ptr<DebugEffectParams> mDebugEffectParams;
     std::shared_ptr<DebugRenderMessageManager> mDebugMessageManager;
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

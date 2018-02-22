@@ -5,6 +5,8 @@
 #include <memory>
 #include <vector>
 
+#include <FalconEngine/Core/Memory.h>
+
 namespace FalconEngine
 {
 
@@ -27,12 +29,7 @@ public:
     /************************************************************************/
     /* Static Members                                                       */
     /************************************************************************/
-    static GameEngineInput *
-    GetInstance()
-    {
-        static GameEngineInput sInstance;
-        return &sInstance;
-    }
+    FALCON_ENGINE_SINGLETON_SAFE_DECLARE(GameEngineInput);
 
     /************************************************************************/
     /* Constructors and Destructor                                          */

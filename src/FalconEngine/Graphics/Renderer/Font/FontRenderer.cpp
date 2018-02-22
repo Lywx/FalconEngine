@@ -78,6 +78,12 @@ FontRenderer::AddText(const Font *font,
 /* Rendering Engine API                                                 */
 /************************************************************************/
 void
+FontRenderer::Destroy()
+{
+    mTextBufferGroup.reset();
+}
+
+void
 FontRenderer::Initialize()
 {
 }

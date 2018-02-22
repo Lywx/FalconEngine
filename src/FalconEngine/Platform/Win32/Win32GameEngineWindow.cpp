@@ -88,6 +88,7 @@ GameEngineWindowProcess(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
     // NOTE(Wuxiang): Input messages.
     case WM_KEYDOWN:
+    case WM_KEYUP:
     {
         gameEngineWindow->ProcessKeyEvent(GetKey(wParam), message == WM_KEYDOWN);
     }

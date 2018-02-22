@@ -9,8 +9,8 @@
 namespace FalconEngine
 {
 
-#pragma warning(disable: 4251)
-class FALCON_ENGINE_API KeyboardState final : private std::unordered_map<Key, KeyState>
+FALCON_ENGINE_CLASS_BEGIN KeyboardState final :
+private std::unordered_map<Key, KeyState>
 {
 public:
     KeyboardState();
@@ -18,6 +18,9 @@ public:
 public:
     bool
     KeyPressed(Key key) const;
+
+    bool
+    KeyReleased(Key key) const;
 
     bool
     KeyDown(Key key) const;
@@ -37,11 +40,11 @@ public:
 
 private:
     void
-    UpdateKey(KeyState& keyState,
+    UpdateKey(KeyState & keyState,
               bool      keyPressedCurrent,
               bool      keyPressedPrevious,
               double    timeCurrent);
 };
-#pragma warning(default: 4251)
+FALCON_ENGINE_CLASS_END
 
 }

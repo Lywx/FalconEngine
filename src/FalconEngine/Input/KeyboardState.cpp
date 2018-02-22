@@ -20,6 +20,12 @@ KeyboardState::KeyPressed(Key key) const
 }
 
 bool
+KeyboardState::KeyReleased(Key key) const
+{
+    return !at(key).mPressed;
+}
+
+bool
 KeyboardState::KeyUp(Key key) const
 {
     return at(key).mUp;

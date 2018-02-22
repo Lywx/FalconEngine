@@ -16,7 +16,7 @@ namespace FalconEngine
 {
 
 Key
-GetKey(WPARAM wParam)
+GetKey(UINT message, WPARAM wParam)
 {
     auto key = Key::Unknown;
     switch (wParam)
@@ -25,39 +25,81 @@ GetKey(WPARAM wParam)
     {
         // TODO(Wuxiang): Test this.
         // https://msdn.microsoft.com/en-us/library/windows/desktop/gg153546(v=vs.85).aspx
-        if (GetKeyState(VK_LMENU) & 0x8000)
+        if (message == WM_KEYDOWN)
         {
-            key = Key::LeftAlt;
+            if (GetKeyState(VK_LMENU) & 0x8000)
+            {
+                key = Key::LeftAlt;
+            }
+            else
+            {
+                key = Key::RightAlt;
+            }
         }
         else
         {
-            key = Key::RightAlt;
+            if (GetKeyState(VK_LMENU) & 0x8000)
+            {
+                key = Key::RightAlt;
+            }
+            else
+            {
+                key = Key::LeftAlt;
+            }
         }
     }
     break;
 
     case VK_CONTROL:
     {
-        if (GetKeyState(VK_LCONTROL) & 0x8000)
+        if (message == WM_KEYDOWN)
         {
-            key = Key::LeftControl;
+            if (GetKeyState(VK_LCONTROL) & 0x8000)
+            {
+                key = Key::LeftControl;
+            }
+            else
+            {
+                key = Key::RightControl;
+            }
         }
         else
         {
-            key = Key::RightControl;
+            if (GetKeyState(VK_LCONTROL) & 0x8000)
+            {
+                key = Key::RightControl;
+            }
+            else
+            {
+                key = Key::LeftControl;
+            }
         }
     }
     break;
 
     case VK_SHIFT:
     {
-        if (GetKeyState(VK_LSHIFT) & 0x8000)
+        if (message == WM_KEYDOWN)
         {
-            key = Key::LeftShift;
+            if (GetKeyState(VK_LSHIFT) & 0x8000)
+            {
+                key = Key::LeftShift;
+            }
+            else
+            {
+                key = Key::RightShift;
+            }
         }
         else
         {
-            key = Key::RightShift;
+            if (GetKeyState(VK_LSHIFT) & 0x8000)
+            {
+                key = Key::RightShift;
+            }
+            else
+            {
+                key = Key::LeftShift;
+            }
         }
     }
     break;
@@ -90,7 +132,7 @@ GameEngineWindowProcess(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_KEYDOWN:
     case WM_KEYUP:
     {
-        gameEngineWindow->ProcessKeyEvent(GetKey(wParam), message == WM_KEYDOWN);
+        gameEngineWindow->ProcessKeyEvent(GetKey(message, wParam), message == WM_KEYDOWN);
     }
     break;
 

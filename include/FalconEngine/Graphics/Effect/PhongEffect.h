@@ -73,7 +73,7 @@ namespace Detail
 {
 
 #pragma pack(push, 4)
-struct PhongTrasnformBufferData
+struct PhongTransformBufferData
 {
     Matrix4f mModelViewProjectionTransform;
     Matrix4f mModelViewTransform;

@@ -110,7 +110,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
     using namespace placeholders;
 
     // Transform
-    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_BEGIN(instance, 0, Detail::PhongTrasnformBufferData, "TransformBuffer", = )
+    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_BEGIN(instance, 0, Detail::PhongTransformBufferData, "TransformBuffer", = )
     {
         data->mModelViewProjectionTransform = camera->GetViewProjection() * visual->mWorldTransform;
         data->mModelViewTransform = camera->GetView() * visual->mWorldTransform;

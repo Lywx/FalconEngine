@@ -101,8 +101,8 @@ PhongEffect::CreateInstance(
 /* Protected Members                                                    */
 /************************************************************************/
 void
-PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                     *instance,
-                                _IN_     const std::shared_ptr<Material>&          material,
+PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance *instance,
+                                _IN_     const std::shared_ptr<Material>& material,
                                 _IN_     const std::shared_ptr<PhongEffectParams>& params) const
 {
     // NEW(Wuxiang): Implement spot lights?

@@ -28,7 +28,7 @@ main(Vin vin)
 {
     Vout vout;
 
-    vout.Position  = mul(float4(vin.Position, 0.0, 1.0), ProjectionTransform);
+    vout.Position  = mul(ProjectionTransform, float4(vin.Position, 0.0, 1.0));
     vout.TexCoord  = vin.TexCoord;
     vout.FontColor = vin.FontColor;
     vout.FontEdge  = vin.FontEdge;

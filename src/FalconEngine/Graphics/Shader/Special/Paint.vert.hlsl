@@ -23,7 +23,7 @@ main(Vin vin)
     Vout vout;
 
     vout.Color = Color;
-    vout.Position = mul(float4(vin.Position, 1.0), ModelViewProjectionTransform); 
+    vout.Position = mul(ModelViewProjectionTransform, float4(vin.Position, 1.0)); 
 
     return vout;
 }

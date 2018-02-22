@@ -15,9 +15,10 @@ Texture2dArray::Texture2dArray(int width,
                                TextureFormat format,
                                ResourceCreationAccessMode accessMode,
                                ResourceCreationAccessUsage accessUsage,
+                               ResourceStorageMode storageMode,
                                int mipmapLevel) :
     Texture2dArray(AssetSource::Virtual, "None", "None",
-                   width, height, depth, format, accessMode, accessUsage, mipmapLevel)
+                   width, height, depth, format, accessMode, accessUsage, storageMode, mipmapLevel)
 {
 }
 
@@ -30,13 +31,14 @@ Texture2dArray::Texture2dArray(AssetSource assetSource,
                                TextureFormat format,
                                ResourceCreationAccessMode accessMode,
                                ResourceCreationAccessUsage accessUsage,
+                               ResourceStorageMode storageMode,
                                int mipmapLevel) :
     Texture2d(assetSource, fileName, filePath,
               // An array texture is a Texture where each mipmap level contains
               // an array of images of the same size.
               width, height, depth, format,
               TextureType::Texture2dArray, accessMode, accessUsage,
-              ResourceStorageMode::Device, mipmapLevel)
+              storageMode, mipmapLevel)
 {
 }
 

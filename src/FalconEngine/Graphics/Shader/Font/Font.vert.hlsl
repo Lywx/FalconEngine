@@ -8,9 +8,9 @@ struct Vin
     float2 Position  : POSITION0;
     float2 TexCoord  : TEXCOORD1;
     float4 FontColor : FONTCOLOR2;
-    float  FontEdge  : FONTEDGE3;
-    float  FontPage  : FONTPAGE4;
-    float  FontWidth : FONTWIDTH5;
+    float  FontWidth : FONTWIDTH3;
+    float  FontEdge  : FONTEDGE4;
+    float  FontPage  : FONTPAGE5;
 };
 
 struct Vout

@@ -87,28 +87,37 @@ PlatformTexture2d::CreateTexture(ID3D11Device4 *device)
     textureDesc.SampleDesc.Count = 1;
     textureDesc.SampleDesc.Quality = 0;
 
-    struct D3D11_SUBRESOURCE_DATA *initialData = nullptr;
-    D3D11_SUBRESOURCE_DATA subresourceData;
-    subresourceData.pSysMem = mTexturePtr->GetData();
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ff476220(v=vs.85).aspx
-    subresourceData.SysMemPitch = UINT(mTexturePtr->GetDimension(0) * mTexturePtr->GetTexelSize());
-    subresourceData.SysMemSlicePitch = 0;
+    D3D11_SUBRESOURCE_DATA *initialDataAddress = nullptr;
+    std::vector<D3D11_SUBRESOURCE_DATA> initialDataList;
+    initialDataList.reserve(mDimension[2]);
 
     auto storageMode = mTexturePtr->GetStorageMode();
     if (storageMode == ResourceStorageMode::Device)
     {
-        // Do nothing.
     }
     else if (storageMode == ResourceStorageMode::Host)
     {
-        initialData = &subresourceData;
+        for (int textureIndex = 0; textureIndex < mDimension[2]; ++textureIndex)
+        {
+            auto textureSlice = mTexturePtr->GetSlice(textureIndex);
+
+            D3D11_SUBRESOURCE_DATA subresourceData;
+            subresourceData.pSysMem = textureSlice->GetData();
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/ff476220(v=vs.85).aspx
+            subresourceData.SysMemPitch = UINT(textureSlice->GetDimension(0) * textureSlice->GetTexelSize());
+            subresourceData.SysMemSlicePitch = 0;
+
+            initialDataList.push_back(subresourceData);
+        }
+
+        initialDataAddress = initialDataList.data();
     }
     else
     {
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
 
-    D3DCheckSuccess(device->CreateTexture2D(&textureDesc, initialData, mTextureObj.ReleaseAndGetAddressOf()));
+    D3DCheckSuccess(device->CreateTexture2D(&textureDesc, initialDataAddress, mTextureObj.ReleaseAndGetAddressOf()));
 }
 
 }

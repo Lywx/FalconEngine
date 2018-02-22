@@ -176,7 +176,11 @@ AssetManager::LoadFontInternal(const std::string& fontAssetPath)
                                        fontPage0Texture->GetDimension(0),
                                        fontPage0Texture->GetDimension(1),
                                        font->mTexturePages,
-                                       TextureFormat::R8G8B8A8_UINT);
+                                       TextureFormat::R8G8B8A8_UINT,
+                                       ResourceCreationAccessMode::GpuRead,
+                                       ResourceCreationAccessUsage::Static,
+                                       ResourceStorageMode::Host);
+            fontPageTextureArray->SetAttachmentEnabled(TextureMode::Texture);
         }
 
         // Load the other textures.

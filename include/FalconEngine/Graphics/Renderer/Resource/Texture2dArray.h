@@ -25,7 +25,9 @@ public:
                    TextureFormat format,
                    ResourceCreationAccessMode accessMode = ResourceCreationAccessMode::GpuRead,
                    ResourceCreationAccessUsage accessUsage = ResourceCreationAccessUsage::Static,
+                   ResourceStorageMode storageMode = ResourceStorageMode::Host,
                    int mipmapLevel = 0);
+
     Texture2dArray(AssetSource assetSource,
                    const std::string & fileName,
                    const std::string & filePath,
@@ -35,7 +37,9 @@ public:
                    TextureFormat format,
                    ResourceCreationAccessMode accessMode = ResourceCreationAccessMode::GpuRead,
                    ResourceCreationAccessUsage accessUsage = ResourceCreationAccessUsage::Static,
+                   ResourceStorageMode storageMode = ResourceStorageMode::Host,
                    int mipmapLevel = 0);
+
     virtual ~Texture2dArray();
 
 public:

@@ -84,6 +84,8 @@ PlatformTexture1d::CreateTexture(ID3D11Device4 *device)
     struct D3D11_SUBRESOURCE_DATA *initialData = nullptr;
     D3D11_SUBRESOURCE_DATA subresourceData;
     subresourceData.pSysMem = mTexturePtr->GetData();
+
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/ff476220(v=vs.85).aspx
     subresourceData.SysMemPitch = UINT(mTexturePtr->GetDataSize());
     subresourceData.SysMemSlicePitch = 0;
 

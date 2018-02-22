@@ -68,34 +68,35 @@ PlatformSampler::Disable(Renderer *renderer, int textureUnit, unsigned int shade
 {
     auto context = renderer->mData->GetContext();
 
+    ID3D11SamplerState *nullSampler[] = { nullptr };
     if (GetShaderEnabled(shaderMask, ShaderType::VertexShader))
     {
-        context->VSSetSamplers(textureUnit, 1, nullptr);
+        context->VSSetSamplers(textureUnit, 1, nullSampler);
     }
 
     if (GetShaderEnabled(shaderMask, ShaderType::TessellationControlShader))
     {
-        context->HSSetSamplers(textureUnit, 1, nullptr);
+        context->HSSetSamplers(textureUnit, 1, nullSampler);
     }
 
     if (GetShaderEnabled(shaderMask, ShaderType::TessellationEvaluationShader))
     {
-        context->DSSetSamplers(textureUnit, 1, nullptr);
+        context->DSSetSamplers(textureUnit, 1, nullSampler);
     }
 
     if (GetShaderEnabled(shaderMask, ShaderType::GeometryShader))
     {
-        context->GSSetSamplers(textureUnit, 1, nullptr);
+        context->GSSetSamplers(textureUnit, 1, nullSampler);
     }
 
     if (GetShaderEnabled(shaderMask, ShaderType::FragmentShader))
     {
-        context->PSSetSamplers(textureUnit, 1, nullptr);
+        context->PSSetSamplers(textureUnit, 1, nullSampler);
     }
 
     if (GetShaderEnabled(shaderMask, ShaderType::ComputeShader))
     {
-        context->CSSetSamplers(textureUnit, 1, nullptr);
+        context->CSSetSamplers(textureUnit, 1, nullSampler);
     }
 }
 
@@ -115,11 +116,11 @@ PlatformSampler::Create(ID3D11Device4 *device)
     int filter = 0;
     if (minFilter == SamplerMinificationFilter::Linear)
     {
-        filter += 1 << 2;
+        filter += 1 << 4;
     }
     if (magFilter == SamplerMagnificationFilter::Linear)
     {
-        filter += 1 << 1;
+        filter += 1 << 2;
     }
     if (mipmapFilter == SamplerMipmapFilter::Linear)
     {

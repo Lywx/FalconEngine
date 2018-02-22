@@ -5,12 +5,12 @@ cbuffer TransformBuffer
 
 struct Vin
 {
-    float2 Position  : POSITION;
-    float2 TexCoord  : TEXCOORD;
-    float4 FontColor : FONTCOLOR;
-    float  FontEdge  : FONTEDGE;
-    float  FontPage  : FONTPAGE;
-    float  FontWidth : FONTWIDTH;
+    float2 Position  : POSITION0;
+    float2 TexCoord  : TEXCOORD1;
+    float4 FontColor : FONTCOLOR2;
+    float  FontEdge  : FONTEDGE3;
+    float  FontPage  : FONTPAGE4;
+    float  FontWidth : FONTWIDTH5;
 };
 
 struct Vout

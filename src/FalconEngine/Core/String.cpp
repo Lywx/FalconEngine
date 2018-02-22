@@ -12,10 +12,7 @@ GetUppercaseString(const std::string& str)
 {
     auto uppercase = str;
 
-    for (char& c : uppercase)
-    {
-        c = char(toupper(c));
-    }
+    std::transform(str.begin(), str.end(), uppercase.begin(), ::toupper);
 
     return uppercase;
 }

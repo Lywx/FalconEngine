@@ -99,7 +99,7 @@ const DXGI_FORMAT Direct3DResourceFormat[int(TextureFormat::Count)] =
 
     DXGI_FORMAT_D16_UNORM,         // D16_UNORM
     DXGI_FORMAT_D24_UNORM_S8_UINT, // D24_UNORM_S8_UINT
-    DXGI_FORMAT_R8G8B8A8_UINT,     // R8G8B8A8_UINT
+    DXGI_FORMAT_R8G8B8A8_UNORM,    // R8G8B8A8_UINT
 };
 
 const D3D11_MAP Direct3DResourceMapMode[int(ResourceMapAccessMode::Count)] =

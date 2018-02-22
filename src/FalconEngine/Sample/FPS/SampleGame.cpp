@@ -132,7 +132,7 @@ SampleGame::Initialize()
         mCamera->LookAt(Vector3f(0, 0, 0), Vector3f(0, 0, -1), Vector3f::UnitY);
 
         static auto sDebugRenderer = DebugRenderer::GetInstance();
-        sDebugRenderer->AddCamera(mCamera.get());
+        sDebugRenderer->SetCamera(mCamera.get());
     }
 }
 

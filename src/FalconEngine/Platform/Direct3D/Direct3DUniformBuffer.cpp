@@ -97,7 +97,7 @@ void *
 PlatformUniformBuffer::Map(Renderer *renderer)
 {
     return PlatformBuffer::Map(renderer,
-                               ResourceMapAccessMode::WriteBuffer,
+                               ResourceMapAccessMode::WriteBufferInvalidateBuffer,
                                ResourceMapFlushMode::Automatic,
                                ResourceMapSyncMode::Unsynchronized,
                                0,

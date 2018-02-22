@@ -217,15 +217,19 @@ DebugRenderer::AddText(const std::string& text,
 /* Camera API                                                           */
 /************************************************************************/
 void
-DebugRenderer::AddCamera(const Camera *camera)
+DebugRenderer::SetCamera(const Camera *camera)
 {
-    mDebugEffectParams->AddCamera(camera);
+    mDebugEffectParams->mCamera = camera;
+
+    UpdateCamera();
 }
 
 void
-DebugRenderer::RemoveCamera(const Camera *camera)
+DebugRenderer::UpdateCamera()
 {
-    mDebugEffectParams->RemoveCamera(camera);
+    auto data = mDebugEffectParams->mCameraBuffer->GetDataCast();
+    data->mViewProjectionTransform = mDebugEffectParams->mCamera->GetViewProjection();
+    mDebugEffectParams->mCameraBuffer->SignalUpdate();
 }
 
 /************************************************************************/
@@ -347,44 +351,35 @@ DebugRenderer::UpdateFrame(double elapsed)
             unsigned char *bufferData;
             std::tie(bufferAdaptor, bufferData) = mDebugBufferGroup->GetChannelData(channel);
 
-            // NOTE(Wuxiang): Text doesn't have a camera parameter. When
-            // cameraIndex is invalid it will not be used.
-            int cameraIndex = 0;
-            if (message.mCamera)
-            {
-                cameraIndex = mDebugEffectParams->mCameraSlotTable.at(message.mCamera);
-            }
-
             // Fill vertex data by inspecting the message.
             switch (message.mType)
             {
             case DebugRenderType::Aabb:
                 DebugRendererHelper::FillAabb(
                     bufferAdaptor, bufferData, message.mFloatVector1,
-                    message.mFloatVector2, message.mColor, cameraIndex);
+                    message.mFloatVector2, message.mColor);
                 break;
             case DebugRenderType::Obb:
                 FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
             case DebugRenderType::Circle:
                 DebugRendererHelper::FillCircle(
                     bufferAdaptor, bufferData, message.mFloatVector1,
-                    message.mFloatVector2, message.mFloat1, message.mColor,
-                    cameraIndex);
+                    message.mFloatVector2, message.mFloat1, message.mColor);
                 break;
             case DebugRenderType::Cross:
                 DebugRendererHelper::FillCross(
                     bufferAdaptor, bufferData, message.mFloatVector1,
-                    message.mFloat1, message.mColor, cameraIndex);
+                    message.mFloat1, message.mColor);
                 break;
             case DebugRenderType::Line:
                 DebugRendererHelper::FillLine(
                     bufferAdaptor, bufferData, message.mFloatVector1,
-                    message.mFloatVector2, message.mColor, cameraIndex);
+                    message.mFloatVector2, message.mColor);
                 break;
             case DebugRenderType::Sphere:
                 DebugRendererHelper::FillSphere(
                     bufferAdaptor, bufferData, message.mFloatVector1,
-                    message.mFloat1, message.mColor, cameraIndex);
+                    message.mFloat1, message.mColor);
                 break;
             case DebugRenderType::Text:
                 break;
@@ -401,14 +396,7 @@ DebugRenderer::UpdateFrame(double elapsed)
     mDebugMessageManager->UpdateFrame(elapsed);
 
     // Update transform uniform.
-    for (auto cameraIndexPair : mDebugEffectParams->mCameraSlotTable)
-    {
-        int cameraIndex = cameraIndexPair.second;
-        auto camera = cameraIndexPair.first;
-
-        mDebugEffectParams->mCameraSlotUniform[cameraIndex]->SetValue(
-            camera->GetViewProjection());
-    }
+    UpdateCamera();
 }
 
 }

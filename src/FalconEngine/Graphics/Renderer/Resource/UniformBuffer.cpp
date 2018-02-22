@@ -29,13 +29,13 @@ UniformBuffer::~UniformBuffer()
 /* Public Members                                                       */
 /************************************************************************/
 bool
-UniformBuffer::IsUpdateNeeded() const
+UniformBuffer::ShouldUpdateContext() const
 {
     return !mValueIsCurrent;
 }
 
 void
-UniformBuffer::UpdateContext(const Camera *, const Visual *, void *)
+UniformBuffer::UpdateContextInternal(const Camera *, const Visual *, void *)
 {
     FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
 }

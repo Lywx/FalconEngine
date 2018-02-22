@@ -33,7 +33,10 @@ PlatformVertexBuffer::Enable(Renderer *renderer, unsigned bindingIndex, int64_t 
 void
 PlatformVertexBuffer::Disable(Renderer *renderer, unsigned bindingIndex)
 {
-    renderer->mData->GetContext()->IASetVertexBuffers(bindingIndex, 1, nullptr, nullptr, nullptr);
+    UINT nullStride = 0;
+    UINT nullOffset = 0;
+    ID3D11Buffer *nullBuffers[] = { nullptr };
+    renderer->mData->GetContext()->IASetVertexBuffers(bindingIndex, 1, nullBuffers, &nullStride, &nullOffset);
 }
 
 }

@@ -2,6 +2,8 @@
 
 #include <FalconEngine/Core/Macro.h>
 
+#include <memory>
+
 #include <FalconEngine/Core/Object.h>
 #include <FalconEngine/Math/Color.h>
 #include <FalconEngine/Math/Vector2.h>
@@ -66,17 +68,17 @@ public:
     Color mSpecularColor = ColorPalette::Transparent;
     float mShininess = 0.0f;
 
-    const Texture2d *mAmbientTexture = nullptr;
-    const Texture2d *mDiffuseTexture = nullptr;
-    const Texture2d *mEmissiveTexture = nullptr;
-    const Texture2d *mSpecularTexture = nullptr;
-    const Texture2d *mShininessTexture = nullptr;
+    std::shared_ptr<Texture2d> mAmbientTexture;
+    std::shared_ptr<Texture2d> mDiffuseTexture;
+    std::shared_ptr<Texture2d> mEmissiveTexture;
+    std::shared_ptr<Texture2d> mSpecularTexture;
+    std::shared_ptr<Texture2d> mShininessTexture;
 
-    const Sampler *mAmbientSampler = nullptr;
-    const Sampler *mDiffuseSampler = nullptr;
-    const Sampler *mEmissiveSampler = nullptr;
-    const Sampler *mSpecularSampler = nullptr;
-    const Sampler *mShininessSampler = nullptr;
+    std::shared_ptr<Sampler> mAmbientSampler;
+    std::shared_ptr<Sampler> mDiffuseSampler;
+    std::shared_ptr<Sampler> mEmissiveSampler;
+    std::shared_ptr<Sampler> mSpecularSampler;
+    std::shared_ptr<Sampler> mShininessSampler;
 };
 FALCON_ENGINE_CLASS_END
 

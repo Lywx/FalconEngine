@@ -220,23 +220,45 @@ AssetManager::LoadShaderSourceInternal(const std::string & shaderFilePath)
 {
     CheckFileExists(shaderFilePath);
 
-    ifstream shaderStream(shaderFilePath.c_str(), ios_base::in);
-    if (shaderStream.good())
+    // Compiled shader
+    if (GetFileExtension(shaderFilePath) == ".bin")
     {
-        string shaderLine, shaderBuffer;
-        while (getline(shaderStream, shaderLine))
+        ifstream shaderStream(shaderFilePath.c_str(), ios::binary);
+        if (shaderStream.good())
         {
-            shaderBuffer.append(shaderLine);
-            shaderBuffer.append("\r\n");
+            ostringstream bindaryStream;
+            auto shaderSource = make_shared<ShaderSource>(AssetSource::Stream, GetFileName(shaderFilePath), shaderFilePath);
+            bindaryStream << shaderStream.rdbuf();
+            shaderSource->mSource = bindaryStream.str();
+            return shaderSource;
         }
-
-        auto shaderSource = make_shared<ShaderSource>(AssetSource::Normal, GetFileName(shaderFilePath), shaderFilePath);
-        shaderSource->mSource = move(shaderBuffer);
-        return shaderSource;
+        else
+        {
+            FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Failed to load the file.");
+        }
     }
+
+    // Raw shader.
     else
     {
-        FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Failed to load the file.");
+        ifstream shaderStream(shaderFilePath.c_str(), ios_base::in);
+        if (shaderStream.good())
+        {
+            string shaderLine, shaderBuffer;
+            while (getline(shaderStream, shaderLine))
+            {
+                shaderBuffer.append(shaderLine);
+                shaderBuffer.append("\r\n");
+            }
+
+            auto shaderSource = make_shared<ShaderSource>(AssetSource::Normal, GetFileName(shaderFilePath), shaderFilePath);
+            shaderSource->mSource = move(shaderBuffer);
+            return shaderSource;
+        }
+        else
+        {
+            FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Failed to load the file.");
+        }
     }
 }
 

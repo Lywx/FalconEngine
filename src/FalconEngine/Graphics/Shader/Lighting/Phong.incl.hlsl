@@ -3,9 +3,9 @@
 
 struct Vin
 {
-    float3 Position : POSITION;
-    float3 Normal : NORMAL;
-    float2 TexCoord : TEXCOORD;
+    float3 Position : POSITION0;
+    float3 Normal : NORMAL1;
+    float2 TexCoord : TEXCOORD2;
 };
 
 struct Vout

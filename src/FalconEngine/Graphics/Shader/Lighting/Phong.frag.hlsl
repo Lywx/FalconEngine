@@ -179,13 +179,14 @@ main(Vout fin, bool frontFacing : SV_IsFrontFace) : SV_TARGET
     float3 eyeV = normalize(-fin.EyePosition); 
 
     float3 frontColor = CalcDirectionalLight(DirectionalLight, eyeN, eyeV, fin.TexCoord);
-    for (int i = 0; i < PointLightNum; ++i) 
+    int i;
+    for (i = 0; i < PointLightNum; ++i) 
     {
         frontColor += CalcPointLight(PointLightArray[i], eyeN, eyeV, fin.EyePosition, fin.TexCoord);
     }
 
     float3 backColor = CalcDirectionalLight(DirectionalLight, -eyeN, eyeV, fin.TexCoord);
-    for (int i = 0; i < PointLightNum; ++i) 
+    for (i = 0; i < PointLightNum; ++i) 
     {
         backColor += CalcPointLight(PointLightArray[i], -eyeN, eyeV, fin.EyePosition, fin.TexCoord);
     }

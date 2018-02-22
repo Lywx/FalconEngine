@@ -199,7 +199,7 @@ PlatformResource::CreateShaderResourceView(ID3D11Device4 *device, D3D11_RESOURCE
         case TextureType::Texture1d:
         {
             viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE1D;
-            viewDesc.Texture1D.MipLevels = texture->GetMipmapLevel();
+            viewDesc.Texture1D.MipLevels = texture->GetMipmapLevel() + 1;
             viewDesc.Texture1D.MostDetailedMip = 0;
         }
         break;
@@ -208,14 +208,14 @@ PlatformResource::CreateShaderResourceView(ID3D11Device4 *device, D3D11_RESOURCE
             viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE1D;
             viewDesc.Texture1DArray.ArraySize = texture->GetDimension(2);
             viewDesc.Texture1DArray.FirstArraySlice = 0;
-            viewDesc.Texture1DArray.MipLevels = texture->GetMipmapLevel();
+            viewDesc.Texture1DArray.MipLevels = texture->GetMipmapLevel() + 1;
             viewDesc.Texture1DArray.MostDetailedMip = 0;
         }
         break;
         case TextureType::Texture2d:
         {
             viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-            viewDesc.Texture2D.MipLevels = texture->GetMipmapLevel();
+            viewDesc.Texture2D.MipLevels = texture->GetMipmapLevel() + 1;
             viewDesc.Texture2D.MostDetailedMip = 0;
         }
         break;
@@ -224,7 +224,7 @@ PlatformResource::CreateShaderResourceView(ID3D11Device4 *device, D3D11_RESOURCE
             viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
             viewDesc.Texture2DArray.ArraySize = texture->GetDimension(2);
             viewDesc.Texture2DArray.FirstArraySlice = 0;
-            viewDesc.Texture2DArray.MipLevels = texture->GetMipmapLevel();
+            viewDesc.Texture2DArray.MipLevels = texture->GetMipmapLevel() + 1;
             viewDesc.Texture2DArray.MostDetailedMip = 0;
         }
         break;

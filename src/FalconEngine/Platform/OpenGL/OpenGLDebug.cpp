@@ -121,8 +121,6 @@ OpenGLDebugInitialize()
 {
     if (glDebugMessageControl != NULL)
     {
-        // TODO(Wuxiang):
-
         // NEW(Wuxiang): Support asynchronous debugging.
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 

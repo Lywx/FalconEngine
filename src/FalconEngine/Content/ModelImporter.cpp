@@ -1,6 +1,7 @@
 #include <FalconEngine/Content/ModelImporter.h>
 #include <FalconEngine/Core/String.h>
 #include <FalconEngine/Graphics/Renderer/Renderer.h>
+#include <FalconEngine/Graphics/Renderer/Resource/Sampler.h>
 
 namespace FalconEngine
 {
@@ -358,6 +359,12 @@ ModelImporter::CreateMaterial(const string& modelFilePath, const aiScene *aiScen
     material->mShininessTexture = LoadMaterialTexture(modelDirectoryPath, aiMaterial, aiTextureType_SHININESS);
     material->mSpecularTexture = LoadMaterialTexture(modelDirectoryPath, aiMaterial, aiTextureType_SPECULAR);
 
+    material->mAmbientSampler = material->mAmbientTexture ? make_shared<Sampler>() : nullptr;
+    material->mDiffuseSampler = material->mDiffuseTexture ? make_shared<Sampler>() : nullptr;
+    material->mEmissiveSampler = material->mEmissiveTexture ? make_shared<Sampler>() : nullptr;
+    material->mShininessSampler = material->mShininessTexture ? make_shared<Sampler>() : nullptr;
+    material->mSpecularSampler = material->mSpecularTexture ? make_shared<Sampler>() : nullptr;
+
     return material;
 }
 
@@ -386,7 +393,7 @@ ModelImporter::GetMaterialFloat(aiMaterial *aiMaterial, const char *param1, int 
     return constant;
 }
 
-Texture2d *
+std::shared_ptr<Texture2d>
 ModelImporter::LoadMaterialTexture(const string& modelDirectoryPath, const aiMaterial *material, aiTextureType materialType)
 {
     // NOTE(Wuxiang): I think most material only has one texture for each texture type.
@@ -407,7 +414,7 @@ ModelImporter::LoadMaterialTexture(const string& modelDirectoryPath, const aiMat
         // NOTE(Wuxiang): Add .bin to file path so that the texture file is
         // loaded from preprocessed asset file.
         auto texture = assetManager->LoadTexture<Texture2d>(modelDirectoryPath + AddAssetExtension(textureFilePath.C_Str()));
-        return texture.get();
+        return texture;
     }
 
     return nullptr;

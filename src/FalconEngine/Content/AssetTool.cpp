@@ -49,22 +49,22 @@ AssetTool::D3DBakeShader(const std::string& shaderFilePath)
     switch (shaderType)
     {
     case ShaderType::VertexShader:
-        shaderProfile = "vs_5_1";
+        shaderProfile = "vs_5_0";
         break;
     case ShaderType::TessellationControlShader:
-        shaderProfile = "hs_5_1";
+        shaderProfile = "hs_5_0";
         break;
     case ShaderType::TessellationEvaluationShader:
-        shaderProfile = "ds_5_1";
+        shaderProfile = "ds_5_0";
         break;
     case ShaderType::GeometryShader:
-        shaderProfile = "gs_5_1";
+        shaderProfile = "gs_5_0";
         break;
     case ShaderType::FragmentShader:
-        shaderProfile = "ps_5_1";
+        shaderProfile = "ps_5_0";
         break;
     case ShaderType::ComputeShader:
-        shaderProfile = "cs_5_1";
+        shaderProfile = "cs_5_0";
         break;
     default:
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
@@ -75,6 +75,10 @@ AssetTool::D3DBakeShader(const std::string& shaderFilePath)
     if (output.first != 0)
     {
         OpenMessageBox("Error", output.second);
+    }
+    else
+    {
+        DisplayProcessOutput(output);
     }
 }
 

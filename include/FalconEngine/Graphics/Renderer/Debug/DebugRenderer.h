@@ -149,10 +149,10 @@ public:
     /* Camera API                                                           */
     /************************************************************************/
     void
-    AddCamera(const Camera *camera);
+    SetCamera(const Camera *camera);
 
     void
-    RemoveCamera(const Camera *camera);
+    UpdateCamera();
 
     /************************************************************************/
     /* Rendering Engine API                                                 */

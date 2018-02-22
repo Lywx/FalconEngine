@@ -56,13 +56,18 @@ PlatformVertexFormat::CreateInputLayout(ID3D11Device4 *device)
 {
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementList;
     inputElementList.assign(mVertexFormat->GetVertexAttributeNum(), D3D11_INPUT_ELEMENT_DESC());
+    std::vector<std::string> inputSemanticList;
+    inputSemanticList.assign(mVertexFormat->GetVertexAttributeNum(), "");
 
     int vertexAttribNum = mVertexFormat->GetVertexAttributeNum();
     for (int vertexAttribIndex = 0; vertexAttribIndex < vertexAttribNum; ++vertexAttribIndex)
     {
         auto const& vertexAttrib = mVertexFormat->GetVertexAttribute(vertexAttribIndex);
 
-        inputElementList[vertexAttribIndex].SemanticName = GetUppercaseString(vertexAttrib.mName).c_str();
+        // NOTE(Wuxiang): Avoid string being destructed before the input layout creation.
+        inputSemanticList[vertexAttribIndex] = GetUppercaseString(vertexAttrib.mName);
+
+        inputElementList[vertexAttribIndex].SemanticName = inputSemanticList[vertexAttribIndex].c_str();
         inputElementList[vertexAttribIndex].SemanticIndex = vertexAttrib.mLocation;
         inputElementList[vertexAttribIndex].Format = Direct3DShaderAttributeFormat[int(vertexAttrib.mType)];
         inputElementList[vertexAttribIndex].InputSlot = vertexAttrib.mBindingIndex;

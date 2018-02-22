@@ -8,7 +8,7 @@
 
 #include <FalconEngine/Graphics/Renderer/VisualEffect.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectParams.h>
-#include <FalconEngine/Graphics/Renderer/Resource/Uniform.h>
+#include <FalconEngine/Graphics/Renderer/Resource/UniformBufferManual.h>
 #include <FalconEngine/Math/Color.h>
 #include <FalconEngine/Math/Vector2.h>
 
@@ -22,12 +22,14 @@ struct FALCON_ENGINE_API DebugVertexData
 {
     Vector2f mPosition;
     Vector4f mColor;
-
-    // This index is used to index into the uniform view projection transform
-    // array to select correct camera transform.
-    int mCamera;
 };
 #pragma pack(pop)
+
+FALCON_ENGINE_STRUCT_BEGIN DebugTransformBufferData
+{
+    Matrix4f mViewProjectionTransform;
+};
+FALCON_ENGINE_STRUCT_END
 }
 
 class Visual;
@@ -44,25 +46,13 @@ public:
     DebugEffectParams();
 
 public:
-    void
-    AddCamera(const Camera * camera);
-
-    void
-    RemoveCamera(const Camera * camera);
-
-public:
-    // Store if the index slot is used by a camera.
-    std::vector<bool> mCameraSlot;
-    std::map<const Camera *, int> mCameraSlotTable;
-    std::vector<UniformValueSp<Matrix4f>> mCameraSlotUniform;
+    const Camera *mCamera;
+    std::shared_ptr<UniformBufferTemplate<Detail::DebugTransformBufferData>> mCameraBuffer;
 };
 
 class FALCON_ENGINE_API DebugEffect : public VisualEffect
 {
     FALCON_ENGINE_EFFECT_DECLARE(DebugEffect);
-
-public:
-    static const int CameraNumMax;
 
 public:
     /************************************************************************/

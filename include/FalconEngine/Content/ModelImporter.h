@@ -171,7 +171,7 @@ private:
     static float
     GetMaterialFloat(aiMaterial *aiMaterial, const char *param1, int param2, int param3);
 
-    static Texture2d *
+    static std::shared_ptr<Texture2d>
     LoadMaterialTexture(_IN_ const string&     modelDirectoryPath,
                         _IN_ const aiMaterial *material,
                         _IN_ aiTextureType     materialType);

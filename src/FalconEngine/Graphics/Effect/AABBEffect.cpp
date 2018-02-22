@@ -24,7 +24,7 @@ AabbEffect::AabbEffect()
     auto pass = make_unique<VisualEffectPass>();
     pass->SetShader(shader);
 
-    auto shaderVertexFormat = std::make_shared<VertexFormat>();
+    auto shaderVertexFormat = std::make_shared<VertexFormat>(shader);
 
     // NOTE(Wuxiang): Fixed vertex data. No instancing.
     shaderVertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);

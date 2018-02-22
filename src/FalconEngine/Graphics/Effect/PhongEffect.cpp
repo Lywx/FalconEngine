@@ -29,13 +29,13 @@ PhongEffect::PhongEffect(bool initializer)
         auto shader = std::make_shared<Shader>();
         shader->PushShaderFile(ShaderType::VertexShader,
 #if defined(FALCON_ENGINE_API_DIRECT3D)
-                               "Content/Shader/Phong.vert.hlsl");
+                               "Content/Shader/Phong.vert.hlsl.bin");
 #elif defined(FALCON_ENGINE_API_OPENGL)
                                "Content/Shader/Phong.vert.glsl");
 #endif
         shader->PushShaderFile(ShaderType::FragmentShader,
 #if defined(FALCON_ENGINE_API_DIRECT3D)
-                               "Content/Shader/Phong.frag.hlsl");
+                               "Content/Shader/Phong.frag.hlsl.bin");
 #elif defined(FALCON_ENGINE_API_OPENGL)
                                "Content/Shader/Phong.frag.glsl");
 #endif
@@ -43,7 +43,7 @@ PhongEffect::PhongEffect(bool initializer)
         auto pass = make_unique<VisualEffectPass>();
         pass->SetShader(shader);
 
-        auto shaderVertexFormat = std::make_shared<VertexFormat>();
+        auto shaderVertexFormat = std::make_shared<VertexFormat>(shader);
         shaderVertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
         shaderVertexFormat->PushVertexAttribute(1, "Normal", VertexAttributeType::FloatVec3, false, 1);
         shaderVertexFormat->PushVertexAttribute(2, "TexCoord", VertexAttributeType::FloatVec2, false, 2);
@@ -147,14 +147,14 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
     if (material->mAmbientTexture != nullptr)
     {
         instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Ambient),
-                                   material->mAmbientTexture,
+                                   material->mAmbientTexture.get(),
                                    TextureMode::Texture,
                                    ShaderType::FragmentShader);
 
         if (material->mAmbientSampler != nullptr)
         {
             instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Ambient),
-                                       material->mAmbientSampler,
+                                       material->mAmbientSampler.get(),
                                        ShaderType::FragmentShader);
         }
     }
@@ -162,13 +162,13 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
     if (material->mDiffuseTexture != nullptr)
     {
         instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Diffuse),
-                                   material->mDiffuseTexture, TextureMode::Texture,
+                                   material->mDiffuseTexture.get(), TextureMode::Texture,
                                    ShaderType::FragmentShader);
 
         if (material->mDiffuseSampler != nullptr)
         {
             instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Diffuse),
-                                       material->mDiffuseSampler,
+                                       material->mDiffuseSampler.get(),
                                        ShaderType::FragmentShader);
         }
     }
@@ -176,13 +176,13 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
     if (material->mEmissiveTexture != nullptr)
     {
         instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Emissive),
-                                   material->mEmissiveTexture, TextureMode::Texture,
+                                   material->mEmissiveTexture.get(), TextureMode::Texture,
                                    ShaderType::FragmentShader);
 
         if (material->mEmissiveSampler != nullptr)
         {
             instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Emissive),
-                                       material->mEmissiveSampler,
+                                       material->mEmissiveSampler.get(),
                                        ShaderType::FragmentShader);
         }
     }
@@ -190,13 +190,13 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
     if (material->mShininessTexture != nullptr)
     {
         instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Shininess),
-                                   material->mShininessTexture, TextureMode::Texture,
+                                   material->mShininessTexture.get(), TextureMode::Texture,
                                    ShaderType::FragmentShader);
 
         if (material->mShininessSampler != nullptr)
         {
             instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Shininess),
-                                       material->mShininessSampler,
+                                       material->mShininessSampler.get(),
                                        ShaderType::FragmentShader);
         }
     }
@@ -204,13 +204,13 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
     if (material->mSpecularTexture != nullptr)
     {
         instance->SetShaderTexture(0, GetTextureUnit(TextureUnit::Specular),
-                                   material->mSpecularTexture, TextureMode::Texture,
+                                   material->mSpecularTexture.get(), TextureMode::Texture,
                                    ShaderType::FragmentShader);
 
         if (material->mSpecularSampler != nullptr)
         {
             instance->SetShaderSampler(0, GetTextureUnit(TextureUnit::Specular),
-                                       material->mSpecularSampler,
+                                       material->mSpecularSampler.get(),
                                        ShaderType::FragmentShader);
         }
     }
@@ -219,7 +219,6 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance                   
     FALCON_ENGINE_UNIFORM_BUFFER_1_SET_BEGIN(instance, 0, Detail::PhongLightBufferData, "LightBuffer", = )
     {
         FALCON_ENGINE_UNUSE(visual);
-
 
         // Directional light
         data->mDirectionalLight.mAmbient = params->mDirectionalLight == nullptr

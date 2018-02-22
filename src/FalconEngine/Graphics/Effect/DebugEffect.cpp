@@ -2,12 +2,12 @@
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
-#include <FalconEngine/Graphics/Renderer/Resource/UniformManual.h>
+#include <FalconEngine/Graphics/Renderer/Resource/UniformBufferManual.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexAttribute.h>
+#include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 #include <FalconEngine/Graphics/Renderer/State/BlendState.h>
 #include <FalconEngine/Graphics/Renderer/State/CullState.h>
 #include <FalconEngine/Graphics/Renderer/State/DepthTestState.h>
-#include <FalconEngine/Graphics/Renderer/Resource/VertexAttribute.h>
-#include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 
 using namespace std;
 
@@ -17,76 +17,12 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-DebugEffectParams::DebugEffectParams()
+DebugEffectParams::DebugEffectParams() :
+    mCamera(nullptr)
 {
-    // Set camera projection parameter for each taken camera slot.
-    for (int cameraIndex = 0; cameraIndex < DebugEffect::CameraNumMax; ++cameraIndex)
-    {
-        auto cameraUniform = ShareUniformManual<Matrix4f>(
-                                 string("ViewProjectionTransformArray[")
-                                 + std::to_string(cameraIndex) + "]",
-                                 Matrix4f::Identity);
-
-        mCameraSlotUniform.push_back(cameraUniform);
-    }
-}
-
-/************************************************************************/
-/* Public Members                                                       */
-/************************************************************************/
-void
-DebugEffectParams::AddCamera(const Camera *camera)
-{
-    if (mCameraSlotTable.find(camera) == mCameraSlotTable.end())
-    {
-        int cameraIndex;
-
-        auto cameraIndexIter = find(mCameraSlot.begin(),
-                                    mCameraSlot.end(),
-                                    false);
-
-        if (cameraIndexIter == mCameraSlot.end())
-        {
-            mCameraSlot.push_back(true);
-            cameraIndex = int(mCameraSlot.size()) - 1;
-        }
-        else
-        {
-            cameraIndex = int(cameraIndexIter - mCameraSlot.begin());
-        }
-
-        int cameraNum = int(mCameraSlotTable.size());
-        if (cameraNum < DebugEffect::CameraNumMax)
-        {
-            mCameraSlotTable.insert({camera, cameraIndex});
-        }
-        else
-        {
-            FALCON_ENGINE_THROW_RUNTIME_EXCEPTION("Don't support camera number "
-                                                  "more than the defined constant.");
-        }
-    }
-}
-
-void
-DebugEffectParams::RemoveCamera(const Camera *camera)
-{
-    auto cameraIter = mCameraSlotTable.find(camera);
-    if (cameraIter != mCameraSlotTable.end())
-    {
-        auto cameraIndex = cameraIter->second;
-        mCameraSlot[cameraIndex] = false;
-        mCameraSlotTable.erase(cameraIter);
-    }
 }
 
 FALCON_ENGINE_EFFECT_IMPLEMENT(DebugEffect);
-
-/************************************************************************/
-/* Static Members                                                       */
-/************************************************************************/
-const int
-DebugEffect::CameraNumMax = 4;
 
 /************************************************************************/
 /* Constructors and Destructor                                          */
@@ -94,16 +30,26 @@ DebugEffect::CameraNumMax = 4;
 DebugEffect::DebugEffect(bool depthTestEnabled)
 {
     auto shader = std::make_shared<Shader>();
-    shader->PushShaderFile(ShaderType::VertexShader, "Content/Shader/Debug.vert.glsl");
-    shader->PushShaderFile(ShaderType::FragmentShader, "Content/Shader/Debug.frag.glsl");
+    shader->PushShaderFile(ShaderType::VertexShader,
+#if defined(FALCON_ENGINE_API_DIRECT3D)
+                           "Content/Shader/Debug.vert.hlsl.bin");
+#elif defined(FALCON_ENGINE_API_OPENGL)
+                           "Content/Shader/Debug.vert.glsl");
+#endif
+
+    shader->PushShaderFile(ShaderType::FragmentShader,
+#if defined(FALCON_ENGINE_API_DIRECT3D)
+                           "Content/Shader/Debug.frag.hlsl.bin");
+#elif defined(FALCON_ENGINE_API_OPENGL)
+                           "Content/Shader/Debug.frag.glsl");
+#endif
 
     auto pass = make_unique<VisualEffectPass>();
     pass->SetShader(shader);
 
-    auto shaderVertexFormat = std::make_shared<VertexFormat>();
+    auto shaderVertexFormat = std::make_shared<VertexFormat>(shader);
     shaderVertexFormat->PushVertexAttribute(0, "Position", VertexAttributeType::FloatVec3, false, 0);
     shaderVertexFormat->PushVertexAttribute(1, "Color", VertexAttributeType::FloatVec4, false, 0);
-    shaderVertexFormat->PushVertexAttribute(2, "Camera", VertexAttributeType::Int, false, 0);
     shaderVertexFormat->FinishVertexAttribute();
     pass->SetShaderVertexFormat(shaderVertexFormat);
 
@@ -153,13 +99,9 @@ DebugEffect::InitializeInstance(
     VisualEffectInstance              *instance,
     std::shared_ptr<DebugEffectParams> params) const
 {
-    using namespace std;
-    using namespace std::placeholders;
-
-    for (int cameraIndex = 0; cameraIndex < CameraNumMax; ++cameraIndex)
-    {
-        instance->SetUniform(0, params->mCameraSlotUniform[cameraIndex]);
-    }
+    FALCON_ENGINE_UNIFORM_BUFFER_2_SET(
+        instance, 0, Detail::DebugTransformBufferData, params->mCameraBuffer,
+        "TransformBuffer", GetShaderMask(ShaderType::VertexShader));
 }
 
 }

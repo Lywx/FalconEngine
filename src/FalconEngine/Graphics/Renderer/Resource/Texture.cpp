@@ -187,4 +187,9 @@ TextureType Texture::GetTextureType() const
     return mType;
 }
 
+size_t
+Texture::GetTexelSize() const
+{
+    return TexelSize[TextureFormatIndex(mFormat)];
+}
 }

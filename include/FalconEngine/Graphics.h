@@ -41,9 +41,7 @@
 #include <FalconEngine/Graphics/Renderer/Resource/UniformAutomatic.h>
 #include <FalconEngine/Graphics/Renderer/Resource/UniformBuffer.h>
 #include <FalconEngine/Graphics/Renderer/Resource/UniformBufferAutomatic.h>
-#include <FalconEngine/Graphics/Renderer/Resource/UniformBufferConstant.h>
 #include <FalconEngine/Graphics/Renderer/Resource/UniformBufferManual.h>
-#include <FalconEngine/Graphics/Renderer/Resource/UniformConstant.h>
 #include <FalconEngine/Graphics/Renderer/Resource/UniformManual.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexAttribute.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexBuffer.h>

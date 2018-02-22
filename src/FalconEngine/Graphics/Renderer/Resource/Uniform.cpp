@@ -28,13 +28,13 @@ Uniform::~Uniform()
 /* Public Members                                                       */
 /************************************************************************/
 bool
-Uniform::IsUpdateNeeded() const
+Uniform::ShouldUpdate() const
 {
     return !mValueIsCurrent;
 }
 
 void
-Uniform::Update(const Camera * /* camera */, const Visual * /* visual */)
+Uniform::UpdateInternal(const Camera * /* camera */, const Visual * /* visual */)
 {
     FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
 }

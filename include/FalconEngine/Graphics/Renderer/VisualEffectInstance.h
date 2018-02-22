@@ -152,3 +152,7 @@ instance->SetUniformBuffer(pass,  \
         uniformBufferNameString, FALCON_ENGINE_UNIFORM_BUFFER_FUNC_BEGIN(captureList, DataKlass)
 
 #define FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END(uniformBufferShaderMask) FALCON_ENGINE_UNIFORM_BUFFER_FUNC_END), uniformBufferShaderMask)
+
+#define FALCON_ENGINE_UNIFORM_BUFFER_2_SET(instance, pass, DataKlass, uniformBufferVariable, uniformBufferNameString, uniformBufferShaderMask) \
+uniformBufferVariable = FalconEngine::ShareUniformBufferManual<DataKlass>(uniformBufferNameString); \
+instance->SetUniformBuffer(pass, uniformBufferVariable, uniformBufferShaderMask)

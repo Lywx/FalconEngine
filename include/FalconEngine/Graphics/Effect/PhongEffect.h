@@ -57,7 +57,7 @@ public:
     /* Public Members                                                       */
     /************************************************************************/
     void
-    CreateInstance(_IN_OUT_ Node                                     * node,
+    CreateInstance(_IN_OUT_ Node * node,
                    _IN_     const std::shared_ptr<PhongEffectParams>& params);
 
 protected:

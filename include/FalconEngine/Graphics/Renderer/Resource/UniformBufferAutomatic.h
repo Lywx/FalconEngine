@@ -29,7 +29,7 @@ public:
 
 public:
     virtual void
-    UpdateContext(const Camera *camera, const Visual *visual, void *data) override;
+    UpdateContextInternal(const Camera *camera, const Visual *visual, void *data) override;
 
 protected:
     virtual void
@@ -53,7 +53,7 @@ UniformBufferAutomatic<T>::UniformBufferAutomatic(
 
 template <typename T>
 void
-UniformBufferAutomatic<T>::UpdateContext(const Camera *camera, const Visual *visual, void *data)
+UniformBufferAutomatic<T>::UpdateContextInternal(const Camera *camera, const Visual *visual, void *data)
 {
     Update(camera, visual, reinterpret_cast<T *>(data));
 }

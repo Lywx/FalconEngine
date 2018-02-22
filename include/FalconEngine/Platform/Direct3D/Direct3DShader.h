@@ -41,11 +41,11 @@ protected:
                            const std::string & shaderSource);
 
     void
-    SetShader(int shaderIndex, ID3D11DeviceChild * shader);
+    SetShader(int shaderIndex, Microsoft::WRL::ComPtr<ID3D11DeviceChild> shader);
 
 private:
     int mShaderNum;
-    ID3D11DeviceChild *mShaders[int(ShaderType::Count)];
+    Microsoft::WRL::ComPtr<ID3D11DeviceChild> mShaders[int(ShaderType::Count)];
 };
 FALCON_ENGINE_CLASS_END
 

@@ -78,10 +78,10 @@ public:
     // @remark If the value is not current, renderer would call Update member
     // function for this instance of uniform.
     bool
-    IsUpdateNeeded() const;
+    ShouldUpdate() const;
 
     virtual void
-    Update(const Camera * camera, const Visual * visual);
+    UpdateInternal(const Camera * camera, const Visual * visual);
 
 public:
     bool mEnabled;
@@ -117,6 +117,9 @@ public:
 protected:
     T mValue;
 };
+
+template <typename T>
+using UniformValueSp = std::shared_ptr<UniformValue<T>>;
 
 template <typename T, typename U, typename ... Args>
 std::shared_ptr<UniformValue<T>>
@@ -227,9 +230,6 @@ UniformValue<T>::SetValue(const T& value)
 {
     mValue = value;
 }
-
-template <typename T>
-using UniformValueSp = std::shared_ptr<UniformValue<T>>;
 
 }
 

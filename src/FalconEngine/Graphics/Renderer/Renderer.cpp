@@ -1158,9 +1158,9 @@ Renderer::Update(const VisualEffectInstancePass *pass,
     // Update uniform value.
     if (uniform->mEnabled)
     {
-        if (uniform->IsUpdateNeeded())
+        if (uniform->ShouldUpdate())
         {
-            uniform->Update(camera, visual);
+            uniform->UpdateInternal(camera, visual);
         }
 
         // Update uniform value in context.
@@ -1193,14 +1193,14 @@ Renderer::Update(const VisualEffectInstancePass *pass,
     if (uniformBufferBinding->mEnabled)
     {
         auto uniformBuffer = uniformBufferBinding->GetBuffer();
-        if (uniformBuffer->IsUpdateNeeded())
+        if (uniformBuffer->ShouldUpdateContext())
         {
             Enable(uniformBufferBinding->GetBuffer(),
                    uniformBufferBinding->mBindingIndex,
                    uniformBufferBinding->mShaderMask);
 
             void *data = Map(uniformBuffer);
-            uniformBuffer->UpdateContext(camera, visual, data);
+            uniformBuffer->UpdateContextInternal(camera, visual, data);
             Unmap(uniformBuffer);
 
             // NOTE(Wuxiang): Don't disable uniform buffer before drawing. That

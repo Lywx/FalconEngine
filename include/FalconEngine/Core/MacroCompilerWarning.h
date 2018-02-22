@@ -16,3 +16,11 @@ class FALCON_ENGINE_API
 
 #define FALCON_ENGINE_CLASS_END \
 FALCON_ENGINE_PROGMA_END
+
+#define FALCON_ENGINE_STRUCT_BEGIN \
+__pragma(pack(push, 1)) \
+struct FALCON_ENGINE_API
+
+#define FALCON_ENGINE_STRUCT_END \
+__pragma(pack(pop))
+

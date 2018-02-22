@@ -185,6 +185,9 @@ public:
     TextureType
     GetTextureType() const;
 
+    size_t
+    GetTexelSize() const;
+
 protected:
     // Texture runtime access usage, needed during construction.
     ResourceCreationAccessMode mAccessMode;

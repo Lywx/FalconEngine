@@ -90,7 +90,8 @@ PlatformTexture2d::CreateTexture(ID3D11Device4 *device)
     struct D3D11_SUBRESOURCE_DATA *initialData = nullptr;
     D3D11_SUBRESOURCE_DATA subresourceData;
     subresourceData.pSysMem = mTexturePtr->GetData();
-    subresourceData.SysMemPitch = UINT(mTexturePtr->GetDataSize());
+    // https://msdn.microsoft.com/en-us/library/windows/desktop/ff476220(v=vs.85).aspx
+    subresourceData.SysMemPitch = UINT(mTexturePtr->GetDimension(0) * mTexturePtr->GetTexelSize());
     subresourceData.SysMemSlicePitch = 0;
 
     auto storageMode = mTexturePtr->GetStorageMode();

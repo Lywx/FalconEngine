@@ -42,37 +42,37 @@ PlatformTexture::Enable(Renderer *renderer,
     if (GetShaderEnabled(textureShaderMaskList[int(TextureMode::Texture)],
                          ShaderType::VertexShader))
     {
-        context->VSSetShaderResources(textureUnit, 1, &mShaderResourceView);
+        context->VSSetShaderResources(textureUnit, 1, mShaderResourceView.GetAddressOf());
     }
 
     if (GetShaderEnabled(textureShaderMaskList[int(TextureMode::Texture)],
                          ShaderType::TessellationControlShader))
     {
-        context->HSSetShaderResources(textureUnit, 1, &mShaderResourceView);
+        context->HSSetShaderResources(textureUnit, 1, mShaderResourceView.GetAddressOf());
     }
 
     if (GetShaderEnabled(textureShaderMaskList[int(TextureMode::Texture)],
                          ShaderType::TessellationEvaluationShader))
     {
-        context->DSSetShaderResources(textureUnit, 1, &mShaderResourceView);
+        context->DSSetShaderResources(textureUnit, 1, mShaderResourceView.GetAddressOf());
     }
 
     if (GetShaderEnabled(textureShaderMaskList[int(TextureMode::Texture)],
                          ShaderType::GeometryShader))
     {
-        context->GSSetShaderResources(textureUnit, 1, &mShaderResourceView);
+        context->GSSetShaderResources(textureUnit, 1, mShaderResourceView.GetAddressOf());
     }
 
     if (GetShaderEnabled(textureShaderMaskList[int(TextureMode::Texture)],
                          ShaderType::FragmentShader))
     {
-        context->PSSetShaderResources(textureUnit, 1, &mShaderResourceView);
+        context->PSSetShaderResources(textureUnit, 1, mShaderResourceView.GetAddressOf());
     }
 
     if (GetShaderEnabled(textureShaderMaskList[int(TextureMode::Texture)],
                          ShaderType::ComputeShader))
     {
-        context->CSSetShaderResources(textureUnit, 1, &mShaderResourceView);
+        context->CSSetShaderResources(textureUnit, 1, mShaderResourceView.GetAddressOf());
     }
 
     // UAV.
@@ -80,7 +80,7 @@ PlatformTexture::Enable(Renderer *renderer,
                          ShaderType::ComputeShader))
     {
         // NEW(Wuxiang): Add Append / Consume Buffer counter support.
-        context->CSSetUnorderedAccessViews(textureUnit, 1, &mUnorderedAccessView, nullptr);
+        context->CSSetUnorderedAccessViews(textureUnit, 1, mUnorderedAccessView.GetAddressOf(), nullptr);
     }
 
     // NOTE(Wuxiang): Since the D3D11 UAV can be bound to output merger stage
@@ -97,48 +97,50 @@ PlatformTexture::Disable(Renderer *renderer,
     ID3D11DeviceContext4 *context = renderer->mData->GetContext();
 
     // SRV.
+    ID3D11ShaderResourceView *nullSrvViews[] = { nullptr };
     if (GetShaderEnabled(textureShaderMaskList[int(TextureMode::Texture)],
                          ShaderType::VertexShader))
     {
-        context->VSSetShaderResources(textureUnit, 1, nullptr);
+        context->VSSetShaderResources(textureUnit, 1, nullSrvViews);
     }
 
     if (GetShaderEnabled(textureShaderMaskList[int(TextureMode::Texture)],
                          ShaderType::TessellationControlShader))
     {
-        context->HSSetShaderResources(textureUnit, 1, nullptr);
+        context->HSSetShaderResources(textureUnit, 1, nullSrvViews);
     }
 
     if (GetShaderEnabled(textureShaderMaskList[int(TextureMode::Texture)],
                          ShaderType::TessellationEvaluationShader))
     {
-        context->DSSetShaderResources(textureUnit, 1, nullptr);
+        context->DSSetShaderResources(textureUnit, 1, nullSrvViews);
     }
 
     if (GetShaderEnabled(textureShaderMaskList[int(TextureMode::Texture)],
                          ShaderType::GeometryShader))
     {
-        context->GSSetShaderResources(textureUnit, 1, nullptr);
+        context->GSSetShaderResources(textureUnit, 1, nullSrvViews);
     }
 
     if (GetShaderEnabled(textureShaderMaskList[int(TextureMode::Texture)],
                          ShaderType::FragmentShader))
     {
-        context->PSSetShaderResources(textureUnit, 1, nullptr);
+        context->PSSetShaderResources(textureUnit, 1, nullSrvViews);
     }
 
     if (GetShaderEnabled(textureShaderMaskList[int(TextureMode::Texture)],
                          ShaderType::ComputeShader))
     {
-        context->CSSetShaderResources(textureUnit, 1, nullptr);
+        context->CSSetShaderResources(textureUnit, 1, nullSrvViews);
     }
 
     // UAV.
+    ID3D11UnorderedAccessView *nullUavViews[] = { nullptr };
     if (GetShaderEnabled(textureShaderMaskList[int(TextureMode::Image)],
                          ShaderType::ComputeShader))
     {
         // NEW(Wuxiang): Add Append / Consume Buffer counter support.
-        context->CSSetUnorderedAccessViews(textureUnit, 1, nullptr, nullptr);
+        context->CSSetUnorderedAccessViews(textureUnit, 1, nullUavViews, nullptr);
     }
 }
 

@@ -36,7 +36,7 @@ public:
     // function. If you intent to enforce reusability, you could override this
     // method using a fixed template class argument.
     virtual void
-    Update(const Camera *camera, const Visual *visual) override;
+    UpdateInternal(const Camera *camera, const Visual *visual) override;
 
 protected:
     UniformUpdateFunction<T> mUpdateFunction;
@@ -68,7 +68,7 @@ UniformAutomatic<T>::SetUpdateFunction(UniformUpdateFunction<T> updateFunction)
 
 template <typename T>
 void
-UniformAutomatic<T>::Update(const Camera *camera, const Visual *visual)
+UniformAutomatic<T>::UpdateInternal(const Camera *camera, const Visual *visual)
 {
     this->mValue = mUpdateFunction(visual, camera);
 }

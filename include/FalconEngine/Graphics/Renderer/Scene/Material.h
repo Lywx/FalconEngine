@@ -37,7 +37,7 @@ struct FALCON_ENGINE_API MaterialTextureData
     int mDiffuseExist;
     int mEmissiveExist;
     int mSpecularExist;
-    int ShininessExist;
+    int mShininessExist;
 
     int _Pad0;
     int _Pad1;

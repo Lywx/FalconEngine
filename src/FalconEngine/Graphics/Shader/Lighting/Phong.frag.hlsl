@@ -7,7 +7,7 @@
 #define PointLightNumMax 6
 #define SpotLightNumMax 6
 
-cbuffer LightBuffer
+cbuffer LightBuffer : register(b2)
 {
     // 4 x float4.
     DirectionalLightData DirectionalLight;
@@ -23,7 +23,7 @@ cbuffer LightBuffer
     int Pad1;
 };
 
-cbuffer MaterialBuffer
+cbuffer MaterialBuffer : register(b1)
 {
     // 4 x float4
     MaterialColorData MaterialColor;

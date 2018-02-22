@@ -137,7 +137,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance *instance,
         data->mMaterialColor.mEmissive = Vector3f(material->mEmissiveColor);
         data->mMaterialTexture.mEmissiveExist = material->mEmissiveTexture != nullptr;
         data->mMaterialColor.mShininess = material->mShininess;
-        data->mMaterialTexture.ShininessExist = material->mShininessTexture != nullptr;
+        data->mMaterialTexture.mShininessExist = material->mShininessTexture != nullptr;
         data->mMaterialColor.mSpecular = Vector3f(material->mSpecularColor);
         data->mMaterialTexture.mSpecularExist = material->mSpecularTexture != nullptr;
     }

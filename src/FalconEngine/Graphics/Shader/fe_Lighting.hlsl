@@ -275,7 +275,7 @@ CalcBlinnPhongLighting(
     out float3 cEmissive,
     out float3 cSpecular)
 {
-        float3 mAmbient;
+    float3 mAmbient;
     if (mTexture.AmbientExist)
     {
         mAmbient = fe_TextureAmbient.Sample(fe_TextureAmbientSampler, texCoord).xyz;

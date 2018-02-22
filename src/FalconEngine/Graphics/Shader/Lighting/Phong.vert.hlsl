@@ -1,6 +1,6 @@
 #include "Phong.incl.hlsl"
 
-cbuffer TransformBuffer
+cbuffer TransformBuffer : register(b0)
 {
    float4x4 ModelViewProjectionTransform;
    float4x4 ModelViewTransform;

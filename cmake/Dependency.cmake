@@ -26,7 +26,7 @@ endif()
 
 # D3D
 if(FALCON_ENGINE_PLATFORM_WINDOWS)
-    set(D3D_LIBRARY_FILE D3D11)
+    set(D3D_LIBRARY_FILE d3d11 d3dcompiler dxguid)
 elseif(FALCON_ENGINE_PLATFORM_LINUX)
     message(FATAL_ERROR "Direct3D API is not supported on Linux.")
 endif()

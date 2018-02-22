@@ -46,7 +46,15 @@ public:
     DebugEffectParams();
 
 public:
+    /************************************************************************/
+    /* Public Members                                                       */
+    /************************************************************************/
+    virtual void
+    UpdateContext() override;
+
+public:
     const Camera *mCamera;
+    std::shared_ptr<UniformBufferTemplate<Detail::DebugTransformBufferData>> mCameraBuffer;
 };
 
 class FALCON_ENGINE_API DebugEffect : public VisualEffect

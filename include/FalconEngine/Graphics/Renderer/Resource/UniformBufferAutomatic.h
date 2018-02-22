@@ -48,7 +48,7 @@ UniformBufferAutomatic<T>::UniformBufferAutomatic(
     mUpdateFunction(std::move(updateFunction))
 {
     // NOTE(Wuxiang): Automatic uniform is always being updated.
-    this->mValueIsCurrent = false;
+    this->mDataIsCurrent = false;
 }
 
 template <typename T>

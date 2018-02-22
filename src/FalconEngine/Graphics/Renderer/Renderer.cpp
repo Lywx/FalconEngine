@@ -282,7 +282,7 @@ Renderer::Map(const Buffer *buffer, ResourceMapAccessMode access, ResourceMapFlu
     case BufferType::ShaderBuffer:
         return Map(reinterpret_cast<const ShaderBuffer *>(buffer), access, flush, sync, offset, size);
     case BufferType::UniformBuffer:
-        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+        return Map(reinterpret_cast<const UniformBuffer *>(buffer), access, flush, sync, offset, size);
     default:
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
@@ -303,7 +303,7 @@ Renderer::Unmap(const Buffer *buffer)
         Unmap(reinterpret_cast<const ShaderBuffer *>(buffer));
         break;
     case BufferType::UniformBuffer:
-        FALCON_ENGINE_THROW_SUPPORT_EXCEPTION();
+        Unmap(reinterpret_cast<const UniformBuffer *>(buffer));
     default:
         FALCON_ENGINE_THROW_ASSERTION_EXCEPTION();
     }
@@ -487,6 +487,15 @@ Renderer::Map(const UniformBuffer *uniformBuffer)
     FALCON_ENGINE_RENDERER_BIND_FIND(uniformBuffer, mUniformBufferTable, PlatformUniformBuffer);
 
     return uniformBufferPlatform->Map(this);
+}
+
+void *
+Renderer::Map(const UniformBuffer *uniformBuffer, ResourceMapAccessMode access, ResourceMapFlushMode flush,
+              ResourceMapSyncMode sync, int64_t offset, int64_t size)
+{
+    FALCON_ENGINE_RENDERER_BIND_FIND(uniformBuffer, mUniformBufferTable, PlatformUniformBuffer);
+
+    return uniformBufferPlatform->Map(this, access, flush, sync, offset, size);
 }
 
 void
@@ -1192,20 +1201,20 @@ Renderer::Update(const VisualEffectInstancePass *pass,
 
     if (uniformBufferBinding->mEnabled)
     {
+        Enable(uniformBufferBinding->GetBuffer(),
+               uniformBufferBinding->mBindingIndex,
+               uniformBufferBinding->mShaderMask);
+
         auto uniformBuffer = uniformBufferBinding->GetBuffer();
         if (uniformBuffer->ShouldUpdateContext())
         {
-            Enable(uniformBufferBinding->GetBuffer(),
-                   uniformBufferBinding->mBindingIndex,
-                   uniformBufferBinding->mShaderMask);
-
             void *data = Map(uniformBuffer);
             uniformBuffer->UpdateContextInternal(camera, visual, data);
             Unmap(uniformBuffer);
-
-            // NOTE(Wuxiang): Don't disable uniform buffer before drawing. That
-            // would make uniform buffer data invalid during drawing.
         }
+
+        // NOTE(Wuxiang): Don't disable uniform buffer before drawing. That
+        // would make uniform buffer data invalid during drawing.
     }
 }
 
@@ -1221,12 +1230,16 @@ Renderer::Draw(const Camera *camera,
 
     FALCON_ENGINE_CHECK_NULLPTR(visual);
 
-    for (auto visualEffectInstanceIter = visual->GetEffectInstanceBegin();
-            visualEffectInstanceIter != visual->GetEffectInstanceEnd();
-            ++visualEffectInstanceIter)
+    auto visualEffectInstanceIter = visual->GetEffectInstanceBegin();
+    auto visualEffectParamsIter = visual->GetEffectParamBegin();
+    for (; visualEffectInstanceIter != visual->GetEffectInstanceEnd()
+            && visualEffectParamsIter != visual->GetEffectParamEnd();
+            ++visualEffectInstanceIter,
+            ++visualEffectParamsIter)
     {
         // NOTE(Wuxiang): The visual instance is guaranteed to not be null.
         FALCON_ENGINE_CHECK_NULLPTR(*visualEffectInstanceIter);
+        FALCON_ENGINE_CHECK_NULLPTR(*visualEffectParamsIter);
 
         Draw(camera, visual, visualEffectInstanceIter->get());
     }

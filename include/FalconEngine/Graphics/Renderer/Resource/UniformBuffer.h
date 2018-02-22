@@ -47,7 +47,7 @@ public:
     /************************************************************************/
     /* Constructors and Destructor                                          */
     /************************************************************************/
-    UniformBuffer(const std::string & name, size_t storageSize, ResourceStorageMode storageMode);
+    UniformBuffer(std::string name, size_t storageSize, ResourceStorageMode storageMode);
     virtual ~UniformBuffer();
 
     /************************************************************************/
@@ -66,7 +66,7 @@ public:
     std::string mName;
 
 protected:
-    bool mValueIsCurrent;
+    bool mDataIsCurrent;
 };
 FALCON_ENGINE_CLASS_END
 
@@ -85,7 +85,7 @@ public:
     GetDataCast();
 
     void
-    SignalUpdate();
+    SignalContext();
 };
 FALCON_ENGINE_PROGMA_END
 
@@ -105,11 +105,10 @@ UniformBufferTemplate<T>::GetDataCast()
 
 template <typename T>
 void
-UniformBufferTemplate<T>::SignalUpdate()
+UniformBufferTemplate<T>::SignalContext()
 {
-    this->mValueIsCurrent = false;
+    this->mDataIsCurrent = false;
 }
-
 
 template <typename T, typename U, typename ... Args>
 std::shared_ptr<UniformBufferTemplate<T>>

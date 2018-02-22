@@ -373,6 +373,8 @@ DebugRenderer::UpdateFrame(double elapsed)
 
     // Remove time-out message.
     mDebugMessageManager->UpdateFrame(elapsed);
+
+    mDebugEffectParams->UpdateContext();
 }
 
 }

@@ -287,6 +287,14 @@ public:
     void *
     Map(const UniformBuffer * uniformBuffer);
 
+    void *
+    Map(const UniformBuffer * uniformBuffer,
+        ResourceMapAccessMode access,
+        ResourceMapFlushMode flush,
+        ResourceMapSyncMode sync,
+        int64_t offset,
+        int64_t size);
+
     void
     Unmap(const UniformBuffer * uniformBuffer);
 

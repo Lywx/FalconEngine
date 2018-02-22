@@ -21,6 +21,15 @@ namespace FalconEngine
 DebugEffectParams::DebugEffectParams() :
     mCamera(nullptr)
 {
+    mCameraBuffer = ShareUniformBufferManual<Detail::DebugTransformBufferData>("TransformBuffer");
+}
+
+void
+DebugEffectParams::UpdateContext()
+{
+    auto data = mCameraBuffer->GetDataCast();
+    data->mViewProjectionTransform = mCamera->GetViewProjection();
+    mCameraBuffer->SignalContext();
 }
 
 FALCON_ENGINE_EFFECT_IMPLEMENT(DebugEffect);
@@ -100,12 +109,7 @@ DebugEffect::InitializeInstance(
     VisualEffectInstance              *instance,
     std::shared_ptr<DebugEffectParams> params) const
 {
-
-    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_BEGIN(instance, 0, Detail::DebugTransformBufferData, "TransformBuffer", = )
-    {
-        data->mViewProjectionTransform = params->mCamera ? params->mCamera->GetViewProjection() : Matrix4f::Zero;
-    }
-    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END(GetShaderMask(ShaderType::VertexShader));
+    instance->SetUniformBuffer(0, params->mCameraBuffer, GetShaderMask(ShaderType::VertexShader));
 }
 
 }

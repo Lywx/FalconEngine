@@ -10,8 +10,6 @@
 #include <FalconEngine/Graphics/Renderer/Resource/VertexAttribute.h>
 #include <FalconEngine/Graphics/Renderer/Resource/VertexFormat.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
-#include <FalconEngine/Graphics/Renderer/Resource/UniformAutomatic.h>
-#include <FalconEngine/Graphics/Renderer/Resource/UniformBufferAutomatic.h>
 
 using namespace std;
 

@@ -33,6 +33,8 @@ public:
     void
     Disable(Renderer *, unsigned int bindingIndex, unsigned int shaderMask);
 
+    using PlatformBuffer::Map;
+
     void *
     Map(Renderer *);
 };

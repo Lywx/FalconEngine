@@ -29,7 +29,9 @@ template <typename T>
 void
 UniformBufferManual<T>::UpdateContextInternal(const Camera *, const Visual *, void *data)
 {
-    std::memcpy(data, this->mData, 1);
+    std::memcpy(data, this->mData, this->mDataSize);
+
+    this->mDataIsCurrent = true;
 }
 
 template <typename T, typename ... Args>

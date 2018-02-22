@@ -250,7 +250,7 @@ VisualEffect::SetUniformAutomaticModelTransform(VisualEffectInstance *visualEffe
     using namespace std::placeholders;
 
     visualEffectInstance->SetUniform(passIndex, ShareUniformAutomatic<Matrix4f>(uniformName,
-                                           std::bind([](const Visual * visual, const Camera * /* camera */)
+                                     std::bind([](const Visual * visual, const Camera * /* camera */)
     {
         return visual->mWorldTransform;
     }, _1, _2)));
@@ -263,7 +263,7 @@ VisualEffect::SetUniformAutomaticModelViewTransform(VisualEffectInstance *visual
     using namespace std::placeholders;
 
     visualEffectInstance->SetUniform(passIndex, ShareUniformAutomatic<Matrix4f>(uniformName,
-                                           std::bind([](const Visual * visual, const Camera * camera)
+                                     std::bind([](const Visual * visual, const Camera * camera)
     {
         return camera->GetView() * visual->mWorldTransform;
     }, _1, _2)));
@@ -300,7 +300,7 @@ VisualEffect::SetUniformAutomaticNormalTransform(VisualEffectInstance *visualEff
     using namespace std::placeholders;
 
     visualEffectInstance->SetUniform(passIndex, ShareUniformAutomatic<Matrix3f>(uniformName,
-                                           std::bind([](const Visual * visual, const Camera * camera)
+                                     std::bind([](const Visual * visual, const Camera * camera)
     {
         auto normalTransform = Matrix4f::Transpose(Matrix4f::Inverse(camera->GetView() * visual->mWorldTransform));
         return Matrix3f(normalTransform);
@@ -314,7 +314,7 @@ VisualEffect::SetUniformAutomaticScreenTransform(VisualEffectInstance *visualEff
     using namespace std::placeholders;
 
     visualEffectInstance->SetUniform(passIndex, ShareUniformAutomatic<Matrix4f>(uniformName,
-                                           std::bind([](const Visual *, const Camera *)
+                                     std::bind([](const Visual *, const Camera *)
     {
         static auto sMasterRenderer = Renderer::GetInstance();
         auto viewport = sMasterRenderer->GetViewport();

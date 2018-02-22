@@ -229,7 +229,7 @@ DebugRenderer::UpdateCamera()
 {
     auto data = mDebugEffectParams->mCameraBuffer->GetDataCast();
     data->mViewProjectionTransform = mDebugEffectParams->mCamera->GetViewProjection();
-    mDebugEffectParams->mCameraBuffer->SignalUpdate();
+    mDebugEffectParams->mCameraBuffer->SignalContext();
 }
 
 /************************************************************************/

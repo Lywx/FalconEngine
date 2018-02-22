@@ -99,9 +99,16 @@ DebugEffect::InitializeInstance(
     VisualEffectInstance              *instance,
     std::shared_ptr<DebugEffectParams> params) const
 {
-    FALCON_ENGINE_UNIFORM_BUFFER_2_SET(
-        instance, 0, Detail::DebugTransformBufferData, params->mCameraBuffer,
-        "TransformBuffer", GetShaderMask(ShaderType::VertexShader));
+    if (!params->mCameraBuffer)
+    {
+        FALCON_ENGINE_UNIFORM_BUFFER_2_SET(
+            instance, 0, Detail::DebugTransformBufferData, params->mCameraBuffer,
+            "TransformBuffer", GetShaderMask(ShaderType::VertexShader));
+    }
+    else
+    {
+        instance->SetUniformBuffer(0, params->mCameraBuffer, GetShaderMask(ShaderType::VertexShader));
+    }
 }
 
 }

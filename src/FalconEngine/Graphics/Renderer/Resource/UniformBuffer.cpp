@@ -1,5 +1,6 @@
 #include <FalconEngine/Graphics/Renderer/Resource/UniformBuffer.h>
 #include <FalconEngine/Core/Exception.h>
+#include <utility>
 
 namespace FalconEngine
 {
@@ -7,7 +8,7 @@ namespace FalconEngine
 /************************************************************************/
 /* Constructors and Destructor                                          */
 /************************************************************************/
-UniformBuffer::UniformBuffer(const std::string & name,
+UniformBuffer::UniformBuffer(std::string name,
                              size_t storageSize,
                              ResourceStorageMode storageMode) :
     Buffer(1,
@@ -16,9 +17,9 @@ UniformBuffer::UniformBuffer(const std::string & name,
            ResourceCreationAccessMode::GpuReadCpuWrite,
            ResourceCreationAccessUsage::Dynamic,
            storageMode),
-    mValueIsCurrent(true)
+    mName(std::move(name)),
+    mDataIsCurrent(true)
 {
-    mName = name;
 }
 
 UniformBuffer::~UniformBuffer()
@@ -31,7 +32,7 @@ UniformBuffer::~UniformBuffer()
 bool
 UniformBuffer::ShouldUpdateContext() const
 {
-    return !mValueIsCurrent;
+    return !mDataIsCurrent;
 }
 
 void

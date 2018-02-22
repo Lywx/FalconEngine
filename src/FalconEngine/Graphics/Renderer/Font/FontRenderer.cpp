@@ -204,7 +204,7 @@ FontRenderer::FillText(
 
     mTextBufferGroup->FillChannelDataBegin(
         fontChannel,
-        ResourceMapAccessMode::WriteRange,
+        ResourceMapAccessMode::WriteRangeContinue,
         ResourceMapFlushMode::Explicit,
         ResourceMapSyncMode::Unsynchronized);
 

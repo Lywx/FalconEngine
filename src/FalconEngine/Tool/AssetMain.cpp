@@ -26,8 +26,12 @@ main()
     // Shader
     AssetTool assetTool;
     assetTool.D3DSetShaderCompiler("C:/Program Files (x86)/Windows Kits/10/bin/10.0.15063.0/x64/fxc.exe");
+    assetTool.D3DBakeShader("Content/Shader/Debug.vert.hlsl");
+    assetTool.D3DBakeShader("Content/Shader/Debug.frag.hlsl");
     assetTool.D3DBakeShader("Content/Shader/Font.vert.hlsl");
     assetTool.D3DBakeShader("Content/Shader/Font.frag.hlsl");
+    assetTool.D3DBakeShader("Content/Shader/Paint.vert.hlsl");
+    assetTool.D3DBakeShader("Content/Shader/Paint.frag.hlsl");
     assetTool.D3DBakeShader("Content/Shader/Phong.vert.hlsl");
     assetTool.D3DBakeShader("Content/Shader/Phong.frag.hlsl");
 #endif

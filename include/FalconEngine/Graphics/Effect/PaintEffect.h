@@ -12,6 +12,18 @@
 namespace FalconEngine
 {
 
+namespace Detail
+{
+
+FALCON_ENGINE_STRUCT_BEGIN PaintBufferData
+{
+    Matrix4f mModelViewProjectionTransform;
+    Vector4f mColor;
+};
+FALCON_ENGINE_STRUCT_END
+
+}
+
 class Visual;
 class Mesh;
 class Node;

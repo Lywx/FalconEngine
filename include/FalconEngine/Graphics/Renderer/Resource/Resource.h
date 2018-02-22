@@ -66,9 +66,16 @@ enum class ResourceCreationAccessUsage
 enum class ResourceMapAccessMode
 {
     WriteBuffer,
-    WriteBufferInvalidateBuffer, // Enable buffer orphaning to avoid implicit synchronization.
+
+    // Enable buffer orphaning to avoid implicit synchronization.
+    WriteBufferInvalidateBuffer,
     WriteRange,
-    WriteRangeInvalidateBuffer,  // Enable buffer orphaning to avoid implicit synchronization.
+
+    // Promise no overwriting existing data.
+    WriteRangeContinue,
+
+    // Enable buffer orphaning to avoid implicit synchronization.
+    WriteRangeInvalidateBuffer,
     WriteRangeInvalidateRange,
 
     ReadWriteBuffer,

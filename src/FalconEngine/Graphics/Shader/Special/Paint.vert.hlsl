@@ -1,22 +1,30 @@
-#version 430 core
-
-layout(location = 0) in vec3 Position;
-layout(location = 0) in vec3 Normal;
-layout(location = 0) in vec3 TexCoord;
-
-out Vout
+struct Vin
 {
-    vec4 Color;
-} vout;
- 
-uniform mat4 ModelViewProjectionTransform;
-uniform vec4 Color;
+    float3 Position : POSITION0;
+    float3 Normal : NORMAL1;
+    float3 TexCoord : TEXCOORD2;
+};
 
-void 
-main()
+struct Vout
+{
+    float4 Position : SV_POSITION;
+    float4 Color : COLOR;
+};
+ 
+cbuffer PaintBuffer
+{
+    float4x4 ModelViewProjectionTransform;
+    float4 Color;
+};
+
+Vout
+main(Vin vin) 
 {      
+    Vout vout;
+
     vout.Color = Color;
-    
-    gl_Position = ModelViewProjectionTransform * vec4(Position, 1); 
+    vout.Position = mul(float4(vin.Position, 1.0), ModelViewProjectionTransform); 
+
+    return vout;
 }
  

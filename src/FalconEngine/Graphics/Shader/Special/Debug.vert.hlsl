@@ -1,12 +1,7 @@
-layout(location = 0) in vec3 Position;
-layout(location = 1) in vec4 Color;
-layout(location = 2) in int  Camera;
-
 struct Vin
 {
     float3 Position : POSITION0;
     float4 Color : COLOR1;
-    int Camera : CAMERA2;
 };
 
 struct Vout
@@ -15,14 +10,19 @@ struct Vout
     noperspective float4 Color : COLOR;
 };
  
-#define CameraMaxNum 4
-uniform mat4[CameraMaxNum] ViewProjectionTransformArray;
-
-void
-main(Vout vout) 
+cbuffer TransformBuffer
 {
-    vout.Color = Color;
+    float4x4 ViewProjectionTransform;
+};
+
+Vout
+main(Vin vin) 
+{
+    Vout vout;
+    vout.Color = vin.Color;
 
     // Assume the position is in world space.
-    gl_Position = ViewProjectionTransformArray[Camera] * vec4(Position, 1); 
+    vout.Position = mul(float4(vin.Position, 1.0), ViewProjectionTransform);
+    
+    return vout;
 }

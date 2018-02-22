@@ -32,6 +32,8 @@ public:
     void
     Disable(Renderer * renderer, unsigned int bindingIndex, unsigned int shaderMask);
 
+    using PlatformResource::Map;
+
     void *
     Map(Renderer *);
 };

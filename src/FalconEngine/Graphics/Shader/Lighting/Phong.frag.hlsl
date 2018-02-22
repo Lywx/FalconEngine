@@ -105,8 +105,6 @@ CalcPointLight(PointLightData light, float3 eyeN, float3 eyeV, float3 eyePositio
         cEmissive,
         cSpecular);
 
-    // TODO(Wuxiang): ???
-
     // Attenuation
     float distance = length(light.EyePosition - eyePosition);
     float attenuation = 1.0f / (light.Constant + light.Linear * distance + 

@@ -104,21 +104,20 @@ const DXGI_FORMAT Direct3DResourceFormat[int(TextureFormat::Count)] =
 
 const D3D11_MAP Direct3DResourceMapMode[int(ResourceMapAccessMode::Count)] =
 {
-    D3D11_MAP_WRITE,
-    D3D11_MAP_WRITE_DISCARD,
-    D3D11_MAP_WRITE,
-    D3D11_MAP_WRITE_DISCARD,
-    D3D11_MAP_WRITE_DISCARD,
+    D3D11_MAP_WRITE,              // WriteBuffer
+    D3D11_MAP_WRITE_DISCARD,      // WriteBufferInvalidateBuffer
+    D3D11_MAP_WRITE,              // WriteRange
 
-    D3D11_MAP_READ_WRITE,
-    D3D11_MAP_READ_WRITE,
+    D3D11_MAP_WRITE_NO_OVERWRITE, // WriteRangeContinue, https://msdn.microsoft.com/en-us/library/windows/desktop/ff476181(v=vs.85).aspx
+    D3D11_MAP_WRITE_DISCARD,      // WriteRangeInvalidateBuffer
+    D3D11_MAP_WRITE_DISCARD,      // WriteRangeInvalidateRange
 
-    D3D11_MAP_READ,
-    D3D11_MAP_READ,
 
-    // TODO(Wuxiang): 2018-02-06 12:10 Add non overwrite support.
-    // https://msdn.microsoft.com/en-us/library/windows/desktop/ff476181(v=vs.85).aspx
-    //D3D11_MAP_WRITE_NO_OVERWRITE
+    D3D11_MAP_READ_WRITE,         // ReadWriteBuffer
+    D3D11_MAP_READ_WRITE,         // ReadWriteRange
+
+    D3D11_MAP_READ,               // ReadBuffer
+    D3D11_MAP_READ,               // ReadRange
 };
 
 const D3D11_TEXTURE_ADDRESS_MODE Direct3DSamplerWrapMode[int(SamplerWrapMode::Count)] =

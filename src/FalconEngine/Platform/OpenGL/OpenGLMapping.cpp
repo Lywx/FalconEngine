@@ -8,17 +8,18 @@ namespace FalconEngine
 
 const GLuint OpenGLBufferAccessModeBit[int(ResourceMapAccessMode::Count)] =
 {
-    GL_MAP_WRITE_BIT,
-    GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT,
-    GL_MAP_WRITE_BIT,
-    GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT,
-    GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT,
+    GL_MAP_WRITE_BIT,                                // WriteBuffer
+    GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT, // WriteBufferInvalidateBuffer
+    GL_MAP_WRITE_BIT,                                // WriteRange
+    GL_MAP_WRITE_BIT,                                // WriteRangeContinue
+    GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT, // WriteRangeInvalidateBuffer
+    GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT,  // WriteRangeInvalidateRange
 
-    GL_MAP_READ_BIT | GL_MAP_WRITE_BIT,
-    GL_MAP_READ_BIT | GL_MAP_WRITE_BIT,
+    GL_MAP_READ_BIT | GL_MAP_WRITE_BIT,              // ReadWriteBuffer
+    GL_MAP_READ_BIT | GL_MAP_WRITE_BIT,              // ReadWriteRange
 
-    GL_MAP_READ_BIT,
-    GL_MAP_READ_BIT,
+    GL_MAP_READ_BIT,                                 // ReadBuffer
+    GL_MAP_READ_BIT,                                 // ReadRange
 };
 
 const GLuint OpenGLBufferFlushModeBit[int(ResourceMapFlushMode::Count)] =

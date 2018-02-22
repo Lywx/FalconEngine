@@ -1,15 +1,11 @@
-#version 430 core
-
-in Vout
+struct Vout
 {
-    noperspective vec4 Color;
-} fin;
-
-layout(location = 0) out vec4 FragColor;
-
-void
-main()
+    float4 Position : SV_POSITION;
+    noperspective float4 Color : COLOR;
+};
+ 
+float4 
+main(Vout fin) : SV_TARGET
 {
-    FragColor = fin.Color;
+    return fin.Color;
 }
-

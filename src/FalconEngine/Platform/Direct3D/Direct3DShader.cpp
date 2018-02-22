@@ -114,6 +114,12 @@ PlatformShader::CreateShaderFromString(ID3D11Device4 *device, int shaderIndex, S
         ComPtr<ID3D11VertexShader> shader;
         D3DCheckSuccess(device->CreateVertexShader(shaderSource.data(), shaderSource.size(), nullptr, shader.ReleaseAndGetAddressOf()));
         SetShader(shaderIndex, shader);
+
+        // NEW(Wuxiang): Add shade reflection support.
+        // ID3D11ShaderReflection *reflector = nullptr;
+        // D3DReflect(shaderSource.data(), shaderSource.size(),
+        //            IID_ID3D11ShaderReflection, reinterpret_cast<void **>(&reflector));
+        // reflector->GetConstantBufferByName()
     }
     break;
     case ShaderType::TessellationControlShader:

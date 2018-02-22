@@ -114,7 +114,7 @@ FontEffect::InitializeInstance(
                                          0, float(gameEngineSettings->mWindowHeight),
                                          -1.0f, 1.0f);
     }
-    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END(GetShaderMask(ShaderType::VertexShader));
+    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END(0, GetShaderMask(ShaderType::VertexShader));
 
     // NOTE(Wuxiang): You don't need to set the texture sampler uniform because
     // they are predefined in the fe_Texture.glsl as #include extension.

@@ -109,7 +109,7 @@ DebugEffect::InitializeInstance(
     VisualEffectInstance              *instance,
     std::shared_ptr<DebugEffectParams> params) const
 {
-    instance->SetUniformBuffer(0, params->mCameraBuffer, GetShaderMask(ShaderType::VertexShader));
+    instance->SetUniformBuffer(0, params->mCameraBuffer, 0, GetShaderMask(ShaderType::VertexShader));
 }
 
 }

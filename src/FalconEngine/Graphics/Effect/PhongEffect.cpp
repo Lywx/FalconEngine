@@ -122,7 +122,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance *instance,
         data->mNormalTransform1 = normalTransform[1];
         data->mNormalTransform2 = normalTransform[2];
     }
-    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END(GetShaderMask(ShaderType::VertexShader));
+    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END(0, GetShaderMask(ShaderType::VertexShader));
 
     // Material
     FALCON_ENGINE_UNIFORM_BUFFER_1_SET_BEGIN(instance, 0, Detail::PhongMaterialBufferData, "MaterialBuffer", = )
@@ -141,7 +141,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance *instance,
         data->mMaterialColor.mSpecular = Vector3f(material->mSpecularColor);
         data->mMaterialTexture.mSpecularExist = material->mSpecularTexture != nullptr;
     }
-    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END(GetShaderMask(ShaderType::FragmentShader));
+    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END(1, GetShaderMask(ShaderType::FragmentShader));
 
     // Texture
     if (material->mAmbientTexture != nullptr)
@@ -261,7 +261,7 @@ PhongEffect::InitializeInstance(_IN_OUT_ VisualEffectInstance *instance,
             }
         }
     }
-    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END(GetShaderMask(ShaderType::FragmentShader));
+    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END(2, GetShaderMask(ShaderType::FragmentShader));
 }
 
 }

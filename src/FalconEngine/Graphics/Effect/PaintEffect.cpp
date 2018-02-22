@@ -113,7 +113,7 @@ PaintEffect::InitializeInstance(
         data->mModelViewProjectionTransform = camera->GetViewProjection() * visual->mWorldTransform;
         data->mColor = Vector4f(params->mColor);
     }
-    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END(GetShaderMask(ShaderType::VertexShader));
+    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END(0, GetShaderMask(ShaderType::VertexShader));
 }
 
 }

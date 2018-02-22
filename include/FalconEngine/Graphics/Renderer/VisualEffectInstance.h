@@ -78,6 +78,7 @@ public:
     void
     SetUniformBuffer(int passIndex,
                      std::shared_ptr<UniformBufferTemplate<T>> uniformBuffer,
+                     unsigned int bindingIndex,
                      unsigned int shaderMask);
 
     const Texture *
@@ -133,11 +134,13 @@ VisualEffectInstance::SetUniform(int passIndex,
 template <typename T>
 void
 VisualEffectInstance::SetUniformBuffer(int passIndex,
-                                       std::shared_ptr<UniformBufferTemplate<T>> uniformBuffer, unsigned int shaderMask)
+                                       std::shared_ptr<UniformBufferTemplate<T>> uniformBuffer,
+                                       unsigned int bindingIndex,
+                                       unsigned int shaderMask)
 {
     FALCON_ENGINE_CHECK_NULLPTR(uniformBuffer);
 
-    mEffectInstancePassList.at(passIndex)->PushUniformBuffer(std::move(uniformBuffer), shaderMask);
+    mEffectInstancePassList.at(passIndex)->PushUniformBuffer(std::move(uniformBuffer), bindingIndex, shaderMask);
 }
 
 }
@@ -154,8 +157,8 @@ instance->SetUniformBuffer(pass,  \
     FalconEngine::ShareUniformBufferAutomatic<DataKlass>( \
         uniformBufferNameString, FALCON_ENGINE_UNIFORM_BUFFER_FUNC_BEGIN(captureList, DataKlass)
 
-#define FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END(uniformBufferShaderMask) FALCON_ENGINE_UNIFORM_BUFFER_FUNC_END), uniformBufferShaderMask)
+#define FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END(uniformBufferBindingIndex, uniformBufferShaderMask) FALCON_ENGINE_UNIFORM_BUFFER_FUNC_END), uniformBufferBindingIndex, uniformBufferShaderMask)
 
-#define FALCON_ENGINE_UNIFORM_BUFFER_2_SET(instance, pass, DataKlass, uniformBufferVariable, uniformBufferNameString, uniformBufferShaderMask) \
+#define FALCON_ENGINE_UNIFORM_BUFFER_2_SET(instance, pass, DataKlass, uniformBufferVariable, uniformBufferNameString, uniformBufferBindingIndex, uniformBufferShaderMask) \
 uniformBufferVariable = FalconEngine::ShareUniformBufferManual<DataKlass>(uniformBufferNameString); \
-instance->SetUniformBuffer(pass, uniformBufferVariable, uniformBufferShaderMask)
+instance->SetUniformBuffer(pass, uniformBufferVariable, uniformBufferBindingIndex, uniformBufferShaderMask)

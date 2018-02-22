@@ -125,7 +125,7 @@ public:
     PushUniform(std::shared_ptr<Uniform> uniform);
 
     void
-    PushUniformBuffer(std::shared_ptr<UniformBuffer> uniformBuffer, unsigned int shaderMask);
+    PushUniformBuffer(std::shared_ptr<UniformBuffer> uniformBuffer, unsigned int bindingIndex, unsigned int shaderMask);
 
     auto
     GetUniformBufferBindingBegin() const
@@ -176,11 +176,9 @@ private:
     /************************************************************************/
     std::map<int, SamplerBinding> mSamplerBindingTable;
     std::map<int, TextureBinding> mTextureBindingTable;
-    int mTextureUnitCount;
 
     std::vector<std::shared_ptr<Uniform>> mUniformList;
     std::vector<std::shared_ptr<UniformBufferBinding>> mUniformBufferBindingList;
-    int mUniformBufferBindingIndexCount;
 };
 FALCON_ENGINE_CLASS_END
 

@@ -19,9 +19,7 @@ namespace FalconEngine
 /************************************************************************/
 VisualEffectInstancePass::VisualEffectInstancePass(Shader *shader) :
     mInstancingNum(1),
-    mShader(shader),
-    mTextureUnitCount(0),
-    mUniformBufferBindingIndexCount(0)
+    mShader(shader)
 {
 }
 
@@ -130,7 +128,7 @@ VisualEffectInstancePass::GetUniformNum() const
 }
 
 void
-VisualEffectInstancePass::PushUniformBuffer(std::shared_ptr<UniformBuffer> uniformBuffer, unsigned int shaderMask)
+VisualEffectInstancePass::PushUniformBuffer(std::shared_ptr<UniformBuffer> uniformBuffer, unsigned int bindingIndex, unsigned int shaderMask)
 {
     FALCON_ENGINE_CHECK_NULLPTR(uniformBuffer);
 
@@ -138,12 +136,11 @@ VisualEffectInstancePass::PushUniformBuffer(std::shared_ptr<UniformBuffer> unifo
     {
         mShader->SetUniformBufferMeta(uniformBuffer->mName,
                                       uniformBuffer->GetCapacitySize(),
-                                      mUniformBufferBindingIndexCount);
+                                      bindingIndex);
     }
 
     auto uniformBufferBinding = make_shared<UniformBufferBinding>(std::move(uniformBuffer), shaderMask);
     mUniformBufferBindingList.push_back(std::move(uniformBufferBinding));
-    mUniformBufferBindingIndexCount += 1;
 }
 
 }

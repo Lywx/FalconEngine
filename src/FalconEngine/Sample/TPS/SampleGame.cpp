@@ -137,6 +137,9 @@ SampleGame::Initialize()
         mCamera->mAzimuthalRadian = Radian(40.0f);
         mCamera->mPolarRadian = Radian(40.0f);
         mCamera->mRadialDistance = 40.0f;
+
+        static auto sDebugRenderer = DebugRenderer::GetInstance();
+        sDebugRenderer->SetCamera(mCamera.get());
     }
 }
 
@@ -194,8 +197,8 @@ SampleGame::Render(GameEngineGraphics *graphics, double percent)
     sEntityRenderer->Draw(mCamera.get(), mScene.get());
 
     static auto sDebugRenderer = graphics->GetDebugRenderer();
-    sDebugRenderer->AddAabb(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f));
-    sDebugRenderer->AddAabb(mCamera.get(), mPointLight2.get(), Transparent(ColorPalette::Green, 1.0f));
+    sDebugRenderer->AddAabb(mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f));
+    sDebugRenderer->AddAabb(mPointLight2.get(), Transparent(ColorPalette::Green, 1.0f));
 
     sFontRenderer->AddText(mFont, 16.0f, Vector2f(gameEngineSettings->mWindowWidth / 2.0f, gameEngineSettings->mWindowHeight / 2.0f), ".");
 

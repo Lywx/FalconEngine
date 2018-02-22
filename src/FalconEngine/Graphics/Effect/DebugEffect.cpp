@@ -1,4 +1,5 @@
 #include <FalconEngine/Graphics/Effect/DebugEffect.h>
+#include <FalconEngine/Graphics/Renderer/Camera.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectPass.h>
 #include <FalconEngine/Graphics/Renderer/VisualEffectInstance.h>
 #include <FalconEngine/Graphics/Renderer/Resource/Shader.h>
@@ -99,9 +100,12 @@ DebugEffect::InitializeInstance(
     VisualEffectInstance              *instance,
     std::shared_ptr<DebugEffectParams> params) const
 {
-    FALCON_ENGINE_UNIFORM_BUFFER_2_SET(
-        instance, 0, Detail::DebugTransformBufferData, params->mCameraBuffer,
-        "TransformBuffer", GetShaderMask(ShaderType::VertexShader));
+
+    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_BEGIN(instance, 0, Detail::DebugTransformBufferData, "TransformBuffer", = )
+    {
+        data->mViewProjectionTransform = params->mCamera ? params->mCamera->GetViewProjection() : Matrix4f::Zero;
+    }
+    FALCON_ENGINE_UNIFORM_BUFFER_1_SET_END(GetShaderMask(ShaderType::VertexShader));
 }
 
 }

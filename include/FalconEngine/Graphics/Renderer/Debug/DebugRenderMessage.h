@@ -35,7 +35,6 @@ public:
                        float           duration,
                        bool            depthEnabled) :
         mType(type),
-        mCamera(),
         mColor(color),
         mDuration(duration),
         mDepthEnabled(depthEnabled),
@@ -51,7 +50,6 @@ public:
     // NOTE(Wuxiang): Those are common data field for all different item type.
     DebugRenderType mType;
 
-    const Camera   *mCamera;
     Color           mColor;
     float           mDuration;
     bool            mDepthEnabled;

@@ -215,19 +215,15 @@ SampleGame::UpdateFrame(GameEngineGraphics *graphics, GameEngineInput *input, do
     }
 
     static auto sDebugRenderer = graphics->GetDebugRenderer();
-    //if (keyboard->KeyDown(Key::P))
-    //{
     if (keyboard->KeyPressed(Key::P))
     {
-        //sDebugRenderer->AddText(std::to_string(GameTimer::GetSeconds()), Vector2f(500.0f, 500.0f), 16.0f, ColorPalette::White, 0.0f);
-        sDebugRenderer->AddAabb(mCamera.get(), mCamera->GetPosition() + Vector3f(-1, -1, -1), mCamera->GetPosition() + Vector3f(1, 1, 1), Transparent(ColorPalette::Yellow, 1.0f), 4.0f, true);
+        // sDebugRenderer->AddText(std::to_string(GameTimer::GetSeconds()), Vector2f(500.0f, 500.0f), 16.0f, ColorPalette::White, 0.0f);
+        sDebugRenderer->AddAabb(mCamera->GetPosition() + Vector3f(-1, -1, -1), mCamera->GetPosition() + Vector3f(1, 1, 1), Transparent(ColorPalette::Yellow, 1.0f), 4.0f, true);
     }
 
-    //}
-
-    //sDebugRenderer->AddSphere(mCamera.get(), mCamera->GetPosition(), 5.0f, ColorPalette::Red, 0.0f, false);
-    // sDebugRenderer->AddAabb(mCamera.get(), mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f), 0.0f, true);
-    // sDebugRenderer->AddAabb(mCamera.get(), mPointLight2.get(), Transparent(ColorPalette::Green, 1.0f), 0.0f, true);
+    //sDebugRenderer->AddSphere(mCamera->GetPosition(), 5.0f, ColorPalette::Red, 0.0f, false);
+    // sDebugRenderer->AddAabb(mPointLight1.get(), Transparent(ColorPalette::Yellow, 1.0f), 0.0f, true);
+    // sDebugRenderer->AddAabb(mPointLight2.get(), Transparent(ColorPalette::Green, 1.0f), 0.0f, true);
 
     Game::UpdateFrame(graphics, input, elasped);
 }

@@ -58,30 +58,26 @@ public:
     /************************************************************************/
     // @summary Recursively draw AABB for the entity.
     void
-    AddAabb(const Camera *camera,
-            const Entity *entity,
+    AddAabb(const Entity *entity,
             const Color&  color,
             float         duration = 0.0f,
             bool          depthEnabled = true);
 
     // @summary Recursively draw AABB for the node.
     void
-    AddAabb(const Camera *camera,
-            const Node   *node,
+    AddAabb(const Node   *node,
             const Color&  color,
             float         duration = 0.0f,
             bool          depthEnabled = true);
 
     void
-    AddAabb(const Camera *camera,
-            const Visual *visual,
+    AddAabb(const Visual *visual,
             const Color&  color,
             float         duration = 0.0f,
             bool          depthEnabled = true);
 
     void
-    AddAabb(const Camera   *camera,
-            const Vector3f& min,
+    AddAabb(const Vector3f& min,
             const Vector3f& max,
 
             const Color&    color,
@@ -89,8 +85,7 @@ public:
             bool            depthEnabled = true);
 
     void
-    AddCircle(const Camera   *camera,
-              const Vector3f& center,
+    AddCircle(const Vector3f& center,
               const Vector3f& normal,
               float           radius,
 
@@ -99,8 +94,7 @@ public:
               bool            depthEnabled = true);
 
     void
-    AddCross(const Camera   *camera,
-             const Vector3f& center,
+    AddCross(const Vector3f& center,
              float           radius,
 
              const Color&    color,
@@ -108,8 +102,7 @@ public:
              bool            depthEnabled = true);
 
     void
-    AddLine(const Camera   *camera,
-            const Vector3f& from,
+    AddLine(const Vector3f& from,
             const Vector3f& to,
 
             const Color&    color,
@@ -125,8 +118,7 @@ public:
     //        bool            depthEnabled = true);
 
     void
-    AddSphere(const Camera   *camera,
-              const Vector3f& center,
+    AddSphere(const Vector3f& center,
               float           radius,
 
               const Color&    color,
@@ -150,9 +142,6 @@ public:
     /************************************************************************/
     void
     SetCamera(const Camera *camera);
-
-    void
-    UpdateCamera();
 
     /************************************************************************/
     /* Rendering Engine API                                                 */

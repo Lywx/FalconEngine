@@ -52,20 +52,18 @@ const int BufferChannelMap[int(DebugRenderType::Count)] =
 /* Rendering API                                                        */
 /************************************************************************/
 void
-DebugRenderer::AddAabb(const Camera *camera,
-                       const Entity *entity,
+DebugRenderer::AddAabb(const Entity *entity,
                        const Color&  color,
                        float         duration,
                        bool          depthEnabled)
 {
     FALCON_ENGINE_CHECK_NULLPTR(entity);
 
-    AddAabb(camera, entity->GetNode(), color, duration, depthEnabled);
+    AddAabb(entity->GetNode(), color, duration, depthEnabled);
 }
 
 void
-DebugRenderer::AddAabb(const Camera *camera,
-                       const Node   *node,
+DebugRenderer::AddAabb(const Node   *node,
                        const Color&  color,
                        float         duration,
                        bool          depthEnabled)
@@ -78,11 +76,11 @@ DebugRenderer::AddAabb(const Camera *camera,
         auto child = node->GetChildAt(slotIndex);
         if (auto childVisual = dynamic_cast<const Visual *>(child))
         {
-            AddAabb(camera, childVisual, color, duration, depthEnabled);
+            AddAabb(childVisual, color, duration, depthEnabled);
         }
         else if (auto childNode = dynamic_cast<const Node *>(child))
         {
-            AddAabb(camera, childNode, color, duration, depthEnabled);
+            AddAabb(childNode, color, duration, depthEnabled);
         }
         else
         {
@@ -92,8 +90,7 @@ DebugRenderer::AddAabb(const Camera *camera,
 }
 
 void
-DebugRenderer::AddAabb(const Camera *camera,
-                       const Visual *visual,
+DebugRenderer::AddAabb(const Visual *visual,
                        const Color&  color,
                        float         duration,
                        bool          depthEnabled)
@@ -102,15 +99,13 @@ DebugRenderer::AddAabb(const Camera *camera,
 
     auto aabb = visual->GetMesh()->GetAabb();
 
-    AddAabb(camera,
-            Vector3f(visual->mWorldTransform * Vector4f(aabb->mMin, 1)),
+    AddAabb(Vector3f(visual->mWorldTransform * Vector4f(aabb->mMin, 1)),
             Vector3f(visual->mWorldTransform * Vector4f(aabb->mMax, 1)),
             color, duration, depthEnabled);
 }
 
 void
-DebugRenderer::AddAabb(const Camera   *camera,
-                       const Vector3f& min,
+DebugRenderer::AddAabb(const Vector3f& min,
                        const Vector3f& max,
 
                        const Color&    color,
@@ -118,7 +113,6 @@ DebugRenderer::AddAabb(const Camera   *camera,
                        bool            depthEnabled)
 {
     DebugRenderMessage message(DebugRenderType::Aabb, color, duration, depthEnabled);
-    message.mCamera = camera;
     message.mFloatVector1 = min;
     message.mFloatVector2 = max;
 
@@ -126,8 +120,7 @@ DebugRenderer::AddAabb(const Camera   *camera,
 }
 
 void
-DebugRenderer::AddCircle(const Camera   *camera,
-                         const Vector3f& center,
+DebugRenderer::AddCircle(const Vector3f& center,
                          const Vector3f& normal,
                          float           radius,
 
@@ -136,7 +129,6 @@ DebugRenderer::AddCircle(const Camera   *camera,
                          bool            depthEnabled)
 {
     DebugRenderMessage message(DebugRenderType::Circle, color, duration, depthEnabled);
-    message.mCamera = camera;
     message.mFloat1 = radius;
     message.mFloatVector1 = center;
     message.mFloatVector2 = normal;
@@ -145,16 +137,15 @@ DebugRenderer::AddCircle(const Camera   *camera,
 }
 
 void
-DebugRenderer::AddCross(const Camera   *camera,
-                        const Vector3f& center,
-                        float           radius,
+DebugRenderer::AddCross(
+    const Vector3f& center,
+    float           radius,
 
-                        const Color&    color,
-                        float           duration,
-                        bool            depthEnabled)
+    const Color&    color,
+    float           duration,
+    bool            depthEnabled)
 {
     DebugRenderMessage message(DebugRenderType::Cross, color, duration, depthEnabled);
-    message.mCamera = camera;
     message.mFloat1 = radius;
     message.mFloatVector1 = center;
 
@@ -162,16 +153,15 @@ DebugRenderer::AddCross(const Camera   *camera,
 }
 
 void
-DebugRenderer::AddLine(const Camera   *camera,
-                       const Vector3f& from,
-                       const Vector3f& to,
+DebugRenderer::AddLine(
+    const Vector3f& from,
+    const Vector3f& to,
 
-                       const Color&    color,
-                       float           duration,
-                       bool            depthEnabled)
+    const Color&    color,
+    float           duration,
+    bool            depthEnabled)
 {
     DebugRenderMessage message(DebugRenderType::Line, color, duration, depthEnabled);
-    message.mCamera = camera;
     message.mFloatVector1 = from;
     message.mFloatVector2 = to;
 
@@ -179,16 +169,15 @@ DebugRenderer::AddLine(const Camera   *camera,
 }
 
 void
-DebugRenderer::AddSphere(const Camera   *camera,
-                         const Vector3f& center,
-                         float           radius,
+DebugRenderer::AddSphere(
+    const Vector3f& center,
+    float           radius,
 
-                         const Color&    color,
-                         float           duration,
-                         bool            depthEnabled)
+    const Color&    color,
+    float           duration,
+    bool            depthEnabled)
 {
     DebugRenderMessage message(DebugRenderType::Sphere, color, duration, depthEnabled);
-    message.mCamera = camera;
     message.mFloat1 = radius;
     message.mFloatVector1 = center;
 
@@ -220,16 +209,6 @@ void
 DebugRenderer::SetCamera(const Camera *camera)
 {
     mDebugEffectParams->mCamera = camera;
-
-    UpdateCamera();
-}
-
-void
-DebugRenderer::UpdateCamera()
-{
-    auto data = mDebugEffectParams->mCameraBuffer->GetDataCast();
-    data->mViewProjectionTransform = mDebugEffectParams->mCamera->GetViewProjection();
-    mDebugEffectParams->mCameraBuffer->SignalUpdate();
 }
 
 /************************************************************************/
@@ -394,9 +373,6 @@ DebugRenderer::UpdateFrame(double elapsed)
 
     // Remove time-out message.
     mDebugMessageManager->UpdateFrame(elapsed);
-
-    // Update transform uniform.
-    UpdateCamera();
 }
 
 }

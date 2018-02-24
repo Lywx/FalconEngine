@@ -140,6 +140,7 @@ fe_set_target_output(FalconEngine.Tool)
 # Set up Falcon Engine sample targets
 #
 
+fe_add_sample("FalconEngine.Sample.HW1" "src/FalconEngine/Sample/HW1")
 fe_add_sample("FalconEngine.Sample.FPS" "src/FalconEngine/Sample/FPS")
 fe_add_sample("FalconEngine.Sample.TPS" "src/FalconEngine/Sample/TPS")
 

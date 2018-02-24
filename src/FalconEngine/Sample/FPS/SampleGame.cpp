@@ -42,8 +42,8 @@ SampleGame::Initialize()
             sceneNode->mWorldTransform = Matrix4f::Zero;
 
             auto roomModel = assetManager->LoadModel("Content/Model/Bedroom.dae");
-            mRoomNode = ShareClone(roomModel->GetNodeSp());
-            sceneNode->AttachChild(mRoomNode);
+            mTerrainNode = ShareClone(roomModel->GetNodeSp());
+            sceneNode->AttachChild(mTerrainNode);
 
             auto boxModel = assetManager->LoadModel("Content/Model/Engine/Box.dae");
             auto boxNode = boxModel->GetNodeSp();
@@ -51,9 +51,9 @@ SampleGame::Initialize()
             mPointLight1 = make_shared<LightEntity>(ShareClone(boxNode), LightType::Point);
             mPointLight2 = make_shared<LightEntity>(ShareClone(boxNode), LightType::Point);
             mPointLight3 = make_shared<LightEntity>(ShareClone(boxNode), LightType::Point);
-            mRoomNode->AttachChild(mPointLight1->GetNodeSp());
-            mRoomNode->AttachChild(mPointLight2->GetNodeSp());
-            mRoomNode->AttachChild(mPointLight3->GetNodeSp());
+            mTerrainNode->AttachChild(mPointLight1->GetNodeSp());
+            mTerrainNode->AttachChild(mPointLight2->GetNodeSp());
+            mTerrainNode->AttachChild(mPointLight3->GetNodeSp());
 
             // Axis
             auto axeModel = assetManager->LoadModel("Content/Model/Engine/Axe.dae");
@@ -124,7 +124,7 @@ SampleGame::Initialize()
         mSceneLightingParams->mPointLightList = { mPointLight1->GetLight(), mPointLight2->GetLight(), mPointLight3->GetLight() };
 
         mSceneLightingEffect = make_shared<PhongEffect>();
-        mSceneLightingEffect->CreateInstance(mRoomNode.get(), mSceneLightingParams);
+        mSceneLightingEffect->CreateInstance(mTerrainNode.get(), mSceneLightingParams);
     }
 
     // Initialize Interaction.

@@ -42,7 +42,7 @@ private:
     std::shared_ptr<SceneEntity>       mScene;
     std::shared_ptr<PhongEffect>       mSceneLightingEffect;
     std::shared_ptr<PhongEffectParams> mSceneLightingParams;
-    std::shared_ptr<Node>              mRoomNode;
+    std::shared_ptr<Node>              mTerrainNode;
 
     // Entities
     std::shared_ptr<LightEntity> mDirectionalLight;

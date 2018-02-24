@@ -22,6 +22,13 @@ main()
     AssetProcessor::BakeTexture1d("Content/Texture/Engine/Gradiant 1d.png");
 #endif
 
+#if 0
+    AssetProcessor::BakeModel("Content/Model/Snowball.dae");
+    AssetProcessor::BakeModel("Content/Model/SnowTerrain.dae");
+    AssetProcessor::BakeModel("Content/Model/Skydrome.dae");
+    AssetProcessor::BakeModel("Content/Model/Woodbox.dae");
+#endif
+
 #if 1
     // Shader
     AssetTool assetTool;
@@ -34,6 +41,8 @@ main()
     assetTool.D3DBakeShader("Content/Shader/Paint.frag.hlsl");
     assetTool.D3DBakeShader("Content/Shader/Phong.vert.hlsl");
     assetTool.D3DBakeShader("Content/Shader/Phong.frag.hlsl");
+    assetTool.D3DBakeShader("Content/Shader/Sky.vert.hlsl");
+    assetTool.D3DBakeShader("Content/Shader/Sky.frag.hlsl");
 #endif
 
     return 0;

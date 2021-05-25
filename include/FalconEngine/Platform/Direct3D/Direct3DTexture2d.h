@@ -27,17 +27,17 @@ protected:
     /* Protected Members                                                    */
     /************************************************************************/
     virtual void
-    CreateResource(ID3D11Device4 * device) override final;
+    CreateResource(ID3D11Device1 * device) override final;
 
     virtual void
-    CreateResourceView(ID3D11Device4 * device) override final;
+    CreateResourceView(ID3D11Device1 * device) override final;
 
 private:
     /************************************************************************/
     /* Private Members                                                      */
     /************************************************************************/
     void
-    CreateTexture(ID3D11Device4 * device);
+    CreateTexture(ID3D11Device1 * device);
 
 protected:
     Microsoft::WRL::ComPtr<ID3D11Texture2D> mTextureObj;

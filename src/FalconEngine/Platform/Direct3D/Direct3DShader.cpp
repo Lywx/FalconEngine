@@ -21,7 +21,7 @@ PlatformShader::PlatformShader(Renderer *renderer, Shader *shader) :
 {
     std::fill_n(mShaders, int(ShaderType::Count), nullptr);
 
-    ID3D11Device4 *device = renderer->mData->GetDevice();
+    ID3D11Device1 *device = renderer->mData->GetDevice();
 
     for (auto shaderIter = shader->GetShaderSourceBegin(); shaderIter != shader->GetShaderSourceEnd(); ++shaderIter)
     {
@@ -44,7 +44,7 @@ PlatformShader::~PlatformShader()
 void
 PlatformShader::Enable(Renderer *renderer) const
 {
-    ID3D11DeviceContext4 *context = renderer->mData->GetContext();
+    ID3D11DeviceContext1 *context = renderer->mData->GetContext();
 
     if (mShaders[VertexShaderIndex])
     {
@@ -92,7 +92,7 @@ PlatformShader::Enable(Renderer *renderer) const
 void
 PlatformShader::Disable(Renderer *renderer) const
 {
-    ID3D11DeviceContext4 *context = renderer->mData->GetContext();
+    ID3D11DeviceContext1 *context = renderer->mData->GetContext();
     context->VSSetShader(nullptr, nullptr, 0);
     context->HSSetShader(nullptr, nullptr, 0);
     context->DSSetShader(nullptr, nullptr, 0);
@@ -105,7 +105,7 @@ PlatformShader::Disable(Renderer *renderer) const
 /* Private Members                                                      */
 /************************************************************************/
 void
-PlatformShader::CreateShaderFromString(ID3D11Device4 *device, int shaderIndex, ShaderType shaderType, const std::string& shaderSource)
+PlatformShader::CreateShaderFromString(ID3D11Device1 *device, int shaderIndex, ShaderType shaderType, const std::string& shaderSource)
 {
     switch (shaderType)
     {

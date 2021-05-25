@@ -16,8 +16,8 @@ FALCON_ENGINE_DELETER_IMPLEMENT(PlatformRendererData, PlatformRendererDataDelete
 /* Constructors and Destructor                                          */
 /************************************************************************/
 PlatformRendererData::PlatformRendererData(
-    const ComPtr<ID3D11DeviceContext4>& context,
-    const ComPtr<ID3D11Device4>& device,
+    const ComPtr<ID3D11DeviceContext1>& context,
+    const ComPtr<ID3D11Device1>& device,
     const HWND& window) :
     mContext(context),
     mDevice(device),
@@ -32,25 +32,25 @@ PlatformRendererData::~PlatformRendererData()
 /************************************************************************/
 /* Public Members                                                       */
 /************************************************************************/
-ID3D11DeviceContext4 *
+ID3D11DeviceContext1 *
 PlatformRendererData::GetContext()
 {
     return mContext.Get();
 }
 
-Microsoft::WRL::ComPtr<ID3D11DeviceContext4>
+Microsoft::WRL::ComPtr<ID3D11DeviceContext1>
 PlatformRendererData::GetContextCp()
 {
     return mContext;
 }
 
-ID3D11Device4 *
+ID3D11Device1 *
 PlatformRendererData::GetDevice()
 {
     return mDevice.Get();
 }
 
-Microsoft::WRL::ComPtr<ID3D11Device4>
+Microsoft::WRL::ComPtr<ID3D11Device1>
 PlatformRendererData::GetDeviceCp()
 {
     return mDevice;

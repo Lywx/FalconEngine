@@ -60,24 +60,24 @@ protected:
 
     // @remark Implementer should initialize resource pointer in base class.
     virtual void
-    CreateResource(ID3D11Device4 * device) = 0;
+    CreateResource(ID3D11Device1 * device) = 0;
 
     // @remark This method is assumed to be called after all the filed is set
     // correctly, like mBindFlag, mFormat etc.
     virtual void
-    CreateResourceView(ID3D11Device4 * device) = 0;
+    CreateResourceView(ID3D11Device1 * device) = 0;
 
     void
-    CreateDepthStencilView(ID3D11Device4 * device, D3D11_RESOURCE_DIMENSION dimension);
+    CreateDepthStencilView(ID3D11Device1 * device, D3D11_RESOURCE_DIMENSION dimension);
 
     void
-    CreateShaderResourceView(ID3D11Device4 * device, D3D11_RESOURCE_DIMENSION dimension);
+    CreateShaderResourceView(ID3D11Device1 * device, D3D11_RESOURCE_DIMENSION dimension);
 
     void
-    CreateRenderTargetView(ID3D11Device4 * device, D3D11_RESOURCE_DIMENSION dimension);
+    CreateRenderTargetView(ID3D11Device1 * device, D3D11_RESOURCE_DIMENSION dimension);
 
     void
-    CreateUnorderedAccessView(ID3D11Device4 * device, D3D11_RESOURCE_DIMENSION dimension);
+    CreateUnorderedAccessView(ID3D11Device1 * device, D3D11_RESOURCE_DIMENSION dimension);
 
 protected:
     UINT mBindFlag;

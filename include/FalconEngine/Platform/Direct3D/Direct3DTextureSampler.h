@@ -35,7 +35,7 @@ private:
     /* Private Members                                                      */
     /************************************************************************/
     void
-    Create(ID3D11Device4 * device);
+    Create(ID3D11Device1 * device);
 
 private:
     const Sampler *mSampler;

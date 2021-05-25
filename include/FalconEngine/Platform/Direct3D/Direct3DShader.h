@@ -35,7 +35,7 @@ public:
 
 protected:
     void
-    CreateShaderFromString(ID3D11Device4 * device,
+    CreateShaderFromString(ID3D11Device1 * device,
                            int shaderIndex,
                            ShaderType shaderType,
                            const std::string & shaderSource);

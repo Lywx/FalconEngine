@@ -51,7 +51,7 @@ PlatformVertexFormat::Disable(Renderer *renderer)
 /* Private Members                                                      */
 /************************************************************************/
 void
-PlatformVertexFormat::CreateInputLayout(ID3D11Device4 *device)
+PlatformVertexFormat::CreateInputLayout(ID3D11Device1 *device)
 {
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementList;
     inputElementList.assign(mVertexFormat->GetVertexAttributeNum(), D3D11_INPUT_ELEMENT_DESC());

@@ -62,7 +62,7 @@ Renderer::InitializeDataPlatform()
     DXGI_FORMAT backBufferFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
 
     // First, retrieve the underlying DXGI Device from the D3D Device.
-    ComPtr<IDXGIDevice4> dxgiDevice;
+    ComPtr<IDXGIDevice1> dxgiDevice;
     D3DCheckSuccess(device.As(&dxgiDevice));
 
     // Identify the physical adapter (GPU or card) this device is running on.
@@ -70,7 +70,7 @@ Renderer::InitializeDataPlatform()
     D3DCheckSuccess(dxgiDevice->GetAdapter(dxgiAdapter.GetAddressOf()));
 
     // And obtain the factory object that created it.
-    ComPtr<IDXGIFactory4> dxgiFactory;
+    ComPtr<IDXGIFactory2> dxgiFactory;
     D3DCheckSuccess(dxgiAdapter->GetParent(IID_PPV_ARGS(dxgiFactory.GetAddressOf())));
 
     // Create a descriptor for the swap chain.

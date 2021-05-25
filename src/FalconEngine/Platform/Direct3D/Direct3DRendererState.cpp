@@ -108,7 +108,7 @@ PlatformRendererState::Set(Renderer *renderer,
 /************************************************************************/
 Microsoft::WRL::ComPtr<ID3D11BlendState1>
 PlatformRendererState::CreateBlendState(
-    ID3D11Device4 *device,
+    ID3D11Device1 *device,
     const BlendState *blendState)
 {
     D3D11_BLEND_DESC1 blendDesc;
@@ -153,7 +153,7 @@ SetStencilTestFaceStatePlatform(_IN_ const StencilTestFaceState& faceStateCurren
 
 Microsoft::WRL::ComPtr<ID3D11DepthStencilState>
 PlatformRendererState::CreateDepthStencilState(
-    ID3D11Device4 *device,
+    ID3D11Device1 *device,
     const DepthTestState *depthTestState,
     const StencilTestState *stencilTestState)
 {
@@ -176,7 +176,7 @@ PlatformRendererState::CreateDepthStencilState(
 
 Microsoft::WRL::ComPtr<ID3D11RasterizerState>
 PlatformRendererState::CreateRasterizerState(
-    ID3D11Device4 *device,
+    ID3D11Device1 *device,
     const CullState *cullState,
     const OffsetState *offsetState,
     const WireframeState *wireframeState)

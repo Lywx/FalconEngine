@@ -35,7 +35,7 @@ public:
     /************************************************************************/
 private:
     void
-    CreateInputLayout(ID3D11Device4 * device);
+    CreateInputLayout(ID3D11Device1 * device);
 
 private:
     Microsoft::WRL::ComPtr<ID3D11InputLayout> mInputLayout;

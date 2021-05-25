@@ -36,7 +36,7 @@ PlatformTexture::Enable(Renderer *renderer,
                         int textureUnit,
                         const TextureShaderMaskList& textureShaderMaskList)
 {
-    ID3D11DeviceContext4 *context = renderer->mData->GetContext();
+    ID3D11DeviceContext1 *context = renderer->mData->GetContext();
 
     // SRV.
     if (GetShaderEnabled(textureShaderMaskList[int(TextureMode::Texture)],
@@ -94,7 +94,7 @@ PlatformTexture::Disable(Renderer *renderer,
                          int textureUnit,
                          const TextureShaderMaskList& textureShaderMaskList)
 {
-    ID3D11DeviceContext4 *context = renderer->mData->GetContext();
+    ID3D11DeviceContext1 *context = renderer->mData->GetContext();
 
     // SRV.
     ID3D11ShaderResourceView *nullSrvViews[] = { nullptr };

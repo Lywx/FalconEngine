@@ -45,7 +45,7 @@ PlatformBuffer::Flush(Renderer *, int64_t offset, int64_t size)
 /* Protected Members                                                    */
 /************************************************************************/
 void
-PlatformBuffer::CreateBuffer(ID3D11Device4 *device)
+PlatformBuffer::CreateBuffer(ID3D11Device1 *device)
 {
     D3D11_BUFFER_DESC bufferDesc;
     bufferDesc.Usage = mUsage;
@@ -90,7 +90,7 @@ PlatformBuffer::CreateBuffer(ID3D11Device4 *device)
 }
 
 void
-PlatformBuffer::CreateResource(ID3D11Device4 *device)
+PlatformBuffer::CreateResource(ID3D11Device1 *device)
 {
     CreateBuffer(device);
 
@@ -98,7 +98,7 @@ PlatformBuffer::CreateResource(ID3D11Device4 *device)
 }
 
 void
-PlatformBuffer::CreateResourceView(ID3D11Device4 *device)
+PlatformBuffer::CreateResourceView(ID3D11Device1 *device)
 {
     FALCON_ENGINE_UNUSE(device);
 

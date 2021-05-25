@@ -29,7 +29,7 @@ PlatformTexture1d::~PlatformTexture1d()
 /* Protected Members                                                    */
 /************************************************************************/
 void
-PlatformTexture1d::CreateResource(ID3D11Device4 *device)
+PlatformTexture1d::CreateResource(ID3D11Device1 *device)
 {
     CreateTexture(device);
 
@@ -37,7 +37,7 @@ PlatformTexture1d::CreateResource(ID3D11Device4 *device)
 }
 
 void
-PlatformTexture1d::CreateResourceView(ID3D11Device4 *device)
+PlatformTexture1d::CreateResourceView(ID3D11Device1 *device)
 {
     auto dimension = GetDimension();
 
@@ -66,7 +66,7 @@ PlatformTexture1d::CreateResourceView(ID3D11Device4 *device)
 /* Private Members                                                      */
 /************************************************************************/
 void
-PlatformTexture1d::CreateTexture(ID3D11Device4 *device)
+PlatformTexture1d::CreateTexture(ID3D11Device1 *device)
 {
     D3D11_TEXTURE1D_DESC textureDesc;
     textureDesc.Format = mFormat;

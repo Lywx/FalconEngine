@@ -96,7 +96,7 @@ PlatformResource::GetDimension() const
 }
 
 void
-PlatformResource::CreateDepthStencilView(ID3D11Device4 *device, D3D11_RESOURCE_DIMENSION dimension)
+PlatformResource::CreateDepthStencilView(ID3D11Device1 *device, D3D11_RESOURCE_DIMENSION dimension)
 {
     FALCON_ENGINE_CHECK_ASSERTION(!mShaderResourceView);
     FALCON_ENGINE_CHECK_ASSERTION(
@@ -166,7 +166,7 @@ PlatformResource::CreateDepthStencilView(ID3D11Device4 *device, D3D11_RESOURCE_D
 }
 
 void
-PlatformResource::CreateShaderResourceView(ID3D11Device4 *device, D3D11_RESOURCE_DIMENSION dimension)
+PlatformResource::CreateShaderResourceView(ID3D11Device1 *device, D3D11_RESOURCE_DIMENSION dimension)
 {
     FALCON_ENGINE_CHECK_ASSERTION(!mShaderResourceView);
     FALCON_ENGINE_CHECK_NULLPTR(mResourceObj);
@@ -247,7 +247,7 @@ PlatformResource::CreateShaderResourceView(ID3D11Device4 *device, D3D11_RESOURCE
 }
 
 void
-PlatformResource::CreateRenderTargetView(ID3D11Device4 *device, D3D11_RESOURCE_DIMENSION dimension)
+PlatformResource::CreateRenderTargetView(ID3D11Device1 *device, D3D11_RESOURCE_DIMENSION dimension)
 {
     FALCON_ENGINE_CHECK_ASSERTION(!mRenderTargetView);
     FALCON_ENGINE_CHECK_NULLPTR(mResourceObj);
@@ -326,7 +326,7 @@ PlatformResource::CreateRenderTargetView(ID3D11Device4 *device, D3D11_RESOURCE_D
 }
 
 void
-PlatformResource::CreateUnorderedAccessView(ID3D11Device4 *device, D3D11_RESOURCE_DIMENSION dimension)
+PlatformResource::CreateUnorderedAccessView(ID3D11Device1 *device, D3D11_RESOURCE_DIMENSION dimension)
 {
     FALCON_ENGINE_UNUSE(device);
     FALCON_ENGINE_UNUSE(dimension);

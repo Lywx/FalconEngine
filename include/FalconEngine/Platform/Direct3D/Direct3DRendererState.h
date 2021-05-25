@@ -55,16 +55,16 @@ private:
     /* Private Members                                                      */
     /************************************************************************/
     Microsoft::WRL::ComPtr<ID3D11BlendState1>
-    CreateBlendState(ID3D11Device4 * device,
+    CreateBlendState(ID3D11Device1 * device,
                      const BlendState * blendState);
 
     Microsoft::WRL::ComPtr<ID3D11DepthStencilState>
-    CreateDepthStencilState(ID3D11Device4 * device,
+    CreateDepthStencilState(ID3D11Device1 * device,
                             const DepthTestState * depthTestState,
                             const StencilTestState * stencilTestState);
 
     Microsoft::WRL::ComPtr<ID3D11RasterizerState>
-    CreateRasterizerState(ID3D11Device4 * device,
+    CreateRasterizerState(ID3D11Device1 * device,
                           const CullState * cullState,
                           const OffsetState * offsetState,
                           const WireframeState * wireframeState);

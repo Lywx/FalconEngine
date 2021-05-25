@@ -103,7 +103,7 @@ PlatformSampler::Disable(Renderer *renderer, int textureUnit, unsigned int shade
 /* Private Members                                                      */
 /************************************************************************/
 void
-PlatformSampler::Create(ID3D11Device4 *device)
+PlatformSampler::Create(ID3D11Device1 *device)
 {
     D3D11_SAMPLER_DESC samplerDesc;
 

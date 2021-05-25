@@ -31,13 +31,13 @@ protected:
     /* Protected Members                                                    */
     /************************************************************************/
     void
-    CreateBuffer(ID3D11Device4 * device);
+    CreateBuffer(ID3D11Device1 * device);
 
     virtual void
-    CreateResource(ID3D11Device4 * device) override final;
+    CreateResource(ID3D11Device1 * device) override final;
 
     virtual void
-    CreateResourceView(ID3D11Device4 * device) override final;
+    CreateResourceView(ID3D11Device1 * device) override final;
 
 protected:
     // NOTE(Wuxiang): mBufferObj doesn't need to be release in destructor, because

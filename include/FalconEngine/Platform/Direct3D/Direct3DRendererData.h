@@ -14,22 +14,22 @@ class Texture2d;
 FALCON_ENGINE_CLASS_BEGIN PlatformRendererData final
 {
 public:
-    explicit PlatformRendererData(const Microsoft::WRL::ComPtr<ID3D11DeviceContext4>& context,
-                                  const Microsoft::WRL::ComPtr<ID3D11Device4>& device,
+    explicit PlatformRendererData(const Microsoft::WRL::ComPtr<ID3D11DeviceContext1>& context,
+                                  const Microsoft::WRL::ComPtr<ID3D11Device1>& device,
                                   const HWND & window);
     ~PlatformRendererData();
 
 public:
-    ID3D11DeviceContext4 *
+    ID3D11DeviceContext1 *
     GetContext();
 
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext4>
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext1>
     GetContextCp();
 
-    ID3D11Device4 *
+    ID3D11Device1 *
     GetDevice();
 
-    Microsoft::WRL::ComPtr<ID3D11Device4>
+    Microsoft::WRL::ComPtr<ID3D11Device1>
     GetDeviceCp();
 
 public:
@@ -39,8 +39,8 @@ public:
     Microsoft::WRL::ComPtr<IDXGISwapChain1> mSwapChain;
 
 private:
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext4> mContext;
-    Microsoft::WRL::ComPtr<ID3D11Device4> mDevice;
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext1> mContext;
+    Microsoft::WRL::ComPtr<ID3D11Device1> mDevice;
 
 public:
     HWND mWindow;

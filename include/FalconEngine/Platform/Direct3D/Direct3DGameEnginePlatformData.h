@@ -18,8 +18,8 @@ public:
     ~PlatformGameEnginePlatformData();
 
 public:
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext4> mContext;
-    Microsoft::WRL::ComPtr<ID3D11Device4>        mDevice;
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext1> mContext;
+    Microsoft::WRL::ComPtr<ID3D11Device1>        mDevice;
     D3D_FEATURE_LEVEL                            mFeatureLevel;
 
 public:

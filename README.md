@@ -1,6 +1,6 @@
 Falcon Engine
 ===
-A cross-platform (Windows / Unix) (DirectX 11 / OpenGL 4.3) 3D Graphics Engine for study and academic use.
+A cross-platform 3D Graphics Engine for study and academic use, (Windows: DirectX 11 / OpenGL 4.3, Unix: OpenGL 4.3).
 
 Building
 ===
